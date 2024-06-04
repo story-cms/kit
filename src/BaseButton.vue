@@ -6,7 +6,7 @@ defineProps({
   count: {
     type: Number,
   },
-})
+});
 </script>
 
 <template>
@@ -19,11 +19,14 @@ defineProps({
     }"
   >
     <slot />
-    <span
-      v-if="count != null"
-      class="text-xs ml-2 bg-white rounded-full px-1.5"
-    >
+    <span v-if="count != null" class="text-xs ml-2 bg-white rounded-full px-1.5 red">
       {{ count }}
     </span>
   </button>
 </template>
+
+<style scoped>
+.red {
+  color: rgb(5, 137, 9);
+}
+</style>
