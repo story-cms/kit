@@ -10,13 +10,12 @@
     "story:preview": "histoire preview",
     "prepare": "npm run build"
   },
-  "main": "./dist/ui.js",
+  "main": "./dist/ui.mjs",
   "module": "./dist/ui.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/ui.mjs",
-      "require": "./dist/ui.mjs",
       "types": "./dist/index.d.ts"
     },
     "./main.css": "./dist/main.css",
@@ -41,7 +40,8 @@
     "ts-node": "^10.9.2",
     "tsup": "^8.0.1",
     "vite": "^5.2.0",
-    "vite-plugin-dts": "^3.9.1"
+    "vite-plugin-dts": "^3.9.1",
+    "vite-tsconfig-paths": "^4.3.2"
   },
   "other": {}
 }
