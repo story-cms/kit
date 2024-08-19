@@ -26,7 +26,14 @@
     "src"
   ],
   "dependencies": {
+    "@headlessui/vue": "^1.7.22",
+    "@inertiajs/vue3": "^1.1.0",
+    "pinia": "^2.1.7",
     "vue": "^3.4.21"
+  },
+  "//": {
+    "@poppinss/utils": "^6.7.3",
+    "@adonisjs/core": "^6.2.3"
   },
   "devDependencies": {
     "@histoire/plugin-vue": "^0.17.17",
@@ -42,6 +49,10 @@
     "vite": "^5.2.0",
     "vite-plugin-dts": "^3.9.1",
     "vite-tsconfig-paths": "^4.3.2"
+  },
+  "peerDependencies": {
+    "pinia": "^2.1.7",
+    "vue": "^3.4.21"
   },
   "other": {}
 }

@@ -290,3 +290,24 @@ export interface UiPageProps {
 export interface UiIndexProps {
   progress: UiProgress[];
 }
+
+export type StoryConfig = {
+  meta: Meta;
+  languages: {
+    locale: string;
+    language: string;
+    languageDirection: string;
+    bibleVersion?: string;
+  }[];
+  schemaVersion: number;
+  stories: {
+    id: number;
+    name: string;
+    fields: FieldSpec[];
+    chapterLimit: number;
+  }[];
+  pages: {
+    schemaVersion: number;
+    tracking: string;
+  };
+};
