@@ -4,6 +4,7 @@
     "allowJs": true,
     "target": "esnext",
     "module": "esnext",
+    "moduleResolution": "bundler",
     "isolatedModules": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
