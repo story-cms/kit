@@ -1,4 +1,9 @@
-import { FieldSpec, LanguageSpecification, Meta, SharedPageProps } from '@/interfaces';
+import {
+  FieldSpec,
+  LanguageSpecification,
+  Meta,
+  SharedPageProps,
+} from '../../interfaces';
 
 export const objectModel: any = {
   name: 'John',

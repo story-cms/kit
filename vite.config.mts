@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import dts from 'vite-plugin-dts';
-import tsconfigPaths from 'vite-tsconfig-paths';
 import path from 'path';
 
 export default defineConfig({
@@ -9,21 +8,21 @@ export default defineConfig({
     vue(),
     dts({
       insertTypesEntry: true,
+      tsconfigPath: 'tsconfig.frontend.json',
     }),
-    // cleaner import statements
-    tsconfigPaths(),
   ],
   build: {
+    outDir: 'dist/frontend',
     sourcemap: 'inline',
     cssCodeSplit: true,
     lib: {
       entry: {
-        main: path.resolve(__dirname, 'src/index.ts'),
-        styles: path.resolve(__dirname, 'src/index.css'),
+        main: path.resolve(__dirname, 'src/frontend/index.ts'),
+        styles: path.resolve(__dirname, 'src/frontend/index.css'),
       },
       formats: ['es'],
-      name: 'Ui',
-      fileName: 'ui',
+      // name: 'Ui',
+      // fileName: 'index',
     },
     rollupOptions: {
       external: [

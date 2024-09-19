@@ -1,5 +1,5 @@
 import { App, PropType } from 'vue';
-import { FieldSpec } from '@/interfaces';
+import { FieldSpec } from '../../interfaces';
 import { BibleBooksMap } from './bibleBooks';
 import { Variant, Story } from 'histoire';
 

@@ -1,20 +1,12 @@
 {
   "compilerOptions": {
     "declaration": true,
-    "allowJs": true,
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "bundler",
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["ESNext", "DOM"],
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"],
-      "#*": ["src/*"]
-    }
-  },
-  "include": ["src"]
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": true,
+    "esModuleInterop": true
+  }
 }

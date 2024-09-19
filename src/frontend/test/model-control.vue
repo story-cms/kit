@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { useModelStore } from '#store';
+import { useModelStore } from '../store';
 import { computed, toRef } from 'vue';
 import { objectModel } from './mocks';
 

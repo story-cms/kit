@@ -1,8 +1,8 @@
-import './src/index.css';
+import './src/frontend/index.css';
 
 import { defineSetupVue3 } from '@histoire/plugin-vue';
 // import { pinia, useWidgetsStore } from './src/store';
-import { pinia } from './src/store';
+import { pinia } from './src/frontend/store';
 
 // const widgets = useWidgetsStore(pinia);
 // widgets.setProviders({

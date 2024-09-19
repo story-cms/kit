@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "lib": ["ESNext", "DOM"],
+    "outDir": "./dist/frontend"
+  },
+  "include": ["src/frontend/**/*"]
+}
