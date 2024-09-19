@@ -25,13 +25,13 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import StringField from './string-field.vue';
-import LanguageControl from '../test/language-control.vue';
-import ErrorControl from '../test/error-control.vue';
-import ModelControl from '../test/model-control.vue';
-import { objectErrors, objectModel, emptyModel } from '../test/mocks';
-import { useModelStore, useSharedStore } from '../store';
-import { StoryHandler } from '../shared/helpers';
+import StringField from '#fields/string-field.vue';
+import LanguageControl from '#test/language-control.vue';
+import ErrorControl from '#test/error-control.vue';
+import ModelControl from '#test/model-control.vue';
+import { objectErrors, objectModel, emptyModel } from '#test/mocks';
+import { useModelStore, useSharedStore } from '#store';
+import { StoryHandler } from '#shared/helpers';
 
 const isRtl = computed(() => {
   return useSharedStore().isRtl;

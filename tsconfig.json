@@ -12,7 +12,8 @@
     "lib": ["ESNext", "DOM"],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "#*": ["src/*"]
     }
   },
   "include": ["src"]

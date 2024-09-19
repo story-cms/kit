@@ -10,6 +10,7 @@ export default defineConfig({
     dts({
       insertTypesEntry: true,
     }),
+    // cleaner import statements
     tsconfigPaths(),
   ],
   build: {

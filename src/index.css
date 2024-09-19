@@ -1,3 +1,49 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  @import url('https://fonts.googleapis.com/css2?family=Amiri&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+}
+
+@layer components {
+  .input-label {
+    @apply mb-1 text-sm font-medium leading-5 text-gray-900;
+  }
+  .input-field {
+    @apply block w-full rounded-md border border-gray-300 px-3 py-3 text-sm font-normal leading-5 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm;
+  }
+  .icon {
+    @apply flex h-4 w-4 items-center justify-center text-black;
+  }
+
+  .btn {
+    @apply inline-flex cursor-pointer items-center justify-center rounded-md border border-transparent px-3 py-2 text-sm font-medium leading-5 shadow hover:opacity-80 hover:shadow-md active:opacity-80;
+  }
+
+  .btn-blue {
+    @apply bg-blue-400 text-white;
+  }
+  .row-subgrid {
+    @apply row-[span_100] grid grid-rows-[subgrid];
+  }
+  .debug {
+    @apply [&>*]:border-2 [&>*]:border-red-500; /* debug class will be removed on production build */
+  }
+}
+
+:root {
+  --arabic-font-family: 'Amiri', serif;
+  --rtl-font-size: 20px;
+}
+
+/* Overide CodeMirror styles */
+.cm-s-ar .CodeMirror-rtl {
+  font-family: var(--arabic-font-family);
+  font-size: var(--rtl-font-size);
+}
+.cm-s-fa .CodeMirror-rtl {
+  font-family: var(--arabic-font-family);
+  font-size: var(--rtl-font-size);
+}

@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { useSharedStore } from '../store';
+import { useSharedStore } from '#store';
 import { computed, toRef } from 'vue';
 
 const props = defineProps({

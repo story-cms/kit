@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { WidgetPicker, Providers } from '../interfaces';
-import { widgetField } from '../fields/widget-fields';
+import type { WidgetPicker, Providers } from '@/interfaces';
+import { widgetField } from '#fields/widget-fields';
 
 const defaultProviders: Providers = {
   s3: {

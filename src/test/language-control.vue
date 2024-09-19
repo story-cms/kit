@@ -8,8 +8,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useSharedStore } from '../store';
-import { LanguageSpecification } from '../interfaces';
+import { useSharedStore } from '#store';
+import { LanguageSpecification } from '@/interfaces';
 
 const english = {
   locale: 'en',

@@ -102,7 +102,7 @@ import { computed, ref } from 'vue';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import DropDown from './drop-down.vue';
 import ContextMenu from './context-menu.vue';
-import { useSharedStore } from '../store';
+import { useSharedStore } from '#store';
 
 const shared = useSharedStore();
 

@@ -34,9 +34,9 @@
 
 <script setup lang="ts">
 import { computed, ref, nextTick } from 'vue';
-import { FieldSpec } from '../interfaces';
-import { useModelStore, useSharedStore } from '../store';
-import { commonProps } from '../shared/helpers';
+import { FieldSpec } from '@/interfaces';
+import { useModelStore, useSharedStore } from '#store';
+import { commonProps } from '#shared/helpers';
 
 const props = defineProps({
   ...commonProps,
