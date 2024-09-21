@@ -5,25 +5,29 @@
   "type": "module",
   "scripts": {
     "dev": "histoire dev",
+    "lint": "eslint .",
+    "clean": "del-cli dist",
     "ui:build": "vite build",
-    "build": "vite build",
+    "backend:build": "tsup-node && tsc -p tsconfig.backend.json --emitDeclarationOnly --declaration",
+    "copy:templates": "copyfiles --up 3 \"src/backend/stubs/**/*.stub\" dist/backend",
+    "build": "npm run ui:build && npm run backend:build",
+    "prebuild": "npm run clean",
+    "postbuild": "npm run copy:templates",
     "story:build": "histoire build",
     "story:preview": "histoire preview",
+    "prepublishOnly": "npm run build",
     "prepare": "npm run build"
   },
-  "main": "./dist/ui.js",
-  "module": "./dist/ui.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/backend/index.js",
   "exports": {
     ".": {
-      "import": "./dist/ui.js",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/backend/index.js",
+      "types": "./dist/backend/backend/index.d.ts"
     },
     "./ui": {
       "import": "./dist/frontend/main.js",
       "types": "./dist/frontend/main.d.ts"
     },
-    "./main.css": "./dist/main.css",
     "./styles.css": "./dist/frontend/styles.css"
   },
   "files": [
@@ -45,6 +49,8 @@
     "@types/node": "^22.5.5",
     "@vitejs/plugin-vue": "^5.0.4",
     "autoprefixer": "^10.4.19",
+    "copyfiles": "^2.4.1",
+    "del-cli": "^5.1.0",
     "eslint": "^9.10.0",
     "histoire": "^0.17.17",
     "tailwindcss": "^3.4.3",
@@ -56,6 +62,17 @@
   "peerDependencies": {
     "pinia": "^2.1.7",
     "vue": "^3.4.21"
+  },
+  "tsup": {
+    "entry": [
+      "./src/backend/index.ts"
+    ],
+    "outDir": "./dist/backend",
+    "clean": true,
+    "format": "esm",
+    "dts": false,
+    "sourcemap": true,
+    "target": "esnext"
   },
   "other": {}
 }

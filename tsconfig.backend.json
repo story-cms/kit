@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "lib": ["ESNext"],
+    "outDir": "./dist/backend"
+  },
+  "include": ["src/backend/**/*"]
+}
