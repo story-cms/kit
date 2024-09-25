@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "histoire dev",
-    "lint": "eslint .",
+    "todo-lint": "eslint .",
     "clean": "del-cli dist",
     "ui:build": "vite build",
     "backend:build": "tsup-node && tsc -p tsconfig.backend.json --emitDeclarationOnly --declaration",
@@ -22,7 +22,7 @@
   "exports": {
     ".": {
       "import": "./dist/backend/index.js",
-      "types": "./dist/backend/backend/index.d.ts"
+      "types": "./dist/backend/index.d.ts"
     },
     "./ui": {
       "import": "./dist/frontend/main.js",

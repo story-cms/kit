@@ -3,7 +3,7 @@
   "compilerOptions": {
     "skipLibCheck": true,
     "lib": ["ESNext"],
-    "outDir": "./dist/backend"
+    "outDir": "./dist"
   },
   "include": ["src/backend/**/*"]
 }

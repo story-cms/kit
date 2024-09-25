@@ -199,5 +199,5 @@ const submit = () => {
   });
 };
 
-const submitLabel = computed(() => (formMode.value == 'update' ? 'Update' : 'Addzz'));
+const submitLabel = computed(() => (formMode.value == 'update' ? 'Update' : 'Add'));
 </script>

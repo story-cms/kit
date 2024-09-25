@@ -6,7 +6,6 @@ import ContextMenu from './shared/context-menu.vue';
 import UsersIndex from './users/users-index.vue';
 export { createInertiaApp, usePage, router } from '@inertiajs/vue3';
 
-export * from '../interfaces';
 export * from './store/index';
 
 export { AppLayout, UsersIndex, Icon, DropDown, ContextMenu, StringField };
