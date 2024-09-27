@@ -56,21 +56,21 @@ export async function configure(command: Configure) {
   });
   codemods.overwriteExisting = true;
 
-  // /**
-  //  * Register provider
-  //  */
-  // await codemods.updateRcFile((rcFile) => {
-  //   rcFile.addProvider('@adonisjs/shield/shield_provider')
-  // })
+  /**
+   * Register provider
+   */
+  await codemods.updateRcFile((rcFile) => {
+    rcFile.addProvider('@story-cms/kit/story_provider');
+  });
 
-  // /**
-  //  * Register middleware
-  //  */
-  // await codemods.registerMiddleware('router', [
-  //   {
-  //     path: '@adonisjs/shield/shield_middleware',
-  //   },
-  // ])
+  /**
+   * Register middleware
+   */
+  await codemods.registerMiddleware('router', [
+    {
+      path: '@story-cms/kit/version_context_middleware',
+    },
+  ]);
 }
 
 // const addConfig = async (command: Configure) => {
