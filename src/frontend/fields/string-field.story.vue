@@ -31,7 +31,7 @@ import ErrorControl from '../test/error-control.vue';
 import ModelControl from '../test/model-control.vue';
 import { objectErrors, objectModel, emptyModel } from '../test/mocks';
 import { useModelStore, useSharedStore } from '../store';
-import { StoryHandler } from '../shared/helpers';
+import type { StoryHandler } from '../shared/helpers';
 
 const isRtl = computed(() => {
   return useSharedStore().isRtl;
@@ -42,10 +42,10 @@ const loadData: StoryHandler = ({ variant }): void => {
   const shared = useSharedStore();
 
   store.model = objectModel;
-  if (variant?.title == 'Error') {
+  if (variant?.title === 'Error') {
     shared.errors = objectErrors;
   }
-  if (variant?.title == 'Readonly') {
+  if (variant?.title === 'Readonly') {
     store.setSource({
       ...emptyModel,
       name: 'Kalvin Kiptum',
