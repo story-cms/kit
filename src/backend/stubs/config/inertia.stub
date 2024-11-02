@@ -1,0 +1,48 @@
+// see: https://github.com/adonisjs/inertia/blob/64875158a2516c47f6ec13820c541161eb890f97/stubs/config.stub
+{{{
+  exports({ to: app.configPath('inertia.ts') })
+}}}
+import { defineConfig } from '@adonisjs/inertia';
+import type { InferSharedProps } from '@adonisjs/inertia/types';
+import storyConfig from '#config/story';
+import { LanguageSpecification } from '@story-cms/kit';
+
+const getLanguage = (locale: string | null): LanguageSpecification => {
+  const found =
+    storyConfig.languages.find((language) => language.locale === locale) ||
+    storyConfig.languages[0];
+  return found as LanguageSpecification;
+};
+
+const inertiaConfig = defineConfig({
+  /**
+   * Path to the Edge view that will be used as the root view for Inertia responses
+   */
+  rootView: 'inertia_layout',
+
+  /**
+   * Data that should be shared with all rendered pages
+   */
+  sharedData: {
+    stories: () => storyConfig.stories.map((item) => item.name),
+    meta: () => storyConfig.meta,
+    user: (ctx) => ctx.auth.use('web')?.user,
+    language: (ctx) => getLanguage(ctx.session.get('locale')),
+    languages: () => storyConfig.languages,
+    errors: (ctx) => ctx.session?.flashMessages.get('errors'),
+  },
+
+  /**
+   * Options for the server-side rendering
+   */
+  ssr: {
+    enabled: false,
+    entrypoint: 'inertia/app/ssr.ts',
+  },
+});
+
+export default inertiaConfig;
+
+declare module '@adonisjs/inertia/types' {
+  export interface SharedProps extends InferSharedProps<typeof inertiaConfig> {}
+}

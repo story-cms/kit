@@ -1,10 +1,7 @@
 {{{
-  exports({
-    to: app.configPath('story.ts')
-  })
+  exports({ to: app.configPath('story.ts') })
 }}}
-import { defineConfig, StoryConfig } from '@story-cms/adonis'
-import type { FieldSpec } from '@story-cms/ui'
+import { defineConfig, StoryConfig, FieldSpec } from '@story-cms/kit';
 
 const {{storyName}}Fields = [
   {

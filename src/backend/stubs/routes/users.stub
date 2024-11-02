@@ -1,0 +1,12 @@
+{{{
+  exports({ to: app.makePath('start/routes/users.ts') })
+}}}
+import router from '@adonisjs/core/services/router';
+const UsersController = () => import('#controllers/users_controller');
+
+export default () => {
+  router.get('/user', [UsersController, 'index']);
+  router.post('/user', [UsersController, 'store']);
+  router.put('/user/:id', [UsersController, 'update']);
+  router.delete('/user/:id', [UsersController, 'destroy']);
+};

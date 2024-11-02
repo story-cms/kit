@@ -1,0 +1,235 @@
+{{{
+  exports({
+    to: app.makePath(migration.folder, migration.fileName)
+  })
+}}}
+import { BaseSchema } from '@adonisjs/lucid/schema'
+
+export default class extends BaseSchema {
+  async up() {
+    // ---------------------------------------
+    // users
+    // ---------------------------------------
+
+    this.schema.raw('DROP TABLE IF EXISTS "users"')
+    this.schema.raw('DROP TYPE IF EXISTS "user_role"')
+
+    this.schema.createTable('users', (table) => {
+      table.increments('id')
+
+      table.string('email', 255).notNullable()
+      table.string('password', 180).notNullable()
+      table.string('name', 255).notNullable()
+      table.string('remember_me_token').nullable()
+      table.string('reset_token').nullable().comment('password reset token')
+      table
+        .timestamp('reset_token_created_at', { useTz: true })
+        .nullable()
+        .comment('password reset token creation time')
+      table
+        .enu('role', ['admin', 'editor'], {
+          useNative: true,
+          enumName: 'user_role',
+          existingType: false,
+        })
+        .notNullable()
+        .defaultTo('editor')
+        .comment('user roles')
+
+      table
+        .string('language', 255)
+        .nullable()
+        .comment(
+          'Language code like "es" to scope the role for this user. Use "*" to allow the user to choose any scope.'
+        )
+
+      table.timestamp('created_at', { useTz: true })
+      table.timestamp('updated_at', { useTz: true })
+    })
+
+    // ---------------------------------------
+    // drafts
+    // ---------------------------------------
+
+    this.schema.createTable('drafts', (table) => {
+      table.increments('id')
+
+      table.integer('api_version').notNullable().comment('the api version of this chapter bundle')
+
+      table
+        .string('locale', 15)
+        .notNullable()
+        .comment('IETF BCP 47 language tag like en-US or zh-Hans')
+
+      table.integer('number').notNullable().comment('the sequential order of the chapter')
+
+      table
+        .jsonb('bundle')
+        .notNullable()
+        .defaultTo('{}')
+        .comment('serialised, localised chapter content')
+
+      table.integer('story_id').unsigned().notNullable()
+      table.text('feedback').nullable().comment('validation or editor feedback')
+
+      table
+        .enu('status', ['started', 'submitted'], {
+          useNative: true,
+          enumName: 'draft_status',
+          existingType: false,
+        })
+        .notNullable()
+        .defaultTo('started')
+        .comment('for editorial workflow. No "published" or "approved" needed')
+
+      table.timestamp('created_at', { useTz: true })
+      table.timestamp('updated_at', { useTz: true })
+    })
+
+    // ---------------------------------------
+    // indices
+    // ---------------------------------------
+
+    this.schema.createTable('indices', (table) => {
+      table.increments('id')
+
+      table.integer('api_version').notNullable().comment('the api version of this index')
+
+      table
+        .string('locale', 15)
+        .notNullable()
+        .comment('IETF BCP 47 language tag like en-US or zh-Hans')
+
+      table.integer('story_id').unsigned().notNullable()
+
+      table
+        .jsonb('items')
+        .notNullable()
+        .defaultTo('{"root":[]}')
+        .comment('list of localised chapter index items')
+
+      table
+        .specificType('published_list', 'integer[]')
+        .notNullable()
+        .defaultTo('{}') // crazy postgres array literal
+        .comment('list of chapter numbers that are published for this index')
+
+      table
+        .specificType('drafts_list', 'integer[]')
+        .notNullable()
+        .defaultTo('{}')
+        .comment('list of chapter numbers that have pending drafts')
+
+      table
+        .specificType('issues_list', 'integer[]')
+        .notNullable()
+        .defaultTo('{}')
+        .comment('list of chapter numbers that have pending issues or feedback')
+
+      table.timestamp('created_at', { useTz: true })
+      table.timestamp('updated_at', { useTz: true })
+    })
+
+    // ---------------------------------------
+    // chapters
+    // ---------------------------------------
+
+    this.schema.createTable('chapters', (table) => {
+      table.increments('id')
+
+      table.integer('api_version').notNullable().comment('the api version of this chapter bundle')
+
+      table
+        .string('locale', 15)
+        .notNullable()
+        .comment('IETF BCP 47 language tag like en-US or zh-Hans')
+
+      table.integer('number').notNullable().comment('the sequential order of the chapter')
+
+      table.integer('story_id').unsigned().notNullable()
+
+      table
+        .jsonb('bundle')
+        .notNullable()
+        .defaultTo('{}')
+        .comment('serialised, localised chapter content')
+
+      table.integer('updated_by').unsigned().references('users.id')
+      table.timestamp('created_at', { useTz: true })
+      table.timestamp('updated_at', { useTz: true })
+    })
+
+    // ---------------------------------------
+    // pages
+    // ---------------------------------------
+
+    this.schema.createTable('pages', (table) => {
+      table.increments('id')
+
+      table.integer('api_version').notNullable().comment('the api version of this page bundle')
+
+      table
+        .string('locale', 15)
+        .notNullable()
+        .comment('IETF BCP 47 language tag like en-US or zh-Hans')
+
+      table.integer('order').notNullable().comment('the sequential order of the chapter')
+
+      table
+        .jsonb('bundle')
+        .notNullable()
+        .defaultTo('{}')
+        .comment('serialised, localised chapter content')
+
+      table
+        .boolean('is_published')
+        .notNullable()
+        .defaultTo(false)
+        .comment('is this page published?')
+
+      table.integer('updated_by').unsigned().references('users.id')
+
+      table.timestamp('created_at', { useTz: true })
+      table.timestamp('updated_at', { useTz: true })
+    })
+
+    // ---------------------------------------
+    // ui
+    // ---------------------------------------
+
+    this.schema.createTable('uis', (table) => {
+      table.increments('id')
+
+      table.string('locale').notNullable()
+      table.string('key').notNullable()
+      table.text('micro_copy').notNullable()
+
+      table.timestamp('created_at', { useTz: true })
+      table.timestamp('updated_at', { useTz: true })
+    })
+
+    this.schema.createTable('ui_attributes', (table) => {
+      table.increments('id')
+
+      table.string('key').notNullable()
+      table.string('description')
+      table
+        .jsonb('placeholders')
+        .comment(
+          'https://github.com/google/app-resource-bundle/wiki/ApplicationResourceBundleSpecification#placeholder-in-resource'
+        )
+    })
+  }
+
+  async down() {
+    this.schema.dropTable('uis')
+    this.schema.dropTable('ui_attributes')
+    this.schema.dropTable('drafts')
+    this.schema.raw('DROP TYPE IF EXISTS "draft_status"')
+    this.schema.dropTable('indices')
+    this.schema.dropTable('chapters')
+    this.schema.dropTable('pages')
+    this.schema.dropTable('users')
+    this.schema.raw('DROP TYPE IF EXISTS "user_role"')
+  }
+}
