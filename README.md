@@ -27,11 +27,11 @@ If you have a question or found a bug, feel free to
 
 ## Roadmap
 
-- [ ] Clean VITA (config/inertia, inertia/app)
-- [ ] users (users_controller, models/user, base migration, routes)
+- [x] Clean VITA (config/inertia, inertia/app)
+- [x] users (users_controller, models/user, base migration, routes)
 - [ ] Configure linting
 - [ ] Add all modules from @storycms/adonis
 - [ ] Add all the widgets from @storycms/ui
 - [ ] Add docs from @storycms/ui
-- [ ] Add ops folder
+- [ ] Add Docker and ops folder
 - [ ] Add licence
