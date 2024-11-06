@@ -95,11 +95,11 @@ export async function configure(command: Configure) {
   /**
    * Define environment variables
    */
-  await codemods.defineEnvVariables({ CLOUDINARY_API_KEY: '' });
-  await codemods.defineEnvVariables({ CLOUDINARY_SECRET: '' });
-  await codemods.defineEnvVariables({ CLOUDINARY_CLOUD_NAME: '' });
-  await codemods.defineEnvVariables({ CLOUDINARY_PRESET: '' });
-  await codemods.defineEnvVariables({ BIBLE_API_KEY: '' });
+  await codemods.defineEnvVariables({ CLOUDINARY_API_KEY: 'redacted' });
+  await codemods.defineEnvVariables({ CLOUDINARY_SECRET: 'redacted' });
+  await codemods.defineEnvVariables({ CLOUDINARY_CLOUD_NAME: 'pending' });
+  await codemods.defineEnvVariables({ CLOUDINARY_PRESET: 'pending' });
+  await codemods.defineEnvVariables({ BIBLE_API_KEY: 'redacted' });
 
   /**
    * Define environment variables validations
@@ -134,6 +134,13 @@ export async function configure(command: Configure) {
   await codemods.registerMiddleware('router', [
     {
       path: '@story-cms/kit/version_context_middleware',
+    },
+  ]);
+
+  await codemods.registerMiddleware('named', [
+    {
+      name: 'admin',
+      path: '@story-cms/kit/admin_middleware',
     },
   ]);
 }

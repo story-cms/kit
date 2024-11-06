@@ -25,6 +25,7 @@
       "types": "./dist/backend/index.d.ts"
     },
     "./version_context_middleware": "./dist/backend/middleware/version_context.js",
+    "./admin_middleware": "./dist/backend/middleware/admin.js",
     "./story_provider": "./dist/backend/providers/story_provider.js",
     "./ui": {
       "import": "./dist/frontend/main.js",
@@ -69,6 +70,7 @@
   "tsup": {
     "entry": [
       "./src/backend/index.ts",
+      "./src/backend/middleware/admin.ts",
       "./src/backend/middleware/version_context.ts",
       "./src/backend/providers/story_provider.ts"
     ],
