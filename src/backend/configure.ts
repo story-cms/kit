@@ -3,32 +3,24 @@ import { Codemods } from '@adonisjs/core/ace/codemods';
 import { stubsRoot } from './stubs/main.js';
 import string from '@poppinss/utils/string';
 
-async function addRoutes(command: Configure, codemods: Codemods) {
-  const tsMorph = await codemods.getTsMorphProject();
-  const routesFile = tsMorph?.getSourceFile(command.app.makePath('./start/routes.ts'));
+async function addMigrations(codemods: Codemods) {
+  // check if a file exists that ends in base.ts in the migrations folder if not create one
+  // const migrationsFolder = path.join(__dirname, 'database/migrations');
+  // const files = fs.readdirSync(migrationsFolder);
+  // const baseMigrationExists = files.some((file) => file.endsWith('base.ts'));
+  // TODO: Implement the above logic
+  const baseMigrationExists = false;
 
-  if (!routesFile) {
-    return command.logger.warning('Unable to find the routes file');
+  if (baseMigrationExists) {
+    return;
   }
 
-  const action = command.logger.action('update start/routes.ts file');
-  try {
-    routesFile?.addStatements((writer) => {
-      writer.writeLine(`import { middleware } from '#start/kernel';`);
-      writer.writeLine(`import users from '#start/routes/users';`);
-      writer.writeLine(``);
-      writer.writeLine(`router.group(() => {`);
-      writer.writeLine(`users();`);
-      writer.writeLine(`})`);
-      writer.writeLine(`.use(middleware.auth());`);
-    });
-
-    await tsMorph?.save();
-    action.succeeded();
-  } catch (error) {
-    codemods.emit('error', error);
-    action.failed(error.message);
-  }
+  await codemods.makeUsingStub(stubsRoot, 'migration.stub', {
+    migration: {
+      folder: 'database/migrations',
+      fileName: `${new Date().getTime()}_base.ts`,
+    },
+  });
 }
 
 async function getOptions(command: Configure): Promise<ConfigOptions> {
@@ -90,15 +82,12 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'config/inertia.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/users_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/users.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'routes/routes.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'inertia/app.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'models/user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/user.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'migration.stub', {
-    migration: {
-      folder: 'database/migrations',
-      fileName: `${new Date().getTime()}_base.ts`,
-    },
-  });
+  await codemods.makeUsingStub(stubsRoot, 'commands/make_user.stub', {});
+  await addMigrations(codemods);
 
   /**
    * Define environment variables
@@ -144,12 +133,7 @@ export async function configure(command: Configure) {
       path: '@story-cms/kit/version_context_middleware',
     },
   ]);
-
-  await addRoutes(command, codemods);
 }
-
-// const addConfig = async (command: Configure) => {
-// };
 
 interface ConfigOptions {
   chapterType: string;

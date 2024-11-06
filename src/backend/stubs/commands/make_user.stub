@@ -1,0 +1,37 @@
+{{{
+  exports({ to: app.commandsPath('make_user.ts') })
+}}}
+import { BaseCommand } from '@adonisjs/core/ace';
+import { CommandOptions } from '@adonisjs/core/types/ace';
+
+export default class MakeUser extends BaseCommand {
+  /**
+   * Command name is used to run the command
+   */
+  public static commandName = 'make:user';
+
+  /**
+   * Command description is displayed in the "help" output
+   */
+  public static description = 'Make a new user';
+
+  static options: CommandOptions = { startApp: true };
+
+  public async run() {
+    const { default: User } = await import('#models/user');
+
+    const name = await this.prompt.ask('Enter name');
+    const email = await this.prompt.ask('Enter email');
+    const language = await this.prompt.ask('Enter user language');
+    const password = await this.prompt.secure('Choose an account password');
+
+    const fresh = await User.create({
+      name,
+      email,
+      password,
+      language,
+    });
+
+    this.logger.info({{ '`User [${fresh.id}] ${fresh.name} created`' }});
+  }
+}
