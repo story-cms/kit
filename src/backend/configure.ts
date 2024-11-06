@@ -2,18 +2,14 @@ import type Configure from '@adonisjs/core/commands/configure';
 import { Codemods } from '@adonisjs/core/ace/codemods';
 import { stubsRoot } from './stubs/main.js';
 import string from '@poppinss/utils/string';
+import { fsReadAll } from '@poppinss/utils';
 
-async function addMigrations(codemods: Codemods) {
-  // check if a file exists that ends in base.ts in the migrations folder if not create one
-  // const migrationsFolder = path.join(__dirname, 'database/migrations');
-  // const files = fs.readdirSync(migrationsFolder);
-  // const baseMigrationExists = files.some((file) => file.endsWith('base.ts'));
-  // TODO: Implement the above logic
-  const baseMigrationExists = false;
+async function addMigrations(command: Configure, codemods: Codemods) {
+  const path = command.app.migrationsPath();
+  const migrations = await fsReadAll(path);
+  const baseMigrationExists = migrations.some((file) => file.endsWith('_base.ts'));
 
-  if (baseMigrationExists) {
-    return;
-  }
+  if (baseMigrationExists) return;
 
   await codemods.makeUsingStub(stubsRoot, 'migration.stub', {
     migration: {
@@ -68,15 +64,22 @@ async function getOptions(command: Configure): Promise<ConfigOptions> {
   };
 }
 
+async function fileExists(folder: string, fileName: string) {
+  const files = await fsReadAll(folder);
+  return files.some((file) => file === fileName);
+}
+
 /**
  * Configures the package
  */
 export async function configure(command: Configure) {
   const codemods = await command.createCodemods();
 
-  const options = await getOptions(command);
-  codemods.overwriteExisting = false;
-  await codemods.makeUsingStub(stubsRoot, 'config/story.stub', options);
+  if ((await fileExists(command.app.configPath(), 'story.ts')) == false) {
+    const options = await getOptions(command);
+    codemods.overwriteExisting = false;
+    await codemods.makeUsingStub(stubsRoot, 'config/story.stub', options);
+  }
 
   codemods.overwriteExisting = true;
   await codemods.makeUsingStub(stubsRoot, 'config/inertia.stub', {});
@@ -87,7 +90,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'models/user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/make_user.stub', {});
-  await addMigrations(codemods);
+  await addMigrations(command, codemods);
 
   /**
    * Define environment variables
