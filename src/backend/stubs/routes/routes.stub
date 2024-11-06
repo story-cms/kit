@@ -1,0 +1,27 @@
+{{{
+  exports({ to: app.makePath('start/routes.ts') })
+}}}
+/*
+|--------------------------------------------------------------------------
+| Routes file
+|--------------------------------------------------------------------------
+|
+| The routes file is used for defining the HTTP routes.
+|
+*/
+
+import router from '@adonisjs/core/services/router';
+import { middleware } from '#start/kernel';
+import users from '#start/routes/users';
+
+router.get('/', () => {
+  return 'CMS API';
+});
+
+router
+  .group(() => {
+    users();
+  })
+  .use(middleware.auth());
+
+
