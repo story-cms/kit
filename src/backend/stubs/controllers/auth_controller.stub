@@ -1,0 +1,31 @@
+{{{
+  exports({ to: app.makePath('app/controllers/auth_controller.ts') })
+}}}
+import type { HttpContext } from '@adonisjs/core/http';
+import User from '#models/user';
+
+export default class AuthController {
+  public async index(ctx: HttpContext) {
+    return ctx.inertia.render('Login');
+  }
+
+  public async store(ctx: HttpContext) {
+    const { email, password } = ctx.request.only(['email', 'password']);
+
+    try {
+      const user = await User.verifyCredentials(email, password);
+      await ctx.auth.use('web').login(user);
+      ctx.session.put('locale', user.defaultLanguage());
+      ctx.response.redirect('/');
+    } catch {
+      ctx.session.flash('errors', { credentials: 'Invalid username or password' });
+      ctx.response.redirect().back();
+    }
+  }
+
+  public async logout(ctx: HttpContext) {
+    ctx.session.clear();
+    await ctx.auth.use('web').logout();
+    ctx.response.redirect('/login');
+  }
+}

@@ -12,16 +12,22 @@
 
 import router from '@adonisjs/core/services/router';
 import { middleware } from '#start/kernel';
+import auth from '#start/routes/auth';
 import users from '#start/routes/users';
 
-router.get('/', () => {
-  return 'CMS API';
-});
+// piblic routes
+auth();
 
+// private routes
+router
+  .get('/', () => {
+    return 'Dashboard';
+  })
+  .use(middleware.auth());
+
+// admin routes
 router
   .group(() => {
     users();
   })
   .use(middleware.auth());
-
-

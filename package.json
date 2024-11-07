@@ -14,9 +14,7 @@
     "prebuild": "npm run clean",
     "postbuild": "npm run copy:templates",
     "story:build": "histoire build",
-    "story:preview": "histoire preview",
-    "prepublishOnly": "npm run build",
-    "prepare": "npm run build"
+    "story:preview": "histoire preview"
   },
   "main": "./dist/backend/index.js",
   "exports": {
