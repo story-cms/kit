@@ -54,7 +54,7 @@
 
 <script setup lang="ts">
 import { useModelStore, useSharedStore } from '../store';
-import ObjectField from './ObjectField.vue';
+import ObjectField from './object-field.vue';
 import ErrorControl from './helpers/error-control.vue';
 import ModelControl from './helpers/model-control.vue';
 import {
