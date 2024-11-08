@@ -5,12 +5,12 @@ export default class Admin {
   async handle(ctx: HttpContext, next: NextFn) {
     await ctx.auth.use('web').check();
 
-    if (!ctx.auth.isAuthenticated) {
+    if (!ctx.auth.use('web').isAuthenticated) {
       ctx.response.unauthorized({ error: 'You have to be logged in' });
       return;
     }
 
-    if (!ctx.auth.user?.isAdmin) {
+    if (!ctx.auth.use('web').user?.isAdmin) {
       ctx.response.forbidden({ error: 'Only for site administrators' });
       return;
     }

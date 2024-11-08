@@ -30,4 +30,4 @@ router
   .group(() => {
     users();
   })
-  .use(middleware.auth());
+  .use(middleware.admin());
