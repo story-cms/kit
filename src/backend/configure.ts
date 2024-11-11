@@ -23,26 +23,6 @@ async function addMigrations(codemods: Codemods) {
   });
 }
 
-async function addMigrations(codemods: Codemods) {
-  // check if a file exists that ends in base.ts in the migrations folder if not create one
-  // const migrationsFolder = path.join(__dirname, 'database/migrations');
-  // const files = fs.readdirSync(migrationsFolder);
-  // const baseMigrationExists = files.some((file) => file.endsWith('base.ts'));
-  // TODO: Implement the above logic
-  const baseMigrationExists = false;
-
-  if (baseMigrationExists) {
-    return;
-  }
-
-  await codemods.makeUsingStub(stubsRoot, 'migration.stub', {
-    migration: {
-      folder: 'database/migrations',
-      fileName: `${new Date().getTime()}_base.ts`,
-    },
-  });
-}
-
 async function getOptions(command: Configure): Promise<ConfigOptions> {
   /**
    * Prompt for the content types
