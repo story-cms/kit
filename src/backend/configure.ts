@@ -85,6 +85,12 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'config/inertia.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/users_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/auth_controller.stub', {});
+  await codemods.makeUsingStub(
+    stubsRoot,
+    'controllers/forgot_password_controller.stub',
+    {},
+  );
+  await codemods.makeUsingStub(stubsRoot, 'mail/forget_password.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/users.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/auth.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/routes.stub', {});
@@ -92,12 +98,14 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'resources/layout.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'models/user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/user.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'validators/auth.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/make_user.stub', {});
   await addMigrations(command, codemods);
 
   /**
    * Define environment variables
    */
+  await codemods.defineEnvVariables({ MAIL_FROM_ADDRESS: 'ops@scoutredeem.co' });
   await codemods.defineEnvVariables({ CLOUDINARY_API_KEY: 'redacted' });
   await codemods.defineEnvVariables({ CLOUDINARY_SECRET: 'redacted' });
   await codemods.defineEnvVariables({ CLOUDINARY_CLOUD_NAME: 'pending' });
@@ -107,6 +115,12 @@ export async function configure(command: Configure) {
   /**
    * Define environment variables validations
    */
+  await codemods.defineEnvValidations({
+    variables: {
+      MAIL_FROM_ADDRESS: `Env.schema.string(),`,
+    },
+  });
+
   await codemods.defineEnvValidations({
     variables: {
       CLOUDINARY_API_KEY: `Env.schema.string(),`,

@@ -6,10 +6,10 @@
 
     <div>
       <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-        Forgot Password
+        Request Password Reset
       </h2>
-      <p v-if="error" class="mt-2 text-center text-sm text-error">
-        {{ error }}
+      <p v-if="errors && errors.email" class="mt-2 text-center text-sm text-error">
+        {{ errors.email[0] }}
       </p>
       <p v-if="success" class="mt-2 text-center text-sm text-green-500">
         We have sent you an e-mail with instructions to reset your password. Please use
@@ -68,7 +68,6 @@ defineProps({
   },
 });
 
-const error = ref('');
 const success = ref(false);
 const form = useForm({
   email: null,
@@ -76,12 +75,8 @@ const form = useForm({
 
 const submit = () =>
   form.post('/forgot-password', {
-    onError({ email }) {
-      error.value = email;
-    },
     onSuccess() {
       success.value = true;
-      error.value = '';
     },
   });
 </script>

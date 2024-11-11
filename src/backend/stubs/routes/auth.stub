@@ -3,16 +3,15 @@
 }}}
 import router from '@adonisjs/core/services/router';
 const AuthController = () => import('#controllers/auth_controller');
-// const ForgotPasswordController = () => import('#controllers/forgot_password_controller');
+const ForgotPasswordController = () => import('#controllers/forgot_password_controller');
 
 export default () => {
   router.get('/login', [AuthController, 'index']);
   router.post('/login', [AuthController, 'store']);
   router.get('/logout', [AuthController, 'logout']);
 
-  //   router.get('/forgot-password', [ForgotPasswordController, 'index']);
-  //   router.post('/forgot-password', [ForgotPasswordController, 'forgotPassword']);
-
-  //   router.get('/reset-password/:token', [ForgotPasswordController, 'resetRequest']);
-  //   router.post('/reset-password/:token', [ForgotPasswordController, 'resetPassword']);
+  router.get('/forgot-password', [ForgotPasswordController, 'index']);
+  router.post('/forgot-password', [ForgotPasswordController, 'forgotPassword']);
+  router.get('/reset-password/:token', [ForgotPasswordController, 'resetRequest']);
+  router.post('/reset-password/:token', [ForgotPasswordController, 'resetPassword']);
 };

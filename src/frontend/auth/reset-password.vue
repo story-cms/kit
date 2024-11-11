@@ -20,17 +20,14 @@
           Login
         </button></a
       >
-      <p v-if="errors && errors.token" class="mt-2 text-center text-sm text-error">
-        {{ errors.token }}
-      </p>
 
       <div v-if="errors">
         <p v-if="errors.password" class="mt-2 text-center text-sm text-error">
-          Make sure your password is at least 6 characters long.
+          {{ errors.password[0] }}
         </p>
 
-        <p v-if="errors.confirmPassword" class="mt-2 text-center text-sm text-error">
-          Password and Confirm Password do not match.
+        <p v-if="errors.token" class="mt-2 text-center text-sm text-error">
+          {{ errors.token }}
         </p>
       </div>
     </div>
