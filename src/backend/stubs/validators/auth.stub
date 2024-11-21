@@ -1,0 +1,31 @@
+{{{
+  exports({ to: app.makePath('app/validators/auth.ts') })
+}}}
+import vine, { SimpleMessagesProvider } from '@vinejs/vine';
+
+export const validationMessages = new SimpleMessagesProvider({
+  'email.required': "The email can't be blank.",
+  'email.email': 'Enter a valid email address.',
+  'password.confirmed': 'Those two passwords are not the same.',
+});
+
+/**
+ * Validates the reset password request
+ */
+export const requestPasswordValidator = vine.compile(
+  vine.object({
+    email: vine.string().trim().email(),
+  }),
+);
+
+/**
+ * Validates the new password
+ */
+export const newPasswordValidator = vine.compile(
+  vine.object({
+    email: vine.string().trim().email(),
+    password: vine.string().trim().minLength(6).confirmed({
+      confirmationField: 'confirmPassword',
+    }),
+  }),
+);

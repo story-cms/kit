@@ -1,0 +1,38 @@
+// see: https://github.com/adonisjs/inertia/blob/aaf1c0a236b3e8ee0d5f12d218637716b9ca827c/stubs/vue/app.ts.stub
+{{{
+  exports({ to: app.makePath('inertia/app/app.ts') })
+}}}
+/// <reference path="../../adonisrc.ts" />
+/// <reference path="../../config/inertia.ts" />
+
+import '../css/app.css';
+import '@story-cms/kit/styles.css';
+import { createApp, h } from 'vue';
+import type { DefineComponent } from 'vue';
+import { resolvePageComponent } from '@adonisjs/inertia/helpers';
+import { createInertiaApp, pinia } from '@story-cms/kit/ui';
+
+createInertiaApp({
+  progress: { color: '#5468FF' },
+
+  title: (title: string) => title,
+
+  resolve: async (name: string) => {
+    const lib = await import('@story-cms/kit/ui');
+
+    // @ts-expect-error Parameter 'name' implicitly has an 'any' type.ts(7006)
+    if (name in lib) return lib[name];
+
+    return resolvePageComponent(
+      {{ '`../pages/${name}.vue`' }},
+      import.meta.glob<DefineComponent>('../pages/**/*.vue'),
+    );
+  },
+
+  setup({ el, App, props, plugin }) {
+    createApp({ render: () => h(App, props) })
+      .use(plugin)
+      .use(pinia)
+      .mount(el);
+  },
+});

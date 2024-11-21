@@ -1,0 +1,75 @@
+{{{
+  exports({ to: app.makePath('app/controllers/users_controller.ts') })
+}}}
+import type { HttpContext } from '@adonisjs/core/http';
+
+import vine from '@vinejs/vine';
+import { UsersProps } from '@story-cms/kit';
+import User from '#models/user';
+import {
+  createUserValidator,
+  updateUserValidator,
+  validationMessages,
+} from '#validators/user';
+
+export default class UsersController {
+  // show a list of all users
+  public async index(ctx: HttpContext) {
+    const users = await User.all();
+    const props: UsersProps = {
+      users: users.map((user: User) => user.meta),
+    };
+
+    return ctx.inertia.render('UsersIndex', {
+      ...props,
+    });
+  }
+
+  // patch a user's information
+  public async update({ request, response, params, session }: HttpContext) {
+    const id = Number(params.id);
+    const user = await User.findOrFail(id);
+
+    try {
+      vine.messagesProvider = validationMessages;
+      const payload = await request.validateUsing(updateUserValidator);
+      user.name = payload.name;
+      user.email = payload.email;
+      user.role = payload.role;
+      user.language = payload.language;
+      user.save();
+    } catch (e) {
+      session.flash('errors', { other: e.message });
+    }
+
+    return response.redirect('/user', false, 303);
+  }
+
+  // delete a user
+  public async destroy({ response, params, session }: HttpContext) {
+    const id = Number(params.id);
+    const user = await User.findOrFail(id);
+    try {
+      await user.delete();
+    } catch (e) {
+      session.flash('errors', { other: e.message });
+    }
+
+    return response.redirect('/user', false, 303);
+  }
+
+  // create a new user
+  public async store({ request, response, session }: HttpContext) {
+    vine.messagesProvider = validationMessages;
+    const payload = await request.validateUsing(createUserValidator);
+
+    try {
+      await User.create({ ...payload, password: 'pending' });
+    } catch (e) {
+      // logger.error(e.message)
+      session.flash('errors', { other: e.message });
+    }
+
+    return response.redirect('/user', false, 303);
+  }
+}
