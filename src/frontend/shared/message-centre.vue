@@ -4,25 +4,25 @@
   >
     <span v-if="response === 0">
       <Icon
-        class="inline-flex h-6 w-auto items-center text-red-500"
+        class="inline-flex items-center w-auto h-6 text-red-500"
         :name="'exclamation'"
       />
       <span>{{ message }}</span>
     </span>
     <span v-if="response === 1">
-      <Icon class="inline-flex h-6 w-6 items-center text-blue-500" :name="'check'" />
+      <Icon class="inline-flex items-center w-6 h-6 text-blue-500" :name="'check'" />
       <span>{{ message }}</span>
     </span>
     <span v-if="response === 2">
       <Icon
-        class="inline-flex h-6 w-6 items-center text-green-500"
+        class="inline-flex items-center w-6 h-6 text-green-500"
         :name="'badge-check'"
       />
       <span>{{ message }}</span>
     </span>
     <span v-if="response === 3">
       <Icon
-        class="inline-flex h-6 w-6 items-center text-yellow-500"
+        class="inline-flex items-center w-6 h-6 text-yellow-500"
         :name="'information-circle'"
       />
       <span>{{ message }}</span>
@@ -31,7 +31,7 @@
 </template>
 <script setup lang="ts">
 import Icon from './icon.vue';
-import { ResponseStatus } from '../../interfaces';
+import type { ResponseStatus } from '../../interfaces';
 
 defineProps<{
   response: ResponseStatus;
