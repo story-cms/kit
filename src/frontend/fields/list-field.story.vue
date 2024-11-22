@@ -67,7 +67,7 @@ import {
   listInListModel,
   listInListSpec,
   listInListErrors,
-} from './helpers/mocks';
+} from '../../frontend/test/mocks';
 
 import type { StoryHandler } from '../shared/helpers';
 

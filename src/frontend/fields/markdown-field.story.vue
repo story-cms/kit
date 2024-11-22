@@ -76,7 +76,7 @@ import MarkdownField from './markdown-field.vue';
 import LanguageControl from './helpers/language-control.vue';
 import ErrorControl from './helpers/error-control.vue';
 import ModelControl from './helpers/model-control.vue';
-import { objectErrors, objectModel } from './helpers/mocks';
+import { objectErrors, objectModel } from '../../frontend/test/mocks';
 import { useModelStore, useSharedStore } from '../store';
 import type { StoryHandler } from '../shared/helpers';
 

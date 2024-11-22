@@ -15,5 +15,5 @@
 
 <script setup lang="ts">
 import MessageTest from './message-test.vue';
-import { sharedProps } from './mocks';
+import { sharedProps } from '../../../frontend/test/mocks';
 </script>

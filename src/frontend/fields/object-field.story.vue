@@ -68,7 +68,7 @@ import {
   objectInListInObjectSpec,
   objectInListInObjectModel,
   objectInListInObjectErrors,
-} from './helpers/mocks';
+} from '../../frontend/test/mocks';
 
 import type { StoryHandler } from '../shared/helpers';
 

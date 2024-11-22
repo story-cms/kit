@@ -49,7 +49,11 @@
 import ImageField from './image-field.vue';
 import ErrorControl from './helpers/error-control.vue';
 import ModelControl from './helpers/model-control.vue';
-import { objectErrors, objectModel, objectModelBlankImage } from './helpers/mocks';
+import {
+  objectErrors,
+  objectModel,
+  objectModelBlankImage,
+} from '../../frontend/test/mocks';
 import { useModelStore, useSharedStore } from '../store';
 import type { StoryHandler } from '../shared/helpers';
 

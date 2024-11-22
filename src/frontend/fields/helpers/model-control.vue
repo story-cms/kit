@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import { useModelStore } from '../../store';
 import { computed, toRef } from 'vue';
-import { objectModel } from './mocks';
+import { objectModel } from '../../../frontend/test/mocks';
 
 const props = defineProps({
   model: {

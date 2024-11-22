@@ -28,9 +28,9 @@
 <script setup lang="ts">
 import UsersIndex from './users-index.vue';
 import { sharedProps } from '../test/mocks';
-import { UserMeta, ResponseStatus } from '../../interfaces';
+import type { UserMeta } from '../../interfaces';
+import { ResponseStatus } from '../../interfaces';
 import { useSharedStore } from '../store';
-import type { Vue3StorySetupHandler } from '@histoire/plugin-vue';
 
 const users: UserMeta[] = [
   {
