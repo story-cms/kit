@@ -3,16 +3,16 @@
     <div class="relative min-w-full">
       <ListboxButton
         :disabled="isReadOnly"
-        class="relative w-32 cursor-default rounded-md border border-gray-300 py-2 pl-3 pr-10 text-left text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-1 sm:text-sm"
+        class="relative w-32 py-2 pl-3 pr-10 text-sm text-left text-gray-700 border border-gray-300 rounded-md shadow-sm cursor-default focus:outline-none focus:ring-1 sm:text-sm"
         :class="{ 'bg-gray-100': isReadOnly, 'bg-white': !isReadOnly }"
       >
         <span class="block truncate">{{ model }}</span>
         <span
-          class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+          class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
         >
           <Icon
             v-if="!isReadOnly"
-            class="h-5 w-5 text-gray-700"
+            class="w-5 h-5 text-gray-700"
             aria-hidden="true"
             name="chevron-down"
           />
@@ -20,12 +20,12 @@
       </ListboxButton>
 
       <transition
-        leave-active-class="transition ease-in duration-100"
+        leave-active-class="transition duration-100 ease-in"
         leave-from-class="opacity-100"
         leave-to-class="opacity-0"
       >
         <ListboxOptions
-          class="absolute z-10 mt-1 max-h-60 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+          class="absolute z-10 py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
         >
           <ListboxOption
             v-for="option in options"
@@ -53,7 +53,7 @@
                   'absolute inset-y-0 right-0 flex items-center pr-4',
                 ]"
               >
-                <Icon class="h-5 w-5" aria-hidden="true" name="check-simple" />
+                <Icon class="w-5 h-5" aria-hidden="true" name="check-simple" />
               </span>
             </li>
           </ListboxOption>
@@ -64,7 +64,8 @@
 </template>
 
 <script setup lang="ts">
-import { toRef, PropType } from 'vue';
+import { toRef } from 'vue';
+import type { PropType } from 'vue';
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue';
 import Icon from './icon.vue';
 

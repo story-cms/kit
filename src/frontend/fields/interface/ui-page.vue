@@ -44,18 +44,14 @@
 
 <script setup lang="ts">
 import { reactive, ref, computed } from 'vue';
-import { useSharedStore } from '../../../store';
-import AppLayout from '../../../shared/app-layout.vue';
-import StickyHeader from '../../../shared/sticky-header.vue';
+import { useSharedStore } from '../../store';
+import AppLayout from '../../shared/app-layout.vue';
+import StickyHeader from '../../shared/sticky-header.vue';
 import { router } from '@inertiajs/vue3';
 
-import type {
-  UiItem,
-  UiPageProps,
-  ResponseStatus,
-  SharedPageProps,
-} from '../../../../interfaces';
-import UiCard from './components/UiCard.vue';
+import { ResponseStatus } from '../../../interfaces';
+import type { UiItem, UiPageProps, SharedPageProps } from '../../../interfaces';
+import UiCard from '../interface/components/ui-card.vue';
 
 type ModelType = { [key: string]: string | undefined };
 
@@ -86,7 +82,7 @@ const model = reactive(startValues);
 
 const save = () => {
   isBusy.value = true;
-  router.post(`/ui`, model, {
+  router.post('/ui', model, {
     preserveScroll: true,
     onSuccess: () => {
       console.log('! saved');
