@@ -27,7 +27,7 @@ export const useWidgetsStore = defineStore('widgets', () => {
   // widget picker
 
   const standardPicker = (widget: string) => widgetField(widget);
-  const picker = ref<WidgetPicker>(standardPicker); // eslint-disable-line
+  const picker = ref<WidgetPicker>(standardPicker);
 
   const setPicker = (fresh: WidgetPicker) => {
     picker.value = fresh;
