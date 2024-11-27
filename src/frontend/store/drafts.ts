@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { DraftEditProps, DraftMeta, StorySpec } from '../../interfaces';
+import { DraftEditProps, DraftMeta, StorySpec } from '../../types';
 import { ref } from 'vue';
 import type { Ref } from 'vue';
 

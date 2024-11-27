@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { UiItem } from '../../../../interfaces';
+import type { UiItem } from '../../../../types';
 
 const props = defineProps<{
   item: UiItem;

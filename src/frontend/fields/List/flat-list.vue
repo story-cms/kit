@@ -31,7 +31,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { PropType } from 'vue';
-import type { FieldSpec } from '../../../interfaces';
+import type { FieldSpec } from '../../../types';
 import Icon from '../../shared/icon.vue';
 import AddItemButton from '../../shared/add-item-button.vue';
 import { useWidgetsStore, useSharedStore } from '../../store';

@@ -90,7 +90,7 @@
 import { PropType, ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import PublicLayout from '../shared/public-layout.vue';
-import { Meta } from '../../interfaces';
+import { Meta } from '../../types';
 
 defineProps({
   errors: {

@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { computed, ref, nextTick } from 'vue';
-import type { FieldSpec } from '../../interfaces';
+import type { FieldSpec } from '../../types';
 import { useModelStore, useSharedStore } from '../store';
 import { commonProps } from '../shared/helpers';
 import AttachmentField from './attachments/attachment-field.vue';

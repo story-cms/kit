@@ -32,12 +32,7 @@ import PageIndexItem from './page-index-item.vue';
 import { router } from '@inertiajs/vue3';
 import { debounce } from '../../shared/helpers';
 import IndexFilter from '../../shared/index-filter.vue';
-import type {
-  TabItem,
-  PageItem,
-  SharedPageProps,
-  PageIndexProps,
-} from '../../../interfaces';
+import type { TabItem, PageItem, SharedPageProps, PageIndexProps } from '../../../types';
 
 const props = defineProps<PageIndexProps & SharedPageProps>();
 const shared = useSharedStore();

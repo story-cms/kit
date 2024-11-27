@@ -52,7 +52,7 @@
 import type { PropType } from 'vue';
 import { computed } from 'vue';
 import StatusTag from './status-tag.vue';
-import type { IndexReadyItem } from '../../interfaces';
+import type { IndexReadyItem } from '../../types';
 import { padZero } from '../shared/helpers';
 
 const props = defineProps({

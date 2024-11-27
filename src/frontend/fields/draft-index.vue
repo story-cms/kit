@@ -70,7 +70,7 @@ import type {
   DraftEditProps,
   SharedPageProps,
   ResponseStatus,
-} from '../../interfaces';
+} from '../../types';
 import { useDraftsStore, useModelStore, useSharedStore, useWidgetsStore } from '../store';
 import MobileAppPreview from './mobile-app-preview.vue';
 import WorkflowButtons from './workflow-buttons.vue';

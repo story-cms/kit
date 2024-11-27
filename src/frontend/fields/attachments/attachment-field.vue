@@ -48,7 +48,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import type { PropType } from 'vue';
-import type { FieldSpec } from '../../../interfaces';
+import type { FieldSpec } from '../../../types';
 import type { HostService } from './types';
 import { commonProps } from '../../shared/helpers';
 import FileUpload from './file-upload.vue';

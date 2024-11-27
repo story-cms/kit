@@ -78,7 +78,7 @@
 
 <script setup lang="ts">
 import { computed, ref, nextTick, onMounted } from 'vue';
-import type { FieldSpec, Scripture } from '../../interfaces';
+import type { FieldSpec, Scripture } from '../../types';
 import { useModelStore, useSharedStore, useWidgetsStore } from '../store';
 import { commonProps } from '../shared/helpers';
 import { parseReference } from '../shared/helpers';

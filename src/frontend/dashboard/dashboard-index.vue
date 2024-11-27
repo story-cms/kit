@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import AppLayout from '../shared/app-layout.vue';
-import { SharedPageProps, DashboardProps } from '../../interfaces';
+import { SharedPageProps, DashboardProps } from '../../types';
 import { useSharedStore } from '../store';
 
 const props = defineProps<DashboardProps & SharedPageProps>();

@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
 import { computed, ref, nextTick, onMounted } from 'vue';
-import type { FieldSpec } from '../../interfaces';
+import type { FieldSpec } from '../../types';
 import { useModelStore, useSharedStore } from '../store';
 import { commonProps } from '../shared/helpers';
 import type { Editor, EditorChange } from 'codemirror';
@@ -100,7 +100,11 @@ const toolbar = computed((): (string | { name: string })[] => {
   if (field.value.minimal) return [];
 
   if (props.isReadOnly)
-    return [customToolbarButtons.find((obj) => obj.name === 'transparent') || { name: 'transparent' }];
+    return [
+      customToolbarButtons.find((obj) => obj.name === 'transparent') || {
+        name: 'transparent',
+      },
+    ];
   // NOTE: make sure to clone the field before passing it to MDE where it is mutated
   if (field.value.toolbar)
     return Array.from(

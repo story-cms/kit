@@ -22,9 +22,9 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { commonProps } from '../shared/helpers';
-import type { FieldSpec } from '../../interfaces';
-import FlatList from './List/flat-list.vue';
-import FoldableList from './List/foldable-list.vue';
+import type { FieldSpec } from '../../types';
+import FlatList from './list/flat-list.vue';
+import FoldableList from './list/foldable-list.vue';
 import { useModelStore } from '../store';
 
 const props = defineProps({

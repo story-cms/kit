@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, toRefs } from 'vue';
-import type { Scripture, SharedPageProps, DraftEditProps } from '../../interfaces';
+import type { Scripture, SharedPageProps, DraftEditProps } from '../../types';
 
 export const useModelStore = defineStore('model', () => {
   const model = ref({});

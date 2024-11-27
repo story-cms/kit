@@ -92,7 +92,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { PropType } from 'vue';
-import type { FieldSpec } from '../../../interfaces';
+import type { FieldSpec } from '../../../types';
 import Icon from '../../shared/icon.vue';
 import {
   useModelStore,

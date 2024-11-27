@@ -24,7 +24,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { commonProps } from '../shared/helpers';
-import type { FieldSpec } from '../../interfaces';
+import type { FieldSpec } from '../../types';
 import { useWidgetsStore } from '../store';
 
 interface FieldMap {

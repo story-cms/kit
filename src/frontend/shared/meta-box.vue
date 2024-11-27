@@ -46,7 +46,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import Icon from '../shared/icon.vue';
-import type { ChapterMeta, Meta } from '../../interfaces';
+import type { ChapterMeta, Meta } from '../../types';
 import { formatDate } from './helpers';
 import { useDraftsStore } from '../store';
 

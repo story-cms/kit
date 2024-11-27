@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import PagesEdit from './pages-edit.vue';
-import type { PageBundle, PageMeta } from '../../../interfaces';
+import type { PageBundle, PageMeta } from '../../../types';
 import { sharedProps } from '../../../frontend/test/mocks';
 
 const pageBundle: PageBundle = {

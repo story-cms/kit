@@ -9,7 +9,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useSharedStore } from '../store';
-import { LanguageSpecification } from '../..//interfaces';
+import { LanguageSpecification } from '../../types';
 
 const english = {
   locale: 'en',

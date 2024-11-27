@@ -31,7 +31,7 @@
 </template>
 <script setup lang="ts">
 import Icon from './icon.vue';
-import type { ResponseStatus } from '../../interfaces';
+import type { ResponseStatus } from '../../types';
 
 defineProps<{
   response: ResponseStatus;

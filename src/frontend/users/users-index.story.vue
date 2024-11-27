@@ -28,8 +28,8 @@
 <script setup lang="ts">
 import UsersIndex from './users-index.vue';
 import { sharedProps } from '../test/mocks';
-import type { UserMeta } from '../../interfaces';
-import { ResponseStatus } from '../../interfaces';
+import type { UserMeta } from '../../types';
+import { ResponseStatus } from '../../types';
 import { useSharedStore } from '../store';
 
 const users: UserMeta[] = [

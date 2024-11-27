@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import type { PageItem } from '../../../interfaces';
+import type { PageItem } from '../../../types';
 import PageIndexItem from './page-index-item.vue';
 
 const page = {

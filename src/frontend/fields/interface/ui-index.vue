@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import AppLayout from '../../shared/app-layout.vue';
 import { useSharedStore } from '../../store';
-import type { UiIndexProps, SharedPageProps } from '../../../interfaces';
+import type { UiIndexProps, SharedPageProps } from '../../../types';
 
 const props = defineProps<SharedPageProps & UiIndexProps>();
 

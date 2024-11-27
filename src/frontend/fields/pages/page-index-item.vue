@@ -67,7 +67,7 @@
 import { computed } from 'vue';
 import type { PropType } from 'vue';
 import Icon from '../../shared/icon.vue';
-import type { PageItem } from '../../../interfaces';
+import type { PageItem } from '../../../types';
 
 const props = defineProps({
   page: {

@@ -1,7 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http';
 
 import type { NextFn } from '@adonisjs/core/types/http';
-import { Story, StoryConfig, Version } from '../../interfaces';
+import { Story, StoryConfig, Version } from '../../types';
 import { Session } from '@adonisjs/session';
 
 /**

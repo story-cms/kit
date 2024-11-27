@@ -63,7 +63,7 @@ import ContentHeader from '../shared/content-header.vue';
 import MetaBox from '../shared/meta-box.vue';
 import MobileAppPreview from '../fields/mobile-app-preview.vue';
 import { formatDate, padZero, safeChapterTitle } from '../shared/helpers';
-import type { PreviewProps, SharedPageProps } from '../../interfaces';
+import type { PreviewProps, SharedPageProps } from '../../types';
 import { useSharedStore } from '../store';
 
 const props = defineProps<PreviewProps & SharedPageProps>();

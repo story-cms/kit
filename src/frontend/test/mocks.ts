@@ -3,7 +3,7 @@ import type {
   LanguageSpecification,
   Meta,
   SharedPageProps,
-} from '../../interfaces.ts';
+} from '../../types.ts';
 
 interface Address {
   street: string;

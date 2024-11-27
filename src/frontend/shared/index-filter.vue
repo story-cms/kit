@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { TabItem } from '../../interfaces';
+import type { TabItem } from '../../types';
 
 const props = defineProps({
   tabs: {

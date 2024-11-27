@@ -105,8 +105,8 @@
 import { ref, onMounted, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
 import type { Errors } from '@inertiajs/core';
-import type { FieldSpec, DraftEditProps, SharedPageProps } from '../../interfaces';
-import { ResponseStatus } from '../../interfaces';
+import type { FieldSpec, DraftEditProps, SharedPageProps } from '../../types';
+import { ResponseStatus } from '../../types';
 import { useSharedStore, useModelStore, useWidgetsStore, useDraftsStore } from '../store';
 import TranslationAppLayout from '../shared/translation-app-layout.vue';
 import MetaBox from '../shared/meta-box.vue';

@@ -108,7 +108,7 @@ import { computed, ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import AppLayout from '../shared/app-layout.vue';
 import Icon from '../shared/icon.vue';
-import { SharedPageProps, UsersProps, UserMeta } from '../../interfaces';
+import { SharedPageProps, UsersProps, UserMeta } from '../../types';
 import { useSharedStore } from '../store';
 
 const emptyForm = {

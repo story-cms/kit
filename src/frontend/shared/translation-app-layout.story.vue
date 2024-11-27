@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 import TranslationAppLayout from './translation-app-layout.vue';
-import type { LanguageSpecification } from '../../interfaces';
+import type { LanguageSpecification } from '../../types';
 import { meta, user } from '../../frontend/test/mocks';
 
 const language: LanguageSpecification = {

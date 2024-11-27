@@ -139,7 +139,7 @@ import { ref, computed, onMounted, toRefs, watch } from 'vue';
 import AppLayout from '../../shared/app-layout.vue';
 import StringField from '../string-field.vue';
 import ImageField from '../image-field.vue';
-import type { SharedPageProps, PageEditProps, ResponseStatus } from '../../../interfaces';
+import type { SharedPageProps, PageEditProps, ResponseStatus } from '../../../types';
 import SelectField from '../select-field.vue';
 import MarkdownField from '../markdown-field.vue';
 import PageMetaBox from './page-meta-box.vue';

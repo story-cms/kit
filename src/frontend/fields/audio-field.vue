@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { computed, ref, nextTick, watch } from 'vue';
-import type { FieldSpec, Audio } from '../../interfaces';
+import type { FieldSpec, Audio } from '../../types';
 import { useModelStore, useSharedStore } from '../store';
 import { commonProps } from '../shared/helpers';
 import AttachmentField from './attachments/attachment-field.vue';
