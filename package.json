@@ -36,9 +36,15 @@
     "src"
   ],
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.697.0",
+    "@aws-sdk/lib-storage": "^3.697.0",
     "@headlessui/vue": "^1.7.22",
     "@inertiajs/vue3": "^1.1.0",
     "@poppinss/utils": "^6.7.3",
+    "@rive-app/canvas": "^2.23.9",
+    "@types/luxon": "^3.3.0",
+    "easymde": "^2.18.0",
+    "luxon": "^3.5.0",
     "pinia": "^2.1.7",
     "vue": "^3.4.21"
   },
