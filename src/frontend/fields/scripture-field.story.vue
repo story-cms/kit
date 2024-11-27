@@ -37,7 +37,7 @@
 import ScriptureField from './scripture-field.vue';
 import ErrorControl from './helpers/error-control.vue';
 import ModelControl from './helpers/model-control.vue';
-import { scriptureSpec, scriptureModel } from './helpers/mocks';
+import { scriptureSpec, scriptureModel } from '../test/mocks';
 
 import { useModelStore, useSharedStore } from '../store';
 import type { StoryHandler } from '../shared/helpers';

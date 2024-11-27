@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import UiPage from './ui-page.vue';
-import { sharedProps } from '../../../../frontend/test/mocks';
+import { sharedProps } from '../../test/mocks';
 
 const items = [
   {
