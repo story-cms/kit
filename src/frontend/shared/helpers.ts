@@ -1,7 +1,7 @@
-import { App, PropType } from 'vue';
-import { FieldSpec } from '../../types';
+import type { App, PropType } from 'vue';
+import type { FieldSpec } from '../../types';
 import { BibleBooksMap } from './bibleBooks';
-import { Variant, Story } from 'histoire';
+import type { Variant, Story } from 'histoire';
 
 export const commonProps = {
   field: {
