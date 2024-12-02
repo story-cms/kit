@@ -36,7 +36,9 @@ test.describe('Select Field', () => {
     const locator = page
       .locator('[data-test-id="preview-iframe"]')
       .contentFrame()
-      .getByText('CityChicagoParisTokyo');
+      .locator('div')
+      .filter({ hasText: /^CityChicagoParisTokyo$/ })
+      .first();
 
     await expect(locator).not.toHaveClass(/rtl/);
     await page
