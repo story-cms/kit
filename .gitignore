@@ -3,3 +3,7 @@ node_modules
 .histoire
 dist
 .env
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
