@@ -23,7 +23,6 @@ export default class CloudinaryService implements HostService {
     if (!provider) throw new Error('Cloudinary provider not found');
 
     if (!provider.cloudName || !provider.defaultPreset) {
-      console.log('Check your env for CLOUDINARY_CLOUD_NAME and CLOUDINARY_PRESET');
       return { url: '' };
     }
 

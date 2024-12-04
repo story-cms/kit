@@ -100,18 +100,12 @@ const metaChapter = computed(
 );
 
 const info = () => {
-  console.info('info');
   showMetaBox.value = !showMetaBox.value;
 };
 
 const appPreview = () => {
-  console.info('app-preview');
   showAppPreview.value = !showAppPreview.value;
 };
-
-// const close = () => {
-//   window.location.href = '/';
-// };
 
 const edit = () => {
   window.location.href = `/draft/${props.chapter.number}/edit`;

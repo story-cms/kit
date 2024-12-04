@@ -170,7 +170,6 @@ const onSuccess = (message?: string) => {
 
 const onError = (errors: Errors, message: string) => {
   widgets.setIsDirty(false);
-  console.log(errors);
   isSettingErrors = true;
   shared.setErrors(props.errors);
   shared.addMessage(ResponseStatus.Failure, message);

@@ -85,11 +85,9 @@ const save = () => {
   router.post('/ui', model, {
     preserveScroll: true,
     onSuccess: () => {
-      console.log('! saved');
       shared.addMessage(ResponseStatus.Accomplishment, 'Translations saved');
     },
     onError: (errors) => {
-      console.log('! error on save', errors);
       shared.addMessage(ResponseStatus.Failure, 'Error saving translations');
     },
     onFinish: () => {

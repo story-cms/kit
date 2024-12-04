@@ -203,7 +203,6 @@ const save = debounce(1000, () => {
     },
 
     onError: (errors) => {
-      console.log('! error on save', errors);
       shared.setErrors(errors);
       shared.addMessage(ResponseStatus.Failure, 'Error saving page');
     },
