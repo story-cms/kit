@@ -64,7 +64,7 @@
         :item="item"
         :is-list="notList"
         scope="Draft"
-        placeholder-image="https://res.cloudinary.com/onesheep/image/upload/v1684754051/Screenshot_2023-05-22_at_13.12.03_pnamdt.png"
+        placeholder-image="https://picsum.photos/seed/1733288671859/500/500"
         chapter-name="Story"
       />
       <template #controls> </template>
@@ -74,7 +74,7 @@
         :item="item"
         :is-list="isList"
         scope=""
-        placeholder-image="https://res.cloudinary.com/onesheep/image/upload/v1684754051/Screenshot_2023-05-22_at_13.12.03_pnamdt.png"
+        placeholder-image="https://picsum.photos/seed/1733288671859/500/500"
         chapter-name="Story"
       />
     </Variant>
@@ -88,32 +88,28 @@ const isList = true;
 const notList = false;
 const item = {
   number: 1,
-  imageUrl:
-    'https://res.cloudinary.com/onesheep/image/upload/v1684754051/Screenshot_2023-05-22_at_13.12.03_pnamdt.png',
+  imageUrl: 'https://picsum.photos/seed/1733288671859/500/500',
   title: 'Index Ready Item Title',
   tags: [],
 };
 
 const itemSquare = {
   number: 1,
-  imageUrl:
-    'https://res.cloudinary.com/theword121/image/upload/v1678106836/episodes/x3i0acaboi9uaj7zmqmz.svg',
+  imageUrl: 'https://picsum.photos/seed/1733288727386/300/300',
   title: 'Square Image Title',
   tags: ['Live'],
 };
 
 const itemTall = {
   number: 1,
-  imageUrl:
-    'https://res.cloudinary.com/theword121/image/upload/v1684768272/episodes/way4y06pk1smaxxg8u6p.jpg',
+  imageUrl: 'https://picsum.photos/seed/1733288772523/300/600',
   title: 'Tall image',
   tags: ['Live', 'Draft'],
 };
 
 const itemWide = {
   number: 1,
-  imageUrl:
-    'https://res.cloudinary.com/theword121/image/upload/v1687325215/episodes/excr8br4oeeblysd9upg.png',
+  imageUrl: 'https://picsum.photos/seed/1733288805172/400/200',
   title: 'Wide Image',
   tags: ['Live'],
 };
