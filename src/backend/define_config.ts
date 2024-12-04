@@ -1,4 +1,4 @@
-import type { StoryConfig } from '../interfaces.ts';
+import type { StoryConfig } from '../types.js';
 
 /**
  * Define shield configuration

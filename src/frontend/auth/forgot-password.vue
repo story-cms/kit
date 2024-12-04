@@ -51,7 +51,7 @@
 import PublicLayout from '../shared/public-layout.vue';
 import { useForm } from '@inertiajs/vue3';
 import { ref, PropType } from 'vue';
-import { Meta } from '../../interfaces';
+import { Meta } from '../../types';
 // 'errors', 'result', 'meta']
 defineProps({
   errors: {

@@ -81,7 +81,7 @@
 <script setup lang="ts">
 import { PropType } from 'vue';
 import { useForm } from '@inertiajs/vue3';
-import { Meta } from '../../interfaces';
+import { Meta } from '../../types';
 import PublicLayout from '../shared/public-layout.vue';
 
 defineProps({

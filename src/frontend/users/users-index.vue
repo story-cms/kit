@@ -1,6 +1,6 @@
 <template>
   <AppLayout>
-    <div class="container mx-auto p-3">
+    <div class="container p-3 mx-auto">
       <h2 class="mb-4 text-2xl font-bold leading-7 text-black">Manage Users</h2>
       <div v-if="otherError" class="py-4 text-error">
         {{ otherError }}
@@ -10,7 +10,7 @@
           <li
             v-for="user in users"
             :key="user.id"
-            class="flex justify-between border-b border-gray-300 py-2 text-xl"
+            class="flex justify-between py-2 text-xl border-b border-gray-300"
           >
             <div class="cursor-pointer" @click="focus(user)">
               {{ user.name }} &lt;{{ user.email }}&gt;
@@ -21,12 +21,12 @@
               class="cursor-pointer"
               @click="deleteUser(user)"
             >
-              <icon name="trash" class="h-10 w-10" />
+              <icon name="trash" class="w-10 h-10" />
             </button>
           </li>
         </ul>
         <div class="my-8">
-          <button type="button" class="btn btn-blue w-32" @click="onAdd()">
+          <button type="button" class="w-32 btn btn-blue" @click="onAdd()">
             Add User
           </button>
         </div>
@@ -86,14 +86,14 @@
             </p>
           </div>
 
-          <div class="my-8 flex space-x-4">
+          <div class="flex my-8 space-x-4">
             <!-- eslint-disable vue/no-v-html -->
             <button
-              class="btn btn-blue bg-slate-200 w-32"
+              class="w-32 btn btn-blue bg-slate-200"
               type="submit"
               v-html="submitLabel"
             ></button>
-            <button class="btn w-32 bg-white" type="button" @click.prevent="onCancel()">
+            <button class="w-32 bg-white btn" type="button" @click.prevent="onCancel()">
               Cancel
             </button>
           </div>
@@ -108,7 +108,7 @@ import { computed, ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import AppLayout from '../shared/app-layout.vue';
 import Icon from '../shared/icon.vue';
-import { SharedPageProps, UsersProps, UserMeta } from '../../interfaces';
+import { SharedPageProps, UsersProps, UserMeta } from '../../types';
 import { useSharedStore } from '../store';
 
 const emptyForm = {
@@ -199,5 +199,5 @@ const submit = () => {
   });
 };
 
-const submitLabel = computed(() => (formMode.value == 'update' ? 'Update' : 'Add'));
+const submitLabel = computed(() => (formMode.value === 'update' ? 'Update' : 'Add'));
 </script>

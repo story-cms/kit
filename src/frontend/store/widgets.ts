@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { WidgetPicker, Providers } from '../../interfaces';
+import type { WidgetPicker, Providers } from '../../types';
 import { widgetField } from '../fields/widget-fields';
 
 const defaultProviders: Providers = {
@@ -27,7 +27,7 @@ export const useWidgetsStore = defineStore('widgets', () => {
   // widget picker
 
   const standardPicker = (widget: string) => widgetField(widget);
-  const picker = ref<WidgetPicker>(standardPicker); // eslint-disable-line
+  const picker = ref<WidgetPicker>(standardPicker);
 
   const setPicker = (fresh: WidgetPicker) => {
     picker.value = fresh;

@@ -1,11 +1,30 @@
-import {
+import type {
   FieldSpec,
   LanguageSpecification,
   Meta,
   SharedPageProps,
-} from '../../interfaces';
+} from '../../types.ts';
 
-export const objectModel: any = {
+interface Address {
+  street: string;
+  city: string;
+  state: string;
+  zip: string;
+  favoriteScripture: {
+    reference: string;
+    verse: string;
+  };
+}
+
+interface ObjectModel {
+  name: string;
+  age: number;
+  notes: string;
+  profile: string;
+  address: Address;
+}
+
+export const objectModel: ObjectModel = {
   name: 'John',
   age: 30,
   notes: '# The Outing\nWe went to the park at *09h00* on a **sunny** day.',
@@ -24,7 +43,7 @@ export const objectModel: any = {
   },
 };
 
-export const objectModelReadonly: any = {
+export const objectModelReadonly: ObjectModel = {
   ...objectModel,
   address: {
     street: '567 Main St',
@@ -39,7 +58,7 @@ export const objectModelReadonly: any = {
   },
 };
 
-export const emptyModel: any = {
+export const emptyModel: ObjectModel = {
   name: '',
   age: null,
   notes: '',
@@ -308,7 +327,15 @@ export const objectInListInObjectSpec: FieldSpec = {
   ],
 };
 
-export const objectInListInObjectModel: Record<string, any> = {
+export const objectInListInObjectModel: {
+  episode: {
+    title: string;
+    spreads: {
+      scriptureReference: string;
+      scripture: { verse: string; callout: string };
+    }[];
+  };
+} = {
   episode: {
     title: 'The Outing',
     spreads: [
@@ -397,7 +424,7 @@ export const meta: Meta = {
 };
 
 export const user = {
-  id: 3,
+  id: 2,
   name: 'John Doe',
   initials: 'JD',
   email: 'john@example.com',

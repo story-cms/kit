@@ -1,7 +1,7 @@
-import { App, PropType } from 'vue';
-import { FieldSpec } from '../../interfaces';
+import type { App, PropType } from 'vue';
+import type { FieldSpec } from '../../types';
 import { BibleBooksMap } from './bibleBooks';
-import { Variant, Story } from 'histoire';
+import type { Variant, Story } from 'histoire';
 
 export const commonProps = {
   field: {
@@ -81,7 +81,7 @@ export const parseReference = (reference: string): string => {
   const match = reference
     .trim()
     .toLocaleLowerCase()
-    .match(/(\d+)?\s*(\w+)\s*(\d+)(?:\s*[:.]\s*(\d+))?(?:\s*-\s*(\d+))?/);
+    .match(/(\d+)?\s*(\w+)\s*(\d+)(?:\s*[:.]\s*(\d+))?(?:\s*-\s*(?:(\d+):)?(\d+))?/);
 
   if (!match) {
     return '';
@@ -91,7 +91,8 @@ export const parseReference = (reference: string): string => {
   let book = match[2];
   const chapter = match[3];
   const verse = match[4];
-  const endVerse = match[5];
+  const endChapter = match[5];
+  const endVerse = match[6];
 
   if (bookNum) {
     book = `${bookNum} ${book}`;
@@ -102,14 +103,14 @@ export const parseReference = (reference: string): string => {
     return '';
   }
 
-  let referenceString = abbreviation;
+  let referenceString = `${abbreviation}.${chapter}`;
 
-  referenceString += `.${chapter}`;
   if (verse) {
     referenceString += `.${verse}`;
-  }
-  if (endVerse) {
-    referenceString += `-${abbreviation}.${chapter}.${endVerse}`;
+    if (endVerse) {
+      const targetChapter = endChapter || chapter;
+      referenceString += `-${abbreviation}.${targetChapter}.${endVerse}`;
+    }
   }
 
   return referenceString;

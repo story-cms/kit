@@ -7,7 +7,7 @@ import {
   LanguageSpecification,
   User,
   ResponseStatus,
-} from '../../interfaces';
+} from '../../types';
 
 const defaultLanguage: LanguageSpecification = {
   locale: 'en',

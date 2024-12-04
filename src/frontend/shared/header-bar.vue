@@ -1,9 +1,9 @@
 <template>
-  <nav id="navbar" class="flex items-center justify-between bg-white px-6 py-3">
+  <nav id="navbar" class="flex items-center justify-between px-6 py-3 bg-white">
     <div class="flex">
       <div class="flex items-center space-x-6">
         <Link href="/">
-          <img :src="shared.meta.logo" alt="Logo" class="h-12 w-auto" />
+          <img :src="shared.meta.logo" alt="Logo" class="w-auto h-12" />
         </Link>
         <!-- eslint-disable vue/valid-v-model -->
         <DropDown
@@ -56,7 +56,7 @@
       <Menu as="div" class="relative ml-3">
         <div>
           <MenuButton
-            class="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+            class="flex text-sm bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
           >
             <span class="sr-only">Open user menu</span>
             <div
@@ -67,15 +67,15 @@
           </MenuButton>
         </div>
         <transition
-          enter-active-class="transition ease-out duration-100"
-          enter-from-class="transform opacity-0 scale-95"
-          enter-to-class="transform opacity-100 scale-100"
-          leave-active-class="transition ease-in duration-75"
-          leave-from-class="transform opacity-100 scale-100"
-          leave-to-class="transform opacity-0 scale-95"
+          enter-active-class="transition duration-100 ease-out"
+          enter-from-class="transform scale-95 opacity-0"
+          enter-to-class="transform scale-100 opacity-100"
+          leave-active-class="transition duration-75 ease-in"
+          leave-from-class="transform scale-100 opacity-100"
+          leave-to-class="transform scale-95 opacity-0"
         >
           <MenuItems
-            class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+            class="absolute right-0 z-10 w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
           >
             <MenuItem v-slot="{ active }">
               <button
@@ -123,16 +123,18 @@ const onLanguage = async (lang: string) => {
   if (lang === form.language) return;
   form.language = lang;
   form.story = null;
-  form.post(`/switch`);
+  form.post('/switch');
 };
 
 const onStory = async (story: string) => {
   form.story = story;
   form.language = null;
-  form.post(`/switch`);
+  form.post('/switch');
 };
 
-const signOut = () => (window.location.href = '/logout');
+const signOut = () => {
+  window.location.href = '/logout';
+};
 const isMultiLingual = computed(() => shared.languages.length > 1);
 const isMultiStory = computed(() => shared.stories.length > 1);
 // a computed prop that returns a bool if user is admin and multi lingual
