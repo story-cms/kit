@@ -25,16 +25,7 @@ export default defineConfig({
       // fileName: 'index',
     },
     rollupOptions: {
-      external: [
-        '@aws-sdk/client-s3',
-        '@aws-sdk/lib-storage',
-        '@rive-app/canva',
-        'axios',
-        'easymde',
-        'luxon',
-        'pinia',
-        'vue',
-      ],
+      external: ['axios', 'luxon', 'pinia', 'vue'],
       output: {
         globals: {
           vue: 'Vue',
