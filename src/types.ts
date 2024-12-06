@@ -15,8 +15,8 @@ export interface IndexItem {
   number: number;
   imageUrl: string;
   title: string;
-  reference: string;
-  part: number;
+  reference?: string;
+  part?: number;
 }
 
 export interface IndexReadyItem {
