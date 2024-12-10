@@ -1,0 +1,40 @@
+{{{
+  exports({ to: app.makePath('app/services/index_service.ts') })
+}}}
+
+
+import storyConfig from '#config/story';
+import { StorySpec, Story } from '@story-cms/kit';
+
+export default class StoryService {
+  public story: Story;
+  public config: Object;
+
+  constructor(story: Story) {
+    this.config = storyConfig;
+    this.story = story;
+  }
+
+  // factory methods
+  public static fromId(id: number): StoryService | undefined {
+    const story = storyConfig.stories.find((s) => s.id === id);
+    if (!story) return undefined;
+
+    return new StoryService(story);
+  }
+
+  public static fromName(name: string): StoryService | undefined {
+    const story = storyConfig.stories.find((s) => s.name === name);
+    if (!story) return undefined;
+
+    return new StoryService(story);
+  }
+
+  public get spec(): StorySpec {
+    return {
+      name: this.story.name,
+      chapterLimit: this.story.chapterLimit,
+      fields: this.story['fields'],
+    };
+  }
+}
