@@ -1,40 +1,205 @@
-{{{
-  exports({ to: app.makePath('app/services/index_service.ts') })
+{{{ 
+  exports({ to: app.makePath('app/services/index_service.ts') }) 
 }}}
 
+import Chapter from '#models/chapter';
+import Draft from '#models/draft';
+import Index from '#models/index';
+import {
+  IndexItem,
+  Version,
+  IndexReadyItem,
+  Story,
+  Part,
+  AddStatus,
+} from '@story-cms/kit';
 
 import storyConfig from '#config/story';
-import { StorySpec, Story } from '@story-cms/kit';
 
-export default class StoryService {
+export default class IndexService {
   public story: Story;
-  public config: Object;
+  public config: Object = {};
 
   constructor(story: Story) {
-    this.config = storyConfig;
     this.story = story;
   }
 
-  // factory methods
-  public static fromId(id: number): StoryService | undefined {
-    const story = storyConfig.stories.find((s) => s.id === id);
-    if (!story) return undefined;
+  public async buildIndex(version: Version) {
+    const index = await Index.firstOrCreate(version, {
+      items: { root: <IndexItem[]>[] },
+    });
 
-    return new StoryService(story);
+    const drafts = await Draft.query().where(version);
+    const published = await Chapter.query().where(version);
+
+    // assemble the items
+    const items = { root: <IndexItem[]>[] };
+    published.forEach((chapter) => items.root.push(chapter.index));
+    drafts.forEach((draft) => {
+      if (items.root.some((item) => item.number === draft.number)) return;
+      items.root.push(draft.index);
+    });
+
+    index.items = items;
+    index.sortItems();
+
+    // build the tag lists
+    const issues = await Draft.query().where(version).andWhereNotNull('feedback');
+    index.draftsList = drafts.map((draft) => draft.number);
+    index.publishedList = published.map((chapter) => chapter.number);
+    index.issuesList = issues.map((draft) => draft.number);
+
+    await index.save();
   }
 
-  public static fromName(name: string): StoryService | undefined {
-    const story = storyConfig.stories.find((s) => s.name === name);
-    if (!story) return undefined;
-
-    return new StoryService(story);
-  }
-
-  public get spec(): StorySpec {
-    return {
-      name: this.story.name,
-      chapterLimit: this.story.chapterLimit,
-      fields: this.story['fields'],
+  public async updateTags(index: Index) {
+    const scope = {
+      storyId: index.storyId,
+      locale: index.locale,
+      apiVersion: index.apiVersion,
     };
+
+    index.draftsList =
+      (await Draft.query().where(scope))?.map((draft) => draft.number) || [];
+    index.publishedList =
+      (await Chapter.query().where(scope))?.map((row) => row.number) || [];
+    index.issuesList =
+      (await Draft.query().where(scope).andWhereNotNull('feedback'))?.map(
+        (row) => row.number,
+      ) || [];
+
+    await index.save();
+  }
+
+  public async getItems(version: Version): Promise<Array<IndexReadyItem>> {
+    const index = await Index.query().where(version).first();
+    if (!index) return [];
+
+    return index!.list.map((item) => {
+      let tags: string[] = [];
+      if (index.publishedList.some((i) => i === item.number)) tags.push('Live');
+      if (index.draftsList.some((i) => i === item.number)) tags.push('Draft');
+      if (index.issuesList.some((i) => i === item.number)) tags.push('Issues');
+      return {
+        ...item,
+        tags,
+      };
+    });
+  }
+
+  public async groupedIndex(version: Version): Promise<any[]> {
+    const index = await Index.query().where(version).firstOrFail();
+    if (!index) return [];
+
+    if (!Array.isArray(this.story.parts)) {
+      return index!.publicList;
+    }
+
+    const grouped = (this.story.parts as Part[]).map((part: Part) => ({
+      id: part.id,
+      title: part.title,
+      subtitle: part.subtitle,
+      description: part.description,
+      index: <any>[],
+    }));
+
+    index!.publicList.forEach((item) => {
+      console.log('item', item);
+
+      const part = grouped.find((group) => group.id === item.part);
+      if (part)
+        part.index.push({
+          id: item.number,
+          title: item.title,
+          reference: item.reference,
+          imageUrl: item.imageUrl,
+        });
+    });
+
+    return grouped;
+  }
+
+  public async getCurrentApiVersion(): Promise<number> {
+    const rows = await Chapter.query().max('api_version');
+    return rows[0].$extras.max || 1;
+  }
+
+  public getDefaultStoryBundle(spec: Object[]): string {
+    const shapes = this.getBundleShapes(spec);
+    return {{ '`{ ${shapes} }`' }};
+  }
+
+  private getBundleShapes(spec: Object[]): string {
+    return (
+      spec
+        // .filter((widget) => widget.hasOwnProperty('name'))
+        .map((node) => {
+          return this.renderBundleShape(node);
+        })
+        .join(',')
+    );
+  }
+
+  private renderBundleShape(node: any): string {
+    if (node['widget'] === 'panel' && node['fields'])
+      return this.getBundleShapes(node['fields']);
+
+    if (node['widget'] === 'list' && node['fields']) return {{ '`"${node[\'name\']}": []`' }}
+
+    if (node['widget'] === 'string') return {{ '`"${node[\'name\']}": ""`' }};
+    if (node['widget'] === 'image') return {{ '`"${node[\'name\']}": ""`' }};
+    if (node['widget'] === 'object')
+      return {{ '`"${node[\'name\']}": ${this.renderObjectShape(node[\'fields\'])}`' }};
+
+    return {{ '`"${node[\'name\']}": ""`' }};
+  }
+
+  private renderObjectShape(node: any): string {
+    const items = Object.entries(node)
+      .map(([_, value]) => {
+        return this.renderBundleShape(value);
+      })
+      .join(',');
+
+    return {{ '`{ ${items} }`' }};
+  }
+  public async getAddStatus(version: Version): Promise<AddStatus> {
+    const index = await this.getItems(version);
+
+    if (index.length >= this.story.chapterLimit) return AddStatus.Full;
+
+    // We have not reached the limit for the number of chapters and we're not a translation
+    if (version.locale === storyConfig.languages[0].locale) {
+      return AddStatus.Add;
+    }
+
+    const number = index.length + 1;
+
+    const specifier = {
+      apiVersion: version.apiVersion,
+      locale: storyConfig.languages[0].locale,
+      storyId: this.story.id,
+      number: number,
+    };
+
+    const source = await Chapter.query().where(specifier).first();
+
+    if (!source) return AddStatus.Wait;
+    return AddStatus.Add;
+  }
+
+  public async getNewChapterNumber(version: Version): Promise<number> {
+    await this.buildIndex(version);
+
+    const index = await Index.query().where(version).first();
+    if (!index) return 1;
+
+    let next = 1;
+    while (index.list.some((item) => item.number === next)) {
+      next += 1;
+    }
+    if (next < index.list.length + 1) return next;
+
+    return index.list.length + 1;
   }
 }

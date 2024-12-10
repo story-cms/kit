@@ -1,8 +1,6 @@
 {{{
   exports({ to: app.makePath('app/services/story_service.ts') })
 }}}
-
-
 import storyConfig from '#config/story';
 import { StorySpec, Story } from '@story-cms/kit';
 
