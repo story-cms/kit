@@ -1,0 +1,86 @@
+{{{
+  exports({ to: app.makePath('app/models/draft.ts') })
+}}}
+
+import { DateTime } from 'luxon';
+import { BaseModel, column } from '@adonisjs/lucid/orm';
+import { IndexItem, Specifier, Version, DraftMeta } from '@story-cms/kit';
+
+export default class Draft extends BaseModel {
+  @column({ isPrimary: true })
+  declare id: number;
+
+  @column()
+  declare apiVersion: number;
+
+  @column()
+  declare locale: string;
+
+  @column()
+  declare number: number;
+
+  @column()
+  declare bundle: string;
+
+  @column()
+  declare storyId: number;
+
+  @column()
+  declare feedback: string;
+
+  @column()
+  declare status: string;
+
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime;
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime;
+
+  public get parsedBundle(): {
+    title: string;
+    imageUrl: string;
+    part: number;
+    passage?: { reference: string };
+  } {
+    const start = typeof this.bundle === 'string' ? JSON.parse(this.bundle) : this.bundle;
+    return start;
+  }
+
+  public get index(): IndexItem {
+    return {
+      number: this.number,
+      title: this.parsedBundle['title'] as string,
+      imageUrl: this.parsedBundle['imageUrl'] as string,
+      part: this.parsedBundle['part'] as number,
+      reference: this.parsedBundle['passage']?.['reference'] ?? '',
+    };
+  }
+
+  public get specifier(): Specifier {
+    return {
+      storyId: this.storyId,
+      locale: this.locale,
+      apiVersion: this.apiVersion,
+      number: this.number,
+    };
+  }
+
+  public get version(): Version {
+    return {
+      storyId: this.storyId,
+      locale: this.locale,
+      apiVersion: this.apiVersion,
+    };
+  }
+
+  public get meta(): DraftMeta {
+    return {
+      id: this.id,
+      number: this.number,
+      status: this.status,
+      updatedAt: this.updatedAt.toString(),
+      createdAt: this.createdAt.toString(),
+    };
+  }
+}

@@ -97,6 +97,8 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'inertia/app.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'resources/layout.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'models/user.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'models/chapter.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'models/draft.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/auth.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/make_user.stub', {});
