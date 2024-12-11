@@ -14,21 +14,22 @@ import router from '@adonisjs/core/services/router';
 import { middleware } from '#start/kernel';
 import auth from '#start/routes/auth';
 import users from '#start/routes/users';
+import dashboard from '#start/routes/dashboard';
 
-// piblic routes
 auth();
 
-// private routes
+// Authenticated routes
 router
-  .get('/', () => {
-    return 'Dashboard';
+  .group(() => {
+    dashboard();
   })
   .use(middleware.auth());
 
-// admin routes
+// Admin routes
 router
   .group(() => {
     users();
   })
   .use(middleware.admin());
+
   

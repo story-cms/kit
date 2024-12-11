@@ -90,6 +90,7 @@ export async function configure(command: Configure) {
     'controllers/forgot_password_controller.stub',
     {},
   );
+  await codemods.makeUsingStub(stubsRoot, 'controllers/dashboard_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'mail/forget_password.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/users.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/auth.stub', {});
