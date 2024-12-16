@@ -1,0 +1,231 @@
+{{{
+  exports({ to: app.makePath('app/controllers/drafts_controller.ts') })
+}}}
+
+import type { HttpContext } from '@adonisjs/core/http';
+import db from '@adonisjs/lucid/services/db';
+import Chapter from '#models/chapter';
+import Draft from '#models/draft';
+import DraftService from '#services/draft_service';
+import IndexService from '#services/index_service';
+import StoryService from '#services/story_service';
+
+import storyConfig from '#config/story';
+import providers from '#config/providers';
+import { DraftEditProps } from '@story-cms/kit';
+
+export default class DraftsController {
+  public async create(ctx: HttpContext) {
+    if (!ctx.version || !ctx.story) return ctx.response.notFound();
+
+    const indexService = new IndexService(ctx.story);
+    const number = await indexService.getNewChapterNumber(ctx.version);
+    if (number > ctx.story.chapterLimit) return ctx.response.redirect('/');
+
+    const service = new DraftService(ctx.story);
+    // TODO: set your own prefill fields
+    service.setPrefilledFields(['imageUrl', 'type']);
+    const bundle = await service.getDraftBundle(ctx.version, number);
+    if (bundle === null) return ctx.response.redirect('/');
+
+    await Draft.create({
+      ...ctx.version,
+      number,
+      bundle,
+    });
+
+    return ctx.response.redirect(`/draft/${number}/edit`);
+  }
+
+  public async edit(ctx: HttpContext) {
+    if (!ctx.version || !ctx.story) return ctx.response.notFound();
+
+    const version = ctx.version;
+    const story = ctx.story;
+
+    const specifier = {
+      apiVersion: version.apiVersion,
+      locale: version.locale,
+      storyId: story.id,
+      number: Number(ctx.params.number),
+    };
+
+    let draft = await Draft.query().where(specifier).first();
+    let lastPublished = '';
+
+    const chapter = await Chapter.query().where(specifier).first();
+
+    if (chapter) {
+      lastPublished = chapter.updatedAt ? chapter.updatedAt.toString() : '';
+    }
+
+    if (!draft) {
+      if (!chapter) {
+        return ctx.response.notFound();
+      }
+      lastPublished = chapter.updatedAt.toString();
+      draft = await Draft.create({
+        ...specifier,
+        bundle: chapter.bundle,
+      });
+    }
+
+    const indexService = new IndexService(story);
+    await indexService.buildIndex(version);
+
+    const service = new StoryService(story);
+    const data: DraftEditProps = {
+      draft: draft.meta,
+      bundle: draft!.bundle,
+      spec: service.spec,
+      lastPublished,
+      providers,
+      storyName: story.name,
+    };
+
+    const isTranslation = version.locale !== storyConfig.languages[0].locale;
+
+    if (!isTranslation) {
+      return ctx.inertia.render('DraftIndex', { ...data });
+    }
+
+    const source = await Chapter.query()
+      .where({
+        ...specifier,
+        locale: storyConfig.languages[0].locale,
+      })
+      .first();
+
+    return ctx.inertia.render('TranslationIndex', {
+      ...data,
+      source: source?.bundle,
+    });
+  }
+
+  // Only saving the draft without performing any validation
+  public async save(ctx: HttpContext) {
+    if (!ctx.story) return ctx.response.notFound();
+
+    const story = ctx.story;
+
+    try {
+      const id = Number(ctx.params.id);
+      const draft = await Draft.findOrFail(id);
+
+      draft.bundle = ctx.request.input('bundle');
+      await draft.save();
+      const service = new IndexService(story);
+      await service.buildIndex(draft.version);
+    } catch (e) {
+      const errors = e.messages || e.message || 'Error while saving this draft. Sorry!';
+      ctx.session.flash('errors', errors);
+    }
+
+    return ctx.response.redirect().back();
+  }
+
+  public async submit(ctx: HttpContext) {
+    if (!ctx.story) return ctx.response.notFound();
+
+    const story = ctx.story!;
+
+    const id = Number(ctx.params.id);
+    const draft = await Draft.findOrFail(id);
+
+    let payload;
+
+    try {
+      payload = await ctx.request; // validate the request
+    } catch (e) {
+      ctx.session.flash('errors', e.messages);
+      return ctx.response.redirect().back();
+    }
+
+    const service = new IndexService(story);
+
+    draft.bundle = JSON.stringify(payload.bundle);
+    draft.status = 'submitted';
+    draft.feedback = '';
+    await draft.save();
+    await service.buildIndex(draft.version);
+    return ctx.response.redirect().back();
+  }
+
+  public async reject({ request, response, params }: HttpContext) {
+    const id = Number(params.id);
+    const draft = await Draft.findOrFail(id);
+    draft.status = 'started';
+    draft.feedback = request.input('feedback');
+    await draft.save();
+    return response.redirect().back();
+  }
+
+  public async publish(ctx: HttpContext) {
+    if (!ctx.story) return ctx.response.notFound();
+
+    const story = ctx.story;
+    const id = Number(ctx.params.id);
+    const draft = await Draft.findOrFail(id);
+
+    try {
+      const payload = await ctx.request; // validate the request
+      draft.bundle = JSON.stringify(payload.bundle);
+    } catch (e) {
+      let errors = e.messages;
+
+      // only show the first 25 errors to avoid the cookie size limit
+      if (Object.keys(errors).length > 25) {
+        errors = Object.keys(errors)
+          .slice(0, 25)
+          .reduce((acc, key) => {
+            acc[key] = errors[key];
+            return acc;
+          }, {});
+      }
+      ctx.session.flash('errors', errors);
+      return ctx.response.redirect().back();
+    }
+
+    draft.bundle = ctx.request.input('bundle');
+    const version = { ...draft.version };
+
+    await db.transaction(async (trx) => {
+      let chapter = await Chapter.query()
+        .where({ ...draft.specifier })
+        .first();
+
+      if (chapter === null) {
+        chapter = new Chapter().fill({ ...draft.specifier, bundle: draft.bundle });
+      } else {
+        chapter.bundle = draft.bundle;
+      }
+
+      chapter.useTransaction(trx);
+      draft.useTransaction(trx);
+      await chapter.save();
+      await draft.delete();
+    });
+
+    // update the index after the transaction
+    const service = new IndexService(story);
+    await service.buildIndex(version);
+
+    return ctx.response.redirect('/');
+  }
+
+  public async delete(ctx: HttpContext) {
+    if (!ctx.story) return ctx.response.notFound();
+
+    const story = ctx.story;
+
+    const id = Number(ctx.params.id);
+    const draft = await Draft.findOrFail(id);
+
+    const version = { ...draft.version };
+    await draft.delete();
+    const service = new IndexService(story);
+    await service.buildIndex(version);
+
+    return ctx.response.redirect('/', false, 303);
+  }
+}

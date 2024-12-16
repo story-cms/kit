@@ -1,0 +1,174 @@
+{{{ 
+  exports({ to: app.makePath('app/services/draft_service.ts') }) 
+}}}
+
+import Chapter from '#models/chapter';
+import { Story, Version } from '@story-cms/kit';
+import storyConfig from '#config/story';
+
+export default class DraftService {
+  public story: Story;
+  public config: Object;
+
+  protected _prefilledFields: string[];
+
+  constructor(story: Story) {
+    this.story = story;
+  }
+
+  //   public async nextNumberFor(version: Version) {}
+
+  public async getDraftBundle(version: Version, number: number): Promise<string | null> {
+    // is this the source language?
+    if (version.locale === storyConfig.languages[0].locale) {
+      return this.getDefaultStoryBundle(this.story.fields);
+    }
+
+    // it's a translation, so we need to get the source bundle
+    const specifier = {
+      apiVersion: version.apiVersion,
+      locale: storyConfig.languages[0].locale,
+      storyId: this.story.id,
+      number: number,
+    };
+    const source = await Chapter.query().where(specifier).first();
+    if (!source) return null;
+
+    const fresh = this.getFreshBundleFrom(source.bundle as any);
+    return JSON.stringify(fresh);
+  }
+
+  public getFreshBundleFrom(sourceBundle: Record<string, any>): Record<string, any> {
+    const draftBundle: Record<string, any> = {};
+
+    Object.keys(sourceBundle).forEach((key) => {
+      const value = sourceBundle[key];
+      if (value === null) {
+        draftBundle[key] = null;
+        return;
+      }
+
+      if (Array.isArray(value)) {
+        draftBundle[key] = value.map((item) => {
+          if (item === null) return null;
+          if (typeof item === 'object' || Array.isArray(item)) {
+            return this.getFreshBundleFrom(item);
+          }
+          return this.leafValue(key, item);
+        });
+        return;
+      }
+
+      if (typeof value === 'object') {
+        draftBundle[key] = this.getFreshBundleFrom(value);
+        return;
+      }
+
+      draftBundle[key] = this.leafValue(key, value);
+    });
+
+    return draftBundle;
+  }
+
+  protected leafValue(key: string, value: any): any {
+    // numbers, booleans
+    if (typeof value !== 'string') {
+      return value;
+    }
+
+    // numbers
+    if (!isNaN(Number(value))) {
+      return value;
+    }
+
+    // in prefilled list
+    if (this.prefilledFields.some((item) => item === key)) {
+      return value;
+    }
+
+    return '';
+  }
+
+  public setPrefilledFields(fields: string[]) {
+    this._prefilledFields = fields;
+  }
+
+  public get prefilledFields(): string[] {
+    if (this._prefilledFields) return this._prefilledFields;
+    this._prefilledFields = [];
+    this.story.fields.forEach((field) => {
+      this.appendPrefilled(field);
+    });
+
+    return this._prefilledFields;
+  }
+
+  protected appendPrefilled(field: object) {
+    switch (field['widget']) {
+      case 'select':
+      case 'number':
+      case 'image':
+      case 'animation':
+        // check if subPath is already in the list
+        if (this._prefilledFields.some((item) => item === field['name'])) break;
+        this._prefilledFields.push(field['name']);
+        break;
+      case 'panel':
+        field['fields'].forEach((item) => {
+          this.appendPrefilled(item);
+        });
+        break;
+      case 'object':
+        Object.keys(field['fields']).forEach((key) => {
+          this.appendPrefilled(field['fields'][key]);
+        });
+        break;
+      case 'list':
+        field['fields'].forEach((item) => {
+          this.appendPrefilled(item);
+        });
+        break;
+      default:
+        break;
+    }
+  }
+
+  public getDefaultStoryBundle(spec: Object[]): string {
+    const shapes = this.getBundleShapes(spec);
+    return `{${shapes}}`;
+  }
+
+  private getBundleShapes(spec: Object[]): string {
+    return (
+      spec
+        // .filter((widget) => widget.hasOwnProperty('name'))
+        .map((node) => {
+          return this.renderBundleShape(node);
+        })
+        .join(',')
+    );
+  }
+
+  private renderBundleShape(node: any): string {
+    if (node['widget'] === 'panel' && node['fields'])
+      return this.getBundleShapes(node['fields']);
+
+    if (node['widget'] === 'list' && node['fields']) return `"${node['name']}": []`;
+    if (node['widget'] === 'string') return `"${node['name']}": ""`;
+    if (node['widget'] === 'image') return `"${node['name']}": ""`;
+    if (node['widget'] === 'object')
+      return `"${node['name']}": ${this.renderObjectShape(node['fields'])}`;
+
+    return `"${node['name']}": ""`;
+  }
+
+  private renderObjectShape(node: any): string {
+    const items = Object.entries(node)
+      .map(([_, value]) => {
+        return this.renderBundleShape(value);
+      })
+      .join(',');
+
+    return `{${items}}`;
+  }
+}
