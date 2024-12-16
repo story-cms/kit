@@ -1,15 +1,16 @@
 {{{
   exports({ to: app.makePath('start/routes/drafts.ts') })
 }}}
+
 import router from '@adonisjs/core/services/router';
 const DraftsController = () => import('#controllers/drafts_controller');
 
 export default () => {
   router.get('/draft/:number/edit', [DraftsController, 'edit']);
-  router.post('/draft/create', [DraftsController, 'create']);
-  router.put('/draft/:id', [DraftsController, 'delete']);
-  router.put('/draft/:id/save', [DraftsController, 'save']);
-  router.put('/draft/:id/publish', [DraftsController, 'publish']);
-  router.put('/draft/:id/submit', [DraftsController, 'submit']);
-  router.put('/draft/:id/reject', [DraftsController, 'reject']);
+  router.get('/draft/create', [DraftsController, 'create']);
+  router.delete('/draft/:id', [DraftsController, 'delete']);
+  router.post('/draft/:id/save', [DraftsController, 'save']);
+  router.post('/draft/:id/publish', [DraftsController, 'publish']);
+  router.post('/draft/:id/submit', [DraftsController, 'submit']);
+  router.post('/draft/:id/reject', [DraftsController, 'reject']);
 };
