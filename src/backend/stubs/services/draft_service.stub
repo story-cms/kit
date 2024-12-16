@@ -135,7 +135,7 @@ export default class DraftService {
 
   public getDefaultStoryBundle(spec: Object[]): string {
     const shapes = this.getBundleShapes(spec);
-    return `{${shapes}}`;
+    return {{ '`{ ${shapes} }`' }};
   }
 
   private getBundleShapes(spec: Object[]): string {
@@ -153,13 +153,13 @@ export default class DraftService {
     if (node['widget'] === 'panel' && node['fields'])
       return this.getBundleShapes(node['fields']);
 
-    if (node['widget'] === 'list' && node['fields']) return `"${node['name']}": []`;
-    if (node['widget'] === 'string') return `"${node['name']}": ""`;
-    if (node['widget'] === 'image') return `"${node['name']}": ""`;
+    if (node['widget'] === 'list' && node['fields']) return {{ "`'${node.name}':[]`" }};
+    if (node['widget'] === 'string') return {{ "`'${node.name}': ''`" }};
+    if (node['widget'] === 'image') return {{ "`'${node.name}': ''`" }};
     if (node['widget'] === 'object')
-      return `"${node['name']}": ${this.renderObjectShape(node['fields'])}`;
+    return {{ "`'${node.name}': ${this.renderObjectShape(node['fields'])}`" }}
 
-    return `"${node['name']}": ""`;
+    return {{ "`'${node.name}': ''`" }};
   }
 
   private renderObjectShape(node: any): string {
@@ -169,6 +169,6 @@ export default class DraftService {
       })
       .join(',');
 
-    return `{${items}}`;
+    return {{ '`{ ${items} }`' }} ;
   }
 }

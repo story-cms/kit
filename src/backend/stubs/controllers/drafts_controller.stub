@@ -34,7 +34,7 @@ export default class DraftsController {
       bundle,
     });
 
-    return ctx.response.redirect(`/draft/${number}/edit`);
+    return ctx.response.redirect({{ '`/draft/${number}/edit`' }});
   }
 
   public async edit(ctx: HttpContext) {
