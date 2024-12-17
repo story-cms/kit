@@ -6,6 +6,5 @@ const DashboardController = () => import('#controllers/dashboard_controller');
 
 export default () => {
   router.get('/', [DashboardController, 'index']);
-  router.post('/poke', [DashboardController, 'poke']);
-  router.put('/switch', [DashboardController, 'switch']);
+  router.post('/switch', [DashboardController, 'switch']);
 };
