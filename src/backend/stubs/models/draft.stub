@@ -37,7 +37,7 @@ export default class Draft extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime;
 
-  public get parsedBundle(): {
+  public get parsedBundle(): Record<string, unknown> {
     title: string;
     imageUrl: string;
     part: number;
