@@ -38,11 +38,6 @@ export default class Draft extends BaseModel {
   declare updatedAt: DateTime;
 
   public get parsedBundle(): Record<string, unknown> {
-    title: string;
-    imageUrl: string;
-    part: number;
-    passage?: { reference: string };
-  } {
     const start = typeof this.bundle === 'string' ? JSON.parse(this.bundle) : this.bundle;
     return start;
   }
@@ -52,8 +47,6 @@ export default class Draft extends BaseModel {
       number: this.number,
       title: this.parsedBundle['title'] as string,
       imageUrl: this.parsedBundle['imageUrl'] as string,
-      part: this.parsedBundle['part'] as number,
-      reference: this.parsedBundle['passage']?.['reference'] ?? '',
     };
   }
 
