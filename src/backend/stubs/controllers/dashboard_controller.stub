@@ -1,0 +1,55 @@
+{{{
+  exports({ to: app.makePath('app/controllers/dashboard_controller.ts') })
+}}}
+
+import type { HttpContext } from '@adonisjs/core/http';
+import vine from '@vinejs/vine';
+import IndexService from '#services/index_service';
+import storyConfig from '#config/story';
+import { DashboardProps, AddStatus } from '@story-cms/kit';
+
+export default class DashboardController {
+  public async index(ctx: HttpContext) {
+    if (!ctx.version || !ctx.story) return ctx.response.notFound();
+
+    const version = ctx.version;
+    const story = ctx.story;
+
+    const service = new IndexService(story);
+
+    const addStatus: AddStatus = await service.getAddStatus(ctx.version);
+    const index = await service.getItems(version);
+    const props: DashboardProps = { index, addStatus, storyName: story.name };
+
+    return ctx.inertia.render('DashboardIndex', { ...props });
+  }
+
+  public async switch(ctx: HttpContext) {
+    const switchRequest = vine.compile(
+      vine.object({
+        language: vine.string().nullable(),
+        story: vine.string().nullable(),
+      }),
+    );
+    const payload = await switchRequest.validate(ctx.request.all());
+
+    // set the locale if it has been provided
+    if (payload.language) {
+      const language =
+        storyConfig.languages.find((lang) => lang.language === payload.language) ||
+        storyConfig.languages[0];
+      ctx.session.put('locale', language.locale);
+    }
+
+    // set the story if it has been provided
+    if (payload.story) {
+      const story =
+        storyConfig.stories.find((story) => story.name === payload.story) ||
+        storyConfig.stories[0];
+      ctx.session.put('storyId', story.id);
+    }
+
+    // force a page relaod to refresh the stores
+    return ctx.inertia.location('/');
+  }
+}
