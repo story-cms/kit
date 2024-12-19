@@ -107,6 +107,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'models/chapter.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'models/draft.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'models/index.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'models/page.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/story_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/index_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/chapter_service.stub', {});
