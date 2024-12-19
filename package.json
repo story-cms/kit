@@ -30,7 +30,8 @@
       "import": "./dist/frontend/main.js",
       "types": "./dist/frontend/main.d.ts"
     },
-    "./styles.css": "./dist/frontend/styles.css"
+    "./styles.css": "./dist/frontend/styles.css",
+    "./index.css": "./dist/frontend/index.css"
   },
   "files": [
     "dist",
