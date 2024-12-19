@@ -14,6 +14,9 @@ import storyConfig from '#config/story';
 import providers from '#config/providers';
 import { DraftEditProps } from '@story-cms/kit';
 
+import { createDraftValidator, errorMessages } from '#validators/bundle';
+import vine from '@vinejs/vine';
+
 export default class DraftsController {
   public async create(ctx: HttpContext) {
     if (!ctx.version || !ctx.story) return ctx.response.notFound();
@@ -39,7 +42,6 @@ export default class DraftsController {
 
   public async edit(ctx: HttpContext) {
     if (!ctx.version || !ctx.story) return ctx.response.notFound();
-
     const version = ctx.version;
     const story = ctx.story;
 
@@ -168,10 +170,19 @@ export default class DraftsController {
     const draft = await Draft.findOrFail(id);
 
     try {
-      const payload = await ctx.request; // validate the request
+      const data = ctx.request.all();
+      vine.messagesProvider = errorMessages;
+      const payload = await createDraftValidator.validate(data);
       draft.bundle = JSON.stringify(payload.bundle);
     } catch (e) {
-      let errors = e.messages;
+      let errors = e.messages.reduce((acc: Record<string, string[]>, error: any) => {
+        const field = error.field;
+        if (!acc[field]) {
+          acc[field] = [];
+        }
+        acc[field].push(error.message);
+        return acc;
+      }, {});
 
       // only show the first 25 errors to avoid the cookie size limit
       if (Object.keys(errors).length > 25) {
