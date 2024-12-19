@@ -1,0 +1,129 @@
+{{{
+  exports({ to: app.makePath('app/controllers/pages_controller.ts') })
+}}}
+
+import type { HttpContext } from '@adonisjs/core/http';
+
+import Page, { PageVersion } from '#models/page';
+import storyConfig from '#config/story';
+import PageService from '#services/page_service';
+
+import { Session } from '@adonisjs/session';
+import providers from '#config/providers';
+import { PageEditProps } from '@story-cms/kit';
+
+export default class PagesController {
+  public async get({ request }: HttpContext) {
+    const locale = request.qs()['locale'] || 'en';
+
+    const service = new PageService({
+      apiVersion: 1,
+      locale: locale,
+    });
+    const items = await service.getPageItemsForClient();
+
+    return { pages: items };
+  }
+
+  public async index({ inertia, session }: HttpContext) {
+    const version = versionFromSession(session);
+    const service = new PageService(version);
+    const pages = await service.getPageItems();
+    return inertia.render('PagesIndex', {
+      pages: pages,
+    });
+  }
+
+  public async edit({ inertia, params }: HttpContext) {
+    const page = await Page.findOrFail(params.id);
+
+    const props: PageEditProps = {
+      providers: providers,
+      page: page.meta,
+      bundle: page.model,
+    };
+
+    return inertia.render('PagesEdit', { ...props });
+  }
+
+  public async create({ response, session, auth }: HttpContext) {
+    const page = await Page.create({
+      locale: session.get('locale') || 'en',
+      apiVersion: storyConfig.pages.schemaVersion,
+      order: 1,
+      bundle: '{"group":1}',
+      updatedBy: auth.user?.id,
+    });
+
+    return response.redirect(`/page/${page.id}/edit`, false, 303);
+  }
+
+  public async destroy({ params, response, session }: HttpContext) {
+    const id = Number(params.id);
+    const page = await Page.findOrFail(id);
+    try {
+      await page.delete();
+    } catch (e) {
+      session.flash('errors', { other: e.message });
+    }
+
+    return response.redirect('/page', false, 303);
+  }
+
+  public async update(ctx: HttpContext) {
+    let payload;
+    try {
+      // constructing the validator first so we can have a
+      // dynamic getter for the schema property
+      const validator = new PageValidator(ctx); // validator
+      payload = await ctx.request.validate({
+        schema: validator.schema,
+        messages: validator.messages,
+      });
+    } catch (e) {
+      ctx.session.flash('errors', prepend(e.messages));
+      return ctx.response.redirect().back();
+    }
+
+    const id = Number(ctx.params.id);
+    const page = await Page.findOrFail(id);
+
+    page.updateBundle(payload);
+    page.isPublished = payload.isPublished;
+    await page.save();
+
+    return ctx.response.redirect().back();
+  }
+
+  public async sort({ response, request, session }: HttpContext) {
+    const version = versionFromSession(session);
+
+    // use the service to sort the pages in memory
+    const service = new PageService(version);
+    const pages = await service.pagesFromItems(request.input('items'));
+
+    // save all the pages
+    for (const page of pages) {
+      await page.save();
+    }
+
+    return response.redirect().back();
+  }
+}
+
+// The model store on the client requires that the error messages
+// each have a "bundle" prefix
+const prepend = (plain: Object): Object => {
+  const result = {};
+  for (const key in plain) {
+    result[`bundle.${key}`] = plain[key];
+  }
+  return result;
+};
+
+const versionFromSession = (session: Session): PageVersion => {
+  return {
+    locale: session.get('locale') || 'en',
+    apiVersion: storyConfig.pages.schemaVersion,
+  } as PageVersion;
+};

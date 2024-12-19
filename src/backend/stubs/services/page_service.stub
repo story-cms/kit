@@ -1,0 +1,23 @@
+{{{ 
+  exports({ to: app.makePath('app/services/chapter_service.ts') }) 
+}}}
+
+import Chapter from '#models/chapter';
+
+export default class ChapterService {
+  public chapter: Chapter;
+
+  constructor(chapter: Chapter) {
+    this.chapter = chapter;
+  }
+
+  public async withMediaChange(mediaLocale: string): Promise<Chapter> {
+    if (this.chapter.locale === mediaLocale) return this.chapter;
+
+    let mediaSpecifier = { ...this.chapter.specifier, locale: mediaLocale };
+
+    const mediaChapter = await Chapter.query().where(mediaSpecifier).firstOrFail();
+    this.chapter.bundle['videoUrl'] = mediaChapter.bundle['videoUrl'];
+    return this.chapter;
+  }
+}

@@ -17,7 +17,7 @@ import users from '#start/routes/users';
 import dashboard from '#start/routes/dashboard';
 import drafts from '#start/routes/drafts';
 import chapters from '#start/routes/chapters';
-
+import pages from '#start/routes/pages';
 
 auth();
 
@@ -27,6 +27,7 @@ router
     dashboard();
     drafts();
     chapters();
+    pages();
   })
   .use(middleware.auth());
 
@@ -36,5 +37,3 @@ router
     users();
   })
   .use(middleware.admin());
-
-  
