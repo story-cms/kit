@@ -65,12 +65,8 @@ import MetaBox from '../shared/meta-box.vue';
 import { router } from '@inertiajs/vue3';
 import type { Errors } from '@inertiajs/core';
 import { padZero, debounce, formatDate, safeChapterTitle } from '../shared/helpers';
-import type {
-  FieldSpec,
-  DraftEditProps,
-  SharedPageProps,
-  ResponseStatus,
-} from '../../types';
+import type { FieldSpec, DraftEditProps, SharedPageProps } from '../../types';
+import { ResponseStatus } from '../../types';
 import { useDraftsStore, useModelStore, useSharedStore, useWidgetsStore } from '../store';
 import MobileAppPreview from './mobile-app-preview.vue';
 import WorkflowButtons from './workflow-buttons.vue';
