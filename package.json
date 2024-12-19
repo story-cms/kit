@@ -30,7 +30,8 @@
       "import": "./dist/frontend/main.js",
       "types": "./dist/frontend/main.d.ts"
     },
-    "./styles.css": "./dist/frontend/styles.css"
+    "./styles.css": "./dist/frontend/styles.css",
+    "./index.css": "./dist/frontend/index.css"
   },
   "files": [
     "dist",
@@ -46,6 +47,7 @@
     "@types/luxon": "^3.3.0",
     "easymde": "^2.18.0",
     "luxon": "^3.5.0",
+    "marked": "^15.0.3",
     "pinia": "^2.1.7",
     "vue": "^3.4.21"
   },

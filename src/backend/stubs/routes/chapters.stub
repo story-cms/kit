@@ -1,0 +1,9 @@
+{{{
+  exports({ to: app.makePath('start/routes/chapters.ts') })
+}}}
+import router from '@adonisjs/core/services/router';
+const ChaptersController = () => import('#controllers/chapters_controller');
+
+export default () => {
+  router.get('/chapter/:number', [ChaptersController, 'preview']);
+};
