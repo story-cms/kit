@@ -1,7 +1,6 @@
 {{{
   exports({ to: app.makePath('start/routes/pages.ts') })
 }}}
-
 import router from '@adonisjs/core/services/router';
 
 const PagesController = () => import('#controllers/pages_controller');

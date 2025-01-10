@@ -1,18 +1,18 @@
 {{{
-  exports({ to: app.makePath('app/validators/pages.ts') })
+  exports({ to: app.makePath('app/validators/page.ts') })
 }}}
-
 import vine, { SimpleMessagesProvider } from '@vinejs/vine';
 import type { HttpContext } from '@adonisjs/core/http';
 
 const draft = {
   title: vine.string(),
-  icon: vine.string(),
-  description: vine.string(),
-  body: vine.string(),
-  type: vine.string(),
+  icon: vine.string().optional(),
+  description: vine.string().optional(),
+  body: vine.string().optional(),
+  type: vine.string().optional(),
   isPublished: vine.boolean(),
 };
+
 const live = {
   title: vine.string(),
   icon: vine.string(),
