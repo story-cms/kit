@@ -32,7 +32,6 @@ export class PageValidator {
   }
 
   public get schema() {
-    console.log('isLink', this.isLink);
     if (!this.isPublished) return vine.compile(vine.object(draft));
     if (this.isLink) {
       const liveLinkSchema = {
