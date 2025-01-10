@@ -115,6 +115,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'validators/user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/auth.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/bundle.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'validators/pages.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/make_user.stub', {});
   await addMigrations(command, codemods);
 

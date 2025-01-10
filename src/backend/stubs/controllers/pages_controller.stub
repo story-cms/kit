@@ -11,6 +11,9 @@ import PageService from '#services/page_service';
 import { Session } from '@adonisjs/session';
 import providers from '#config/providers';
 import { PageEditProps } from '@story-cms/kit';
+import vine from '@vinejs/vine';
+
+import { PageValidator, errorMessages } from '#validators/page';
 
 export default class PagesController {
   public async get({ request }: HttpContext) {
@@ -75,13 +78,24 @@ export default class PagesController {
     try {
       // constructing the validator first so we can have a
       // dynamic getter for the schema property
-      const validator = new PageValidator(ctx); // validator
-      payload = await ctx.request.validate({
-        schema: validator.schema,
-        messages: validator.messages,
-      });
+      const data = ctx.request.all();
+      vine.messagesProvider = errorMessages;
+
+      const pageValidator = new PageValidator(ctx);
+      payload = await pageValidator.schema.validate(data);
     } catch (e) {
-      ctx.session.flash('errors', prepend(e.messages));
+      let errors = e.messages.reduce((acc, error) => {
+        const { field, message } = error;
+
+        if (!acc[field]) {
+          acc[field] = [];
+        }
+
+        acc[field].push(message);
+        return acc;
+      }, {});
+
+      ctx.session.flash('errors', prepend(errors));
       return ctx.response.redirect().back();
     }
 
@@ -89,6 +103,7 @@ export default class PagesController {
     const page = await Page.findOrFail(id);
 
     page.updateBundle(payload);
+
     page.isPublished = payload.isPublished;
     await page.save();
 
