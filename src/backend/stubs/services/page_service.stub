@@ -1,23 +1,73 @@
 {{{ 
-  exports({ to: app.makePath('app/services/chapter_service.ts') }) 
+  exports({ to: app.makePath('app/services/page_service.ts') }) 
 }}}
 
-import Chapter from '#models/chapter';
+import Page, { PageVersion, PageBundle } from '#models/page';
+import { PageItem } from '@story-cms/kit';
+import storyConfig from '#config/story';
 
-export default class ChapterService {
-  public chapter: Chapter;
+export default class PageService {
+  protected version: PageVersion;
 
-  constructor(chapter: Chapter) {
-    this.chapter = chapter;
+  constructor(version: PageVersion) {
+    this.version = version;
   }
 
-  public async withMediaChange(mediaLocale: string): Promise<Chapter> {
-    if (this.chapter.locale === mediaLocale) return this.chapter;
+  public async getPageItems(): Promise<PageItem[]> {
+    const pages = await Page.query().where(this.version).orderBy('order', 'asc');
+    const maxId = pages.reduce((max, page) => Math.max(max, page.id), 0);
 
-    let mediaSpecifier = { ...this.chapter.specifier, locale: mediaLocale };
+    const collected: PageItem[] = [];
+    let group = 1;
+    pages.forEach((page: Page) => {
+      const bundle = page.parsedBundle;
+      if (page.isPublished && bundle.group !== group) {
+        group = bundle.group;
+        collected.push({
+          id: maxId + group,
+          isDivider: true,
+          isPublished: true,
+        });
+      }
+      collected.push(page.model);
+    });
 
-    const mediaChapter = await Chapter.query().where(mediaSpecifier).firstOrFail();
-    this.chapter.bundle['videoUrl'] = mediaChapter.bundle['videoUrl'];
-    return this.chapter;
+    return collected;
+  }
+
+  public async getPageItemsForClient(): Promise<PageBundle[]> {
+    const pages = await Page.query()
+      .where(this.version)
+      .where('isPublished', true)
+      .orderBy('order', 'asc');
+
+    const tracking = storyConfig.pages.tracking;
+    return pages.map((page) => page.bundleWithTracking(tracking));
+  }
+
+  public async pagesFromItems(items: PageItem[]): Promise<Page[]> {
+    const pages = await Page.query().where(this.version);
+
+    const collected: Page[] = [];
+    let group = 1;
+    let order = 0; // can't be i
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].isDivider) {
+        group++;
+        continue;
+      }
+
+      const page = pages.find((p) => p.id === items[i].id);
+      if (!page) {
+        continue;
+      }
+
+      page.order = order;
+      page.updateBundle({ group: group });
+      collected.push(page);
+      order++;
+    }
+
+    return collected;
   }
 }
