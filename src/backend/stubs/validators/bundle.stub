@@ -7,15 +7,11 @@ export const createDraftValidator = vine.compile(
   vine.object({
     bundle: vine.object({
       title: vine.string(),
-      part: vine.number(),
     }),
   }),
 );
 
 export const errorMessages = new SimpleMessagesProvider({
   'bundle.title': 'Title must be a string',
-  'bundle.part': 'Part must be a number',
   'bundle.title.required': 'A title is required',
-  'bundle.part.required': 'A part number is required',
 });
-
