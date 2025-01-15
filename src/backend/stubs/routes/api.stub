@@ -1,0 +1,14 @@
+{{{
+  exports({ to: app.makePath('start/routes/api.ts') })
+}}}
+import router from '@adonisjs/core/services/router';
+const ChaptersController = () => import('#controllers/chapters_controller');
+
+export default () => {
+  router
+    .get('/chapter/:number', [ChaptersController, 'get'])
+    .prefix('/api/v1')
+    .where('number', {
+      match: /^[0-9]+$/,
+    });
+};

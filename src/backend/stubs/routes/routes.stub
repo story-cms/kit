@@ -18,6 +18,7 @@ import dashboard from '#start/routes/dashboard';
 import drafts from '#start/routes/drafts';
 import chapters from '#start/routes/chapters';
 import pages from '#start/routes/pages';
+import api from '#start/routes/api';
 
 auth();
 
@@ -37,3 +38,11 @@ router
     users();
   })
   .use(middleware.admin());
+
+
+// API routes
+router
+  .group(() => {
+    api();
+  })
+  .use(middleware.noIndex());
