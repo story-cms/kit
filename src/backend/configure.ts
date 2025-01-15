@@ -103,6 +103,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'routes/drafts.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/chapters.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/pages.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'routes/api.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'inertia/app.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'resources/layout.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'resources/views/preview.stub', {});
@@ -179,6 +180,10 @@ export async function configure(command: Configure) {
     {
       name: 'admin',
       path: '@story-cms/kit/admin_middleware',
+    },
+    {
+      name: 'noIndex',
+      path: '@story-cms/kit/add_meta_noindex_middleware',
     },
   ]);
 }

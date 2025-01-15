@@ -24,6 +24,7 @@
       "types": "./dist/backend/index.d.ts"
     },
     "./version_context_middleware": "./dist/backend/middleware/version_context.js",
+    "./add_meta_noindex_middleware": "./dist/backend/middleware/add_meta_noindex.js",
     "./admin_middleware": "./dist/backend/middleware/admin.js",
     "./story_provider": "./dist/backend/providers/story_provider.js",
     "./ui": {
@@ -81,6 +82,7 @@
       "./src/backend/index.ts",
       "./src/backend/middleware/admin.ts",
       "./src/backend/middleware/version_context.ts",
+      "./src/backend/middleware/add_meta_noindex.ts",
       "./src/backend/providers/story_provider.ts"
     ],
     "outDir": "./dist/backend",
