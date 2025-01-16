@@ -34,7 +34,7 @@ export default class AdminService {
    * Synchronize the sequential increment number of an autoincrement field after a data import.
    */
   public async syncAutoIncrement() {
-    const tables = ['chapters', 'indices', 'drafts', 'users', 'pages'];
+    const tables = ['chapters', 'indices', 'drafts', 'users', 'pages', 'uis', 'ui_attributes'];
 
     for (const table of tables) {
       await this.syncAutoIncrementFor(table);
