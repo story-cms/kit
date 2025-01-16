@@ -1,0 +1,37 @@
+{{{
+  exports({ to: app.commandsPath('fix_database.ts') })
+}}}
+
+import { BaseCommand } from '@adonisjs/core/ace';
+import AdminService from '#services/admin_service';
+import { CommandOptions } from '@adonisjs/core/types/ace';
+
+export default class FixDatabase extends BaseCommand {
+  /**
+   * Command name is used to run the command
+   */
+  public static commandName = 'fix:database';
+
+  /**
+   * Command description is displayed in the "help" output
+   */
+  public static description =
+    'Rebuild the indexes and synchronize the autoincrement fields';
+
+  static options: CommandOptions = { startApp: true };
+
+  public static settings = {
+    loadApp: true,
+
+    stayAlive: false,
+  };
+
+  public async run() {
+    this.logger.info(FixDatabase.description);
+    const service = new AdminService();
+    await service.rebuildIndexes();
+    {{'this.logger.info(service.feedback.join(\'\\n\'));'}}
+    await service.syncAutoIncrement();
+    {{'this.logger.info(service.feedback.join(\'\\n\'));'}}
+  }
+}
