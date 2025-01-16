@@ -46,7 +46,7 @@ export default class AdminService {
     const maxId = maxIdResult.rows[0]['nr'];
 
     const nextLevelResult = await db.rawQuery(
-      {{'`SELECT nextval("public.${table}_id_seq") as nr`'}},
+      {{"`SELECT nextval('public.${table}_id_seq') as nr`"}},
     );
     const nextLevel = Number.parseInt(nextLevelResult.rows[0]['nr'], 10);
     const targetLevel = maxId;
@@ -54,7 +54,7 @@ export default class AdminService {
       this._feedback.push({{'`Autoincrement on ${table} table is already synchronized.`'}});
       return;
     }
-    await db.rawQuery({{'`SELECT SETVAL("public.${table}_id_seq", ?, FALSE)`'}}, [targetLevel]);
+    await db.rawQuery({{"`SELECT SETVAL('public.${table}_id_seq', ?, FALSE)`"}}, [targetLevel]);
     this._feedback.push(
       {{'`Autoincrement on ${table} table synchronized to ${targetLevel}.`'}},
     );
