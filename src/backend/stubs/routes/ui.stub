@@ -1,0 +1,13 @@
+{{{
+  exports({ to: app.makePath('start/routes/ui.ts') })
+}}}
+import router from '@adonisjs/core/services/router';
+const UiController = () => import('#controllers/ui_controller');
+import { middleware } from '#start/kernel';
+
+export default () => {
+  router.get('/ui', [UiController, 'index']).use(middleware.auth());
+  router.post('/ui', [UiController, 'store']).use(middleware.auth());
+  router.get('/pull', [UiController, 'pull']).prefix('/ui/v1');
+  router.get('/translation', [UiController, 'translation']).prefix('/ui/v1');
+};

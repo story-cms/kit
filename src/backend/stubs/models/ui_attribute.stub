@@ -1,5 +1,5 @@
 {{{
-  exports({ to: app.makePath('app/models/ui_interface.ts') })
+  exports({ to: app.makePath('app/models/ui_attribute.ts') })
 }}}
 
 import { BaseModel, column } from '@adonisjs/lucid/orm';

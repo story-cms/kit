@@ -96,6 +96,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'controllers/drafts_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/pages_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/admin_controller.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'controllers/ui_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'mail/forget_password.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/users.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/auth.stub', {});
@@ -105,6 +106,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'routes/chapters.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/pages.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/api.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'routes/ui.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'inertia/app.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'resources/layout.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'resources/views/preview.stub', {});
