@@ -1,0 +1,24 @@
+{{{
+  exports({ to: app.configPath('providers.ts') })
+}}}
+import env from '#start/env';
+import { Providers } from '@story-cms/kit';
+
+export default {
+  s3: {
+    accessKeyId: env.get('S3_ACCESS_KEY_ID', ''),
+    accessKey: env.get('S3_SECRET_ACCESS_KEY', ''),
+    bucket: env.get('S3_BUCKET', ''),
+    region: env.get('S3_REGION', ''),
+    endpoint: env.get('S3_ENDPOINT', ''),
+  },
+  cloudinary: {
+    apiKey: env.get('CLOUDINARY_API_KEY', ''),
+    secret: env.get('CLOUDINARY_SECRET', ''),
+    cloudName: env.get('CLOUDINARY_CLOUD_NAME', ''),
+    defaultPreset: env.get('CLOUDINARY_PRESET', ''),
+  },
+  scripture: {
+    bibleApiKey: env.get('BIBLE_API_KEY', ''),
+  },
+} as Providers;

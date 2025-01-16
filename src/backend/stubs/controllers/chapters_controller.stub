@@ -1,0 +1,69 @@
+{{{
+  exports({ to: app.makePath('app/controllers/chapters_controller.ts') })
+}}}
+
+import type { HttpContext } from '@adonisjs/core/http';
+import { marked } from 'marked';
+import edge from 'edge.js';
+import Chapter from '#models/chapter';
+import { PreviewProps } from '@story-cms/kit';
+
+export default class ChaptersController {
+  public async preview(ctx: HttpContext) {
+    if (!ctx.version || !ctx.story) return ctx.response.notFound();
+
+    const version = ctx.version!;
+    const story = ctx.story!;
+
+    const specifier = {
+      apiVersion: version.apiVersion,
+      locale: version.locale,
+      storyId: story.id,
+      number: Number(ctx.params.number),
+    };
+
+    const chapter = await Chapter.query().where(specifier).firstOrFail();
+    const bundleView = await edge.render('preview', {
+      bundle: chapter.bundle,
+      marked: marked,
+    });
+
+    const props: PreviewProps = {
+      chapter: chapter.meta,
+      bundleView: bundleView,
+      storyName: story.name,
+      chapterLimit: story.chapterLimit,
+      title: chapter.index.title,
+      bundle: chapter.bundle,
+    };
+
+    return ctx.inertia.render('ChapterPreview', { ...props });
+  }
+
+  public async get(ctx: HttpContext) {
+    if (!ctx.version || !ctx.story) return ctx.response.notFound();
+
+    const specifier = {
+      ...ctx.version,
+      number: Number(ctx.params.number),
+    };
+
+    const chapter = await Chapter.query().where(specifier).firstOrFail();
+
+    return { number: chapter.number, bundle: chapter.bundle };
+  }
+
+  public async range(ctx: HttpContext) {
+    if (!ctx.version || !ctx.story) return ctx.response.notFound();
+
+    const page = ctx.request.qs()['page'] || 1;
+
+    const chapters = await Chapter.query()
+      .whereBetween('number', [ctx.params.from, ctx.params.to])
+      .where(ctx.version)
+      .orderBy('number', 'asc')
+      .paginate(page, 20);
+
+    return chapters;
+  }
+}

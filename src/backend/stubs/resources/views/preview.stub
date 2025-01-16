@@ -1,0 +1,7 @@
+{{{
+  exports({ to: app.makePath('resources/views/preview.edge') })
+}}}
+<section>
+  <div class="mb-1 text-sm font-medium leading-5 text-gray-400">Title</div>
+  <div class="text-2xl">\{\{ bundle.title \}\}</div>
+</section>

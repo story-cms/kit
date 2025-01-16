@@ -24,13 +24,15 @@
       "types": "./dist/backend/index.d.ts"
     },
     "./version_context_middleware": "./dist/backend/middleware/version_context.js",
+    "./add_meta_noindex_middleware": "./dist/backend/middleware/add_meta_noindex.js",
     "./admin_middleware": "./dist/backend/middleware/admin.js",
     "./story_provider": "./dist/backend/providers/story_provider.js",
     "./ui": {
       "import": "./dist/frontend/main.js",
       "types": "./dist/frontend/main.d.ts"
     },
-    "./styles.css": "./dist/frontend/styles.css"
+    "./styles.css": "./dist/frontend/styles.css",
+    "./index.css": "./dist/frontend/index.css"
   },
   "files": [
     "dist",
@@ -46,6 +48,7 @@
     "@types/luxon": "^3.3.0",
     "easymde": "^2.18.0",
     "luxon": "^3.5.0",
+    "marked": "^15.0.3",
     "pinia": "^2.1.7",
     "vue": "^3.4.21"
   },
@@ -79,6 +82,7 @@
       "./src/backend/index.ts",
       "./src/backend/middleware/admin.ts",
       "./src/backend/middleware/version_context.ts",
+      "./src/backend/middleware/add_meta_noindex.ts",
       "./src/backend/providers/story_provider.ts"
     ],
     "outDir": "./dist/backend",

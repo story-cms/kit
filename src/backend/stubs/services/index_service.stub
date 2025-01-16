@@ -104,8 +104,6 @@ export default class IndexService {
     }));
 
     index!.publicList.forEach((item) => {
-      console.log('item', item);
-
       const part = grouped.find((group) => group.id === item.part);
       if (part)
         part.index.push({

@@ -1,0 +1,15 @@
+{{{
+  exports({ to: app.makePath('start/routes/pages.ts') })
+}}}
+import router from '@adonisjs/core/services/router';
+
+const PagesController = () => import('#controllers/pages_controller');
+
+export default () => {
+  router.get('/page', [PagesController, 'index']);
+  router.get('/page/:id/edit', [PagesController, 'edit']);
+  router.get('/page/create', [PagesController, 'create']);
+  router.delete('/page/:id', [PagesController, 'destroy']);
+  router.post('/page/sort', [PagesController, 'sort']);
+  router.post('/page/:id', [PagesController, 'update']);
+};

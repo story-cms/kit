@@ -39,7 +39,7 @@ import type { FieldSpec } from '../../types';
 import { useModelStore, useSharedStore } from '../store';
 import { commonProps } from '../shared/helpers';
 import type { Editor, EditorChange } from 'codemirror';
-import { customToolbarButtons, defaultButtons } from './Markdown/toolbar-buttons';
+import { customToolbarButtons, defaultButtons } from './markdown/toolbar-buttons';
 // import EasyMDE from 'easymde';
 
 const props = defineProps({
