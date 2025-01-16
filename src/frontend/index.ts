@@ -32,8 +32,8 @@ import TranslationIndex from './fields/translation-index.vue';
 import PagesIndex from './fields/pages/pages-index.vue';
 import PagesEdit from './fields/pages/pages-edit.vue';
 import ChapterPreview from './chapters/chapter-preview.vue';
-import UiIndex from './fields/interface/ui-index.vue';
-import UiPage from './fields/interface/ui-page.vue';
+import UiIndex from './interface/ui-index.vue';
+import UiPage from './interface/ui-page.vue';
 
 export { createInertiaApp, usePage, router } from '@inertiajs/vue3';
 

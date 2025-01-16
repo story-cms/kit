@@ -29,7 +29,7 @@ const inertiaConfig = defineConfig({
     user: (ctx) => ctx.auth.use('web')?.user,
     language: (ctx) => getLanguage(ctx.session.get('locale')),
     languages: () => storyConfig.languages,
-    errors: (ctx) => ctx.session?.flashMessages.get('errors'),
+    errors: (ctx) => ctx.session?.flashMessages.get('errors') ?? {},
   },
 
   /**
