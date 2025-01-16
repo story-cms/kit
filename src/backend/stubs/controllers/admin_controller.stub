@@ -1,0 +1,51 @@
+{{{
+  exports({ to: app.makePath('app/controllers/admin_controller.ts') })
+}}}
+import type { HttpContext } from '@adonisjs/core/http';
+import env from '#start/env';
+import AdminService from '#services/admin_service';
+
+export default class AdminController {
+  public async reIndex(ctx: HttpContext) {
+    if (ctx.request.qs().token !== env.get('APP_KEY')) {
+      return ctx.response.unauthorized();
+    }
+
+    const service = new AdminService();
+    try {
+      await service.rebuildIndexes();
+    } catch (error) {
+      return {
+        result: 'error',
+        feedback: error.message,
+      };
+    }
+
+    return {
+      result: 'ok',
+      feedback: service.feedback,
+    };
+  }
+
+  public async fixSequence(ctx: HttpContext) {
+    if (ctx.request.qs().token !== env.get('APP_KEY')) {
+      return ctx.response.unauthorized();
+    }
+
+    const service = new AdminService();
+    try {
+      await service.syncAutoIncrement();
+    } catch (error) {
+      return {
+        result: 'error',
+        feedback: error.message,
+      };
+    }
+
+    return {
+      result: 'ok',
+      feedback: service.feedback,
+    };
+  }
+}
+

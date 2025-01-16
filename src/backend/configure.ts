@@ -95,6 +95,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'controllers/chapters_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/drafts_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/pages_controller.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'controllers/admin_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'mail/forget_password.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/users.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/auth.stub', {});
@@ -117,11 +118,13 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'services/chapter_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/draft_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/page_service.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'services/admin_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/auth.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/bundle.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/page.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/make_user.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'commands/fix_database.stub', {});
   await addMigrations(command, codemods);
 
   /**
