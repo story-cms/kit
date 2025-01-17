@@ -3,12 +3,32 @@
 }}}
 import router from '@adonisjs/core/services/router';
 const ChaptersController = () => import('#controllers/chapters_controller');
+const PreviewController = () => import('#controllers/preview_controller');
+const PagesController = () => import('#controllers/pages_controller');
+const IndicesController = () => import('#controllers/indices_controller');
 
 export default () => {
+  router
+    .get('/preview/:number', [PreviewController, 'get'])
+    .prefix('/api/v1')
+    .where('number', {
+      match: /^[0-9]+$/,
+    });
   router
     .get('/chapter/:number', [ChaptersController, 'get'])
     .prefix('/api/v1')
     .where('number', {
       match: /^[0-9]+$/,
     });
+  router
+    .get('/chapter/from/:from/to/:to', [ChaptersController, 'range'])
+    .prefix('/api/v1')
+    .where('from', {
+      match: /^[0-9]+$/,
+    })
+    .where('to', {
+      match: /^[0-9]+$/,
+    });
+  router.get('/index', [IndicesController, 'index']).prefix('/api/v1');
+  router.get('/page', [PagesController, 'get']).prefix('/api/v1');
 };

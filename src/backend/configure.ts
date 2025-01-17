@@ -97,6 +97,8 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'controllers/pages_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/admin_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/ui_controller.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'controllers/preview_controller.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'controllers/indices_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'mail/forget_password.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/users.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/auth.stub', {});

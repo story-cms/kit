@@ -1,0 +1,36 @@
+{{{
+  exports({ to: app.makePath('app/controllers/preview_controller.ts') })
+}}}
+import type { HttpContext } from '@adonisjs/core/http';
+import Chapter from '#models/chapter';
+import Draft from '#models/draft';
+import storyConfig from '#config/story';
+
+export default class PreviewController {
+  public async get({ request, response, params }: HttpContext) {
+    const storylabel = request.qs()['story'] || storyConfig.stories[0].name;
+    const story = storyConfig.stories.find(
+      (s) => s.name.toLowerCase() === storylabel.toLowerCase(),
+    );
+
+    if (!story) return response.status(404);
+
+    const locale = request.qs()['locale'] || 'en';
+
+    const specifier = {
+      storyId: story.id,
+      apiVersion: storyConfig.schemaVersion,
+      locale: locale,
+      number: Number(params.number),
+    };
+
+    const draft = await Draft.query().where(specifier).first();
+
+    if (draft !== null) {
+      return { number: draft.number, bundle: draft.bundle };
+    }
+
+    const chapter = await Chapter.query().where(specifier).firstOrFail();
+    return { number: chapter.number, bundle: chapter.bundle };
+  }
+}
