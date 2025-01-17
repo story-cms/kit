@@ -7,21 +7,14 @@ import Draft from '#models/draft';
 import storyConfig from '#config/story';
 
 export default class PreviewController {
-  public async get({ request, response, params }: HttpContext) {
-    const storylabel = request.qs()['story'] || storyConfig.stories[0].name;
-    const story = storyConfig.stories.find(
-      (s) => s.name.toLowerCase() === storylabel.toLowerCase(),
-    );
-
-    if (!story) return response.status(404);
-
-    const locale = request.qs()['locale'] || 'en';
+  public async get(ctx: HttpContext) {
+    if (!ctx.version || !ctx.story) return ctx.response.notFound();
 
     const specifier = {
-      storyId: story.id,
+      storyId: ctx.story.id,
       apiVersion: storyConfig.schemaVersion,
-      locale: locale,
-      number: Number(params.number),
+      locale: ctx.version.locale,
+      number: Number(ctx.params.number),
     };
 
     const draft = await Draft.query().where(specifier).first();

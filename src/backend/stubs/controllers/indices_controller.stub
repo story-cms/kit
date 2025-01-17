@@ -2,31 +2,16 @@
   exports({ to: app.makePath('app/controllers/indices_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
-import storyConfig from '#config/story';
 import IndexService from '#services/index_service';
 
 export default class IndicesController {
-  // API endpoint without context
-  public async index({ request, response }: HttpContext) {
-    const storylabel = request.qs()['story'] || storyConfig.stories[0].name;
-    const story = storyConfig.stories.find((s) => s.name === storylabel);
+  public async index(ctx: HttpContext) {
+    if (!ctx.version || !ctx.story) return ctx.response.notFound();
 
-    if (!story) return response.status(404);
-
-    const version = {
-      storyId: story.id,
-      apiVersion: storyConfig.schemaVersion,
-      locale: request.qs()['locale'] || 'en',
-    };
-    const service = new IndexService(story);
-    const grouped = await service.groupedIndex(version);
+    const service = new IndexService(ctx.story);
+    const idx = await service.groupedIndex(ctx.version);
     return {
-      stories: [
-        {
-          title: story.name,
-          parts: grouped,
-        },
-      ],
+      index: idx,
     };
   }
 }
