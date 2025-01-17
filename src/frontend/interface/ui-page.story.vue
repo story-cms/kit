@@ -3,7 +3,7 @@
     <Variant title="Index">
       <UiPage
         :items="items"
-        :errors="sharedProps.errors"
+        :errors="{ onBoardTitle: 'This is an error' }"
         :language="sharedProps.language"
         :languages="sharedProps.languages"
         :meta="sharedProps.meta"
@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import UiPage from './ui-page.vue';
-import { sharedProps } from '../../test/mocks';
+import { sharedProps } from '../test/mocks';
 
 const items = [
   {

@@ -44,13 +44,13 @@
 
 <script setup lang="ts">
 import { reactive, ref, computed } from 'vue';
-import { useSharedStore } from '../../store';
-import AppLayout from '../../shared/app-layout.vue';
-import StickyHeader from '../../shared/sticky-header.vue';
+import { useSharedStore } from '../store';
+import AppLayout from '../shared/app-layout.vue';
+import StickyHeader from '../shared/sticky-header.vue';
 import { router } from '@inertiajs/vue3';
 
-import { ResponseStatus } from '../../../types';
-import type { UiItem, UiPageProps, SharedPageProps } from '../../../types';
+import { ResponseStatus } from '../../types';
+import type { UiItem, UiPageProps, SharedPageProps } from '../../types';
 import UiCard from '../interface/components/ui-card.vue';
 
 type ModelType = { [key: string]: string | undefined };

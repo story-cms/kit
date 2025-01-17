@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import UiIndex from './ui-index.vue';
-import { sharedProps } from '../../test/mocks';
+import { sharedProps } from '../test/mocks';
 
 const progress = [
   {
