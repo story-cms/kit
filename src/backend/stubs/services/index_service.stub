@@ -1,7 +1,6 @@
 {{{ 
   exports({ to: app.makePath('app/services/index_service.ts') }) 
 }}}
-
 import Chapter from '#models/chapter';
 import Draft from '#models/draft';
 import Index from '#models/index';
@@ -89,10 +88,11 @@ export default class IndexService {
 
   public async groupedIndex(version: Version): Promise<any[]> {
     const index = await Index.query().where(version).firstOrFail();
+
     if (!index) return [];
 
-    if (!Array.isArray(this.story.parts)) {
-      return index!.publicList;
+    if (!this.storyHasParts) {
+      return index.publicList;
     }
 
     const grouped = (this.story.parts as Part[]).map((part: Part) => ({
@@ -109,12 +109,15 @@ export default class IndexService {
         part.index.push({
           id: item.number,
           title: item.title,
-          reference: item.reference,
           imageUrl: item.imageUrl,
         });
     });
 
     return grouped;
+  }
+
+  public get storyHasParts(): boolean {
+    return !!this.story.parts;
   }
 
   public async getCurrentApiVersion(): Promise<number> {

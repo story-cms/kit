@@ -7,28 +7,27 @@ const PreviewController = () => import('#controllers/preview_controller');
 const PagesController = () => import('#controllers/pages_controller');
 const IndicesController = () => import('#controllers/indices_controller');
 
+const number = /^[0-9]+$/;
+
 export default () => {
   router
-    .get('/preview/:number', [PreviewController, 'get'])
-    .prefix('/api/v1')
-    .where('number', {
-      match: /^[0-9]+$/,
-    });
-  router
-    .get('/chapter/:number', [ChaptersController, 'get'])
-    .prefix('/api/v1')
-    .where('number', {
-      match: /^[0-9]+$/,
-    });
-  router
-    .get('/chapter/from/:from/to/:to', [ChaptersController, 'range'])
-    .prefix('/api/v1')
-    .where('from', {
-      match: /^[0-9]+$/,
+    .group(() => {
+      router
+        .get('/preview/:number', [PreviewController, 'get'])
+        .where('number', { match: number });
+
+      router
+        .get('/chapter/:number', [ChaptersController, 'get'])
+        .where('number', { match: number });
+
+      router
+        .get('/chapter/from/:from/to/:to', [ChaptersController, 'range'])
+        .where('from', { match: number })
+        .where('to', { match: number });
+
+      router.get('/index', [IndicesController, 'index']);
+
+      router.get('/page', [PagesController, 'get']);
     })
-    .where('to', {
-      match: /^[0-9]+$/,
-    });
-  router.get('/index', [IndicesController, 'index']).prefix('/api/v1');
-  router.get('/page', [PagesController, 'get']).prefix('/api/v1');
+    .prefix('/api/v1');
 };

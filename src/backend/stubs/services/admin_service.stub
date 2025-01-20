@@ -1,7 +1,6 @@
 {{{ 
   exports({ to: app.makePath('app/services/admin_service.ts') }) 
 }}}
-
 import storyConfig from '#config/story';
 import IndexService from '#services/index_service';
 import db from '@adonisjs/lucid/services/db';
