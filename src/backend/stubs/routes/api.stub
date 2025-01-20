@@ -2,6 +2,7 @@
   exports({ to: app.makePath('start/routes/api.ts') })
 }}}
 import router from '@adonisjs/core/services/router';
+import { middleware } from '#start/kernel';
 const ChaptersController = () => import('#controllers/chapters_controller');
 const PreviewController = () => import('#controllers/preview_controller');
 const PagesController = () => import('#controllers/pages_controller');
@@ -29,5 +30,6 @@ export default () => {
 
       router.get('/page', [PagesController, 'get']);
     })
+    .use(middleware.noIndex())
     .prefix('/api/v1');
 };
