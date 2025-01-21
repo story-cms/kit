@@ -13,6 +13,7 @@
     "build": "npm run ui:build && npm run backend:build",
     "prebuild": "npm run clean",
     "postbuild": "npm run copy:templates",
+    "prepare": "npm run build",
     "story:build": "histoire build",
     "story:preview": "histoire preview",
     "test:e2e": "npx playwright test tests/e2e/*.ts"

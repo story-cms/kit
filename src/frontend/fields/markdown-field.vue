@@ -40,7 +40,6 @@ import { useModelStore, useSharedStore } from '../store';
 import { commonProps } from '../shared/helpers';
 import type { Editor, EditorChange } from 'codemirror';
 import { customToolbarButtons, defaultButtons } from './markdown/toolbar-buttons';
-// import EasyMDE from 'easymde';
 
 const props = defineProps({
   ...commonProps,
@@ -128,6 +127,7 @@ onMounted(async () => {
     spellChecker: false,
     nativeSpellcheck: false,
     status: false,
+    // @ts-ignore
     toolbar: toolbar.value,
   });
   mde?.codemirror.setOption('readOnly', props.isReadOnly);
