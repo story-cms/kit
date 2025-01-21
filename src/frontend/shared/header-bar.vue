@@ -109,15 +109,10 @@ const shared = useSharedStore();
 const navbar = ref<HTMLElement | null>(null);
 defineExpose({ navbar });
 
-interface Form {
-  language: string | null;
-  story: string | null;
-}
-
 const form = useForm({
   language: shared.language.language,
   story: null,
-} as Form);
+});
 
 const onLanguage = async (lang: string) => {
   if (lang === form.language) return;
