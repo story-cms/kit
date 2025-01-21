@@ -110,6 +110,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'routes/api.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/ui.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'inertia/app.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'inertia/css.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'resources/layout.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'resources/views/preview.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'models/user.stub', {});
@@ -133,6 +134,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'commands/make_user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/fix_database.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/rest.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'tailwind.stub', {});
   await addMigrations(command, codemods);
 
   /**

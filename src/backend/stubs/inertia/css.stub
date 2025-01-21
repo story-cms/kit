@@ -1,0 +1,11 @@
+{{{
+  exports({ to: app.makePath('inertia/css/app.css') })
+}}}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-color: #002666;
+  --secondary-color: #f2a715;
+}

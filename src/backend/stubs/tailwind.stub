@@ -1,0 +1,11 @@
+{{{
+  exports({ to: app.makePath('tailwind.config.js') })
+}}}
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./inertia/**/*.{vue,js,ts}'],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
