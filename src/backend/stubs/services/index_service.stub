@@ -51,25 +51,6 @@ export default class IndexService {
     await index.save();
   }
 
-  public async updateTags(index: Index) {
-    const scope = {
-      storyId: index.storyId,
-      locale: index.locale,
-      apiVersion: index.apiVersion,
-    };
-
-    index.draftsList =
-      (await Draft.query().where(scope))?.map((draft) => draft.number) || [];
-    index.publishedList =
-      (await Chapter.query().where(scope))?.map((row) => row.number) || [];
-    index.issuesList =
-      (await Draft.query().where(scope).andWhereNotNull('feedback'))?.map(
-        (row) => row.number,
-      ) || [];
-
-    await index.save();
-  }
-
   public async getItems(version: Version): Promise<Array<IndexReadyItem>> {
     const index = await Index.query().where(version).first();
     if (!index) return [];

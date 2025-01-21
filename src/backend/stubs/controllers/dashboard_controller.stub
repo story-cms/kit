@@ -1,7 +1,6 @@
 {{{
   exports({ to: app.makePath('app/controllers/dashboard_controller.ts') })
 }}}
-
 import type { HttpContext } from '@adonisjs/core/http';
 import vine from '@vinejs/vine';
 import IndexService from '#services/index_service';
@@ -44,7 +43,7 @@ export default class DashboardController {
     // set the story if it has been provided
     if (payload.story) {
       const story =
-        storyConfig.stories.find((story) => story.name === payload.story) ||
+        storyConfig.stories.find((item) => item.name === payload.story) ||
         storyConfig.stories[0];
       ctx.session.put('storyId', story.id);
     }
