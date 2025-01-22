@@ -11,9 +11,6 @@ export default class extends BaseSchema {
     // users
     // ---------------------------------------
 
-    this.schema.raw('DROP TABLE IF EXISTS "users"')
-    this.schema.raw('DROP TYPE IF EXISTS "user_role"')
-
     this.schema.createTable('users', (table) => {
       table.increments('id')
 
