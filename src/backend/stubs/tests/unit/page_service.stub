@@ -1,0 +1,322 @@
+{{{ 
+  exports({ to: app.makePath('tests/unit/page_service.spec.ts') }) 
+}}}
+import { test } from '@japa/runner';
+import { PageFactory } from '#database/factories/page_factory';
+import PageService from '#services/page_service';
+import storyConfig from '#config/story';
+import testUtils from '@adonisjs/core/services/test_utils';
+
+test.group('Page service', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction());
+  test("unpublished items don't make dividers", async ({ assert }) => {
+    // arrange
+    await PageFactory.merge({
+      id: 4,
+      order: 1,
+      bundle: JSON.stringify({ title: 'Title for Page 4', group: 1 }),
+      isPublished: false,
+    }).create();
+
+    const p3 = await PageFactory.merge({
+      id: 3,
+      order: 2,
+      bundle: JSON.stringify({ title: 'Title for Page 3', group: 2 }),
+      isPublished: false,
+    }).create();
+
+    // act
+    const service = new PageService({
+      apiVersion: p3.apiVersion,
+      locale: p3.locale,
+    });
+    const items = await service.getPageItems();
+
+    // assert
+    assert.equal(items.length, 2);
+  });
+
+  test('can group page items with dividers', async ({ assert }) => {
+    // arrange
+    // const p4 = await PageFactory.merge({
+    await PageFactory.merge({
+      id: 4,
+      order: 1,
+      bundle: JSON.stringify({ title: 'Title for Page 4', group: 1 }),
+    }).create();
+
+    // const p3 = await PageFactory.merge({
+    await PageFactory.merge({
+      id: 3,
+      order: 2,
+      bundle: JSON.stringify({ title: 'Title for Page 3', group: 2 }),
+    }).create();
+
+    const p2 = await PageFactory.merge({
+      id: 2,
+      order: 3,
+      bundle: JSON.stringify({ title: 'Title for Page 2', group: 2 }),
+    }).create();
+
+    // act
+    const service = new PageService({
+      apiVersion: p2.apiVersion,
+      locale: p2.locale,
+    });
+    const items = await service.getPageItems();
+
+    // assert
+    assert.equal(items.length, 4);
+
+    // items are ordered by order
+    assert.equal(items[0].id, 4);
+    assert.isTrue(items[1].id > 4); // divider has biggest id
+    assert.equal(items[2].id, 3);
+    assert.equal(items[3].id, 2);
+
+    // divider is inserted between groups
+    assert.equal(items[1].isDivider, true);
+  });
+
+  test('can sort pages', async ({ assert }) => {
+    // arrange
+    const p2 = await PageFactory.merge({
+      id: 2,
+      order: 0,
+    }).create();
+
+    const p3 = await PageFactory.merge({
+      id: 3,
+      order: 0,
+    }).create();
+
+    const p4 = await PageFactory.merge({
+      id: 4,
+      order: 0,
+      bundle: JSON.stringify({ title: 'Title for Page 4', group: 8 }),
+    }).create();
+
+    const service = new PageService({
+      apiVersion: p2.apiVersion,
+      locale: p2.locale,
+    });
+
+    // act
+    const sorted = await service.pagesFromItems(payloadItems);
+
+    // assert
+    assert.equal(p2.id, 2);
+    assert.equal(p3.id, 3);
+    assert.equal(p4.id, 4);
+
+    assert.equal(sorted.length, 3);
+
+    assert.equal(sorted[0].id, 4);
+    assert.equal(sorted[0].order, 0);
+    assert.equal(sorted[0].model.group, 1);
+    // we don't update other bundle attributes, only the group
+    assert.equal(sorted[0].model.title, p4.model.title);
+
+    assert.equal(sorted[1].id, 2);
+    assert.equal(sorted[1].order, 1);
+    assert.equal(sorted[1].model.group, 2);
+
+    assert.equal(sorted[2].id, 3);
+    assert.equal(sorted[2].order, 2);
+    assert.equal(sorted[2].model.group, 2);
+  });
+  test('can get pages for mobile client without dividers', async ({ assert }) => {
+    // arrange
+    const p2 = await PageFactory.merge({
+      id: 2,
+      order: 0,
+    }).create();
+
+    const p3 = await PageFactory.merge({
+      id: 3,
+      order: 0,
+    }).create();
+
+    const p4 = await PageFactory.merge({
+      id: 4,
+      order: 0,
+      bundle: JSON.stringify({ title: 'Title for Page 4', group: 8 }),
+    }).create();
+
+    const service = new PageService({
+      apiVersion: p2.apiVersion,
+      locale: p2.locale,
+    });
+
+    // act
+    const clientPages = await service.getPageItemsForClient();
+    console.log(clientPages[0]['title']);
+    // assert
+    assert.equal(clientPages.length, 3);
+    assert.equal(clientPages[0]['title'], p2.model.title);
+    assert.equal(clientPages[1]['title'], p3.model.title);
+    assert.equal(clientPages[2]['title'], p4.model.title);
+  });
+
+  test('can return rightly ordered pages for mobile client', async ({ assert }) => {
+    // arrange
+    const p1 = await PageFactory.merge({
+      id: 1,
+      order: 4,
+    }).create();
+    const p2 = await PageFactory.merge({
+      id: 2,
+      order: 1,
+    }).create();
+
+    const p3 = await PageFactory.merge({
+      id: 3,
+      order: 3,
+    }).create();
+
+    const p4 = await PageFactory.merge({
+      id: 4,
+      order: 2,
+      bundle: JSON.stringify({ title: 'Title for Page 4', group: 8 }),
+    }).create();
+
+    const service = new PageService({
+      apiVersion: p2.apiVersion,
+      locale: p2.locale,
+    });
+
+    // act
+    const clientPages = await service.getPageItemsForClient();
+    // assert
+    assert.equal(clientPages.length, 4);
+    assert.equal(clientPages[0]['title'], p2.model.title);
+    assert.equal(clientPages[1]['title'], p4.model.title);
+    assert.equal(clientPages[2]['title'], p3.model.title);
+    assert.equal(clientPages[3]['title'], p1.model.title);
+  });
+  test('only returns published pages for mobile client', async ({ assert }) => {
+    // arrange
+    await PageFactory.merge({
+      isPublished: false,
+      id: 1,
+      order: 4,
+    }).create();
+    const p2 = await PageFactory.merge({
+      isPublished: false,
+      id: 2,
+      order: 1,
+    }).create();
+
+    await PageFactory.merge({
+      isPublished: false,
+      id: 3,
+      order: 3,
+    }).create();
+
+    const p4 = await PageFactory.merge({
+      id: 4,
+      order: 2,
+      bundle: JSON.stringify({ title: 'Title for Page 4', group: 8 }),
+    }).create();
+
+    await PageFactory.merge({
+      isPublished: false,
+      id: 5,
+      order: 2,
+      bundle: JSON.stringify({ title: 'Title for Page 4', group: 8 }),
+    }).create();
+
+    const service = new PageService({
+      apiVersion: p2.apiVersion,
+      locale: p2.locale,
+    });
+
+    // act
+    const clientPages = await service.getPageItemsForClient();
+    // assert
+    assert.equal(clientPages.length, 1);
+    assert.equal(clientPages[0]['title'], p4.model.title);
+  });
+
+  test('append tracking to external page urls', async ({ assert }) => {
+    // arrange
+    const p1 = await PageFactory.merge({
+      id: 1,
+      order: 1,
+      bundle: JSON.stringify({
+        title: 'Title for link 1',
+        group: 1,
+        body: 'https://www.example.com',
+      }),
+      isPublished: true,
+    }).create();
+
+    await PageFactory.merge({
+      id: 3,
+      order: 3,
+      bundle: JSON.stringify({
+        title: 'Link with parameters',
+        group: 1,
+        body: 'https://www.example.com?param=1&param2=2',
+      }),
+      isPublished: true,
+    }).create();
+
+    await PageFactory.merge({
+      id: 2,
+      order: 2,
+      bundle: JSON.stringify({
+        title: 'Title for page 2',
+        group: 1,
+        body: '## Not a link',
+      }),
+      isPublished: true,
+    }).create();
+
+    const service = new PageService({
+      apiVersion: p1.apiVersion,
+      locale: p1.locale,
+    });
+
+    // act
+    const clientPages = await service.getPageItemsForClient();
+
+    // assert
+    const tracking = storyConfig['pages']['tracking'];
+    assert.equal(clientPages.length, 3);
+    // non links not affected
+    const page2 = clientPages[1];
+    assert.equal(page2['body'], '## Not a link');
+
+    // links has tracking appended
+    const page1 = clientPages[0];
+    assert.equal(page1['body'], {{ '`https://www.example.com?${tracking}`' }});
+
+    // keep existing parameters
+    const page3 = clientPages[2];
+    assert.equal(page3['body'], 'https://www.example.com?param=1&param2=2&' + tracking);
+  });
+});
+
+const payloadItems = [
+  {
+    title: 'FAQ',
+    description: 'All your questions answered',
+    id: 4,
+    isPublished: false,
+  },
+  { id: 5, isDivider: true },
+  {
+    body: 'A better body',
+    title: 'About',
+    description: 'All about us',
+    id: 2,
+    isPublished: false,
+  },
+  {
+    title: 'Info',
+    description: "All the world's infos",
+    id: 3,
+    isPublished: false,
+  },
+];

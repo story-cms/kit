@@ -51,13 +51,15 @@ export default class PageService {
     const collected: Page[] = [];
     let group = 1;
     let order = 0; // can't be i
-    for (let i = 0; i < items.length; i++) {
-      if (items[i].isDivider) {
+    
+    for (const item of items) {
+      if (item.isDivider) {
         group++;
         continue;
       }
 
-      const page = pages.find((p) => p.id === items[i].id);
+      const page = pages.find((p) => p.id === item.id);
+
       if (!page) {
         continue;
       }

@@ -99,6 +99,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'controllers/ui_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/preview_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/indices_controller.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'factories/page_factory.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'mail/forget_password.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/users.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/auth.stub', {});
@@ -134,6 +135,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'commands/make_user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/fix_database.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/rest.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'tests/unit/page_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tailwind.stub', {});
   await addMigrations(command, codemods);
 
