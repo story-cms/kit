@@ -1,0 +1,314 @@
+{{{ 
+  exports({ to: app.makePath('tests/unit/model.spec.ts') }) 
+}}}
+import { test } from '@japa/runner';
+import testUtils from '@adonisjs/core/services/test_utils';
+
+import User from '#models/user';
+import Index from '#models/index';
+import Draft from '#models/draft';
+import { UserFactory } from '#database/factories/user_factory';
+import { ChapterFactory } from '#database/factories/chapter_factory';
+import Chapter from '#models/chapter';
+import { IndexFactory } from '#database/factories/index_factory';
+import { DraftFactory } from '#database/factories/draft_factory';
+import storyConfig from '#config/story';
+import { PageFactory } from '#database/factories/page_factory';
+
+test.group('User', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction());
+
+  test('users are persisted', async ({ assert }) => {
+    const user = await UserFactory.create();
+    assert.isTrue(user.$isPersisted);
+
+    const users = await UserFactory.createMany(3);
+    assert.lengthOf(users, 3);
+  });
+
+  test('user password is hashed during save', async ({ assert }) => {
+    const user = new User();
+    user.email = 'jake@example.com';
+    user.name = 'Jake Polyglot';
+    user.password = 'super secret';
+    await user.save();
+
+    assert.notEqual(user.password, 'super secret');
+  });
+
+  test('user has default language', async ({ assert }) => {
+    const user = await UserFactory.merge({
+      language: null,
+    }).create();
+
+    assert.isNull(user.language);
+    assert.equal(user.defaultLanguage(), 'en');
+    assert.equal(user.defaultLanguage('es'), 'es');
+
+    user.language = 'th';
+    assert.equal(user.defaultLanguage(), 'th');
+    assert.equal(user.defaultLanguage('en'), 'th');
+
+    user.language = '*';
+    assert.equal(user.defaultLanguage(), 'en');
+    assert.equal(user.defaultLanguage('th'), 'th');
+  });
+
+  test('user identified as manager', async ({ assert }) => {
+    const user = await UserFactory.merge({
+      language: null,
+    }).create();
+
+    assert.isNull(user.language);
+    assert.equal(user.isManager, false);
+
+    user.language = 'th';
+    assert.equal(user.isManager, false);
+
+    user.language = '*';
+    assert.equal(user.isManager, true);
+  });
+
+  test('user identified as admin', async ({ assert }) => {
+    const user = await UserFactory.merge({
+      role: 'admin',
+    }).create();
+
+    assert.equal(user.isAdmin, true);
+
+    user.role = 'editor';
+    assert.equal(user.isAdmin, false);
+  });
+
+  test('user has initials', async ({ assert }) => {
+    const user = await UserFactory.merge({
+      name: '',
+    }).create();
+
+    assert.equal(user.initials, '');
+
+    user.name = 'Robert';
+    assert.equal(user.initials, 'R');
+
+    user.name = "Robert M'Cheyne";
+    assert.equal(user.initials, 'RM');
+
+    user.name = "Robert Murray M'Cheyne";
+    assert.equal(user.initials, 'RM');
+
+    user.name = "  Robert   M'Cheyne     ";
+    assert.equal(user.initials, 'RM');
+  });
+});
+
+test.group('Chapter', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction());
+
+  test('chapters are persisted', async ({ assert }) => {
+    const user = await UserFactory.create();
+
+    const chapter = await ChapterFactory.merge({
+      updatedBy: user.id,
+      bundle: '{"title": "Adam and Eve"}',
+    }).create();
+    assert.isTrue(chapter.$isPersisted);
+
+    const fresh = await Chapter.findOrFail(chapter.id);
+
+    assert.equal(fresh.parsedBundle['title'], 'Adam and Eve');
+  });
+});
+
+test.group('Index', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction());
+
+  test('index has list and publicList', async ({ assert }) => {
+    const index = new Index().fill({
+      storyId: 1,
+      publishedList: [2, 3],
+      items: {
+        root: [
+          {
+            title: 'Adam and Eve',
+            number: 1,
+            imageUrl: 'pic1',
+            reference: 'Genesis 1',
+            part: 1,
+          },
+          { title: 'Noah', number: 2, imageUrl: 'pic2', reference: 'Genesis 6', part: 1 },
+          {
+            title: 'David',
+            number: 3,
+            imageUrl: 'pic2',
+            reference: '1 Samuel 13',
+            part: 1,
+          },
+        ],
+      },
+    });
+
+    assert.equal(index.list.length, 3);
+    assert.equal(index.publicList.length, 2);
+    assert.equal(index.publicList[0].title, 'Noah');
+    assert.equal(index.publicList[0].part, 1);
+  });
+
+  test('indecis are persisted', async ({ assert }) => {
+    const index = await IndexFactory.merge({
+      items: {
+        root: [
+          {
+            title: 'Adam and Eve',
+            number: 1,
+            imageUrl: 'pic1',
+            reference: 'Genesis 1',
+            part: 1,
+          },
+          {
+            title: 'David',
+            number: 2,
+            imageUrl: 'pic2',
+            reference: '1 Samuel 13',
+            part: 1,
+          },
+        ],
+      },
+    }).create();
+    assert.isTrue(index.$isPersisted);
+
+    const fresh = await Index.findOrFail(index.id);
+
+    assert.equal(fresh.list[1].title, 'David');
+    assert.equal(fresh.list[1].reference, '1 Samuel 13');
+  });
+});
+
+test.group('Draft', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction());
+
+  test('it can give an index item', async ({ assert }) => {
+    const draft = await Draft.create({
+      storyId: 1,
+      locale: 'en',
+      apiVersion: 1,
+      number: 2,
+      bundle:
+        '{"title": "Adam and Eve", "part": 1, "sections": [], "imageUrl":"https://test.com", "passage": {"reference": "Genesis 1", "text": "In the beginning..."}}',
+    });
+    // read the draft to parse the bundle to an object
+    await draft.refresh();
+    assert.equal(draft.index.number, 2);
+    assert.equal(draft.index.imageUrl, 'https://test.com');
+    assert.equal(draft.index.title, 'Adam and Eve');
+  });
+
+  test('it can give a scope', async ({ assert }) => {
+    const draft = await Draft.create({
+      storyId: 1,
+      locale: 'en',
+      apiVersion: 1,
+      number: 2,
+      bundle: '{"title": "Adam and Eve", "sections": [], "imageUrl":"https://test.com"}',
+    });
+
+    const expected = {
+      storyId: 1,
+      locale: 'en',
+      apiVersion: 1,
+      number: 2,
+    };
+
+    const scope = draft.specifier;
+
+    assert.equal(scope.storyId, expected.storyId);
+    assert.equal(scope.locale, expected.locale);
+    assert.equal(scope.apiVersion, expected.apiVersion);
+    assert.equal(scope.number, expected.number);
+  });
+
+  test('drafts are persisted', async ({ assert }) => {
+    const draft = await DraftFactory.merge({
+      storyId: 1,
+      bundle: '{"title": "Adam and Eve"}',
+      status: 'submitted',
+    }).create();
+    assert.isTrue(draft.$isPersisted);
+
+    const fresh = await Draft.findOrFail(draft.id);
+
+    assert.equal(fresh.parsedBundle['title'], 'Adam and Eve');
+    assert.equal(fresh.status, 'submitted');
+  });
+});
+
+test.group('Page', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction());
+
+  test('it identifies the type', async ({ assert }) => {
+    const page = await PageFactory.merge({
+      bundle: JSON.stringify({
+        body: 'https://test.com',
+      }),
+    }).create();
+    assert.isTrue(page.isLink);
+  });
+
+  test('it can add tracking to links', async ({ assert }) => {
+    const tracking = storyConfig.pages.tracking;
+
+    const page = await PageFactory.merge({
+      bundle: JSON.stringify({
+        body: 'https://test.com',
+      }),
+    }).make();
+    assert.equal(page.bundleWithTracking(tracking).body, {{ '`https://test.com?${tracking}`' }});
+
+    const withQuery = await PageFactory.merge({
+      bundle: JSON.stringify({
+        body: 'https://test.com?q=1&q=some+other+thing',
+      }),
+    }).make();
+    assert.equal(
+      withQuery.bundleWithTracking(tracking).body,
+      {{{ '`https://test.com?q=1&q=some+other+thing&${tracking}`' }}},
+    );
+
+    const withComplexQuery = await PageFactory.merge({
+      bundle: JSON.stringify({
+        body: 'https://test.com?q=is+it+worth+it?',
+      }),
+    }).make();
+    assert.equal(
+      withComplexQuery.bundleWithTracking(tracking).body,
+      {{{ '`https://test.com?q=is+it+worth+it?&${tracking}`' }}},
+    );
+  });
+
+  test('it can update the bundle', async ({ assert }) => {
+    const page = await PageFactory.merge({
+      bundle: JSON.stringify({
+        junk: 'Should not be in the bundle',
+        body: 'the original body',
+        icon: 'https://test.com',
+      }),
+    }).create();
+
+    page.updateBundle({ title: 'Adam and Eve', icon: '' });
+
+    assert.isString(page.bundle);
+    const updated = JSON.parse(page.bundle);
+
+    // removes junk
+    assert.isUndefined(updated.junk);
+    // updates fresh attributes
+    assert.equal(updated.title, 'Adam and Eve');
+    // adds missing attributes
+    assert.equal(page.parsedBundle.description, '');
+    // adds missing attributes with default
+    assert.equal(page.parsedBundle.group, 1);
+    // does not change existing attributes
+    assert.equal(page.parsedBundle.body, 'the original body');
+    // deletes attributes that are empty
+    assert.equal(page.parsedBundle.icon, '');
+  });
+});
