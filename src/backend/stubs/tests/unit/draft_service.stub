@@ -1,0 +1,235 @@
+{{{ 
+  exports({ to: app.makePath('tests/unit/draft_service.spec.ts') }) 
+}}}
+import { test } from '@japa/runner';
+
+import DraftService from '#services/draft_service';
+import db from '@adonisjs/lucid/services/db';
+import { bundleSpec } from '../mock.js';
+
+import storyConfig from '#config/story';
+import { draftOne, translationDraftOne } from '../mock.js';
+import { Story } from '@story-cms/kit';
+
+test.group('Service', (group) => {
+  group.each.setup(async () => {
+    await db.beginGlobalTransaction();
+    return () => db.rollbackGlobalTransaction();
+  });
+
+  test('creates default bundle from spec', async ({ assert }) => {
+    const story = storyConfig.stories[0];
+    const service = new DraftService(story);
+    const expected = {
+      title: '',
+      imageUrl: '',
+      videoUrl: '',
+      nextStop: { intro: '', reference: '', referenceText: '' },
+      sections: [],
+      conclusion: '',
+      keyTruth: '',
+      extra: '',
+      footnotes: [],
+    };
+    const serializedBundle = service.getDefaultStoryBundle(bundleSpec);
+    const bundle = JSON.parse(serializedBundle);
+    assert.equal(bundle['extra'], expected.extra);
+    assert.isTrue(Array.isArray(bundle['sections']));
+    assert.equal(bundle['nextStop']['reference'], expected.nextStop.reference);
+  });
+
+  test('creates target bundle from source', async ({ assert }) => {
+    // 1. arrange
+    const service = new DraftService(storyConfig.stories[0]);
+    service.setPrefilledFields(['part', 'imageUrl', 'type', 'spreadType']);
+    const bundle = JSON.parse(draftOne);
+
+    // 2. act
+    // const actual = service.getFreshBundleFrom(draftOne);
+    const actual = service.getFreshBundleFrom(bundle);
+
+    // root level fields are cleared
+    assert.equal(actual['title'], translationDraftOne['title']);
+
+    // nested level fields are cleared
+    assert.equal(
+      actual['spreads'][0]['notes'][0]['content'],
+      translationDraftOne['spreads'][0]['notes'][0]['content'],
+    );
+
+    // null values are preserved
+    assert.equal(
+      actual['spreads'][0]['callout'],
+      translationDraftOne['spreads'][0]['callout'],
+    );
+
+    // lists have the same counts
+    assert.isTrue(Array.isArray(actual['spreads']));
+    assert.equal(actual['spreads'].length, translationDraftOne['spreads'].length);
+    assert.isTrue(Array.isArray(actual['spreads'][0]['notes']));
+    assert.equal(
+      actual['spreads'][0]['notes'].length,
+      translationDraftOne['spreads'][0]['notes'].length,
+    );
+
+    // booleans are prefilled
+    assert.equal(
+      actual['spreads'][0]['isInsert'],
+      translationDraftOne['spreads'][0]['isInsert'],
+    );
+
+    // numbers are prefilled
+    assert.equal(actual['part'], translationDraftOne['part']);
+
+    // select fields are prefilled
+
+    // images are prefilled
+    assert.equal(actual['imageUrl'], translationDraftOne['imageUrl']);
+  });
+
+  test('can identify prefilled fields', async ({ assert }) => {
+    // 1. arrange
+    const story = {
+      id: 1,
+      name: 'John',
+      fields: [
+        {
+          label: 'Title',
+          name: 'title',
+          widget: 'string',
+        },
+        {
+          label: 'Intro',
+          name: 'intro',
+          widget: 'markdown',
+        },
+        {
+          label: 'Image',
+          name: 'imageUrl',
+          widget: 'image',
+        },
+        {
+          label: 'Next Stop',
+          name: 'nextStop',
+          widget: 'object',
+          fields: {
+            intro: {
+              label: 'Intro',
+              name: 'intro',
+              widget: 'string',
+            },
+            reference: {
+              label: 'Reference',
+              name: 'type',
+              widget: 'select',
+            },
+          },
+        },
+        {
+          label: 'Sections',
+          name: 'sections',
+          widget: 'list',
+          fields: [
+            {
+              label: 'Day',
+              name: 'day',
+              widget: 'number',
+            },
+            {
+              label: 'Colour',
+              name: 'colour',
+              widget: 'string',
+            },
+          ],
+        },
+      ],
+      chapterLimit: 42,
+    } as Story;
+
+    const expected = ['imageUrl', 'type', 'day'];
+
+    // 2. act
+    const service = new DraftService(story);
+    const actual = service.prefilledFields;
+
+    // 3. assert
+    assert.equal(actual.length, expected.length);
+    assert.isTrue(actual.every((val) => expected.includes(val)));
+  });
+
+  test('bundle ignores groupings from spec', async ({ assert }) => {
+    const story = storyConfig.stories[0];
+    const service = new DraftService(story);
+    const expected = {
+      title: '',
+      intro: '',
+      imageUrl: '',
+      nextStop: { intro: '', reference: '' },
+      sections: [],
+    };
+    const spec = [
+      {
+        widget: 'panel',
+        fields: [
+          {
+            label: 'Title',
+            name: 'title',
+            widget: 'string',
+          },
+          {
+            label: 'Intro',
+            name: 'intro',
+            widget: 'markdown',
+          },
+        ],
+      },
+
+      {
+        label: 'Image',
+        name: 'imageUrl',
+        widget: 'image',
+      },
+      {
+        label: 'Next Stop',
+        name: 'nextStop',
+        widget: 'object',
+        fields: {
+          intro: {
+            label: 'Intro',
+            name: 'intro',
+            widget: 'string',
+          },
+          reference: {
+            label: 'Reference',
+            name: 'reference',
+            widget: 'string',
+          },
+        },
+      },
+      {
+        label: 'Sections',
+        name: 'sections',
+        widget: 'list',
+        fields: [
+          {
+            label: 'Day',
+            name: 'day',
+            widget: 'string',
+          },
+          {
+            label: 'Colour',
+            name: 'colour',
+            widget: 'string',
+          },
+        ],
+      },
+    ];
+
+    const serializedBundle = service.getDefaultStoryBundle(spec);
+    const bundle = JSON.parse(serializedBundle);
+    assert.equal(bundle['title'], expected.title);
+    assert.equal(bundle['imageUrl'], expected.title);
+    assert.isTrue(Array.isArray(bundle['sections']));
+    assert.equal(bundle['nextStop']['reference'], expected.nextStop.reference);
+  });
+});
