@@ -39,6 +39,8 @@ export { createInertiaApp, usePage, router } from '@inertiajs/vue3';
 
 export * from './store/index';
 
+export { commonProps } from './shared/helpers';
+
 export {
   AppLayout,
   UsersIndex,
