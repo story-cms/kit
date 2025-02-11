@@ -2,31 +2,26 @@
   <AppLayout>
     <StickyHeader>
       <div class="container px-3 mx-auto">
-        <div class="flex items-center justify-between py-6">
-          <h3 class="font-['Inter'] text-2xl font-semibold text-gray-800">
-            App Phrases for {{ language.language }}
-          </h3>
-
-          <div class="flex items-center space-x-6">
-            <button
-              type="button"
-              :disabled="isBusy"
-              class="w-32 rounded-[38px] border px-[15px] py-[9px] text-sm/5 font-medium text-white shadow focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset]"
-              :class="{
-                'bg-gray-400 opacity-80 hover:bg-gray-400 hover:shadow-none active:opacity-80':
-                  isBusy,
-                'bg-green-500 hover:bg-green-400': !isBusy,
-              }"
-              @click.prevent="save"
-            >
-              Save
-            </button>
-          </div>
-        </div>
+        <h3 class="font-['Inter'] text-2xl font-semibold text-gray-800 mt-6">
+          Interface: {{ language.language }}
+        </h3>
+        <ui-toolbar></ui-toolbar>
       </div>
     </StickyHeader>
 
     <section class="container px-3 mx-auto mt-5">
+      <div class="grid grid-cols-[24fr_76fr] gap-x-6">
+        <div class="h-64 bg-blue-100">
+          <div>
+            <ul>
+              <li v-for="item in filteredItems" :key="item.key">
+                {{ item.source }}
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="h-64 bg-red-500"></div>
+      </div>
       <form>
         <ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
           <UiCard
@@ -47,6 +42,7 @@ import { reactive, ref, computed } from 'vue';
 import { useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
 import StickyHeader from '../shared/sticky-header.vue';
+import uiToolbar from './components/ui-toolbar.vue';
 import { router } from '@inertiajs/vue3';
 
 import { ResponseStatus } from '../../types';
@@ -62,6 +58,8 @@ const filteredItems = computed(() => {
     .filter((item) => !item.translation)
     .concat(props.items.filter((item) => !!item.translation));
 });
+
+console.log(filteredItems.value);
 
 const shared = useSharedStore();
 shared.setFromProps(props);
