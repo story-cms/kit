@@ -2,7 +2,9 @@
   <button
     class="grid grid-cols-[1fr_auto] gap-x-4 w-full px-2 py-3 border-b border-gray-200"
   >
-    <p class="text-left font-['Inter'] text-base leading-8 text-black font-medium">
+    <p
+      class="text-left font-['Inter'] text-base leading-8 text-black font-medium line-clamp-1"
+    >
       {{ props.item.source }}
     </p>
     <Icon class="size-4" name="sparkles" />
