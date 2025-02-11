@@ -11,14 +11,8 @@
 
     <section class="container px-3 mx-auto mt-5">
       <div class="grid grid-cols-[24fr_76fr] gap-x-6">
-        <div class="h-64 bg-blue-100">
-          <div>
-            <ul>
-              <li v-for="item in filteredItems" :key="item.key">
-                {{ item.source }}
-              </li>
-            </ul>
-          </div>
+        <div>
+          <UiStringItem v-for="item in filteredItems" :key="item.key" :item="item" />
         </div>
         <div class="h-64 bg-red-500"></div>
       </div>
@@ -43,6 +37,7 @@ import { useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
 import StickyHeader from '../shared/sticky-header.vue';
 import uiToolbar from './components/ui-toolbar.vue';
+import UiStringItem from './components/ui-string-item.vue';
 import { router } from '@inertiajs/vue3';
 
 import { ResponseStatus } from '../../types';
