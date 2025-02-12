@@ -20,27 +20,17 @@
           />
         </div>
         <div>
-          <UiCardPrime
-            v-if="selectedItem"
-            :key="selectedItem.key"
-            v-model:model="model[selectedItem.key]"
-            :item="selectedItem"
-            :error="errors[selectedItem.key]"
-          />
+          <form>
+            <UiCard
+              v-if="selectedItem"
+              :key="selectedItem.key"
+              v-model:model="model[selectedItem.key]"
+              :item="selectedItem"
+              :error="errors[selectedItem.key]"
+            />
+          </form>
         </div>
       </div>
-      <form>
-        <ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
-          <UiCard
-            v-if="false"
-            v-for="item in filteredItems"
-            :key="item.key"
-            v-model:model="model[item.key]"
-            :item="item"
-            :error="errors[item.key]"
-          />
-        </ul>
-      </form>
     </section>
   </AppLayout>
 </template>
@@ -57,8 +47,7 @@ import { router } from '@inertiajs/vue3';
 
 import { ResponseStatus } from '../../types';
 import type { UiItem, UiPageProps, SharedPageProps } from '../../types';
-import UiCard from '../interface/components/ui-card.vue';
-import UiCardPrime from '../interface/components/ui-card-prime.vue';
+import UiCard from './components/ui-card.vue';
 
 type ModelType = { [key: string]: string | undefined };
 
