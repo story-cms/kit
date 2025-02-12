@@ -1,12 +1,12 @@
 <template>
-  <div class="shadow font-['Inter']">
+  <div class="shadow font-['Inter'] rounded-lg border border-gray-200">
     <div class="grid grid-cols-2 px-8 pt-6 pb-4 gap-x-10">
       <div>
-        <label
-          :for="item.key"
-          class="block font-medium text-gray-700 uppercase text-sm/5"
-        >
-          {{ shared.language.language }} {{ shared.locale }}
+        <label :for="item.key" class="block font-medium text-gray-700 text-sm/5">
+          {{ shared.language.language }}
+          <span class="uppercase">
+            {{ shared.locale }}
+          </span>
         </label>
         <div class="mt-1">
           <textarea
@@ -20,9 +20,7 @@
         </div>
       </div>
       <div>
-        <span class="block font-medium text-gray-700 uppercase text-sm/5"
-          >English EN</span
-        >
+        <span class="block font-medium text-gray-700 text-sm/5">English EN</span>
         <div class="mt-1">
           <span class="font-medium text-gray-900 text-base/5">
             {{ item.source }}
@@ -56,7 +54,7 @@
         <span class="block font-medium text-sm/5">AI Suggestion</span>
         <div class="mt-1">
           <span class="font-medium text-blue-500 text-base/5">
-            {{ item.description }}
+            AI suggestion goes here
           </span>
         </div>
       </div>
@@ -80,21 +78,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
 import type { UiItem } from '../../../types';
 import Icon from '../../shared/icon.vue';
 import { useSharedStore } from '../../store';
 
 const shared = useSharedStore();
-const props = defineProps<{
+defineProps<{
   item: UiItem;
   model: string | undefined;
   error: string | undefined;
 }>();
 
 defineEmits(['update:model']);
-
-const label = computed(() => {
-  return props.item.description || `Field ${props.item.key}`;
-});
 </script>
