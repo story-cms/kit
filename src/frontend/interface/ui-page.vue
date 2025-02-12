@@ -5,20 +5,25 @@
         <h3 class="font-['Inter'] text-2xl font-semibold text-gray-800 mt-6">
           Interface: {{ language.language }}
         </h3>
-        <ui-toolbar></ui-toolbar>
+        <ui-toolbar v-model="searchTerm"></ui-toolbar>
       </div>
     </StickyHeader>
 
     <section class="container px-3 mx-auto mt-5">
       <div class="grid grid-cols-[24fr_76fr] gap-x-6 h-[calc(100vh-12rem)]">
         <div class="overflow-y-auto scrollbar-hide">
-          <UiStringItem
-            v-for="item in filteredItems"
-            :key="item.key"
-            :item="item"
-            :is-selected="selectedItem?.key === item.key"
-            @click="selectItem(item)"
-          />
+          <template v-if="filteredItems.length">
+            <UiStringItem
+              v-for="item in filteredItems"
+              :key="item.key"
+              :item="item"
+              :is-selected="selectedItem?.key === item.key"
+              @click="selectItem(item)"
+            />
+          </template>
+          <div v-else class="py-10 text-gray-500">
+            <p class="text-sm">No results found for "{{ searchTerm }}"</p>
+          </div>
         </div>
         <div class="overflow-y-auto scrollbar-hide">
           <form>
@@ -54,10 +59,22 @@ type ModelType = { [key: string]: string | undefined };
 
 const props = defineProps<SharedPageProps & UiPageProps>();
 
+const searchTerm = ref('');
+
 const filteredItems = computed(() => {
-  return props.items
+  const items = props.items
     .filter((item) => !item.translation)
     .concat(props.items.filter((item) => !!item.translation));
+
+  if (!searchTerm.value) return items;
+
+  const search = searchTerm.value.toLowerCase();
+  return items.filter(
+    (item) =>
+      item.source.toLowerCase().includes(search) ||
+      item.description?.toLowerCase().includes(search) ||
+      item.key.toLowerCase().includes(search),
+  );
 });
 
 const shared = useSharedStore();
