@@ -89,7 +89,6 @@ const model = reactive(startValues);
 
 const selectedItem = ref<UiItem | null>(null);
 
-// Set initial selected item to first item in filteredItems
 selectedItem.value = filteredItems.value[0];
 
 const selectItem = (item: UiItem) => {
