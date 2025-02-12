@@ -16,6 +16,7 @@
             v-for="item in filteredItems"
             :key="item.key"
             :item="item"
+            :is-selected="selectedItem?.key === item.key"
             @click="selectItem(item)"
           />
         </div>
