@@ -106,46 +106,6 @@ export default class IndexService {
     return rows[0].$extras.max || 1;
   }
 
-  public getDefaultStoryBundle(spec: Object[]): string {
-    const shapes = this.getBundleShapes(spec);
-    return {{ '`{ ${shapes} }`' }};
-  }
-
-  private getBundleShapes(spec: Object[]): string {
-    return (
-      spec
-        // .filter((widget) => widget.hasOwnProperty('name'))
-        .map((node) => {
-          return this.renderBundleShape(node);
-        })
-        .join(',')
-    );
-  }
-
-  private renderBundleShape(node: any): string {
-    if (node['widget'] === 'panel' && node['fields'])
-      return this.getBundleShapes(node['fields']);
-
-    if (node['widget'] === 'list' && node['fields']) return {{ "`'${node.name}':[]`" }};
-    if (node['widget'] === 'string') return {{ "`'${node.name}': ''`" }};
-    if (node['widget'] === 'image') return {{ "`'${node.name}': ''`" }};
-    if (node['widget'] === 'object')
-      return {{ "`'${node.name}': ${this.renderObjectShape(node['fields'])}`" }}
-
-    return {{ "`'${node.name}': ''`" }};
-  
-  }
-
-  private renderObjectShape(node: any): string {
-    const items = Object.entries(node)
-      .map(([_, value]) => {
-        return this.renderBundleShape(value);
-      })
-      .join(',');
-
-    return {{ '`{ ${items} }`' }} ;
-  }
-
   public async getAddStatus(version: Version): Promise<AddStatus> {
     const index = await this.getItems(version);
 
