@@ -10,8 +10,8 @@
     </StickyHeader>
 
     <section class="container px-3 mx-auto mt-5">
-      <div class="grid grid-cols-[24fr_76fr] gap-x-6">
-        <div>
+      <div class="grid grid-cols-[24fr_76fr] gap-x-6 h-[calc(100vh-12rem)]">
+        <div class="overflow-y-auto scrollbar-hide">
           <UiStringItem
             v-for="item in filteredItems"
             :key="item.key"
@@ -19,7 +19,7 @@
             @click="selectItem(item)"
           />
         </div>
-        <div>
+        <div class="overflow-y-auto scrollbar-hide">
           <form>
             <UiCard
               v-if="selectedItem"
@@ -100,3 +100,14 @@ const save = () => {
   });
 };
 </script>
+
+<style scoped>
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+</style>
