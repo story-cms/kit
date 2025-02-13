@@ -12,14 +12,16 @@
     <section class="container px-3 mx-auto mt-5">
       <div class="grid grid-cols-[24fr_76fr] gap-x-6 h-[calc(100vh-12rem)]">
         <div class="overflow-y-auto scrollbar-hide">
-          <button
-            type="button"
-            class="inline-flex items-center justify-center gap-x-2 rounded-full bg-white hover:bg- px-3.5 py-2.5 text-sm font-medium text-gray-800 shadow-sm hover:bg-indigo-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ring-1 ring-inset ring-gray-300 w-full leading-4 mb-4"
-          >
-            <Icon name="sparkles" class="w-4 h-4 text-gray-800" />
+          <div class="sticky top-0 bg-gray-50">
+            <button
+              type="button"
+              class="inline-flex items-center justify-center gap-x-2 rounded-full bg-white hover:bg- px-3.5 py-2.5 text-sm font-medium text-gray-800 shadow-sm hover:bg-indigo-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ring-1 ring-inset ring-gray-300 w-full leading-4 mb-4"
+            >
+              <Icon name="sparkles" class="w-4 h-4 text-gray-800" />
 
-            AI translate to do items
-          </button>
+              AI translate to do items
+            </button>
+          </div>
           <template v-if="filteredItems.length">
             <UiStringItem
               v-for="item in filteredItems"
