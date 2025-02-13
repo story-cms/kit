@@ -8,6 +8,8 @@
         v-model="searchTerm"
         :to-do-count="todoCount"
         :all-count="props.items.length"
+        :active-filter="activeFilter"
+        @update:active-filter="activeFilter = $event"
       ></ui-toolbar>
     </div>
 
@@ -91,20 +93,28 @@ const todoCount = computed(() => {
   return props.items.filter((item) => !item.translation).length;
 });
 
+const activeFilter = ref<'todo' | 'all'>('all');
+
 const filteredItems = computed(() => {
-  const items = props.items
+  let items = props.items;
+
+  if (activeFilter.value === 'todo') {
+    items = items.filter((item) => !item.translation);
+  }
+
+  if (searchTerm.value) {
+    const search = searchTerm.value.toLowerCase();
+    items = items.filter(
+      (item) =>
+        item.source.toLowerCase().includes(search) ||
+        item.description?.toLowerCase().includes(search) ||
+        item.key.toLowerCase().includes(search),
+    );
+  }
+
+  return items
     .filter((item) => !item.translation)
-    .concat(props.items.filter((item) => !!item.translation));
-
-  if (!searchTerm.value) return items;
-
-  const search = searchTerm.value.toLowerCase();
-  return items.filter(
-    (item) =>
-      item.source.toLowerCase().includes(search) ||
-      item.description?.toLowerCase().includes(search) ||
-      item.key.toLowerCase().includes(search),
-  );
+    .concat(items.filter((item) => !!item.translation));
 });
 
 const shared = useSharedStore();

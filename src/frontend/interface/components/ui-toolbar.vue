@@ -5,7 +5,13 @@
         <span class="inline-flex rounded-md shadow-sm isolate">
           <button
             type="button"
-            class="relative inline-flex items-center px-4 py-2 text-sm font-medium leading-4 text-indigo-700 bg-white border-r rounded-l-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10 hover:ring-indigo-700 hover:border-r hover:border-indigo-700"
+            :class="[
+              'relative inline-flex items-center px-4 py-2 text-sm font-medium leading-4 border-r rounded-l-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10',
+              activeFilter === 'todo'
+                ? 'bg-indigo-50 text-indigo-700 ring-indigo-700'
+                : 'bg-white text-gray-900',
+            ]"
+            @click="$emit('update:activeFilter', 'todo')"
           >
             To do
             <span
@@ -16,7 +22,13 @@
 
           <button
             type="button"
-            class="relative inline-flex items-center px-3 py-2 -ml-px text-sm font-medium leading-4 text-gray-900 bg-white rounded-r-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
+            :class="[
+              'relative inline-flex items-center px-3 py-2 -ml-px text-sm font-medium leading-4 rounded-r-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10',
+              activeFilter === 'all'
+                ? 'bg-indigo-50 text-indigo-700 ring-indigo-700'
+                : 'bg-white text-gray-900',
+            ]"
+            @click="$emit('update:activeFilter', 'all')"
           >
             All
             <span
@@ -113,9 +125,11 @@ defineProps<{
   modelValue: string;
   toDoCount: number;
   allCount: number;
+  activeFilter: 'todo' | 'all';
 }>();
 
 defineEmits<{
   'update:modelValue': [value: string];
+  'update:activeFilter': [value: 'todo' | 'all'];
 }>();
 </script>
