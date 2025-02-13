@@ -1,25 +1,37 @@
 <template>
   <AppLayout>
-    <StickyHeader>
-      <div class="container px-3 mx-auto">
-        <h3 class="font-['Inter'] text-2xl font-semibold text-gray-800 mt-6">
-          Interface: {{ language.language }}
-        </h3>
-        <ui-toolbar v-model="searchTerm"></ui-toolbar>
-      </div>
-    </StickyHeader>
+    <div class="container px-3 mx-auto">
+      <h3 class="font-['Inter'] text-2xl font-semibold text-gray-800 mt-6">
+        Interface: {{ language.language }}
+      </h3>
+      <ui-toolbar v-model="searchTerm"></ui-toolbar>
+    </div>
 
     <section class="container px-3 mx-auto mt-5">
       <div class="grid grid-cols-[24fr_76fr] gap-x-6 h-[calc(100vh-12rem)]">
         <div class="overflow-y-auto scrollbar-hide">
           <div class="sticky top-0 bg-gray-50">
             <button
+              @click="translateItems"
               type="button"
-              class="inline-flex items-center justify-center gap-x-2 rounded-full bg-white hover:bg- px-3.5 py-2.5 text-sm font-medium text-gray-800 shadow-sm hover:bg-indigo-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ring-1 ring-inset ring-gray-300 w-full leading-4 mb-4"
+              class="inline-flex items-center justify-center gap-x-2 rounded-full px-3.5 py-2.5 text-sm font-medium text-gray-800 shadow-sm hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ring-1 ring-inset ring-gray-300 w-full leading-4 mb-4"
+              :class="{
+                'bg-blue-50': isTranslating,
+                'bg-white': !isTranslating,
+              }"
             >
-              <Icon name="sparkles" class="w-4 h-4 text-gray-800" />
+              <Icon
+                name="sparkles"
+                class="w-4 h-4"
+                :class="{
+                  'text-gray-800': !isTranslating,
+                  'text-blue-500': isTranslating,
+                }"
+              />
 
-              AI translate to do items
+              {{
+                isTranslating ? 'Translation in progress...' : 'AI translate to do items'
+              }}
             </button>
           </div>
           <template v-if="filteredItems.length">
@@ -55,7 +67,6 @@
 import { reactive, ref, computed } from 'vue';
 import { useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
-import StickyHeader from '../shared/sticky-header.vue';
 import uiToolbar from './components/ui-toolbar.vue';
 import UiStringItem from './components/ui-string-item.vue';
 
@@ -111,6 +122,15 @@ selectedItem.value = filteredItems.value[0];
 
 const selectItem = (item: UiItem) => {
   selectedItem.value = item;
+};
+
+const isTranslating = ref(false);
+
+const translateItems = () => {
+  isTranslating.value = true;
+  setTimeout(() => {
+    isTranslating.value = false;
+  }, 10000);
 };
 
 const save = () => {
