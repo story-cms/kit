@@ -43,7 +43,7 @@
             <Icon class="size-6" name="flag" />
           </button>
           <button class="p-3 border border-blue-500 rounded-full">
-            <Icon class="size-6" name="sparkles" />
+            <Icon class="size-6 text-blue-500" name="sparkles" />
           </button>
           <button class="p-3 bg-green-500 border border-green-700 rounded-full">
             <Icon class="text-white size-6" name="check" />
