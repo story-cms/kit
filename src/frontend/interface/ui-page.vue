@@ -70,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, computed } from 'vue';
+import { reactive, ref, computed, watch } from 'vue';
 import { useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
 import uiToolbar from './components/ui-toolbar.vue';
@@ -136,7 +136,19 @@ const model = reactive(startValues);
 
 const selectedItem = ref<UiItem | null>(null);
 
-selectedItem.value = filteredItems.value[0];
+watch(
+  [filteredItems],
+  () => {
+    if (
+      filteredItems.value.length &&
+      (!selectedItem.value ||
+        !filteredItems.value.some((item) => item.key === selectedItem.value?.key))
+    ) {
+      selectedItem.value = filteredItems.value[0];
+    }
+  },
+  { immediate: true },
+);
 
 const selectItem = (item: UiItem) => {
   selectedItem.value = item;

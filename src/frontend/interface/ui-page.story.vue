@@ -52,7 +52,7 @@ const items = [
   {
     key: 'featureHighlight3',
     source: 'Customize your experience',
-    translation: 'Personaliza tu experiencia',
+    translation: '',
     description: 'Highlight of customization options',
   },
   {
