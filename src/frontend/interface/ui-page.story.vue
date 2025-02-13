@@ -74,42 +74,6 @@ const items = [
     description: 'Confirmation prompt for user actions',
   },
   {
-    key: 'onBoardCTA',
-    source: 'Get Started',
-    translation: 'Comenzar',
-    description: 'Call-to-action button text',
-  },
-  {
-    key: 'errorMessage',
-    source: 'Something went wrong. Please try again.',
-    translation: 'Algo salió mal. Por favor, inténtalo de nuevo.',
-    description: 'Error message displayed on failures',
-  },
-  {
-    key: 'successMessage',
-    source: 'Your action was successful!',
-    translation: '¡Tu acción fue exitosa!',
-    description: 'Message displayed after a successful action',
-  },
-  {
-    key: 'loadingMessage',
-    source: 'Loading, please wait...',
-    translation: 'Cargando, por favor espera...',
-    description: 'Displayed while content is loading',
-  },
-  {
-    key: 'updatePrompt',
-    source: 'A new update is available. Update now?',
-    translation: 'Hay una nueva actualización disponible. ¿Actualizar ahora?',
-    description: 'Prompt for users to update the app',
-  },
-  {
-    key: 'notificationTitle',
-    source: 'You have new notifications!',
-    translation: '¡Tienes nuevas notificaciones!',
-    description: 'Title for notification alerts',
-  },
-  {
     key: 'profileCompletion',
     source: 'Complete your profile for a better experience.',
     translation: '',
@@ -121,18 +85,7 @@ const items = [
     translation: '',
     description: 'Reminder notification for users',
   },
-  {
-    key: 'helpSupport',
-    source: 'Need help? Contact support.',
-    translation: '¿Necesitas ayuda? Contacta con soporte.',
-    description: 'Message directing users to support',
-  },
-  {
-    key: 'termsAgreement',
-    source: 'By continuing, you agree to our Terms and Conditions.',
-    translation: 'Al continuar, aceptas nuestros Términos y Condiciones.',
-    description: 'Agreement message before proceeding',
-  },
+
   {
     key: 'exitMessage',
     source: 'Goodbye! See you soon.',
