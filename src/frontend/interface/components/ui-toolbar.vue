@@ -20,7 +20,7 @@
           >
             All
             <span
-              class="inline-flex items-center px-2 py-1 ml-1 text-xs font-medium leading-4 text-gray-700 bg-gray-100 rounded-full"
+              class="inline-flex items-center px-2 py-1 ml-4 text-xs font-medium leading-4 text-gray-700 bg-gray-100 rounded-full"
               >100</span
             >
           </button>
