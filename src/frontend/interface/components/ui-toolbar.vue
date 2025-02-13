@@ -10,7 +10,7 @@
             To do
             <span
               class="inline-flex items-center px-2 py-1 ml-1 text-xs font-medium leading-4 text-indigo-700 bg-gray-100 rounded-full"
-              >100</span
+              >{{ toDoCount }}</span
             >
           </button>
 
@@ -21,7 +21,7 @@
             All
             <span
               class="inline-flex items-center px-2 py-1 ml-4 text-xs font-medium leading-4 text-gray-700 bg-gray-100 rounded-full"
-              >100</span
+              >{{ allCount }}</span
             >
           </button>
         </span>
@@ -111,6 +111,8 @@
 <script setup lang="ts">
 defineProps<{
   modelValue: string;
+  toDoCount: number;
+  allCount: number;
 }>();
 
 defineEmits<{

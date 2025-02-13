@@ -4,7 +4,11 @@
       <h3 class="font-['Inter'] text-2xl font-semibold text-gray-800 mt-6">
         Interface: {{ language.language }}
       </h3>
-      <ui-toolbar v-model="searchTerm"></ui-toolbar>
+      <ui-toolbar
+        v-model="searchTerm"
+        :to-do-count="todoCount"
+        :all-count="props.items.length"
+      ></ui-toolbar>
     </div>
 
     <section class="container px-3 mx-auto mt-5">
@@ -82,6 +86,10 @@ type ModelType = { [key: string]: string | undefined };
 const props = defineProps<SharedPageProps & UiPageProps>();
 
 const searchTerm = ref('');
+
+const todoCount = computed(() => {
+  return props.items.filter((item) => !item.translation).length;
+});
 
 const filteredItems = computed(() => {
   const items = props.items
