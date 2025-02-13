@@ -16,7 +16,7 @@
     <section class="container px-3 mx-auto mt-5">
       <div class="grid grid-cols-[24fr_76fr] gap-x-6 h-[calc(100vh-12rem)]">
         <div class="overflow-y-auto scrollbar-hide">
-          <div class="sticky top-0 bg-gray-50">
+          <div v-if="filteredItems.length" class="sticky top-0 bg-gray-50">
             <button
               @click="translateItems"
               type="button"
@@ -40,29 +40,30 @@
               }}
             </button>
           </div>
-          <template v-if="filteredItems.length">
-            <UiStringItem
-              v-for="item in filteredItems"
-              :key="item.key"
-              :item="item"
-              :is-selected="selectedItem?.key === item.key"
-              @click="selectItem(item)"
-            />
-          </template>
-          <div v-else class="py-10 text-gray-500">
-            <p class="text-sm">No results found for "{{ searchTerm }}"</p>
-          </div>
+          <UiStringItem
+            v-show="filteredItems.length"
+            v-for="item in filteredItems"
+            :key="item.key"
+            :item="item"
+            :is-selected="selectedItem?.key === item.key"
+            @click="selectItem(item)"
+          />
         </div>
         <div>
-          <form>
-            <UiCard
-              v-if="selectedItem"
-              :key="selectedItem.key"
-              v-model:model="model[selectedItem.key]"
-              :item="selectedItem"
-              :error="errors[selectedItem.key]"
-            />
-          </form>
+          <template v-if="filteredItems.length">
+            <form>
+              <UiCard
+                v-if="selectedItem"
+                :key="selectedItem.key"
+                v-model:model="model[selectedItem.key]"
+                :item="selectedItem"
+                :error="errors[selectedItem.key]"
+              />
+            </form>
+          </template>
+          <div v-else class="py-10 text-gray-500">
+            <p class="text-sm text-center">No results found for "{{ searchTerm }}"</p>
+          </div>
         </div>
       </div>
     </section>
