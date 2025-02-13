@@ -25,7 +25,7 @@
             <p class="text-sm">No results found for "{{ searchTerm }}"</p>
           </div>
         </div>
-        <div class="overflow-y-auto scrollbar-hide">
+        <div>
           <form>
             <UiCard
               v-if="selectedItem"
