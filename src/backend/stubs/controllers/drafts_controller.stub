@@ -9,13 +9,13 @@ import Draft from '#models/draft';
 import DraftService from '#services/draft_service';
 import IndexService from '#services/index_service';
 import StoryService from '#services/story_service';
+import { trimmedErrors } from '#services/helpers';
 
 import storyConfig from '#config/story';
 import providers from '#config/providers';
 import { DraftEditProps } from '@story-cms/kit';
 
-import { createDraftValidator, errorMessages } from '#validators/bundle';
-import vine from '@vinejs/vine';
+import { draftValidator } from '#validators/bundle';
 
 export default class DraftsController {
   public async create(ctx: HttpContext) {
@@ -27,7 +27,13 @@ export default class DraftsController {
 
     const service = new DraftService(ctx.story);
     // TODO: set your own prefill fields
-    service.setPrefilledFields(['imageUrl', 'type']);
+    service.setPrefilledFields([
+      'part',
+      'imageUrl',
+      'animationUrl',
+      'type',
+      'spreadType',
+    ]);
     const bundle = await service.getDraftBundle(ctx.version, number);
     if (bundle === null) return ctx.response.redirect('/');
 
@@ -137,9 +143,11 @@ export default class DraftsController {
     let payload;
 
     try {
-      payload = await ctx.request; // validate the request
+      const data = ctx.request.all();
+      payload = await draftValidator.validate(data);
     } catch (e) {
-      ctx.session.flash('errors', e.messages);
+      const errors = trimmedErrors(e);
+      ctx.session.flash('errors', errors);
       return ctx.response.redirect().back();
     }
 
@@ -171,28 +179,10 @@ export default class DraftsController {
 
     try {
       const data = ctx.request.all();
-      vine.messagesProvider = errorMessages;
-      const payload = await createDraftValidator.validate(data);
+      const payload = await draftValidator.validate(data);
       draft.bundle = JSON.stringify(payload.bundle);
     } catch (e) {
-      let errors = e.messages.reduce((acc: Record<string, string[]>, error: any) => {
-        const field = error.field;
-        if (!acc[field]) {
-          acc[field] = [];
-        }
-        acc[field].push(error.message);
-        return acc;
-      }, {});
-
-      // only show the first 25 errors to avoid the cookie size limit
-      if (Object.keys(errors).length > 25) {
-        errors = Object.keys(errors)
-          .slice(0, 25)
-          .reduce((acc, key) => {
-            acc[key] = errors[key];
-            return acc;
-          }, {});
-      }
+      const errors = trimmedErrors(e);
       ctx.session.flash('errors', errors);
       return ctx.response.redirect().back();
     }

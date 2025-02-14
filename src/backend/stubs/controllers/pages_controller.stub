@@ -14,6 +14,7 @@ import { PageEditProps } from '@story-cms/kit';
 import vine from '@vinejs/vine';
 
 import { PageValidator, errorMessages } from '#validators/page';
+import { trimmedErrors } from '#services/helpers';
 
 export default class PagesController {
   public async get({ request }: HttpContext) {
@@ -84,16 +85,7 @@ export default class PagesController {
       const pageValidator = new PageValidator(ctx);
       payload = await pageValidator.schema.validate(data);
     } catch (e) {
-      let errors = e.messages.reduce((acc, error) => {
-        const { field, message } = error;
-
-        if (!acc[field]) {
-          acc[field] = [];
-        }
-
-        acc[field].push(message);
-        return acc;
-      }, {});
+      const errors = trimmedErrors(e);
 
       ctx.session.flash('errors', prepend(errors));
       return ctx.response.redirect().back();
@@ -128,8 +120,8 @@ export default class PagesController {
 
 // The model store on the client requires that the error messages
 // each have a "bundle" prefix
-const prepend = (plain: Object): Object => {
-  const result = {};
+const prepend = (plain: Record<string, string[]>): Object => {
+  const result: Record<string, unknown> = {};
   for (const key in plain) {
     result[{{ '`bundle.${key}`' }}] = plain[key];
   }

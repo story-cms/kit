@@ -62,8 +62,8 @@ export default class Page extends BaseModel {
   }
 
   protected freshValue(
-    changes: Object,
-    old: Object,
+    changes: Record<string, any>,
+    old: Record<string, any>,
     key: string,
     fallback: string | number,
   ): string | number {
