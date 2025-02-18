@@ -28,11 +28,8 @@ export default class DraftsController {
     const service = new DraftService(ctx.story);
     // TODO: set your own prefill fields
     service.setPrefilledFields([
-      'part',
       'imageUrl',
-      'animationUrl',
       'type',
-      'spreadType',
     ]);
     const bundle = await service.getDraftBundle(ctx.version, number);
     if (bundle === null) return ctx.response.redirect('/');
