@@ -2,14 +2,13 @@
   exports({ to: app.makePath('app/services/draft_service.ts') }) 
 }}}
 import Chapter from '#models/chapter';
-import { Story, Version } from '@story-cms/kit';
+import { FieldMap, FieldSpec, Story, Version } from '@story-cms/kit';
 import storyConfig from '#config/story';
 
 export default class DraftService {
   public story: Story;
-  public config: Object;
 
-  protected _prefilledFields: string[];
+  protected _prefilledFields: string[] | null = null;
 
   constructor(story: Story) {
     this.story = story;
@@ -76,7 +75,7 @@ export default class DraftService {
     }
 
     // numbers
-    if (!isNaN(Number(value))) {
+    if (!Number.isNaN(Number(value))) {
       return value;
     }
 
@@ -96,34 +95,41 @@ export default class DraftService {
     if (this._prefilledFields) return this._prefilledFields;
     this._prefilledFields = [];
     this.story.fields.forEach((field) => {
-      this.appendPrefilled(field);
+      this.appendPrefilled(field as FieldSpec);
     });
 
     return this._prefilledFields;
   }
 
-  protected appendPrefilled(field: object) {
+  protected appendPrefilled(field: FieldSpec) {
+    if (!this._prefilledFields) {
+      this._prefilledFields = [];
+    }
+
     switch (field['widget']) {
       case 'select':
       case 'number':
       case 'image':
       case 'animation':
         // check if subPath is already in the list
-        if (this._prefilledFields.some((item) => item === field['name'])) break;
+        if (this.prefilledFields.some((item) => item === field['name'])) break;
         this._prefilledFields.push(field['name']);
         break;
       case 'panel':
-        field['fields'].forEach((item) => {
+        const frame = field['fields'] as FieldSpec[];
+        frame.forEach((item) => {
           this.appendPrefilled(item);
         });
         break;
       case 'object':
-        Object.keys(field['fields']).forEach((key) => {
-          this.appendPrefilled(field['fields'][key]);
+        const map = field['fields'] as FieldMap;
+        Object.keys(map).forEach((key) => {
+          this.appendPrefilled(map[key]);
         });
         break;
       case 'list':
-        field['fields'].forEach((item) => {
+        const items = field['fields'] as FieldSpec[];
+        items.forEach((item) => {
           this.appendPrefilled(item);
         });
         break;

@@ -3,7 +3,7 @@
 }}}
 import vine, { SimpleMessagesProvider } from '@vinejs/vine';
 
-export const createDraftValidator = vine.compile(
+export const draftValidator = vine.compile(
   vine.object({
     bundle: vine.object({
       title: vine.string(),
