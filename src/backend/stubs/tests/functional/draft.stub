@@ -1,0 +1,258 @@
+{{{ 
+  exports({ to: app.makePath('tests/functional/draft.spec.ts') }) 
+}}}
+import { test } from '@japa/runner';
+import Draft from '#models/draft';
+import Chapter from '#models/chapter';
+import testUtils from '@adonisjs/core/services/test_utils';
+
+import { ChapterFactory } from '#database/factories/chapter_factory';
+import { UserFactory } from '#database/factories/user_factory';
+import { DraftFactory } from '#database/factories/draft_factory';
+import { draftOne } from '../mock.js';
+
+test.group('Draft GET', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction());
+
+  test('Non authenticated should be redirected to login screen', async ({ client }) => {
+    const response = await client.get('/draft/1/edit');
+    response.assertRedirectsTo('/login');
+  });
+
+  test('Authenticated user should be able to render draft', async ({ client }) => {
+    const user = await UserFactory.create();
+
+    await DraftFactory.merge({
+      storyId: 1,
+      bundle: draftOne,
+      number: 1,
+    }).create();
+
+    const response = await client.get('/draft/1/edit').loginAs(user);
+    response.assertStatus(200);
+  });
+
+  test('If the draft is empty, it should be populated', async ({ assert, client }) => {
+    const user = await UserFactory.create();
+
+    const chapter = await ChapterFactory.merge({
+      number: 1,
+      storyId: 1,
+      updatedBy: user.id,
+      bundle: draftOne,
+    }).create();
+
+    let draft = await Draft.query().where({ number: 1 }).first();
+
+    assert.isNull(draft);
+
+    const response = await client.get('/draft/1/edit').loginAs(user);
+
+    response.assertStatus(200);
+
+    draft = await Draft.query().where({ number: 1 }).first();
+    assert.isNotNull(draft);
+    assert.equal(draft!.storyId, chapter.storyId);
+    assert.equal(draft!.parsedBundle['title'], JSON.parse(chapter.bundle)['title']);
+  });
+
+  test('HTTP error if non existing Chapter is requested', async ({ client }) => {
+    const user = await UserFactory.create();
+
+    const response = await client.get('/draft/1/edit').loginAs(user);
+    response.assertStatus(404);
+  });
+});
+
+test.group('Draft DELETE', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction());
+
+  test('Non authenticated should be redirected to login screen', async ({ client }) => {
+    const draft = await DraftFactory.merge({
+      storyId: 1,
+      bundle: '{"title": "Adam and Eve"}',
+      number: 1,
+    }).create();
+
+    const response = await client.delete({{ '`/draft/${draft.id}`' }}).withCsrfToken();
+    response.assertRedirectsTo('/login');
+  });
+
+  test('Authenticated user should be able to delete the available draft', async ({
+    assert,
+    client,
+  }) => {
+    const user = await UserFactory.create();
+
+    const draft = await DraftFactory.merge({
+      storyId: 1,
+      bundle: '{"title": "Adam and Eve"}',
+      number: 1,
+    }).create();
+
+    const response = await client
+      .delete({{ '`/draft/${draft.id}`' }})
+      .loginAs(user)
+      .withCsrfToken();
+
+    response.assertRedirectsTo('/');
+
+    const draftFromDb = await Draft.query().where({ number: 1 }).first();
+    assert.isNull(draftFromDb);
+  });
+
+  test('Deleting no-existing chapter should throw 404', async ({ client }) => {
+    const user = await UserFactory.create();
+    const response = await client.delete('/draft/0').loginAs(user).withCsrfToken();
+    response.assertStatus(404);
+  });
+});
+
+test.group('Draft updating', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction());
+
+  test('Drafts can be saved without validation or change of status', async ({
+    assert,
+    client,
+  }) => {
+    const user = await UserFactory.create();
+
+    const draft = await DraftFactory.merge({
+      status: 'started',
+      storyId: 1,
+      bundle: '{"title": "Adam and Eve"}',
+      number: 1,
+    }).create();
+
+    let response = await client
+      .post({{ '`/draft/${draft.id}/save`' }})
+      .field('feedback', draft.feedback)
+      .field('bundle', '{"title": "Adam and Eve updated"}')
+      .loginAs(user)
+      .withCsrfToken();
+
+    response.assertRedirectsTo('/');
+    await draft.refresh();
+    assert.equal(draft.parsedBundle['title'], 'Adam and Eve updated');
+    assert.equal(draft.status, 'started');
+
+    draft.status = 'submitted';
+    draft.feedback = 'some errors';
+    await draft.save();
+
+    response = await client
+      .post({{ '`/draft/${draft.id}/save`' }})
+      .field('feedback', draft.feedback)
+      .field('bundle', '{"title": "Adam and Eve updated again!"}')
+      .loginAs(user)
+      .withCsrfToken();
+
+    await draft.refresh();
+    assert.equal(draft.parsedBundle['title'], 'Adam and Eve updated again!');
+    assert.equal(draft.status, 'submitted');
+    assert.equal(draft.feedback, 'some errors');
+  });
+
+  test('Drafts can be submitted', async ({ assert, client }) => {
+    const user = await UserFactory.create();
+
+    const draft = await DraftFactory.merge({
+      status: 'started',
+      storyId: 1,
+      bundle: '{"title": "Adam and Eve"}',
+      number: 1,
+    }).create();
+
+    // with incomplete bundle nothing is updated
+    let response = await client
+      .post({{ '`/draft/${draft.id}/submit`' }})
+      .form({ bundle: JSON.parse('{"title": ""}') })
+      .loginAs(user)
+      .withCsrfToken();
+
+    response.assertRedirectsTo('/');
+    await draft.refresh();
+    assert.equal(draft.parsedBundle['title'], 'Adam and Eve');
+    assert.equal(draft.status, 'started');
+
+    response = await client
+      .post({{ '`/draft/${draft.id}/submit`' }})
+      .form({ bundle: JSON.parse(draftOne) })
+      .loginAs(user)
+      .withCsrfToken();
+
+    response.assertStatus(200);
+    response.assertRedirectsTo('/');
+
+    await draft.refresh();
+    assert.equal(draft.parsedBundle['title'], 'God came to earth');
+    assert.equal(draft.status, 'submitted');
+    assert.equal(draft.feedback, '');
+  });
+
+  test('Submitted drafts can be rejected', async ({ assert, client }) => {
+    const user = await UserFactory.create();
+
+    const draft = await DraftFactory.merge({
+      status: 'submitted',
+      feedback: '',
+      storyId: 1,
+      bundle: '{"title": "Adam and Eve"}',
+      number: 1,
+    }).create();
+
+    // with incomplete bundle nothing is updated
+    let response = await client
+      .post({{ '`/draft/${draft.id}/reject`' }})
+      .field('feedback', 'please fix the quote from Johnathan Edwards')
+      .loginAs(user)
+      .withCsrfToken();
+
+    response.assertRedirectsTo('/');
+
+    await draft.refresh();
+    assert.equal(draft.parsedBundle['title'], 'Adam and Eve');
+    assert.equal(draft.status, 'started');
+    assert.equal(draft.feedback, 'please fix the quote from Johnathan Edwards');
+  });
+
+  test('Drafts can be published to new chapters', async ({ assert, client }) => {
+    const user = await UserFactory.create();
+
+    const draft = await DraftFactory.merge({
+      status: 'submitted',
+      storyId: 1,
+      bundle: '{"title": "Adam and Eve"}',
+      number: 1,
+    }).create();
+
+    // with incomplete bundle nothing is published or changed
+    let response = await client
+      .post({{ '`/draft/${draft.id}/publish`' }})
+      .form({ bundle: JSON.parse('{"title": ""}') })
+      .loginAs(user)
+      .withCsrfToken();
+
+    response.assertRedirectsTo('/');
+
+    await draft.refresh();
+    assert.equal(draft.parsedBundle['title'], 'Adam and Eve');
+    assert.equal(draft.status, 'submitted');
+
+    // publishing where there are no corresponding chapters
+    response = await client
+      .post({{ '`/draft/${draft.id}/publish`' }})
+      .form({ bundle: JSON.parse(draftOne) })
+      .loginAs(user)
+      .withCsrfToken();
+
+    response.assertRedirectsTo('/');
+
+    const missing = await Draft.find(draft.id);
+    assert.isNull(missing);
+    const published = await Chapter.query()
+      .where({ ...draft.specifier })
+      .first();
+    assert.equal(published?.parsedBundle['title'], 'God came to earth');
+  });
+});

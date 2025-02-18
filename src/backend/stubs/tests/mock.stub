@@ -1,0 +1,7 @@
+{{{ 
+  exports({ to: app.makePath('tests/mock.ts') }) 
+}}}
+export const draftOne = JSON.stringify({
+  title: 'God came to earth',
+  // ... other draft properties based on usage in tests
+});
