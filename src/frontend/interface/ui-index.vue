@@ -135,8 +135,8 @@ const translations = [
   {
     locale: 'vi',
     language: 'Vietnamese: Tiếng Việt',
-    humanTranslation: 2,
-    aiTranslation: 0,
+    humanTranslation: 0,
+    aiTranslation: 345,
     totalCount: 345,
     updatedAt: '2024-03-13T10:25:56.814+00:00',
   },

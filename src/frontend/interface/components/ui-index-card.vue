@@ -18,7 +18,8 @@
         >
           <li
             v-if="percentageCompleted === 100"
-            class="relative h-[30px] bg-[#10B981] rounded-[10px] group"
+            class="relative h-[30px] rounded-[10px] group"
+            :class="percentageHumanTranslation === 100 ? 'bg-[#10B981]' : 'bg-[#3B82F6]'"
           >
             <div
               class="absolute inset-x-0 z-10 items-center justify-center hidden -top-6 group-hover:flex"
@@ -66,7 +67,7 @@
           <span
             class="px-2 py-1 text-xs font-medium leading-4 rounded-xl"
             :class="
-              percentageCompleted === 100
+              percentageCompleted === 100 && percentageHumanTranslation === 100
                 ? 'bg-green-100 text-gray-800'
                 : ' text-red-800 bg-red-100'
             "
