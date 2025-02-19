@@ -4,13 +4,13 @@
       <h3 class="font-['Inter'] text-2xl font-semibold text-gray-800 mt-6">
         Interface: {{ language.language }}
       </h3>
-      <ui-toolbar
+      <UiPageToolbar
         v-model="searchTerm"
         :to-do-count="todoCount"
         :all-count="props.items.length"
         :active-filter="activeFilter"
         @update:active-filter="activeFilter = $event"
-      ></ui-toolbar>
+      />
     </div>
 
     <section class="container px-3 mx-auto mt-5">
@@ -40,7 +40,7 @@
               }}
             </button>
           </div>
-          <UiStringItem
+          <UiPageStringItem
             v-show="filteredItems.length"
             v-for="item in filteredItems"
             :key="item.key"
@@ -52,7 +52,7 @@
         <div>
           <template v-if="filteredItems.length">
             <form>
-              <UiCard
+              <UiPageCard
                 v-if="selectedItem"
                 :key="selectedItem.key"
                 v-model:model="model[selectedItem.key]"
@@ -74,14 +74,14 @@
 import { reactive, ref, computed, watch } from 'vue';
 import { useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
-import uiToolbar from './components/ui-toolbar.vue';
-import UiStringItem from './components/ui-string-item.vue';
+import UiPageToolbar from './components/ui-page-toolbar.vue';
+import UiPageStringItem from './components/ui-page-string-item.vue';
 
 import { router } from '@inertiajs/vue3';
 
 import { ResponseStatus } from '../../types';
 import type { UiItem, UiPageProps, SharedPageProps } from '../../types';
-import UiCard from './components/ui-card.vue';
+import UiPageCard from './components/ui-page-card.vue';
 import Icon from '../shared/icon.vue';
 
 type ModelType = { [key: string]: string | undefined };

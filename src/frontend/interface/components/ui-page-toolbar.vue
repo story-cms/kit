@@ -116,7 +116,7 @@
         </div>
       </div>
     </div>
-    <hr class="container mx-auto px-3" />
+    <hr class="container px-3 mx-auto" />
   </div>
 </template>
 
