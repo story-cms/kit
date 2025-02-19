@@ -8,32 +8,47 @@
         <ul
           class="grid"
           :style="{
-            gridTemplateColumns: `${percentageHumanTranslation}% ${percentageAiTranslation}% ${
-              100 - percentageHumanTranslation - percentageAiTranslation
-            }%`,
+            gridTemplateColumns:
+              percentageCompleted === 100
+                ? '100%'
+                : `${percentageHumanTranslation}% ${percentageAiTranslation}% ${
+                    100 - percentageHumanTranslation - percentageAiTranslation
+                  }%`,
           }"
         >
           <li
-            class="relative h-[30px] bg-[#10B981] first:rounded-l-[10px] last:rounded-r-[10px] group"
+            v-if="percentageCompleted === 100"
+            class="relative h-[30px] bg-[#10B981] rounded-[10px] group"
           >
             <span
               class="absolute -right-5 -top-6 z-10 rounded-t-[10px] rounded-br-[10px] bg-gray-100 p-[10px] text-xs font-medium leading-4 text-black group-hover:block"
             >
-              {{ percentageHumanTranslation }}%
+              100%
             </span>
           </li>
-          <li
-            class="relative h-[30px] bg-[#3B82F6] first:rounded-l-[10px] last:rounded-r-[10px] group"
-          >
-            <span
-              class="absolute -right-5 -top-6 z-10 rounded-t-[10px] rounded-br-[10px] bg-gray-100 p-[10px] text-xs font-medium leading-4 text-black group-hover:block"
+          <template v-else>
+            <li
+              class="relative h-[30px] bg-[#10B981] first:rounded-l-[10px] last:rounded-r-[10px] group"
             >
-              {{ percentageAiTranslation }}%
-            </span>
-          </li>
-          <li
-            class="h-[30px] bg-transparent first:rounded-l-[10px] last:rounded-r-[10px]"
-          ></li>
+              <span
+                class="absolute -right-5 -top-6 z-10 rounded-t-[10px] rounded-br-[10px] bg-gray-100 p-[10px] text-xs font-medium leading-4 text-black group-hover:block"
+              >
+                {{ percentageHumanTranslation }}%
+              </span>
+            </li>
+            <li
+              class="relative h-[30px] bg-[#3B82F6] first:rounded-l-[10px] last:rounded-r-[10px] group"
+            >
+              <span
+                class="absolute -right-5 -top-6 z-10 rounded-t-[10px] rounded-br-[10px] bg-gray-100 p-[10px] text-xs font-medium leading-4 text-black group-hover:block"
+              >
+                {{ percentageAiTranslation }}%
+              </span>
+            </li>
+            <li
+              class="h-[30px] bg-transparent first:rounded-l-[10px] last:rounded-r-[10px]"
+            ></li>
+          </template>
         </ul>
         <div class="flex flex-col items-center justify-center">
           <span
