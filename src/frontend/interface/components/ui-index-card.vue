@@ -64,7 +64,12 @@
         </ul>
         <div class="flex flex-col items-center justify-center">
           <span
-            class="px-2 py-1 text-xs font-medium leading-4 text-red-800 bg-red-100 rounded-xl"
+            class="px-2 py-1 text-xs font-medium leading-4 rounded-xl"
+            :class="
+              percentageCompleted === 100
+                ? 'bg-green-100 text-gray-800'
+                : ' text-red-800 bg-red-100'
+            "
             >{{ percentageCompleted }}%</span
           >
         </div>
