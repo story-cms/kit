@@ -71,7 +71,7 @@
       </div>
     </div>
     <p class="text-lg font-medium leading-7 text-gray-500">
-      Last update: 03 January 2025
+      Last update: {{ formattedDate }}
     </p>
   </div>
 </template>
@@ -100,5 +100,14 @@ const percentageCompleted = computed(() => {
   return Math.round(
     ((props.humanTranslation + props.aiTranslation) / props.totalTranslation) * 100,
   );
+});
+
+const formattedDate = computed(() => {
+  const date = new Date(props.updatedAt);
+  return date.toLocaleDateString('en-US', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  });
 });
 </script>
