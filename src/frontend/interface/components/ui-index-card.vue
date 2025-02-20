@@ -76,7 +76,10 @@
         </div>
       </div>
     </div>
-    <p class="text-lg font-medium leading-7 text-gray-500">
+    <p
+      class="text-lg font-medium leading-7 text-gray-500"
+      :class="props.updatedAt ? '' : 'opacity-0'"
+    >
       Last update: {{ formattedDate }}
     </p>
   </div>
