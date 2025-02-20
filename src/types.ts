@@ -279,6 +279,7 @@ export interface UiProgress {
   locale: string;
   language: string;
   translatedCount: number;
+  prefilledCount: number;
   totalCount: number;
   updatedAt: string;
 }

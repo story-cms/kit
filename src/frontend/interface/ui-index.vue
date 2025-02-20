@@ -23,15 +23,8 @@
     </StickyHeader>
     <section class="container px-3 mx-auto">
       <ul class="grid grid-cols-2 gap-4">
-        <li v-for="item in progress" :key="item.locale">
-          <UiIndexCard
-            :locale="item.locale"
-            :language="item.language"
-            :human-translation="item.humanTranslation"
-            :ai-translation="item.aiTranslation"
-            :total-translation="item.totalCount"
-            :updated-at="item.updatedAt"
-          />
+        <li v-for="item in props.progress" :key="item.locale">
+          <UiIndexCard v-bind="item" />
         </li>
       </ul>
     </section>
