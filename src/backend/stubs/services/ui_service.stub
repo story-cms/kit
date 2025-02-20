@@ -60,6 +60,7 @@ export class UiService {
         translatedCount,
         totalCount,
         updatedAt,
+        prefilledCount: 0,
       });
     }
 
