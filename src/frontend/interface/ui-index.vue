@@ -22,11 +22,16 @@
       </div>
     </StickyHeader>
     <section class="container px-3 mx-auto">
-      <ul class="grid grid-cols-2 gap-4">
+      <ul v-if="props.progress.length > 0" class="grid grid-cols-2 gap-4">
         <li v-for="item in props.progress" :key="item.locale">
           <UiIndexCard v-bind="item" />
         </li>
       </ul>
+      <div v-else class="flex items-center justify-center py-12">
+        <p class="text-lg font-medium leading-7 text-gray-500">
+          No progress on translations yet
+        </p>
+      </div>
     </section>
   </AppLayout>
 </template>
