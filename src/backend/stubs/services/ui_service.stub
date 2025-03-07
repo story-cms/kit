@@ -60,6 +60,7 @@ export class UiService {
         translatedCount,
         totalCount,
         updatedAt,
+        prefilledCount: 0
       });
     }
 
@@ -161,7 +162,7 @@ export class UiService {
       .filter((key) => key.startsWith('@') && key !== '@@locale')
       .map((key) => ({
         key: key.substring(1),
-        description: data[key]['description'].substring(0, 254),
+        description: data[key]['description'],
         placeholders: data[key]['placeholders'],
       }));
 
