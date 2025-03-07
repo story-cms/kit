@@ -1,5 +1,5 @@
 <template>
-  <Story title="Translation Navigation" group="shared">
+  <Story title="Navigation Bar" group="shared">
     <Variant title="SingleStory SingleLanguage Editor" :setup-app="loadData">
       <HeaderBar />
     </Variant>
