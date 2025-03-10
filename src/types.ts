@@ -49,6 +49,7 @@ export interface FieldSpec {
   maxSize?: number;
   tintColor?: string;
   labelOrder?: string;
+  folder?: string;
 }
 
 export interface Scripture {
