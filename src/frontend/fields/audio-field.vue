@@ -23,6 +23,8 @@ import AudioPlayer from './attachments/audio-player.vue';
 
 const props = defineProps({
   ...commonProps,
+  // The path to the file in the S3 bucket without an extension.
+  // If not provided, a unique filename will be generated.
   filePath: {
     type: String,
     required: false,
@@ -50,7 +52,7 @@ const startValue = props.isReadOnly
 
 const url = ref(startValue.url);
 const length = ref(startValue.length);
-const host = new S3Service(props.filePath);
+const host = new S3Service(props.filePath, field.value.folder);
 let durationReady = false;
 
 model.$subscribe(() => {

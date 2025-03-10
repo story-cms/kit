@@ -9,10 +9,34 @@ import { Upload } from '@aws-sdk/lib-storage';
 
 export default class S3Service implements HostService {
   private path: string;
+  private folder: string;
 
-  constructor(path: string) {
+  /**
+   * @param path - The path to the file in the S3 bucket without an extension. If not provided, a unique filename will be generated.
+   * @param folder - The base folder to store the file in
+   */
+  constructor(path: string, folder: string) {
     this.path = path;
+    this.folder = folder;
   }
+
+  getFilePath = (file: File): string => {
+    const extension = file.name.split('.').pop();
+    if (this.path !== '') {
+      return `${this.path}.${extension}`;
+    }
+
+    // Generate a unique filename so a draft upload can't overwrite a published upload
+    const timestamp = Date.now();
+    const slugifiedName = file.name.replace(/\s+/g, '_').toLowerCase();
+    const uniqueFilename = `${timestamp}_${slugifiedName}.${extension}`;
+    if (this.folder) {
+      return `${this.folder}/${uniqueFilename}`;
+    }
+
+    return uniqueFilename;
+  };
+
   upload = async (
     file: File,
     // eslint-disable-next-line no-unused-vars
@@ -30,10 +54,6 @@ export default class S3Service implements HostService {
       return { url: '' };
     }
 
-    const filePath = (path: string, file: File) => {
-      return `${path}.${file.name.split('.').pop()}`;
-    };
-
     const client = new S3Client({
       region: provider.region,
       endpoint: provider.endpoint,
@@ -45,7 +65,7 @@ export default class S3Service implements HostService {
 
     const params = {
       Bucket: provider.bucket,
-      Key: this.path === '' ? file.name : filePath(this.path, file),
+      Key: this.getFilePath(file),
       Body: file,
       ContentType: file.type,
       ACL: 'public-read' as ObjectCannedACL,
@@ -77,6 +97,7 @@ export default class S3Service implements HostService {
         client.destroy();
       }
     }
+
     return { url: '' };
   };
 }

@@ -1,11 +1,16 @@
 <template>
   <Story id="audio-field" title="Audio Field" group="widgets">
-    <Variant title="Model with audio" :setup-app="loadData">
-      <AudioField :field="spec" :file-path="greet('donkey')" />
+    <Variant title="Model without audio" :setup-app="loadData">
+      <AudioField :field="spec" />
       <ModelControl :model="audioModelBlankAudio" />
     </Variant>
 
-    <Variant title="Model without audio" :setup-app="loadData">
+    <Variant title="Special target file path" :setup-app="loadData">
+      <AudioField :field="spec" file-path="drafts/audio/day_01" />
+      <ModelControl :model="audioModelBlankAudio" />
+    </Variant>
+
+    <Variant title="Model with audio" :setup-app="loadData">
       <AudioField :field="spec" />
       <ModelControl :model="audioModelBlankAudio" />
     </Variant>
@@ -48,6 +53,7 @@ const loadData: StoryHandler = ({ variant }): void => {
 
   switch (variant?.title) {
     case 'Model without audio':
+    case 'Special target file path':
       store.model = audioModelBlankAudio;
       return;
 
@@ -77,10 +83,6 @@ const loadData: StoryHandler = ({ variant }): void => {
   }
 };
 
-function greet(name: string): string {
-  return `dev/cat/dog/${name}`;
-}
-
 const provider = {
   defaultPreset: 'cmsplayground',
   cloudName: 'onesheep',
@@ -95,6 +97,7 @@ const spec = {
   uploadPreset: 'cmsplayground',
   provider: provider,
   maxSize: 50662310,
+  folder: 'audio',
 };
 
 const nested = {
