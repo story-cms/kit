@@ -29,7 +29,7 @@ export default class S3Service implements HostService {
     // Generate a unique filename so a draft upload can't overwrite a published upload
     const timestamp = Date.now();
     const slugifiedName = file.name.replace(/\s+/g, '_').toLowerCase();
-    const uniqueFilename = `${timestamp}_${slugifiedName}.${extension}`;
+    const uniqueFilename = `${timestamp}_${slugifiedName}`;
     if (this.folder) {
       return `${this.folder}/${uniqueFilename}`;
     }
