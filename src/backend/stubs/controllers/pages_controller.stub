@@ -68,7 +68,7 @@ export default class PagesController {
     try {
       await page.delete();
     } catch (e) {
-      session.flash('errors', { other: e.message });
+      session.flash('errorsBag', { other: e.message });
     }
 
     return response.redirect('/page', false, 303);
@@ -87,7 +87,7 @@ export default class PagesController {
     } catch (e) {
       const errors = trimmedErrors(e);
 
-      ctx.session.flash('errors', prepend(errors));
+      ctx.session.flash('errorsBag', prepend(errors));
       return ctx.response.redirect().back();
     }
 

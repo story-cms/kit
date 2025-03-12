@@ -39,7 +39,7 @@ export default class UsersController {
       user.language = payload.language;
       user.save();
     } catch (e) {
-      session.flash('errors', { other: e.message });
+      session.flash('errorsBag', { other: e.message });
     }
 
     return response.redirect('/user', false, 303);
@@ -52,7 +52,7 @@ export default class UsersController {
     try {
       await user.delete();
     } catch (e) {
-      session.flash('errors', { other: e.message });
+      session.flash('errorsBag', { other: e.message });
     }
 
     return response.redirect('/user', false, 303);
@@ -67,7 +67,7 @@ export default class UsersController {
       await User.create({ ...payload, password: 'pending' });
     } catch (e) {
       // logger.error(e.message)
-      session.flash('errors', { other: e.message });
+      session.flash('errorsBag', { other: e.message });
     }
 
     return response.redirect('/user', false, 303);
