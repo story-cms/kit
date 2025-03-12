@@ -9,15 +9,19 @@ import { Upload } from '@aws-sdk/lib-storage';
 
 export default class S3Service implements HostService {
   private path: string;
-  private folder: string;
-
+  private folder?: string;
+  private customDomain?: string;
   /**
    * @param path - The path to the file in the S3 bucket without an extension. If not provided, a unique filename will be generated.
-   * @param folder - The base folder to store the file in
+   * @param folder - The optional base folder to store the file in
    */
-  constructor(path: string, folder: string) {
+  constructor(path: string, folder?: string) {
     this.path = path;
     this.folder = folder;
+    const provider = useWidgetsStore().providers.s3;
+    if (provider) {
+      this.customDomain = provider.customDomain;
+    }
   }
 
   getFilePath = (file: File): string => {
@@ -35,6 +39,23 @@ export default class S3Service implements HostService {
     }
 
     return uniqueFilename;
+  };
+
+  getPublicUrl = (url: string): string => {
+    // make sure the url has a protocol
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = `https://${url}`;
+    }
+
+    if (!this.customDomain) {
+      return url;
+    }
+
+    const uri = new URL(url);
+
+    const customDomainUrl = url.replace(uri.host, this.customDomain);
+
+    return customDomainUrl;
   };
 
   upload = async (
@@ -86,10 +107,7 @@ export default class S3Service implements HostService {
       const response = (await upload.done()) as CompleteMultipartUploadCommandOutput;
 
       const url = response?.Location as string;
-      if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        return { url: `https://${url}` };
-      }
-      return { url };
+      return { url: this.getPublicUrl(url) };
     } catch (error) {
       console.error(error);
     } finally {

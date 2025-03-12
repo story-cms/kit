@@ -132,6 +132,7 @@ export interface Providers {
     region: string;
     endpoint: string;
     folder?: string;
+    customDomain?: string;
   };
 
   cloudinary?: {

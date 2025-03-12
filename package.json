@@ -1,6 +1,6 @@
 {
   "name": "@story-cms/kit",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "private": true,
   "type": "module",
   "scripts": {
@@ -16,7 +16,8 @@
     "prepare": "npm run build",
     "story:build": "histoire build",
     "story:preview": "histoire preview",
-    "test:e2e": "npx playwright test tests/e2e/*.ts"
+    "test:e2e": "npx playwright test tests/e2e/*.ts",
+    "test": "npx playwright test tests/unit/*.ts"
   },
   "main": "./dist/backend/index.js",
   "exports": {
