@@ -48,7 +48,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import BooleanField from './boolen-field.vue';
+import BooleanField from './boolean-field.vue';
 import LanguageControl from './helpers/language-control.vue';
 import ErrorControl from './helpers/error-control.vue';
 import ModelControl from './helpers/model-control.vue';

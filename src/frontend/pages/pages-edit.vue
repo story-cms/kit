@@ -136,21 +136,20 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, toRefs, watch } from 'vue';
-import AppLayout from '../../shared/app-layout.vue';
-import StringField from '../string-field.vue';
-import ImageField from '../image-field.vue';
-import type { SharedPageProps, PageEditProps } from '../../../types';
-import { ResponseStatus } from '../../../types';
-import SelectField from '../select-field.vue';
-import MarkdownField from '../markdown-field.vue';
-import PageMetaBox from './page-meta-box.vue';
-import ContentHeader from '../../shared/content-header.vue';
-import BooleanField from '../boolen-field.vue';
-
-import { debounce } from '../../shared/helpers';
-import { useModelStore, useSharedStore, useWidgetsStore } from '../../store';
-import { router } from '@inertiajs/vue3';
 import { DateTime } from 'luxon';
+import { router } from '@inertiajs/vue3';
+import type { SharedPageProps, PageEditProps } from '../../types';
+import { ResponseStatus } from '../../types';
+import { useModelStore, useSharedStore, useWidgetsStore } from '../store';
+import AppLayout from '../shared/app-layout.vue';
+import ContentHeader from '../shared/content-header.vue';
+import { debounce } from '../shared/helpers';
+import StringField from '../fields/string-field.vue';
+import ImageField from '../fields/image-field.vue';
+import SelectField from '../fields/select-field.vue';
+import MarkdownField from '../fields/markdown-field.vue';
+import BooleanField from '../fields/boolean-field.vue';
+import PageMetaBox from './page-meta-box.vue';
 
 const props = defineProps<PageEditProps & SharedPageProps>();
 

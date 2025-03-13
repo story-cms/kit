@@ -13,7 +13,7 @@ import StatusTag from './chapters/status-tag.vue';
 import AnimationField from './fields/animation-field.vue';
 import AudioField from './fields/audio-field.vue';
 import ImageField from './fields/image-field.vue';
-import BooleanField from './fields/boolen-field.vue';
+import BooleanField from './fields/boolean-field.vue';
 import ListField from './fields/list-field.vue';
 import MarkdownField from './fields/markdown-field.vue';
 import NullField from './fields/null-field.vue';

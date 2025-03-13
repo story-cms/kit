@@ -16,8 +16,8 @@
 
 <script setup lang="ts">
 import PagesIndex from './pages-index.vue';
-import { sharedProps } from '../../../frontend/test/mocks';
-import type { PageItem } from '../../../types';
+import { sharedProps } from '../../frontend/test/mocks';
+import type { PageItem } from '../../types';
 
 const pages: PageItem[] = [
   {

@@ -25,7 +25,7 @@
 import IndexFilter from './index-filter.vue';
 import type { TabItem, PageItem } from '../../types';
 import { ref, computed } from 'vue';
-import PageIndexItem from '../fields/pages/page-index-item.vue';
+import PageIndexItem from '../pages/page-index-item.vue';
 
 const items = ref<PageItem[]>([
   {

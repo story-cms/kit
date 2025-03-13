@@ -26,9 +26,9 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { PageMeta } from '../../../types';
-import { formatDate } from '../../shared/helpers';
-import Icon from '../../shared/icon.vue';
+import type { PageMeta } from '../../types';
+import { formatDate } from '../shared/helpers';
+import Icon from '../shared/icon.vue';
 
 const props = defineProps<
   Pick<PageMeta, 'createdAt' | 'updatedAt'> & {

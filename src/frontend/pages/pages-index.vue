@@ -25,14 +25,14 @@
 
 <script setup lang="ts">
 import { ref, computed, toRefs } from 'vue';
-import { usePagesStore, useSharedStore } from '../../store';
-import AppLayout from '../../shared/app-layout.vue';
-import AddItemButton from '../../shared/add-item-button.vue';
-import PageIndexItem from './page-index-item.vue';
 import { router } from '@inertiajs/vue3';
-import { debounce } from '../../shared/helpers';
-import IndexFilter from '../../shared/index-filter.vue';
-import type { TabItem, PageItem, SharedPageProps, PageIndexProps } from '../../../types';
+import type { TabItem, PageItem, SharedPageProps, PageIndexProps } from '../../types';
+import { usePagesStore, useSharedStore } from '../store';
+import AppLayout from '../shared/app-layout.vue';
+import IndexFilter from '../shared/index-filter.vue';
+import AddItemButton from '../shared/add-item-button.vue';
+import { debounce } from '../shared/helpers';
+import PageIndexItem from './page-index-item.vue';
 
 const props = defineProps<PageIndexProps & SharedPageProps>();
 const shared = useSharedStore();

@@ -66,8 +66,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { PropType } from 'vue';
-import Icon from '../../shared/icon.vue';
-import type { PageItem } from '../../../types';
+import Icon from '../shared/icon.vue';
+import type { PageItem } from '../../types';
 
 const props = defineProps({
   page: {
