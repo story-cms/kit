@@ -123,7 +123,7 @@ export default class DraftsController {
       await service.buildIndex(draft.version);
     } catch (e) {
       const errors = e.messages || e.message || 'Error while saving this draft. Sorry!';
-      ctx.session.flash('errors', errors);
+      ctx.session.flash('errorsBag', errors);
     }
 
     return ctx.response.redirect().back();
@@ -144,7 +144,7 @@ export default class DraftsController {
       payload = await draftValidator.validate(data);
     } catch (e) {
       const errors = trimmedErrors(e);
-      ctx.session.flash('errors', errors);
+      ctx.session.flash('errorsBag', errors);
       return ctx.response.redirect().back();
     }
 
@@ -180,7 +180,7 @@ export default class DraftsController {
       draft.bundle = JSON.stringify(payload.bundle);
     } catch (e) {
       const errors = trimmedErrors(e);
-      ctx.session.flash('errors', errors);
+      ctx.session.flash('errorsBag', errors);
       return ctx.response.redirect().back();
     }
 

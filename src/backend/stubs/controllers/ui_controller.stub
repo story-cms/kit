@@ -59,9 +59,9 @@ export default class UisController {
       // return the result
     } catch (error) {
       if (error instanceof UiValidationError) {
-        ctx.session.flash('errors', error.messages);
+        ctx.session.flash('errorsBag', error.messages);
       } else {
-        ctx.session.flash('errors', error.message);
+        ctx.session.flash('errorsBag', error.message);
       }
     }
 

@@ -18,7 +18,7 @@ export default class AuthController {
       ctx.session.put('locale', user.defaultLanguage());
       ctx.response.redirect('/');
     } catch {
-      ctx.session.flash('errors', { credentials: 'Invalid username or password' });
+      ctx.session.flash('errorsBag', { credentials: 'Invalid username or password' });
       ctx.response.redirect().back();
     }
   }
