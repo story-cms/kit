@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-app_gray">
+  <div class="min-h-screen pb-20 bg-app_gray">
     <div>
       <HeaderBar />
       <slot></slot>
