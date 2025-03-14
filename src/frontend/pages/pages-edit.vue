@@ -192,7 +192,6 @@ const publishedAt = computed(() =>
 const isLink = computed((): boolean => selection.value === 'link');
 
 const save = debounce(1000, () => {
-  // clear errors
   shared.clearErrors();
 
   router.post(`/page/${props.page.id}`, getPayload(), {
@@ -204,6 +203,9 @@ const save = debounce(1000, () => {
 
     onError: (errors) => {
       shared.setErrors(errors);
+      // Set isPublished to false when errors occur
+      isPublished.value = false;
+      model.setField('isPublished', false);
       shared.addMessage(ResponseStatus.Failure, 'Error saving page');
     },
   });
@@ -221,6 +223,17 @@ const showMetaBox = ref(true);
 const isLargeScreen = computed(() => {
   return shared.isLargeScreen;
 });
+
+watch(
+  () => shared.errors,
+  (newErrors) => {
+    if (newErrors && Object.keys(newErrors).length > 0) {
+      isPublished.value = false;
+      model.setField('isPublished', false);
+    }
+  },
+  { deep: true },
+);
 
 watch([showMetaBox, isLargeScreen], ([a, c]) => {
   if (c) {
