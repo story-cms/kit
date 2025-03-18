@@ -41,21 +41,8 @@ export default class S3Service implements HostService {
     return uniqueFilename;
   };
 
-  getPublicUrl = (url: string): string => {
-    // make sure the url has a protocol
-    if (!url.startsWith('http://') && !url.startsWith('https://')) {
-      url = `https://${url}`;
-    }
-
-    if (!this.customDomain) {
-      return url;
-    }
-
-    const uri = new URL(url);
-
-    const customDomainUrl = url.replace(uri.host, this.customDomain);
-
-    return customDomainUrl;
+  getPublicUrl = (key: string): string => {
+    return `https://${this.customDomain}/${key}`;
   };
 
   upload = async (
@@ -105,9 +92,11 @@ export default class S3Service implements HostService {
       });
 
       const response = (await upload.done()) as CompleteMultipartUploadCommandOutput;
-
-      const url = response?.Location as string;
-      return { url: this.getPublicUrl(url) };
+      // NOTE: Incompatible with BNAP Audio that uses response.Location
+      // response.Key audio/recaps/1742280691067_episode-1-luke-1-5.mp3
+      // response.Location "https://807541099482344e1b0f4471d98b6705.r2.cloudflarestorage.com/ntj/audio/recaps/1742280691067_episode-1-luke-1-5.mp3"
+      const key = response?.Key as string;
+      return { url: this.getPublicUrl(key) };
     } catch (error) {
       console.error(error);
     } finally {
