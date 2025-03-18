@@ -97,7 +97,6 @@
               'heading',
               'bold',
               'italic',
-              'link',
               'ordered-list',
               'unordered-list',
               'quote',

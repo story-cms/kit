@@ -3,7 +3,7 @@
     <div class="relative min-w-full">
       <ListboxButton
         :disabled="isReadOnly"
-        class="relative w-32 py-2 pl-3 pr-10 text-sm text-left text-gray-700 border border-gray-300 rounded-md shadow-sm cursor-default focus:outline-none focus:ring-1 sm:text-sm"
+        class="relative w-32 py-2 pl-3 pr-10 text-sm text-left text-gray-700 border border-gray-300 rounded-md shadow-sm cursor-default focus:outline-none focus:ring-1 sm:text-sm text-nowrap"
         :class="{ 'bg-gray-100': isReadOnly, 'bg-white': !isReadOnly }"
       >
         <span class="block truncate">{{ model }}</span>
