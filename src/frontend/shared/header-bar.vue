@@ -50,7 +50,7 @@
           :href="shared.meta.helpUrl"
           target="_blank"
           rel="noopener noreferrer"
-          >Help
+          >Support
         </a>
       </div>
     </div>
