@@ -161,6 +161,8 @@ type RequestPayload = {
   isPublished: boolean;
 };
 
+let isRevertingPublished = false;
+
 const { bundle, page } = toRefs(props);
 const model = useModelStore();
 const shared = useSharedStore();
@@ -227,6 +229,7 @@ watch(
   () => shared.errors,
   (newErrors) => {
     if (newErrors && Object.keys(newErrors).length > 0) {
+      isRevertingPublished = true;
       isPublished.value = false;
       model.setField('isPublished', false);
     }
@@ -250,6 +253,11 @@ watch(isLargeScreen, (newValue) => {
 
 onMounted(() => {
   model.$subscribe(() => {
+    if (isRevertingPublished) {
+      isRevertingPublished = false;
+      return;
+    }
+
     save();
     selection.value = model.getField('type', defaultType);
     title.value = model.getField('title', 'Page');
