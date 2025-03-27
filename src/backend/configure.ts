@@ -131,6 +131,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'services/draft_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/page_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/admin_service.stub', {});
+  // await codemods.makeUsingStub(stubsRoot, 'services/ai_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/helpers.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/auth.stub', {});

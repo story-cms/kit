@@ -200,6 +200,13 @@ export default class extends BaseSchema {
       table.string('locale').notNullable()
       table.string('key').notNullable()
       table.text('micro_copy').notNullable()
+      table.enu('flag', ['prefilled', 'recheck'], {
+          useNative: true,
+          enumName: 'ui_flag',
+          existingType: false,
+        })
+        .nullable()
+        .comment('prefilled by ai | recheck needed | null');
 
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })

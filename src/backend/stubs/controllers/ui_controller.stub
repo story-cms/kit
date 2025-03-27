@@ -2,7 +2,7 @@
   exports({ to: app.makePath('app/controllers/ui_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
-import { UiService, UiValidationError } from '#services/ui_service';
+import { UiService } from '#services/ui_service';
 import { UiPageProps } from '@story-cms/kit';
 import storyConfig from '#config/story';
 
@@ -23,7 +23,9 @@ export default class UisController {
     const props: UiPageProps = {
       items,
     };
-    return ctx.inertia.render('UiPage', { ...props });
+    const errors = ctx.session.flashMessages.get('errorsBag') ?? {};
+
+    return ctx.inertia.render('UiPage', { ...props, errors });
   }
 
   // API endpoint to get the translation for a specific locale
@@ -39,7 +41,7 @@ export default class UisController {
     return ctx.response.json(rendered);
   }
 
-  // persist a set of phrases for a translation
+  // persist a translated item
   public async store(ctx: HttpContext) {
     if (!ctx.version) return ctx.response.notFound();
 
@@ -50,19 +52,10 @@ export default class UisController {
     const service = new UiService(locale);
 
     try {
-      // validate the payload
-      const valid = await service.validate(ctx.request.all());
-
-      // use the service to store the payload
-      await service.store(locale, valid);
-
-      // return the result
+      // use the service to validate and store the payload
+      await service.store(locale, ctx.request.all());
     } catch (error) {
-      if (error instanceof UiValidationError) {
-        ctx.session.flash('errorsBag', error.messages);
-      } else {
-        ctx.session.flash('errorsBag', error.message);
-      }
+      ctx.session.flash('errorsBag', error.message);
     }
 
     return ctx.response.redirect().back();
@@ -94,3 +87,4 @@ export default class UisController {
     return storyConfig.languages[0].locale;
   }
 }
+

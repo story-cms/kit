@@ -7,22 +7,64 @@ import axios from 'axios';
 import db from '@adonisjs/lucid/services/db';
 import { UiItem, UiProgress } from '@story-cms/kit';
 import storyConfig from '#config/story';
+import {
+  AiService,
+  TranslationSource,
+  type TranslationInput,
+} from '#services/ai_service';
 
 const sourcePath = storyConfig.meta.microCopySource as string;
 
-export class UiValidationError extends Error {
-  public messages: Record<string, string>;
-  constructor(message: Record<string, string>) {
-    super();
-    this.messages = message;
-  }
-}
+export type UiItemPayload = {
+  key: string;
+  translation: string;
+};
 
 export class UiService {
   protected sourceLocale = 'en';
 
   constructor(locale: string) {
     this.sourceLocale = locale;
+  }
+
+  public async fillMissing(locale: string): Promise<number> {
+    let fillCount = 0;
+
+    const missing = await this.missingItems(locale);
+    if (missing.length === 0) return fillCount;
+
+    const aiService = new AiService();
+    const input: TranslationInput = {
+      outputLocales: [locale],
+      translationSources: missing,
+    };
+
+    const result = await aiService.translate(input);
+    // TODO: remove this
+    console.log(result);
+    if (!result[locale] || result[locale].length === 0) return fillCount;
+
+    // persist the result
+    const fresh = result[locale].map((item) => ({
+      locale,
+      key: item.id,
+      microCopy: item.text,
+      flag: 'prefilled',
+    }));
+
+    const freshKeys = fresh.map((item) => item.key);
+
+    await db.transaction(async (trx) => {
+      // clear the existing locale data
+      await Ui.query({ client: trx })
+        .where('locale', locale)
+        .whereIn('key', freshKeys)
+        .delete();
+      const ui = await Ui.createMany(fresh);
+      fillCount = ui.length;
+    });
+
+    return fillCount;
   }
 
   public async translation(locale: string): Promise<Record<string, string>> {
@@ -60,7 +102,7 @@ export class UiService {
         translatedCount,
         totalCount,
         updatedAt,
-        prefilledCount: 0
+        // prefilledCount: 0,
       });
     }
 
@@ -86,58 +128,86 @@ export class UiService {
     return items;
   }
 
-  public async store(
-    locale: string,
-    payload: Record<string, string>,
-  ): Promise<{ result: string; ingested?: number; attributes?: number }> {
-    var result: { result: string; ingested?: number; attributes?: number } = {
-      result: 'success',
-    };
+  public async missingItems(locale: string): Promise<TranslationSource[]> {
+    const attributes = await UiAttribute.all();
+    const source = await Ui.query().where('locale', this.sourceLocale);
+    const translations = await Ui.query().where('locale', locale);
+    const missing = source
+      // TODO: missing or empty
+      .filter((item) => !translations.find((row) => row.key === item.key))
+      .map<TranslationSource>((item) => {
+        const attribute = attributes.find((attr) => attr.key === item.key);
+        return {
+          id: item.key,
+          text: item.microCopy,
+          description: attribute?.description,
+          placeholders: attribute?.placeholdersArray,
+        };
+      });
 
-    const keys = Object.keys(payload);
-    const fresh = keys.map((key) => ({ locale: locale, key, micro_copy: payload[key] }));
-
-    await db.transaction(async (trx) => {
-      // clear the existing locale data
-      await Ui.query().where('locale', locale).useTransaction(trx).delete();
-      const ui = await Ui.createMany(fresh);
-      result['ingested'] = ui.length;
-    });
-
-    return result;
+    return missing;
   }
 
-  public async validate(payload: Record<string, any>): Promise<Record<string, string>> {
-    // validate placeholders
-    const attributes = await UiAttribute.all();
-    let issues: Record<string, string> = {};
-    Object.keys(payload).forEach((key) => {
-      const attribute = attributes.find((attr) => attr.key === key);
-      if (!attribute?.placeholders) return;
+  public async suggest(locale: string, key: string): Promise<string> {
+    const source = await Ui.query()
+      .where('locale', this.sourceLocale)
+      .where('key', key)
+      .first();
+    if (!source) return '';
 
-      const haystack = payload[key];
-      if (!haystack) return;
+    const attribute = await UiAttribute.query().where('key', key).first();
+
+    const aiService = new AiService();
+    const input: TranslationInput = {
+      outputLocales: [locale],
+      translationSources: [
+        {
+          id: source.key,
+          text: source.microCopy,
+          description: attribute?.description,
+          placeholders: attribute?.placeholdersArray,
+        },
+      ],
+    };
+    const result = await aiService.translate(input);
+    return result[locale][0].text;
+  }
+
+  public async store(locale: string, payload: Record<string, string>): Promise<void> {
+    // validate the payload
+    const input = <UiItemPayload>{
+      key: payload['key'],
+      translation: payload['translation'],
+    };
+
+    const validated = await this.validate(input);
+    await Ui.updateOrCreate(
+      { locale, key: validated.key },
+      { microCopy: validated.translation },
+    );
+  }
+
+  private async validate(payload: UiItemPayload): Promise<UiItemPayload> {
+    // validate not empty
+    if (!payload.translation || payload.translation.trim() === '') {
+      throw new Error('Translation is required');
+    }
+
+    // validate placeholders
+    const attribute = await UiAttribute.query().where('key', payload.key).first();
+    if (attribute?.placeholders) {
+      const haystack = payload.translation;
 
       const missing = attribute.placeholdersArray.filter(
         (ph) => !haystack.includes('{' + ph + '}'),
       );
-      if (missing.length > 0) {
-            issues[key] = {{{ '`Missing placeholders: ${missing.join(", ")}`' }}};
-      }   
-    });
 
-    if (Object.keys(issues).length > 0) {
-      throw new UiValidationError(issues);
+      if (missing.length > 0) {
+        throw new Error({{ '`Missing placeholders: ${missing.join(\', \')}`' }});
+      }
     }
 
-    // collect good strings
-    let collected: Record<string, string> = {};
-    Object.keys(payload).forEach((key) => {
-      if (!payload[key]) return;
-      collected[key] = payload[key];
-    });
-
-    return collected;
+    return payload;
   }
 
   public async pull(
