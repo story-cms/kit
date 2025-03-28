@@ -88,11 +88,7 @@
 
           <div class="flex my-8 space-x-4">
             <!-- eslint-disable vue/no-v-html -->
-            <button
-              class="w-32 btn btn-blue bg-slate-200"
-              type="submit"
-              v-html="submitLabel"
-            ></button>
+            <button class="w-32 btn btn-blue" type="submit" v-html="submitLabel"></button>
             <button class="w-32 bg-white btn" type="button" @click.prevent="onCancel()">
               Cancel
             </button>
