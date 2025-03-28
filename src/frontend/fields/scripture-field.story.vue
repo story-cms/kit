@@ -44,6 +44,7 @@ import type { StoryHandler } from '../shared/helpers';
 
 const scriptureError = {
   'bundle.scripture.verse': ['required validation failed'],
+  'bundle.scripture.reference': ['that does not look quite right'],
 };
 
 const setGerman: StoryHandler = () => {
