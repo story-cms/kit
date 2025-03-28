@@ -17,7 +17,7 @@ export class AiService {
   private SYSTEM_PROMPT =
     'You are a professional translator. Translate texts naturally and concisely for a mobile app. Preserve all placeholders exactly as they appear (e.g., {userName}).';
 
-  async translate(input: TranslationInput): Promise<TranslationOutput> {
+  public async translate(input: TranslationInput): Promise<TranslationOutput> {
     const output: TranslationOutput = {};
     const batches = this.getBatchedSources(input);
     const sourcePlaceholders = new Map(
@@ -125,7 +125,7 @@ export class AiService {
       }
     }
 
-    const usedPlaceholders = text.match(/\{([^}]+)\}/g)?.map((p) => p.slice(1, -1)) || [];
+    const usedPlaceholders = text.match(/\\{([^}]+)\\}/g)?.map((p) => p.slice(1, -1)) || [];
     for (const used of usedPlaceholders) {
       if (!placeholders.includes(used)) {
         throw new Error({{{ '`Undefined placeholder {${used}\} in: "${text}"`' }}});
