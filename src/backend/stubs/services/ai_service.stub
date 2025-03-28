@@ -1,75 +1,56 @@
 {{{
   exports({ to: app.makePath('app/services/ai_service.ts') })
 }}}
+
 import OpenAI from 'openai';
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
 import env from '#start/env';
-import { encode } from 'punycode';
+import { encode } from 'node:punycode';
 
 export class AiService {
-  private client: OpenAI;
-
-  private MAX_INPUT_TOKENS = 4096; // GPT-4 input token limit
-  private MAX_OUTPUT_TOKENS = 4096; // GPT-4 output token limit
-  private TOKEN_BUFFER = 500; // Buffer for system messages and other overhead
-  private LANGUAGE_MODEL = 'gpt-4o-2024-08-06';
-
-  constructor() {
-    this.client = new OpenAI({
-      apiKey: env.get('OPENAI_API_KEY'),
-    });
-  }
-
+  private client = new OpenAI({ apiKey: env.get('OPENAI_API_KEY') });
+  private MAX_INPUT_TOKENS = 4096;
+  private MAX_OUTPUT_TOKENS = 4096;
+  private TOKEN_BUFFER = 500;
+  private MODEL = 'gpt-4o-2024-08-06';
   private SYSTEM_PROMPT =
-    'You are a professional translator. Translate the given texts naturally and accurately for a mobile app. Make translations short and concise for small screen display. Preserve all placeholders exactly as they appear in the original text.';
+    'You are a professional translator. Translate texts naturally and concisely for a mobile app. Preserve all placeholders exactly as they appear (e.g., {userName}).';
 
-  public async translate(input: TranslationInput): Promise<TranslationOutput> {
+  async translate(input: TranslationInput): Promise<TranslationOutput> {
     const output: TranslationOutput = {};
     const batches = this.getBatchedSources(input);
-
-    // Create a map of source IDs to their placeholders for validation
     const sourcePlaceholders = new Map(
-      input.translationSources.map((source) => [source.id, source.placeholders]),
+      input.translationSources.map((s) => [s.id, s.placeholders]),
     );
 
-    for (let i = 0; i < batches.length; i++) {
-
-      const userPrompt = this.createPrompt(input.outputLocales, batches[i]);
+    for (const batch of batches) {
+      const prompt = this.createPrompt(input.outputLocales, batch);
 
       const completion = await this.client.beta.chat.completions.parse({
         messages: [
           { role: 'system', content: this.SYSTEM_PROMPT },
-          { role: 'user', content: userPrompt },
+          { role: 'user', content: prompt },
         ],
-        model: this.LANGUAGE_MODEL,
+        model: this.MODEL,
         response_format: zodResponseFormat(TranslationResponseSchema, 'translations'),
       });
 
       const result = completion.choices[0].message.parsed;
-      if (!result) {
-        throw new Error({{ '`Failed to get translation response for batch ${i + 1}`' }});
-      }
+      if (!result) throw new Error('Translation failed');
 
-      // Validate placeholders in translations before merging
+      // Validate and merge results
       for (const translation of result.translations) {
         for (const item of translation.items) {
-          const originalPlaceholders = sourcePlaceholders.get(item.id);
-          if (originalPlaceholders) {
-            try {
-              this.validatePlaceholders(item.text, originalPlaceholders);
-            } catch (error) {
-              throw new Error(
-                {{ '`Invalid translation for ${item.id} in ${translation.locale}: ${error instanceof Error ? error.message : 'Unknown error'}`' }},
-              );
-            }
+          const placeholders = sourcePlaceholders.get(item.id);
+          if (placeholders) {
+            this.validatePlaceholders(item.text, placeholders);
           }
         }
-
-        if (!output[translation.locale]) {
-          output[translation.locale] = [];
-        }
-        output[translation.locale].push(...translation.items);
+        output[translation.locale] = [
+          ...(output[translation.locale] || []),
+          ...translation.items,
+        ];
       }
     }
 
@@ -77,33 +58,24 @@ export class AiService {
   }
 
   private getBatchedSources(input: TranslationInput): TranslationSource[][] {
-    // Initialize arrays to store batches and current working batch
-    const batches: TranslationSource[][] = []; // Will hold all batches
-    let currentBatch: TranslationSource[] = []; // Current batch being built
-    let currentTokenCount = 0; // Track tokens in current batch
+    const batches: TranslationSource[][] = [];
+    let currentBatch: TranslationSource[] = [];
+    let currentTokenCount = 0;
 
-    // Calculate fixed overhead tokens that will be present in every batch
-    const systemTokens = encode(this.SYSTEM_PROMPT).length; // Tokens in system message
-    const localesTokens = encode(input.outputLocales.join(', ')).length; // Tokens in locale list
-    const baseTokenCount = systemTokens + localesTokens + this.TOKEN_BUFFER; // Total overhead
+    const systemTokens = encode(this.SYSTEM_PROMPT).length;
+    const localesTokens = encode(input.outputLocales.join(', ')).length;
+    const baseTokenCount = systemTokens + localesTokens + this.TOKEN_BUFFER;
 
-    // Process each translation source
     for (const source of input.translationSources) {
       this.validatePlaceholders(source.text, source.placeholders);
-
-      // Calculate tokens for this source item
       const sourceText = this.createPrompt(input.outputLocales, [source]);
-      const sourceTokens = encode(sourceText).length; // Tokens in this source
-      const estimatedOutputTokens = this.estimateOutputTokens(input.outputLocales, [
-        source,
-      ]); // Estimate output tokens for all languages
+      const sourceTokens = encode(sourceText).length;
+      const outputTokens = this.estimateOutputTokens(input.outputLocales, [source]);
 
-      // Check if adding this source would exceed limits
       if (
-        currentTokenCount + sourceTokens + baseTokenCount > this.MAX_INPUT_TOKENS || // Check input limit
-        estimatedOutputTokens > this.MAX_OUTPUT_TOKENS // Check output limit
+        currentTokenCount + sourceTokens + baseTokenCount > this.MAX_INPUT_TOKENS ||
+        outputTokens > this.MAX_OUTPUT_TOKENS
       ) {
-        // If current batch has items, save it and start new batch
         if (currentBatch.length > 0) {
           batches.push(currentBatch);
           currentBatch = [];
@@ -111,81 +83,71 @@ export class AiService {
         }
       }
 
-      // Add source to current batch
       currentBatch.push(source);
       currentTokenCount += sourceTokens;
     }
 
-    // Don't forget the last batch
-    if (currentBatch.length > 0) {
-      batches.push(currentBatch);
-    }
-
+    if (currentBatch.length > 0) batches.push(currentBatch);
     return batches;
   }
 
   private createPrompt(locales: string[], sources: TranslationSource[]): string {
-    const placeholderInstructions =
-      'IMPORTANT: Preserve all placeholders in the format {placeholderName}. Do not translate or modify the placeholder names. For example, if you see {userName}, keep it exactly as {userName} in the translation.';
+    if (!locales.length || !sources.length) {
+      throw new Error('Locales and sources cannot be empty.');
+    }
 
-    const sourcesWithPlaceholders = sources
-      .map((source) => {
-        const placeholderInfo = source.placeholders?.map((p) => {{ '`  - ${p}`' }}).join('\n');
+    const placeholderNote = 'Keep placeholders like {placeholderName} unchanged.';
+    const formattedSources = sources.map(this.formatSource).join(\'\\n\\n\');
 
-        return `ID: ${source.id}
-Text: "${source.text}"${source.description ? `\nDescription: ${source.description}` : ''}${
-          placeholderInfo ? `\nPlaceholders:\n${placeholderInfo}` : ''
-        }`;
-      })
-      .join('\n\n');
+    return {{ '`Translate to ${locales.join(\', \')}:\\n${placeholderNote}\\n\\n${formattedSources}`' }};
 
-    return `Translate the following English texts to these languages: ${locales.join(', ')}\n
-${placeholderInstructions}\n
-Texts to translate:\n${sourcesWithPlaceholders}`;
   }
 
-  private validatePlaceholders(text: string, placeholders?: Array<string>): void {
+  private formatSource(source: TranslationSource): string {
+    const { id, text, description, placeholders } = source;
+
+    return [
+      {{{ '`ID: ${id}`' }}},
+      {{{ '`Text: "${text}"`' }}},
+      description ? {{ '`Description: ${description}`' }} : '',
+      placeholders?.length ? {{ '`Placeholders: ${placeholders.join(\', \')}`' }} : '',
+    ]
+      .filter(Boolean)
+      .join(\'\\n\');
+  }
+
+  private validatePlaceholders(text: string, placeholders?: string[]): void {
     if (!placeholders) return;
 
-    // Check if all defined placeholders are used in the text
     for (const placeholder of placeholders) {
-      if (!text.includes(`{${placeholder}}`)) {
-        throw new Error(
-          `Placeholder {${placeholder}} is defined but not used in the text: "${text}"`,
-        );
+      if (!text.includes({{ '`{${placeholder}\}`' }})) {
+        throw new Error({{{ '`Missing placeholder {${placeholder}\} in: "${text}"`' }}});
       }
     }
 
-    // Check if all used placeholders are defined
     const usedPlaceholders = text.match(/\{([^}]+)\}/g)?.map((p) => p.slice(1, -1)) || [];
     for (const used of usedPlaceholders) {
-      if (!placeholders.some((p) => p === used)) {
-        throw new Error(
-          `Placeholder {${used}} is used in text but not defined in placeholders: "${text}"`,
-        );
+      if (!placeholders.includes(used)) {
+        throw new Error({{{ '`Undefined placeholder {${used}\} in: "${text}"`' }}});
       }
     }
   }
 
   private estimateOutputTokens(locales: string[], sources: TranslationSource[]): number {
-    // Estimate output tokens based on input length and number of target languages
-    // Average translation might be 1.5x the input length due to some languages being more verbose
-    const averageExpansionFactor = 1.5;
-    const baseTokensPerTranslation = 20; // Account for JSON structure, ids, etc.
+    const expansionFactor = 1.5;
+    const baseTokens = 20;
+    let total = 0;
 
-    let totalTokens = 0;
     for (const source of sources) {
       const sourceTokens = encode(source.text).length;
-      totalTokens +=
-        (sourceTokens * averageExpansionFactor + baseTokensPerTranslation) *
-        locales.length;
+      total += (sourceTokens * expansionFactor + baseTokens) * locales.length;
     }
 
-    return Math.ceil(totalTokens);
+    return Math.ceil(total);
   }
 }
 
-// Zod Schemas
+// Schemas
 const TranslationSourceSchema = z.object({
   id: z.string(),
   text: z.string(),
@@ -198,31 +160,31 @@ const TranslationInputSchema = z.object({
   translationSources: z.array(TranslationSourceSchema),
 });
 
-const TranslatedItemSchema = z.object({
-  id: z.string(),
-  text: z.string(),
+const TranslationOutputSchema = z.record(
+  z.string(),
+  z.array(
+    z.object({
+      id: z.string(),
+      text: z.string(),
+    }),
+  ),
+);
+
+const TranslationResponseSchema = z.object({
+  translations: z.array(
+    z.object({
+      locale: z.string(),
+      items: z.array(
+        z.object({
+          id: z.string(),
+          text: z.string(),
+        }),
+      ),
+    }),
+  ),
 });
-
-const TranslationOutputSchema = z.record(z.string(), z.array(TranslatedItemSchema));
-
-const TranslationResponseSchema = z
-  .object({
-    translations: z.array(
-      z.object({
-        locale: z.string(),
-        items: z.array(
-          z.object({
-            id: z.string(),
-            text: z.string(),
-          }),
-        ),
-      }),
-    ),
-  })
-  .strict();
 
 // Types
 export type TranslationOutput = z.infer<typeof TranslationOutputSchema>;
 export type TranslationInput = z.infer<typeof TranslationInputSchema>;
 export type TranslationSource = z.infer<typeof TranslationSourceSchema>;
-
