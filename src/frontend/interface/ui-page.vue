@@ -1,66 +1,121 @@
 <template>
   <AppLayout>
-    <StickyHeader>
-      <div class="container px-3 mx-auto">
-        <div class="flex items-center justify-between py-6">
-          <h3 class="font-['Inter'] text-2xl font-semibold text-gray-800">
-            App Phrases for {{ language.language }}
-          </h3>
+    <div class="container px-3 mx-auto">
+      <h3 class="font-['Inter'] text-2xl font-semibold text-gray-800 mt-6">
+        Interface: {{ language.language }}
+      </h3>
+      <ui-toolbar
+        v-model="searchTerm"
+        :to-do-count="todoCount"
+        :all-count="props.items.length"
+        :active-filter="activeFilter"
+        @update:active-filter="activeFilter = $event"
+      ></ui-toolbar>
+    </div>
 
-          <div class="flex items-center space-x-6">
+    <section class="container px-3 mx-auto mt-5">
+      <div class="grid grid-cols-[24fr_76fr] gap-x-6 h-[calc(100vh-12rem)]">
+        <div class="overflow-y-auto scrollbar-hide">
+          <div v-if="filteredItems.length" class="sticky top-0 bg-gray-50">
             <button
+              @click="translateItems"
               type="button"
-              :disabled="isBusy"
-              class="w-32 rounded-[38px] border px-[15px] py-[9px] text-sm/5 font-medium text-white shadow focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset]"
+              class="inline-flex items-center justify-center gap-x-2 rounded-full px-3.5 py-2.5 text-sm font-medium text-gray-800 shadow-sm hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ring-1 ring-inset ring-gray-300 w-full leading-4 mb-4"
               :class="{
-                'bg-gray-400 opacity-80 hover:bg-gray-400 hover:shadow-none active:opacity-80':
-                  isBusy,
-                'bg-green-500 hover:bg-green-400': !isBusy,
+                'bg-blue-50': isTranslating,
+                'bg-white': !isTranslating,
               }"
-              @click.prevent="save"
             >
-              Save
+              <Icon
+                name="sparkles"
+                class="w-4 h-4"
+                :class="{
+                  'text-gray-800': !isTranslating,
+                  'text-blue-500': isTranslating,
+                }"
+              />
+
+              {{
+                isTranslating ? 'Translation in progress...' : 'AI translate to do items'
+              }}
             </button>
+          </div>
+          <UiStringItem
+            v-show="filteredItems.length"
+            v-for="item in filteredItems"
+            :key="item.key"
+            :item="item"
+            :is-selected="selectedItem?.key === item.key"
+            @click="selectItem(item)"
+          />
+        </div>
+        <div>
+          <template v-if="filteredItems.length">
+            <form>
+              <UiCard
+                v-if="selectedItem"
+                :key="selectedItem.key"
+                v-model:model="model[selectedItem.key]"
+                :item="selectedItem"
+                :error="errors[selectedItem.key]"
+              />
+            </form>
+          </template>
+          <div v-else class="py-10 text-gray-500">
+            <p class="text-sm text-center">No results found for "{{ searchTerm }}"</p>
           </div>
         </div>
       </div>
-    </StickyHeader>
-
-    <section class="container px-3 mx-auto mt-5">
-      <form>
-        <ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
-          <UiCard
-            v-for="item in filteredItems"
-            :key="item.key"
-            v-model:model="model[item.key]"
-            :item="item"
-            :error="errors[item.key]"
-          />
-        </ul>
-      </form>
     </section>
   </AppLayout>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, computed } from 'vue';
+import { reactive, ref, computed, watch } from 'vue';
 import { useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
-import StickyHeader from '../shared/sticky-header.vue';
+import uiToolbar from './components/ui-toolbar.vue';
+import UiStringItem from './components/ui-string-item.vue';
+
 import { router } from '@inertiajs/vue3';
 
 import { ResponseStatus } from '../../types';
 import type { UiItem, UiPageProps, SharedPageProps } from '../../types';
-import UiCard from '../interface/components/ui-card.vue';
+import UiCard from './components/ui-card.vue';
+import Icon from '../shared/icon.vue';
 
 type ModelType = { [key: string]: string | undefined };
 
 const props = defineProps<SharedPageProps & UiPageProps>();
 
+const searchTerm = ref('');
+
+const todoCount = computed(() => {
+  return props.items.filter((item) => !item.translation).length;
+});
+
+const activeFilter = ref<'todo' | 'all'>('all');
+
 const filteredItems = computed(() => {
-  return props.items
+  let items = props.items;
+
+  if (activeFilter.value === 'todo') {
+    items = items.filter((item) => !item.translation);
+  }
+
+  if (searchTerm.value) {
+    const search = searchTerm.value.toLowerCase();
+    items = items.filter(
+      (item) =>
+        item.source.toLowerCase().includes(search) ||
+        item.description?.toLowerCase().includes(search) ||
+        item.key.toLowerCase().includes(search),
+    );
+  }
+
+  return items
     .filter((item) => !item.translation)
-    .concat(props.items.filter((item) => !!item.translation));
+    .concat(items.filter((item) => !!item.translation));
 });
 
 const shared = useSharedStore();
@@ -80,6 +135,35 @@ const listToMap = (list: UiItem[]): ModelType => {
 const startValues = listToMap(props.items);
 const model = reactive(startValues);
 
+const selectedItem = ref<UiItem | null>(null);
+
+watch(
+  [filteredItems],
+  () => {
+    if (
+      filteredItems.value.length &&
+      (!selectedItem.value ||
+        !filteredItems.value.some((item) => item.key === selectedItem.value?.key))
+    ) {
+      selectedItem.value = filteredItems.value[0];
+    }
+  },
+  { immediate: true },
+);
+
+const selectItem = (item: UiItem) => {
+  selectedItem.value = item;
+};
+
+const isTranslating = ref(false);
+
+const translateItems = () => {
+  isTranslating.value = true;
+  setTimeout(() => {
+    isTranslating.value = false;
+  }, 10000);
+};
+
 const save = () => {
   isBusy.value = true;
   router.post('/ui', model, {
@@ -96,3 +180,14 @@ const save = () => {
   });
 };
 </script>
+
+<style scoped>
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+</style>
