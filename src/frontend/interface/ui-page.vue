@@ -4,61 +4,33 @@
       <h3 class="font-['Inter'] text-2xl font-semibold text-gray-800 mt-6">
         Interface: {{ language.language }}
       </h3>
-      <ui-toolbar
-        v-model="searchTerm"
-        :to-do-count="todoCount"
-        :all-count="props.items.length"
-        :active-filter="activeFilter"
-        @update:active-filter="activeFilter = $event"
-      ></ui-toolbar>
+      <ui-toolbar v-model="searchTerm" :to-do-count="todoCount" :all-count="props.items.length" :active-filter="activeFilter" @update:active-filter="activeFilter = $event"></ui-toolbar>
     </div>
 
     <section class="container px-3 mx-auto mt-5">
       <div class="grid grid-cols-[24fr_76fr] gap-x-6 h-[calc(100vh-12rem)]">
         <div class="overflow-y-auto scrollbar-hide">
           <div v-if="filteredItems.length" class="sticky top-0 bg-gray-50">
-            <button
-              @click="translateItems"
-              type="button"
-              class="inline-flex items-center justify-center gap-x-2 rounded-full px-3.5 py-2.5 text-sm font-medium text-gray-800 shadow-sm hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ring-1 ring-inset ring-gray-300 w-full leading-4 mb-4"
-              :class="{
-                'bg-blue-50': isTranslating,
-                'bg-white': !isTranslating,
-              }"
-            >
-              <Icon
-                name="sparkles"
-                class="w-4 h-4"
-                :class="{
-                  'text-gray-800': !isTranslating,
-                  'text-blue-500': isTranslating,
-                }"
-              />
+            <button @click="translateItems" type="button" class="inline-flex items-center justify-center gap-x-2 rounded-full px-3.5 py-2.5 text-sm font-medium text-gray-800 shadow-sm hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ring-1 ring-inset ring-gray-300 w-full leading-4 mb-4" :class="{
+              'bg-blue-50': isTranslating,
+              'bg-white': !isTranslating,
+            }">
+              <Icon name="sparkles" class="w-4 h-4" :class="{
+                'text-gray-800': !isTranslating,
+                'text-blue-500': isTranslating,
+              }" />
 
               {{
                 isTranslating ? 'Translation in progress...' : 'AI translate to do items'
               }}
             </button>
           </div>
-          <UiStringItem
-            v-show="filteredItems.length"
-            v-for="item in filteredItems"
-            :key="item.key"
-            :item="item"
-            :is-selected="selectedItem?.key === item.key"
-            @click="selectItem(item)"
-          />
+          <UiStringItem v-show="filteredItems.length" v-for="item in filteredItems" :key="item.key" :item="item" :is-selected="selectedItem?.key === item.key" @click="selectItem(item)" />
         </div>
         <div>
           <template v-if="filteredItems.length">
             <form>
-              <UiCard
-                v-if="selectedItem"
-                :key="selectedItem.key"
-                v-model:model="model[selectedItem.key]"
-                :item="selectedItem"
-                :error="errors[selectedItem.key]"
-              />
+              <UiCard v-if="selectedItem" :key="selectedItem.key" v-model:model="model[selectedItem.key]" :item="selectedItem" :error="errors[selectedItem.key]" />
             </form>
           </template>
           <div v-else class="py-10 text-gray-500">
@@ -157,11 +129,33 @@ const selectItem = (item: UiItem) => {
 
 const isTranslating = ref(false);
 
-const translateItems = () => {
+const translateItems = async () => {
+  if (isTranslating.value) return;
+
   isTranslating.value = true;
-  setTimeout(() => {
+  try {
+    // Get untranslated items only
+    const itemsToTranslate = props.items.filter(item => !item.translation);
+
+
+    const payload = itemsToTranslate.reduce((acc, item) => {
+      acc[item.key] = '';
+      return acc;
+    }, {} as Record<string, string>);
+
+
+    router.post('/ui/translate-bulk', payload, {
+      preserveScroll: true,
+      onSuccess: () => {
+        shared.addMessage(ResponseStatus.Accomplishment, 'Items translated successfully');
+      },
+      onError: () => {
+        shared.addMessage(ResponseStatus.Failure, 'Failed to translate items');
+      },
+    });
+  } finally {
     isTranslating.value = false;
-  }, 10000);
+  }
 };
 
 const save = () => {
@@ -183,11 +177,14 @@ const save = () => {
 
 <style scoped>
 .scrollbar-hide {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-  display: none; /* Chrome, Safari and Opera */
+  display: none;
+  /* Chrome, Safari and Opera */
 }
 </style>
