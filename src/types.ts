@@ -275,6 +275,7 @@ export interface UiItem {
   translation?: string;
   description?: string;
   placeholders?: string[];
+  flag?: string;
 }
 
 export interface UiProgress {
