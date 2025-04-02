@@ -278,6 +278,13 @@ export interface UiItem {
   flag?: string;
 }
 
+export type UiItemPayload = {
+  key: string;
+  locale: string;
+  translation: string;
+  isPrefilled: boolean;
+};
+
 export interface UiProgress {
   locale: string;
   language: string;
