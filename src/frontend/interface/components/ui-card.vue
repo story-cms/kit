@@ -45,9 +45,7 @@
         <div class="grid grid-cols-2 mt-4 col-span-full">
           <div>
             <div v-if="item.description">
-              <span class="block font-medium text-gray-700 text-sm/5"
-                >Context {{ item.flag }}</span
-              >
+              <span class="block font-medium text-gray-700 text-sm/5">Context</span>
               <div class="mt-1">
                 <span class="font-medium text-gray-600 text-base/5">
                   {{ item.description }}

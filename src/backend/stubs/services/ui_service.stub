@@ -5,7 +5,7 @@ import Ui from '#models/ui';
 import UiAttribute from '#models/ui_attribute';
 import axios from 'axios';
 import db from '@adonisjs/lucid/services/db';
-import { UiItem, UiProgress } from '@story-cms/kit';
+import { UiItem, UiProgress, type UiItemPayload } from '@story-cms/kit';
 import storyConfig from '#config/story';
 import {
   AiService,
@@ -14,11 +14,6 @@ import {
 } from '#services/ai_service';
 
 const sourcePath = storyConfig.meta.microCopySource as string;
-
-export type UiItemPayload = {
-  key: string;
-  translation: string;
-};
 
 export class UiService {
   protected sourceLocale = 'en';
@@ -40,8 +35,6 @@ export class UiService {
     };
 
     const result = await aiService.translate(input);
-    // TODO: remove this
-    console.log(result);
     if (!result[locale] || result[locale].length === 0) return fillCount;
 
     // persist the result
@@ -122,6 +115,8 @@ export class UiService {
         translation: translation?.microCopy,
         description: attribute?.description ?? item.key,
         placeholders: attribute?.placeholdersArray || [],
+        flag: translation?.flag ?? undefined,
+        updatedAt: (translation?.updatedAt ?? item.updatedAt).toISO() ?? '',
       };
     });
 
@@ -173,17 +168,26 @@ export class UiService {
     return result[locale][0].text;
   }
 
-  public async store(locale: string, payload: Record<string, string>): Promise<void> {
+  public async flag(locale: string, key: string, state: string): Promise<void> {
+    await Ui.updateOrCreate({ locale, key }, { flag: state });
+  }
+
+  public async store(locale: string, payload: Record<string, any>): Promise<void> {
     // validate the payload
     const input = <UiItemPayload>{
       key: payload['key'],
       translation: payload['translation'],
+      isPrefilled: payload['isPrefilled'],
+      locale: locale,
     };
 
     const validated = await this.validate(input);
     await Ui.updateOrCreate(
       { locale, key: validated.key },
-      { microCopy: validated.translation },
+      {
+        microCopy: validated.translation,
+        flag: validated.isPrefilled ? 'prefilled' : null,
+      },
     );
   }
 

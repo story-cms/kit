@@ -8,6 +8,9 @@ const UiController = () => import('#controllers/ui_controller');
 export const ui = () => {
   router.get('/ui', [UiController, 'index']);
   router.post('/ui', [UiController, 'store']);
+  router.post('/ui/translate-bulk', [UiController, 'translateBulk']);
+  router.post('/ui/suggest', [UiController, 'suggest']);
+  router.post('/ui/flag', [UiController, 'flag']);
 };
 
 export const uiTools = () => {

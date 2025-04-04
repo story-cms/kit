@@ -237,6 +237,7 @@ const translateItems = async () => {
     shared.addMessage(ResponseStatus.Failure, 'Failed to translate items');
   } finally {
     isTranslating.value = false;
+    router.reload({ only: ['ui', 'items'] });
   }
 };
 
