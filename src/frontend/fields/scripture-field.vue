@@ -27,7 +27,7 @@
         @blur="lookup"
       />
       <p v-if="referenceHasError" class="text-sm text-error">
-        This field cannot be empty
+        {{ referenceErrorMessage }}
       </p>
       <label
         class="block mt-4 input-label"
@@ -187,6 +187,11 @@ const verseErrorMessage = computed(() => {
   return messages.length > 0 ? messages[0] : '';
 });
 
+const referenceErrorMessage = computed(() => {
+  const messages = shared.errors[`bundle.${fieldPath.value}.reference`];
+  return messages.length > 0 ? messages[0] : '';
+});
+
 const lookupTranslatedScripture = () => {
   if (reference.value !== '') return;
   if (props.isReadOnly) return;
@@ -230,7 +235,7 @@ const setScripture = async (reference: string) => {
   );
 
   if (response.status !== 200) {
-    throw new Error(response.statusText);
+    return;
   }
 
   const data = await response.json();

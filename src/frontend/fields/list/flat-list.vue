@@ -24,8 +24,14 @@
       </div>
     </div>
   </div>
-  <div v-if="canMutate" class="mt-8 ml-8">
+  <div v-if="canMutate" class="mt-8 ml-8 flex flex-row items-center gap-4">
     <AddItemButton :label="field.label" @add="emit('addSet')" />
+    <div v-if="listNeedsItem()" class="cursor-pointer text-accent-one">
+      <div class="p-2 bg-white border rounded-full flex flex-row items-center">
+        <Icon name="exclamation" class="pr-2 text-red-500" />
+        <p class="text-sm text-error">At least one item is required</p>
+      </div>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -67,4 +73,20 @@ const canMutate = computed(() => {
 
   return !language.isTranslation;
 });
+
+const listNeedsItem = (): boolean => {
+  if (props.isReadOnly) return false;
+  let foundItem = false;
+  for (const key in language.errors) {
+    const needle = `bundle.${props.fieldPath}`;
+    if (key.startsWith(needle)) {
+      const remaining = key.slice(needle.length);
+      if (remaining.startsWith('.') && /\d+/.test(remaining.slice(1))) {
+        foundItem = true;
+      }
+    }
+    if (!foundItem && props.listItems.length === 0) return true;
+    return false;
+  }
+};
 </script>
