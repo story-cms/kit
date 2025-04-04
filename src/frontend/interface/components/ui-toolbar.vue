@@ -124,8 +124,6 @@
 </template>
 
 <script setup lang="ts">
-import Icon from '../../shared/icon.vue';
-
 defineProps<{
   modelValue: string;
   toDoCount: number;
