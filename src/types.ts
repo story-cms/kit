@@ -276,6 +276,7 @@ export interface UiItem {
   description?: string;
   placeholders?: string[];
   flag?: string;
+  updatedAt?: string;
 }
 
 export type UiItemPayload = {
