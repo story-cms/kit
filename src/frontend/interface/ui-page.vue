@@ -61,7 +61,9 @@
               />
             </form>
             <div v-show="isTranslating" class="grid w-full h-full place-content-center">
-              <p>Loading...</p>
+              <RivePlayer
+                url="https://res.cloudinary.com/redeem/raw/upload/v1743751242/story-cms-ui/audio_visualizer_resize_teno9b.riv"
+              />
             </div>
           </template>
           <div v-else class="py-10 text-gray-500">
@@ -86,6 +88,7 @@ import Icon from '../shared/icon.vue';
 import uiToolbar from './components/ui-toolbar.vue';
 import UiStringItem from './components/ui-string-item.vue';
 import UiCard from './components/ui-card.vue';
+import RivePlayer from '../fields/attachments/rive-player.vue';
 
 type ModelType = { [key: string]: string | undefined };
 
