@@ -6,11 +6,12 @@
           <button
             type="button"
             :class="[
-              'relative inline-flex items-center px-4 py-2 text-sm font-medium leading-4 border-r rounded-l-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10',
+              'relative inline-flex items-center px-4 py-2 text-sm font-medium leading-4 border-r rounded-l-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10 disabled:cursor-not-allowed',
               activeFilter === 'todo'
                 ? 'bg-indigo-50 text-indigo-700 ring-indigo-700'
                 : 'bg-white text-gray-900',
             ]"
+            :disabled="!toDoCount"
             @click="$emit('update:activeFilter', 'todo')"
           >
             To do
@@ -40,8 +41,10 @@
         <button
           type="button"
           class="inline-flex items-center gap-x-2 rounded-full bg-white hover:bg- px-3.5 py-2.5 text-sm font-medium text-indigo-700 shadow-sm hover:bg-indigo-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ring-1 ring-inset ring-indigo-700"
+          @click="$emit('sort', 'lastEdited')"
         >
           <svg
+            v-if="sortBy?.field === 'lastEdited'"
             width="10"
             height="10"
             viewBox="0 0 10 10"
@@ -60,6 +63,7 @@
         <button
           type="button"
           class="inline-flex items-center gap-x-2 rounded-full bg-white hover:bg- px-3.5 py-2.5 text-sm font-medium text-indigo-700 shadow-sm hover:bg-indigo-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ring-1 ring-inset ring-indigo-700"
+          @click="$emit('sort', 'status')"
         >
           <svg
             width="14"
@@ -85,7 +89,6 @@
               fill="#374151"
             />
           </svg>
-
           Status
         </button>
       </div>
@@ -116,20 +119,27 @@
         </div>
       </div>
     </div>
-    <hr class="container mx-auto px-3" />
+    <hr class="container px-3 mx-auto" />
   </div>
 </template>
 
 <script setup lang="ts">
+import Icon from '../../shared/icon.vue';
+
 defineProps<{
   modelValue: string;
   toDoCount: number;
   allCount: number;
   activeFilter: 'todo' | 'all';
+  sortBy?: {
+    field: 'status' | 'lastEdited' | null;
+    direction: 'asc' | 'desc';
+  };
 }>();
 
 defineEmits<{
   'update:modelValue': [value: string];
   'update:activeFilter': [value: 'todo' | 'all'];
+  sort: [field: 'status' | 'lastEdited'];
 }>();
 </script>

@@ -16,7 +16,16 @@
     </p>
     <div class="flex items-center justify-center">
       <Icon v-if="isSelected" class="text-white h-[10px] w-auto" name="chevron-right" />
-      <Icon v-else class="size-4 text-blue-500" name="sparkles" />
+      <Icon
+        v-else-if="item.flag === 'recheck'"
+        class="text-blue-500 size-4"
+        name="flag"
+      />
+      <Icon
+        v-else-if="item.flag === 'prefilled'"
+        class="text-blue-500 size-4"
+        name="sparkles"
+      />
     </div>
   </button>
 </template>
