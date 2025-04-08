@@ -4,7 +4,7 @@
       <h3 class="font-['Inter'] text-2xl font-semibold text-gray-800 mt-6">
         Interface: {{ language.language }}
       </h3>
-      <ui-toolbar
+      <UiToolbar
         v-model="searchTerm"
         :to-do-count="todoCount"
         :all-count="props.items.length"
@@ -12,7 +12,7 @@
         :sort-by="sortBy"
         @update:active-filter="activeFilter = $event"
         @sort="handleSort"
-      ></ui-toolbar>
+      />
     </div>
 
     <section class="container px-3 mx-auto mt-5">
@@ -90,6 +90,10 @@
 import { reactive, ref, computed, watch } from 'vue';
 import axios from 'axios';
 import { router } from '@inertiajs/vue3';
+
+import UiToolbar from './components/ui-toolbar.vue';
+import UiStringItem from './components/ui-string-item.vue';
+import UiCard from './components/ui-card.vue';
 
 import { useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
