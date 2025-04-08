@@ -35,6 +35,8 @@
         <Link
           v-if="isMultiLingual"
           class="px-2 py-3 text-sm text-gray-500 hover:text-gray-700"
+          :class="{ 'cursor-not-allowed': shared.language.locale === 'en' }"
+          :disabled="shared.language.locale === 'en'"
           href="/ui"
           >Interface</Link
         >

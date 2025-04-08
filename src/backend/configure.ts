@@ -131,6 +131,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'services/draft_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/page_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/admin_service.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'services/ai_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/helpers.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/auth.stub', {});
@@ -156,6 +157,7 @@ export async function configure(command: Configure) {
   await codemods.defineEnvVariables({ CLOUDINARY_CLOUD_NAME: 'pending' });
   await codemods.defineEnvVariables({ CLOUDINARY_PRESET: 'pending' });
   await codemods.defineEnvVariables({ BIBLE_API_KEY: 'redacted' });
+  await codemods.defineEnvVariables({ OPENAI_API_KEY: 'redacted' });
 
   /**
    * Define environment variables validations
@@ -181,6 +183,13 @@ export async function configure(command: Configure) {
       BIBLE_API_KEY: `Env.schema.string(),`,
     },
     leadingComment: 'Configuration for the Bible API service',
+  });
+
+  await codemods.defineEnvValidations({
+    variables: {
+      OPENAI_API_KEY: `Env.schema.string(),`,
+    },
+    leadingComment: 'Configuration for the OpenAI API service',
   });
 
   /**

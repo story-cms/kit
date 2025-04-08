@@ -275,7 +275,16 @@ export interface UiItem {
   translation?: string;
   description?: string;
   placeholders?: string[];
+  flag?: string;
+  updatedAt?: string;
 }
+
+export type UiItemPayload = {
+  key: string;
+  locale: string;
+  translation: string;
+  isPrefilled: boolean;
+};
 
 export interface UiProgress {
   locale: string;
@@ -313,3 +322,8 @@ export type StoryConfig = {
     tracking: string;
   };
 };
+
+export enum FlagState {
+  PREFILLED = 'prefilled',
+  RECHECK = 'recheck',
+}

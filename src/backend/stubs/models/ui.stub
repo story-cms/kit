@@ -18,6 +18,9 @@ export default class Ui extends BaseModel {
   @column()
   declare microCopy: string;
 
+  @column()
+  declare flag: string | null;
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime;
 

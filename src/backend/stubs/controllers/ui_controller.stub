@@ -2,7 +2,7 @@
   exports({ to: app.makePath('app/controllers/ui_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
-import { UiService, UiValidationError } from '#services/ui_service';
+import { UiService } from '#services/ui_service';
 import { UiPageProps } from '@story-cms/kit';
 import storyConfig from '#config/story';
 
@@ -23,7 +23,9 @@ export default class UisController {
     const props: UiPageProps = {
       items,
     };
-    return ctx.inertia.render('UiPage', { ...props });
+    const errors = ctx.session.flashMessages.get('errorsBag') ?? {};
+
+    return ctx.inertia.render('UiPage', { ...props, errors });
   }
 
   // API endpoint to get the translation for a specific locale
@@ -39,7 +41,7 @@ export default class UisController {
     return ctx.response.json(rendered);
   }
 
-  // persist a set of phrases for a translation
+  // persist a translated item
   public async store(ctx: HttpContext) {
     if (!ctx.version) return ctx.response.notFound();
 
@@ -50,22 +52,62 @@ export default class UisController {
     const service = new UiService(locale);
 
     try {
-      // validate the payload
-      const valid = await service.validate(ctx.request.all());
-
-      // use the service to store the payload
-      await service.store(locale, valid);
-
-      // return the result
+      // use the service to validate and store the payload
+      await service.store(locale, ctx.request.all());
     } catch (error) {
-      if (error instanceof UiValidationError) {
-        ctx.session.flash('errorsBag', error.messages);
-      } else {
-        ctx.session.flash('errorsBag', error.message);
-      }
+      return ctx.response.abort({ message: (error as Error).message }, 422);
+    }
+  }
+
+  public async translateBulk(ctx: HttpContext) {
+    if (!ctx.version) return ctx.response.notFound();
+
+    if (!this.isTranslation(ctx)) {
+      return ctx.response.unprocessableEntity('Cannot translate source language');
     }
 
+    const locale = ctx.version.locale;
+    const service = new UiService(this.sourceLocale);
+
+    try {
+      await service.fillMissing(locale);
+    } catch (error) {
+      return ctx.response.internalServerError({ error: 'Failed to translate items' });
+    }
     return ctx.response.redirect().back();
+  }
+
+  public async suggest(ctx: HttpContext) {
+    if (!ctx.version) return ctx.response.notFound();
+
+    if (!this.isTranslation(ctx)) {
+      return ctx.response.unprocessableEntity('Cannot suggest translation');
+    }
+
+    const locale = ctx.version.locale;
+    const key = ctx.request.input('key');
+
+    const service = new UiService(this.sourceLocale);
+    const suggestion = await service.suggest(locale, key);
+
+    return ctx.response.json({ suggestion });
+  }
+
+  public async flag(ctx: HttpContext) {
+    if (!ctx.version) return ctx.response.notFound();
+
+    const service = new UiService(ctx.version.locale);
+    try {
+      await service.flag(
+        ctx.version.locale,
+        ctx.request.input('key'),
+        ctx.request.input('state'),
+      );
+    } catch (error) {
+      return ctx.response.internalServerError();
+    }
+
+    return ctx.response.finish();
   }
 
   // API endpoint to trigger a pull the source phrases from project repository
@@ -80,7 +122,6 @@ export default class UisController {
       const result = await service.pull(token);
       return response.json(result);
     } catch (error) {
-      console.error(error);
       return response.internalServerError();
     }
   }
@@ -94,3 +135,4 @@ export default class UisController {
     return storyConfig.languages[0].locale;
   }
 }
+

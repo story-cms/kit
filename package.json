@@ -52,7 +52,10 @@
     "luxon": "^3.5.0",
     "marked": "^15.0.3",
     "pinia": "^2.1.7",
-    "vue": "^3.4.21"
+    "vue": "^3.4.21",
+    "gpt-tokenizer": "^2.9.0",
+    "openai": "^4.89.0",
+    "zod": "^3.24.2"
   },
   "//": {},
   "devDependencies": {
@@ -69,7 +72,7 @@
     "del-cli": "^5.1.0",
     "eslint": "^9.10.0",
     "histoire": "^0.17.17",
-    "tailwindcss": "^3.4.3",
+    "tailwindcss": "^3.4.17",
     "ts-node": "^10.9.2",
     "tsup": "^8.0.1",
     "vite": "^5.2.0",
