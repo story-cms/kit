@@ -56,7 +56,7 @@
                 :key="selectedItem.key"
                 v-model:model="model[selectedItem.key]"
                 :item="selectedItem"
-                :error="errors[selectedItem.key]"
+                :error="itemError"
                 @flagged="handleFlagged"
                 @set-flag="setFlag"
                 @save="save"
@@ -108,11 +108,9 @@ type ModelType = { [key: string]: string | undefined };
 const props = defineProps<SharedPageProps & UiPageProps>();
 
 const searchTerm = ref('');
-
+const itemError = ref('');
 const todoCount = computed(() => {
-  return props.items.filter(
-    (item) => !item.translation || item.flag === FlagState.RECHECK,
-  ).length;
+  return props.items.filter((item) => !item.translation || !!item.flag).length;
 });
 
 const activeFilter = ref<'todo' | 'all'>('todo');
@@ -128,7 +126,7 @@ const filteredItems = computed(() => {
   let items = props.items;
 
   if (activeFilter.value === 'todo') {
-    items = items.filter((item) => !item.translation || item.flag === 'recheck');
+    items = items.filter((item) => !item.translation || !!item.flag);
   }
 
   if (searchTerm.value) {
@@ -253,8 +251,8 @@ const save = async (payload: UiItemPayload) => {
       shared.addMessage(ResponseStatus.Accomplishment, 'Translations saved');
     }
   } catch (error) {
-    error.value = error.response?.data?.message || 'Error saving translation';
     shared.addMessage(ResponseStatus.Failure, 'Error saving translation');
+    itemError.value = error.response?.data?.message || 'Error saving translation';
   }
 };
 

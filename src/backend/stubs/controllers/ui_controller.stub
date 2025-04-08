@@ -55,7 +55,7 @@ export default class UisController {
       // use the service to validate and store the payload
       await service.store(locale, ctx.request.all());
     } catch (error) {
-      return ctx.response.abort({ message: (error as Error).message }, 400);
+      return ctx.response.abort({ message: (error as Error).message }, 422);
     }
   }
 

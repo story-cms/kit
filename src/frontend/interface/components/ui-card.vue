@@ -170,11 +170,10 @@ const isOpen = ref(false);
 const suggestion = ref('');
 const isLoading = ref(false);
 
-const error = ref('');
-
 const props = defineProps<{
   item: UiItem;
   model: string | undefined;
+  error: string | undefined;
 }>();
 
 const emit = defineEmits<{
