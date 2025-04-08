@@ -322,3 +322,8 @@ export type StoryConfig = {
     tracking: string;
   };
 };
+
+export enum FlagState {
+  PREFILLED = 'prefilled',
+  RECHECK = 'recheck',
+}
