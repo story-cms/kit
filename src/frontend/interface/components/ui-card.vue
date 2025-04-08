@@ -1,9 +1,6 @@
 <template>
   <Transition name="slide-fade">
-    <div
-      v-show="!isFlagged"
-      class="shadow font-['Inter'] rounded-lg border border-gray-200"
-    >
+    <div class="shadow font-['Inter'] rounded-lg border border-gray-200">
       <div class="grid grid-cols-2 px-8 pt-6 pb-4 gap-x-10">
         <div>
           <label :for="item.key" class="block font-medium text-gray-700 text-sm/5">
@@ -56,29 +53,29 @@
           <div class="flex items-center justify-end gap-x-6">
             <button
               type="button"
-              @click="setFlag(State.RECHECK)"
+              @click="handleSetFlag(FlagState.RECHECK)"
               class="p-3 border border-gray-300 rounded-full"
               :disabled="!model"
             >
               <Icon
                 class="w-auto h-6"
                 :class="{
-                  'text-[#F59E0B]': item.flag === 'recheck',
-                  'text-gray-700': item.flag !== 'recheck',
+                  'text-blue-500': item.flag === FlagState.RECHECK,
+                  'text-gray-700': item.flag !== FlagState.RECHECK,
                 }"
                 name="flag"
               />
             </button>
             <button
               type="button"
-              @click="aiTranslate"
+              @click="suggestAi"
               class="p-3 border border-gray-300 rounded-full"
             >
               <Icon
                 class="w-auto h-6"
                 :class="{
-                  'text-blue-500': item.flag === 'prefilled',
-                  'text-gray-700': item.flag !== 'prefilled',
+                  'text-blue-500': item.flag === FlagState.PREFILLED,
+                  'text-gray-700': item.flag !== FlagState.PREFILLED,
                 }"
                 name="sparkles"
               />
@@ -86,7 +83,7 @@
             <button
               type="button"
               @click="
-                store({
+                emit('save', {
                   key: props.item.key,
                   locale: shared.locale,
                   translation: props.model ?? '',
@@ -98,7 +95,7 @@
               :class="{ 'bg-green-500 border-green-800': model }"
             >
               <Icon
-                class="w-auto h-6 text-gray-700"
+                class="w-auto h-6"
                 :class="{ 'text-gray-300': !model, 'text-white': model }"
                 name="check"
               />
@@ -158,9 +155,13 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import axios from 'axios';
-import { router } from '@inertiajs/vue3';
 
-import { type UiItem, type UiItemPayload, ResponseStatus } from '../../../types';
+import {
+  type UiItem,
+  type UiItemPayload,
+  FlagState,
+  ResponseStatus,
+} from '../../../types';
 import Icon from '../../shared/icon.vue';
 import { useSharedStore } from '../../store';
 
@@ -168,7 +169,7 @@ const shared = useSharedStore();
 const isOpen = ref(false);
 const suggestion = ref('');
 const isLoading = ref(false);
-const isFlagged = ref(false);
+
 const error = ref('');
 
 const props = defineProps<{
@@ -179,29 +180,14 @@ const props = defineProps<{
 const emit = defineEmits<{
   'update:model': [value: string];
   flagged: [key: string];
+  'set-flag': [key: string, state: FlagState];
+  save: [payload: UiItemPayload];
+  'apply-suggestion': [suggestion: string];
 }>();
 
-enum State {
-  PREFILLED = 'prefilled',
-  RECHECK = 'recheck',
-}
-
-const setFlag = async (state: State) => {
-  isFlagged.value = true;
+const handleSetFlag = (state: FlagState) => {
+  emit('set-flag', props.item.key, state);
   emit('flagged', props.item.key);
-
-  try {
-    const response = await axios.post('/ui/flag', {
-      key: props.item.key,
-      state,
-    });
-    if (response.status === 200) {
-      router.reload({ only: ['ui', 'items'] });
-      shared.addMessage(ResponseStatus.Accomplishment, 'Flag set');
-    }
-  } catch (_error) {
-    shared.addMessage(ResponseStatus.Failure, 'Error setting flag');
-  }
 };
 
 const discardSuggestion = () => {
@@ -209,20 +195,7 @@ const discardSuggestion = () => {
   isOpen.value = false;
 };
 
-const store = async (payload: UiItemPayload) => {
-  try {
-    const response = await axios.post('/ui', payload);
-    if (response.status === 200) {
-      router.reload({ only: ['ui', 'items'] });
-      shared.addMessage(ResponseStatus.Accomplishment, 'Translations saved');
-    }
-  } catch (error) {
-    error.value = error.response?.data?.message || 'Error saving translation';
-    shared.addMessage(ResponseStatus.Failure, 'Error saving translation');
-  }
-};
-
-const aiTranslate = async () => {
+const suggestAi = async () => {
   isLoading.value = true;
   isOpen.value = true;
 
@@ -243,15 +216,8 @@ const aiTranslate = async () => {
 };
 
 const applySuggestion = () => {
-  emit('update:model', suggestion.value);
+  emit('apply-suggestion', suggestion.value);
   isOpen.value = false;
-  const payload: UiItemPayload = {
-    key: props.item.key,
-    locale: shared.locale,
-    translation: suggestion.value,
-    isPrefilled: true,
-  };
-  store(payload);
 };
 </script>
 

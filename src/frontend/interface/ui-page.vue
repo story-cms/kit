@@ -18,7 +18,7 @@
     <section class="container px-3 mx-auto mt-5">
       <div class="grid grid-cols-[24fr_76fr] gap-x-6 h-[calc(100vh-12rem)]">
         <div class="overflow-y-auto scrollbar-hide">
-          <div v-if="filteredItems.length" class="sticky top-0 bg-gray-50">
+          <div v-if="hasEmptyItems" class="sticky top-0 bg-gray-50">
             <button
               v-show="todoCount"
               @click="translateItems"
@@ -58,6 +58,9 @@
                 :item="selectedItem"
                 :error="errors[selectedItem.key]"
                 @flagged="handleFlagged"
+                @set-flag="setFlag"
+                @save="save"
+                @apply-suggestion="handleApplySuggestion"
               />
             </form>
             <div v-show="isTranslating" class="grid w-full h-full place-content-center">
@@ -67,8 +70,16 @@
             </div>
           </template>
           <div v-else class="py-10 text-gray-500">
-            <p class="text-sm text-center">No results found for "{{ searchTerm }}"</p>
+            <p v-if="searchTerm" class="text-sm text-center">
+              No results found for "{{ searchTerm }}"
+            </p>
           </div>
+        </div>
+        <div
+          v-if="activeFilter === 'todo' && !todoCount && !searchTerm"
+          class="flex flex-col items-center justify-center col-span-2 row-start-1"
+        >
+          <Icon class="size-96" name="inbox-zero" />
         </div>
       </div>
     </section>
@@ -82,12 +93,10 @@ import { router } from '@inertiajs/vue3';
 
 import { useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
-import { ResponseStatus } from '../../types';
-import type { UiItem, UiPageProps, SharedPageProps } from '../../types';
+import { ResponseStatus, FlagState } from '../../types';
+import type { UiItem, UiPageProps, SharedPageProps, UiItemPayload } from '../../types';
 import Icon from '../shared/icon.vue';
-import uiToolbar from './components/ui-toolbar.vue';
-import UiStringItem from './components/ui-string-item.vue';
-import UiCard from './components/ui-card.vue';
+
 import RivePlayer from '../fields/attachments/rive-player.vue';
 
 type ModelType = { [key: string]: string | undefined };
@@ -97,20 +106,25 @@ const props = defineProps<SharedPageProps & UiPageProps>();
 const searchTerm = ref('');
 
 const todoCount = computed(() => {
-  return props.items.filter((item) => !item.translation).length;
+  return props.items.filter(
+    (item) => !item.translation || item.flag === FlagState.RECHECK,
+  ).length;
 });
 
-const activeFilter = ref<'todo' | 'all'>('all');
-const sortBy = ref<{ field: 'status' | 'lastEdited' | null; direction: 'asc' | 'desc' }>({
-  field: null,
-  direction: 'asc',
+const activeFilter = ref<'todo' | 'all'>('todo');
+const sortBy = ref<{ field: 'status' | 'lastEdited' }>({
+  field: 'lastEdited',
+});
+
+const hasEmptyItems = computed(() => {
+  return props.items.some((item) => !item.translation);
 });
 
 const filteredItems = computed(() => {
   let items = props.items;
 
   if (activeFilter.value === 'todo') {
-    items = items.filter((item) => !item.translation);
+    items = items.filter((item) => !item.translation || item.flag === 'recheck');
   }
 
   if (searchTerm.value) {
@@ -123,50 +137,27 @@ const filteredItems = computed(() => {
     );
   }
 
-  const untranslatedItems = items.filter((item) => !item.translation);
-  const translatedItems = items.filter((item) => !!item.translation);
-
-  const sortByFlagged = (a: UiItem, b: UiItem) => {
-    // First sort by recheck flag
-    if (a.flag === 'recheck' && b.flag !== 'recheck') return -1;
-    if (a.flag !== 'recheck' && b.flag === 'recheck') return 1;
-
-    // Then sort by prefilled flag
-    if (a.flag === 'prefilled' && b.flag !== 'prefilled') return -1;
-    if (a.flag !== 'prefilled' && b.flag === 'prefilled') return 1;
-
-    // If both have the same flag or both are null, maintain original order
-    return 0;
-  };
-
   const sortByStatus = (a: UiItem, b: UiItem) => {
-    // First sort by translation status
+    if (a.flag === FlagState.RECHECK && b.flag !== FlagState.RECHECK) return -1;
+    if (a.flag !== FlagState.RECHECK && b.flag === FlagState.RECHECK) return 1;
+
+    if (a.flag === FlagState.PREFILLED && b.flag !== FlagState.PREFILLED) return -1;
+    if (a.flag !== FlagState.PREFILLED && b.flag === FlagState.PREFILLED) return 1;
+
     const aTranslated = !!a.translation;
     const bTranslated = !!b.translation;
     if (aTranslated !== bTranslated) {
-      return sortBy.value.direction === 'asc'
-        ? aTranslated
-          ? 1
-          : -1
-        : aTranslated
-        ? -1
-        : 1;
+      return aTranslated ? 1 : -1;
     }
 
-    // If both have the same translation status, sort by flag
-    const aFlag = a.flag || '';
-    const bFlag = b.flag || '';
-    return sortBy.value.direction === 'asc'
-      ? aFlag.localeCompare(bFlag)
-      : bFlag.localeCompare(aFlag);
+    return 0;
   };
 
   const sortByLastEdited = (a: UiItem, b: UiItem) => {
-    const aDate = a.updatedAt || '';
-    const bDate = b.updatedAt || '';
-    return sortBy.value.direction === 'asc'
-      ? new Date(aDate).getTime() - new Date(bDate).getTime()
-      : new Date(bDate).getTime() - new Date(aDate).getTime();
+    if (!a.updatedAt && !b.updatedAt) return 0;
+    if (!a.updatedAt) return 1;
+    if (!b.updatedAt) return -1;
+    return new Date(b.updatedAt!).getTime() - new Date(a.updatedAt!).getTime();
   };
 
   const sortFunction =
@@ -174,9 +165,22 @@ const filteredItems = computed(() => {
       ? sortByStatus
       : sortBy.value.field === 'lastEdited'
       ? sortByLastEdited
-      : sortByFlagged;
+      : (a: UiItem, b: UiItem) => {
+          const aTranslated = !!a.translation;
+          const bTranslated = !!b.translation;
+          if (aTranslated !== bTranslated) {
+            return aTranslated ? 1 : -1;
+          }
 
-  return [...untranslatedItems.sort(sortFunction), ...translatedItems.sort(sortFunction)];
+          if (a.flag === FlagState.RECHECK && b.flag !== FlagState.RECHECK) return -1;
+          if (a.flag !== FlagState.RECHECK && b.flag === FlagState.RECHECK) return 1;
+          if (a.flag === FlagState.PREFILLED && b.flag !== FlagState.PREFILLED) return -1;
+          if (a.flag !== FlagState.PREFILLED && b.flag === FlagState.PREFILLED) return 1;
+
+          return 0;
+        };
+
+  return items.sort(sortFunction);
 });
 
 const shared = useSharedStore();
@@ -216,6 +220,40 @@ const selectItem = (item: UiItem) => {
 
 const isTranslating = ref(false);
 
+const setFlag = async (key: string, state: FlagState) => {
+  const item = props.items.find((item) => item.key === key);
+  const newState = item?.flag === state ? null : state;
+
+  try {
+    const response = await axios.post('/ui/flag', {
+      key: key,
+      state: newState,
+    });
+    if (response.status === 200) {
+      router.reload({ only: ['ui', 'items'] });
+      shared.addMessage(
+        ResponseStatus.Accomplishment,
+        newState ? 'Flag set' : 'Flag removed',
+      );
+    }
+  } catch (_error) {
+    shared.addMessage(ResponseStatus.Failure, 'Error updating flag');
+  }
+};
+
+const save = async (payload: UiItemPayload) => {
+  try {
+    const response = await axios.post('/ui', payload);
+    if (response.status === 200) {
+      router.reload({ only: ['ui', 'items'] });
+      shared.addMessage(ResponseStatus.Accomplishment, 'Translations saved');
+    }
+  } catch (error) {
+    error.value = error.response?.data?.message || 'Error saving translation';
+    shared.addMessage(ResponseStatus.Failure, 'Error saving translation');
+  }
+};
+
 const translateItems = async () => {
   if (isTranslating.value) return;
 
@@ -251,12 +289,23 @@ const handleFlagged = (key: string) => {
   }
 };
 
+const handleApplySuggestion = (suggestion: string) => {
+  if (!selectedItem.value) return;
+
+  model[selectedItem.value.key] = suggestion;
+
+  save({
+    key: selectedItem.value.key,
+    locale: shared.locale,
+    translation: suggestion,
+    isPrefilled: true,
+  });
+};
+
 const handleSort = (field: 'status' | 'lastEdited') => {
-  if (sortBy.value.field === field) {
-    sortBy.value.direction = sortBy.value.direction === 'asc' ? 'desc' : 'asc';
-  } else {
-    sortBy.value.field = field;
-    sortBy.value.direction = 'asc';
+  sortBy.value.field = field;
+  if (filteredItems.value.length > 0) {
+    selectedItem.value = filteredItems.value[0];
   }
 };
 </script>
