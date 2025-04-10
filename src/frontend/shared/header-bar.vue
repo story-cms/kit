@@ -1,198 +1,109 @@
 <template>
-  <div>
-    <section
-      :class="[
-        isSidebarOpen
-          ? 'rounded-r-[20px] flex flex-col min-h-screen pb-[26px]'
-          : 'rounded-[20px] ',
-        'py-4  mb-6 bg-white shadow-lg  max-w-96',
-      ]"
-    >
-      <div :class="[isSidebarOpen ? 'px-[43px]' : 'px-7', 'flex justify-between']">
-        <button>
-          <Icon name="home" />
-        </button>
-        <button>
-          <Icon name="reply" />
-        </button>
-        <button class="relative">
-          <Icon name="translate" />
-          <span
-            class="absolute -top-2 left-5 rounded-[7px] bg-purple-100 px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-purple-800"
-            >en</span
-          >
-        </button>
-        <button @click="toggleSidebar">
-          <Icon name="chevron-double-right" v-if="!isSidebarOpen" />
-          <Icon name="chevron-double-left" v-else="isSidebarOpen" />
-        </button>
+  <nav
+    id="navbar"
+    :class="[
+      isSidebarOpen
+        ? 'rounded-r-[20px] flex flex-col min-h-screen pb-[26px]'
+        : 'rounded-[20px] ',
+      'py-4  mb-6 bg-white shadow-lg  max-w-96 z-50 mt-5',
+    ]"
+  >
+    <div :class="[isSidebarOpen ? 'px-[43px]' : 'px-7', 'flex justify-between']">
+      <button>
+        <Icon name="home" />
+      </button>
+      <button @click="goBack">
+        <Icon name="reply" />
+      </button>
+      <div class="relative">
+        <Icon name="translate" />
+        <span
+          class="absolute -top-2 left-5 rounded-[7px] bg-purple_light px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-purple_dark"
+          >{{ currentLocale }}</span
+        >
       </div>
-      <div v-if="isSidebarOpen" class="mt-14 grow">
-        <div class="grid grid-cols-1 gap-4 pl-8">
-          <Link
-            class="px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800"
-            href="/"
-          >
-            Dashboard
-          </Link>
-          <ul v-for="story in shared.stories" :key="story">
-            <li class="grid grid-cols-1 gap-4">
-              <Link
-                class="px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800"
-                href="/"
-              >
-                {{ story }}
-              </Link>
-            </li>
-          </ul>
-          <Link
-            class="relative px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800"
-            :class="{ 'cursor-not-allowed': shared.language.locale === 'en' }"
-            :disabled="shared.language.locale === 'en'"
-            href="/ui"
-            >Interface
-            <span
-              class="absolute px-1 ml-2 text-xs font-medium leading-4 text-red-800 bg-red-100 py-[2px] rounded-full"
-              >5</span
+      <button @click="toggleSidebar">
+        <Icon name="chevron-double-right" v-if="!isSidebarOpen" />
+        <Icon name="chevron-double-left" v-else="isSidebarOpen" />
+      </button>
+    </div>
+    <div v-if="isSidebarOpen" class="mt-14 grow">
+      <div class="grid grid-cols-1 gap-4 pl-8">
+        <Link
+          class="px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800"
+          href="/"
+        >
+          Dashboard
+        </Link>
+        <ul v-for="story in shared.stories" :key="story">
+          <li class="grid grid-cols-1 gap-4">
+            <Link
+              class="px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800"
+              href="/"
             >
-          </Link>
-        </div>
-        <div class="mx-5 my-4 border-t border-gray-400"></div>
-        <div class="grid grid-cols-1 gap-4 pl-8">
-          <Link
-            class="flex items-center px-3 py-2 text-lg font-semibold leading-6 text-black gap-x-2 hover:gray-800"
-            href="/"
-          >
-            <Icon name="users" />
-            <span> Users </span>
-          </Link>
-          <Link
-            class="flex items-center px-3 text-lg font-semibold leading-6 text-black p y-2 items- gap-x-2 hover:gray-800"
-            href="/"
-          >
-            <Icon name="question-mark" />
-            <span> Help </span>
-          </Link>
-          <Link
-            class="flex items-center px-3 py-2 text-lg font-semibold leading-6 text-black gap-x-2 hover:gray-800"
-            href="/"
-          >
-            <Icon name="logout" />
-            <span> Users </span>
-          </Link>
-        </div>
-      </div>
-      <div v-if="isSidebarOpen" class="flex items-center justify-center">
-        <LiftUp
+              {{ story }}
+            </Link>
+          </li>
+        </ul>
+        <Link
+          v-if="isMultiLingualAdmin"
+          class="px-2 py-3 text-sm text-gray-500 hover:text-gray-700"
+          href="/page"
+          >Pages</Link
+        >
+        <Link
           v-if="isMultiLingual"
-          v-model="(form.language as string)"
-          :options="(shared.languages.map((l) => l.language) as string[])"
-          :is-read-only="!shared.user.isManager"
-          @change="onLanguage"
-        ></LiftUp>
+          class="relative px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800"
+          :class="{ 'cursor-not-allowed': shared.language.locale === 'en' }"
+          :disabled="shared.language.locale === 'en'"
+          href="/ui"
+          >Interface
+          <!-- Todo: add remaining translation todos count to the badge -->
+          <span
+            class="absolute px-1 ml-2 text-xs font-medium leading-4 text-red-800 bg-red-100 py-[2px] rounded-full"
+            >5</span
+          >
+        </Link>
       </div>
-    </section>
-    <nav id="navbar" class="flex items-center justify-between px-6 py-3 bg-white">
-      <div class="flex">
-        <div class="flex items-center space-x-6">
-          <Link href="/">
-            <img :src="shared.meta.logo" alt="Logo" class="w-auto h-12" />
-          </Link>
-          <!-- eslint-disable vue/valid-v-model -->
-          <DropDown
-            v-if="isMultiLingual"
-            v-model="(form.language as string)"
-            :options="(shared.languages.map((l) => l.language) as string[])"
-            :is-read-only="!shared.user.isManager"
-            @change="onLanguage"
-          ></DropDown>
-          <ContextMenu
-            v-if="isMultiStory"
-            :options="(shared.stories as string[])"
-            :anchor="shared.meta.storyType"
-            @select="onStory"
-          ></ContextMenu>
-
-          <Link
-            v-if="!isMultiStory"
-            class="px-2 py-3 text-sm text-gray-500 hover:text-gray-700"
-            href="/"
-            >{{ shared.meta.storyType }}s</Link
-          >
-          <Link
-            v-if="isMultiLingualAdmin"
-            class="px-2 py-3 text-sm text-gray-500 hover:text-gray-700"
-            href="/page"
-            >Pages</Link
-          >
-          <Link
-            v-if="isMultiLingual"
-            class="px-2 py-3 text-sm text-gray-500 hover:text-gray-700"
-            :class="{ 'cursor-not-allowed': shared.language.locale === 'en' }"
-            :disabled="shared.language.locale === 'en'"
-            href="/ui"
-            >Interface</Link
-          >
-          <Link
-            v-if="shared.user.isAdmin"
-            class="px-2 py-3 text-sm text-gray-500 hover:text-gray-700"
-            href="/user"
-            >Users</Link
-          >
-          <a
-            v-if="shared.meta.helpUrl"
-            class="inline-block px-2 py-3 text-sm text-gray-500 hover:text-gray-700"
-            :href="shared.meta.helpUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-            >Support
-          </a>
-        </div>
+      <div class="mx-5 my-4 border-t border-gray-400"></div>
+      <div class="grid grid-cols-1 pl-8 gap-y-6">
+        <Link
+          v-if="shared.user.isAdmin"
+          class="flex items-center px-3 py-2 text-lg font-semibold leading-6 text-black gap-x-2 hover:gray-800"
+          href="/user"
+        >
+          <Icon name="users" />
+          <span> Users </span>
+        </Link>
+        <Link
+          v-if="shared.meta.helpUrl"
+          class="flex items-center px-3 text-lg font-semibold leading-6 text-black p y-2 items- gap-x-2 hover:gray-800"
+          :href="shared.meta.helpUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Icon name="question-mark" />
+          <span> Help </span>
+        </Link>
+        <button
+          @click="signOut()"
+          class="flex items-center px-3 py-2 text-lg font-semibold leading-6 text-black gap-x-2 hover:gray-800"
+        >
+          <Icon name="logout" />
+          <span> Log out </span>
+        </button>
       </div>
-      <div class="flex items-center">
-        <div class="ml-6 text-lg font-extrabold">{{ shared.user.name }}</div>
-        <Menu as="div" class="relative ml-3">
-          <div>
-            <MenuButton
-              class="flex text-sm bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-            >
-              <span class="sr-only">Open user menu</span>
-              <div
-                class="flex h-16 w-16 cursor-pointer items-center justify-center rounded-full bg-accent-pink p-2.5 text-2xl font-extrabold leading-8 text-white"
-              >
-                {{ shared.user.initials }}
-              </div>
-            </MenuButton>
-          </div>
-          <transition
-            enter-active-class="transition duration-100 ease-out"
-            enter-from-class="transform scale-95 opacity-0"
-            enter-to-class="transform scale-100 opacity-100"
-            leave-active-class="transition duration-75 ease-in"
-            leave-from-class="transform scale-100 opacity-100"
-            leave-to-class="transform scale-95 opacity-0"
-          >
-            <MenuItems
-              class="absolute right-0 z-10 w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-            >
-              <MenuItem v-slot="{ active }">
-                <button
-                  type="button"
-                  :class="[
-                    active ? 'bg-gray-100' : '',
-                    'block w-full px-4 py-2 text-sm text-gray-700',
-                  ]"
-                  @click="signOut()"
-                >
-                  Sign out
-                </button>
-              </MenuItem>
-            </MenuItems>
-          </transition>
-        </Menu>
-      </div>
-    </nav>
-  </div>
+    </div>
+    <div v-if="isSidebarOpen" class="flex items-center justify-center">
+      <LiftUp
+        v-if="isMultiLingual"
+        v-model="(form.language as string)"
+        :options="(shared.languages.map((l) => l.language) as string[])"
+        :is-read-only="!shared.user.isManager"
+        @change="onLanguage"
+      ></LiftUp>
+    </div>
+  </nav>
 </template>
 
 <script setup lang="ts">
@@ -240,5 +151,13 @@ const isMultiLingualAdmin = computed(
 const isSidebarOpen = ref(false);
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value;
+};
+
+const currentLocale = computed(() => {
+  return shared.languages.find((l) => l.language === form.language)?.locale;
+});
+
+const goBack = () => {
+  window.history.back();
 };
 </script>
