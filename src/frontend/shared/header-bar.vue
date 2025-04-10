@@ -2,8 +2,10 @@
   <div>
     <section
       :class="[
-        isSidebarOpen ? 'rounded-r-[20px]' : 'rounded-[20px] ',
-        'py-4 mb-6 bg-white shadow-lg  max-w-96',
+        isSidebarOpen
+          ? 'rounded-r-[20px] flex flex-col min-h-screen pb-[26px]'
+          : 'rounded-[20px] ',
+        'py-4  mb-6 bg-white shadow-lg  max-w-96',
       ]"
     >
       <div :class="[isSidebarOpen ? 'px-[43px]' : 'px-7', 'flex justify-between']">
@@ -25,7 +27,7 @@
           <Icon name="chevron-double-left" v-else="isSidebarOpen" />
         </button>
       </div>
-      <div v-if="isSidebarOpen" class="mt-14">
+      <div v-if="isSidebarOpen" class="mt-14 grow">
         <div class="grid grid-cols-1 gap-4 pl-8">
           <Link
             class="px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800"
@@ -79,6 +81,15 @@
             <span> Users </span>
           </Link>
         </div>
+      </div>
+      <div v-if="isSidebarOpen" class="flex items-center justify-center">
+        <LiftUp
+          v-if="isMultiLingual"
+          v-model="(form.language as string)"
+          :options="(shared.languages.map((l) => l.language) as string[])"
+          :is-read-only="!shared.user.isManager"
+          @change="onLanguage"
+        ></LiftUp>
       </div>
     </section>
     <nav id="navbar" class="flex items-center justify-between px-6 py-3 bg-white">
@@ -189,6 +200,7 @@ import { Link, useForm } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import DropDown from './drop-down.vue';
+import LiftUp from './lift-up.vue';
 import ContextMenu from './context-menu.vue';
 import Icon from './icon.vue';
 import { useSharedStore } from '../store';
