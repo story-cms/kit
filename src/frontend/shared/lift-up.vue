@@ -1,9 +1,9 @@
 <template>
   <Listbox v-model="model" as="div">
-    <div class="relative min-w-full">
+    <div class="relative">
       <ListboxButton
         :disabled="isReadOnly"
-        class="relative py-2 pl-3 pr-10 text-lg font-semibold leading-6 text-left text-gray-700 rounded-md cursor-default focus:outline-none focus:ring-1 text-nowrap"
+        class="relative py-2 pl-3 pr-10 text-lg font-semibold leading-6 text-left text-gray-700 rounded-md cursor-default text-nowrap focus:outline-none focus:ring-1"
         :class="{ 'bg-gray-100': isReadOnly, 'bg-white': !isReadOnly }"
       >
         <div class="flex items-center gap-2">
@@ -28,7 +28,7 @@
         leave-to-class="opacity-0"
       >
         <ListboxOptions
-          class="absolute z-10 min-w-[20rem] py-1 mb-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-[calc(100vh-10rem)] ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm bottom-full -left-7"
+          class="absolute -left-7 bottom-full z-10 mb-1 max-h-[calc(100vh-10rem)] min-w-[18rem] overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
         >
           <ListboxOption
             v-for="option in options"
@@ -45,9 +45,17 @@
               ]"
             >
               <span
-                :class="[value ? 'font-semibold' : 'font-normal', 'block truncate']"
-                >{{ option }}</span
+                :class="[
+                  value ? 'font-semibold' : 'font-normal',
+                  'flex items-center gap-2 truncate',
+                ]"
               >
+                <span>
+                  {{ option }}
+                </span>
+
+                <Icon v-if="model === option" name="check" />
+              </span>
 
               <span
                 v-if="value"

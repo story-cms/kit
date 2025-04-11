@@ -55,6 +55,13 @@ export const useSharedStore = defineStore('shared', () => {
     isLargeScreen.value = fresh;
   };
 
+  // Sidebar
+  const sidebarIsOpen = ref(true);
+
+  const toggleSidebar = () => {
+    sidebarIsOpen.value = !sidebarIsOpen.value;
+  };
+
   // Message Centre
   const messageCentre = reactive({
     response: ResponseStatus.None as ResponseStatus,
@@ -108,6 +115,9 @@ export const useSharedStore = defineStore('shared', () => {
 
     isIntersecting,
     setIsIntersecting,
+
+    sidebarIsOpen,
+    toggleSidebar,
 
     language,
     languageDirection,

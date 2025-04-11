@@ -5,54 +5,18 @@
       @delete="deleteDraft"
       @info="info"
       @app-preview="appPreview"
+      @request-change="reject"
+      @publish="publish"
+      @submit="submit"
     >
-      <WorkflowButtons @request-change="reject" @publish="publish" @submit="submit" />
     </ContentHeader>
 
-    <div
-      class="container relative px-3 mx-auto"
-      :class="{
-        'grid grid-cols-[1fr,_416px] gap-x-8 ': isLargeScreen,
-        'mx-auto grid max-w-[1080px] grid-cols-[1fr] ':
-          !isLargeScreen || (!showMetaBox && !showAppPreview),
-      }"
-    >
+    <div>
       <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8">
         <div v-for="(item, index) in drafts.story.fields" :key="index">
           <component :is="widgetFor(index)" :field="item" :is-nested="false" />
         </div>
       </form>
-
-      <div
-        :class="{
-          'right-4': !isLargeScreen,
-          'absolute block': shared.isIntersecting,
-          'fixed right-4 top-24': !shared.isIntersecting && !isLargeScreen,
-          'sticky top-24  [align-self:start]': isLargeScreen,
-        }"
-      >
-        <section v-if="showMetaBox">
-          <MetaBox
-            :created-at="props.draft.createdAt"
-            :updated-at="props.draft.updatedAt"
-            :story-type="props.meta.storyType"
-            :chapter-type="metaChapter"
-            :published-when="publishedWhen"
-            :is-floating="!isLargeScreen"
-            @close="showMetaBox = false"
-          />
-        </section>
-        <section v-if="meta.hasAppPreview && showAppPreview" class="mt-6">
-          <MobileAppPreview
-            v-if="bundle"
-            :is-floating="!isLargeScreen"
-            :bundle="bundle"
-            :number="props.draft.number"
-            class="mt-2"
-            @close="showAppPreview = false"
-          />
-        </section>
-      </div>
     </div>
   </AppLayout>
 </template>

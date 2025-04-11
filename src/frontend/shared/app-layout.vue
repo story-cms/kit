@@ -1,23 +1,26 @@
 <template>
-  <div class="min-h-screen pb-20 bg-app_gray">
-    <div>
-      <HeaderBar />
-      <slot></slot>
+  <div class="bg-app_gray">
+    <div id="top"></div>
+    <div
+      :class="[
+        'container relative mx-auto grid h-full w-full transition-all duration-300 ease-in-out',
+        shared.sidebarIsOpen ? 'grid-cols-[360px_1fr] gap-x-10' : 'grid-cols-1',
+      ]"
+    >
+      <Sidebar />
+      <div :class="[shared.sidebarIsOpen ? '' : 'pt-16', 'px-3 py-10']">
+        <slot></slot>
+      </div>
     </div>
-    <MessageCentre
-      class="fixed inset-x-0 top-0"
-      :class="{ hidden: !shared.hasFeedback }"
-      :response="shared.messageCentre.response"
-      :message="shared.messageCentre.message"
-    />
   </div>
 </template>
 
 <script setup lang="ts">
 import MessageCentre from './message-centre.vue';
-import HeaderBar from './header-bar.vue';
+import Sidebar from './sidebar.vue';
+import LoremIpsum from './LoremIpsum.vue';
 
-import { onMounted, onUnmounted } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { useSharedStore } from '../store';
 const shared = useSharedStore();
 
@@ -34,4 +37,11 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', resizeHook);
 });
+
+const sidebarOpen = ref(false);
+const toggleSidebar = () => {
+  sidebarOpen.value = !sidebarOpen.value;
+};
+
+console.log('isIntersecting', shared.isIntersecting);
 </script>
