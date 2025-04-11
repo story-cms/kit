@@ -24,6 +24,7 @@ const defaultProviders: Providers = {
   bunny: {
     accessKey: '',
     libraryId: '',
+    host: '',
   },
 };
 

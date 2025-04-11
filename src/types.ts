@@ -149,6 +149,7 @@ export interface Providers {
   bunny?: {
     accessKey: string;
     libraryId: string;
+    host: string;
   };
 }
 

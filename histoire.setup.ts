@@ -24,6 +24,7 @@ widgets.setProviders({
   bunny: {
     accessKey: import.meta.env.VITE_BUNNY_ACCESS_KEY,
     libraryId: import.meta.env.VITE_BUNNY_LIBRARY_ID,
+    host: import.meta.env.VITE_BUNNY_HOST,
   },
 });
 
