@@ -145,6 +145,11 @@ export interface Providers {
   scripture?: {
     bibleApiKey: string;
   };
+
+  bunny?: {
+    accessKey: string;
+    libraryId: string;
+  };
 }
 
 export interface Audio {

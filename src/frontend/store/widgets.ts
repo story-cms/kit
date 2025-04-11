@@ -21,6 +21,10 @@ const defaultProviders: Providers = {
   scripture: {
     bibleApiKey: '',
   },
+  bunny: {
+    accessKey: '',
+    libraryId: '',
+  },
 };
 
 export const useWidgetsStore = defineStore('widgets', () => {
