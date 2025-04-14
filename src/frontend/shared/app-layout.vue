@@ -18,19 +18,16 @@
 <script setup lang="ts">
 import Sidebar from './sidebar.vue';
 
-import { onMounted, onUnmounted } from 'vue';
+import { onMounted, onUnmounted, watch } from 'vue';
 import { useSharedStore } from '../store';
 const shared = useSharedStore();
 
 const resizeHook = () => {
   const fresh = document.documentElement.clientWidth;
-
-  if (fresh >= 1660) {
-    shared.openSidebar = true;
-  } else {
-    shared.openSidebar = false;
-  }
   shared.setLargeScreen(fresh >= 1324);
+  if (shared.isLargeScreen && shared.openSidebar) {
+    shared.expandMenu = true;
+  }
 };
 
 onMounted(() => {
@@ -41,4 +38,16 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', resizeHook);
 });
+
+watch(
+  () => shared.isLargeScreen,
+  (newVal) => {
+    if (newVal) {
+      shared.openSidebar = true;
+    } else {
+      shared.openSidebar = false;
+    }
+  },
+  { immediate: true },
+);
 </script>

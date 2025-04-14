@@ -3,7 +3,8 @@
     :class="[
       shared.openSidebar
         ? 'sticky left-0 top-0 h-screen overflow-y-auto rounded-r-[20px] border pb-[26px] pt-9'
-        : 'fixed top-5 h-[calc(100vh-40px)] rounded-[20px] bg-white px-7 py-4 shadow-lg',
+        : 'fixed top-5 rounded-[20px] bg-white px-7 py-4 shadow-lg',
+      shared.expandMenu ? 'h-[calc(100vh-40px)]' : '',
       'z-20 flex w-full max-w-96 flex-col transition-all duration-300 ease-in-out',
     ]"
   >
@@ -27,9 +28,9 @@
             >{{ currentLocale }}</span
           >
         </div>
-        <button @click="toggleSidebar">
-          <Icon name="chevron-double-right" v-if="!shared.openSidebar" />
-          <Icon name="chevron-double-left" v-else="shared.openSidebar" />
+        <button @click="toggleMenu">
+          <Icon name="chevron-double-right" v-if="!shared.expandMenu" />
+          <Icon name="chevron-double-left" v-else="shared.expandMenu" />
         </button>
       </div>
       <MessageCentre
@@ -38,7 +39,7 @@
         :message="shared.messageCentre.message"
       />
     </div>
-    <div v-if="expandMenu" class="mt-14 grow">
+    <div v-if="shared.expandMenu" class="mt-14 grow">
       <div class="grid grid-cols-1 gap-4 pl-8">
         <Link
           class="px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800"
@@ -46,16 +47,14 @@
         >
           Dashboard
         </Link>
-        <ul v-for="story in shared.stories" :key="story">
-          <li class="grid grid-cols-1 gap-4">
-            <Link
-              class="px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800"
-              href="/"
-            >
-              {{ story }}
-            </Link>
-          </li>
-        </ul>
+        <div v-for="story in shared.stories" :key="story">
+          <button
+            class="block px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800"
+            @click="onStory(story)"
+          >
+            {{ story }}
+          </button>
+        </div>
         <Link
           v-if="isMultiLingualAdmin"
           class="px-2 py-3 text-sm text-gray-500 hover:text-gray-700"
@@ -105,7 +104,7 @@
         </button>
       </div>
     </div>
-    <div class="flex items-center justify-center">
+    <div v-if="shared.expandMenu" class="flex items-center justify-center">
       <LiftUp
         v-model="form.language as string"
         @change="onLanguage"
@@ -118,7 +117,7 @@
 
 <script setup lang="ts">
 import { Link, useForm } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import LiftUp from './lift-up.vue';
 import MessageCentre from './message-centre.vue';
 import Icon from './icon.vue';
@@ -153,10 +152,6 @@ const isMultiLingualAdmin = computed(
   () => shared.user.isAdmin && shared.user.language === '*',
 );
 
-const toggleSidebar = () => {
-  shared.toggleSidebar();
-};
-
 const currentLocale = computed(() => {
   return shared.languages.find((l) => l.language === form.language)?.locale;
 });
@@ -165,5 +160,18 @@ const goBack = () => {
   window.history.back();
 };
 
-const expandMenu = ref(true);
+const toggleMenu = () => {
+  shared.expandMenu = !shared.expandMenu;
+};
+
+watch(
+  () => shared.expandMenu,
+  (newVal) => {
+    if (newVal) {
+      shared.openSidebar = true;
+    } else {
+      shared.openSidebar = false;
+    }
+  },
+);
 </script>

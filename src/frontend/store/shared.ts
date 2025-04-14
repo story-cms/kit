@@ -62,6 +62,14 @@ export const useSharedStore = defineStore('shared', () => {
     openSidebar.value = !openSidebar.value;
   };
 
+  // Menu
+
+  const expandMenu = ref(true);
+
+  const toggleMenu = () => {
+    expandMenu.value = !expandMenu.value;
+  };
+
   // Message Centre
   const messageCentre = reactive({
     response: ResponseStatus.None as ResponseStatus,
@@ -118,6 +126,9 @@ export const useSharedStore = defineStore('shared', () => {
 
     openSidebar,
     toggleSidebar,
+
+    expandMenu,
+    toggleMenu,
 
     language,
     languageDirection,
