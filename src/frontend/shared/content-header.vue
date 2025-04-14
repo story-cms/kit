@@ -8,6 +8,9 @@
 
     <ContentActionBar
       :element-to-watch="'content-title'"
+      @delete="emit('delete')"
+      @info="emit('info')"
+      @app-preview="emit('app-preview')"
       @request-change="emit('request-change')"
       @publish="emit('publish')"
       @submit="emit('submit')"
@@ -21,5 +24,12 @@ defineProps<{
   title: string;
 }>();
 
-const emit = defineEmits(['request-change', 'publish', 'submit']);
+const emit = defineEmits([
+  'delete',
+  'info',
+  'app-preview',
+  'request-change',
+  'publish',
+  'submit',
+]);
 </script>

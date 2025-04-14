@@ -11,12 +11,50 @@
     >
     </ContentHeader>
 
-    <div>
+    <div
+      class="relative grid"
+      :class="{
+        'grid-cols-[1fr_360px] gap-x-10':
+          isLargeScreen && (showMetaBox || showAppPreview),
+        'mx-auto max-w-5xl grid-cols-1':
+          !isLargeScreen || (!showMetaBox && !showAppPreview),
+      }"
+    >
       <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8">
         <div v-for="(item, index) in drafts.story.fields" :key="index">
           <component :is="widgetFor(index)" :field="item" :is-nested="false" />
         </div>
       </form>
+      <div
+        :class="{
+          'right-4': !isLargeScreen,
+          'absolute block': shared.isIntersecting,
+          'fixed right-4 top-24': !shared.isIntersecting && !isLargeScreen,
+          'sticky top-24 [align-self:start]': isLargeScreen,
+        }"
+      >
+        <section v-if="showMetaBox">
+          <MetaBox
+            :created-at="props.draft.createdAt"
+            :updated-at="props.draft.updatedAt"
+            :story-type="props.meta.storyType"
+            :chapter-type="metaChapter"
+            :published-when="publishedWhen"
+            :is-floating="!isLargeScreen"
+            @close="showMetaBox = false"
+          />
+        </section>
+        <section v-if="meta.hasAppPreview && showAppPreview" class="mt-6">
+          <MobileAppPreview
+            v-if="bundle"
+            :is-floating="!isLargeScreen"
+            :bundle="bundle"
+            :number="props.draft.number"
+            class="mt-2"
+            @close="showAppPreview = false"
+          />
+        </section>
+      </div>
     </div>
   </AppLayout>
 </template>
@@ -33,7 +71,6 @@ import type { FieldSpec, DraftEditProps, SharedPageProps } from '../../types';
 import { ResponseStatus } from '../../types';
 import { useDraftsStore, useModelStore, useSharedStore, useWidgetsStore } from '../store';
 import MobileAppPreview from './mobile-app-preview.vue';
-import WorkflowButtons from './workflow-buttons.vue';
 
 const props = defineProps<DraftEditProps & SharedPageProps>();
 

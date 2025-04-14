@@ -14,9 +14,9 @@
       ]"
     >
       <div v-if="!shared.hasFeedback" class="flex justify-between">
-        <button>
+        <Link href="/">
           <Icon name="home" />
-        </button>
+        </Link>
         <button @click="goBack">
           <Icon name="reply" />
         </button>
@@ -106,12 +106,12 @@
       </div>
     </div>
     <div v-if="shared.sidebarIsOpen" class="flex items-center justify-center">
-      <!-- <LiftUp
-          v-model="form.language as string"
-          @change="onLanguage"
-          :options="shared.languages.map((l) => l.language) as string[]"
-          :is-read-only="!shared.user.isManager"
-        /> -->
+      <LiftUp
+        v-model="form.language as string"
+        @change="onLanguage"
+        :options="shared.languages.map((l) => l.language) as string[]"
+        :is-read-only="!shared.user.isManager"
+      />
     </div>
   </nav>
 </template>
@@ -119,10 +119,7 @@
 <script setup lang="ts">
 import { Link, useForm } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
-import DropDown from './drop-down.vue';
 import LiftUp from './lift-up.vue';
-import ContextMenu from './context-menu.vue';
 import MessageCentre from './message-centre.vue';
 import Icon from './icon.vue';
 import { useSharedStore } from '../store';
@@ -156,7 +153,6 @@ const isMultiLingualAdmin = computed(
   () => shared.user.isAdmin && shared.user.language === '*',
 );
 
-const isSidebarOpen = computed(() => shared.sidebarIsOpen);
 const toggleSidebar = () => {
   shared.toggleSidebar();
 };
