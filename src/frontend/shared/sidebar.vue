@@ -24,7 +24,7 @@
         <div class="relative">
           <Icon name="translate" />
           <span
-            class="bg-purple_light text-purple_dark absolute -top-2 left-5 rounded-[7px] px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px]"
+            class="absolute -top-2 left-5 rounded-[7px] bg-[#EDE9FE] px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-[#5B21B6]"
             >{{ currentLocale }}</span
           >
         </div>
