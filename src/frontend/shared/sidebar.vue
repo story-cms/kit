@@ -2,9 +2,9 @@
   <nav
     :class="[
       shared.openSidebar
-        ? 'sticky left-0 top-0 flex h-screen flex-col overflow-y-auto rounded-r-[20px] border pb-[26px] pt-9'
-        : 'fixed top-5 rounded-[20px] bg-white px-7 py-4 shadow-lg',
-      'z-20 w-full max-w-96 transition-all duration-300 ease-in-out',
+        ? 'sticky left-0 top-0 h-screen overflow-y-auto rounded-r-[20px] border pb-[26px] pt-9'
+        : 'fixed top-5 h-[calc(100vh-40px)] rounded-[20px] bg-white px-7 py-4 shadow-lg',
+      'z-20 flex w-full max-w-96 flex-col transition-all duration-300 ease-in-out',
     ]"
   >
     <div
