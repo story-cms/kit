@@ -10,26 +10,33 @@
     <div
       :class="[
         shared.sidebarIsOpen ? 'px-10' : 'px-0',
-        'flex justify-between transition-all duration-300 ease-in-out',
+        'transition-all duration-300 ease-in-out',
       ]"
     >
-      <button>
-        <Icon name="home" />
-      </button>
-      <button @click="goBack">
-        <Icon name="reply" />
-      </button>
-      <div class="relative">
-        <Icon name="translate" />
-        <span
-          class="bg-purple_light text-purple_dark absolute -top-2 left-5 rounded-[7px] px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px]"
-          >{{ currentLocale }}</span
-        >
+      <div v-if="!shared.hasFeedback" class="flex justify-between">
+        <button>
+          <Icon name="home" />
+        </button>
+        <button @click="goBack">
+          <Icon name="reply" />
+        </button>
+        <div class="relative">
+          <Icon name="translate" />
+          <span
+            class="bg-purple_light text-purple_dark absolute -top-2 left-5 rounded-[7px] px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px]"
+            >{{ currentLocale }}</span
+          >
+        </div>
+        <button @click="toggleSidebar">
+          <Icon name="chevron-double-right" v-if="!shared.sidebarIsOpen" />
+          <Icon name="chevron-double-left" v-else="shared.sidebarIsOpen" />
+        </button>
       </div>
-      <button @click="toggleSidebar">
-        <Icon name="chevron-double-right" v-if="!shared.sidebarIsOpen" />
-        <Icon name="chevron-double-left" v-else="shared.sidebarIsOpen" />
-      </button>
+      <MessageCentre
+        v-else
+        :response="shared.messageCentre.response"
+        :message="shared.messageCentre.message"
+      />
     </div>
     <div v-if="shared.sidebarIsOpen" class="mt-14 grow">
       <div class="grid grid-cols-1 gap-4 pl-8">
@@ -116,6 +123,7 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import DropDown from './drop-down.vue';
 import LiftUp from './lift-up.vue';
 import ContextMenu from './context-menu.vue';
+import MessageCentre from './message-centre.vue';
 import Icon from './icon.vue';
 import { useSharedStore } from '../store';
 const shared = useSharedStore();
