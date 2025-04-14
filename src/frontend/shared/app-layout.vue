@@ -4,11 +4,11 @@
     <div
       :class="[
         'container relative mx-auto grid h-full w-full transition-all duration-300 ease-in-out',
-        shared.sidebarIsOpen ? 'grid-cols-[360px_1fr] gap-x-10' : 'grid-cols-1',
+        shared.openSidebar ? 'grid-cols-[360px_1fr] gap-x-10' : 'grid-cols-1',
       ]"
     >
       <Sidebar />
-      <div :class="[shared.sidebarIsOpen ? '' : 'pt-16', 'px-3 py-10']">
+      <div :class="[shared.openSidebar ? '' : 'pt-16', 'px-3 py-10']">
         <slot></slot>
       </div>
     </div>
@@ -26,9 +26,9 @@ const resizeHook = () => {
   const fresh = document.documentElement.clientWidth;
 
   if (fresh >= 1660) {
-    shared.sidebarIsOpen = true;
+    shared.openSidebar = true;
   } else {
-    shared.sidebarIsOpen = false;
+    shared.openSidebar = false;
   }
   shared.setLargeScreen(fresh >= 1324);
 };

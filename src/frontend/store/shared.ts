@@ -56,10 +56,10 @@ export const useSharedStore = defineStore('shared', () => {
   };
 
   // Sidebar
-  const sidebarIsOpen = ref(true);
+  const openSidebar = ref(true);
 
   const toggleSidebar = () => {
-    sidebarIsOpen.value = !sidebarIsOpen.value;
+    openSidebar.value = !openSidebar.value;
   };
 
   // Message Centre
@@ -116,7 +116,7 @@ export const useSharedStore = defineStore('shared', () => {
     isIntersecting,
     setIsIntersecting,
 
-    sidebarIsOpen,
+    openSidebar,
     toggleSidebar,
 
     language,

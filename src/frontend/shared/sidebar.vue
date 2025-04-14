@@ -1,7 +1,7 @@
 <template>
   <nav
     :class="[
-      shared.sidebarIsOpen
+      shared.openSidebar
         ? 'sticky left-0 top-0 flex h-screen flex-col overflow-y-auto rounded-r-[20px] border pb-[26px] pt-9'
         : 'fixed top-5 rounded-[20px] bg-white px-7 py-4 shadow-lg',
       'z-20 w-full max-w-96 transition-all duration-300 ease-in-out',
@@ -9,7 +9,7 @@
   >
     <div
       :class="[
-        shared.sidebarIsOpen ? 'px-10' : 'px-0',
+        shared.openSidebar ? 'px-10' : 'px-0',
         'transition-all duration-300 ease-in-out',
       ]"
     >
@@ -28,8 +28,8 @@
           >
         </div>
         <button @click="toggleSidebar">
-          <Icon name="chevron-double-right" v-if="!shared.sidebarIsOpen" />
-          <Icon name="chevron-double-left" v-else="shared.sidebarIsOpen" />
+          <Icon name="chevron-double-right" v-if="!shared.openSidebar" />
+          <Icon name="chevron-double-left" v-else="shared.openSidebar" />
         </button>
       </div>
       <MessageCentre
@@ -38,7 +38,7 @@
         :message="shared.messageCentre.message"
       />
     </div>
-    <div v-if="shared.sidebarIsOpen" class="mt-14 grow">
+    <div v-if="expandMenu" class="mt-14 grow">
       <div class="grid grid-cols-1 gap-4 pl-8">
         <Link
           class="px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800"
@@ -105,7 +105,7 @@
         </button>
       </div>
     </div>
-    <div v-if="shared.sidebarIsOpen" class="flex items-center justify-center">
+    <div class="flex items-center justify-center">
       <LiftUp
         v-model="form.language as string"
         @change="onLanguage"
@@ -164,4 +164,6 @@ const currentLocale = computed(() => {
 const goBack = () => {
   window.history.back();
 };
+
+const expandMenu = ref(true);
 </script>
