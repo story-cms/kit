@@ -5,15 +5,10 @@
         ? 'sticky left-0 top-0 h-screen overflow-y-auto rounded-r-[20px] border pb-[26px] pt-9'
         : 'fixed top-5 rounded-[20px] bg-white px-7 py-4 shadow-lg',
       shared.expandMenu ? 'h-[calc(100vh-40px)]' : '',
-      'z-20 flex w-full max-w-96 flex-col transition-all duration-300 ease-in-out',
+      'z-20 flex w-full max-w-96 flex-col',
     ]"
   >
-    <div
-      :class="[
-        shared.openSidebar ? 'px-10' : 'px-0',
-        'transition-all duration-300 ease-in-out',
-      ]"
-    >
+    <div :class="[shared.openSidebar ? 'px-10' : 'px-0']">
       <div v-if="!shared.hasFeedback" class="flex justify-between">
         <Link href="/">
           <Icon name="home" />
