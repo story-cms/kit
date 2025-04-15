@@ -6,20 +6,50 @@
       v-html="title"
     ></h3>
 
-    <ContentActionBar
-      :element-to-watch="'content-title'"
-      @delete="emit('delete')"
-      @info="emit('info')"
-      @app-preview="emit('app-preview')"
-      @request-change="emit('request-change')"
-      @publish="emit('publish')"
-      @submit="emit('submit')"
-    />
+    <MakeSticky :el-id="'content-title'">
+      <div class="flex items-center space-x-6">
+        <button
+          type="button"
+          class="grid h-[42px] w-[42px] cursor-pointer place-content-center rounded-full border border-gray-300 bg-white"
+          @click.prevent="emit('info')"
+        >
+          <Icon name="info" class="h-auto w-6 cursor-pointer text-gray-500" />
+        </button>
+        <button
+          v-if="shared.meta.hasAppPreview"
+          type="button"
+          class="grid h-[42px] w-[42px] cursor-pointer place-content-center rounded-full border border-gray-300 bg-white"
+          @click.prevent="emit('app-preview')"
+        >
+          <Icon name="mobile" class="h-auto w-6 cursor-pointer text-gray-500" />
+        </button>
+        <button
+          type="button"
+          class="grid h-[42px] w-[42px] cursor-pointer place-content-center rounded-full border border-gray-300 bg-white"
+          @click="emit('delete')"
+        >
+          <Icon
+            name="trash"
+            class="flex h-auto w-6 cursor-pointer items-center justify-center text-gray-500"
+          />
+        </button>
+        <WorkflowButtons
+          @publish="emit('publish')"
+          @request-change="emit('request-change')"
+          @submit="emit('submit')"
+        />
+        <slot name="actions"></slot>
+      </div>
+    </MakeSticky>
   </div>
 </template>
 
 <script setup lang="ts">
-import ContentActionBar from './content-action-bar.vue';
+import Icon from './icon.vue';
+import { useSharedStore } from '../store';
+import MakeSticky from './make-sticky.vue';
+import WorkflowButtons from '../fields/workflow-buttons.vue';
+
 defineProps<{
   title: string;
 }>();
@@ -32,4 +62,6 @@ const emit = defineEmits([
   'publish',
   'submit',
 ]);
+
+const shared = useSharedStore();
 </script>
