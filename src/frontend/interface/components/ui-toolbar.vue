@@ -1,12 +1,12 @@
 <template>
-  <div class="w-full mb-2 bg-gray-50">
+  <div class="mb-2 w-full bg-gray-50">
     <div class="flex items-center justify-between py-4">
       <div class="flex items-center gap-x-4">
-        <span class="inline-flex rounded-md shadow-sm isolate">
+        <span class="isolate inline-flex rounded-md shadow-sm">
           <button
             type="button"
             :class="[
-              'relative inline-flex items-center px-4 py-2 text-sm font-medium leading-4 border-r rounded-l-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10 disabled:cursor-not-allowed',
+              'relative inline-flex items-center rounded-l-md border-r px-4 py-2 text-sm font-medium leading-4 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10 disabled:cursor-not-allowed',
               activeFilter === 'todo'
                 ? 'bg-indigo-50 text-indigo-700 ring-indigo-700'
                 : 'bg-white text-gray-900',
@@ -15,7 +15,7 @@
           >
             To do
             <span
-              class="inline-flex items-center px-2 py-1 ml-1 text-xs font-medium leading-4 text-indigo-700 bg-gray-100 rounded-full"
+              class="ml-1 inline-flex items-center rounded-full bg-gray-100 px-2 py-1 text-xs font-medium leading-4 text-indigo-700"
               >{{ toDoCount }}</span
             >
           </button>
@@ -23,7 +23,7 @@
           <button
             type="button"
             :class="[
-              'relative inline-flex items-center px-3 py-2 -ml-px text-sm font-medium leading-4 rounded-r-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10',
+              'relative -ml-px inline-flex items-center rounded-r-md px-3 py-2 text-sm font-medium leading-4 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10',
               activeFilter === 'all'
                 ? 'bg-indigo-50 text-indigo-700 ring-indigo-700'
                 : 'bg-white text-gray-900',
@@ -32,7 +32,7 @@
           >
             All
             <span
-              class="inline-flex items-center px-2 py-1 ml-4 text-xs font-medium leading-4 text-gray-700 bg-gray-100 rounded-full"
+              class="ml-4 inline-flex items-center rounded-full bg-gray-100 px-2 py-1 text-xs font-medium leading-4 text-gray-700"
               >{{ allCount }}</span
             >
           </button>
@@ -40,7 +40,7 @@
         <button
           type="button"
           :class="[
-            'inline-flex items-center gap-x-2 rounded-full px-3.5 py-2.5 text-sm font-medium shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ring-1 ring-inset',
+            'inline-flex items-center gap-x-2 rounded-full px-3.5 py-2.5 text-sm font-medium shadow-sm ring-1 ring-inset focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
             sortBy?.field === 'lastEdited'
               ? 'bg-indigo-50 text-indigo-700 ring-indigo-700'
               : 'bg-white text-indigo-700 ring-indigo-700 hover:bg-indigo-100',
@@ -53,7 +53,7 @@
         <button
           type="button"
           :class="[
-            'inline-flex items-center gap-x-2 rounded-full px-3.5 py-2.5 text-sm font-medium shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ring-1 ring-inset',
+            'inline-flex items-center gap-x-2 rounded-full px-3.5 py-2.5 text-sm font-medium shadow-sm ring-1 ring-inset focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
             sortBy?.field === 'status'
               ? 'bg-indigo-50 text-indigo-700 ring-indigo-700'
               : 'bg-white text-indigo-700 ring-indigo-700 hover:bg-indigo-100',
@@ -65,7 +65,7 @@
         </button>
       </div>
       <div>
-        <div class="grid grid-cols-1 mt-2">
+        <div class="mt-2 grid grid-cols-1">
           <input
             type="text"
             name="search"
@@ -76,7 +76,7 @@
             placeholder="Search"
           />
           <svg
-            class="self-center col-start-1 row-start-1 ml-4 text-gray-400 pointer-events-none size-4"
+            class="pointer-events-none col-start-1 row-start-1 ml-4 size-4 self-center text-gray-400"
             viewBox="0 0 16 16"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -91,7 +91,7 @@
         </div>
       </div>
     </div>
-    <hr class="container px-3 mx-auto" />
+    <hr class="w-full" />
   </div>
 </template>
 

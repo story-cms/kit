@@ -1,6 +1,6 @@
 <template>
   <AppLayout>
-    <div class="container mx-auto px-3">
+    <div>
       <h3 class="mt-6 font-['Inter'] text-2xl font-semibold text-gray-800">
         Interface: {{ language.language }}
       </h3>
@@ -15,8 +15,8 @@
       />
     </div>
 
-    <section class="container mx-auto mt-5 px-3">
-      <div class="grid h-[calc(100vh-12rem)] grid-cols-[24fr_76fr] gap-x-6">
+    <section class="mt-5">
+      <div class="grid h-[calc(100vh-12rem)] grid-cols-[2fr_4fr] gap-x-6">
         <div class="scrollbar-hide overflow-y-auto">
           <div v-if="hasEmptyItems" class="sticky top-0 bg-gray-50">
             <button
