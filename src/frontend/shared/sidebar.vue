@@ -37,14 +37,14 @@
     <div v-if="shared.expandMenu" class="mt-14 grow">
       <div class="grid grid-cols-1 gap-4 pl-8">
         <Link
-          class="px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800"
+          class="hover:gray-800 px-3 py-2 text-lg font-semibold leading-6 text-black"
           href="/"
         >
           Dashboard
         </Link>
         <div v-for="story in shared.stories" :key="story">
           <button
-            class="block px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800"
+            class="hover:gray-800 block px-3 py-2 text-lg font-semibold leading-6 text-black"
             @click="onStory(story)"
           >
             {{ story }}
@@ -52,13 +52,13 @@
         </div>
         <Link
           v-if="isMultiLingualAdmin"
-          class="px-2 py-3 text-sm text-gray-500 hover:text-gray-700"
+          class="hover:gray-800 px-3 py-2 text-lg font-semibold leading-6 text-black"
           href="/page"
           >Pages</Link
         >
         <Link
           v-if="isMultiLingual"
-          class="relative px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800"
+          class="hover:gray-800 relative px-3 py-2 text-lg font-semibold leading-6 text-black"
           :class="{ 'cursor-not-allowed': shared.language.locale === 'en' }"
           :disabled="shared.language.locale === 'en'"
           href="/ui"
@@ -71,10 +71,10 @@
         </Link>
       </div>
       <div class="mx-5 my-4 border-t border-gray-400"></div>
-      <div class="grid grid-cols-1 pl-8 gap-y-6">
+      <div class="grid grid-cols-1 gap-y-6 pl-8">
         <Link
           v-if="shared.user.isAdmin"
-          class="flex items-center px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800 gap-x-2"
+          class="hover:gray-800 flex items-center gap-x-2 px-3 py-2 text-lg font-semibold leading-6 text-black"
           href="/user"
         >
           <Icon name="users" />
@@ -82,7 +82,7 @@
         </Link>
         <Link
           v-if="shared.meta.helpUrl"
-          class="flex items-center px-3 text-lg font-semibold leading-6 text-black p y-2 items- hover:gray-800 gap-x-2"
+          class="p y-2 items- hover:gray-800 flex items-center gap-x-2 px-3 text-lg font-semibold leading-6 text-black"
           :href="shared.meta.helpUrl"
           target="_blank"
           rel="noopener noreferrer"
@@ -92,7 +92,7 @@
         </Link>
         <button
           @click="signOut()"
-          class="flex items-center px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800 gap-x-2"
+          class="hover:gray-800 flex items-center gap-x-2 px-3 py-2 text-lg font-semibold leading-6 text-black"
         >
           <Icon name="logout" />
           <span> Log out </span>
