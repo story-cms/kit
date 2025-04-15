@@ -16,49 +16,13 @@
         <button @click="goBack">
           <Icon name="reply" />
         </button>
-        <Menu as="div" class="relative inline-block text-left">
-          <div>
-            <MenuButton class="relative">
-              <Icon name="translate" />
-              <span
-                class="absolute -top-2 left-5 rounded-[7px] bg-[#EDE9FE] px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-[#5B21B6]"
-                >{{ currentLocale }}</span
-              >
-            </MenuButton>
-          </div>
-
-          <transition
-            enter-active-class="transition duration-100 ease-out"
-            enter-from-class="transform scale-95 opacity-0"
-            enter-to-class="transform scale-100 opacity-100"
-            leave-active-class="transition duration-75 ease-in"
-            leave-from-class="transform scale-100 opacity-100"
-            leave-to-class="transform scale-95 opacity-0"
-          >
-            <MenuItems
-              class="absolute left-0 z-10 w-56 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black/5 focus:outline-none"
-            >
-              <div
-                class="py-1"
-                v-for="language in shared.languages"
-                :key="language.language"
-              >
-                <MenuItem v-slot="{ active }">
-                  <button
-                    @click="onLanguage(language.language)"
-                    :class="[
-                      active ? 'bg-gray-100 text-gray-900 outline-none' : 'text-gray-700',
-                      'flex w-full items-center gap-x-2 px-4 py-2 text-left text-sm',
-                    ]"
-                  >
-                    <span> {{ language.language }}</span>
-                    <Icon name="check" v-if="language.language === form.language" />
-                  </button>
-                </MenuItem>
-              </div>
-            </MenuItems>
-          </transition>
-        </Menu>
+        <LanguageSelector
+          :is-expanded="shared.expandMenu"
+          :current-locale="currentLocale"
+          :current-language="form.language"
+          :languages="shared.languages"
+          @language-change="onLanguage"
+        />
         <button @click="toggleMenu">
           <Icon name="chevron-double-right" v-if="!shared.expandMenu" />
           <Icon name="chevron-double-left" v-else="shared.expandMenu" />
@@ -152,9 +116,9 @@ import { computed, ref, watch } from 'vue';
 import LiftUp from './lift-up.vue';
 import MessageCentre from './message-centre.vue';
 import Icon from './icon.vue';
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
-
+import LanguageSelector from './language-selector.vue';
 import { useSharedStore } from '../store';
+
 const shared = useSharedStore();
 
 const form = useForm({
