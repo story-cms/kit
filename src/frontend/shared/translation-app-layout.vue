@@ -5,10 +5,15 @@
       @delete="emit('delete')"
       @info="emit('info')"
       @app-preview="emit('app-preview')"
-      @request-change="emit('request-change')"
-      @publish="emit('publish')"
-      @submit="emit('submit')"
     >
+      <template #actions>
+        <WorkflowButtons
+          @request-change="emit('request-change')"
+          @publish="emit('publish')"
+          @submit="emit('submit')"
+        />
+      </template>
+
       <template #labels>
         <div
           class="flex items-center justify-between [&>h3]:pb-2 [&>h3]:text-lg/8 [&>h3]:font-semibold [&>h3]:text-gray-800"
@@ -46,7 +51,7 @@
 import AppLayout from './app-layout.vue';
 import { useDraftsStore, useSharedStore } from '../store';
 import ContentHeader from './content-header.vue';
-
+import WorkflowButtons from '../fields/workflow-buttons.vue';
 import Icon from '../shared/icon.vue';
 
 defineProps<{

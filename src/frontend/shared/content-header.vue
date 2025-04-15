@@ -37,13 +37,15 @@
       </div>
     </MakeSticky>
   </div>
+  <div class="w-full">
+    <slot name="labels"></slot>
+  </div>
 </template>
 
 <script setup lang="ts">
 import Icon from './icon.vue';
 import { useSharedStore } from '../store';
 import MakeSticky from './make-sticky.vue';
-import WorkflowButtons from '../fields/workflow-buttons.vue';
 
 defineProps<{
   title: string;
