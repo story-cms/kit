@@ -1,6 +1,6 @@
 <template>
   <AppLayout>
-    <div class="container px-3 mx-auto">
+    <div class="container mx-auto px-3">
       <h3 class="mt-6 font-['Inter'] text-2xl font-semibold text-gray-800">
         Interface: {{ language.language }}
       </h3>
@@ -15,9 +15,9 @@
       />
     </div>
 
-    <section class="container px-3 mx-auto mt-5">
+    <section class="container mx-auto mt-5 px-3">
       <div class="grid h-[calc(100vh-12rem)] grid-cols-[24fr_76fr] gap-x-6">
-        <div class="overflow-y-auto scrollbar-hide">
+        <div class="scrollbar-hide overflow-y-auto">
           <div v-if="hasEmptyItems" class="sticky top-0 bg-gray-50">
             <button
               v-show="todoCount"
@@ -63,21 +63,21 @@
                 @apply-suggestion="handleApplySuggestion"
               />
             </form>
-            <div v-show="isTranslating" class="grid w-full h-full place-content-center">
+            <div v-show="isTranslating" class="grid h-full w-full place-content-center">
               <RivePlayer
                 url="https://res.cloudinary.com/redeem/raw/upload/v1743751242/story-cms-ui/audio_visualizer_resize_teno9b.riv"
               />
             </div>
           </template>
           <div v-else class="py-10 text-gray-500">
-            <p v-if="searchTerm" class="text-sm text-center">
+            <p v-if="searchTerm" class="text-center text-sm">
               No results found for "{{ searchTerm }}"
             </p>
           </div>
         </div>
         <div
           v-if="activeFilter === 'todo' && !todoCount && !searchTerm"
-          class="flex flex-col items-center justify-center col-span-2 row-start-1"
+          class="col-span-2 row-start-1 flex flex-col items-center justify-center"
         >
           <Icon class="size-96" name="inbox-zero" />
         </div>
@@ -110,7 +110,7 @@ const props = defineProps<SharedPageProps & UiPageProps>();
 const searchTerm = ref('');
 const itemError = ref('');
 const todoCount = computed(() => {
-  return shared.todoCount;
+  return props.items.filter((item) => !item.translation || !!item.flag).length;
 });
 
 const activeFilter = ref<'todo' | 'all'>('todo');
@@ -315,15 +315,6 @@ const handleSort = (field: 'status' | 'lastEdited') => {
     selectedItem.value = filteredItems.value[0];
   }
 };
-
-watch(
-  () => props.items,
-  (items) => {
-    const count = items.filter((item) => !item.translation || !!item.flag).length;
-    shared.setTodoCount(count);
-  },
-  { immediate: true },
-);
 </script>
 
 <style scoped>
