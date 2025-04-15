@@ -62,6 +62,13 @@ export const useSharedStore = defineStore('shared', () => {
     openSidebar.value = !openSidebar.value;
   };
 
+  // Todo Count
+  const todoCount = ref(0);
+  const setTodoCount = (fresh: number) => {
+    todoCount.value = fresh;
+    
+  };
+
   // Menu
 
   const expandMenu = ref(true);
@@ -126,6 +133,9 @@ export const useSharedStore = defineStore('shared', () => {
 
     openSidebar,
     toggleSidebar,
+
+    todoCount,
+    setTodoCount,
 
     expandMenu,
     toggleMenu,

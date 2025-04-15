@@ -102,7 +102,7 @@
           <!-- Todo: add remaining translation todos count to the badge -->
           <span
             class="absolute ml-2 rounded-full bg-red-100 px-1 py-[2px] text-xs font-medium leading-4 text-red-800"
-            >5</span
+            >{{ shared.todoCount }}</span
           >
         </Link>
       </div>

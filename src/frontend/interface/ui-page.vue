@@ -1,7 +1,7 @@
 <template>
   <AppLayout>
     <div class="container px-3 mx-auto">
-      <h3 class="font-['Inter'] text-2xl font-semibold text-gray-800 mt-6">
+      <h3 class="mt-6 font-['Inter'] text-2xl font-semibold text-gray-800">
         Interface: {{ language.language }}
       </h3>
       <UiToolbar
@@ -16,14 +16,14 @@
     </div>
 
     <section class="container px-3 mx-auto mt-5">
-      <div class="grid grid-cols-[24fr_76fr] gap-x-6 h-[calc(100vh-12rem)]">
+      <div class="grid h-[calc(100vh-12rem)] grid-cols-[24fr_76fr] gap-x-6">
         <div class="overflow-y-auto scrollbar-hide">
           <div v-if="hasEmptyItems" class="sticky top-0 bg-gray-50">
             <button
               v-show="todoCount"
               @click="translateItems"
               type="button"
-              class="flex items-center justify-center gap-x-2 rounded-full py-[11px] text-sm font-medium text-gray-800 shadow-sm hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ring-1 ring-inset ring-gray-300 w-full leading-4 mb-4"
+              class="mb-4 flex w-full items-center justify-center gap-x-2 rounded-full py-[11px] text-sm font-medium leading-4 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               :class="{
                 'bg-blue-50': isTranslating,
                 'bg-white': !isTranslating,
@@ -110,7 +110,7 @@ const props = defineProps<SharedPageProps & UiPageProps>();
 const searchTerm = ref('');
 const itemError = ref('');
 const todoCount = computed(() => {
-  return props.items.filter((item) => !item.translation || !!item.flag).length;
+  return shared.todoCount;
 });
 
 const activeFilter = ref<'todo' | 'all'>('todo');
@@ -166,21 +166,23 @@ const filteredItems = computed(() => {
     sortBy.value.field === 'status'
       ? sortByStatus
       : sortBy.value.field === 'lastEdited'
-      ? sortByLastEdited
-      : (a: UiItem, b: UiItem) => {
-          const aTranslated = !!a.translation;
-          const bTranslated = !!b.translation;
-          if (aTranslated !== bTranslated) {
-            return aTranslated ? 1 : -1;
-          }
+        ? sortByLastEdited
+        : (a: UiItem, b: UiItem) => {
+            const aTranslated = !!a.translation;
+            const bTranslated = !!b.translation;
+            if (aTranslated !== bTranslated) {
+              return aTranslated ? 1 : -1;
+            }
 
-          if (a.flag === FlagState.RECHECK && b.flag !== FlagState.RECHECK) return -1;
-          if (a.flag !== FlagState.RECHECK && b.flag === FlagState.RECHECK) return 1;
-          if (a.flag === FlagState.PREFILLED && b.flag !== FlagState.PREFILLED) return -1;
-          if (a.flag !== FlagState.PREFILLED && b.flag === FlagState.PREFILLED) return 1;
+            if (a.flag === FlagState.RECHECK && b.flag !== FlagState.RECHECK) return -1;
+            if (a.flag !== FlagState.RECHECK && b.flag === FlagState.RECHECK) return 1;
+            if (a.flag === FlagState.PREFILLED && b.flag !== FlagState.PREFILLED)
+              return -1;
+            if (a.flag !== FlagState.PREFILLED && b.flag === FlagState.PREFILLED)
+              return 1;
 
-          return 0;
-        };
+            return 0;
+          };
 
   return items.sort(sortFunction);
 });
@@ -262,10 +264,13 @@ const translateItems = async () => {
   isTranslating.value = true;
   const itemsToTranslate = props.items.filter((item) => !item.translation);
 
-  const payload = itemsToTranslate.reduce((acc, item) => {
-    acc[item.key] = '';
-    return acc;
-  }, {} as Record<string, string>);
+  const payload = itemsToTranslate.reduce(
+    (acc, item) => {
+      acc[item.key] = '';
+      return acc;
+    },
+    {} as Record<string, string>,
+  );
   try {
     const response = await axios.post('/ui/translate-bulk', payload);
 
@@ -310,6 +315,15 @@ const handleSort = (field: 'status' | 'lastEdited') => {
     selectedItem.value = filteredItems.value[0];
   }
 };
+
+watch(
+  () => props.items,
+  (items) => {
+    const count = items.filter((item) => !item.translation || !!item.flag).length;
+    shared.setTodoCount(count);
+  },
+  { immediate: true },
+);
 </script>
 
 <style scoped>
