@@ -33,11 +33,6 @@
             class="flex h-auto w-6 cursor-pointer items-center justify-center text-gray-500"
           />
         </button>
-        <WorkflowButtons
-          @publish="emit('publish')"
-          @request-change="emit('request-change')"
-          @submit="emit('submit')"
-        />
         <slot name="actions"></slot>
       </div>
     </MakeSticky>

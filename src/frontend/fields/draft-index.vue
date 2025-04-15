@@ -5,10 +5,10 @@
       @delete="deleteDraft"
       @info="info"
       @app-preview="appPreview"
-      @request-change="reject"
-      @publish="publish"
-      @submit="submit"
     >
+      <template #actions>
+        <WorkflowButtons @publish="publish" @request-change="reject" @submit="submit" />
+      </template>
     </ContentHeader>
 
     <div
@@ -63,6 +63,7 @@
 import { computed, ref, onMounted, watch } from 'vue';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
+import WorkflowButtons from '../fields/workflow-buttons.vue';
 import MetaBox from '../shared/meta-box.vue';
 import { router } from '@inertiajs/vue3';
 import type { Errors } from '@inertiajs/core';
