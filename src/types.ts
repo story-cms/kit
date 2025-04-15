@@ -292,6 +292,7 @@ export interface UiProgress {
   translatedCount: number;
   totalCount: number;
   updatedAt: string;
+  flaggedCount: number;
 }
 
 export interface UiPageProps {

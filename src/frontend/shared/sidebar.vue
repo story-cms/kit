@@ -66,7 +66,7 @@
           <!-- Todo: add remaining translation todos count to the badge -->
           <span
             class="absolute ml-2 rounded-full bg-red-100 px-1 py-[2px] text-xs font-medium leading-4 text-red-800"
-            >{{ shared.todoCount }}</span
+            >{{ shared.flaggedCount }}</span
           >
         </Link>
       </div>
@@ -112,7 +112,7 @@
 
 <script setup lang="ts">
 import { Link, useForm } from '@inertiajs/vue3';
-import { computed, ref, watch } from 'vue';
+import { computed, watch } from 'vue';
 import LiftUp from './lift-up.vue';
 import MessageCentre from './message-centre.vue';
 import Icon from './icon.vue';
@@ -143,8 +143,7 @@ const signOut = () => {
   window.location.href = '/logout';
 };
 const isMultiLingual = computed(() => shared.languages.length > 1);
-const isMultiStory = computed(() => shared.stories.length > 1);
-// a computed prop that returns a bool if user is admin and multi lingual
+
 const isMultiLingualAdmin = computed(
   () => shared.user.isAdmin && shared.user.language === '*',
 );
