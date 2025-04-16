@@ -7,7 +7,7 @@
         shared.openSidebar ? 'grid-cols-[360px_1fr] gap-x-10' : 'grid-cols-1',
       ]"
     >
-      <Sidebar :flagged-count="flaggedCount" />
+      <Sidebar />
       <div :class="[shared.openSidebar ? '' : 'pt-16', 'px-3 py-10']">
         <slot></slot>
       </div>
@@ -24,10 +24,6 @@ import { useSharedStore } from '../store';
 import { UiProgress } from '../../types';
 const shared = useSharedStore();
 
-const flaggedCount = computed(() => {
-  return shared.flaggedCount;
-});
-
 const resizeHook = () => {
   const fresh = document.documentElement.clientWidth;
   shared.setLargeScreen(fresh >= 1324);
@@ -40,12 +36,13 @@ const getUiProgress = async () => {
   try {
     const response = await axios.get('/ui/progress');
 
-    const currentLocaleProgress = response.data.progress.find(
+    console.log(response.data);
+    const { flaggedCount, translatedCount, totalCount } = response.data.find(
       (progress: UiProgress) => progress.locale === shared.language.locale,
     );
-    if (currentLocaleProgress) {
-      shared.setFlaggedCount(currentLocaleProgress.flaggedCount);
-    }
+
+    const todoCount = flaggedCount + (totalCount - translatedCount);
+    shared.setUiTodos(todoCount);
   } catch (error) {
     console.error(error);
   }

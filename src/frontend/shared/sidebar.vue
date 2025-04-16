@@ -56,24 +56,28 @@
           href="/page"
           >Pages</Link
         >
-        <Link
-          v-if="isMultiLingual"
-          class="hover:gray-800 relative px-3 py-2 text-lg font-semibold leading-6 text-black"
-          :class="{ 'cursor-not-allowed': shared.language.locale === 'en' }"
-          :disabled="shared.language.locale === 'en'"
-          href="/ui"
-          >Interface
-          <!-- Todo: add remaining translation todos count to the badge -->
+        <div v-if="isMultiLingual">
           <span
-            class="absolute ml-2 rounded-full bg-red-100 px-1 py-[2px] text-xs font-medium leading-4 text-red-800"
-            >{{ flaggedCount }}</span
+            v-if="currentLocale === 'en'"
+            class="hover:gray-800 cursor-not-allowed px-3 py-2 text-lg font-semibold leading-6 text-black opacity-50"
+            >Interface</span
           >
-        </Link>
+          <Link
+            v-else
+            class="hover:gray-800 px-3 py-2 text-lg font-semibold leading-6 text-black"
+            href="/ui"
+            >Interface
+            <span
+              class="absolute ml-2 rounded-full bg-red-100 px-1 py-[2px] text-xs font-medium leading-4 text-red-800"
+              >{{ todoCount }}</span
+            >
+          </Link>
+        </div>
       </div>
       <div class="mx-5 my-4 border-t border-gray-400"></div>
       <div class="grid grid-cols-1 gap-y-6 pl-8">
         <Link
-          v-if="shared.user.isAdmin"
+          v-if="isAdmin"
           class="hover:gray-800 flex items-center gap-x-2 px-3 py-2 text-lg font-semibold leading-6 text-black"
           href="/user"
         >
@@ -119,10 +123,6 @@ import Icon from './icon.vue';
 import LanguageSelector from './language-selector.vue';
 import { useSharedStore } from '../store';
 
-defineProps<{
-  flaggedCount: number;
-}>();
-
 const shared = useSharedStore();
 
 const form = useForm({
@@ -148,10 +148,6 @@ const signOut = () => {
 };
 const isMultiLingual = computed(() => shared.languages.length > 1);
 
-const isMultiLingualAdmin = computed(
-  () => shared.user.isAdmin && shared.user.language === '*',
-);
-
 const isAdmin = computed(() => shared.user.isAdmin);
 
 const currentLocale = computed(() => {
@@ -165,6 +161,8 @@ const goBack = () => {
 const toggleMenu = () => {
   shared.expandMenu = !shared.expandMenu;
 };
+
+const todoCount = computed(() => shared.uiTodos);
 
 watch(
   () => shared.expandMenu,
