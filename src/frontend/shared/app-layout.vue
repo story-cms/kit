@@ -7,7 +7,7 @@
         shared.openSidebar ? 'grid-cols-[360px_1fr] gap-x-10' : 'grid-cols-1',
       ]"
     >
-      <Sidebar />
+      <Sidebar :flagged-count="flaggedCount" />
       <div :class="[shared.openSidebar ? '' : 'pt-16', 'px-3 py-10']">
         <slot></slot>
       </div>
@@ -19,10 +19,14 @@
 import axios from 'axios';
 import Sidebar from './sidebar.vue';
 
-import { onMounted, onUnmounted, watch } from 'vue';
+import { onMounted, onUnmounted, watch, computed } from 'vue';
 import { useSharedStore } from '../store';
 import { UiProgress } from '../../types';
 const shared = useSharedStore();
+
+const flaggedCount = computed(() => {
+  return shared.flaggedCount;
+});
 
 const resizeHook = () => {
   const fresh = document.documentElement.clientWidth;
@@ -36,7 +40,7 @@ const getUiProgress = async () => {
   try {
     const response = await axios.get('/ui/progress');
 
-    const currentLocaleProgress = response.data.find(
+    const currentLocaleProgress = response.data.progress.find(
       (progress: UiProgress) => progress.locale === shared.language.locale,
     );
     if (currentLocaleProgress) {

@@ -97,7 +97,7 @@ import UiCard from './components/ui-card.vue';
 
 import { useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
-import { ResponseStatus, FlagState } from '../../types';
+import { ResponseStatus, FlagState, UiProgress } from '../../types';
 import type { UiItem, UiPageProps, SharedPageProps, UiItemPayload } from '../../types';
 import Icon from '../shared/icon.vue';
 
@@ -233,7 +233,19 @@ const setFlag = async (key: string, state: FlagState) => {
       key: key,
       state: newState,
     });
+    console.log('Flag response:', response.data); // Debug log
+
     if (response.status === 200) {
+      // Update flagged count from the response
+      if (response.data.progress) {
+        const currentLocaleProgress = response.data.progress.find(
+          (progress: UiProgress) => progress.locale === shared.language.locale,
+        );
+        if (currentLocaleProgress) {
+          shared.setFlaggedCount(currentLocaleProgress.flaggedCount);
+        }
+      }
+
       router.reload({ only: ['ui', 'items'] });
       shared.addMessage(
         ResponseStatus.Accomplishment,
