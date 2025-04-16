@@ -16,7 +16,7 @@
             To do
             <span
               class="ml-1 inline-flex items-center rounded-full bg-gray-100 px-2 py-1 text-xs font-medium leading-4 text-indigo-700"
-              >{{ toDoCount }}</span
+              >{{ shared.uiTodos }}</span
             >
           </button>
 
@@ -97,9 +97,12 @@
 
 <script setup lang="ts">
 import Icon from '../../shared/icon.vue';
+import { useSharedStore } from '../../store';
+
+const shared = useSharedStore();
+
 defineProps<{
   modelValue: string;
-  toDoCount: number;
   allCount: number;
   activeFilter: 'todo' | 'all';
   sortBy: {

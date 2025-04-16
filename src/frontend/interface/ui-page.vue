@@ -6,7 +6,6 @@
       </h3>
       <UiToolbar
         v-model="searchTerm"
-        :to-do-count="todoCount"
         :all-count="props.items.length"
         :active-filter="activeFilter"
         :sort-by="sortBy"
@@ -190,6 +189,10 @@ const filteredItems = computed(() => {
 const shared = useSharedStore();
 shared.setFromProps(props);
 shared.setUiTodos(todoCount.value);
+
+watch(todoCount, (newCount) => {
+  shared.setUiTodos(newCount);
+});
 
 const listToMap = (list: UiItem[]): ModelType => {
   const map: ModelType = {};

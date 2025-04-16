@@ -11,6 +11,7 @@ export const ui = () => {
   router.post('/ui/translate-bulk', [UiController, 'translateBulk']);
   router.post('/ui/suggest', [UiController, 'suggest']);
   router.post('/ui/flag', [UiController, 'flag']);
+  router.get('/ui/progress', [UiController, 'progress']);
 };
 
 export const uiTools = () => {

@@ -89,13 +89,15 @@ export class UiService {
         )[0];
         updatedAt = latest.updatedAt.toISO() ?? '';
       }
+      const flaggedCount = rows.filter((row) => row.flag).length;
+
       collected.push({
         locale: lang.locale,
         language: lang.language,
         translatedCount,
         totalCount,
         updatedAt,
-        // prefilledCount: 0,
+        flaggedCount,
       });
     }
 
