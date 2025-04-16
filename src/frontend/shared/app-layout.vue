@@ -36,7 +36,6 @@ const getUiProgress = async () => {
   try {
     const response = await axios.get('/ui/progress');
 
-    console.log(response.data);
     const { flaggedCount, translatedCount, totalCount } = response.data.find(
       (progress: UiProgress) => progress.locale === shared.language.locale,
     );
