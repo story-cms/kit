@@ -51,7 +51,7 @@
           </button>
         </div>
         <Link
-          v-if="isMultiLingualAdmin"
+          v-if="isAdmin"
           class="hover:gray-800 px-3 py-2 text-lg font-semibold leading-6 text-black"
           href="/page"
           >Pages</Link
@@ -151,6 +151,8 @@ const isMultiLingual = computed(() => shared.languages.length > 1);
 const isMultiLingualAdmin = computed(
   () => shared.user.isAdmin && shared.user.language === '*',
 );
+
+const isAdmin = computed(() => shared.user.isAdmin);
 
 const currentLocale = computed(() => {
   return shared.languages.find((l) => l.language === form.language)?.locale;
