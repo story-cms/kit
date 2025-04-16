@@ -167,9 +167,10 @@ const todoCount = computed(() => shared.uiTodos);
 watch(
   () => shared.expandMenu,
   (newVal) => {
-    if (newVal) {
+    if (newVal && shared.isLargeScreen) {
       shared.openSidebar = true;
-    } else {
+    }
+    if (!newVal && shared.isLargeScreen) {
       shared.openSidebar = false;
     }
   },

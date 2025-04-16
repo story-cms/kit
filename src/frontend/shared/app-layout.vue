@@ -30,6 +30,9 @@ const resizeHook = () => {
   if (shared.isLargeScreen && shared.openSidebar) {
     shared.expandMenu = true;
   }
+  if (!shared.isLargeScreen && !shared.openSidebar) {
+    shared.expandMenu = false;
+  }
 };
 
 const getUiProgress = async () => {
