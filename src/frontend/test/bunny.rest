@@ -1,0 +1,50 @@
+@authority = https://video.bunnycdn.com
+@videoId = d4748f79-100a-4446-862f-10f09a59d4aa
+
+GET {{authority}}/library/{{bunnyLibraryId}}/videos/{{videoId}}/play HTTP/1.1
+AccessKey: {{bunnyAccessKey}}
+
+###
+# 1. create a video
+POST {{authority}}/library/{{bunnyLibraryId}}/videos HTTP/1.1
+AccessKey: {{bunnyAccessKey}}
+Content-Type: application/json
+
+{
+    "title": "Greatest Story Ever Told",
+    "collectionId": "{{bunnyCollectionId}}",
+    "thumbnailTime": 149000
+}
+
+# {
+#   "videoLibraryId": 408259,
+#   "guid": "2e89a26a-3457-4e6c-a50d-33b495b8dc71",
+#   "title": "Greatest Story Ever Told",
+#   "description": null,
+#   "dateUploaded": "2025-04-11T07:30:32.6781051Z",
+#   "views": 0,
+#   "isPublic": false,
+#   "length": 0,
+#   "status": 0,
+#   "framerate": 0,
+#   "rotation": null,
+#   "width": 0,
+#   "height": 0,
+#   "availableResolutions": null,
+#   "outputCodecs": null,
+#   "thumbnailCount": 0,
+#   "encodeProgress": 0,
+#   "storageSize": 0,
+#   "captions": [],
+#   "hasMP4Fallback": false,
+#   "collectionId": "",
+#   "thumbnailFileName": "thumbnail.jpg",
+#   "averageWatchTime": 0,
+#   "totalWatchTime": 0,
+#   "category": "unknown",
+#   "chapters": [],
+#   "moments": [],
+#   "metaTags": [],
+#   "transcodingMessages": [],
+#   "jitEncodingEnabled": null
+# }
