@@ -33,7 +33,7 @@
             @file="onFile"
           />
           <div
-            v-if="uploading"
+            v-if="isUploading"
             class="absolute top-0 left-0 w-full h-full bg-gray-400 rounded-md bg-opacity-30"
           >
             <div class="h-full bg-accent opacity-30" :style="progress"></div>
@@ -73,11 +73,11 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['delete', 'attached']);
+const emit = defineEmits(['delete', 'attached', 'dropped']);
 
 const field = computed(() => props.field as FieldSpec);
 const progress = ref('width:0.9%');
-const uploading = ref(false);
+const isUploading = ref(false);
 
 const onFileProgress = (percentage: number | undefined) => {
   if (percentage !== undefined) {
@@ -86,10 +86,12 @@ const onFileProgress = (percentage: number | undefined) => {
 };
 
 const onFile = async (file: File) => {
-  uploading.value = true;
+  isUploading.value = true;
+  emit('dropped', file.name);
+  onFileProgress(0);
   const result = await props.hostService.upload(file, onFileProgress);
   emit('attached', result);
-  uploading.value = false;
+  isUploading.value = false;
 };
 
 const hasError = computed(() => props.errors.length > 0 && !props.isReadOnly);
@@ -109,6 +111,13 @@ const defaults = computed(() => {
           props.field?.description ?? 'WAV, MP3, OGG, AAC, WMA files up to 35MB',
         extensions: props.field?.extensions ?? ['.wav', '.mp3', '.ogg', '.aac', '.wma'],
         maxSize: props.field?.maxSize ?? 35662310,
+      };
+
+    case 'video':
+      return {
+        description: props.field?.description ?? 'MP4 and MOV files up to 500MB',
+        extensions: props.field?.extensions ?? ['.mp4', '.mov'],
+        maxSize: props.field?.maxSize ?? 500662310,
       };
 
     default:

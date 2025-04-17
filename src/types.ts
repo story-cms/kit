@@ -50,6 +50,7 @@ export interface FieldSpec {
   tintColor?: string;
   labelOrder?: string;
   folder?: string;
+  collectionId?: string;
 }
 
 export interface Scripture {
@@ -156,6 +157,10 @@ export interface Providers {
 export interface Audio {
   url: string;
   length: number;
+}
+
+export interface Video {
+  url: string;
 }
 
 export interface User {
