@@ -1,27 +1,29 @@
 <template>
   <AppLayout>
     <ContentHeader dir="ltr" :title="title" @delete="deletePage" @info="info">
-      <BooleanField
-        :field="{
-          name: 'isPublished',
-          label: 'Published',
-          widget: 'boolean',
-          default: false,
-          tintColor: 'green-400',
-          labelOrder: 'start',
-        }"
-        :is-nested="true"
-      />
+      <template #actions>
+        <BooleanField
+          :field="{
+            name: 'isPublished',
+            label: 'Published',
+            widget: 'boolean',
+            default: false,
+            tintColor: 'green-400',
+            labelOrder: 'start',
+          }"
+          :is-nested="true"
+        />
+      </template>
     </ContentHeader>
 
     <div
-      class="container relative px-3 mx-auto"
+      class="container relative mx-auto px-3"
       :class="{
-        'grid grid-cols-[1fr,_416px] gap-x-8 ': isLargeScreen,
-        'mx-auto grid max-w-[1080px] grid-cols-[1fr] ': !isLargeScreen || !showMetaBox,
+        'grid grid-cols-[1fr,_416px] gap-x-8': isLargeScreen,
+        'mx-auto grid max-w-[1080px] grid-cols-[1fr]': !isLargeScreen || !showMetaBox,
       }"
     >
-      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="py-4 space-y-8 bg-white">
+      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8 bg-white py-4">
         <StringField
           :field="{
             name: 'title',
@@ -112,10 +114,10 @@
       </form>
       <div
         :class="{
-          'right-4 ': !isLargeScreen,
+          'right-4': !isLargeScreen,
           'absolute block': shared.isIntersecting,
           'fixed right-4 top-24': !shared.isIntersecting && !isLargeScreen,
-          'sticky top-24  [align-self:start]': isLargeScreen,
+          'sticky top-24 [align-self:start]': isLargeScreen,
         }"
       >
         <section v-if="showMetaBox">

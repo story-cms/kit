@@ -6,14 +6,17 @@
       @info="info"
       @app-preview="appPreview"
     >
-      <WorkflowButtons @request-change="reject" @publish="publish" @submit="submit" />
+      <template #actions>
+        <WorkflowButtons @publish="publish" @request-change="reject" @submit="submit" />
+      </template>
     </ContentHeader>
 
     <div
-      class="container relative px-3 mx-auto"
+      class="relative grid"
       :class="{
-        'grid grid-cols-[1fr,_416px] gap-x-8 ': isLargeScreen,
-        'mx-auto grid max-w-[1080px] grid-cols-[1fr] ':
+        'grid-cols-[1fr_360px] gap-x-10':
+          isLargeScreen && (showMetaBox || showAppPreview),
+        'mx-auto max-w-5xl grid-cols-1':
           !isLargeScreen || (!showMetaBox && !showAppPreview),
       }"
     >
@@ -22,13 +25,12 @@
           <component :is="widgetFor(index)" :field="item" :is-nested="false" />
         </div>
       </form>
-
       <div
         :class="{
           'right-4': !isLargeScreen,
           'absolute block': shared.isIntersecting,
           'fixed right-4 top-24': !shared.isIntersecting && !isLargeScreen,
-          'sticky top-24  [align-self:start]': isLargeScreen,
+          'sticky top-24 [align-self:start]': isLargeScreen,
         }"
       >
         <section v-if="showMetaBox">
@@ -61,6 +63,7 @@
 import { computed, ref, onMounted, watch } from 'vue';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
+import WorkflowButtons from '../fields/workflow-buttons.vue';
 import MetaBox from '../shared/meta-box.vue';
 import { router } from '@inertiajs/vue3';
 import type { Errors } from '@inertiajs/core';
@@ -69,7 +72,6 @@ import type { FieldSpec, DraftEditProps, SharedPageProps } from '../../types';
 import { ResponseStatus } from '../../types';
 import { useDraftsStore, useModelStore, useSharedStore, useWidgetsStore } from '../store';
 import MobileAppPreview from './mobile-app-preview.vue';
-import WorkflowButtons from './workflow-buttons.vue';
 
 const props = defineProps<DraftEditProps & SharedPageProps>();
 

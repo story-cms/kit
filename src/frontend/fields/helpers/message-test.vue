@@ -1,10 +1,12 @@
 <template>
   <AppLayout>
     <ContentHeader title="Sticky Header" @delete="onAccomplish" @info="onNeutral">
-      <button type="button" @click.prevent="onConfirm">Confirm</button>
-      <button type="button" @click.prevent="onFail">Fail</button>
+      <template #actions>
+        <button type="button" @click.prevent="onConfirm">Confirm</button>
+        <button type="button" @click.prevent="onFail">Fail</button>
+      </template>
     </ContentHeader>
-    <div class="container grid w-64 p-3 mx-auto space-y-16">
+    <div class="container mx-auto grid w-64 space-y-16 p-3">
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
         incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud

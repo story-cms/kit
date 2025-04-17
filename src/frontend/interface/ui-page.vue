@@ -1,12 +1,11 @@
 <template>
   <AppLayout>
-    <div class="container px-3 mx-auto">
-      <h3 class="font-['Inter'] text-2xl font-semibold text-gray-800 mt-6">
+    <div>
+      <h3 class="mt-6 font-['Inter'] text-2xl font-semibold text-gray-800">
         Interface: {{ language.language }}
       </h3>
       <UiToolbar
         v-model="searchTerm"
-        :to-do-count="todoCount"
         :all-count="props.items.length"
         :active-filter="activeFilter"
         :sort-by="sortBy"
@@ -15,15 +14,15 @@
       />
     </div>
 
-    <section class="container px-3 mx-auto mt-5">
-      <div class="grid grid-cols-[24fr_76fr] gap-x-6 h-[calc(100vh-12rem)]">
-        <div class="overflow-y-auto scrollbar-hide">
+    <section class="mt-5">
+      <div class="grid h-[calc(100vh-12rem)] grid-cols-[2fr_4fr] gap-x-6">
+        <div class="scrollbar-hide overflow-y-auto">
           <div v-if="hasEmptyItems" class="sticky top-0 bg-gray-50">
             <button
               v-show="todoCount"
               @click="translateItems"
               type="button"
-              class="flex items-center justify-center gap-x-2 rounded-full py-[11px] text-sm font-medium text-gray-800 shadow-sm hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ring-1 ring-inset ring-gray-300 w-full leading-4 mb-4"
+              class="mb-4 flex w-full items-center justify-center gap-x-2 rounded-full py-[11px] text-sm font-medium leading-4 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               :class="{
                 'bg-blue-50': isTranslating,
                 'bg-white': !isTranslating,
@@ -63,21 +62,21 @@
                 @apply-suggestion="handleApplySuggestion"
               />
             </form>
-            <div v-show="isTranslating" class="grid w-full h-full place-content-center">
+            <div v-show="isTranslating" class="grid h-full w-full place-content-center">
               <RivePlayer
                 url="https://res.cloudinary.com/redeem/raw/upload/v1743751242/story-cms-ui/audio_visualizer_resize_teno9b.riv"
               />
             </div>
           </template>
           <div v-else class="py-10 text-gray-500">
-            <p v-if="searchTerm" class="text-sm text-center">
+            <p v-if="searchTerm" class="text-center text-sm">
               No results found for "{{ searchTerm }}"
             </p>
           </div>
         </div>
         <div
           v-if="activeFilter === 'todo' && !todoCount && !searchTerm"
-          class="flex flex-col items-center justify-center col-span-2 row-start-1"
+          class="col-span-2 row-start-1 flex flex-col items-center justify-center"
         >
           <Icon class="size-96" name="inbox-zero" />
         </div>
@@ -166,27 +165,34 @@ const filteredItems = computed(() => {
     sortBy.value.field === 'status'
       ? sortByStatus
       : sortBy.value.field === 'lastEdited'
-      ? sortByLastEdited
-      : (a: UiItem, b: UiItem) => {
-          const aTranslated = !!a.translation;
-          const bTranslated = !!b.translation;
-          if (aTranslated !== bTranslated) {
-            return aTranslated ? 1 : -1;
-          }
+        ? sortByLastEdited
+        : (a: UiItem, b: UiItem) => {
+            const aTranslated = !!a.translation;
+            const bTranslated = !!b.translation;
+            if (aTranslated !== bTranslated) {
+              return aTranslated ? 1 : -1;
+            }
 
-          if (a.flag === FlagState.RECHECK && b.flag !== FlagState.RECHECK) return -1;
-          if (a.flag !== FlagState.RECHECK && b.flag === FlagState.RECHECK) return 1;
-          if (a.flag === FlagState.PREFILLED && b.flag !== FlagState.PREFILLED) return -1;
-          if (a.flag !== FlagState.PREFILLED && b.flag === FlagState.PREFILLED) return 1;
+            if (a.flag === FlagState.RECHECK && b.flag !== FlagState.RECHECK) return -1;
+            if (a.flag !== FlagState.RECHECK && b.flag === FlagState.RECHECK) return 1;
+            if (a.flag === FlagState.PREFILLED && b.flag !== FlagState.PREFILLED)
+              return -1;
+            if (a.flag !== FlagState.PREFILLED && b.flag === FlagState.PREFILLED)
+              return 1;
 
-          return 0;
-        };
+            return 0;
+          };
 
   return items.sort(sortFunction);
 });
 
 const shared = useSharedStore();
 shared.setFromProps(props);
+shared.setUiTodos(todoCount.value);
+
+watch(todoCount, (newCount) => {
+  shared.setUiTodos(newCount);
+});
 
 const listToMap = (list: UiItem[]): ModelType => {
   const map: ModelType = {};
@@ -262,10 +268,13 @@ const translateItems = async () => {
   isTranslating.value = true;
   const itemsToTranslate = props.items.filter((item) => !item.translation);
 
-  const payload = itemsToTranslate.reduce((acc, item) => {
-    acc[item.key] = '';
-    return acc;
-  }, {} as Record<string, string>);
+  const payload = itemsToTranslate.reduce(
+    (acc, item) => {
+      acc[item.key] = '';
+      return acc;
+    },
+    {} as Record<string, string>,
+  );
   try {
     const response = await axios.post('/ui/translate-bulk', payload);
 

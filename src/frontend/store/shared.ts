@@ -55,6 +55,27 @@ export const useSharedStore = defineStore('shared', () => {
     isLargeScreen.value = fresh;
   };
 
+  // Sidebar
+  const openSidebar = ref(true);
+
+  const toggleSidebar = () => {
+    openSidebar.value = !openSidebar.value;
+  };
+
+  // UI Todos
+  const uiTodos = ref(0);
+  const setUiTodos = (fresh: number) => {
+    uiTodos.value = fresh;
+  };
+
+  // Menu
+
+  const expandMenu = ref(true);
+
+  const toggleMenu = () => {
+    expandMenu.value = !expandMenu.value;
+  };
+
   // Message Centre
   const messageCentre = reactive({
     response: ResponseStatus.None as ResponseStatus,
@@ -108,6 +129,15 @@ export const useSharedStore = defineStore('shared', () => {
 
     isIntersecting,
     setIsIntersecting,
+
+    openSidebar,
+    toggleSidebar,
+
+    uiTodos,
+    setUiTodos,
+
+    expandMenu,
+    toggleMenu,
 
     language,
     languageDirection,

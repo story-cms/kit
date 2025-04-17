@@ -8,7 +8,7 @@
     <button
       v-if="props.isFloating"
       type="button"
-      class="absolute -right-2 -top-2 inline-flex h-[42px] w-[42px] items-center justify-center rounded-full bg-white"
+      class="absolute -right-2 -top-2 inline-flex size-[42px] items-center justify-center rounded-full bg-white"
       @click.prevent="emit('close')"
     >
       <icon name="cross" class="w-6 h-6" />

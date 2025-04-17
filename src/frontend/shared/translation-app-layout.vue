@@ -6,11 +6,14 @@
       @info="emit('info')"
       @app-preview="emit('app-preview')"
     >
-      <WorkflowButtons
-        @submit="emit('submit')"
-        @publish="emit('publish')"
-        @request-change="emit('request-change')"
-      />
+      <template #actions>
+        <WorkflowButtons
+          @request-change="emit('request-change')"
+          @publish="emit('publish')"
+          @submit="emit('submit')"
+        />
+      </template>
+
       <template #labels>
         <div
           class="flex items-center justify-between [&>h3]:pb-2 [&>h3]:text-lg/8 [&>h3]:font-semibold [&>h3]:text-gray-800"
@@ -21,7 +24,7 @@
             <span class="ml-2">
               <Icon
                 name="eyeoff"
-                class="w-8 h-8 text-black cursor-pointer"
+                class="h-8 w-8 cursor-pointer text-black"
                 @click.prevent="toggle"
               />
             </span>
