@@ -110,14 +110,6 @@ export default class UisController {
     return ctx.response.finish();
   }
 
-  public async progress(ctx: HttpContext) {
-    if (!ctx.version) return ctx.response.notFound();
-
-    const service = new UiService(this.sourceLocale);
-    const progress = await service.progress();
-    return ctx.response.json(progress);
-  }
-
   // API endpoint to trigger a pull the source phrases from project repository
   public async pull({ request, response }: HttpContext) {
     const token = request.qs().token;
