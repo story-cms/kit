@@ -199,6 +199,7 @@ export interface SharedPageProps {
   languages: LanguageSpecification[];
   stories: string[];
   user: User;
+  uiProgress: UiProgress[];
 }
 
 export interface PageMeta {

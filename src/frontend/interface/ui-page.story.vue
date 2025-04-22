@@ -9,6 +9,7 @@
         :meta="sharedProps.meta"
         :user="sharedProps.user"
         :stories="['John', 'Acts']"
+        :uiProgress="sharedProps.uiProgress"
       />
     </Variant>
   </Story>

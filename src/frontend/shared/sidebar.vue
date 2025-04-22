@@ -37,14 +37,14 @@
     <div v-if="shared.expandMenu" class="mt-14 grow">
       <div class="grid grid-cols-1 gap-4 pl-8">
         <Link
-          class="hover:gray-800 px-3 py-2 text-lg font-semibold leading-6 text-black"
+          class="px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800"
           href="/"
         >
           Dashboard
         </Link>
         <div v-for="story in shared.stories" :key="story">
           <button
-            class="hover:gray-800 block px-3 py-2 text-lg font-semibold leading-6 text-black"
+            class="block px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800"
             @click="onStory(story)"
           >
             {{ story }}
@@ -52,19 +52,19 @@
         </div>
         <Link
           v-if="isAdmin"
-          class="hover:gray-800 px-3 py-2 text-lg font-semibold leading-6 text-black"
+          class="px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800"
           href="/page"
           >Pages</Link
         >
         <div v-if="isMultiLingual">
           <span
             v-if="currentLocale === 'en'"
-            class="hover:gray-800 cursor-not-allowed px-3 py-2 text-lg font-semibold leading-6 text-black opacity-50"
+            class="px-3 py-2 text-lg font-semibold leading-6 text-black opacity-50 cursor-not-allowed hover:gray-800"
             >Interface</span
           >
           <Link
             v-else
-            class="hover:gray-800 px-3 py-2 text-lg font-semibold leading-6 text-black"
+            class="px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800"
             href="/ui"
             >Interface
             <span
@@ -75,10 +75,10 @@
         </div>
       </div>
       <div class="mx-5 my-4 border-t border-gray-400"></div>
-      <div class="grid grid-cols-1 gap-y-6 pl-8">
+      <div class="grid grid-cols-1 pl-8 gap-y-6">
         <Link
           v-if="isAdmin"
-          class="hover:gray-800 flex items-center gap-x-2 px-3 py-2 text-lg font-semibold leading-6 text-black"
+          class="flex items-center px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800 gap-x-2"
           href="/user"
         >
           <Icon name="users" />
@@ -86,7 +86,7 @@
         </Link>
         <Link
           v-if="shared.meta.helpUrl"
-          class="p y-2 items- hover:gray-800 flex items-center gap-x-2 px-3 text-lg font-semibold leading-6 text-black"
+          class="flex items-center px-3 text-lg font-semibold leading-6 text-black p y-2 items- hover:gray-800 gap-x-2"
           :href="shared.meta.helpUrl"
           target="_blank"
           rel="noopener noreferrer"
@@ -96,14 +96,14 @@
         </Link>
         <button
           @click="signOut()"
-          class="hover:gray-800 flex items-center gap-x-2 px-3 py-2 text-lg font-semibold leading-6 text-black"
+          class="flex items-center px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800 gap-x-2"
         >
           <Icon name="logout" />
           <span> Log out </span>
         </button>
       </div>
     </div>
-    <div v-if="shared.expandMenu" class="flex items-center justify-center">
+  <div v-if="shared.expandMenu" class="flex items-center justify-center">
       <LiftUp
         v-model="form.language as string"
         @change="onLanguage"
@@ -116,12 +116,13 @@
 
 <script setup lang="ts">
 import { Link, useForm } from '@inertiajs/vue3';
-import { computed, watch } from 'vue';
+import { computed, watch, onMounted } from 'vue';
 import LiftUp from './lift-up.vue';
 import MessageCentre from './message-centre.vue';
 import Icon from './icon.vue';
 import LanguageSelector from './language-selector.vue';
 import { useSharedStore } from '../store';
+import { UiProgress } from '../../types';
 
 const shared = useSharedStore();
 
@@ -163,6 +164,16 @@ const toggleMenu = () => {
 };
 
 const todoCount = computed(() => shared.uiTodos);
+const getTodoCount = () => {
+  const { flaggedCount, translatedCount, totalCount } = shared.uiProgress.find(
+    (p: UiProgress) => p.locale === currentLocale.value,
+  );
+  return flaggedCount + (totalCount - translatedCount);
+};
+
+onMounted(() => {
+  shared.setUiTodos(getTodoCount());
+});
 
 watch(
   () => shared.expandMenu,

@@ -16,7 +16,7 @@
 
     <section class="mt-5">
       <div class="grid h-[calc(100vh-12rem)] grid-cols-[2fr_4fr] gap-x-6">
-        <div class="scrollbar-hide overflow-y-auto">
+        <div class="overflow-y-auto scrollbar-hide">
           <div v-if="hasEmptyItems" class="sticky top-0 bg-gray-50">
             <button
               v-show="todoCount"
@@ -62,21 +62,21 @@
                 @apply-suggestion="handleApplySuggestion"
               />
             </form>
-            <div v-show="isTranslating" class="grid h-full w-full place-content-center">
+            <div v-show="isTranslating" class="grid w-full h-full place-content-center">
               <RivePlayer
                 url="https://res.cloudinary.com/redeem/raw/upload/v1743751242/story-cms-ui/audio_visualizer_resize_teno9b.riv"
               />
             </div>
           </template>
           <div v-else class="py-10 text-gray-500">
-            <p v-if="searchTerm" class="text-center text-sm">
+            <p v-if="searchTerm" class="text-sm text-center">
               No results found for "{{ searchTerm }}"
             </p>
           </div>
         </div>
         <div
           v-if="activeFilter === 'todo' && !todoCount && !searchTerm"
-          class="col-span-2 row-start-1 flex flex-col items-center justify-center"
+          class="flex flex-col items-center justify-center col-span-2 row-start-1"
         >
           <Icon class="size-96" name="inbox-zero" />
         </div>
@@ -254,7 +254,7 @@ const save = async (payload: UiItemPayload) => {
     const response = await axios.post('/ui', payload);
     if (response.status === 200) {
       router.reload({ only: ['ui', 'items'] });
-      shared.addMessage(ResponseStatus.Accomplishment, 'Translations saved');
+      shared.addMessage(ResponseStatus.Accomplishment, 'Translation saved');
     }
   } catch (error) {
     shared.addMessage(ResponseStatus.Failure, 'Error saving translation');

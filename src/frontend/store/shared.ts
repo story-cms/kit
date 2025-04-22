@@ -7,6 +7,7 @@ import {
   LanguageSpecification,
   User,
   ResponseStatus,
+  UiProgress,
 } from '../../types';
 
 const defaultLanguage: LanguageSpecification = {
@@ -20,6 +21,7 @@ export const useSharedStore = defineStore('shared', () => {
   const meta: Ref<Meta> = ref({} as Meta);
   const user: Ref<User> = ref({} as User);
   const languages: Ref<LanguageSpecification[]> = ref([] as LanguageSpecification[]);
+  const uiProgress: Ref<UiProgress[]> = ref([] as UiProgress[]);
 
   const setFromProps = (props: SharedPageProps) => {
     errors.value = toRefs(props.errors) as any;
@@ -28,6 +30,7 @@ export const useSharedStore = defineStore('shared', () => {
     languages.value = props.languages;
     user.value = props.user;
     language.value = props.language;
+    uiProgress.value = props.uiProgress;
   };
 
   // errors
@@ -63,11 +66,13 @@ export const useSharedStore = defineStore('shared', () => {
   };
 
   // UI Todos
+
+
+  
   const uiTodos = ref(0);
   const setUiTodos = (fresh: number) => {
     uiTodos.value = fresh;
   };
-
   // Menu
 
   const expandMenu = ref(true);
@@ -120,7 +125,7 @@ export const useSharedStore = defineStore('shared', () => {
     languages,
     errors,
     user,
-
+    uiProgress,
     messageCentre,
     hasFeedback,
 
@@ -135,6 +140,7 @@ export const useSharedStore = defineStore('shared', () => {
 
     uiTodos,
     setUiTodos,
+
 
     expandMenu,
     toggleMenu,

@@ -16,12 +16,10 @@
 </template>
 
 <script setup lang="ts">
-import axios from 'axios';
 import Sidebar from './sidebar.vue';
 
-import { onMounted, onUnmounted, watch, computed } from 'vue';
+import { onMounted, onUnmounted, watch } from 'vue';
 import { useSharedStore } from '../store';
-import { UiProgress } from '../../types';
 const shared = useSharedStore();
 
 const resizeHook = () => {
@@ -32,21 +30,6 @@ const resizeHook = () => {
   }
   if (!shared.isLargeScreen && !shared.openSidebar) {
     shared.expandMenu = false;
-  }
-};
-
-const getUiProgress = async () => {
-  try {
-    const response = await axios.get('/ui/progress');
-
-    const { flaggedCount, translatedCount, totalCount } = response.data.find(
-      (progress: UiProgress) => progress.locale === shared.language.locale,
-    );
-
-    const todoCount = flaggedCount + (totalCount - translatedCount);
-    shared.setUiTodos(todoCount);
-  } catch (error) {
-    console.error(error);
   }
 };
 
@@ -65,7 +48,6 @@ watch(
 onMounted(() => {
   window.addEventListener('resize', resizeHook);
   resizeHook();
-  getUiProgress();
 });
 
 onUnmounted(() => {
