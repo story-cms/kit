@@ -2,13 +2,13 @@
   <Story title="Ui Index Page" group="interface">
     <Variant title="Index">
       <UiIndex
-        :progress="progress"
         :errors="sharedProps.errors"
         :language="sharedProps.language"
         :languages="sharedProps.languages"
         :meta="sharedProps.meta"
         :user="sharedProps.user"
         :stories="['John', 'Acts']"
+        :ui-progress="sharedProps.uiProgress"
       />
     </Variant>
   </Story>

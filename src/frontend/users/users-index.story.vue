@@ -9,6 +9,7 @@
         :language="sharedProps.language"
         :languages="sharedProps.languages"
         :stories="['John', 'Acts']"
+        :ui-progress="sharedProps.uiProgress"
       />
     </Variant>
     <Variant title="With feedback" :setup-app="loadData">
@@ -20,6 +21,7 @@
         :language="sharedProps.language"
         :languages="sharedProps.languages"
         :stories="['John', 'Acts']"
+        :ui-progress="sharedProps.uiProgress"
       />
     </Variant>
   </Story>
