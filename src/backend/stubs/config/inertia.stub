@@ -6,6 +6,7 @@ import { defineConfig } from '@adonisjs/inertia';
 import type { InferSharedProps } from '@adonisjs/inertia/types';
 import storyConfig from '#config/story';
 import { LanguageSpecification } from '@story-cms/kit';
+import { UiService } from '#services/ui_service';
 
 const getLanguage = (locale: string | null): LanguageSpecification => {
   const found =
