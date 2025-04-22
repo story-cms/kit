@@ -14,6 +14,11 @@ const getLanguage = (locale: string | null): LanguageSpecification => {
   return found as LanguageSpecification;
 };
 
+const getUiProgress = async (locale: string) => {
+  const service = new UiService(locale);
+  return await service.progress();
+};
+
 const inertiaConfig = defineConfig({
   /**
    * Path to the Edge view that will be used as the root view for Inertia responses
@@ -30,6 +35,7 @@ const inertiaConfig = defineConfig({
     language: (ctx) => getLanguage(ctx.session.get('locale')),
     languages: () => storyConfig.languages,
     errors: (ctx) => ctx.session?.flashMessages.get('errors') ?? {},
+    uiProgress: () => getUiProgress(storyConfig.languages[0].locale),
   },
 
   /**
