@@ -27,6 +27,7 @@
     },
     "./version_context_middleware": "./dist/backend/middleware/version_context.js",
     "./add_meta_noindex_middleware": "./dist/backend/middleware/add_meta_noindex.js",
+    "./api_token_middleware": "./dist/backend/middleware/api_token_middleware.js",
     "./admin_middleware": "./dist/backend/middleware/admin.js",
     "./story_provider": "./dist/backend/providers/story_provider.js",
     "./ui": {

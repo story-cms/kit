@@ -1,0 +1,26 @@
+import type { HttpContext } from '@adonisjs/core/http';
+import type { NextFn } from '@adonisjs/core/types/http';
+import env from '#start/env';
+
+export default class ApiTokenMiddleware {
+  async handle(ctx: HttpContext, next: NextFn) {
+    const authHeader = ctx.request.header('Authorization');
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return ctx.response.unauthorized({
+        error: 'Missing or invalid authorization token',
+      });
+    }
+
+    const token = authHeader.split(' ')[1];
+    const appKey = env.get('APP_KEY');
+
+    if (!token || token !== appKey) {
+      return ctx.response.unauthorized({
+        error: 'Invalid API token',
+      });
+    }
+
+    await next();
+  }
+}

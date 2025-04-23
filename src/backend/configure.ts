@@ -82,7 +82,9 @@ export async function configure(command: Configure) {
   }
 
   codemods.overwriteExisting = true;
+  await codemods.makeUsingStub(stubsRoot, 'middleware/api_token_middleware.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/inertia.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'config/shield.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/providers.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/users_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/auth_controller.stub', {});
@@ -98,6 +100,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'controllers/admin_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/ui_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/preview_controller.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'controllers/donations_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/indices_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'factories/page_factory.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'factories/user_factory.stub', {});
@@ -133,15 +136,18 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'services/admin_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/ai_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/helpers.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'services/stripe_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/auth.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/bundle.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'validators/donation.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/page.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/make_user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/fix_database.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/bootstrap.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/mock.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/rest.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'tests/donations.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/functional/draft.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/page_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/model.stub', {});
@@ -160,6 +166,7 @@ export async function configure(command: Configure) {
   await codemods.defineEnvVariables({ CLOUDINARY_PRESET: 'pending' });
   await codemods.defineEnvVariables({ BIBLE_API_KEY: 'redacted' });
   await codemods.defineEnvVariables({ OPENAI_API_KEY: 'redacted' });
+  await codemods.defineEnvVariables({ STRIPE_KEY: 'redacted' });
 
   /**
    * Define environment variables validations
@@ -193,6 +200,12 @@ export async function configure(command: Configure) {
     },
     leadingComment: 'Configuration for the OpenAI API service',
   });
+  await codemods.defineEnvValidations({
+    variables: {
+      STRIPE_KEY: `Env.schema.string(),`,
+    },
+    leadingComment: 'Configuration for the Stripe donations service',
+  });
 
   /**
    * Register provider
@@ -218,6 +231,10 @@ export async function configure(command: Configure) {
     {
       name: 'noIndex',
       path: '@story-cms/kit/add_meta_noindex_middleware',
+    },
+    {
+      name: 'apiToken',
+      path: '@story-cms/kit/api_token_middleware',
     },
   ]);
 }
