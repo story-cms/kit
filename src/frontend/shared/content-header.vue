@@ -7,7 +7,7 @@
         v-html="title"
       ></h3>
 
-      <MakeSticky :el-id="'content-title'">
+      <MakeSticky el-id="content-title">
         <div class="flex items-center space-x-6">
           <button
             type="button"
