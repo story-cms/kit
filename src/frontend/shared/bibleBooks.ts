@@ -47,7 +47,7 @@ export const BibleBooksMap: { [key: string]: Array<string> } = {
   acts: ['act', 'ac'],
   romans: ['rom', 'ro', 'rm'],
   '1 corinthians': ['1co', '1cor', '1 co', '1 cor'],
-  '2 corinthians': ['1co', '1cor', '1 co', '1 cor'],
+  '2 corinthians': ['2co', '2cor', '2 co', '2 cor'],
   galatians: ['gal', 'ga', 'gl'],
   ephesians: ['eph', 'ep'],
   philippians: ['php', 'ph', 'phil'],
