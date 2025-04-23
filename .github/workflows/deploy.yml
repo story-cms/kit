@@ -1,0 +1,49 @@
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the main branch
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+
+    name: Deploy to Cloudflare Pages
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      # Run your project's build step
+      - name: Build
+        run: npm install && npm run story:build
+        env:
+          VITE_CLOUDINARY_API_KEY: ${{ secrets.VITE_CLOUDINARY_API_KEY }}
+          VITE_CLOUDINARY_SECRET: ${{ secrets.VITE_CLOUDINARY_SECRET }}
+          VITE_CLOUDINARY_PRESET: ${{ secrets.VITE_CLOUDINARY_PRESET }}
+          VITE_CLOUDINARY_CLOUD_NAME: ${{ secrets.VITE_CLOUDINARY_CLOUD_NAME }}
+          VITE_BIBLE_API_KEY: ${{ secrets.VITE_BIBLE_API_KEY }}
+          VITE_S3_ACCESS_KEY_ID: ${{ secrets.VITE_S3_ACCESS_KEY_ID }}
+          VITE_S3_SECRET_ACCESS_KEY: ${{ secrets.VITE_S3_SECRET_ACCESS_KEY }}
+          VITE_S3_BUCKET: ${{ secrets.VITE_S3_BUCKET }}
+          VITE_S3_ENDPOINT: ${{ secrets.VITE_S3_ENDPOINT }}
+          VITE_S3_REGION: ${{ secrets.VITE_S3_REGION }}
+
+      - name: Publish
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: 656ce03f4ef6c13bf8278f824cfc13e6
+          projectName: kit
+          directory: .histoire/dist
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          wranglerVersion: '3'
+
+      - name: Notify Slack
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: curl -X POST -H 'Content-type:application/json' --data '{"text":"✅ Story-CMS/kit deployed to production "}' ${{ secrets.SLACK_SR_BUILDS_WEBHOOK_URL }}
