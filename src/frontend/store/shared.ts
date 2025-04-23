@@ -7,7 +7,7 @@ import {
   LanguageSpecification,
   User,
   ResponseStatus,
-  UiProgress,
+  
 } from '../../types';
 
 const defaultLanguage: LanguageSpecification = {
@@ -21,7 +21,7 @@ export const useSharedStore = defineStore('shared', () => {
   const meta: Ref<Meta> = ref({} as Meta);
   const user: Ref<User> = ref({} as User);
   const languages: Ref<LanguageSpecification[]> = ref([] as LanguageSpecification[]);
-  const uiProgress: Ref<UiProgress[]> = ref([] as UiProgress[]);
+  const uiTodoCount: Ref<number> = ref(0);
 
   const setFromProps = (props: SharedPageProps) => {
     errors.value = toRefs(props.errors) as any;
@@ -30,7 +30,7 @@ export const useSharedStore = defineStore('shared', () => {
     languages.value = props.languages;
     user.value = props.user;
     language.value = props.language;
-    uiProgress.value = props.uiProgress;
+    uiTodoCount.value = props.uiTodoCount;
   };
 
   // errors
@@ -59,10 +59,10 @@ export const useSharedStore = defineStore('shared', () => {
   };
 
   // Sidebar
-  const openSidebar = ref(true);
+  const hasOpenSidebar = ref(true);
 
   const toggleSidebar = () => {
-    openSidebar.value = !openSidebar.value;
+    hasOpenSidebar.value = !hasOpenSidebar.value;
   };
 
   // UI Todos
@@ -75,10 +75,10 @@ export const useSharedStore = defineStore('shared', () => {
   };
   // Menu
 
-  const expandMenu = ref(true);
+  const hasLanguageMenu = ref(true);
 
-  const toggleMenu = () => {
-    expandMenu.value = !expandMenu.value;
+  const toggleLanguageMenu = () => {
+    hasLanguageMenu.value = !hasLanguageMenu.value;
   };
 
   // Message Centre
@@ -125,7 +125,7 @@ export const useSharedStore = defineStore('shared', () => {
     languages,
     errors,
     user,
-    uiProgress,
+    uiTodoCount,
     messageCentre,
     hasFeedback,
 
@@ -135,15 +135,15 @@ export const useSharedStore = defineStore('shared', () => {
     isIntersecting,
     setIsIntersecting,
 
-    openSidebar,
+    hasOpenSidebar,
     toggleSidebar,
 
     uiTodos,
     setUiTodos,
 
 
-    expandMenu,
-    toggleMenu,
+    hasLanguageMenu,
+    toggleLanguageMenu,
 
     language,
     languageDirection,

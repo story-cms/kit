@@ -3,9 +3,8 @@
     <div class="container relative px-3 mx-auto">
       <h2>Micro Copy Status</h2>
       <section class="flex flex-col space-y-6">
-        <div v-for="item in shared.uiProgress" :key="item.locale">
-          <h3>{{ item.language }}</h3>
-          <pre>{{ JSON.stringify(item, null, 4) }}</pre>
+        <div>
+          <h3>{{ shared.uiTodoCount }}</h3>
         </div>
       </section>
     </div>

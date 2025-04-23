@@ -518,5 +518,5 @@ export const sharedProps: SharedPageProps = {
   language: english,
   languages,
   errors: {},
-  uiProgress: [],
+  uiTodoCount: 5,
 };

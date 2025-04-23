@@ -1,14 +1,14 @@
 <template>
   <nav
     :class="[
-      shared.openSidebar
+      shared.hasOpenSidebar
         ? 'sticky left-0 top-0 h-screen overflow-y-auto rounded-r-[20px] border pb-[26px] pt-9'
         : 'fixed top-5 rounded-[20px] bg-white px-7 py-4 shadow-lg',
-      shared.expandMenu ? 'h-[calc(100vh-40px)]' : '',
+      shared.hasLanguageMenu ? 'h-[calc(100vh-40px)]' : '',
       'z-20 flex w-full max-w-96 flex-col',
     ]"
   >
-    <div :class="[shared.openSidebar ? 'px-10' : 'px-0']">
+    <div :class="[shared.hasOpenSidebar ? 'px-10' : 'px-0']">
       <div v-if="!shared.hasFeedback" class="flex justify-between">
         <Link href="/">
           <Icon name="home" />
@@ -17,15 +17,15 @@
           <Icon name="reply" />
         </button>
         <LanguageSelector
-          :is-expanded="shared.expandMenu"
+          :is-expanded="shared.hasLanguageMenu"
           :current-locale="currentLocale"
           :current-language="form.language"
           :languages="shared.languages"
           @language-change="onLanguage"
         />
         <button @click="toggleMenu">
-          <Icon name="chevron-double-right" v-if="!shared.expandMenu" />
-          <Icon name="chevron-double-left" v-else="shared.expandMenu" />
+          <Icon name="chevron-double-right" v-if="!shared.hasLanguageMenu" />
+          <Icon name="chevron-double-left" v-else="shared.hasLanguageMenu" />
         </button>
       </div>
       <MessageCentre
@@ -34,7 +34,7 @@
         :message="shared.messageCentre.message"
       />
     </div>
-    <div v-if="shared.expandMenu" class="mt-14 grow">
+    <div v-if="shared.hasLanguageMenu" class="mt-14 grow">
       <div class="grid grid-cols-1 gap-4 pl-8">
         <Link
           class="px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800"
@@ -103,7 +103,7 @@
         </button>
       </div>
     </div>
-  <div v-if="shared.expandMenu" class="flex items-center justify-center">
+    <div v-if="shared.hasLanguageMenu" class="flex items-center justify-center">
       <DropUp
         v-model="form.language as string"
         @change="onLanguage"
@@ -122,7 +122,7 @@ import MessageCentre from './message-centre.vue';
 import Icon from './icon.vue';
 import LanguageSelector from './language-selector.vue';
 import { useSharedStore } from '../store';
-import { UiProgress } from '../../types';
+
 
 const shared = useSharedStore();
 
@@ -160,29 +160,23 @@ const goBack = () => {
 };
 
 const toggleMenu = () => {
-  shared.expandMenu = !shared.expandMenu;
+  shared.hasLanguageMenu = !shared.hasLanguageMenu;
 };
 
 const todoCount = computed(() => shared.uiTodos);
-const getTodoCount = () => {
-  const { flaggedCount, translatedCount, totalCount } = shared.uiProgress.find(
-    (p: UiProgress) => p.locale === currentLocale.value,
-  );
-  return flaggedCount + (totalCount - translatedCount);
-};
 
 onMounted(() => {
-  shared.setUiTodos(getTodoCount());
+  shared.setUiTodos(shared.uiTodoCount);
 });
 
 watch(
-  () => shared.expandMenu,
+  () => shared.hasLanguageMenu,
   (newVal) => {
     if (newVal && shared.isLargeScreen) {
-      shared.openSidebar = true;
+      shared.hasOpenSidebar = true;
     }
     if (!newVal && shared.isLargeScreen) {
-      shared.openSidebar = false;
+      shared.hasOpenSidebar = false;
     }
   },
 );
