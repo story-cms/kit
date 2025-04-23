@@ -104,7 +104,7 @@
       </div>
     </div>
   <div v-if="shared.expandMenu" class="flex items-center justify-center">
-      <LiftUp
+      <DropUp
         v-model="form.language as string"
         @change="onLanguage"
         :options="shared.languages.map((l) => l.language) as string[]"
@@ -117,7 +117,7 @@
 <script setup lang="ts">
 import { Link, useForm } from '@inertiajs/vue3';
 import { computed, watch, onMounted } from 'vue';
-import LiftUp from './lift-up.vue';
+import DropUp from './drop-up.vue';
 import MessageCentre from './message-centre.vue';
 import Icon from './icon.vue';
 import LanguageSelector from './language-selector.vue';
