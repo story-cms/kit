@@ -45,4 +45,5 @@ jobs:
           wranglerVersion: '3'
 
       - name: Notify Slack
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: curl -X POST -H 'Content-type:application/json' --data '{"text":"✅ Story-CMS/kit deployed to production "}' ${{ secrets.SLACK_SR_BUILDS_WEBHOOK_URL }}
