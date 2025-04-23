@@ -15,9 +15,9 @@ const getLanguage = (locale: string | null): LanguageSpecification => {
   return found as LanguageSpecification;
 };
 
-const getUiProgress = async (locale: string) => {
+const getTodoCount = async (locale: string) => {
   const service = new UiService(locale);
-  return await service.progress();
+  return await service.getTodoCount(locale);
 };
 
 const inertiaConfig = defineConfig({
@@ -36,7 +36,7 @@ const inertiaConfig = defineConfig({
     language: (ctx) => getLanguage(ctx.session.get('locale')),
     languages: () => storyConfig.languages,
     errors: (ctx) => ctx.session?.flashMessages.get('errors') ?? {},
-    uiProgress: () => getUiProgress(storyConfig.languages[0].locale),
+    uiTodoCount: (ctx) => getTodoCount(ctx.session.get('locale')),
   },
 
   /**
