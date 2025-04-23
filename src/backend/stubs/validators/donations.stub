@@ -1,5 +1,5 @@
 {{{
-  exports({ to: app.makePath('app/validators/donation.ts') })
+  exports({ to: app.makePath('app/validators/donations.ts') })
 }}}
 import vine from '@vinejs/vine';
 

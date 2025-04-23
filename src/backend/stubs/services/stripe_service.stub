@@ -15,7 +15,7 @@ const metaFrom = (data: Payload) => {
 
 export default class StripeService {
   receiptMessage =
-    'Thank you for your kind donation to our ministry.\nYour giving will help churches around the world share the gospel and grow disciples of Jesus.\nThank you!';
+    'Thank you for your kind donation to our ministry.\\nYour giving will help churches around the world share the gospel and grow disciples of Jesus.\\nThank you!';
 
   public async createDonation(payload: Payload) {
     const stripeKey = env.get('STRIPE_KEY');

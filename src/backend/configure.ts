@@ -19,6 +19,16 @@ async function addMigrations(command: Configure, codemods: Codemods) {
   });
 }
 
+async function getFeatures(command: Configure): Promise<FeatureOptions> {
+  const usesDonations = await command.prompt.confirm('Do you want to enable donations?', {
+    default: false,
+  });
+
+  return {
+    usesDonations,
+  };
+}
+
 async function getOptions(command: Configure): Promise<ConfigOptions> {
   /**
    * Prompt for the content types
@@ -81,8 +91,24 @@ export async function configure(command: Configure) {
     await codemods.makeUsingStub(stubsRoot, 'config/story.stub', options);
   }
 
+  const featureOptions = await getFeatures(command);
   codemods.overwriteExisting = true;
-  await codemods.makeUsingStub(stubsRoot, 'middleware/api_token_middleware.stub', {});
+  if (featureOptions.usesDonations) {
+    await codemods.makeUsingStub(stubsRoot, 'middleware/api_token_middleware.stub', {});
+    await codemods.makeUsingStub(stubsRoot, 'controllers/donations_controller.stub', {});
+    await codemods.makeUsingStub(stubsRoot, 'services/stripe_service.stub', {});
+    await codemods.makeUsingStub(stubsRoot, 'validators/donations.stub', {});
+    await codemods.makeUsingStub(stubsRoot, 'tests/donations.stub', {});
+
+    await codemods.defineEnvVariables({ STRIPE_KEY: 'redacted' });
+    await codemods.defineEnvValidations({
+      variables: {
+        STRIPE_KEY: `Env.schema.string(),`,
+      },
+      leadingComment: 'Configuration for the Stripe donations service',
+    });
+  }
+
   await codemods.makeUsingStub(stubsRoot, 'config/inertia.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/shield.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/providers.stub', {});
@@ -100,7 +126,6 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'controllers/admin_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/ui_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/preview_controller.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'controllers/donations_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/indices_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'factories/page_factory.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'factories/user_factory.stub', {});
@@ -115,7 +140,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'routes/drafts.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/chapters.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/pages.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'routes/api.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'routes/api.stub', { featureOptions });
   await codemods.makeUsingStub(stubsRoot, 'routes/ui.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'inertia/app.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'inertia/css.stub', {});
@@ -136,18 +161,15 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'services/admin_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/ai_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/helpers.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'services/stripe_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/auth.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/bundle.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'validators/donation.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/page.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/make_user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/fix_database.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/bootstrap.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/mock.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/rest.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'tests/donations.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/functional/draft.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/page_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/model.stub', {});
@@ -166,7 +188,6 @@ export async function configure(command: Configure) {
   await codemods.defineEnvVariables({ CLOUDINARY_PRESET: 'pending' });
   await codemods.defineEnvVariables({ BIBLE_API_KEY: 'redacted' });
   await codemods.defineEnvVariables({ OPENAI_API_KEY: 'redacted' });
-  await codemods.defineEnvVariables({ STRIPE_KEY: 'redacted' });
 
   /**
    * Define environment variables validations
@@ -200,12 +221,6 @@ export async function configure(command: Configure) {
     },
     leadingComment: 'Configuration for the OpenAI API service',
   });
-  await codemods.defineEnvValidations({
-    variables: {
-      STRIPE_KEY: `Env.schema.string(),`,
-    },
-    leadingComment: 'Configuration for the Stripe donations service',
-  });
 
   /**
    * Register provider
@@ -223,7 +238,7 @@ export async function configure(command: Configure) {
     },
   ]);
 
-  await codemods.registerMiddleware('named', [
+  const namedMiddleware = [
     {
       name: 'admin',
       path: '@story-cms/kit/admin_middleware',
@@ -232,15 +247,23 @@ export async function configure(command: Configure) {
       name: 'noIndex',
       path: '@story-cms/kit/add_meta_noindex_middleware',
     },
-    {
+  ];
+
+  if (featureOptions.usesDonations) {
+    namedMiddleware.push({
       name: 'apiToken',
-      path: '@story-cms/kit/api_token_middleware',
-    },
-  ]);
+      path: '#middleware/api_token_middleware',
+    });
+  }
+
+  await codemods.registerMiddleware('named', namedMiddleware);
 }
 
 interface ConfigOptions {
   chapterType: string;
   storyType: string;
   storyName: string;
+}
+interface FeatureOptions {
+  usesDonations: boolean;
 }

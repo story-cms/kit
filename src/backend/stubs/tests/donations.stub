@@ -1,9 +1,12 @@
-@authority = http://localhost:3333
+{{{ 
+  exports({ to: app.makePath('tests/donations.rest') }) 
+}}}
 
 ###
-POST {{ authority }}/api/v1/donate HTTP/1.1
+POST \{\{ authority \}\}/api/v1/donate HTTP/1.1
 Content-Type: application/json
 Accept: application/json
+Authorization: ApiKey \{\{ apiToken \}\}
 
 {
   "amount": 10,

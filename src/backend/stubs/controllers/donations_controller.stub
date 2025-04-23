@@ -2,7 +2,7 @@
   exports({ to: app.makePath('app/controllers/donations_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
-import { donationValidator } from '#validators/donation';
+import { donationValidator } from '#validators/donations';
 import StripeService from '#services/stripe_service';
 
 export default class DonationsController {
