@@ -226,14 +226,15 @@ export default class extends BaseSchema {
   }
 
   async down() {
-    this.schema.dropTable('uis')
-    this.schema.dropTable('ui_attributes')
-    this.schema.dropTable('drafts')
-    this.schema.raw('DROP TYPE IF EXISTS "draft_status"')
-    this.schema.dropTable('indices')
-    this.schema.dropTable('chapters')
-    this.schema.dropTable('pages')
-    this.schema.dropTable('users')
-    this.schema.raw('DROP TYPE IF EXISTS "user_role"')
+    this.schema.dropTable('uis');
+    this.schema.dropTable('ui_attributes');
+    this.schema.dropTable('drafts');
+    this.schema.raw('DROP TYPE IF EXISTS "draft_status"');
+    this.schema.dropTable('indices');
+    this.schema.dropTable('chapters');
+    this.schema.dropTable('pages');
+    this.schema.dropTable('users');
+    this.schema.raw('DROP TYPE IF EXISTS "user_role"');
+    this.schema.raw('DROP TYPE IF EXISTS "ui_flag"');
   }
 }
