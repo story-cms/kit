@@ -95,5 +95,8 @@
     "sourcemap": true,
     "target": "esnext"
   },
-  "other": {}
+  "other": {},
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.40.0"
+  }
 }
