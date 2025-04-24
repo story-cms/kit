@@ -32,7 +32,6 @@ import TranslationIndex from './fields/translation-index.vue';
 import PagesIndex from './pages/pages-index.vue';
 import PagesEdit from './pages/pages-edit.vue';
 import ChapterPreview from './chapters/chapter-preview.vue';
-import UiIndex from './interface/ui-index.vue';
 import UiPage from './interface/ui-page.vue';
 import VideoField from './fields/video-field.vue';
 
@@ -78,6 +77,5 @@ export {
   PagesIndex,
   PagesEdit,
   ChapterPreview,
-  UiIndex,
   UiPage,
 };
