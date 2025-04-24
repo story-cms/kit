@@ -26,6 +26,11 @@ const getTodoCount = async (ctx: HttpContext) => {
   const locale = ctx.session?.get('locale');
   if (!locale) return 0;
 
+  // count not needed for source language
+  if (locale === storyConfig.languages[0].locale) {
+    return 0;
+  }
+
   const service = new UiService(storyConfig.languages[0].locale);
   return await service.getTodoCount(locale);
 };

@@ -51,7 +51,6 @@
           </button>
         </div>
         <Link
-          v-if="isAdmin"
           class="px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800"
           href="/page"
           >Pages</Link
