@@ -60,11 +60,18 @@ export const useSharedStore = defineStore('shared', () => {
 
   // sidebar
 
+  const hasNonFloatingSidebar = ref(true);
+
+  const setSidebarAsFloating = (isFloating: boolean) => {
+    hasNonFloatingSidebar.value = !isFloating;
+  };
+
   const hasOpenSidebar = ref(true);
 
-  const toggleSidebar = () => {
-    hasOpenSidebar.value = !hasOpenSidebar.value;
+  const setSidebarOpen = (isOpen: boolean) => {
+    hasOpenSidebar.value = isOpen;
   };
+
 
   // ui counter
 
@@ -72,14 +79,6 @@ export const useSharedStore = defineStore('shared', () => {
   
   const setUiTodoCount = (fresh: number) => {
     uiTodoCount.value = fresh;
-  };
-
-  // menu
-
-  const hasLanguageMenu = ref(true);
-
-  const toggleLanguageMenu = () => {
-    hasLanguageMenu.value = !hasLanguageMenu.value;
   };
 
   // message centre
@@ -136,14 +135,13 @@ export const useSharedStore = defineStore('shared', () => {
     isIntersecting,
     setIsIntersecting,
     
+    hasNonFloatingSidebar,
+    setSidebarAsFloating,
     hasOpenSidebar,
-    toggleSidebar,
+    setSidebarOpen,
 
     uiTodoCount,
     setUiTodoCount,
-
-    hasLanguageMenu,
-    toggleLanguageMenu,
 
     language,
     languageDirection,

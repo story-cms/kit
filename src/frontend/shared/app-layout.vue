@@ -4,11 +4,11 @@
     <div
       :class="[
         'container relative mx-auto grid h-full w-full transition-all duration-300 ease-in-out',
-        shared.hasOpenSidebar ? 'grid-cols-[360px_1fr] gap-x-10' : 'grid-cols-1',
+        shared.hasNonFloatingSidebar ? 'grid-cols-[360px_1fr] gap-x-10' : 'grid-cols-1',
       ]"
     >
       <Sidebar />
-      <div :class="[shared.hasOpenSidebar ? '' : 'pt-16', 'px-3 py-10']">
+      <div :class="[shared.hasNonFloatingSidebar ? '' : 'pt-16', 'px-3 py-10']">
         <slot></slot>
       </div>
     </div>
@@ -25,11 +25,11 @@ const shared = useSharedStore();
 const resizeHook = () => {
   const fresh = document.documentElement.clientWidth;
   shared.setLargeScreen(fresh >= 1324);
-  if (shared.isLargeScreen && shared.hasOpenSidebar) {
-    shared.hasLanguageMenu = true;
+  if (shared.isLargeScreen && shared.hasNonFloatingSidebar) {
+    shared.setSidebarOpen(true);
   }
-  if (!shared.isLargeScreen && !shared.hasOpenSidebar) {
-      shared.hasLanguageMenu = false;
+  if (!shared.isLargeScreen && !shared.hasNonFloatingSidebar) {
+    shared.setSidebarOpen(false);
   }
 };
 
@@ -37,9 +37,9 @@ watch(
   () => shared.isLargeScreen,
   (newVal) => {
     if (newVal) {
-      shared.hasOpenSidebar = true;
+      shared.setSidebarAsFloating(false);
     } else {
-      shared.hasOpenSidebar = false;
+      shared.setSidebarAsFloating(true);
     }
   },
   { immediate: true },

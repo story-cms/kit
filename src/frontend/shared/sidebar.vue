@@ -1,14 +1,14 @@
 <template>
   <nav
     :class="[
-      shared.hasOpenSidebar
+      shared.hasNonFloatingSidebar
         ? 'sticky left-0 top-0 h-screen overflow-y-auto rounded-r-[20px] border pb-[26px] pt-9'
         : 'fixed top-5 rounded-[20px] bg-white px-7 py-4 shadow-lg',
-      shared.hasLanguageMenu ? 'h-[calc(100vh-40px)]' : '',
+      shared.hasOpenSidebar ? 'h-[calc(100vh-40px)]' : '',
       'z-20 flex w-full max-w-96 flex-col',
     ]"
   >
-    <div :class="[shared.hasOpenSidebar ? 'px-10' : 'px-0']">
+    <div :class="[shared.hasNonFloatingSidebar ? 'px-10' : 'px-0']">
       <div v-if="!shared.hasFeedback" class="flex justify-between">
         <Link href="/">
           <Icon name="home" />
@@ -17,15 +17,15 @@
           <Icon name="reply" />
         </button>
         <LanguageSelector
-          :is-expanded="shared.hasLanguageMenu"
+          :is-expanded="shared.hasOpenSidebar"
           :current-locale="currentLocale"
           :current-language="form.language"
           :languages="shared.languages"
           @language-change="onLanguage"
         />
         <button @click="toggleMenu">
-          <Icon name="chevron-double-right" v-if="!shared.hasLanguageMenu" />
-          <Icon name="chevron-double-left" v-else="shared.hasLanguageMenu" />
+          <Icon v-if="!shared.hasOpenSidebar" name="chevron-double-right"  />
+          <Icon v-else name="chevron-double-left" />
         </button>
       </div>
       <MessageCentre
@@ -34,7 +34,7 @@
         :message="shared.messageCentre.message"
       />
     </div>
-    <div v-if="shared.hasLanguageMenu" class="mt-14 grow">
+    <div v-if="shared.hasOpenSidebar" class="mt-14 grow">
       <div class="grid grid-cols-1 gap-4 pl-8">
         <Link
           class="px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800"
@@ -103,12 +103,12 @@
         </button>
       </div>
     </div>
-    <div v-if="shared.hasLanguageMenu" class="flex items-center justify-center">
+    <div v-if="shared.hasOpenSidebar" class="flex items-center justify-center">
       <DropUp
-        v-model="form.language as string"
-        @change="onLanguage"
-        :options="shared.languages.map((l) => l.language) as string[]"
+        v-model="form.language"
         :is-read-only="!shared.user.isManager"
+        :options="languageOptions"
+        @change="onLanguage"
       />
     </div>
   </nav>
@@ -127,7 +127,7 @@ import { useSharedStore } from '../store';
 const shared = useSharedStore();
 
 const form = useForm({
-  language: shared.language.language,
+  language: shared.language.language as string,
   story: null,
 });
 
@@ -147,6 +147,7 @@ const onStory = async (story: string) => {
 const signOut = () => {
   window.location.href = '/logout';
 };
+
 const isMultiLingual = computed(() => shared.languages.length > 1);
 
 const isAdmin = computed(() => shared.user.isAdmin);
@@ -160,17 +161,21 @@ const goBack = () => {
 };
 
 const toggleMenu = () => {
-  shared.hasLanguageMenu = !shared.hasLanguageMenu;
+  shared.setSidebarOpen(!shared.hasOpenSidebar);
 };
 
+const languageOptions = computed(() => {
+  return shared.languages.map((l) => l.language) as string[];
+});
+
 watch(
-  () => shared.hasLanguageMenu,
+  () => shared.hasOpenSidebar,
   (newVal) => {
     if (newVal && shared.isLargeScreen) {
-      shared.hasOpenSidebar = true;
+      shared.setSidebarAsFloating(false);
     }
     if (!newVal && shared.isLargeScreen) {
-      shared.hasOpenSidebar = false;
+      shared.setSidebarAsFloating(true);
     }
   },
 );

@@ -1,7 +1,7 @@
 <template>
   <div
     class="text-sm font-medium leading-4"
-    :class="shared.hasOpenSidebar ? 'bg-app_gray' : 'bg-white'"
+    :class="shared.hasNonFloatingSidebar ? 'bg-app_gray' : 'bg-white'"
   >
     <div v-if="response === 0" class="flex items-center w-full gap-x-6">
       <Icon
