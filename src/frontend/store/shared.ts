@@ -21,7 +21,6 @@ export const useSharedStore = defineStore('shared', () => {
   const meta: Ref<Meta> = ref({} as Meta);
   const user: Ref<User> = ref({} as User);
   const languages: Ref<LanguageSpecification[]> = ref([] as LanguageSpecification[]);
-  const uiTodoCount: Ref<number> = ref(0);
 
   const setFromProps = (props: SharedPageProps) => {
     errors.value = toRefs(props.errors) as any;
@@ -51,29 +50,31 @@ export const useSharedStore = defineStore('shared', () => {
     return messages;
   };
 
-  // Window size
+  // window size
+
   const isLargeScreen = ref(false);
 
   const setLargeScreen = (fresh: boolean) => {
     isLargeScreen.value = fresh;
   };
 
-  // Sidebar
+  // sidebar
+
   const hasOpenSidebar = ref(true);
 
   const toggleSidebar = () => {
     hasOpenSidebar.value = !hasOpenSidebar.value;
   };
 
-  // UI Todos
+  // ui counter
 
-
+  const uiTodoCount: Ref<number> = ref(0);
   
-  const uiTodos = ref(0);
-  const setUiTodos = (fresh: number) => {
-    uiTodos.value = fresh;
+  const setUiTodoCount = (fresh: number) => {
+    uiTodoCount.value = fresh;
   };
-  // Menu
+
+  // menu
 
   const hasLanguageMenu = ref(true);
 
@@ -81,7 +82,8 @@ export const useSharedStore = defineStore('shared', () => {
     hasLanguageMenu.value = !hasLanguageMenu.value;
   };
 
-  // Message Centre
+  // message centre
+
   const messageCentre = reactive({
     response: ResponseStatus.None as ResponseStatus,
     message: '' as string,
@@ -125,22 +127,20 @@ export const useSharedStore = defineStore('shared', () => {
     languages,
     errors,
     user,
-    uiTodoCount,
     messageCentre,
     hasFeedback,
-
+    
     isLargeScreen,
     setLargeScreen,
-
+    
     isIntersecting,
     setIsIntersecting,
-
+    
     hasOpenSidebar,
     toggleSidebar,
 
-    uiTodos,
-    setUiTodos,
-
+    uiTodoCount,
+    setUiTodoCount,
 
     hasLanguageMenu,
     toggleLanguageMenu,

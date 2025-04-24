@@ -69,7 +69,7 @@
             >Interface
             <span
               class="absolute ml-2 rounded-full bg-red-100 px-1 py-[2px] text-xs font-medium leading-4 text-red-800"
-              >{{ todoCount }}</span
+              >{{ shared.uiTodoCount }}</span
             >
           </Link>
         </div>
@@ -116,7 +116,7 @@
 
 <script setup lang="ts">
 import { Link, useForm } from '@inertiajs/vue3';
-import { computed, watch, onMounted } from 'vue';
+import { computed, watch } from 'vue';
 import DropUp from './drop-up.vue';
 import MessageCentre from './message-centre.vue';
 import Icon from './icon.vue';
@@ -162,12 +162,6 @@ const goBack = () => {
 const toggleMenu = () => {
   shared.hasLanguageMenu = !shared.hasLanguageMenu;
 };
-
-const todoCount = computed(() => shared.uiTodos);
-
-onMounted(() => {
-  shared.setUiTodos(shared.uiTodoCount);
-});
 
 watch(
   () => shared.hasLanguageMenu,

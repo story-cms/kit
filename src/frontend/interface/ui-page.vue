@@ -188,10 +188,10 @@ const filteredItems = computed(() => {
 
 const shared = useSharedStore();
 shared.setFromProps(props);
-shared.setUiTodos(todoCount.value);
+// shared.setUiTodoCount(todoCount.value);
 
 watch(todoCount, (newCount) => {
-  shared.setUiTodos(newCount);
+  shared.setUiTodoCount(newCount);
 });
 
 const listToMap = (list: UiItem[]): ModelType => {

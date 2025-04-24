@@ -16,7 +16,7 @@
             To do
             <span
               class="ml-1 inline-flex items-center rounded-full bg-gray-100 px-2 py-1 text-xs font-medium leading-4 text-indigo-700"
-              >{{ shared.uiTodos }}</span
+              >{{ shared.uiTodoCount }}</span
             >
           </button>
 
