@@ -8,6 +8,7 @@
         :language="sharedProps.language"
         :languages="sharedProps.languages"
         :stories="['John', 'Acts']"
+        :ui-progress="sharedProps.uiProgress"
       />
     </Variant>
   </Story>

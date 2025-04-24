@@ -13,12 +13,6 @@ export default class UisController {
     const locale = ctx.version.locale;
     const service = new UiService(this.sourceLocale);
 
-    if (!this.isTranslation(ctx)) {
-      const progress = await service.progress();
-      const props = { progress };
-      return ctx.inertia.render('UiIndex', { ...props });
-    }
-
     const items = await service.items(locale);
     const props: UiPageProps = {
       items,

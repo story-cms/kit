@@ -7,6 +7,7 @@ import {
   LanguageSpecification,
   User,
   ResponseStatus,
+  
 } from '../../types';
 
 const defaultLanguage: LanguageSpecification = {
@@ -28,6 +29,7 @@ export const useSharedStore = defineStore('shared', () => {
     languages.value = props.languages;
     user.value = props.user;
     language.value = props.language;
+    uiTodoCount.value = props.uiTodoCount;
   };
 
   // errors
@@ -48,14 +50,39 @@ export const useSharedStore = defineStore('shared', () => {
     return messages;
   };
 
-  // Window size
+  // window size
+
   const isLargeScreen = ref(false);
 
   const setLargeScreen = (fresh: boolean) => {
     isLargeScreen.value = fresh;
   };
 
-  // Message Centre
+  // sidebar
+
+  const hasNonFloatingSidebar = ref(true);
+
+  const setSidebarAsFloating = (isFloating: boolean) => {
+    hasNonFloatingSidebar.value = !isFloating;
+  };
+
+  const hasOpenSidebar = ref(true);
+
+  const setSidebarOpen = (isOpen: boolean) => {
+    hasOpenSidebar.value = isOpen;
+  };
+
+
+  // ui counter
+
+  const uiTodoCount: Ref<number> = ref(0);
+  
+  const setUiTodoCount = (fresh: number) => {
+    uiTodoCount.value = fresh;
+  };
+
+  // message centre
+
   const messageCentre = reactive({
     response: ResponseStatus.None as ResponseStatus,
     message: '' as string,
@@ -99,15 +126,22 @@ export const useSharedStore = defineStore('shared', () => {
     languages,
     errors,
     user,
-
     messageCentre,
     hasFeedback,
-
+    
     isLargeScreen,
     setLargeScreen,
-
+    
     isIntersecting,
     setIsIntersecting,
+    
+    hasNonFloatingSidebar,
+    setSidebarAsFloating,
+    hasOpenSidebar,
+    setSidebarOpen,
+
+    uiTodoCount,
+    setUiTodoCount,
 
     language,
     languageDirection,

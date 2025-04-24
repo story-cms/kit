@@ -1,12 +1,13 @@
 <template>
-  <StickyHeader>
-    <div class="container px-3 mx-auto">
-      <div class="flex items-center justify-between py-6">
-        <!-- eslint-disable vue/no-v-html -->
-        <h3
-          class="font-['Inter'] text-2xl font-semibold text-gray-800 [&>span]:text-gray-400"
-          v-html="title"
-        ></h3>
+  <div>
+    <div class="relative flex items-center justify-between py-10">
+      <h3
+        id="content-title"
+        class="font-['Inter'] text-2xl font-semibold text-gray-800 [&>span]:text-gray-400"
+        v-html="title"
+      ></h3>
+
+      <MakeSticky el-id="content-title">
         <div class="flex items-center space-x-6">
           <button
             type="button"
@@ -33,25 +34,33 @@
               class="flex items-center justify-center w-6 h-auto text-gray-500 cursor-pointer"
             />
           </button>
-          <slot></slot>
+          <slot name="actions"></slot>
         </div>
-      </div>
-      <div>
-        <slot name="labels"></slot>
-      </div>
+      </MakeSticky>
     </div>
-  </StickyHeader>
+    <div class="w-full">
+      <slot name="labels"></slot>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import Icon from './icon.vue';
-import StickyHeader from './sticky-header.vue';
 import { useSharedStore } from '../store';
+import MakeSticky from './make-sticky.vue';
 
 defineProps<{
   title: string;
 }>();
-const emit = defineEmits(['delete', 'info', 'app-preview']);
+
+const emit = defineEmits([
+  'delete',
+  'info',
+  'app-preview',
+  'request-change',
+  'publish',
+  'submit',
+]);
 
 const shared = useSharedStore();
 </script>

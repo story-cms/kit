@@ -1,6 +1,6 @@
 <template>
   <AppLayout>
-    <div class="container px-6 py-3 mx-auto lg:w-2/3">
+    <div class="container mx-auto px-3 py-3">
       <div class="flex items-center justify-between">
         <div class="space-x-6">
           <AddItemButton label="Page" @add="addPage" />
@@ -8,7 +8,7 @@
         </div>
         <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
       </div>
-      <div class="flex flex-col my-8 space-y-8">
+      <div class="my-8 flex flex-col space-y-8">
         <div v-for="page in filteredItems" :key="page.id" @drop="onDrop">
           <PageIndexItem
             :page="page"
