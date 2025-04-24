@@ -2,6 +2,13 @@
 
 StoryCMS package for AdonisJS
 
+## Setup
+
+Setup git hooks for commit message linting.
+```
+make setup-hooks
+```
+
 ## Installation
 
 ```shell
