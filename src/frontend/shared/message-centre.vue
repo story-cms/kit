@@ -1,37 +1,42 @@
 <template>
   <div
-    class="z-50 flex h-24 w-full items-center justify-center space-x-6 bg-white [&>span]:flex [&>span]:items-center [&>span]:justify-center [&>span]:space-x-6 [&>span]:text-sm/4 [&>span]:font-medium"
+    class="text-sm font-medium leading-4"
+    :class="shared.hasNonFloatingSidebar ? 'bg-app_gray' : 'bg-white'"
   >
-    <span v-if="response === 0">
+    <div v-if="response === 0" class="flex items-center w-full gap-x-6">
       <Icon
         class="inline-flex items-center w-auto h-6 text-red-500"
         :name="'exclamation'"
       />
-      <span>{{ message }}</span>
-    </span>
-    <span v-if="response === 1">
+      <p class="max-w-full">{{ message }}</p>
+    </div>
+    <div v-if="response === 1" class="flex items-center w-full gap-x-6">
       <Icon class="inline-flex items-center w-6 h-6 text-blue-500" :name="'check'" />
-      <span>{{ message }}</span>
-    </span>
-    <span v-if="response === 2">
+      <p class="max-w-full">{{ message }}</p>
+    </div>
+    <div v-if="response === 2" class="flex items-center w-full gap-x-6">
       <Icon
         class="inline-flex items-center w-6 h-6 text-green-500"
         :name="'badge-check'"
       />
-      <span>{{ message }}</span>
-    </span>
-    <span v-if="response === 3">
+      <p class="max-w-full">{{ message }}</p>
+    </div>
+    <div v-if="response === 3" class="flex items-center w-full gap-x-6">
       <Icon
         class="inline-flex items-center w-6 h-6 text-yellow-500"
         :name="'information-circle'"
       />
-      <span>{{ message }}</span>
-    </span>
+      <p class="max-w-full">{{ message }}</p>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
 import Icon from './icon.vue';
 import type { ResponseStatus } from '../../types';
+
+import { useSharedStore } from '../store';
+
+const shared = useSharedStore();
 
 defineProps<{
   response: ResponseStatus;

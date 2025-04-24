@@ -199,6 +199,7 @@ export interface SharedPageProps {
   languages: LanguageSpecification[];
   stories: string[];
   user: User;
+  uiTodoCount: number;
 }
 
 export interface PageMeta {
@@ -296,21 +297,8 @@ export type UiItemPayload = {
   translation: string;
   isPrefilled: boolean;
 };
-
-export interface UiProgress {
-  locale: string;
-  language: string;
-  translatedCount: number;
-  totalCount: number;
-  updatedAt: string;
-}
-
 export interface UiPageProps {
   items: UiItem[];
-}
-
-export interface UiIndexProps {
-  progress: UiProgress[];
 }
 
 export type StoryConfig = {

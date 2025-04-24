@@ -47,13 +47,15 @@ const scriptureError = {
   'bundle.scripture.reference': ['that does not look quite right'],
 };
 
+const kjv = 'de4e12af7f28f599-02';
+
 const setGerman: StoryHandler = () => {
   const shared = useSharedStore();
   shared.setLanguage({
     locale: 'de',
     language: 'Deutsch',
     languageDirection: 'ltr',
-    bibleVersion: '926aa5efbc5e04e2-01',
+    bibleVersion: kjv,
   });
 };
 
@@ -64,7 +66,7 @@ const setPrepopulatedGerman: StoryHandler = () => {
     locale: 'de',
     language: 'Deutsch',
     languageDirection: 'ltr',
-    bibleVersion: '926aa5efbc5e04e2-01',
+    bibleVersion: kjv,
   });
 
   store.setSource({

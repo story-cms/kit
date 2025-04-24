@@ -1,32 +1,34 @@
 <template>
   <AppLayout>
     <ContentHeader :title="chapterTitle" @info="info" @app-preview="appPreview">
-      <button
-        type="button"
-        class="w-32 rounded-[38px] border border-blue-500 bg-blue-500 px-[15px] py-[9px] text-sm/5 font-medium text-white shadow"
-        @click.prevent="edit"
-      >
-        Edit
-      </button>
+      <template #actions>
+        <button
+          type="button"
+          class="w-32 rounded-[38px] border border-blue-500 bg-blue-500 px-[15px] py-[9px] text-sm/5 font-medium text-white shadow"
+          @click.prevent="edit"
+        >
+          Edit
+        </button>
+      </template>
     </ContentHeader>
 
     <div
-      class="container relative px-3 mx-auto"
+      class="container relative mx-auto px-3"
       :class="{
-        'grid grid-cols-[1fr,_416px] gap-x-8 ': isLargeScreen,
-        'mx-auto grid max-w-[1080px] grid-cols-[1fr] ':
+        'grid grid-cols-[1fr,_416px] gap-x-8': isLargeScreen,
+        'mx-auto grid max-w-[1080px] grid-cols-[1fr]':
           !isLargeScreen || (!showMetaBox && !showAppPreview),
       }"
     >
       <!-- eslint-disable vue/no-v-html -->
-      <div class="p-8 -ml-8 bg-white shadow-sm border-s" v-html="bundleView"></div>
+      <div class="-ml-8 border-s bg-white p-8 shadow-sm" v-html="bundleView"></div>
 
       <div
         :class="{
           'right-4': !isLargeScreen,
           'absolute block': shared.isIntersecting,
           'fixed right-4 top-24': !shared.isIntersecting && !isLargeScreen,
-          'sticky top-24  [align-self:start]': isLargeScreen,
+          'sticky top-24 [align-self:start]': isLargeScreen,
         }"
       >
         <section v-if="showMetaBox">
