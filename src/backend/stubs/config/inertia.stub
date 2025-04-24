@@ -7,6 +7,7 @@ import type { InferSharedProps } from '@adonisjs/inertia/types';
 import storyConfig from '#config/story';
 import { LanguageSpecification } from '@story-cms/kit';
 import { UiService } from '#services/ui_service';
+import { HttpContext } from '@adonisjs/core/http';
 
 const getLanguage = (locale: string | null): LanguageSpecification => {
   const found =
@@ -15,8 +16,17 @@ const getLanguage = (locale: string | null): LanguageSpecification => {
   return found as LanguageSpecification;
 };
 
-const getTodoCount = async (locale: string) => {
-  const service = new UiService(locale);
+const getTodoCount = async (ctx: HttpContext) => {
+  // don't show todo count if there is only one language
+  if (storyConfig.languages.length < 2) return 0;
+
+  // don't show todo count if user is not logged in
+  if (!ctx.auth.use('web')?.user) return 0;
+
+  const locale = ctx.session?.get('locale');
+  if (!locale) return 0;
+
+  const service = new UiService(storyConfig.languages[0].locale);
   return await service.getTodoCount(locale);
 };
 
@@ -33,15 +43,10 @@ const inertiaConfig = defineConfig({
     stories: () => storyConfig.stories.map((item) => item.name),
     meta: () => storyConfig.meta,
     user: (ctx) => ctx.auth.use('web')?.user,
-    language: (ctx) => getLanguage(ctx.session.get('locale')),
+    language: (ctx) => getLanguage(ctx.session?.get('locale') ?? 'en'),
     languages: () => storyConfig.languages,
     errors: (ctx) => ctx.session?.flashMessages.get('errors') ?? {},
-    uiTodoCount: (ctx) => {
-      if (ctx.auth.use('web')?.user) {
-        return getTodoCount(ctx.session.get('locale'));
-      }
-      return 0;
-    },
+    uiTodoCount: (ctx) => getTodoCount(ctx),
   },
 
   /**
