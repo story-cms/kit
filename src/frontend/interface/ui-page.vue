@@ -21,13 +21,13 @@
           <div v-if="hasEmptyItems" class="sticky top-0 bg-gray-50">
             <button
               v-show="todoCount"
-              @click="translateItems"
               type="button"
               class="flex items-center justify-center gap-x-2 rounded-full py-[11px] text-sm font-medium text-gray-800 shadow-sm hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ring-1 ring-inset ring-gray-300 w-full leading-4 mb-4"
               :class="{
                 'bg-blue-50': isTranslating,
                 'bg-white': !isTranslating,
               }"
+              @click="translateItems"
             >
               <Icon class="w-auto text-gray-800" name="sparkles" />
               <span>
@@ -40,8 +40,8 @@
             </button>
           </div>
           <UiStringItem
-            v-show="filteredItems.length"
             v-for="item in filteredItems"
+            v-show="filteredItems.length"
             :key="item.key"
             :item="item"
             :is-selected="selectedItem?.key === item.key"

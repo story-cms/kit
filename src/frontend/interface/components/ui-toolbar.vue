@@ -67,13 +67,13 @@
       <div>
         <div class="grid grid-cols-1 mt-2">
           <input
+            id="search"
             type="text"
             name="search"
-            id="search"
             :value="modelValue"
-            @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
             class="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pl-10 pr-3 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:pl-9 sm:text-sm/6"
             placeholder="Search"
+            @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
           />
           <svg
             class="self-center col-start-1 row-start-1 ml-4 text-gray-400 pointer-events-none size-4"

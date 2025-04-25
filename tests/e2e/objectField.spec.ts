@@ -8,6 +8,7 @@ import {
   objectInListInObjectSpec,
   objectInListInObjectModel,
 } from '../../src/frontend/test/mocks';
+import { FieldSpec } from '../../src/types';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/src-draft-objectfield-story-vue');
@@ -88,7 +89,7 @@ test.describe('Object Field', () => {
   });
   test('should list in object', async ({ page }) => {
     await page.getByRole('link', { name: 'List in Object', exact: true }).click();
-    for (const item of listInObjectSpec.fields as any) {
+    for (const item of listInObjectSpec.fields as FieldSpec[]) {
       if (item.widget === 'string') {
         await expect(
           page
@@ -105,9 +106,9 @@ test.describe('Object Field', () => {
         const count = await listLocator.count();
         expect(count).toEqual(listInObjectModel.spread.notes.length);
 
-        for (const field of listInObjectSpec.fields as any) {
+        for (const field of listInObjectSpec.fields as FieldSpec[]) {
           if (field.widget === 'list') {
-            for (const item of field.fields) {
+            for (const item of field.fields as FieldSpec[]) {
               if (item.widget === 'string') {
                 await expect(
                   listLocator
@@ -157,7 +158,7 @@ test.describe('Object Field', () => {
       frameLocator.getByText(objectInListInObjectSpec.label, { exact: true }),
     ).toBeVisible();
 
-    for (const item of objectInListInObjectSpec.fields as any) {
+    for (const item of objectInListInObjectSpec.fields as FieldSpec[]) {
       if (item.widget === 'string') {
         await expect(frameLocator.locator(`input[name='${item.label}']`)).toHaveValue(
           objectInListInObjectModel.episode[item.name],

@@ -53,9 +53,9 @@
           <div class="flex items-center justify-end gap-x-6">
             <button
               type="button"
-              @click="handleSetFlag(FlagState.RECHECK)"
               class="p-3 border border-gray-300 rounded-full"
               :disabled="!model"
+              @click="handleSetFlag(FlagState.RECHECK)"
             >
               <Icon
                 class="w-auto h-6"
@@ -68,8 +68,8 @@
             </button>
             <button
               type="button"
-              @click="suggestAi"
               class="p-3 border border-gray-300 rounded-full"
+              @click="suggestAi"
             >
               <Icon
                 class="w-auto h-6"
@@ -82,6 +82,9 @@
             </button>
             <button
               type="button"
+              class="p-3 border border-gray-300 rounded-full disabled:border-gray-300 disabled:bg-gray-100"
+              :disabled="!model"
+              :class="{ 'bg-green-500 border-green-800': model }"
               @click="
                 emit('save', {
                   key: props.item.key,
@@ -90,9 +93,6 @@
                   isPrefilled: false,
                 })
               "
-              class="p-3 border border-gray-300 rounded-full disabled:border-gray-300 disabled:bg-gray-100"
-              :disabled="!model"
-              :class="{ 'bg-green-500 border-green-800': model }"
             >
               <Icon
                 class="w-auto h-6"
@@ -133,15 +133,15 @@
           <div v-show="suggestion.length > 0" class="flex gap-x-6">
             <button
               type="button"
-              @click="discardSuggestion"
               class="w-32 rounded-[38px] border px-[15px] py-[9px] text-sm/5 font-medium text-gray-800 shadow focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset] bg-white hover:bg-green-400"
+              @click="discardSuggestion"
             >
               Discard
             </button>
             <button
               type="button"
-              @click="applySuggestion"
               class="rounded-[38px] border px-[15px] py-[9px] text-sm/5 font-medium text-white shadow focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset] bg-blue-500 hover:bg-green-400"
+              @click="applySuggestion"
             >
               Apply Suggestion
             </button>
