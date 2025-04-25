@@ -25,14 +25,13 @@ import SelectField from './fields/select-field.vue';
 import IndexFilter from './shared/index-filter.vue';
 import AddItemButton from './shared/add-item-button.vue';
 import PublicLayout from './shared/public-layout.vue';
-import StickyHeader from './shared/sticky-header.vue';
+import MakeSticky from './shared/make-sticky.vue';
 import PageIndexItem from './pages/page-index-item.vue';
 import DraftIndex from './fields/draft-index.vue';
 import TranslationIndex from './fields/translation-index.vue';
 import PagesIndex from './pages/pages-index.vue';
 import PagesEdit from './pages/pages-edit.vue';
 import ChapterPreview from './chapters/chapter-preview.vue';
-import UiIndex from './interface/ui-index.vue';
 import UiPage from './interface/ui-page.vue';
 import VideoField from './fields/video-field.vue';
 
@@ -71,13 +70,12 @@ export {
   IndexFilter,
   AddItemButton,
   PublicLayout,
-  StickyHeader,
+  MakeSticky,
   PageIndexItem,
   DraftIndex,
   TranslationIndex,
   PagesIndex,
   PagesEdit,
   ChapterPreview,
-  UiIndex,
   UiPage,
 };

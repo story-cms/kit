@@ -1,21 +1,24 @@
 <template>
   <div
-    class="w-full mb-2 bg-gray-50"
-    :class="{ 'fixed inset-x-0 top-0 z-10': !shared.isIntersecting }"
+    :class="[
+      props.style,
+      !shared.isIntersecting
+        ? 'container fixed inset-x-0 top-5 z-10 mx-auto flex justify-end px-3'
+        : '',
+    ]"
   >
     <slot />
-
-    <hr
-      :class="{
-        'container mx-auto px-3': shared.isIntersecting,
-      }"
-    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { useSharedStore } from '../store';
+
+const props = defineProps<{
+  elId: string | 'top';
+  style?: string;
+}>();
 
 const shared = useSharedStore();
 
@@ -27,13 +30,13 @@ const observer = new IntersectionObserver(
   },
   {
     root: null,
-    rootMargin: '0px',
-    threshold: 1.0,
+    rootMargin: '10px',
+    threshold: 0.8,
   },
 );
 
 onMounted(() => {
-  const navbar = document.getElementById('navbar') as HTMLElement;
-  observer.observe(navbar);
+  const el = document.getElementById(props.elId) as HTMLElement;
+  observer.observe(el);
 });
 </script>

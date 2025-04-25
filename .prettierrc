@@ -1,20 +1,18 @@
 {
-    "useTabs": false,
-    "tabWidth": 2,
-    "semi": true,
-    "htmlWhitespaceSensitivity": "ignore",
-    "singleQuote": true,
-    "printWidth": 100,
-    "trailingComma": "es5",
-    "bracketSpacing": true,
-    "vueIndentScriptAndStyle": true,
-    "endOfLine": "lf",
-    "overrides": [
-        {
-            "files": "*.md",
-            "options": {
-                "proseWrap": "always"
-            }
-        }
-    ]
+  "useTabs": false,
+  "tabWidth": 2,
+  "semi": true,
+  "htmlWhitespaceSensitivity": "css",
+  "singleQuote": true,
+  "printWidth": 90,
+  "trailingComma": "all",
+  "overrides": [
+    {
+      "files": "*.md",
+      "options": {
+        "proseWrap": "always"
+      }
+    }
+  ],
+  "plugins": ["prettier-plugin-tailwindcss"]
 }
