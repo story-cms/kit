@@ -4,12 +4,12 @@
       <label class="input-label">{{ field.label }}</label>
     </div>
     <div
-      class="relative w-full h-48 mt-[2px] rounded-md border-2 border-dashed border-gray-300"
+      class="relative mt-[2px] h-48 w-full rounded-md border-2 border-dashed border-gray-300"
     >
       <!-- Progress bar background -->
       <div
         v-if="!isDone"
-        class="absolute bottom-0 left-0 w-full h-full bg-transparent rounded-md"
+        class="absolute bottom-0 left-0 h-full w-full rounded-md bg-transparent"
       >
         <!-- Progress bar fill -->
         <div class="h-full bg-accent opacity-30" :style="progress"></div>
@@ -35,6 +35,10 @@ import { FieldSpec } from '../../../types';
 import Icon from '../../shared/icon.vue';
 
 interface Props {
+  field: FieldSpec;
+  rootPath?: string;
+  isNested: boolean;
+  isReadOnly?: boolean;
   bytesUploaded: number;
   bytesTotal: number;
 }
@@ -43,19 +47,25 @@ const props = defineProps({
   ...commonProps,
   bytesUploaded: {
     type: Number,
+    required: true,
   },
   bytesTotal: {
     type: Number,
+    required: true,
   },
 });
 
 const field = computed(() => props.field as FieldSpec);
 
-const isDone = computed(() => props.bytesUploaded >= props.bytesTotal);
+const isDone = computed(() => {
+  const p = props as Props;
+  return p.bytesUploaded >= p.bytesTotal;
+});
 
-const percentage = computed(() =>
-  Math.round((props.bytesUploaded / props.bytesTotal) * 100),
-);
+const percentage = computed(() => {
+  const p = props as Props;
+  return Math.round((p.bytesUploaded / p.bytesTotal) * 100);
+});
 
 const progress = computed(() => {
   return {

@@ -45,6 +45,7 @@ export default class BunnyService implements HostService {
 
   public upload = async (
     file: File,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _onProgress: (progress: number | undefined) => void,
   ): Promise<AttachmentModel> => {
     try {

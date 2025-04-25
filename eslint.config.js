@@ -1,35 +1,30 @@
-import js from '@eslint/js';
-import tsPlugin from '@typescript-eslint/eslint-plugin';
-import tsParser from '@typescript-eslint/parser';
-import vuePlugin from 'eslint-plugin-vue';
-import vueParser from 'vue-eslint-parser';
+import eslint from '@eslint/js';
+import eslintConfigPrettier from 'eslint-config-prettier';
+import eslintPluginVue from 'eslint-plugin-vue';
+import globals from 'globals';
+import typescriptEslint from 'typescript-eslint';
 
-export default [
-    {
-        ignores: ['dist/**', '.histoire/**'],
+export default typescriptEslint.config(
+  { ignores: ['*.d.ts', '**/dist', '.histoire/'] },
+  {
+    extends: [
+      eslint.configs.recommended,
+      ...typescriptEslint.configs.recommended,
+      ...eslintPluginVue.configs['flat/recommended'],
+    ],
+    files: ['**/*.{ts,vue}'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: globals.browser,
+      parserOptions: {
+        parser: typescriptEslint.parser,
+      },
     },
-    js.configs.recommended,
-    {
-        files: ['**/*.ts', '**/*.tsx'],
-        languageOptions: {
-            parser: vueParser,
-            parserOptions: {
-                parser: {
-                    ts: tsParser,
-                    js: "espree",
-                },
-                ecmaVersion: "latest",
-                sourceType: "module",
-            },
-        },
-        plugins: {
-            "@typescript-eslint": tsPlugin,
-            "vue": vuePlugin,
-        },
-        rules: {
-            ...tsPlugin.configs.recommended.rules,
-            ...vuePlugin.configs.recommended.rules,
-            // ...vuePlugin.configs["vue3-recommended"].rules,
-        },
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      'vue/multi-word-component-names': 'off',
     },
-];
+  },
+  eslintConfigPrettier
+);

@@ -24,7 +24,7 @@
           @language-change="onLanguage"
         />
         <button @click="toggleMenu">
-          <Icon v-if="!shared.hasOpenSidebar" name="chevron-double-right"  />
+          <Icon v-if="!shared.hasOpenSidebar" name="chevron-double-right" />
           <Icon v-else name="chevron-double-left" />
         </button>
       </div>
@@ -37,33 +37,33 @@
     <div v-if="shared.hasOpenSidebar" class="mt-14 grow">
       <div class="grid grid-cols-1 gap-4 pl-8">
         <Link
-          class="px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800"
+          class="hover:gray-800 px-3 py-2 text-lg font-semibold leading-6 text-black"
           href="/"
         >
           Dashboard
         </Link>
         <div v-for="story in shared.stories" :key="story">
           <button
-            class="block px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800"
+            class="hover:gray-800 block px-3 py-2 text-lg font-semibold leading-6 text-black"
             @click="onStory(story)"
           >
             {{ story }}
           </button>
         </div>
         <Link
-          class="px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800"
+          class="hover:gray-800 px-3 py-2 text-lg font-semibold leading-6 text-black"
           href="/page"
           >Pages</Link
         >
         <div v-if="isMultiLingual">
           <span
             v-if="currentLocale === 'en'"
-            class="px-3 py-2 text-lg font-semibold leading-6 text-black opacity-50 cursor-not-allowed hover:gray-800"
+            class="hover:gray-800 cursor-not-allowed px-3 py-2 text-lg font-semibold leading-6 text-black opacity-50"
             >Interface</span
           >
           <Link
             v-else
-            class="px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800"
+            class="hover:gray-800 px-3 py-2 text-lg font-semibold leading-6 text-black"
             href="/ui"
             >Interface
             <span
@@ -74,10 +74,10 @@
         </div>
       </div>
       <div class="mx-5 my-4 border-t border-gray-400"></div>
-      <div class="grid grid-cols-1 pl-8 gap-y-6">
+      <div class="grid grid-cols-1 gap-y-6 pl-8">
         <Link
           v-if="isAdmin"
-          class="flex items-center px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800 gap-x-2"
+          class="hover:gray-800 flex items-center gap-x-2 px-3 py-2 text-lg font-semibold leading-6 text-black"
           href="/user"
         >
           <Icon name="users" />
@@ -85,7 +85,7 @@
         </Link>
         <Link
           v-if="shared.meta.helpUrl"
-          class="flex items-center px-3 text-lg font-semibold leading-6 text-black p y-2 items- hover:gray-800 gap-x-2"
+          class="p y-2 items- hover:gray-800 flex items-center gap-x-2 px-3 text-lg font-semibold leading-6 text-black"
           :href="shared.meta.helpUrl"
           target="_blank"
           rel="noopener noreferrer"
@@ -94,8 +94,8 @@
           <span> Help </span>
         </Link>
         <button
+          class="hover:gray-800 flex items-center gap-x-2 px-3 py-2 text-lg font-semibold leading-6 text-black"
           @click="signOut()"
-          class="flex items-center px-3 py-2 text-lg font-semibold leading-6 text-black hover:gray-800 gap-x-2"
         >
           <Icon name="logout" />
           <span> Log out </span>
@@ -121,7 +121,6 @@ import MessageCentre from './message-centre.vue';
 import Icon from './icon.vue';
 import LanguageSelector from './language-selector.vue';
 import { useSharedStore } from '../store';
-
 
 const shared = useSharedStore();
 

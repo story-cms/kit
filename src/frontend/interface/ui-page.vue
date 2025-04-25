@@ -16,7 +16,7 @@
 
     <section class="mt-5">
       <div class="grid h-[calc(100vh-12rem)] grid-cols-[2fr_4fr] gap-x-6">
-        <div class="overflow-y-auto scrollbar-hide">
+        <div class="scrollbar-hide overflow-y-auto">
           <div v-if="hasEmptyItems" class="sticky top-0 bg-gray-50">
             <button
               v-show="todoCount"
@@ -62,21 +62,21 @@
                 @apply-suggestion="handleApplySuggestion"
               />
             </form>
-            <div v-show="isTranslating" class="grid w-full h-full place-content-center">
+            <div v-show="isTranslating" class="grid h-full w-full place-content-center">
               <RivePlayer
                 url="https://res.cloudinary.com/redeem/raw/upload/v1743751242/story-cms-ui/audio_visualizer_resize_teno9b.riv"
               />
             </div>
           </template>
           <div v-else class="py-10 text-gray-500">
-            <p v-if="searchTerm" class="text-sm text-center">
+            <p v-if="searchTerm" class="text-center text-sm">
               No results found for "{{ searchTerm }}"
             </p>
           </div>
         </div>
         <div
           v-if="activeFilter === 'todo' && !todoCount && !searchTerm"
-          class="flex flex-col items-center justify-center col-span-2 row-start-1"
+          class="col-span-2 row-start-1 flex flex-col items-center justify-center"
         >
           <Icon class="size-96" name="inbox-zero" />
         </div>
@@ -89,6 +89,7 @@
 import { reactive, ref, computed, watch } from 'vue';
 import axios from 'axios';
 import { router } from '@inertiajs/vue3';
+import { AxiosError } from 'axios';
 
 import UiToolbar from './components/ui-toolbar.vue';
 import UiStringItem from './components/ui-string-item.vue';
@@ -244,7 +245,8 @@ const setFlag = async (key: string, state: FlagState) => {
         newState ? 'Flag set' : 'Flag removed',
       );
     }
-  } catch (_error) {
+  } catch (error) {
+    console.error(error);
     shared.addMessage(ResponseStatus.Failure, 'Error updating flag');
   }
 };
@@ -258,7 +260,9 @@ const save = async (payload: UiItemPayload) => {
     }
   } catch (error) {
     shared.addMessage(ResponseStatus.Failure, 'Error saving translation');
-    itemError.value = error.response?.data?.message || 'Error saving translation';
+    itemError.value =
+      (error as AxiosError<{ message: string }>).response?.data?.message ||
+      'Error saving translation';
   }
 };
 
@@ -283,6 +287,7 @@ const translateItems = async () => {
       shared.addMessage(ResponseStatus.Accomplishment, 'Items translated successfully');
     }
   } catch (error) {
+    console.error(error);
     shared.addMessage(ResponseStatus.Failure, 'Failed to translate items');
   } finally {
     isTranslating.value = false;

@@ -127,7 +127,7 @@ onMounted(async () => {
     spellChecker: false,
     nativeSpellcheck: false,
     status: false,
-    // @ts-ignore
+    // @ts-expect-error toolbar is not typed
     toolbar: toolbar.value,
   });
   mde?.codemirror.setOption('readOnly', props.isReadOnly);

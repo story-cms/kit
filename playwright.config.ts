@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { defineConfig, devices } from '@playwright/test';
 /**
  * Read environment variables from file.

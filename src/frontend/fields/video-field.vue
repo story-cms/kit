@@ -110,10 +110,12 @@ const onDelete = () => {
   });
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const onDropped = (_fileName: string) => {
   resetWidget();
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const onAttached = (_data: AttachmentModel) => {
   // for video, the file is not uploaded yet,
   // so we need to wait for the onSuccess callback
