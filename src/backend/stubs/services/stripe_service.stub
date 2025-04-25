@@ -3,9 +3,9 @@
 }}}
 import Stripe from 'stripe';
 import env from '#start/env';
-import { Payload } from '../types/index.js';
+import { StripePayload } from '@story-cms/kit';
 
-const metaFrom = (data: Payload) => {
+const metaFrom = (data: StripePayload) => {
   return {
     giftaid: data.isGiftaid === true ? 'yes' : 'no',
     newsletter: data.isNewsletter === true ? 'yes' : 'no',
@@ -17,7 +17,7 @@ export default class StripeService {
   receiptMessage =
     'Thank you for your kind donation to our ministry.\\nYour giving will help churches around the world share the gospel and grow disciples of Jesus.\\nThank you!';
 
-  public async createDonation(payload: Payload) {
+  public async createDonation(payload: StripePayload) {
     const stripeKey = env.get('STRIPE_KEY');
 
     if (!stripeKey) {
@@ -37,7 +37,7 @@ export default class StripeService {
 
   private async createDonationSession(
     stripe: Stripe,
-    payload: Payload,
+    payload: StripePayload,
   ): Promise<Stripe.Checkout.Session> {
     return await stripe.checkout.sessions.create({
       mode: 'payment',
@@ -69,7 +69,7 @@ export default class StripeService {
 
   private async createRecurringDonationSession(
     stripe: Stripe,
-    payload: Payload,
+    payload: StripePayload,
   ): Promise<Stripe.Checkout.Session> {
     return await stripe.checkout.sessions.create({
       mode: 'subscription',

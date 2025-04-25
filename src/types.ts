@@ -322,7 +322,7 @@ export type StoryConfig = {
   };
 };
 
-export type Payload = {
+export type StripePayload = {
   isGiftaid: boolean;
   fullName: string;
   amount: number;
