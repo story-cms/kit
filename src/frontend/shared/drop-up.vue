@@ -3,19 +3,19 @@
     <div class="relative">
       <ListboxButton
         :disabled="isReadOnly"
-        class="relative py-2 pl-3 pr-10 text-lg font-semibold leading-6 text-left text-gray-700 rounded-md cursor-default text-nowrap focus:outline-none focus:ring-1"
+        class="relative cursor-default text-nowrap rounded-md py-2 pl-3 pr-10 text-left text-lg font-semibold leading-6 text-gray-700 focus:outline-none focus:ring-1"
         :class="{ 'bg-gray-100': isReadOnly, 'bg-white': !isReadOnly }"
       >
         <div class="flex items-center gap-2">
-          <Icon name="translate" class="w-5 h-5" />
+          <Icon name="translate" class="h-5 w-5" />
           <span class="block w-32 truncate">{{ model }}</span>
         </div>
         <span
-          class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
+          class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
         >
           <Icon
             v-if="!isReadOnly"
-            class="w-5 h-5 text-gray-700"
+            class="h-5 w-5 text-gray-700"
             aria-hidden="true"
             name="chevron-down"
           />
@@ -64,7 +64,7 @@
                   'absolute inset-y-0 right-0 flex items-center pr-4',
                 ]"
               >
-                <Icon class="w-5 h-5" aria-hidden="true" name="check-simple" />
+                <Icon class="h-5 w-5" aria-hidden="true" name="check-simple" />
               </span>
             </li>
           </ListboxOption>
