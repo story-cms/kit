@@ -7,7 +7,6 @@ import {
   LanguageSpecification,
   User,
   ResponseStatus,
-  
 } from '../../types';
 
 const defaultLanguage: LanguageSpecification = {
@@ -72,11 +71,18 @@ export const useSharedStore = defineStore('shared', () => {
     hasOpenSidebar.value = isOpen;
   };
 
+  // main and header
+
+  const isMainUnderHeader = ref(false);
+
+  const setMainUnderHeader = (isUnder: boolean) => {
+    isMainUnderHeader.value = isUnder;
+  };
 
   // ui counter
 
   const uiTodoCount: Ref<number> = ref(0);
-  
+
   const setUiTodoCount = (fresh: number) => {
     uiTodoCount.value = fresh;
   };
@@ -128,13 +134,16 @@ export const useSharedStore = defineStore('shared', () => {
     user,
     messageCentre,
     hasFeedback,
-    
+
     isLargeScreen,
     setLargeScreen,
-    
+
     isIntersecting,
     setIsIntersecting,
-    
+
+    isMainUnderHeader,
+    setMainUnderHeader,
+
     hasNonFloatingSidebar,
     setSidebarAsFloating,
     hasOpenSidebar,
