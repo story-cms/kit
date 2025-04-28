@@ -7,84 +7,86 @@
         : 'top-3 mx-auto max-h-min rounded-full',
     ]"
   >
-    <nav>
-      <div
-        :class="[
-          'flex',
-          shared.isLargeScreen ? 'justify-between p-5' : 'flex-col gap-y-3 p-2',
-        ]"
-      >
-        <Link :class="['nav-icon', true ? 'active' : '']" href="/">
-          <Icon name="home" />
-        </Link>
-        <button @click="goBack" class="nav-icon">
-          <Icon name="reply" />
-        </button>
-        <button class="nav-icon relative">
-          <span
-            class="absolute right-2 top-4 rounded-[7px] bg-blue-100 px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-blue-800"
-          >
-            {{ currentLocale }}
-          </span>
-          <Icon name="translate" />
-        </button>
-        <button class="nav-icon" @click="toggleMenu">
-          <Icon v-if="!shared.hasOpenSidebar" name="chevron-double-right" />
-          <Icon v-else name="chevron-double-left" />
-        </button>
-      </div>
-      <div :class="[shared.isLargeScreen ? 'mt-4 flex flex-col px-4' : 'hidden']">
-        <section class="grid grid-cols-1">
-          <div v-for="story in shared.stories" :key="story">
-            <button
-              :class="['nav-link', story === 'John' ? 'active' : '']"
-              @click="onStory(story)"
+    <nav class="flex h-full flex-col justify-between">
+      <div>
+        <div
+          :class="[
+            'flex',
+            shared.isLargeScreen ? 'justify-between p-5' : 'flex-col gap-y-3 p-2',
+          ]"
+        >
+          <Link :class="['nav-icon', true ? 'active' : '']" href="/">
+            <Icon name="home" />
+          </Link>
+          <button @click="goBack" class="nav-icon">
+            <Icon name="reply" />
+          </button>
+          <button class="nav-icon relative">
+            <span
+              class="absolute right-2 top-4 rounded-[7px] bg-blue-100 px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-blue-800"
             >
-              {{ story }}
-            </button>
-          </div>
-          <Link class="nav-link" href="/page">Pages</Link>
-          <div v-if="isMultiLingual">
-            <button
-              v-if="currentLocale === 'en'"
-              class="nav-link opacity-50 disabled:cursor-not-allowed"
-              disabled
-            >
-              Interface
-            </button>
-            <Link v-else class="nav-link flex items-center justify-between" href="/ui"
-              ><span>Interface</span>
-              <span class="">24</span>
-            </Link>
-          </div>
-        </section>
-        <div class="my-7 border-t border-gray-200"></div>
-        <section class="grid grid-cols-1">
-          <Link class="nav-link flex items-center gap-x-3" href="/profile">
-            <Icon name="user" />
-            <span>Profile</span>
-          </Link>
-          <Link class="nav-link flex items-center gap-x-3" href="/profile">
-            <Icon name="users" />
-            <span>Users</span>
-          </Link>
-          <Link class="nav-link flex items-center gap-x-3" href="/profile">
-            <Icon name="help" />
-            <span>Help</span>
-          </Link>
-          <Link class="nav-link flex items-center gap-x-3" href="/profile">
-            <Icon name="logout" />
-            <span>Logout</span>
-          </Link>
-        </section>
-        <div>
-          <DropUp
-            v-model="form.language"
-            :is-read-only="!shared.user.isManager"
-            :options="languageOptions"
-            @change="onLanguage"
-          />
+              {{ currentLocale }}
+            </span>
+            <Icon name="translate" />
+          </button>
+          <button class="nav-icon" @click="toggleMenu">
+            <Icon v-if="!shared.hasOpenSidebar" name="chevron-double-right" />
+            <Icon v-else name="chevron-double-left" />
+          </button>
         </div>
+        <div :class="[shared.isLargeScreen ? 'mt-4 flex flex-col px-4' : 'hidden']">
+          <section class="grid grid-cols-1">
+            <div v-for="story in shared.stories" :key="story">
+              <button
+                :class="['nav-link', story === 'John' ? 'active' : '']"
+                @click="onStory(story)"
+              >
+                {{ story }}
+              </button>
+            </div>
+            <Link class="nav-link" href="/page">Pages</Link>
+            <div v-if="isMultiLingual">
+              <button
+                v-if="currentLocale === 'en'"
+                class="nav-link opacity-50 disabled:cursor-not-allowed"
+                disabled
+              >
+                Interface
+              </button>
+              <Link v-else class="nav-link flex items-center justify-between" href="/ui"
+                ><span>Interface</span>
+                <span class="">24</span>
+              </Link>
+            </div>
+          </section>
+          <div class="my-7 border-t border-gray-200"></div>
+          <section class="grid grid-cols-1">
+            <Link class="nav-link flex items-center gap-x-3" href="/profile">
+              <Icon name="user" />
+              <span>Profile</span>
+            </Link>
+            <Link class="nav-link flex items-center gap-x-3" href="/profile">
+              <Icon name="users" />
+              <span>Users</span>
+            </Link>
+            <Link class="nav-link flex items-center gap-x-3" href="/profile">
+              <Icon name="help" />
+              <span>Help</span>
+            </Link>
+            <Link class="nav-link flex items-center gap-x-3" href="/profile">
+              <Icon name="logout" />
+              <span>Logout</span>
+            </Link>
+          </section>
+        </div>
+      </div>
+      <div :class="[shared.isLargeScreen ? 'px-4 pb-4' : 'hidden']">
+        <DropUp
+          v-model="form.language"
+          :is-read-only="!shared.user.isManager"
+          :options="languageOptions"
+          @change="onLanguage"
+        />
       </div>
     </nav>
   </aside>

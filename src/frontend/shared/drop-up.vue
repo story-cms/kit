@@ -28,7 +28,7 @@
         leave-to-class="opacity-0"
       >
         <ListboxOptions
-          class="absolute -left-7 bottom-full z-10 mb-1 max-h-[calc(100vh-10rem)] min-w-[18rem] overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+          class="absolute bottom-full z-10 mb-1 max-h-[calc(100vh-10rem)] min-w-[18rem] overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
         >
           <ListboxOption
             v-for="option in options"
