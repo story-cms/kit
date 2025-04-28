@@ -165,12 +165,12 @@ const languageOptions = computed(() => {
 </script>
 <style lang="postcss" scoped>
 .nav-icon {
-  @apply flex size-14 items-center justify-center rounded-full transition-all duration-75 hover:bg-gray-100;
+  @apply flex size-14 items-center justify-center rounded-full transition-all duration-200 ease-in-out hover:bg-gray-100;
 }
 .nav-link {
-  @apply w-full rounded-full px-6 py-[18px] text-left text-sm font-semibold leading-5 hover:bg-gray-100;
+  @apply w-full rounded-full px-6 py-[18px] text-left text-sm font-semibold leading-5 transition-all duration-200 ease-in-out hover:bg-gray-100;
 }
 .active {
-  @apply bg-blue-50;
+  @apply bg-blue-50 transition-all duration-200 ease-in-out;
 }
 </style>
