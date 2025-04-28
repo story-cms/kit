@@ -1,5 +1,53 @@
 <template>
   <AppLayout>
+    <div class="container px-3 mx-auto mt-10">
+      <div class="flow-root mt-8">
+        <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+            <div class="overflow-hidden shadow ring-1 ring-black/5 sm:rounded-lg">
+              <table class="min-w-full divide-y divide-gray-300">
+                <thead class="uppercase bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      class="py-3 pl-4 pr-3 text-xs font-medium tracking-wide text-left text-gray-500 uppercase sm:pl-6"
+                    >
+                      Name
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-3 py-3 text-xs font-medium tracking-wide text-left text-gray-500 uppercase"
+                    >
+                      Role
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-3 py-3 text-xs font-medium tracking-wide text-left text-gray-500 uppercase"
+                    >
+                      Languages
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-3 py-3 text-xs font-medium tracking-wide text-left text-gray-500 uppercase"
+                    >
+                      Last Activity
+                    </th>
+                    <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                      <span class="sr-only">Edit</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr v-for="person in people" :key="person.email">
+                    <UserRow :user="person" />
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="container p-3 mx-auto">
       <h2 class="mb-4 text-2xl font-bold leading-7 text-black">Manage Users</h2>
       <div v-if="otherError" class="py-4 text-error">
@@ -104,7 +152,8 @@ import { computed, ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import AppLayout from '../shared/app-layout.vue';
 import Icon from '../shared/icon.vue';
-import { SharedPageProps, UsersProps, UserMeta } from '../../types';
+import UserRow from './components/user-row.vue';
+import { SharedPageProps, UsersProps, UserMeta, type User } from '../../types';
 import { useSharedStore } from '../store';
 
 const emptyForm = {
@@ -196,4 +245,85 @@ const submit = () => {
 };
 
 const submitLabel = computed(() => (formMode.value === 'update' ? 'Update' : 'Add'));
+
+const people: User[] = [
+  {
+    id: 1,
+    name: 'Lindsay Walton',
+    initials: 'LW',
+    email: 'lindsay.walton@example.com',
+    role: 'Member',
+    isManager: false,
+    isAdmin: false,
+    language: 'en',
+    lastActivity: '2021-01-01',
+  },
+  // TODO: Add more users with different roles and names
+  {
+    id: 2,
+    name: 'John Doe',
+    initials: 'JD',
+    email: 'john.doe@example.com',
+    role: 'Admin',
+    isManager: false,
+    isAdmin: false,
+    language: 'en',
+    lastActivity: 'Yesterday',
+  },
+  {
+    id: 3,
+    name: 'Jane Smith',
+    initials: 'JS',
+    email: 'jane.smith@example.com',
+    role: 'Editor',
+    isManager: false,
+    isAdmin: false,
+    language: 'es',
+    lastActivity: 'Tuesday',
+  },
+  {
+    id: 4,
+    name: 'Alice Johnson',
+    initials: 'AJ',
+    email: 'alice.johnson@example.com',
+    role: 'Member',
+    isManager: false,
+    isAdmin: false,
+    language: 'es',
+    lastActivity: 'Yesterday',
+  },
+  {
+    id: 5,
+    name: 'Bob Brown',
+    initials: 'BB',
+    email: 'bob.brown@example.com',
+    role: 'Member',
+    isManager: false,
+    isAdmin: false,
+    language: 'en',
+    lastActivity: '7th April',
+  },
+  {
+    id: 6,
+    name: 'Charlie Davis',
+    initials: 'CD',
+    email: 'charlie.davis@example.com',
+    role: 'Member',
+    isManager: false,
+    isAdmin: false,
+    language: 'es',
+    lastActivity: 'Monday',
+  },
+  {
+    id: 7,
+    name: 'Diana Evans',
+    initials: 'DE',
+    email: 'diana.evans@example.com',
+    role: 'Member',
+    isManager: false,
+    isAdmin: false,
+    language: '*',
+    lastActivity: 'Friday',
+  },
+];
 </script>

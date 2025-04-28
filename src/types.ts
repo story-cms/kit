@@ -172,6 +172,7 @@ export interface User {
   isAdmin: boolean;
   role: string;
   language: string;
+  lastActivity: string;
 }
 
 export interface DraftMeta {
