@@ -7,7 +7,7 @@
         : 'top-3 mx-auto max-h-min rounded-full',
     ]"
   >
-    <nav class="flex h-full flex-col justify-between">
+    <nav :class="{ 'flex h-full flex-col justify-between': shared.isLargeScreen }">
       <div>
         <div
           :class="[
