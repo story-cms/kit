@@ -21,14 +21,26 @@
           <button @click="goBack" class="nav-icon">
             <Icon name="reply" />
           </button>
-          <button class="nav-icon relative">
-            <span
-              class="absolute right-2 top-4 rounded-[7px] bg-blue-100 px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-blue-800"
+          <div v-if="isMultiLingual">
+            <button
+              v-if="!shared.hasNonFloatingSidebar"
+              class="relative flex size-14 items-center justify-center rounded-full transition-all duration-75 hover:bg-gray-100"
             >
-              {{ currentLocale }}
-            </span>
-            <Icon name="translate" />
-          </button>
+              <span
+                class="absolute right-2 top-4 rounded-[7px] bg-blue-100 px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-red-800"
+              >
+                {{ currentLocale }}
+              </span>
+              <Icon name="translate" />
+            </button>
+            <LanguageSelector
+              v-if="shared.hasNonFloatingSidebar"
+              :current-locale="currentLocale"
+              :current-language="form.language"
+              :languages="shared.languages"
+              @language-change="onLanguage"
+            />
+          </div>
           <button class="nav-icon" @click="toggleMenu">
             <Icon v-if="!shared.hasOpenSidebar" name="chevron-double-right" />
             <Icon v-else name="chevron-double-left" />
@@ -104,6 +116,7 @@ import { useSharedStore } from '../store';
 import { Link, useForm } from '@inertiajs/vue3';
 
 import Icon from '../shared/icon.vue';
+import LanguageSelector from './language-selector.vue';
 import DropUp from './drop-up.vue';
 
 const shared = useSharedStore();
