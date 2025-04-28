@@ -55,7 +55,7 @@
               </button>
               <Link v-else class="nav-link flex items-center justify-between" href="/ui"
                 ><span>Interface</span>
-                <span class="">24</span>
+                <span class="text-yellow-500">{{ shared.uiTodoCount }}</span>
               </Link>
             </div>
           </section>
@@ -65,18 +65,24 @@
               <Icon name="user" />
               <span>Profile</span>
             </Link>
-            <Link class="nav-link flex items-center gap-x-3" href="/profile">
+            <Link v-if="isAdmin" class="nav-link flex items-center gap-x-3" href="/user">
               <Icon name="users" />
               <span>Users</span>
             </Link>
-            <Link class="nav-link flex items-center gap-x-3" href="/profile">
+            <Link
+              v-if="shared.meta.helpUrl"
+              class="nav-link flex items-center gap-x-3"
+              :href="shared.meta.helpUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Icon name="help" />
               <span>Help</span>
             </Link>
-            <Link class="nav-link flex items-center gap-x-3" href="/profile">
+            <button class="nav-link flex items-center gap-x-3" @click="signOut">
               <Icon name="logout" />
               <span>Logout</span>
-            </Link>
+            </button>
           </section>
         </div>
       </div>

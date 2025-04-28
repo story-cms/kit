@@ -64,7 +64,7 @@
                   'absolute inset-y-0 right-0 flex items-center pr-4',
                 ]"
               >
-                <Icon class="h-5 w-5" aria-hidden="true" name="check-simple" />
+                <Icon class="size-6" aria-hidden="true" name="check-simple" />
               </span>
             </li>
           </ListboxOption>
