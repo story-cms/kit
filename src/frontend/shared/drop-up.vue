@@ -3,11 +3,11 @@
     <div class="relative">
       <ListboxButton
         :disabled="isReadOnly"
-        class="relative cursor-default text-nowrap rounded-md py-2 pl-3 pr-10 text-left text-lg font-semibold leading-6 text-gray-700 focus:outline-none focus:ring-1"
+        class="relative w-full cursor-default text-nowrap rounded-md py-2 pl-3 pr-10 text-left text-sm font-semibold leading-5 text-gray-700 focus:outline-none focus:ring-1"
         :class="{ 'bg-gray-100': isReadOnly, 'bg-white': !isReadOnly }"
       >
         <div class="flex items-center gap-2">
-          <Icon name="translate" class="h-5 w-5" />
+          <Icon name="translate" class="size-6" />
           <span class="block w-32 truncate">{{ model }}</span>
         </div>
         <span
@@ -15,7 +15,7 @@
         >
           <Icon
             v-if="!isReadOnly"
-            class="h-5 w-5 text-gray-700"
+            class="size-6 text-gray-700"
             aria-hidden="true"
             name="chevron-down"
           />
