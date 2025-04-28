@@ -77,6 +77,14 @@
             <span>Logout</span>
           </Link>
         </section>
+        <div>
+          <DropUp
+            v-model="form.language"
+            :is-read-only="!shared.user.isManager"
+            :options="languageOptions"
+            @change="onLanguage"
+          />
+        </div>
       </div>
     </nav>
   </aside>
@@ -88,7 +96,7 @@ import { useSharedStore } from '../store';
 import { Link, useForm } from '@inertiajs/vue3';
 
 import Icon from '../shared/icon.vue';
-import LanguageSelector from './language-selector.vue';
+import DropUp from './drop-up.vue';
 
 const shared = useSharedStore();
 
