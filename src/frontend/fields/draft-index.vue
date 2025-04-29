@@ -1,60 +1,20 @@
 <template>
   <AppLayout>
-    <ContentHeader
-      :title="chapterTitle"
-      @delete="deleteDraft"
-      @info="info"
-      @app-preview="appPreview"
-    >
-      <template #actions>
-        <WorkflowButtons @publish="publish" @request-change="reject" @submit="submit" />
-      </template>
-    </ContentHeader>
-
-    <div
-      class="relative grid"
-      :class="{
-        'grid-cols-[1fr_360px] gap-x-10':
-          isLargeScreen && (showMetaBox || showAppPreview),
-        'mx-auto max-w-5xl grid-cols-1':
-          !isLargeScreen || (!showMetaBox && !showAppPreview),
-      }"
-    >
+    <div class="relative grid grid-cols-[1fr_300px] gap-x-4">
       <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8">
         <div v-for="(item, index) in drafts.story.fields" :key="index">
           <component :is="widgetFor(index)" :field="item" :is-nested="false" />
         </div>
       </form>
-      <div
-        :class="{
-          'right-4': !isLargeScreen,
-          'absolute block': shared.isIntersecting,
-          'fixed right-4 top-24': !shared.isIntersecting && !isLargeScreen,
-          'sticky top-24 [align-self:start]': isLargeScreen,
-        }"
-      >
-        <section v-if="showMetaBox">
-          <MetaBox
-            :created-at="props.draft.createdAt"
-            :updated-at="props.draft.updatedAt"
-            :story-type="props.meta.storyType"
-            :chapter-type="metaChapter"
-            :published-when="publishedWhen"
-            :is-floating="!isLargeScreen"
-            @close="showMetaBox = false"
-          />
-        </section>
-        <section v-if="meta.hasAppPreview && showAppPreview" class="mt-6">
-          <MobileAppPreview
-            v-if="bundle"
-            :is-floating="!isLargeScreen"
-            :bundle="bundle"
-            :number="props.draft.number"
-            class="mt-2"
-            @close="showAppPreview = false"
-          />
-        </section>
-      </div>
+      <section class="sticky top-24 z-0 [align-self:start]">
+        <MetaBox
+          :created-at="props.draft.createdAt"
+          :updated-at="props.draft.updatedAt"
+          :story-type="props.meta.storyType"
+          :chapter-type="metaChapter"
+          :published-when="publishedWhen"
+        />
+      </section>
     </div>
   </AppLayout>
 </template>

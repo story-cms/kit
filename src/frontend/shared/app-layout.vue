@@ -8,18 +8,20 @@
     >
       <Sidebar />
       <div class="relative">
-        <div class="mx-auto max-w-[860px] pb-6">
+        <div class="pb-6 mx-auto">
           <header
             ref="header"
             :class="[
-              'sticky top-0 h-[100px] bg-gray-50 transition-all duration-75',
+              'sticky top-0 z-10 h-[100px] bg-gray-50 transition-all duration-75',
               shared.isMainUnderHeader ? 'border-x border-b border-gray-200' : '',
             ]"
           >
             <p>Header</p>
             <p>Is large screen: {{ shared.isLargeScreen }}</p>
           </header>
-          <main ref="main" class="mt-1"></main>
+          <main ref="main" class="h-full mt-1">
+            <slot />
+          </main>
         </div>
       </div>
     </div>
