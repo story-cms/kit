@@ -1,29 +1,32 @@
 <template>
   <AppLayout>
-    <ContentHeader dir="ltr" :title="title" @delete="deletePage" @info="info">
-      <template #actions>
-        <BooleanField
-          :field="{
-            name: 'isPublished',
-            label: 'Published',
-            widget: 'boolean',
-            default: false,
-            tintColor: 'green-400',
-            labelOrder: 'start',
-          }"
-          :is-nested="true"
-        />
-      </template>
-    </ContentHeader>
+    <template #header>
+      <ContentHeader dir="ltr" :title="title">
+        <template #draft-actions>
+          <DraftActions @delete="deletePage" @info="info" />
+          <BooleanField
+            :field="{
+              name: 'isPublished',
+              label: 'Published',
+              widget: 'boolean',
+              default: false,
+              tintColor: 'green-400',
+              labelOrder: 'start',
+            }"
+            :is-nested="true"
+          />
+        </template>
+      </ContentHeader>
+    </template>
 
     <div
-      class="container relative mx-auto px-3"
+      class="relative"
       :class="{
         'grid grid-cols-[1fr,_416px] gap-x-8': isLargeScreen,
         'mx-auto grid max-w-[1080px] grid-cols-[1fr]': !isLargeScreen || !showMetaBox,
       }"
     >
-      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8 bg-white py-4">
+      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="py-4 space-y-8 bg-white">
         <StringField
           :field="{
             name: 'title',
@@ -151,7 +154,7 @@ import SelectField from '../fields/select-field.vue';
 import MarkdownField from '../fields/markdown-field.vue';
 import BooleanField from '../fields/boolean-field.vue';
 import PageMetaBox from './page-meta-box.vue';
-
+import DraftActions from '../fields/draft-actions.vue';
 const props = defineProps<PageEditProps & SharedPageProps>();
 
 type RequestPayload = {

@@ -7,7 +7,7 @@
       @app-preview="emit('app-preview')"
     >
       <template #actions>
-        <WorkflowButtons
+        <WorkflowActions
           @request-change="emit('request-change')"
           @publish="emit('publish')"
           @submit="emit('submit')"
@@ -24,7 +24,7 @@
             <span class="ml-2">
               <Icon
                 name="eyeoff"
-                class="h-8 w-8 cursor-pointer text-black"
+                class="w-8 h-8 text-black cursor-pointer"
                 @click.prevent="toggle"
               />
             </span>
@@ -51,7 +51,7 @@
 import AppLayout from './app-layout.vue';
 import { useDraftsStore, useSharedStore } from '../store';
 import ContentHeader from './content-header.vue';
-import WorkflowButtons from '../fields/workflow-buttons.vue';
+import WorkflowActions from '../fields/workflow-actions.vue';
 import Icon from '../shared/icon.vue';
 
 defineProps<{
