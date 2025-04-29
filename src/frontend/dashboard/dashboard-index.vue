@@ -35,7 +35,17 @@
     <div
       :class="[
         'grid gap-4',
-        !isList ? 'grid-cols-[repeat(auto-fit,_minmax(260px,_1fr))]' : 'grid-cols-1',
+        {
+          'grid-cols-[repeat(auto-fit,_minmax(260px,_1fr))]':
+            !isList && filteredIndex.length > 3,
+        },
+        {
+          'grid-cols-[repeat(auto-fit,_minmax(260px,_260px))]':
+            !isList && filteredIndex.length <= 3,
+        },
+        {
+          'grid-cols-1': isList,
+        },
       ]"
     >
       <index-card
