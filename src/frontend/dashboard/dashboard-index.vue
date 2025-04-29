@@ -33,10 +33,10 @@
       </ContentHeader>
     </template>
     <div
-      class="grid grid-cols-1 gap-4"
-      :class="{
-        'sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5': !isList,
-      }"
+      :class="[
+        'grid gap-4',
+        !isList ? 'grid-cols-[repeat(auto-fit,_minmax(260px,_1fr))]' : 'grid-cols-1',
+      ]"
     >
       <index-card
         v-for="item in filteredIndex"
