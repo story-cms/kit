@@ -15,13 +15,12 @@ jobs:
       contents: read
       deployments: write
 
-    name: Deploy to Cloudflare Pages
+    name: Code quality checks
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      # Run your project's build step
-      - name: Build
+      - name: Install dependencies
         run: npm install
 
       - name: Lint
