@@ -12,12 +12,11 @@
           <header
             ref="header"
             :class="[
-              'sticky top-0 z-10 h-[100px] bg-gray-50 transition-all duration-75',
+              'sticky top-0 z-10 bg-gray-50 transition-all duration-75',
               shared.isMainUnderHeader ? 'border-x border-b border-gray-200' : '',
             ]"
           >
-            <p>Header</p>
-            <p>Is large screen: {{ shared.isLargeScreen }}</p>
+            <slot name="header" />
           </header>
           <main ref="main" class="h-full mt-1">
             <slot />

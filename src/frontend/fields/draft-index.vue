@@ -1,5 +1,15 @@
 <template>
   <AppLayout>
+    <template #header>
+      <ContentHeader :title="chapterTitle">
+        <template #draft-actions>
+          <DraftActions @delete="deleteDraft" @info="info" @app-preview="appPreview" />
+        </template>
+        <template #workflow-actions>
+          <WorkflowActions @publish="publish" @request-change="reject" @submit="submit" />
+        </template>
+      </ContentHeader>
+    </template>
     <div class="relative grid grid-cols-[1fr_300px] gap-x-4">
       <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8">
         <div v-for="(item, index) in drafts.story.fields" :key="index">
@@ -22,8 +32,6 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, watch } from 'vue';
 import AppLayout from '../shared/app-layout.vue';
-import ContentHeader from '../shared/content-header.vue';
-import WorkflowButtons from '../fields/workflow-buttons.vue';
 import MetaBox from '../shared/meta-box.vue';
 import { router } from '@inertiajs/vue3';
 import type { Errors } from '@inertiajs/core';
@@ -31,7 +39,9 @@ import { padZero, debounce, formatDate, safeChapterTitle } from '../shared/helpe
 import type { FieldSpec, DraftEditProps, SharedPageProps } from '../../types';
 import { ResponseStatus } from '../../types';
 import { useDraftsStore, useModelStore, useSharedStore, useWidgetsStore } from '../store';
-import MobileAppPreview from './mobile-app-preview.vue';
+import ContentHeader from '../shared/content-header.vue';
+import DraftActions from './draft-actions.vue';
+import WorkflowActions from './workflow-actions.vue';
 
 const props = defineProps<DraftEditProps & SharedPageProps>();
 
