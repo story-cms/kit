@@ -59,10 +59,10 @@ export const useSharedStore = defineStore('shared', () => {
 
   // sidebar
 
-  const hasNonFloatingSidebar = ref(true);
+  const hasFloatingSidebar = ref(false);
 
   const setSidebarAsFloating = (isFloating: boolean) => {
-    hasNonFloatingSidebar.value = !isFloating;
+    hasFloatingSidebar.value = isFloating;
   };
 
   const hasOpenSidebar = ref(true);
@@ -144,8 +144,9 @@ export const useSharedStore = defineStore('shared', () => {
     isMainUnderHeader,
     setMainUnderHeader,
 
-    hasNonFloatingSidebar,
+    hasFloatingSidebar,
     setSidebarAsFloating,
+
     hasOpenSidebar,
     setSidebarOpen,
 

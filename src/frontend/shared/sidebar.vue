@@ -1,7 +1,8 @@
 <template>
   <aside
     :class="[
-      'sticky z-10 max-w-[320px] bg-white shadow-md transition-all duration-75',
+      'max-w-[320px] bg-white shadow-md transition-all duration-75',
+      shared.hasFloatingSidebar ? 'fixed inset-y-0 z-30' : 'sticky z-10',
       shared.hasOpenSidebar
         ? 'top-0 max-h-screen rounded-r-[20px]'
         : 'top-3 mx-auto max-h-min rounded-full',
@@ -23,18 +24,18 @@
           </button>
           <div v-if="isMultiLingual">
             <button
-              v-if="!shared.hasNonFloatingSidebar"
+              v-if="shared.hasOpenSidebar"
               class="relative flex items-center justify-center transition-all duration-75 rounded-full size-14 hover:bg-gray-100"
             >
               <span
-                class="absolute right-2 top-4 rounded-[7px] bg-blue-100 px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-red-800"
+                class="absolute right-2 top-4 rounded-[7px] bg-blue-100 px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-blue-800"
               >
                 {{ currentLocale }}
               </span>
               <Icon name="translate" />
             </button>
             <LanguageSelector
-              v-if="shared.hasNonFloatingSidebar"
+              v-if="!shared.hasOpenSidebar"
               :current-locale="currentLocale"
               :current-language="form.language"
               :languages="shared.languages"
@@ -111,7 +112,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import { useSharedStore } from '../store';
 import { Link, useForm } from '@inertiajs/vue3';
 
@@ -162,6 +163,22 @@ const toggleMenu = () => {
 const languageOptions = computed(() => {
   return shared.languages.map((l) => l.language) as string[];
 });
+
+watch(
+  () => shared.hasOpenSidebar,
+  (newVal) => {
+    if (newVal && shared.isLargeScreen) {
+      shared.setSidebarAsFloating(false);
+    }
+    if (newVal && !shared.isLargeScreen) {
+      shared.setSidebarAsFloating(true);
+    }
+    if (!newVal) {
+      shared.setSidebarAsFloating(false);
+    }
+  },
+  { immediate: true },
+);
 </script>
 <style lang="postcss" scoped>
 .nav-icon {
