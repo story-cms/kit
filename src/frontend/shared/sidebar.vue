@@ -2,17 +2,17 @@
   <aside
     :class="[
       'sticky z-10 max-w-[320px] bg-white shadow-md transition-all duration-75',
-      shared.isLargeScreen
+      shared.hasOpenSidebar
         ? 'top-0 max-h-screen rounded-r-[20px]'
         : 'top-3 mx-auto max-h-min rounded-full',
     ]"
   >
-    <nav :class="{ 'flex h-full flex-col justify-between': shared.isLargeScreen }">
+    <nav :class="{ 'flex h-full flex-col justify-between': shared.hasOpenSidebar }">
       <div>
         <div
           :class="[
             'flex',
-            shared.isLargeScreen ? 'justify-between p-5' : 'flex-col gap-y-3 p-2',
+            shared.hasOpenSidebar ? 'justify-between p-5' : 'flex-col gap-y-3 p-2',
           ]"
         >
           <Link :class="['nav-icon', true ? 'active' : '']" href="/">
@@ -46,7 +46,7 @@
             <Icon v-else name="chevron-double-left" />
           </button>
         </div>
-        <div :class="[shared.isLargeScreen ? 'mt-4 flex flex-col px-4' : 'hidden']">
+        <div :class="[shared.hasOpenSidebar ? 'mt-4 flex flex-col px-4' : 'hidden']">
           <section class="grid grid-cols-1">
             <div v-for="story in shared.stories" :key="story">
               <button
@@ -98,7 +98,7 @@
           </section>
         </div>
       </div>
-      <div :class="[shared.isLargeScreen ? 'px-4 pb-4' : 'hidden']">
+      <div :class="[shared.hasOpenSidebar ? 'px-4 pb-4' : 'hidden']">
         <DropUp
           v-model="form.language"
           :is-read-only="!shared.user.isManager"

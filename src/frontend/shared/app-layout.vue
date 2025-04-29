@@ -1,9 +1,18 @@
 <template>
+  <div class="grid grid-cols-1 bg-white">
+    <p>Has non floating sidebar: {{ shared.hasNonFloatingSidebar }}</p>
+    <p>Is large screen: {{ shared.isLargeScreen }}</p>
+    <p>Has open sidebar: {{ shared.hasOpenSidebar }}</p>
+  </div>
   <div class="bg-gray-50">
     <div
       :class="[
         'container relative mx-auto grid min-h-screen px-3 transition-all duration-75',
-        shared.isLargeScreen ? 'grid-cols-[320px_auto] gap-x-3' : 'grid-cols-[96px_auto]',
+
+        { 'grid-cols-[96px_auto]': !shared.isLargeScreen || !shared.hasOpenSidebar },
+        {
+          'grid-cols-[320px_auto] gap-x-3': shared.isLargeScreen,
+        },
       ]"
     >
       <Sidebar />
@@ -48,6 +57,7 @@ const onScroll = () => {
 const resizeHook = () => {
   const fresh = document.documentElement.clientWidth;
   shared.setLargeScreen(fresh >= 1280);
+  shared.setSidebarOpen(fresh >= 1280);
 };
 
 onMounted(() => {
