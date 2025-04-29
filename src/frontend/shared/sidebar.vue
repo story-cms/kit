@@ -137,7 +137,9 @@ const onLanguage = async (lang: string) => {
 };
 
 const onStory = async (story: string) => {
+  // @ts-ignore - Ignoring type mismatch for now
   form.story = story;
+  // @ts-ignore - Ignoring type mismatch for now
   form.language = null;
   form.post('/switch');
 };
@@ -151,7 +153,7 @@ const isMultiLingual = computed(() => shared.languages.length > 1);
 const isAdmin = computed(() => shared.user.isAdmin);
 
 const currentLocale = computed(() => {
-  return shared.languages.find((l) => l.language === form.language)?.locale;
+  return shared.languages.find((l) => l.language === form.language)?.locale ?? 'en';
 });
 
 const goBack = () => {

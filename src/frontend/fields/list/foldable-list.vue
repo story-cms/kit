@@ -1,7 +1,7 @@
 <template>
   <ul v-for="(_listItem, index) in listItems" :key="index">
     <li
-      class="relative pt-10 pl-3 mb-8 ml-3 bg-transparent border-gray-300"
+      class="relative mb-8 ml-3 border-gray-300 bg-transparent pl-3 pt-10"
       :class="{
         'border-l': isExpanded(index) && !isReadOnly,
         'border-t': !isReadOnly && (!shared.isTranslation || drafts.isSingleColumn),
@@ -14,7 +14,7 @@
 
       <div
         v-if="!isReadOnly"
-        class="absolute right-0 flex items-center justify-between ml-2 -left-5"
+        class="absolute -left-5 right-0 ml-2 flex items-center justify-between"
         :class="{
           '-top-[17.6px]': shared.isTranslation,
           '-top-5': !shared.isTranslation,
@@ -28,31 +28,27 @@
           <icon
             v-if="isExpanded(index)"
             name="chevron-down"
-            class="mr-1 icon"
+            class="icon mr-1"
             aria-hidden="true"
           />
-          <icon v-else name="chevron-right" class="mr-1 icon" aria-hidden="true" />
+          <icon v-else name="chevron-right" class="icon mr-1" aria-hidden="true" />
           <span>
             {{ String(sectionTitle(index)) }}
           </span>
         </button>
-        <div
-          v-if="itemHasError(index)"
-          class="cursor-pointer text-accent-one"
-          @click.prevent="toggle(index)"
-        >
-          <div class="p-2 bg-white border rounded-full">
-            <Icon name="exclamation" class="w-10 h-10 text-red-500" />
+        <div v-if="itemHasError(index)" class="text-accent-one">
+          <div class="rounded-full border bg-white p-2">
+            <Icon name="exclamation" class="h-10 w-10 text-red-500" />
           </div>
         </div>
         <button
           v-if="canMutate"
           type="button"
-          class="flex items-center justify-center w-10 h-10 text-gray-500 bg-white border rounded-full cursor-pointer"
+          class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
           @click="emit('removeSet', index)"
         >
-          <span v-if="!isReadOnly" class="flex items-center justify-center w-10 h-10">
-            <Icon name="trash" class="w-auto h-auto" />
+          <span v-if="!isReadOnly" class="flex h-10 w-10 items-center justify-center">
+            <Icon name="trash" class="h-auto w-auto" />
           </span>
         </button>
       </div>
@@ -63,7 +59,7 @@
             :class="{
               'rounded border border-gray-200 bg-white drop-shadow-sm':
                 item.widget != 'list',
-              'mt-8 rounded border border-gray-200  bg-white p-8 shadow': isIsland(
+              'mt-8 rounded border border-gray-200 bg-white p-8 shadow': isIsland(
                 item.widget,
               ),
             }"
@@ -86,10 +82,10 @@
   </ul>
   <div v-if="canMutate" class="flex items-center gap-4">
     <AddItemButton :label="field.label" @add="emit('addSet')" />
-    <div v-if="listNeedsItem()" class="cursor-pointer text-accent-one">
-      <div class="p-2 bg-white border rounded-full flex flex-row items-center">
-        <Icon name="exclamation" class="pr-2 text-red-500" />
-        <p class="text-sm text-error">At least one item is required</p>
+    <div v-if="showEmptyListWarning()">
+      <div class="flex flex-row items-center rounded-full border bg-white p-2 text-error">
+        <Icon name="exclamation" class="pr-2" />
+        <p class="text-sm">At least one item is required</p>
       </div>
     </div>
   </div>
@@ -187,19 +183,14 @@ const itemHasError = (index: number): boolean => {
   return false;
 };
 
-const listNeedsItem = (): boolean => {
+const showEmptyListWarning = (): boolean => {
   if (props.isReadOnly) return false;
-  let foundItem = false;
+  if (props.listItems.length > 0) return false;
+
   for (const key in shared.errors) {
     const needle = `bundle.${props.fieldPath}`;
-    if (key.startsWith(needle)) {
-      const remaining = key.slice(needle.length);
-      if (remaining.startsWith('.') && /\d+/.test(remaining.slice(1))) {
-        foundItem = true;
-      }
-    }
-    if (!foundItem && props.listItems.length === 0) return true;
-    return false;
+    if (key.startsWith(needle)) return true;
   }
+  return false;
 };
 </script>

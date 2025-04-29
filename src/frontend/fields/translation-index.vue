@@ -27,10 +27,11 @@
           :key="index"
           class="grid grid-rows-[subgrid]"
           :style="{
-              gridRow: `span ${
-                sourceItemsLength.find((obj) => obj.key === `${(item as FieldSpec).name}`)?.length
-              }`,
-            }"
+            gridRow: `span ${
+              sourceItemsLength.find((obj) => obj.key === `${(item as FieldSpec).name}`)
+                ?.length
+            }`,
+          }"
         >
           <component :is="widgetFor(index)" :field="item" :is-nested="false" />
         </div>
@@ -43,10 +44,11 @@
           :key="index"
           class="grid grid-rows-[subgrid]"
           :style="{
-              gridRow: `span ${
-                sourceItemsLength.find((obj) => obj.key === `${(item as FieldSpec).name}`)?.length
-              }`,
-            }"
+            gridRow: `span ${
+              sourceItemsLength.find((obj) => obj.key === `${(item as FieldSpec).name}`)
+                ?.length
+            }`,
+          }"
         >
           <component
             :is="widgetFor(index)"
@@ -62,7 +64,7 @@
         'right-4': !isLargeScreen || !showSideBar,
         'absolute block': shared.isIntersecting,
         'container fixed inset-x-0 mx-auto': !shared.isIntersecting && !showSideBar,
-        'sticky top-24  grid [align-self:start]': isLargeScreen && drafts.isSingleColumn,
+        'sticky top-24 grid [align-self:start]': isLargeScreen && drafts.isSingleColumn,
       }"
     >
       <div
@@ -168,7 +170,7 @@ const onSuccess = (message?: string) => {
   shared.addMessage(ResponseStatus.Confirmation, message);
 };
 
-const onError = (errors: Errors, message: string) => {
+const onError = (_errors: Errors, message: string) => {
   widgets.setIsDirty(false);
   isSettingErrors = true;
   shared.setErrors(props.errors);

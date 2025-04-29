@@ -56,6 +56,14 @@ export default class BunnyService implements HostService {
       // unix timestamp 10 hours from now
       const uploadExpiry = `${Math.floor(Date.now() / 1000) + 36000}`;
       const signature = await this.generateSignature(uploadExpiry);
+      const metadata: MetadataType = {
+        filetype: file.type,
+        title: file.name.split('.')[0],
+      };
+
+      if (this.collectionId) {
+        metadata.collection = this.collectionId;
+      }
 
       const resumableUpload = new tus.Upload(file, {
         endpoint: `${authority}/tusupload`,
@@ -66,15 +74,11 @@ export default class BunnyService implements HostService {
           VideoId: this.guid,
           LibraryId: this.libraryId,
         },
-        metadata: {
-          filetype: file.type,
-          title: file.name.split('.')[0],
-          collection: this.collectionId,
-        },
+        metadata,
         onError: this.onError,
         onProgress: this.onProgress,
         onSuccess: () => {
-          this.onSuccess(this.url);
+          this.onSuccess(this.url ?? '');
         },
       });
 
@@ -87,12 +91,16 @@ export default class BunnyService implements HostService {
       // Start the upload
       resumableUpload.start();
     } catch (error) {
-      this.onError(error);
-      return { url: null };
+      if (error instanceof Error) {
+        this.onError(error);
+      } else {
+        this.onError(new Error(String(error)));
+      }
+      return { url: '' };
     }
 
     // this url is not ready yet, we need to wait for the onSuccess callback
-    return { url: this.url };
+    return { url: '' };
   };
 
   public get url(): string | null {
@@ -131,4 +139,8 @@ export default class BunnyService implements HostService {
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
   }
+}
+
+interface MetadataType {
+  [key: string]: string;
 }

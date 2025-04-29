@@ -10,14 +10,14 @@
     <AttachmentField
       v-else
       v-bind="props"
-      :url="url"
+      :url="previewUrl"
       :errors="errors"
       :host-service="host"
       @delete="onDelete"
       @attached="onAttached"
       @dropped="onDropped"
     >
-      <VideoPlayer :url="url" :library="host.library" />
+      <VideoPlayer :url="previewUrl" :library="host.library" />
     </AttachmentField>
 
     <div v-if="feedback" class="text-sm text-red-300">
@@ -63,13 +63,15 @@ const startValue = props.isReadOnly
   ? (model.getSourceField(fieldPath.value, emptyVideo) as Video)
   : (model.getField(fieldPath.value, emptyVideo) as Video);
 
-const url = ref(startValue.url);
+const url = ref<string | null>(startValue.url);
+const previewUrl = computed(() => url.value ?? '');
 
 const onSuccess = (url: string) => {
   console.log('success!', url);
+  const newValue = url ? url : null;
 
   model.setField(fieldPath.value, {
-    url,
+    url: newValue,
   });
 };
 

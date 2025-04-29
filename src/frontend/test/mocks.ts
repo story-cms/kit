@@ -18,7 +18,7 @@ interface Address {
 
 interface ObjectModel {
   name: string;
-  age: number;
+  age: number | null;
   notes: string;
   profile: string;
   address: Address;
@@ -214,10 +214,6 @@ export const listModel = {
       commentary: 'He was with God in the beginning.',
     },
   ],
-};
-
-export const listErrors = {
-  'bundle.sections.1.scripture': ['required validation failed'],
 };
 
 export const listInListSpec: FieldSpec = {

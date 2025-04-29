@@ -117,7 +117,7 @@ const onSuccess = (message?: string) => {
   shared.addMessage(ResponseStatus.Confirmation, message);
 };
 
-const onError = (errors: Errors, message: string) => {
+const onError = (_errors: Errors, message: string) => {
   widgets.setIsDirty(false);
   isSettingErrors = true;
   shared.setErrors(props.errors);
