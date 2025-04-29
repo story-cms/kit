@@ -1,9 +1,4 @@
 <template>
-  <div class="fixed right-0 z-50 grid grid-cols-1 bg-white">
-    <p>Has non floating sidebar: {{ shared.hasFloatingSidebar }}</p>
-    <p>Is large screen: {{ shared.isLargeScreen }}</p>
-    <p>Has open sidebar: {{ shared.hasOpenSidebar }}</p>
-  </div>
   <div class="bg-gray-50">
     <div
       :class="[
