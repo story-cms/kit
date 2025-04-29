@@ -1,27 +1,30 @@
 <template>
   <AppLayout>
-    <ContentHeader :title="chapterTitle" @info="info" @app-preview="appPreview">
-      <template #actions>
-        <button
-          type="button"
-          class="w-32 rounded-[38px] border border-blue-500 bg-blue-500 px-[15px] py-[9px] text-sm/5 font-medium text-white shadow"
-          @click.prevent="edit"
-        >
-          Edit
-        </button>
-      </template>
-    </ContentHeader>
+    <template #header>
+      <ContentHeader :title="chapterTitle">
+        <template #draft-actions>
+          <DraftActions @info="info" @app-preview="appPreview" />
+          <button
+            type="button"
+            class="w-32 rounded-[38px] border border-blue-500 bg-blue-500 px-[15px] py-[9px] text-sm/5 font-medium text-white shadow"
+            @click.prevent="edit"
+          >
+            Edit
+          </button>
+        </template>
+      </ContentHeader>
+    </template>
 
     <div
-      class="container relative mx-auto px-3"
+      class="relative"
       :class="{
-        'grid grid-cols-[1fr,_416px] gap-x-8': isLargeScreen,
+        'grid grid-cols-[1fr_300px] gap-x-8': isLargeScreen,
         'mx-auto grid max-w-[1080px] grid-cols-[1fr]':
           !isLargeScreen || (!showMetaBox && !showAppPreview),
       }"
     >
       <!-- eslint-disable vue/no-v-html -->
-      <div class="-ml-8 border-s bg-white p-8 shadow-sm" v-html="bundleView"></div>
+      <div class="p-8 bg-white shadow-sm" v-html="bundleView"></div>
 
       <div
         :class="{
@@ -43,16 +46,6 @@
             @close="showMetaBox = false"
           />
         </section>
-        <section v-if="meta.hasAppPreview && showAppPreview" class="mt-6">
-          <MobileAppPreview
-            v-if="bundle"
-            :is-floating="!isLargeScreen"
-            :bundle="bundle"
-            :number="props.chapter.number"
-            class="mt-2"
-            @close="showAppPreview = false"
-          />
-        </section>
       </div>
     </div>
   </AppLayout>
@@ -62,6 +55,7 @@
 import { computed, ref, watch, onMounted } from 'vue';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
+import DraftActions from '../fields/draft-actions.vue';
 import MetaBox from '../shared/meta-box.vue';
 import MobileAppPreview from '../fields/mobile-app-preview.vue';
 import { formatDate, padZero, safeChapterTitle } from '../shared/helpers';
