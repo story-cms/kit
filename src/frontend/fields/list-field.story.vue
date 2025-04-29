@@ -22,6 +22,13 @@
       </template>
     </Variant>
 
+    <Variant title="Empty List Error" :setup-app="loadData">
+      <ListField :field="{ canFold: false, ...listSpec }" />
+      <template #controls>
+        <ErrorControl :errors="listErrors" />
+      </template>
+    </Variant>
+
     <Variant title="Readonly" :setup-app="loadData">
       <ListField :field="pokeSpec" :is-read-only="true" />
     </Variant>
@@ -63,7 +70,6 @@ import ErrorControl from './helpers/error-control.vue';
 import {
   listSpec,
   listModel,
-  listErrors,
   listInListModel,
   listInListSpec,
   listInListErrors,
@@ -80,8 +86,16 @@ const loadData: StoryHandler = ({ variant }): void => {
     store.model = listModel;
     return;
   }
+
+  if (variant?.title === 'Empty List Error') {
+    shared.errors = emptyListError;
+    store.model = { ...listModel, sections: [] };
+    return;
+  }
+
   if (variant?.title === 'List in List Error') {
     shared.errors = listInListErrors;
+    store.model = listInListModel;
     return;
   }
   if (variant?.title === 'List in List') {
@@ -125,6 +139,14 @@ const loadData: StoryHandler = ({ variant }): void => {
     return;
   }
   store.model = listModel;
+};
+
+const listErrors = {
+  'bundle.sections.1.scripture': ['required validation failed'],
+};
+
+const emptyListError = {
+  'bundle.sections': ['The sections field must have at least 1 items'],
 };
 
 const pokeSpec = {

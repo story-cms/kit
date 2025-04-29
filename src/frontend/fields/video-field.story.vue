@@ -67,7 +67,6 @@ const spec = {
   name: 'intro',
   label: 'Intro video',
   widget: 'video',
-  collectionId: '3b08a34e-1f2d-4e80-8c36-7c315e7eb507',
 };
 
 const fileAttributesSpec = {
@@ -84,7 +83,7 @@ const videoModel = {
   name: 'John',
   age: 30,
   intro: {
-    url: 'https://vz-831b1d74-446.b-cdn.net/d4748f79-100a-4446-862f-10f09a59d4aa/playlist.m3u8',
+    url: 'https://vz-831b1d74-446.b-cdn.net/9c2b5fcb-df7e-411a-95f0-d5820393c87f/playlist.m3u8',
   },
 };
 

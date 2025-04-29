@@ -14,7 +14,7 @@
             class="grid h-[42px] w-[42px] cursor-pointer place-content-center rounded-full border border-gray-300 bg-white"
             @click.prevent="emit('info')"
           >
-            <Icon name="info" class="w-6 h-auto text-gray-500 cursor-pointer" />
+            <Icon name="info" class="h-auto w-6 cursor-pointer text-gray-500" />
           </button>
           <button
             v-if="shared.meta.hasAppPreview"
@@ -22,7 +22,7 @@
             class="grid h-[42px] w-[42px] cursor-pointer place-content-center rounded-full border border-gray-300 bg-white"
             @click.prevent="emit('app-preview')"
           >
-            <Icon name="mobile" class="w-6 h-auto text-gray-500 cursor-pointer" />
+            <Icon name="mobile" class="h-auto w-6 cursor-pointer text-gray-500" />
           </button>
           <button
             type="button"
@@ -31,7 +31,7 @@
           >
             <Icon
               name="trash"
-              class="flex items-center justify-center w-6 h-auto text-gray-500 cursor-pointer"
+              class="flex h-auto w-6 cursor-pointer items-center justify-center text-gray-500"
             />
           </button>
           <slot name="actions"></slot>

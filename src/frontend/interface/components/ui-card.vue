@@ -1,9 +1,9 @@
 <template>
   <Transition name="slide-fade">
-    <div class="shadow font-['Inter'] rounded-lg border border-gray-200">
-      <div class="grid grid-cols-2 px-8 pt-6 pb-4 gap-x-10">
+    <div v-if="true" class="rounded-lg border border-gray-200 font-['Inter'] shadow">
+      <div class="grid grid-cols-2 gap-x-10 px-8 pb-4 pt-6">
         <div>
-          <label :for="item.key" class="block font-medium text-gray-700 text-sm/5">
+          <label :for="item.key" class="block text-sm/5 font-medium text-gray-700">
             {{ shared.language.language }}
             <span class="uppercase">
               {{ shared.locale }}
@@ -22,7 +22,7 @@
             />
             <p
               v-if="error"
-              class="text-[#FF2415] font-medium text-sm leading-[120%] mt-4 flex items-center gap-x-[11px]"
+              class="mt-4 flex items-center gap-x-[11px] text-sm font-medium leading-[120%] text-[#FF2415]"
             >
               <span>
                 <Icon name="exclamation-circle" />
@@ -32,19 +32,19 @@
           </div>
         </div>
         <div>
-          <span class="block font-medium text-gray-700 text-sm/5">English EN</span>
+          <span class="block text-sm/5 font-medium text-gray-700">English EN</span>
           <div class="mt-1">
-            <span class="font-medium text-gray-900 text-base/5">
+            <span class="text-base/5 font-medium text-gray-900">
               {{ item.source }}
             </span>
           </div>
         </div>
-        <div class="grid grid-cols-2 mt-4 col-span-full">
+        <div class="col-span-full mt-4 grid grid-cols-2">
           <div>
             <div v-if="item.description">
-              <span class="block font-medium text-gray-700 text-sm/5">Context</span>
+              <span class="block text-sm/5 font-medium text-gray-700">Context</span>
               <div class="mt-1">
-                <span class="font-medium text-gray-600 text-base/5">
+                <span class="text-base/5 font-medium text-gray-600">
                   {{ item.description }}
                 </span>
               </div>
@@ -53,12 +53,12 @@
           <div class="flex items-center justify-end gap-x-6">
             <button
               type="button"
-              @click="handleSetFlag(FlagState.RECHECK)"
-              class="p-3 border border-gray-300 rounded-full"
+              class="rounded-full border border-gray-300 p-3"
               :disabled="!model"
+              @click="handleSetFlag(FlagState.RECHECK)"
             >
               <Icon
-                class="w-auto h-6"
+                class="h-6 w-auto"
                 :class="{
                   'text-blue-500': item.flag === FlagState.RECHECK,
                   'text-gray-700': item.flag !== FlagState.RECHECK,
@@ -68,11 +68,11 @@
             </button>
             <button
               type="button"
+              class="rounded-full border border-gray-300 p-3"
               @click="suggestAi"
-              class="p-3 border border-gray-300 rounded-full"
             >
               <Icon
-                class="w-auto h-6"
+                class="h-6 w-auto"
                 :class="{
                   'text-blue-500': item.flag === FlagState.PREFILLED,
                   'text-gray-700': item.flag !== FlagState.PREFILLED,
@@ -82,6 +82,9 @@
             </button>
             <button
               type="button"
+              class="rounded-full border border-gray-300 p-3 disabled:border-gray-300 disabled:bg-gray-100"
+              :disabled="!model"
+              :class="{ 'border-green-800 bg-green-500': model }"
               @click="
                 emit('save', {
                   key: props.item.key,
@@ -90,12 +93,9 @@
                   isPrefilled: false,
                 })
               "
-              class="p-3 border border-gray-300 rounded-full disabled:border-gray-300 disabled:bg-gray-100"
-              :disabled="!model"
-              :class="{ 'bg-green-500 border-green-800': model }"
             >
               <Icon
-                class="w-auto h-6"
+                class="h-6 w-auto"
                 :class="{ 'text-gray-300': !model, 'text-white': model }"
                 name="check"
               />
@@ -103,29 +103,29 @@
           </div>
         </div>
       </div>
-      <div v-show="isOpen" class="px-8 pt-4 pb-6 bg-blue-50">
+      <div v-show="isOpen" class="bg-blue-50 px-8 pb-6 pt-4">
         <div v-show="isLoading">
-          <div class="flex space-x-4 animate-pulse">
-            <div class="flex-1 py-1 space-y-6">
-              <div class="h-2 bg-gray-200 rounded"></div>
+          <div class="flex animate-pulse space-x-4">
+            <div class="flex-1 space-y-6 py-1">
+              <div class="h-2 rounded bg-gray-200"></div>
               <div class="space-y-3">
                 <div class="grid grid-cols-3 gap-4">
-                  <div class="h-2 col-span-2 bg-gray-200 rounded"></div>
-                  <div class="h-2 col-span-1 bg-gray-200 rounded"></div>
+                  <div class="col-span-2 h-2 rounded bg-gray-200"></div>
+                  <div class="col-span-1 h-2 rounded bg-gray-200"></div>
                 </div>
-                <div class="h-2 bg-gray-200 rounded"></div>
+                <div class="h-2 rounded bg-gray-200"></div>
               </div>
             </div>
           </div>
         </div>
         <div v-show="!isLoading" class="flex items-center justify-between">
           <div>
-            <span class="block font-medium text-sm/5">AI Suggestion</span>
+            <span class="block text-sm/5 font-medium">AI Suggestion</span>
             <div class="mt-1">
-              <span v-if="isLoading" class="font-medium text-blue-500 text-base/5">
+              <span v-if="isLoading" class="text-base/5 font-medium text-blue-500">
                 Generating suggestion...
               </span>
-              <span v-else class="font-medium text-blue-500 text-base/5">
+              <span v-else class="text-base/5 font-medium text-blue-500">
                 {{ suggestion ? suggestion : 'No suggestion found' }}
               </span>
             </div>
@@ -133,15 +133,15 @@
           <div v-show="suggestion.length > 0" class="flex gap-x-6">
             <button
               type="button"
+              class="w-32 rounded-[38px] border bg-white px-[15px] py-[9px] text-sm/5 font-medium text-gray-800 shadow hover:bg-green-400 focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset]"
               @click="discardSuggestion"
-              class="w-32 rounded-[38px] border px-[15px] py-[9px] text-sm/5 font-medium text-gray-800 shadow focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset] bg-white hover:bg-green-400"
             >
               Discard
             </button>
             <button
               type="button"
+              class="rounded-[38px] border bg-blue-500 px-[15px] py-[9px] text-sm/5 font-medium text-white shadow hover:bg-green-400 focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset]"
               @click="applySuggestion"
-              class="rounded-[38px] border px-[15px] py-[9px] text-sm/5 font-medium text-white shadow focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset] bg-blue-500 hover:bg-green-400"
             >
               Apply Suggestion
             </button>
@@ -208,6 +208,7 @@ const suggestAi = async () => {
       isLoading.value = false;
     }
   } catch (error) {
+    console.error('ui-card.suggestAi', error);
     isOpen.value = false;
     isLoading.value = false;
     shared.addMessage(ResponseStatus.Failure, 'Error generating suggestion');

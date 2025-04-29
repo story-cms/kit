@@ -3,15 +3,15 @@
     v-for="(_listItem, index) in listItems"
     :key="index"
     role="listitem"
-    class="grid my-8 space-y-8 bg-transparent"
+    class="my-8 grid space-y-8 bg-transparent"
   >
-    <div class="px-8 pt-3 pb-8 ml-8 space-y-6 bg-gray-100 drop-shadow">
+    <div class="ml-8 space-y-6 bg-gray-100 px-8 pb-8 pt-3 drop-shadow">
       <div
         v-if="canMutate"
-        class="absolute right-0 mr-3 text-gray-500 cursor-pointer"
+        class="absolute right-0 mr-3 cursor-pointer text-gray-500"
         @click="emit('removeSet', index)"
       >
-        <Icon name="trash" class="w-10 h-10" />
+        <Icon name="trash" class="h-10 w-10" />
       </div>
       <div v-for="(item, i) in fields" :key="item.name + `${i.toString()}`">
         <component
@@ -24,12 +24,12 @@
       </div>
     </div>
   </div>
-  <div v-if="canMutate" class="mt-8 ml-8 flex flex-row items-center gap-4">
+  <div v-if="canMutate" class="ml-8 mt-8 flex flex-row items-center gap-4">
     <AddItemButton :label="field.label" @add="emit('addSet')" />
-    <div v-if="listNeedsItem()" class="cursor-pointer text-accent-one">
-      <div class="p-2 bg-white border rounded-full flex flex-row items-center">
-        <Icon name="exclamation" class="pr-2 text-red-500" />
-        <p class="text-sm text-error">At least one item is required</p>
+    <div v-if="showEmptyListWarning()">
+      <div class="flex flex-row items-center rounded-full border bg-white p-2 text-error">
+        <Icon name="exclamation" class="pr-2" />
+        <p class="text-sm">At least one item is required</p>
       </div>
     </div>
   </div>
@@ -66,27 +66,22 @@ const emit = defineEmits(['addSet', 'removeSet']);
 const field = computed(() => props.field as FieldSpec);
 const fields = field.value.fields as FieldSpec[];
 const store = useWidgetsStore();
-const language = useSharedStore();
+const shared = useSharedStore();
 
 const canMutate = computed(() => {
   if (props.isReadOnly) return false;
 
-  return !language.isTranslation;
+  return !shared.isTranslation;
 });
 
-const listNeedsItem = (): boolean => {
+const showEmptyListWarning = (): boolean => {
   if (props.isReadOnly) return false;
-  let foundItem = false;
-  for (const key in language.errors) {
+  if (props.listItems.length > 0) return false;
+
+  for (const key in shared.errors) {
     const needle = `bundle.${props.fieldPath}`;
-    if (key.startsWith(needle)) {
-      const remaining = key.slice(needle.length);
-      if (remaining.startsWith('.') && /\d+/.test(remaining.slice(1))) {
-        foundItem = true;
-      }
-    }
-    if (!foundItem && props.listItems.length === 0) return true;
-    return false;
+    if (key.startsWith(needle)) return true;
   }
+  return false;
 };
 </script>
