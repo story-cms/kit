@@ -4,9 +4,8 @@
       <h3
         id="content-title"
         class="font-['Inter'] text-2xl font-semibold text-gray-800 [&>span]:text-gray-400"
-      >
-        {{ title }}
-      </h3>
+        v-html="title"
+      ></h3>
 
       <MakeSticky el-id="content-title">
         <div class="flex items-center space-x-6">

@@ -137,9 +137,9 @@ const onLanguage = async (lang: string) => {
 };
 
 const onStory = async (story: string) => {
-  // @ts-ignore - Ignoring type mismatch for now
+  // @ts-expect-error - Ignoring type mismatch for now
   form.story = story;
-  // @ts-ignore - Ignoring type mismatch for now
+  // @ts-expect-error - Ignoring type mismatch for now
   form.language = null;
   form.post('/switch');
 };
