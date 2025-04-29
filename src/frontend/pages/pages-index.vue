@@ -1,23 +1,31 @@
 <template>
   <AppLayout>
-    <div class="container mx-auto px-3 py-3">
-      <div class="flex items-center justify-between">
-        <div class="space-x-6">
-          <AddItemButton label="Page" @add="addPage" />
-          <AddItemButton v-if="isShowingPublished" label="Divider" @add="addDivider" />
-        </div>
-        <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
-      </div>
-      <div class="my-8 flex flex-col space-y-8">
-        <div v-for="page in filteredItems" :key="page.id" @drop="onDrop">
-          <PageIndexItem
-            :page="page"
-            @remove-divider="deleteDivider(page.id)"
-            @tap="onTap"
-            @drag-start="fromIndex = items.indexOf(page)"
-            @drag-enter="toIndex = items.indexOf(page)"
-          />
-        </div>
+    <template #header>
+      <ContentHeader title="Pages">
+        <template #extra-actions>
+          <div class="flex items-center justify-between">
+            <div class="space-x-6">
+              <AddItemButton label="Page" @add="addPage" />
+              <AddItemButton
+                v-if="isShowingPublished"
+                label="Divider"
+                @add="addDivider"
+              />
+            </div>
+            <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
+          </div>
+        </template>
+      </ContentHeader>
+    </template>
+    <div class="flex flex-col my-8 space-y-8">
+      <div v-for="page in filteredItems" :key="page.id" @drop="onDrop">
+        <PageIndexItem
+          :page="page"
+          @remove-divider="deleteDivider(page.id)"
+          @tap="onTap"
+          @drag-start="fromIndex = items.indexOf(page)"
+          @drag-enter="toIndex = items.indexOf(page)"
+        />
       </div>
     </div>
   </AppLayout>
@@ -32,6 +40,7 @@ import AppLayout from '../shared/app-layout.vue';
 import IndexFilter from '../shared/index-filter.vue';
 import AddItemButton from '../shared/add-item-button.vue';
 import { debounce } from '../shared/helpers';
+import ContentHeader from '../shared/content-header.vue';
 import PageIndexItem from './page-index-item.vue';
 
 const props = defineProps<PageIndexProps & SharedPageProps>();
