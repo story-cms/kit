@@ -253,7 +253,7 @@ const info = () => {
 };
 
 watch(isLargeScreen, (newValue) => {
-  newValue ? (showMetaBox.value = true) : (showMetaBox.value = false);
+  showMetaBox.value = newValue;
 });
 
 onMounted(() => {

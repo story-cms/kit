@@ -24,17 +24,17 @@
       <MenuItems
         class="absolute left-0 z-10 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
       >
-        <div class="py-1" v-for="language in languages" :key="language.language">
+        <div v-for="language in languages" :key="language.language" class="py-1">
           <MenuItem v-slot="{ active }">
             <button
-              @click="onLanguage(language.language)"
               :class="[
                 active ? 'bg-gray-100 text-gray-900 outline-none' : 'text-gray-700',
                 'flex w-full items-center gap-x-2 px-4 py-2 text-left text-sm',
               ]"
+              @click="onLanguage(language.language)"
             >
               <span> {{ language.language }}</span>
-              <Icon name="check" v-if="language.language === currentLanguage" />
+              <Icon v-if="language.language === currentLanguage" name="check" />
             </button>
           </MenuItem>
         </div>

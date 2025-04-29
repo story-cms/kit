@@ -3,10 +3,20 @@
     "declaration": true,
     "target": "esnext",
     "module": "esnext",
+
+    /* Bundler mode */
     "moduleResolution": "bundler",
-    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "isolatedModules": true,
-    "esModuleInterop": true
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
+    "forceConsistentCasingInFileNames": true
   }
 }
