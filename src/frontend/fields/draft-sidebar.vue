@@ -3,7 +3,10 @@
     v-if="showMetaBox || showAppPreview"
     :class="{
       'fixed right-0': drafts.hasFloatingDraftSidebar,
-      'sticky top-24 [align-self:start]': !drafts.hasFloatingDraftSidebar,
+      'sticky [align-self:start]': !drafts.hasFloatingDraftSidebar,
+    }"
+    :style="{
+      top: `${headerHeight + 24}px`,
     }"
   >
     <section v-if="showMetaBox">
@@ -29,7 +32,7 @@ const props = defineProps<{
 const { showMetaBox, showAppPreview } = toRefs(props);
 
 const isLargeScreen = computed(() => shared.isLargeScreen);
-
+const headerHeight = computed(() => shared.headerHeight);
 watch([showMetaBox, showAppPreview, isLargeScreen], ([a, b, c]) => {
   if (!a && !b) {
     drafts.setDraftSidebarAsFloating(false);

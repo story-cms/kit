@@ -20,6 +20,7 @@
       <p>drafts.isSingleColumn: {{ drafts.isSingleColumn }}</p>
       <p>Is large screen: {{ shared.isLargeScreen }}</p>
       <p>Has floating draft sidebar: {{ drafts.hasFloatingDraftSidebar }}</p>
+      <p>Header height: {{ shared.headerHeight }}</p>
     </div>
     <div
       :class="[

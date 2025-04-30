@@ -52,6 +52,10 @@ const onScroll = () => {
     const mainRect = main.value.getBoundingClientRect();
     shared.setMainUnderHeader(mainRect.top <= headerRect.bottom);
   }
+  if (header.value) {
+    const headerRect = header.value.getBoundingClientRect();
+    shared.setHeaderHeight(headerRect.height);
+  }
 };
 const resizeHook = () => {
   const fresh = document.documentElement.clientWidth;

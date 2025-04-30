@@ -79,6 +79,12 @@ export const useSharedStore = defineStore('shared', () => {
     isMainUnderHeader.value = isUnder;
   };
 
+  const headerHeight = ref(0);
+
+  const setHeaderHeight = (fresh: number) => {
+    headerHeight.value = fresh;
+  };
+
   // ui counter
 
   const uiTodoCount: Ref<number> = ref(0);
@@ -143,6 +149,8 @@ export const useSharedStore = defineStore('shared', () => {
 
     isMainUnderHeader,
     setMainUnderHeader,
+    headerHeight,
+    setHeaderHeight,
 
     hasFloatingSidebar,
     setSidebarAsFloating,
