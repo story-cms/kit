@@ -2,7 +2,7 @@
   <button
     type="button"
     class="grid transition-all duration-200 ease-in-out bg-white rounded-full cursor-pointer size-10 place-content-center hover:bg-gray-100"
-    @click.prevent="emit('info')"
+    @click.prevent="emit('meta-box')"
   >
     <Icon name="info" class="text-gray-500 cursor-pointer size-6" />
   </button>
@@ -32,5 +32,5 @@ import { useSharedStore } from '../store';
 
 const shared = useSharedStore();
 
-const emit = defineEmits(['info', 'app-preview', 'delete']);
+const emit = defineEmits(['meta-box', 'app-preview', 'delete']);
 </script>

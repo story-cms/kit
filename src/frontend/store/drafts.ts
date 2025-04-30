@@ -19,6 +19,11 @@ export const useDraftsStore = defineStore('drafts', () => {
     isSingleColumn.value = value;
   };
 
+  const hasFloatingDraftSidebar = ref(false);
+  const setDraftSidebarAsFloating = (value: boolean) => {
+    hasFloatingDraftSidebar.value = value;
+  };
+
   const setStatus = (status: string) => {
     draft.value.status = status;
   };
@@ -27,9 +32,15 @@ export const useDraftsStore = defineStore('drafts', () => {
     story,
     lastPublished,
     draft,
+
     setFromProps,
+
     isSingleColumn,
     setSingleColumn,
+
     setStatus,
+
+    hasFloatingDraftSidebar,
+    setDraftSidebarAsFloating,
   };
 });

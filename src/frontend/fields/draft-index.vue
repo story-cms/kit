@@ -3,28 +3,52 @@
     <template #header>
       <ContentHeader :title="chapterTitle">
         <template #draft-actions>
-          <DraftActions @delete="deleteDraft" @info="info" @app-preview="appPreview" />
+          <DraftActions
+            @delete="deleteDraft"
+            @meta-box="toggleMetaBox"
+            @app-preview="toggleAppPreview"
+          />
         </template>
         <template #workflow-actions>
           <WorkflowActions @publish="publish" @request-change="reject" @submit="submit" />
         </template>
       </ContentHeader>
     </template>
-    <div class="relative grid grid-cols-[1fr_300px] gap-x-4">
+    <div>
+      <p>showMetaBox: {{ showMetaBox }}</p>
+      <p>showAppPreview: {{ showAppPreview }}</p>
+      <p>drafts.isSingleColumn: {{ drafts.isSingleColumn }}</p>
+      <p>Is large screen: {{ shared.isLargeScreen }}</p>
+      <p>Has floating draft sidebar: {{ drafts.hasFloatingDraftSidebar }}</p>
+    </div>
+    <div
+      :class="[
+        'relative grid',
+        {
+          'grid-cols-[1fr_300px] gap-x-4': !drafts.isSingleColumn,
+          'grid-cols-1': drafts.isSingleColumn,
+        },
+      ]"
+    >
       <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8">
         <div v-for="(item, index) in drafts.story.fields" :key="index">
           <component :is="widgetFor(index)" :field="item" :is-nested="false" />
         </div>
       </form>
-      <section class="sticky top-24 z-0 [align-self:start]">
-        <MetaBox
-          :created-at="props.draft.createdAt"
-          :updated-at="props.draft.updatedAt"
-          :story-type="props.meta.storyType"
-          :chapter-type="metaChapter"
-          :published-when="publishedWhen"
-        />
-      </section>
+      <DraftSidebar :show-meta-box="showMetaBox" :show-app-preview="showAppPreview">
+        <template #meta-box>
+          <MetaBox
+            :created-at="props.draft.createdAt"
+            :updated-at="props.draft.updatedAt"
+            :story-type="props.meta.storyType"
+            :chapter-type="metaChapter"
+            :published-when="publishedWhen"
+          />
+        </template>
+        <template #app-preview>
+          <div class="h-20 w-[290px] bg-red-500"></div>
+        </template>
+      </DraftSidebar>
     </div>
   </AppLayout>
 </template>
@@ -32,7 +56,7 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, watch } from 'vue';
 import AppLayout from '../shared/app-layout.vue';
-import MetaBox from '../shared/meta-box.vue';
+
 import { router } from '@inertiajs/vue3';
 import type { Errors } from '@inertiajs/core';
 import { padZero, debounce, formatDate, safeChapterTitle } from '../shared/helpers';
@@ -42,6 +66,8 @@ import { useDraftsStore, useModelStore, useSharedStore, useWidgetsStore } from '
 import ContentHeader from '../shared/content-header.vue';
 import DraftActions from './draft-actions.vue';
 import WorkflowActions from './workflow-actions.vue';
+import DraftSidebar from './draft-sidebar.vue';
+import MetaBox from '../shared/meta-box.vue';
 
 const props = defineProps<DraftEditProps & SharedPageProps>();
 
@@ -143,22 +169,11 @@ const reject = () => {
 const showMetaBox = ref(true);
 const showAppPreview = ref(true);
 
-const isLargeScreen = computed(() => {
-  return shared.isLargeScreen;
-});
-
-watch([showMetaBox, showAppPreview, isLargeScreen], ([a, b, c]) => {
-  if (c) {
-    showMetaBox.value = a;
-    showAppPreview.value = b;
-  }
-});
-
-const info = () => {
+const toggleMetaBox = () => {
   showMetaBox.value = !showMetaBox.value;
 };
 
-const appPreview = () => {
+const toggleAppPreview = () => {
   showAppPreview.value = !showAppPreview.value;
 };
 
@@ -170,6 +185,20 @@ const metaChapter = computed(
   () => `${padZero(props.draft.number)} of ${padZero(props.spec.chapterLimit)}`,
 );
 
+const handleResponsiveLayout = () => {
+  if (shared.isLargeScreen) {
+    drafts.setSingleColumn(false);
+  }
+  if (!shared.isLargeScreen) {
+    drafts.setSingleColumn(true);
+  }
+};
+
+watch(
+  () => shared.isLargeScreen,
+  () => handleResponsiveLayout(),
+);
+
 onMounted(() => {
   model.$subscribe(() => {
     if (isSettingErrors) {
@@ -179,8 +208,9 @@ onMounted(() => {
     widgets.setIsDirty(true);
     save();
     title.value = model.getField('title', defaultTitle.value);
-    console.info('title', title.value);
   });
+
+  handleResponsiveLayout();
 });
 
 const widgetFor = (key: number) => {
