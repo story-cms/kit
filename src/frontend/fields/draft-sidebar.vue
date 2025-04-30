@@ -6,7 +6,7 @@
       'sticky [align-self:start]': !drafts.hasFloatingDraftSidebar,
     }"
     :style="{
-      top: `${headerHeight + 24}px`,
+      top: `${headerHeight + 4}px`,
     }"
   >
     <section v-if="showMetaBox">
