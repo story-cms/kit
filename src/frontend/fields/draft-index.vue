@@ -14,20 +14,13 @@
         </template>
       </ContentHeader>
     </template>
-    <div>
-      <p>showMetaBox: {{ showMetaBox }}</p>
-      <p>showAppPreview: {{ showAppPreview }}</p>
-      <p>drafts.isSingleColumn: {{ drafts.isSingleColumn }}</p>
-      <p>Is large screen: {{ shared.isLargeScreen }}</p>
-      <p>Has floating draft sidebar: {{ drafts.hasFloatingDraftSidebar }}</p>
-      <p>Header height: {{ shared.headerHeight }}</p>
-    </div>
+
     <div
       :class="[
         'relative grid',
         {
-          'grid-cols-[1fr_300px] gap-x-4': !drafts.isSingleColumn,
-          'grid-cols-1': drafts.isSingleColumn,
+          'grid-cols-[1fr_375px] gap-x-4': !drafts.isSingleColumn,
+          'mx-auto max-w-4xl grid-cols-1': drafts.isSingleColumn,
         },
       ]"
     >
@@ -47,7 +40,14 @@
           />
         </template>
         <template #app-preview>
-          <div class="h-20 w-[290px] bg-red-500"></div>
+          <div v-if="shared.meta.hasAppPreview">
+            <MobileAppPreview
+              v-if="bundle"
+              :bundle="bundle"
+              :number="props.draft.number"
+              class="mt-2"
+            />
+          </div>
         </template>
       </DraftSidebar>
     </div>
@@ -69,6 +69,7 @@ import DraftActions from './draft-actions.vue';
 import WorkflowActions from './workflow-actions.vue';
 import DraftSidebar from './draft-sidebar.vue';
 import MetaBox from '../shared/meta-box.vue';
+import MobileAppPreview from './mobile-app-preview.vue';
 
 const props = defineProps<DraftEditProps & SharedPageProps>();
 

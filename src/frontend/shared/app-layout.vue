@@ -1,6 +1,7 @@
 <template>
-  <div class="bg-gray-50">
+  <div ref="layout" class="bg-gray-50">
     <div
+      ref="container"
       :class="[
         'container relative mx-auto grid min-h-screen px-3 transition-all duration-75',
 
@@ -21,7 +22,9 @@
             ref="header"
             :class="[
               'sticky top-0 z-10 bg-gray-50 transition-all duration-75',
-              shared.isMainUnderHeader ? 'border-x border-b border-gray-200' : '',
+              shared.isMainUnderHeader
+                ? 'border-x border-b border-gray-200'
+                : 'border-gray-50',
             ]"
           >
             <slot name="header" />
@@ -45,18 +48,35 @@ const shared = useSharedStore();
 
 const header = ref<HTMLElement | null>(null);
 const main = ref<HTMLElement | null>(null);
-
+const layout = ref<HTMLElement | null>(null);
+const container = ref<HTMLElement | null>(null);
 const onScroll = () => {
   if (header.value && main.value) {
     const headerRect = header.value.getBoundingClientRect();
     const mainRect = main.value.getBoundingClientRect();
     shared.setMainUnderHeader(mainRect.top <= headerRect.bottom);
-  }
-  if (header.value) {
-    const headerRect = header.value.getBoundingClientRect();
     shared.setHeaderHeight(headerRect.height);
   }
+  setDimensions();
 };
+
+const setDimensions = () => {
+  if (header.value) {
+    const headerRect = header.value.getBoundingClientRect();
+    shared.setHeaderWidth(headerRect.width);
+  }
+
+  if (layout.value) {
+    const layoutRect = layout.value.getBoundingClientRect();
+    shared.setLayoutWidth(layoutRect.width);
+  }
+
+  if (container.value) {
+    const containerRect = container.value.getBoundingClientRect();
+    shared.setContainerWidth(containerRect.width);
+  }
+};
+
 const resizeHook = () => {
   const fresh = document.documentElement.clientWidth;
   shared.setLargeScreen(fresh >= 1280);
@@ -69,12 +89,15 @@ const resizeHook = () => {
   if (shared.isLargeScreen && shared.hasOpenSidebar) {
     shared.setSidebarAsFloating(false);
   }
+
+  setDimensions();
 };
 
 onMounted(() => {
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', resizeHook);
   resizeHook();
+  setDimensions();
 });
 
 onBeforeUnmount(() => {
