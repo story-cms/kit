@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, onUnmounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount, onUnmounted, onBeforeMount } from 'vue';
 import { useSharedStore, useDraftsStore } from '../store';
 
 import Sidebar from './sidebar.vue';
@@ -86,6 +86,7 @@ const resizeHook = () => {
   const fresh = document.documentElement.clientWidth;
   shared.setLargeScreen(fresh >= 1280);
   shared.setSidebarOpen(fresh >= 1280);
+  drafts.setSingleColumn(fresh < 1280);
 
   if (!shared.isLargeScreen && shared.hasOpenSidebar) {
     shared.setSidebarAsFloating(true);
@@ -107,6 +108,10 @@ const resizeHook = () => {
 
   setDimensions();
 };
+
+onBeforeMount(() => {
+  resizeHook();
+});
 
 onMounted(() => {
   window.addEventListener('scroll', onScroll, { passive: true });
