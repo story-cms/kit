@@ -26,28 +26,27 @@
     >
       <!-- eslint-disable vue/no-v-html -->
       <div class="p-8 bg-white shadow-sm" v-html="bundleView"></div>
-
-      <div
-        :class="{
-          'right-4': !isLargeScreen,
-          'absolute block': shared.isIntersecting,
-          'fixed right-4 top-24': !shared.isIntersecting && !isLargeScreen,
-          'sticky top-24 [align-self:start]': isLargeScreen,
-        }"
-      >
-        <section v-if="showMetaBox">
+      <ContentSidebar>
+        <template #meta-box>
           <MetaBox
             :created-at="props.chapter.createdAt"
             :updated-at="props.chapter.updatedAt"
             :story-type="props.meta.storyType"
             :chapter-type="metaChapter"
             :published-when="publishedWhen"
-            :is-floating="!isLargeScreen"
-            :story-name="storyName"
-            @close="showMetaBox = false"
           />
-        </section>
-      </div>
+        </template>
+        <template #app-preview>
+          <div v-if="shared.meta.hasAppPreview">
+            <MobileAppPreview
+              v-if="bundle"
+              :bundle="bundle"
+              :number="props.chapter.number"
+              class="mt-2"
+            />
+          </div>
+        </template>
+      </ContentSidebar>
     </div>
   </AppLayout>
 </template>
@@ -58,6 +57,7 @@ import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
 import DraftActions from '../fields/draft-actions.vue';
 import MetaBox from '../shared/meta-box.vue';
+import ContentSidebar from '../shared/content-sidebar.vue';
 import MobileAppPreview from '../fields/mobile-app-preview.vue';
 import { formatDate, padZero, safeChapterTitle } from '../shared/helpers';
 import type { PreviewProps, SharedPageProps } from '../../types';
@@ -111,10 +111,5 @@ const edit = () => {
 
 onMounted(() => {
   shared.setCurrentStoryName(props.storyName);
-  if (shared.meta.hasAppPreview) {
-    showAppPreview.value = true;
-  } else {
-    showAppPreview.value = false;
-  }
 });
 </script>
