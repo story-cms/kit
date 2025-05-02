@@ -71,6 +71,11 @@ export const useSharedStore = defineStore('shared', () => {
     hasOpenSidebar.value = isOpen;
   };
 
+  const currentStoryName = ref('');
+  const setCurrentStoryName = (name: string) => {
+    currentStoryName.value = name;
+  };
+
   // main and header
 
   const isMainUnderHeader = ref(false);
@@ -177,6 +182,9 @@ export const useSharedStore = defineStore('shared', () => {
 
     hasOpenSidebar,
     setSidebarOpen,
+
+    currentStoryName,
+    setCurrentStoryName,
 
     uiTodoCount,
     setUiTodoCount,

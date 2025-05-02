@@ -108,6 +108,7 @@ const edit = () => {
 };
 
 onMounted(() => {
+  shared.setCurrentStoryName(props.storyName);
   if (shared.meta.hasAppPreview) {
     showAppPreview.value = true;
   } else {

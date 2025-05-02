@@ -1,7 +1,7 @@
 <template>
   <AppLayout>
     <template #header>
-      <ContentHeader :title="`${meta.storyType}: ${props.storyName}`">
+      <ContentHeader :title="`${meta.storyType}: ${shared.currentStoryName}`">
         <template #standard-actions>
           <icon :name="iconName" class="w-8 h-8 text-black" @click.prevent="toggle" />
         </template>
@@ -65,7 +65,7 @@
 <script setup lang="ts">
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 
 import Icon from '../shared/icon.vue';
 import AddItemButton from '../shared/add-item-button.vue';
@@ -77,7 +77,9 @@ import { useSharedStore } from '../store';
 
 const props = defineProps<DashboardProps & SharedPageProps>();
 
-useSharedStore().setFromProps(props);
+const shared = useSharedStore();
+
+shared.setFromProps(props);
 
 const isList = ref(false);
 const toggle = () => {
@@ -132,4 +134,8 @@ const onTap = (item: IndexReadyItem) => {
     window.location.href = `/chapter/${item.number}`;
   }
 };
+
+onMounted(() => {
+  shared.setCurrentStoryName(props.storyName);
+});
 </script>
