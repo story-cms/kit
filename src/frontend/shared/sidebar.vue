@@ -25,7 +25,7 @@
           <div v-if="isMultiLingual">
             <button
               v-if="shared.hasOpenSidebar"
-              class="relative flex items-center justify-center transition-all duration-75 rounded-full size-14 hover:bg-gray-100"
+              class="relative flex items-center justify-center transition-all duration-75 rounded-full size-14"
             >
               <span
                 class="absolute right-2 top-4 rounded-[7px] bg-blue-100 px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-blue-800"
