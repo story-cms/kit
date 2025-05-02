@@ -10,9 +10,6 @@
         </template>
       </ContentHeader>
     </template>
-    <div class="fixed top-0 left-0 z-20">
-      <p>Draft sidebar is floating: {{ drafts.hasFloatingDraftSidebar }}</p>
-    </div>
     <div
       :class="[
         'relative grid',

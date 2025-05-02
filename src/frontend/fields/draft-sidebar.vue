@@ -21,12 +21,14 @@
 
 <script setup lang="ts">
 import { watch, onMounted, computed } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useDraftsStore, useSharedStore } from '../store';
 
 const drafts = useDraftsStore();
 const shared = useSharedStore();
+const { showMetaBox, showAppPreview, isSingleColumn } = storeToRefs(drafts);
+const { isLargeScreen } = storeToRefs(shared);
 
-const isLargeScreen = computed(() => shared.isLargeScreen);
 const headerHeight = computed(() => shared.headerHeight);
 
 const rightPosition = computed(() => {
@@ -34,7 +36,7 @@ const rightPosition = computed(() => {
   return `${difference / 2 + 12}px`;
 });
 
-watch([drafts.showMetaBox, drafts.showAppPreview, isLargeScreen], ([a, b, c]) => {
+watch([showMetaBox, showAppPreview, isLargeScreen], ([a, b, c]) => {
   if (!a && !b) {
     drafts.setDraftSidebarAsFloating(false);
     drafts.setSingleColumn(true);
@@ -46,14 +48,14 @@ watch([drafts.showMetaBox, drafts.showAppPreview, isLargeScreen], ([a, b, c]) =>
 });
 
 watch(
-  () => drafts.isSingleColumn,
+  () => isSingleColumn.value,
   (value) => {
     drafts.setDraftSidebarAsFloating(value);
   },
 );
 
 onMounted(() => {
-  if (drafts.isSingleColumn) {
+  if (isSingleColumn.value) {
     drafts.setDraftSidebarAsFloating(true);
   }
 });
