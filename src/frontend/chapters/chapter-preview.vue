@@ -16,12 +16,13 @@
     </template>
 
     <div
-      class="relative"
-      :class="{
-        'grid grid-cols-[1fr_300px] gap-x-8': isLargeScreen,
-        'mx-auto grid max-w-[1080px] grid-cols-[1fr]':
-          !isLargeScreen || (!showMetaBox && !showAppPreview),
-      }"
+      :class="[
+        'relative grid',
+        {
+          'grid-cols-[1fr_375px] gap-x-4': !drafts.isSingleColumn,
+          'mx-auto max-w-4xl grid-cols-1': drafts.isSingleColumn,
+        },
+      ]"
     >
       <!-- eslint-disable vue/no-v-html -->
       <div class="p-8 bg-white shadow-sm" v-html="bundleView"></div>
@@ -60,11 +61,12 @@ import MetaBox from '../shared/meta-box.vue';
 import MobileAppPreview from '../fields/mobile-app-preview.vue';
 import { formatDate, padZero, safeChapterTitle } from '../shared/helpers';
 import type { PreviewProps, SharedPageProps } from '../../types';
-import { useSharedStore } from '../store';
+import { useSharedStore, useDraftsStore } from '../store';
 
 const props = defineProps<PreviewProps & SharedPageProps>();
 
 const shared = useSharedStore();
+const drafts = useDraftsStore();
 shared.setFromProps(props);
 
 const chapterTitle =

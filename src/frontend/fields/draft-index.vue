@@ -24,7 +24,7 @@
           <component :is="widgetFor(index)" :field="item" :is-nested="false" />
         </div>
       </form>
-      <DraftSidebar>
+      <ContentSidebar>
         <template #meta-box>
           <MetaBox
             :created-at="props.draft.createdAt"
@@ -44,7 +44,7 @@
             />
           </div>
         </template>
-      </DraftSidebar>
+      </ContentSidebar>
     </div>
   </AppLayout>
 </template>
@@ -62,7 +62,7 @@ import { useDraftsStore, useModelStore, useSharedStore, useWidgetsStore } from '
 import ContentHeader from '../shared/content-header.vue';
 import DraftActions from './draft-actions.vue';
 import WorkflowActions from './workflow-actions.vue';
-import DraftSidebar from './draft-sidebar.vue';
+import ContentSidebar from '../shared/content-sidebar.vue';
 import MetaBox from '../shared/meta-box.vue';
 import MobileAppPreview from './mobile-app-preview.vue';
 
