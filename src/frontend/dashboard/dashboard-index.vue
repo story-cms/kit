@@ -6,13 +6,12 @@
           <icon :name="iconName" class="w-8 h-8 text-black" @click.prevent="toggle" />
         </template>
         <template #extra-actions>
-          <div class="flex items-center justify-between mb-4">
-            <div class="flex space-x-6">
-              <input
-                v-model="filterNumber"
-                class="block w-24 px-3 py-1 text-sm font-normal leading-5 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                :placeholder="meta.chapterType"
-              />
+          <div
+            class="flex flex-col justify-between mb-4 gap-y-4 md:flex-row md:items-center md:gap-x-4"
+          >
+            <div class="flex gap-x-4">
+              <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
+
               <AddItemButton
                 v-if="addStatus == AddStatus.Add"
                 :label="meta.chapterType"
@@ -27,7 +26,30 @@
                 {{ `No more ${meta.chapterType}s available to translate` }}
               </button>
             </div>
-            <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
+
+            <div class="grid grid-cols-1">
+              <input
+                id="search"
+                type="text"
+                name="search"
+                class="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pl-10 pr-3 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:pl-9 sm:text-sm/6"
+                :placeholder="meta.chapterType"
+                v-model="filterNumber"
+              />
+              <svg
+                class="self-center col-start-1 row-start-1 ml-4 text-gray-400 pointer-events-none size-4"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M6 2C3.79086 2 2 3.79086 2 6C2 8.20914 3.79086 10 6 10C8.20914 10 10 8.20914 10 6C10 3.79086 8.20914 2 6 2ZM0 6C0 2.68629 2.68629 0 6 0C9.31371 0 12 2.68629 12 6C12 7.29583 11.5892 8.49572 10.8907 9.47653L15.7071 14.2929C16.0976 14.6834 16.0976 15.3166 15.7071 15.7071C15.3166 16.0976 14.6834 16.0976 14.2929 15.7071L9.47653 10.8907C8.49572 11.5892 7.29583 12 6 12C2.68629 12 0 9.31371 0 6Z"
+                  fill="#374151"
+                />
+              </svg>
+            </div>
           </div>
         </template>
       </ContentHeader>
