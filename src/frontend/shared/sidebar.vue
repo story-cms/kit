@@ -16,7 +16,15 @@
             shared.hasOpenSidebar ? 'justify-between p-5' : 'flex-col gap-y-3 p-2',
           ]"
         >
-          <Link :class="['nav-icon', true ? 'active' : '']" href="/">
+          <Link
+            :class="[
+              'nav-icon',
+              {
+                active: $page?.url === '/',
+              },
+            ]"
+            href="/"
+          >
             <Icon name="home" />
           </Link>
           <button @click="goBack" class="nav-icon">
@@ -51,13 +59,27 @@
           <section class="grid grid-cols-1">
             <div v-for="story in shared.stories" :key="story">
               <button
-                :class="['nav-link', story === 'John' ? 'active' : '']"
+                :class="[
+                  'nav-link',
+                  {
+                    active: $page?.url?.startsWith('/draft'),
+                  },
+                ]"
                 @click="onStory(story)"
               >
                 {{ story }}
               </button>
             </div>
-            <Link class="nav-link" href="/page">Pages</Link>
+            <Link
+              :class="[
+                'nav-link',
+                {
+                  active: $page?.url === '/page',
+                },
+              ]"
+              href="/page"
+              >Pages</Link
+            >
             <div v-if="isMultiLingual">
               <button
                 v-if="currentLocale === 'en'"
@@ -66,7 +88,15 @@
               >
                 Interface
               </button>
-              <Link v-else class="flex items-center justify-between nav-link" href="/ui"
+              <Link
+                v-else
+                :class="[
+                  'nav-link flex items-center justify-between',
+                  {
+                    active: $page?.url === '/ui',
+                  },
+                ]"
+                href="/ui"
                 ><span>Interface</span>
                 <span class="text-yellow-500">{{ shared.uiTodoCount }}</span>
               </Link>
@@ -74,11 +104,20 @@
           </section>
           <div class="border-t border-gray-200 my-7"></div>
           <section class="grid grid-cols-1">
-            <Link class="flex items-center nav-link gap-x-3" href="/profile">
+            <!-- <Link class="flex items-center nav-link gap-x-3" href="/profile">
               <Icon name="user" />
               <span>Profile</span>
-            </Link>
-            <Link v-if="isAdmin" class="flex items-center nav-link gap-x-3" href="/user">
+            </Link> -->
+            <Link
+              v-if="isAdmin"
+              :class="[
+                'nav-link flex items-center gap-x-3',
+                {
+                  active: $page?.url === '/user',
+                },
+              ]"
+              href="/user"
+            >
               <Icon name="users" />
               <span>Users</span>
             </Link>
