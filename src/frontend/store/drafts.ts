@@ -19,6 +19,16 @@ export const useDraftsStore = defineStore('drafts', () => {
     isSingleColumn.value = value;
   };
 
+  const showMetaBox = ref(true);
+  const toggleMetaBox = () => {
+    showMetaBox.value = !showMetaBox.value;
+  };
+
+  const showAppPreview = ref(true);
+  const toggleAppPreview = () => {
+    showAppPreview.value = !showAppPreview.value;
+  };
+
   const hasFloatingDraftSidebar = ref(false);
   const setDraftSidebarAsFloating = (value: boolean) => {
     hasFloatingDraftSidebar.value = value;
@@ -42,5 +52,11 @@ export const useDraftsStore = defineStore('drafts', () => {
 
     hasFloatingDraftSidebar,
     setDraftSidebarAsFloating,
+
+    showMetaBox,
+    toggleMetaBox,
+
+    showAppPreview,
+    toggleAppPreview,
   };
 });

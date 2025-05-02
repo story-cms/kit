@@ -3,18 +3,16 @@
     <template #header>
       <ContentHeader :title="chapterTitle">
         <template #draft-actions>
-          <DraftActions
-            @delete="deleteDraft"
-            @meta-box="toggleMetaBox"
-            @app-preview="toggleAppPreview"
-          />
+          <DraftActions @delete="deleteDraft" />
         </template>
         <template #workflow-actions>
           <WorkflowActions @publish="publish" @request-change="reject" @submit="submit" />
         </template>
       </ContentHeader>
     </template>
-
+    <div class="fixed top-0 left-0 z-20">
+      <p>Draft sidebar is floating: {{ drafts.hasFloatingDraftSidebar }}</p>
+    </div>
     <div
       :class="[
         'relative grid',
@@ -29,7 +27,7 @@
           <component :is="widgetFor(index)" :field="item" :is-nested="false" />
         </div>
       </form>
-      <DraftSidebar :show-meta-box="showMetaBox" :show-app-preview="showAppPreview">
+      <DraftSidebar>
         <template #meta-box>
           <MetaBox
             :created-at="props.draft.createdAt"
@@ -166,17 +164,6 @@ const reject = () => {
     onSuccess: () => onSuccess('Draft sent back for fixing'),
     onError: (e) => onError(e, 'Error sending draft back'),
   });
-};
-
-const showMetaBox = ref(true);
-const showAppPreview = ref(true);
-
-const toggleMetaBox = () => {
-  showMetaBox.value = !showMetaBox.value;
-};
-
-const toggleAppPreview = () => {
-  showAppPreview.value = !showAppPreview.value;
 };
 
 const publishedWhen = computed(() => {

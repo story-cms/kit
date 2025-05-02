@@ -40,11 +40,12 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, onUnmounted } from 'vue';
-import { useSharedStore } from '../store';
+import { useSharedStore, useDraftsStore } from '../store';
 
 import Sidebar from './sidebar.vue';
 
 const shared = useSharedStore();
+const drafts = useDraftsStore();
 
 const header = ref<HTMLElement | null>(null);
 const main = ref<HTMLElement | null>(null);
@@ -75,6 +76,10 @@ const setDimensions = () => {
     const containerRect = container.value.getBoundingClientRect();
     shared.setContainerWidth(containerRect.width);
   }
+  if (header.value) {
+    const headerRect = header.value.getBoundingClientRect();
+    shared.setHeaderHeight(headerRect.height);
+  }
 };
 
 const resizeHook = () => {
@@ -88,6 +93,16 @@ const resizeHook = () => {
 
   if (shared.isLargeScreen && shared.hasOpenSidebar) {
     shared.setSidebarAsFloating(false);
+  }
+  if (!shared.isLargeScreen) {
+    drafts.showAppPreview = false;
+    drafts.showMetaBox = false;
+  }
+  if (shared.isLargeScreen) {
+    drafts.showAppPreview = true;
+    drafts.showMetaBox = true;
+    drafts.setDraftSidebarAsFloating(false);
+    drafts.setSingleColumn(false);
   }
 
   setDimensions();

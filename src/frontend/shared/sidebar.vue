@@ -25,7 +25,7 @@
           <div v-if="isMultiLingual">
             <button
               v-if="shared.hasOpenSidebar"
-              class="relative flex size-14 items-center justify-center rounded-full transition-all duration-75 hover:bg-gray-100"
+              class="relative flex items-center justify-center transition-all duration-75 rounded-full size-14 hover:bg-gray-100"
             >
               <span
                 class="absolute right-2 top-4 rounded-[7px] bg-blue-100 px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-blue-800"
@@ -61,30 +61,30 @@
             <div v-if="isMultiLingual">
               <button
                 v-if="currentLocale === 'en'"
-                class="nav-link opacity-50 disabled:cursor-not-allowed"
+                class="opacity-50 nav-link disabled:cursor-not-allowed"
                 disabled
               >
                 Interface
               </button>
-              <Link v-else class="nav-link flex items-center justify-between" href="/ui"
+              <Link v-else class="flex items-center justify-between nav-link" href="/ui"
                 ><span>Interface</span>
                 <span class="text-yellow-500">{{ shared.uiTodoCount }}</span>
               </Link>
             </div>
           </section>
-          <div class="my-7 border-t border-gray-200"></div>
+          <div class="border-t border-gray-200 my-7"></div>
           <section class="grid grid-cols-1">
-            <Link class="nav-link flex items-center gap-x-3" href="/profile">
+            <Link class="flex items-center nav-link gap-x-3" href="/profile">
               <Icon name="user" />
               <span>Profile</span>
             </Link>
-            <Link v-if="isAdmin" class="nav-link flex items-center gap-x-3" href="/user">
+            <Link v-if="isAdmin" class="flex items-center nav-link gap-x-3" href="/user">
               <Icon name="users" />
               <span>Users</span>
             </Link>
             <Link
               v-if="shared.meta.helpUrl"
-              class="nav-link flex items-center gap-x-3"
+              class="flex items-center nav-link gap-x-3"
               :href="shared.meta.helpUrl"
               target="_blank"
               rel="noopener noreferrer"
@@ -92,7 +92,7 @@
               <Icon name="help" />
               <span>Help</span>
             </Link>
-            <button class="nav-link flex items-center gap-x-3" @click="signOut">
+            <button class="flex items-center nav-link gap-x-3" @click="signOut">
               <Icon name="logout" />
               <span>Logout</span>
             </button>
@@ -188,8 +188,5 @@ watch(
 }
 .nav-link {
   @apply w-full rounded-full px-6 py-[18px] text-left text-sm font-semibold leading-5 transition-all duration-200 ease-in-out hover:bg-gray-100;
-}
-.active {
-  @apply bg-blue-50 transition-all duration-200 ease-in-out;
 }
 </style>

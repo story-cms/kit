@@ -2,7 +2,7 @@
   <Menu as="div" class="relative inline-block text-left">
     <div>
       <MenuButton
-        class="relative flex size-14 items-center justify-center rounded-full transition-all duration-75 hover:bg-gray-100"
+        class="relative flex items-center justify-center transition-all duration-75 rounded-full size-14 hover:bg-gray-100"
       >
         <span
           class="absolute right-2 top-4 rounded-[7px] bg-blue-100 px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-blue-800"
@@ -22,7 +22,7 @@
       leave-to-class="transform scale-95 opacity-0"
     >
       <MenuItems
-        class="absolute left-0 z-10 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
+        class="absolute left-0 z-10 w-56 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black/5 focus:outline-none"
       >
         <div v-for="language in languages" :key="language.language" class="py-1">
           <MenuItem v-slot="{ active }">
@@ -46,9 +46,6 @@
 <script setup lang="ts">
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import Icon from '../shared/icon.vue';
-import { useSharedStore } from '../store';
-
-const shared = useSharedStore();
 
 defineProps<{
   currentLocale: string;

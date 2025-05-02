@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="showMetaBox || showAppPreview"
+    v-if="drafts.showMetaBox || drafts.showAppPreview"
     :class="[
       'w-[375px]',
       drafts.hasFloatingDraftSidebar ? 'fixed' : 'sticky [align-self:start]',
@@ -10,27 +10,21 @@
       right: drafts.hasFloatingDraftSidebar ? rightPosition : '',
     }"
   >
-    <section v-if="showMetaBox">
+    <section v-if="drafts.showMetaBox">
       <slot name="meta-box" />
     </section>
-    <section v-if="showAppPreview">
+    <section v-if="drafts.showAppPreview">
       <slot name="app-preview" />
     </section>
   </div>
 </template>
 
 <script setup lang="ts">
-import { watch, onMounted, computed, toRefs } from 'vue';
+import { watch, onMounted, computed } from 'vue';
 import { useDraftsStore, useSharedStore } from '../store';
 
 const drafts = useDraftsStore();
 const shared = useSharedStore();
-const props = defineProps<{
-  showMetaBox: boolean;
-  showAppPreview?: boolean;
-}>();
-
-const { showMetaBox, showAppPreview } = toRefs(props);
 
 const isLargeScreen = computed(() => shared.isLargeScreen);
 const headerHeight = computed(() => shared.headerHeight);
@@ -40,7 +34,7 @@ const rightPosition = computed(() => {
   return `${difference / 2 + 12}px`;
 });
 
-watch([showMetaBox, showAppPreview, isLargeScreen], ([a, b, c]) => {
+watch([drafts.showMetaBox, drafts.showAppPreview, isLargeScreen], ([a, b, c]) => {
   if (!a && !b) {
     drafts.setDraftSidebarAsFloating(false);
     drafts.setSingleColumn(true);
