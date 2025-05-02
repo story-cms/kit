@@ -2,7 +2,7 @@
   <button
     type="button"
     :class="['action-button', drafts.showMetaBox ? 'active' : 'bg-white']"
-    @click.prevent="drafts.toggleMetaBox()"
+    @click.prevent="drafts.setShowMetaBox(!drafts.showMetaBox)"
   >
     <Icon name="info" class="action-icon" />
   </button>
@@ -10,7 +10,7 @@
     v-if="shared.meta.hasAppPreview"
     type="button"
     :class="['action-button', drafts.showAppPreview ? 'active' : 'bg-white']"
-    @click.prevent="drafts.toggleAppPreview()"
+    @click.prevent="drafts.setShowAppPreview(!drafts.showAppPreview)"
   >
     <Icon name="mobile" class="action-icon" />
   </button>

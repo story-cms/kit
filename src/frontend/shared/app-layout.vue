@@ -95,12 +95,12 @@ const resizeHook = () => {
     shared.setSidebarAsFloating(false);
   }
   if (!shared.isLargeScreen) {
-    drafts.showAppPreview = false;
-    drafts.showMetaBox = false;
+    drafts.setShowAppPreview(false);
+    drafts.setShowMetaBox(false);
   }
   if (shared.isLargeScreen) {
-    drafts.showAppPreview = true;
-    drafts.showMetaBox = true;
+    drafts.setShowAppPreview(true);
+    drafts.setShowMetaBox(true);
     drafts.setDraftSidebarAsFloating(false);
     drafts.setSingleColumn(false);
   }
