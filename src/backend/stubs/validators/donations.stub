@@ -1,0 +1,17 @@
+{{{
+  exports({ to: app.makePath('app/validators/donations.ts') })
+}}}
+import vine from '@vinejs/vine';
+
+export const donationValidator = vine.compile(
+  vine.object({
+    isGiftaid: vine.boolean(),
+    fullName: vine.string(),
+    amount: vine.number(),
+    currency: vine.string(),
+    isNewsletter: vine.boolean(),
+    successUrl: vine.string(),
+    cancelUrl: vine.string(),
+    isRecurring: vine.boolean(),
+  }),
+);

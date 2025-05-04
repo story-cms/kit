@@ -322,6 +322,17 @@ export type StoryConfig = {
   };
 };
 
+export type StripePayload = {
+  isGiftaid: boolean;
+  fullName: string;
+  amount: number;
+  currency: string;
+  isNewsletter: boolean;
+  successUrl: string;
+  cancelUrl: string;
+  isRecurring: boolean;
+};
+
 export enum FlagState {
   PREFILLED = 'prefilled',
   RECHECK = 'recheck',

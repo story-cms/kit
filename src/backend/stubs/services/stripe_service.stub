@@ -1,0 +1,102 @@
+{{{
+  exports({ to: app.makePath('app/services/stripe_service.ts') })
+}}}
+import Stripe from 'stripe';
+import env from '#start/env';
+import { StripePayload } from '@story-cms/kit';
+
+const metaFrom = (data: StripePayload) => {
+  return {
+    giftaid: data.isGiftaid === true ? 'yes' : 'no',
+    newsletter: data.isNewsletter === true ? 'yes' : 'no',
+    fullName: data.fullName ?? '',
+  };
+};
+
+export default class StripeService {
+  receiptMessage =
+    'Thank you for your kind donation to our ministry.\\nYour giving will help churches around the world share the gospel and grow disciples of Jesus.\\nThank you!';
+
+  public async createDonation(payload: StripePayload) {
+    const stripeKey = env.get('STRIPE_KEY');
+
+    if (!stripeKey) {
+      throw new Error('STRIPE_KEY not found in your environment variables');
+    }
+
+    const stripe = new Stripe(stripeKey, {
+      apiVersion: '2025-03-31.basil',
+    });
+
+    const checkoutSession = payload.isRecurring
+      ? await this.createRecurringDonationSession(stripe, payload)
+      : await this.createDonationSession(stripe, payload);
+
+    return { data: { url: checkoutSession.url } };
+  }
+
+  private async createDonationSession(
+    stripe: Stripe,
+    payload: StripePayload,
+  ): Promise<Stripe.Checkout.Session> {
+    return await stripe.checkout.sessions.create({
+      mode: 'payment',
+      line_items: [
+        {
+          price_data: {
+            currency: payload.currency,
+            product_data: {
+              name: 'Speak Life Donation',
+              description: 'One-time donation to Speak Life',
+            },
+            unit_amount: payload.amount * 100,
+          },
+          quantity: 1,
+        },
+      ],
+      payment_method_types: ['card'],
+      success_url: payload.successUrl,
+      cancel_url: payload.cancelUrl,
+      submit_type: 'donate',
+      billing_address_collection: 'required',
+      customer_creation: 'always',
+      payment_intent_data: {
+        metadata: metaFrom(payload),
+        description: this.receiptMessage,
+      },
+    });
+  }
+
+  private async createRecurringDonationSession(
+    stripe: Stripe,
+    payload: StripePayload,
+  ): Promise<Stripe.Checkout.Session> {
+    return await stripe.checkout.sessions.create({
+      mode: 'subscription',
+      line_items: [
+        {
+          price_data: {
+            currency: payload.currency,
+            product_data: {
+              name: "Speak Life's Monthly Donation",
+            },
+            recurring: {
+              interval: 'month',
+              interval_count: 1,
+            },
+            unit_amount: payload.amount * 100,
+          },
+          quantity: 1,
+        },
+      ],
+      payment_method_types: ['card'],
+      success_url: payload.successUrl,
+      cancel_url: payload.cancelUrl,
+      submit_type: 'donate',
+      billing_address_collection: 'required',
+      subscription_data: {
+        metadata: metaFrom(payload),
+      },
+    });
+  }
+}

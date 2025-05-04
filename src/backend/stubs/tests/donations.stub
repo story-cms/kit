@@ -1,0 +1,20 @@
+{{{ 
+  exports({ to: app.makePath('tests/donations.rest') }) 
+}}}
+
+###
+POST \{\{ authority \}\}/api/v1/donate HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Authorization: ApiKey \{\{ apiToken \}\}
+
+{
+  "amount": 10,
+  "currency": "GBP",
+  "isGiftaid": true,
+  "isNewsletter": true,
+  "fullName": "John Doe",
+  "successUrl": "https://example.com/success",
+  "cancelUrl": "https://example.com/cancel",
+  "isRecurring": true
+}

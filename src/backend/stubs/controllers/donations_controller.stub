@@ -1,0 +1,27 @@
+{{{
+  exports({ to: app.makePath('app/controllers/donations_controller.ts') })
+}}}
+import type { HttpContext } from '@adonisjs/core/http';
+import { donationValidator } from '#validators/donations';
+import StripeService from '#services/stripe_service';
+
+export default class DonationsController {
+  public async create(ctx: HttpContext) {
+    try {
+      const payload = await donationValidator.validate(ctx.request.body());
+      const stripeService = new StripeService();
+      return await stripeService.createDonation(payload);
+    } catch (error) {
+      // Check if it's a Vine validation error
+      if (error.status === 422 && error.messages) {
+        return ctx.response.unprocessableEntity({
+          errors: error.messages,
+        });
+      }
+
+      return ctx.response.serviceUnavailable({
+        error: error.message,
+      });
+    }
+  }
+}

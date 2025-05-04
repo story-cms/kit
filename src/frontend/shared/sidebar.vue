@@ -116,11 +116,11 @@
 <script setup lang="ts">
 import { Link, useForm } from '@inertiajs/vue3';
 import { computed, watch } from 'vue';
+import { useSharedStore } from '../store';
 import DropUp from './drop-up.vue';
-import MessageCentre from './message-centre.vue';
 import Icon from './icon.vue';
 import LanguageSelector from './language-selector.vue';
-import { useSharedStore } from '../store';
+import MessageCentre from './message-centre.vue';
 
 const shared = useSharedStore();
 

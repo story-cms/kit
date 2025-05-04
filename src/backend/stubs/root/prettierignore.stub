@@ -1,0 +1,23 @@
+{{{
+  exports({ to: app.makePath('.prettierignore') })
+}}}
+# Dependencies
+node_modules
+package-lock.json
+
+# Build output
+public
+build
+dist
+
+# Cache and logs
+.cache
+*.log
+
+# Environment files
+.env*
+!.env.example
+
+# System files
+.DS_Store
+Thumbs.db 
