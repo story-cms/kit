@@ -292,5 +292,6 @@ onMounted(() => {
   drafts.setShowMetaBox(false);
   drafts.setShowAppPreview(false);
   drafts.setDraftSidebarAsFloating(false);
+  shared.setSidebarOpen(false);
 });
 </script>
