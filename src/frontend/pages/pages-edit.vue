@@ -3,7 +3,7 @@
     <template #header>
       <ContentHeader dir="ltr" :title="title">
         <template #draft-actions>
-          <DraftActions @delete="deletePage" @info="info" />
+          <DraftActions @delete="deletePage" />
           <BooleanField
             :field="{
               name: 'isPublished',
@@ -20,11 +20,13 @@
     </template>
 
     <div
-      class="relative"
-      :class="{
-        'grid grid-cols-[1fr,_416px] gap-x-8': isLargeScreen,
-        'mx-auto grid max-w-[1080px] grid-cols-[1fr]': !isLargeScreen || !showMetaBox,
-      }"
+      :class="[
+        'relative grid',
+        {
+          'grid-cols-[1fr_375px] gap-x-4': !drafts.isSingleColumn,
+          'mx-auto max-w-4xl grid-cols-1': drafts.isSingleColumn,
+        },
+      ]"
     >
       <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="py-4 space-y-8 bg-white">
         <StringField
@@ -115,25 +117,16 @@
           class="px-8"
         />
       </form>
-      <div
-        :class="{
-          'right-4': !isLargeScreen,
-          'absolute block': shared.isIntersecting,
-          'fixed right-4 top-24': !shared.isIntersecting && !isLargeScreen,
-          'sticky top-24 [align-self:start]': isLargeScreen,
-        }"
-      >
-        <section v-if="showMetaBox">
+      <ContentSidebar>
+        <template #meta-box>
           <PageMetaBox
-            :is-floating="!isLargeScreen"
             :created-at="page.createdAt"
             :saved-at="savedAt"
             :updated-at="page.updatedAt"
             :published-at="publishedAt"
-            @close="showMetaBox = false"
           />
-        </section>
-      </div>
+        </template>
+      </ContentSidebar>
     </div>
   </AppLayout>
 </template>
@@ -144,7 +137,7 @@ import { DateTime } from 'luxon';
 import { router } from '@inertiajs/vue3';
 import type { SharedPageProps, PageEditProps } from '../../types';
 import { ResponseStatus } from '../../types';
-import { useModelStore, useSharedStore, useWidgetsStore } from '../store';
+import { useModelStore, useSharedStore, useWidgetsStore, useDraftsStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
 import { debounce } from '../shared/helpers';
@@ -155,6 +148,7 @@ import MarkdownField from '../fields/markdown-field.vue';
 import BooleanField from '../fields/boolean-field.vue';
 import PageMetaBox from './page-meta-box.vue';
 import DraftActions from '../fields/draft-actions.vue';
+import ContentSidebar from '../shared/content-sidebar.vue';
 const props = defineProps<PageEditProps & SharedPageProps>();
 
 type RequestPayload = {
@@ -171,6 +165,7 @@ let isRevertingPublished = false;
 const { bundle, page } = toRefs(props);
 const model = useModelStore();
 const shared = useSharedStore();
+const drafts = useDraftsStore();
 model.setModel(bundle.value);
 shared.setFromProps(props);
 shared.clearErrors();
@@ -224,12 +219,6 @@ const deletePage = () => {
   });
 };
 
-const showMetaBox = ref(true);
-
-const isLargeScreen = computed(() => {
-  return shared.isLargeScreen;
-});
-
 watch(
   () => shared.errors,
   (newErrors) => {
@@ -241,20 +230,6 @@ watch(
   },
   { deep: true },
 );
-
-watch([showMetaBox, isLargeScreen], ([a, c]) => {
-  if (c) {
-    showMetaBox.value = a;
-  }
-});
-
-const info = () => {
-  showMetaBox.value = !showMetaBox.value;
-};
-
-watch(isLargeScreen, (newValue) => {
-  showMetaBox.value = newValue;
-});
 
 onMounted(() => {
   model.$subscribe(() => {
@@ -268,5 +243,7 @@ onMounted(() => {
     title.value = model.getField('title', 'Page');
     isPublished.value = Boolean(model.getField('isPublished', false));
   });
+
+  drafts.setShowAppPreview(false);
 });
 </script>

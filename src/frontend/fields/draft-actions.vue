@@ -7,7 +7,7 @@
     <Icon name="info" class="action-icon" />
   </button>
   <button
-    v-if="shared.meta.hasAppPreview"
+    v-if="shared.meta.hasAppPreview && !$page?.url?.includes('page')"
     type="button"
     :class="['action-button', drafts.showAppPreview ? 'active' : 'bg-white']"
     @click.prevent="drafts.setShowAppPreview(!drafts.showAppPreview)"
