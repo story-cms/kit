@@ -1,13 +1,13 @@
 <template>
   <button
-    class="grid grid-cols-[1fr_auto] gap-x-4 w-full px-2 py-3 border-b border-gray-200"
+    class="grid w-full grid-cols-[1fr_auto] gap-x-4 border-b border-gray-200 px-2 py-3"
     :class="{
-      'bg-blue-500 ': isSelected,
+      'bg-blue-500': isSelected,
     }"
     @click="$emit('click', item)"
   >
     <p
-      class="text-left font-['Inter'] text-base leading-8 text-black font-medium line-clamp-1"
+      class="line-clamp-1 text-left font-['Inter'] text-base font-medium leading-8 text-black"
       :class="{
         'text-white': isSelected,
       }"
@@ -15,7 +15,7 @@
       {{ item.source }}
     </p>
     <div class="flex items-center justify-center">
-      <Icon v-if="isSelected" class="text-white h-[10px] w-auto" name="chevron-right" />
+      <Icon v-if="isSelected" class="h-[10px] w-auto text-white" name="chevron-right" />
       <Icon
         v-else-if="item.flag === 'recheck'"
         class="text-blue-500 size-4"
