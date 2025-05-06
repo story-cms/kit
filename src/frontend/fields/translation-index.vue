@@ -46,7 +46,7 @@
               :style="{
                 gridRow: `span ${
                   sourceItemsLength.find(
-                    (obj) => obj.key === `${(item as FieldSpec).name}`,
+                    (obj: SourceItem) => obj.key === `${(item as FieldSpec).name}`,
                   )?.length
                 }`,
               }"
@@ -64,7 +64,7 @@
               :style="{
                 gridRow: `span ${
                   sourceItemsLength.find(
-                    (obj) => obj.key === `${(item as FieldSpec).name}`,
+                    (obj: SourceItem) => obj.key === `${(item as FieldSpec).name}`,
                   )?.length
                 }`,
               }"
@@ -232,16 +232,19 @@ const reject = () => {
   });
 };
 
-let sourceItemsLength: Array<{ key: string; length: number }> = [];
+interface SourceItem {
+  key: string;
+  length: number;
+}
+
+let sourceItemsLength: SourceItem[] = [];
 
 interface NestedObject {
   [key: string]: string | string[] | NestedObject;
 }
 
-const getSourceItemsLength = (
-  obj: NestedObject,
-): Array<{ key: string; length: number }> => {
-  const result: Array<{ key: string; length: number }> = [];
+const getSourceItemsLength = (obj: NestedObject): SourceItem[] => {
+  const result: SourceItem[] = [];
 
   function calculateLength(value: string | string[] | NestedObject): number {
     if (Array.isArray(value)) {
