@@ -15,7 +15,10 @@
       </ContentHeader>
     </template>
     <section>
-      <div class="grid h-[calc(100vh-12rem)] grid-cols-[2fr_4fr] gap-x-6">
+      <div
+        class="grid grid-cols-[2fr_4fr] gap-x-6"
+        :style="{ height: `calc(100vh - (${headerHeight}px + 1rem))` }"
+      >
         <div class="overflow-y-auto scrollbar-hide">
           <div v-if="hasEmptyItems" class="sticky top-0 bg-gray-50">
             <button
@@ -192,7 +195,8 @@ const filteredItems = computed(() => {
 
 const shared = useSharedStore();
 shared.setFromProps(props);
-// shared.setUiTodoCount(todoCount.value);
+
+const headerHeight = computed(() => shared.headerHeight);
 
 watch(todoCount, (newCount) => {
   shared.setUiTodoCount(newCount);
