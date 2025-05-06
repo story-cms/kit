@@ -28,7 +28,7 @@
               }"
               @click="translateItems"
             >
-              <Icon class="w-auto text-gray-800" name="sparkles" />
+              <Icon class="text-gray-800 size-4" name="sparkles" />
               <span>
                 {{
                   isTranslating
