@@ -19,54 +19,87 @@
             <p class="text-left">{{ shared.language.language }}</p>
             <p class="inline-flex items-center justify-end">
               English
-              <span class="ml-2">
+              <button class="ml-2">
                 <Icon name="eyeoff" class="block text-black cursor-pointer size-6" />
-              </span>
+              </button>
             </p>
           </div>
         </template>
       </ContentHeader>
     </template>
-    <div class="grid min-h-screen grid-flow-col-dense grid-cols-2 gap-x-2">
-      <section class="row-subgrid">
-        <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="row-subgrid gap-y-8">
-          <div
-            v-for="(item, index) in spec.fields"
-            :key="index"
-            class="grid grid-rows-[subgrid]"
-            :style="{
-              gridRow: `span ${
-                sourceItemsLength.find((obj) => obj.key === `${(item as FieldSpec).name}`)
-                  ?.length
-              }`,
-            }"
-          >
-            <component :is="widgetFor(index)" :field="item" :is-nested="false" />
+    <div
+      :class="[
+        'relative grid',
+        {
+          'grid-cols-[1fr_375px] gap-x-4': !drafts.isSingleColumn,
+          'mx-auto max-w-4xl grid-cols-1': drafts.isSingleColumn,
+        },
+      ]"
+    >
+      <div class="grid min-h-screen grid-flow-col-dense grid-cols-2 gap-x-2">
+        <section class="row-subgrid">
+          <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="row-subgrid gap-y-8">
+            <div
+              v-for="(item, index) in spec.fields"
+              :key="index"
+              class="grid grid-rows-[subgrid]"
+              :style="{
+                gridRow: `span ${
+                  sourceItemsLength.find(
+                    (obj) => obj.key === `${(item as FieldSpec).name}`,
+                  )?.length
+                }`,
+              }"
+            >
+              <component :is="widgetFor(index)" :field="item" :is-nested="false" />
+            </div>
+          </form>
+        </section>
+        <section class="row-subgrid">
+          <div dir="ltr" class="row-subgrid gap-y-8">
+            <div
+              v-for="(item, index) in spec.fields"
+              :key="index"
+              class="grid grid-rows-[subgrid]"
+              :style="{
+                gridRow: `span ${
+                  sourceItemsLength.find(
+                    (obj) => obj.key === `${(item as FieldSpec).name}`,
+                  )?.length
+                }`,
+              }"
+            >
+              <component
+                :is="widgetFor(index)"
+                :field="item"
+                :is-nested="false"
+                :is-read-only="true"
+              />
+            </div>
           </div>
-        </form>
-      </section>
-      <section class="row-subgrid">
-        <div dir="ltr" class="row-subgrid gap-y-8">
-          <div
-            v-for="(item, index) in spec.fields"
-            :key="index"
-            class="grid grid-rows-[subgrid]"
-            :style="{
-              gridRow: `span ${
-                sourceItemsLength.find((obj) => obj.key === `${(item as FieldSpec).name}`)
-                  ?.length
-              }`,
-            }"
-          >
-            <component
-              :is="widgetFor(index)"
-              :field="item"
-              :is-nested="false"
-              :is-read-only="true"
+        </section>
+      </div>
+      <ContentSidebar>
+        <template #meta-box>
+          <MetaBox
+            :created-at="props.draft.createdAt"
+            :updated-at="props.draft.updatedAt"
+            :story-type="props.meta.storyType"
+            :chapter-type="metaChapter"
+            :published-when="publishedWhen"
+          />
+        </template>
+        <template #app-preview>
+          <div v-if="shared.meta.hasAppPreview">
+            <MobileAppPreview
+              v-if="bundle"
+              :bundle="bundle"
+              :number="props.draft.number"
+              class="mt-2"
             />
           </div>
-        </div>
-      </section>
+        </template>
+      </ContentSidebar>
     </div>
   </AppLayout>
 </template>
@@ -197,29 +230,6 @@ const reject = () => {
     onSuccess: () => onSuccess('Draft sent back for fixing.'),
     onError: (e) => onError(e, 'Draft could not be sent back.'),
   });
-};
-
-const showMetaBox = ref(false);
-const showAppPreview = ref(false);
-
-const isLargeScreen = computed(() => {
-  return shared.isLargeScreen;
-});
-
-const showSideBar = computed(() => {
-  return (
-    shared.isLargeScreen &&
-    (showMetaBox.value || showAppPreview.value) &&
-    drafts.isSingleColumn
-  );
-});
-
-const info = () => {
-  showMetaBox.value = !showMetaBox.value;
-};
-
-const appPreview = () => {
-  showAppPreview.value = !showAppPreview.value;
 };
 
 let sourceItemsLength: Array<{ key: string; length: number }> = [];
