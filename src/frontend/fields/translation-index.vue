@@ -32,7 +32,7 @@
     </template>
     <div
       :class="[
-        'relative grid',
+        'relative grid min-h-screen',
         {
           'grid-cols-[1fr_375px] gap-x-4': !drafts.isSingleColumn,
           'mx-auto max-w-4xl grid-cols-1':
@@ -42,9 +42,12 @@
     >
       <div
         :class="[
-          'grid min-h-screen grid-flow-col-dense',
+          'grid h-full grid-flow-col-dense',
           {
-            'grid-cols-2 gap-x-2': drafts.showSourceColumn,
+            'grid-cols-[repeat(2,_minmax(440px,_1fr))] gap-x-2 overflow-x-auto':
+              drafts.showSourceColumn && !shared.isLargeScreen,
+            'grid-cols-2 gap-x-2 overflow-x-auto':
+              drafts.showSourceColumn && shared.isLargeScreen,
             'grid-cols-1': !drafts.showSourceColumn,
           },
         ]"
