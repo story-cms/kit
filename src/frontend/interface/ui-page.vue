@@ -1,20 +1,20 @@
 <template>
   <AppLayout>
-    <div>
-      <h3 class="mt-6 font-['Inter'] text-2xl font-semibold text-gray-800">
-        Interface: {{ language.language }}
-      </h3>
-      <UiToolbar
-        v-model="searchTerm"
-        :all-count="props.items.length"
-        :active-filter="activeFilter"
-        :sort-by="sortBy"
-        @update:active-filter="activeFilter = $event"
-        @sort="handleSort"
-      />
-    </div>
-
-    <section class="mt-5">
+    <template #header>
+      <ContentHeader :title="`Interface: ${language.language}`">
+        <template #extra-actions>
+          <UiToolbar
+            v-model="searchTerm"
+            :all-count="props.items.length"
+            :active-filter="activeFilter"
+            :sort-by="sortBy"
+            @update:active-filter="activeFilter = $event"
+            @sort="handleSort"
+          />
+        </template>
+      </ContentHeader>
+    </template>
+    <section>
       <div class="grid h-[calc(100vh-12rem)] grid-cols-[2fr_4fr] gap-x-6">
         <div class="overflow-y-auto scrollbar-hide">
           <div v-if="hasEmptyItems" class="sticky top-0 bg-gray-50">
@@ -93,6 +93,7 @@ import axios from 'axios';
 import { router } from '@inertiajs/vue3';
 import { AxiosError } from 'axios';
 
+import ContentHeader from '../shared/content-header.vue';
 import UiToolbar from './components/ui-toolbar.vue';
 import UiStringItem from './components/ui-string-item.vue';
 import UiCard from './components/ui-card.vue';
