@@ -14,16 +14,16 @@
     >
       {{ item.source }}
     </p>
-    <div class="flex items-center justify-center">
+    <div class="flex items-center justify-center h-full">
       <Icon v-if="isSelected" class="h-[10px] w-auto text-white" name="chevron-right" />
       <Icon
         v-else-if="item.flag === 'recheck'"
-        class="text-blue-500 size-4"
+        class="text-blue-500 size-5"
         name="flag"
       />
       <Icon
         v-else-if="item.flag === 'prefilled'"
-        class="text-blue-500 size-4"
+        class="text-blue-500 size-5"
         name="sparkles"
       />
     </div>

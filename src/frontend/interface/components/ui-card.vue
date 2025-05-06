@@ -1,6 +1,6 @@
 <template>
   <Transition name="slide-fade">
-    <div v-if="true" class="rounded-lg border border-gray-200 font-['Inter'] shadow">
+    <div v-if="true" class="rounded-lg bg-white font-['Inter'] shadow">
       <div class="grid grid-cols-2 px-8 pt-6 pb-4 gap-x-10">
         <div>
           <label :for="item.key" class="block font-medium text-gray-700 text-sm/5">
@@ -53,7 +53,7 @@
           <div class="flex items-center justify-end gap-x-6">
             <button
               type="button"
-              class="p-2 rounded-full size-10"
+              class="p-2 rounded-full size-10 hover:bg-gray-100"
               :disabled="!model"
               @click="handleSetFlag(FlagState.RECHECK)"
             >
@@ -66,7 +66,11 @@
                 name="flag"
               />
             </button>
-            <button type="button" class="p-2 rounded-full size-10" @click="suggestAi">
+            <button
+              type="button"
+              class="p-2 rounded-full size-10 hover:bg-gray-100"
+              @click="suggestAi"
+            >
               <Icon
                 class="size-6"
                 :class="{

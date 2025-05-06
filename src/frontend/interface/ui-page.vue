@@ -38,14 +38,16 @@
               </span>
             </button>
           </div>
-          <UiStringItem
-            v-for="item in filteredItems"
-            v-show="filteredItems.length"
-            :key="item.key"
-            :item="item"
-            :is-selected="selectedItem?.key === item.key"
-            @click="selectItem(item)"
-          />
+          <div class="overflow-hidden bg-white rounded-lg shadow">
+            <UiStringItem
+              v-for="item in filteredItems"
+              v-show="filteredItems.length"
+              :key="item.key"
+              :item="item"
+              :is-selected="selectedItem?.key === item.key"
+              @click="selectItem(item)"
+            />
+          </div>
         </div>
         <div>
           <template v-if="filteredItems.length">
