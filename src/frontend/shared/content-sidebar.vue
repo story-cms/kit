@@ -26,7 +26,8 @@ import { useDraftsStore, useSharedStore } from '../store';
 
 const drafts = useDraftsStore();
 const shared = useSharedStore();
-const { showMetaBox, showAppPreview, isSingleColumn } = storeToRefs(drafts);
+const { showMetaBox, showAppPreview, isSingleColumn, showSourceColumn } =
+  storeToRefs(drafts);
 const { isLargeScreen } = storeToRefs(shared);
 
 const headerHeight = computed(() => shared.headerHeight);
@@ -36,7 +37,7 @@ const rightPosition = computed(() => {
   return `${difference / 2 + 12}px`;
 });
 
-watch([showMetaBox, showAppPreview, isLargeScreen], ([a, b, c]) => {
+watch([showMetaBox, showAppPreview, isLargeScreen, showSourceColumn], ([a, b, c, d]) => {
   if (!a && !b) {
     drafts.setDraftSidebarAsFloating(false);
     drafts.setSingleColumn(true);
@@ -44,6 +45,10 @@ watch([showMetaBox, showAppPreview, isLargeScreen], ([a, b, c]) => {
   if (c && (a || b)) {
     drafts.setDraftSidebarAsFloating(false);
     drafts.setSingleColumn(false);
+  }
+  if (d && (a || b)) {
+    drafts.setDraftSidebarAsFloating(true);
+    drafts.setSingleColumn(true);
   }
 });
 

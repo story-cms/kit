@@ -34,6 +34,11 @@ export const useDraftsStore = defineStore('drafts', () => {
     hasFloatingDraftSidebar.value = value;
   };
 
+  const showSourceColumn = ref(true);
+  const setSourceColumnAsHidden = (value: boolean) => {
+    showSourceColumn.value = value;
+  };
+
   const setStatus = (status: string) => {
     draft.value.status = status;
   };
@@ -52,6 +57,9 @@ export const useDraftsStore = defineStore('drafts', () => {
 
     hasFloatingDraftSidebar,
     setDraftSidebarAsFloating,
+
+    showSourceColumn,
+    setSourceColumnAsHidden,
 
     showMetaBox,
     setShowMetaBox,

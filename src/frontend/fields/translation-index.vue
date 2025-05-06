@@ -19,7 +19,10 @@
             <p class="text-left">{{ shared.language.language }}</p>
             <p class="inline-flex items-center justify-end">
               English
-              <button class="ml-2">
+              <button
+                @click="drafts.setSourceColumnAsHidden(!drafts.showSourceColumn)"
+                class="ml-2"
+              >
                 <Icon name="eyeoff" class="block text-black cursor-pointer size-6" />
               </button>
             </p>
@@ -32,11 +35,20 @@
         'relative grid',
         {
           'grid-cols-[1fr_375px] gap-x-4': !drafts.isSingleColumn,
-          'mx-auto max-w-4xl grid-cols-1': drafts.isSingleColumn,
+          'mx-auto max-w-4xl grid-cols-1':
+            drafts.isSingleColumn && !drafts.showSourceColumn,
         },
       ]"
     >
-      <div class="grid min-h-screen grid-flow-col-dense grid-cols-2 gap-x-2">
+      <div
+        :class="[
+          'grid min-h-screen grid-flow-col-dense',
+          {
+            'grid-cols-2 gap-x-2': drafts.showSourceColumn,
+            'grid-cols-1': !drafts.showSourceColumn,
+          },
+        ]"
+      >
         <section class="row-subgrid">
           <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="row-subgrid gap-y-8">
             <div
@@ -55,7 +67,7 @@
             </div>
           </form>
         </section>
-        <section class="row-subgrid">
+        <section :class="['row-subgrid', { hidden: !drafts.showSourceColumn }]">
           <div dir="ltr" class="row-subgrid gap-y-8">
             <div
               v-for="(item, index) in spec.fields"
@@ -275,5 +287,10 @@ onMounted(() => {
     title.value = model.getField('title', defaultTitle.value);
     saveDraft();
   });
+
+  drafts.setSingleColumn(true);
+  drafts.setShowMetaBox(false);
+  drafts.setShowAppPreview(false);
+  drafts.setDraftSidebarAsFloating(false);
 });
 </script>
