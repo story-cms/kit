@@ -1,106 +1,74 @@
 <template>
-  <TranslationAppLayout
-    :chapter-title="chapterTitle"
-    :show-side-bar="showSideBar"
-    @delete="deleteDraft"
-    @submit="submitDraft"
-    @publish="publishDraft"
-    @request-change="reject"
-    @info="info"
-    @app-preview="appPreview"
-  >
-    <section
-      :class="{
-        'mx-auto w-full max-w-[1080px]': drafts.isSingleColumn,
-        'row-subgrid': !drafts.isSingleColumn,
-      }"
-    >
-      <form
-        :dir="shared.isRtl ? 'rtl' : 'ltr'"
-        :class="{
-          'row-subgrid gap-y-8': !drafts.isSingleColumn,
-          'grid grid-cols-1 gap-y-2': drafts.isSingleColumn,
-        }"
-      >
-        <div
-          v-for="(item, index) in spec.fields"
-          :key="index"
-          class="grid grid-rows-[subgrid]"
-          :style="{
-            gridRow: `span ${
-              sourceItemsLength.find((obj) => obj.key === `${(item as FieldSpec).name}`)
-                ?.length
-            }`,
-          }"
-        >
-          <component :is="widgetFor(index)" :field="item" :is-nested="false" />
+  <AppLayout>
+    <template #header>
+      <ContentHeader :title="chapterTitle">
+        <template #draft-actions>
+          <DraftActions @delete="deleteDraft" />
+        </template>
+        <template #workflow-actions>
+          <WorkflowActions
+            @request-change="reject"
+            @publish="publishDraft"
+            @submit="submitDraft"
+          />
+        </template>
+        <template #extra-actions>
+          <div
+            class="flex items-center justify-between py-4 text-sm font-medium leading-4"
+          >
+            <p class="text-left">{{ shared.language.language }}</p>
+            <p class="inline-flex items-center justify-end">
+              English
+              <span class="ml-2">
+                <Icon name="eyeoff" class="block text-black cursor-pointer size-6" />
+              </span>
+            </p>
+          </div>
+        </template>
+      </ContentHeader>
+    </template>
+    <div class="grid min-h-screen grid-flow-col-dense grid-cols-2 gap-x-2">
+      <section class="row-subgrid">
+        <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="row-subgrid gap-y-8">
+          <div
+            v-for="(item, index) in spec.fields"
+            :key="index"
+            class="grid grid-rows-[subgrid]"
+            :style="{
+              gridRow: `span ${
+                sourceItemsLength.find((obj) => obj.key === `${(item as FieldSpec).name}`)
+                  ?.length
+              }`,
+            }"
+          >
+            <component :is="widgetFor(index)" :field="item" :is-nested="false" />
+          </div>
+        </form>
+      </section>
+      <section class="row-subgrid">
+        <div dir="ltr" class="row-subgrid gap-y-8">
+          <div
+            v-for="(item, index) in spec.fields"
+            :key="index"
+            class="grid grid-rows-[subgrid]"
+            :style="{
+              gridRow: `span ${
+                sourceItemsLength.find((obj) => obj.key === `${(item as FieldSpec).name}`)
+                  ?.length
+              }`,
+            }"
+          >
+            <component
+              :is="widgetFor(index)"
+              :field="item"
+              :is-nested="false"
+              :is-read-only="true"
+            />
+          </div>
         </div>
-      </form>
-    </section>
-    <section class="row-subgrid" :class="drafts.isSingleColumn ? 'hidden' : ''">
-      <div dir="ltr" class="row-subgrid gap-y-8">
-        <div
-          v-for="(item, index) in spec.fields"
-          :key="index"
-          class="grid grid-rows-[subgrid]"
-          :style="{
-            gridRow: `span ${
-              sourceItemsLength.find((obj) => obj.key === `${(item as FieldSpec).name}`)
-                ?.length
-            }`,
-          }"
-        >
-          <component
-            :is="widgetFor(index)"
-            :field="item"
-            :is-nested="false"
-            :is-read-only="true"
-          />
-        </div>
-      </div>
-    </section>
-    <div
-      :class="{
-        'right-4': !isLargeScreen || !showSideBar,
-        'absolute block': shared.isIntersecting,
-        'container fixed inset-x-0 mx-auto': !shared.isIntersecting && !showSideBar,
-        'sticky top-24 grid [align-self:start]': isLargeScreen && drafts.isSingleColumn,
-      }"
-    >
-      <div
-        :class="{
-          'absolute right-4 top-10': !shared.isIntersecting && !showSideBar,
-          'mt-11': !shared.isIntersecting && showSideBar,
-        }"
-      >
-        <section v-if="showMetaBox">
-          <MetaBox
-            :class="{ 'w-[407px]': !showSideBar }"
-            :created-at="props.draft.createdAt"
-            :updated-at="props.draft.updatedAt"
-            :story-type="props.meta.storyType"
-            :chapter-type="metaChapter"
-            :published-when="published_when"
-            :is-floating="!isLargeScreen || !drafts.isSingleColumn"
-            @close="showMetaBox = false"
-          />
-        </section>
-        <section
-          v-if="meta.hasAppPreview && showAppPreview"
-          class="mt-6"
-          :class="{ 'mt-14': showSideBar && !showMetaBox }"
-        >
-          <MobileAppPreview
-            v-if="bundle"
-            :is-floating="!isLargeScreen || !drafts.isSingleColumn"
-            :bundle="bundle"
-            class="mt-2"
-            @close="showAppPreview = false"
-          />
-        </section>
-      </div>
+      </section>
     </div>
-  </TranslationAppLayout>
+  </AppLayout>
 </template>
 
 <script setup lang="ts">
@@ -110,7 +78,12 @@ import type { Errors } from '@inertiajs/core';
 import type { FieldSpec, DraftEditProps, SharedPageProps } from '../../types';
 import { ResponseStatus } from '../../types';
 import { useSharedStore, useModelStore, useWidgetsStore, useDraftsStore } from '../store';
-import TranslationAppLayout from '../shared/translation-app-layout.vue';
+import AppLayout from '../shared/app-layout.vue';
+import ContentHeader from '../shared/content-header.vue';
+import DraftActions from '../fields/draft-actions.vue';
+import WorkflowActions from '../fields/workflow-actions.vue';
+import Icon from '../shared/icon.vue';
+import ContentSidebar from '../shared/content-sidebar.vue';
 import MetaBox from '../shared/meta-box.vue';
 import MobileAppPreview from './mobile-app-preview.vue';
 import { debounce, padZero, formatDate, safeChapterTitle } from '../shared/helpers';
@@ -151,7 +124,7 @@ const metaChapter = computed(
   () => `${padZero(props.draft.number)} of ${padZero(props.spec.chapterLimit)}`,
 );
 
-const published_when = computed(() => {
+const publishedWhen = computed(() => {
   return props.lastPublished === '' ? 'Unpublished' : formatDate(props.lastPublished);
 });
 
