@@ -29,6 +29,7 @@ export const useSharedStore = defineStore('shared', () => {
     user.value = props.user;
     language.value = props.language;
     uiTodoCount.value = props.uiTodoCount;
+    currentStoryName.value = props.storyName;
   };
 
   // errors
@@ -72,9 +73,6 @@ export const useSharedStore = defineStore('shared', () => {
   };
 
   const currentStoryName = ref('');
-  const setCurrentStoryName = (name: string) => {
-    currentStoryName.value = name;
-  };
 
   // main and header
 
@@ -184,7 +182,6 @@ export const useSharedStore = defineStore('shared', () => {
     setSidebarOpen,
 
     currentStoryName,
-    setCurrentStoryName,
 
     uiTodoCount,
     setUiTodoCount,

@@ -30,11 +30,11 @@
             <div class="grid grid-cols-1">
               <input
                 id="search"
+                v-model="filterNumber"
                 type="text"
                 name="search"
                 class="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pl-10 pr-3 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:pl-9 sm:text-sm/6"
                 :placeholder="meta.chapterType"
-                v-model="filterNumber"
               />
               <Icon
                 name="search"
@@ -78,7 +78,7 @@
 <script setup lang="ts">
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
-import { computed, ref, onMounted } from 'vue';
+import { computed, ref } from 'vue';
 
 import Icon from '../shared/icon.vue';
 import AddItemButton from '../shared/add-item-button.vue';
@@ -147,8 +147,4 @@ const onTap = (item: IndexReadyItem) => {
     window.location.href = `/chapter/${item.number}`;
   }
 };
-
-onMounted(() => {
-  shared.setCurrentStoryName(props.storyName);
-});
 </script>

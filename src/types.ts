@@ -200,6 +200,7 @@ export interface SharedPageProps {
   stories: string[];
   user: User;
   uiTodoCount: number;
+  storyName: string;
 }
 
 export interface PageMeta {
