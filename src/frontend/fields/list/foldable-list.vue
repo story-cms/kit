@@ -4,12 +4,15 @@
       class="relative pt-10 pl-3 mb-8 ml-3 bg-transparent border-gray-300"
       :class="{
         'border-l': isExpanded(index) && !isReadOnly,
-        'border-t': !isReadOnly && (!shared.isTranslation || drafts.isSingleColumn),
+        'border-t': !isReadOnly && !shared.isTranslation,
       }"
     >
       <div
-        v-if="shared.isTranslation && !drafts.isSingleColumn && !isReadOnly"
-        class="absolute left-0 right-0 top-0 w-[calc(47rem_*_2)] border-t border-gray-300"
+        v-if="!isReadOnly && shared.isTranslation"
+        class="absolute top-0 left-0 right-0 border-t border-gray-300"
+        :style="{
+          width: `calc(${shared.headerWidth}px - 50px)`,
+        }"
       ></div>
 
       <div
@@ -96,12 +99,7 @@ import { computed } from 'vue';
 import type { PropType } from 'vue';
 import type { FieldSpec } from '../../../types';
 import Icon from '../../shared/icon.vue';
-import {
-  useModelStore,
-  useWidgetsStore,
-  useSharedStore,
-  useDraftsStore,
-} from '../../store';
+import { useModelStore, useWidgetsStore, useSharedStore } from '../../store';
 import AddItemButton from '../../shared/add-item-button.vue';
 
 const props = defineProps({
@@ -130,7 +128,6 @@ const fields = field.value.fields as FieldSpec[];
 const model = useModelStore();
 const widgets = useWidgetsStore();
 const shared = useSharedStore();
-const drafts = useDraftsStore();
 
 const canMutate = computed(() => {
   if (props.isReadOnly) return false;
