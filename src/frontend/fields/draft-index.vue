@@ -197,7 +197,6 @@ onMounted(() => {
   });
 
   handleResponsiveLayout();
-  shared.setCurrentStoryName(props.storyName);
 });
 
 const widgetFor = (key: number) => {

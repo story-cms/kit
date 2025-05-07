@@ -144,11 +144,6 @@ export const useSharedStore = defineStore('shared', () => {
     language.value = fresh;
   };
 
-  const isIntersecting = ref(false);
-  const setIsIntersecting = (fresh: boolean) => {
-    isIntersecting.value = fresh;
-  };
-
   return {
     stories,
     meta,
@@ -160,9 +155,6 @@ export const useSharedStore = defineStore('shared', () => {
 
     isLargeScreen,
     setLargeScreen,
-
-    isIntersecting,
-    setIsIntersecting,
 
     isMainUnderHeader,
     setMainUnderHeader,

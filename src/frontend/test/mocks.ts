@@ -515,4 +515,5 @@ export const sharedProps: SharedPageProps = {
   languages,
   errors: {},
   uiTodoCount: 5,
+  storyName: 'John',
 };
