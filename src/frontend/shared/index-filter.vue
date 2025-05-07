@@ -2,7 +2,6 @@
   <div class="flex">
     <button
       v-for="(tab, index) in tabs"
-      @click.prevent="emit('change', tab.label)"
       :key="tab.label"
       type="button"
       :aria-current="tab.current ? 'page' : undefined"
@@ -13,6 +12,7 @@
           ? 'bg-indigo-50 text-indigo-700 ring-indigo-700'
           : 'bg-white text-gray-900',
       ]"
+      @click.prevent="emit('change', tab.label)"
     >
       {{ tab.label }}
       <span

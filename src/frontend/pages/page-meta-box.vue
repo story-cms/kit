@@ -31,8 +31,6 @@ const props = defineProps<
   }
 >();
 
-const emit = defineEmits(['close']);
-
 const publishedAtLabel = computed(() => {
   if (props.publishedAt === 'unpublished') return 'UNPUBLISHED';
   return formatDate(props.publishedAt);

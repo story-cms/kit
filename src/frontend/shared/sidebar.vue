@@ -19,7 +19,7 @@
           <Link :class="['nav-icon']" href="/">
             <Icon name="home" />
           </Link>
-          <button @click="goBack" class="nav-icon">
+          <button class="nav-icon" @click="goBack">
             <Icon name="reply" />
           </button>
           <div v-if="isMultiLingual">

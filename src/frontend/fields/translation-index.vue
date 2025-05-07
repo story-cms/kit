@@ -20,8 +20,8 @@
             <p class="inline-flex items-center justify-end">
               English
               <button
-                @click="drafts.setSourceColumnAsHidden(!drafts.showSourceColumn)"
                 class="ml-2"
+                @click="drafts.setSourceColumnAsHidden(!drafts.showSourceColumn)"
               >
                 <Icon name="eyeoff" class="block text-black cursor-pointer size-6" />
               </button>

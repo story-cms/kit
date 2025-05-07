@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import { listInListSpec, sharedProps } from '../test/mocks';
+import { sharedProps } from '../test/mocks';
 import { AddStatus } from '../../types';
 import DashboardIndex from './dashboard-index.vue';
 </script>
