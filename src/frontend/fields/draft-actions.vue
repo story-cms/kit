@@ -14,7 +14,12 @@
   >
     <Icon name="mobile" class="action-icon" />
   </button>
-  <button type="button" class="bg-white action-button" @click="emit('delete')">
+  <button
+    v-if="canDelete"
+    type="button"
+    class="bg-white action-button"
+    @click="emit('delete')"
+  >
     <Icon name="trash" class="action-icon" />
   </button>
 </template>
@@ -22,6 +27,13 @@
 <script setup lang="ts">
 import Icon from '../shared/icon.vue';
 import { useSharedStore, useDraftsStore } from '../store';
+
+defineProps({
+  canDelete: {
+    type: Boolean,
+    default: true,
+  },
+});
 
 const shared = useSharedStore();
 const drafts = useDraftsStore();

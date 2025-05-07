@@ -3,7 +3,7 @@
     <template #header>
       <ContentHeader :title="chapterTitle">
         <template #draft-actions>
-          <DraftActions @info="info" @app-preview="appPreview" />
+          <DraftActions :can-delete="false" />
           <button
             type="button"
             class="w-32 rounded-[38px] border border-blue-500 bg-blue-500 px-[15px] py-[9px] text-sm/5 font-medium text-white shadow"
@@ -96,14 +96,6 @@ const publishedWhen = computed(() => {
 const metaChapter = computed(
   () => `${padZero(props.chapter.number)} of ${padZero(props.chapterLimit)}`,
 );
-
-const info = () => {
-  showMetaBox.value = !showMetaBox.value;
-};
-
-const appPreview = () => {
-  showAppPreview.value = !showAppPreview.value;
-};
 
 const edit = () => {
   window.location.href = `/draft/${props.chapter.number}/edit`;
