@@ -102,7 +102,7 @@ const resizeHook = () => {
   if (shared.isLargeScreen) {
     drafts.setShowAppPreview(true);
     drafts.setShowMetaBox(true);
-    drafts.setDraftSidebarAsFloating(false);
+    drafts.setContentSidebarAsFloating(false);
     drafts.setSingleColumn(false);
   }
 

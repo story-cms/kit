@@ -51,6 +51,4 @@ const props = defineProps<Props>();
 const drafts = useDraftsStore();
 
 const story = computed(() => props.storyName ?? drafts.story.name);
-
-const emit = defineEmits(['close']);
 </script>

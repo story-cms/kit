@@ -294,7 +294,7 @@ onMounted(() => {
   drafts.setSingleColumn(true);
   drafts.setShowMetaBox(false);
   drafts.setShowAppPreview(false);
-  drafts.setDraftSidebarAsFloating(false);
+  drafts.setContentSidebarAsFloating(false);
   shared.setSidebarOpen(false);
 });
 </script>
