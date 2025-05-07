@@ -27,7 +27,12 @@
                 : 'border-gray-50',
             ]"
           >
-            <slot name="header" />
+            <slot v-if="!shared.hasFeedback" name="header" />
+            <MessageCentre
+              v-else
+              :response="shared.messageCentre.response"
+              :message="shared.messageCentre.message"
+            />
           </header>
           <main ref="main" class="h-full mt-1">
             <slot />
@@ -43,6 +48,7 @@ import { ref, onMounted, onBeforeUnmount, onUnmounted, onBeforeMount } from 'vue
 import { useSharedStore, useDraftsStore } from '../store';
 
 import Sidebar from './sidebar.vue';
+import MessageCentre from './message-centre.vue';
 
 const shared = useSharedStore();
 const drafts = useDraftsStore();
