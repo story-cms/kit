@@ -29,9 +29,9 @@ export const useDraftsStore = defineStore('drafts', () => {
     showAppPreview.value = value;
   };
 
-  const hasFloatingDraftSidebar = ref(false);
-  const setDraftSidebarAsFloating = (value: boolean) => {
-    hasFloatingDraftSidebar.value = value;
+  const hasFloatingContentSidebar = ref(false);
+  const setContentSidebarAsFloating = (value: boolean) => {
+    hasFloatingContentSidebar.value = value;
   };
 
   const showSourceColumn = ref(true);
@@ -55,8 +55,8 @@ export const useDraftsStore = defineStore('drafts', () => {
 
     setStatus,
 
-    hasFloatingDraftSidebar,
-    setDraftSidebarAsFloating,
+    hasFloatingContentSidebar,
+    setContentSidebarAsFloating,
 
     showSourceColumn,
     setSourceColumnAsHidden,

@@ -3,11 +3,11 @@
     v-if="drafts.showMetaBox || drafts.showAppPreview"
     :class="[
       'w-[375px]',
-      drafts.hasFloatingDraftSidebar ? 'fixed' : 'sticky [align-self:start]',
+      drafts.hasFloatingContentSidebar ? 'fixed' : 'sticky [align-self:start]',
     ]"
     :style="{
       top: `${headerHeight + 4}px`,
-      right: drafts.hasFloatingDraftSidebar ? rightPosition : '',
+      right: drafts.hasFloatingContentSidebar ? rightPosition : '',
     }"
   >
     <section v-if="drafts.showMetaBox">
@@ -39,15 +39,15 @@ const rightPosition = computed(() => {
 
 watch([showMetaBox, showAppPreview, isLargeScreen, showSourceColumn], ([a, b, c, d]) => {
   if (!a && !b) {
-    drafts.setDraftSidebarAsFloating(false);
+    drafts.setContentSidebarAsFloating(false);
     drafts.setSingleColumn(true);
   }
   if (c && (a || b)) {
-    drafts.setDraftSidebarAsFloating(false);
+    drafts.setContentSidebarAsFloating(false);
     drafts.setSingleColumn(false);
   }
   if (d && (a || b)) {
-    drafts.setDraftSidebarAsFloating(true);
+    drafts.setContentSidebarAsFloating(true);
     drafts.setSingleColumn(true);
   }
 });
@@ -55,13 +55,13 @@ watch([showMetaBox, showAppPreview, isLargeScreen, showSourceColumn], ([a, b, c,
 watch(
   () => isSingleColumn.value,
   (value) => {
-    drafts.setDraftSidebarAsFloating(value);
+    drafts.setContentSidebarAsFloating(value);
   },
 );
 
 onMounted(() => {
   if (isSingleColumn.value) {
-    drafts.setDraftSidebarAsFloating(true);
+    drafts.setContentSidebarAsFloating(true);
   }
 });
 </script>
