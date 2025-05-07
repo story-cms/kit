@@ -55,7 +55,7 @@
                   'nav-link',
                   {
                     active:
-                      story.toLowerCase() === shared.currentStoryName.toLowerCase() &&
+                      story.toLowerCase() === shared.currentStoryName?.toLowerCase() &&
                       ($page?.url === '/' ||
                         $page?.url.startsWith('/chapter') ||
                         $page?.url.startsWith('/draft')),
