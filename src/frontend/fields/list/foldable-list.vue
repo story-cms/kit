@@ -10,9 +10,7 @@
       <div
         v-if="!isReadOnly && shared.isTranslation"
         class="absolute top-0 left-0 right-0 border-t border-gray-300"
-        :style="{
-          width: `calc(${shared.headerWidth}px - 50px)`,
-        }"
+        :style="{ width: borderWidth }"
       ></div>
 
       <div
@@ -99,7 +97,12 @@ import { computed } from 'vue';
 import type { PropType } from 'vue';
 import type { FieldSpec } from '../../../types';
 import Icon from '../../shared/icon.vue';
-import { useModelStore, useWidgetsStore, useSharedStore } from '../../store';
+import {
+  useModelStore,
+  useWidgetsStore,
+  useSharedStore,
+  useDraftsStore,
+} from '../../store';
 import AddItemButton from '../../shared/add-item-button.vue';
 
 const props = defineProps({
@@ -128,6 +131,7 @@ const fields = field.value.fields as FieldSpec[];
 const model = useModelStore();
 const widgets = useWidgetsStore();
 const shared = useSharedStore();
+const drafts = useDraftsStore();
 
 const canMutate = computed(() => {
   if (props.isReadOnly) return false;
@@ -190,4 +194,9 @@ const showEmptyListWarning = (): boolean => {
   }
   return false;
 };
+
+const borderWidth = computed(() => {
+  if (drafts.showSourceColumn) return `${shared.headerWidth - 30}px`;
+  return '100%';
+});
 </script>
