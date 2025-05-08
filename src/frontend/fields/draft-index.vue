@@ -2,10 +2,8 @@
   <AppLayout>
     <template #header>
       <ContentHeader :title="chapterTitle">
-        <template #draft-actions>
+        <template #actions>
           <DraftActions @delete="deleteDraft" />
-        </template>
-        <template #workflow-actions>
           <WorkflowActions @publish="publish" @request-change="reject" @submit="submit" />
         </template>
       </ContentHeader>

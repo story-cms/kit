@@ -2,7 +2,7 @@
   <AppLayout>
     <template #header>
       <ContentHeader dir="ltr" :title="title">
-        <template #draft-actions>
+        <template #actions>
           <DraftActions @delete="deletePage" />
           <BooleanField
             :field="{

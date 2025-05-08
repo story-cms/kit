@@ -2,7 +2,7 @@
   <AppLayout>
     <template #header>
       <ContentHeader :title="`${meta.storyType}: ${shared.currentStoryName}`">
-        <template #standard-actions>
+        <template #actions>
           <icon :name="iconName" class="w-8 h-8 text-black" @click.prevent="toggle" />
         </template>
         <template #extra-actions>

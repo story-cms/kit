@@ -2,7 +2,7 @@
   <AppLayout>
     <template #header>
       <ContentHeader title="Sticky Header" @delete="onAccomplish" @info="onNeutral">
-        <template #draft-actions>
+        <template #actions>
           <button type="button" @click.prevent="onConfirm">Confirm</button>
           <button type="button" @click.prevent="onFail">Fail</button>
         </template>

@@ -2,7 +2,7 @@
   <AppLayout>
     <template #header>
       <ContentHeader :title="chapterTitle">
-        <template #draft-actions>
+        <template #actions>
           <DraftActions :can-delete="false" />
           <button
             type="button"

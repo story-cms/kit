@@ -2,7 +2,7 @@
   <AppLayout>
     <template #header>
       <ContentHeader title="Pages">
-        <template #standard-actions>
+        <template #actions>
           <div class="flex items-center gap-x-6">
             <button
               v-if="isShowingPublished"

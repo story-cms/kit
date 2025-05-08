@@ -6,14 +6,11 @@
         v-html="title"
       ></h3>
       <div class="flex items-center space-x-6">
-        <slot name="standard-actions"></slot>
-        <slot name="draft-actions"></slot>
-        <slot name="workflow-actions"></slot>
+        <slot name="actions"></slot>
       </div>
     </div>
     <div class="w-full">
       <slot name="extra-actions"></slot>
-      <slot name="labels"></slot>
     </div>
   </div>
 </template>
