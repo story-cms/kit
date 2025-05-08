@@ -86,16 +86,14 @@ export const useSharedStore = defineStore('shared', () => {
   const headerWidth = ref(0);
   const layoutWidth = ref(0);
   const containerWidth = ref(0);
-  const setHeaderHeight = (fresh: number) => {
-    headerHeight.value = fresh;
-  };
-
-  const setHeaderWidth = (fresh: number) => {
-    headerWidth.value = fresh;
-  };
 
   const setLayoutWidth = (fresh: number) => {
     layoutWidth.value = fresh;
+  };
+
+  const setHeaderSize = (height: number, width: number) => {
+    headerHeight.value = height;
+    headerWidth.value = width;
   };
 
   const setContainerWidth = (fresh: number) => {
@@ -159,9 +157,8 @@ export const useSharedStore = defineStore('shared', () => {
     isMainUnderHeader,
     setMainUnderHeader,
     headerHeight,
-    setHeaderHeight,
     headerWidth,
-    setHeaderWidth,
+    setHeaderSize,
     layoutWidth,
     setLayoutWidth,
     containerWidth,

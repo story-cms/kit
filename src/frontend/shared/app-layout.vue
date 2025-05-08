@@ -62,7 +62,7 @@ const onScroll = () => {
     const headerRect = header.value.getBoundingClientRect();
     const mainRect = main.value.getBoundingClientRect();
     shared.setMainUnderHeader(mainRect.top <= headerRect.bottom);
-    shared.setHeaderHeight(headerRect.height);
+    shared.setHeaderSize(headerRect.height, headerRect.width);
   }
   setDimensions();
 };
@@ -70,7 +70,7 @@ const onScroll = () => {
 const setDimensions = () => {
   if (header.value) {
     const headerRect = header.value.getBoundingClientRect();
-    shared.setHeaderWidth(headerRect.width);
+    shared.setHeaderSize(headerRect.height, headerRect.width);
   }
 
   if (layout.value) {
@@ -81,10 +81,6 @@ const setDimensions = () => {
   if (container.value) {
     const containerRect = container.value.getBoundingClientRect();
     shared.setContainerWidth(containerRect.width);
-  }
-  if (header.value) {
-    const headerRect = header.value.getBoundingClientRect();
-    shared.setHeaderHeight(headerRect.height);
   }
 };
 
