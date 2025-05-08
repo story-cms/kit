@@ -195,6 +195,7 @@ onMounted(() => {
   });
 
   handleResponsiveLayout();
+  shared.setSourceColumnAsHidden(false);
 });
 
 const widgetFor = (key: number) => {

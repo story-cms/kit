@@ -245,5 +245,6 @@ onMounted(() => {
   });
 
   shared.setShowAppPreview(false);
+  shared.setSourceColumnAsHidden(false);
 });
 </script>
