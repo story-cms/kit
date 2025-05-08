@@ -1,16 +1,16 @@
 <template>
   <button
     type="button"
-    :class="['action-button', drafts.showMetaBox ? 'active' : 'bg-white']"
-    @click.prevent="drafts.setShowMetaBox(!drafts.showMetaBox)"
+    :class="['action-button', shared.showMetaBox ? 'active' : 'bg-white']"
+    @click.prevent="shared.setShowMetaBox(!shared.showMetaBox)"
   >
     <Icon name="info" class="action-icon" />
   </button>
   <button
     v-if="shared.meta.hasAppPreview && !$page?.url?.includes('page')"
     type="button"
-    :class="['action-button', drafts.showAppPreview ? 'active' : 'bg-white']"
-    @click.prevent="drafts.setShowAppPreview(!drafts.showAppPreview)"
+    :class="['action-button', shared.showAppPreview ? 'active' : 'bg-white']"
+    @click.prevent="shared.setShowAppPreview(!shared.showAppPreview)"
   >
     <Icon name="mobile" class="action-icon" />
   </button>
@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import Icon from '../shared/icon.vue';
-import { useSharedStore, useDraftsStore } from '../store';
+import { useSharedStore } from '../store';
 
 defineProps({
   canDelete: {
@@ -36,7 +36,6 @@ defineProps({
 });
 
 const shared = useSharedStore();
-const drafts = useDraftsStore();
 
 const emit = defineEmits(['delete']);
 </script>

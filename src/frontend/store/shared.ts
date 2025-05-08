@@ -142,6 +142,32 @@ export const useSharedStore = defineStore('shared', () => {
     language.value = fresh;
   };
 
+  // content sidebar
+  const isSingleColumn = ref(false);
+  const setSingleColumn = (value: boolean) => {
+    isSingleColumn.value = value;
+  };
+
+  const showMetaBox = ref(true);
+  const setShowMetaBox = (value: boolean) => {
+    showMetaBox.value = value;
+  };
+
+  const showAppPreview = ref(true);
+  const setShowAppPreview = (value: boolean) => {
+    showAppPreview.value = value;
+  };
+
+  const hasFloatingContentSidebar = ref(false);
+  const setContentSidebarAsFloating = (value: boolean) => {
+    hasFloatingContentSidebar.value = value;
+  };
+
+  const showSourceColumn = ref(true);
+  const setSourceColumnAsHidden = (value: boolean) => {
+    showSourceColumn.value = value;
+  };
+
   return {
     stories,
     meta,
@@ -188,5 +214,20 @@ export const useSharedStore = defineStore('shared', () => {
     errorMessages,
     setFromProps,
     addMessage,
+
+    isSingleColumn,
+    setSingleColumn,
+
+    hasFloatingContentSidebar,
+    setContentSidebarAsFloating,
+
+    showSourceColumn,
+    setSourceColumnAsHidden,
+
+    showMetaBox,
+    setShowMetaBox,
+
+    showAppPreview,
+    setShowAppPreview,
   };
 });

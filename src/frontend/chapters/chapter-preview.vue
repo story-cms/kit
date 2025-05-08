@@ -19,8 +19,8 @@
       :class="[
         'relative grid',
         {
-          'grid-cols-[1fr_375px] gap-x-4': !drafts.isSingleColumn,
-          'mx-auto max-w-4xl grid-cols-1': drafts.isSingleColumn,
+          'grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn,
+          'mx-auto max-w-4xl grid-cols-1': shared.isSingleColumn,
         },
       ]"
     >
@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed } from 'vue';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
 import DraftActions from '../fields/draft-actions.vue';
@@ -61,31 +61,16 @@ import ContentSidebar from '../shared/content-sidebar.vue';
 import MobileAppPreview from '../fields/mobile-app-preview.vue';
 import { formatDate, padZero, safeChapterTitle } from '../shared/helpers';
 import type { PreviewProps, SharedPageProps } from '../../types';
-import { useSharedStore, useDraftsStore } from '../store';
+import { useSharedStore } from '../store';
 
 const props = defineProps<PreviewProps & SharedPageProps>();
 
 const shared = useSharedStore();
-const drafts = useDraftsStore();
 shared.setFromProps(props);
 
 const chapterTitle =
   safeChapterTitle(props.title, props.storyName, props.chapter.number) ??
   `New ${props.meta.chapterType}`;
-
-const showMetaBox = ref(true);
-const showAppPreview = ref(true);
-
-const isLargeScreen = computed(() => {
-  return shared.isLargeScreen;
-});
-
-watch([showMetaBox, showAppPreview, isLargeScreen], ([a, b, c]) => {
-  if (c) {
-    showMetaBox.value = a;
-    showAppPreview.value = b;
-  }
-});
 
 const publishedWhen = computed(() => {
   return props.chapter.updatedAt === ''

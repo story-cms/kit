@@ -45,13 +45,12 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, onUnmounted, onBeforeMount } from 'vue';
-import { useSharedStore, useDraftsStore } from '../store';
+import { useSharedStore } from '../store';
 
 import Sidebar from './sidebar.vue';
 import MessageCentre from './message-centre.vue';
 
 const shared = useSharedStore();
-const drafts = useDraftsStore();
 
 const header = ref<HTMLElement | null>(null);
 const main = ref<HTMLElement | null>(null);
@@ -88,7 +87,7 @@ const resizeHook = () => {
   const fresh = document.documentElement.clientWidth;
   shared.setLargeScreen(fresh >= 1280);
   shared.setSidebarOpen(fresh >= 1280);
-  drafts.setSingleColumn(fresh < 1280);
+  shared.setSingleColumn(fresh < 1280);
 
   if (!shared.isLargeScreen && shared.hasOpenSidebar) {
     shared.setSidebarAsFloating(true);
@@ -98,14 +97,14 @@ const resizeHook = () => {
     shared.setSidebarAsFloating(false);
   }
   if (!shared.isLargeScreen) {
-    drafts.setShowAppPreview(false);
-    drafts.setShowMetaBox(false);
+    shared.setShowAppPreview(false);
+    shared.setShowMetaBox(false);
   }
   if (shared.isLargeScreen) {
-    drafts.setShowAppPreview(true);
-    drafts.setShowMetaBox(true);
-    drafts.setContentSidebarAsFloating(false);
-    drafts.setSingleColumn(false);
+    shared.setShowAppPreview(true);
+    shared.setShowMetaBox(true);
+    shared.setContentSidebarAsFloating(false);
+    shared.setSingleColumn(false);
   }
 
   setDimensions();

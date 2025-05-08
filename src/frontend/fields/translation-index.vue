@@ -19,7 +19,7 @@
               English
               <button
                 class="ml-2"
-                @click="drafts.setSourceColumnAsHidden(!drafts.showSourceColumn)"
+                @click="shared.setSourceColumnAsHidden(!shared.showSourceColumn)"
               >
                 <Icon name="eyeoff" class="block text-black cursor-pointer size-6" />
               </button>
@@ -32,9 +32,9 @@
       :class="[
         'relative grid min-h-screen',
         {
-          'grid-cols-[1fr_375px] gap-x-4': !drafts.isSingleColumn,
+          'grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn,
           'mx-auto max-w-4xl grid-cols-1':
-            drafts.isSingleColumn && !drafts.showSourceColumn,
+            shared.isSingleColumn && !shared.showSourceColumn,
         },
       ]"
     >
@@ -43,10 +43,10 @@
           'grid h-full grid-flow-col-dense',
           {
             'grid-cols-[repeat(2,_minmax(440px,_1fr))] gap-x-2 overflow-x-auto':
-              drafts.showSourceColumn && !shared.isLargeScreen,
+              shared.showSourceColumn && !shared.isLargeScreen,
             'grid-cols-2 gap-x-2 overflow-x-auto':
-              drafts.showSourceColumn && shared.isLargeScreen,
-            'grid-cols-1': !drafts.showSourceColumn,
+              shared.showSourceColumn && shared.isLargeScreen,
+            'grid-cols-1': !shared.showSourceColumn,
           },
         ]"
       >
@@ -68,7 +68,7 @@
             </div>
           </form>
         </section>
-        <section :class="['row-subgrid', { hidden: !drafts.showSourceColumn }]">
+        <section :class="['row-subgrid', { hidden: !shared.showSourceColumn }]">
           <div dir="ltr" class="row-subgrid gap-y-8">
             <div
               v-for="(item, index) in spec.fields"
@@ -289,10 +289,10 @@ onMounted(() => {
     saveDraft();
   });
 
-  drafts.setSingleColumn(true);
-  drafts.setShowMetaBox(false);
-  drafts.setShowAppPreview(false);
-  drafts.setContentSidebarAsFloating(false);
+  shared.setSingleColumn(true);
+  shared.setShowMetaBox(false);
+  shared.setShowAppPreview(false);
+  shared.setContentSidebarAsFloating(false);
   shared.setSidebarOpen(false);
 });
 </script>

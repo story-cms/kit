@@ -12,8 +12,8 @@
       :class="[
         'relative grid',
         {
-          'grid-cols-[1fr_375px] gap-x-4': !drafts.isSingleColumn,
-          'mx-auto max-w-4xl grid-cols-1': drafts.isSingleColumn,
+          'grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn,
+          'mx-auto max-w-4xl grid-cols-1': shared.isSingleColumn,
         },
       ]"
     >
@@ -171,10 +171,10 @@ const metaChapter = computed(
 
 const handleResponsiveLayout = () => {
   if (shared.isLargeScreen) {
-    drafts.setSingleColumn(false);
+    shared.setSingleColumn(false);
   }
   if (!shared.isLargeScreen) {
-    drafts.setSingleColumn(true);
+    shared.setSingleColumn(true);
   }
 };
 

@@ -23,8 +23,8 @@
       :class="[
         'relative grid',
         {
-          'grid-cols-[1fr_375px] gap-x-4': !drafts.isSingleColumn,
-          'mx-auto max-w-4xl grid-cols-1': drafts.isSingleColumn,
+          'grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn,
+          'mx-auto max-w-4xl grid-cols-1': shared.isSingleColumn,
         },
       ]"
     >
@@ -137,7 +137,7 @@ import { DateTime } from 'luxon';
 import { router } from '@inertiajs/vue3';
 import type { SharedPageProps, PageEditProps } from '../../types';
 import { ResponseStatus } from '../../types';
-import { useModelStore, useSharedStore, useWidgetsStore, useDraftsStore } from '../store';
+import { useModelStore, useSharedStore, useWidgetsStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
 import { debounce } from '../shared/helpers';
@@ -165,7 +165,7 @@ let isRevertingPublished = false;
 const { bundle, page } = toRefs(props);
 const model = useModelStore();
 const shared = useSharedStore();
-const drafts = useDraftsStore();
+
 model.setModel(bundle.value);
 shared.setFromProps(props);
 shared.clearErrors();
@@ -244,6 +244,6 @@ onMounted(() => {
     isPublished.value = Boolean(model.getField('isPublished', false));
   });
 
-  drafts.setShowAppPreview(false);
+  shared.setShowAppPreview(false);
 });
 </script>

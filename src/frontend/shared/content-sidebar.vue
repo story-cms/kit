@@ -1,19 +1,19 @@
 <template>
   <div
-    v-if="drafts.showMetaBox || drafts.showAppPreview"
+    v-if="shared.showMetaBox || shared.showAppPreview"
     :class="[
       'w-[375px]',
-      drafts.hasFloatingContentSidebar ? 'fixed' : 'sticky [align-self:start]',
+      shared.hasFloatingContentSidebar ? 'fixed' : 'sticky [align-self:start]',
     ]"
     :style="{
       top: `${headerHeight + 4}px`,
-      right: drafts.hasFloatingContentSidebar ? rightPosition : '',
+      right: shared.hasFloatingContentSidebar ? rightPosition : '',
     }"
   >
-    <section v-if="drafts.showMetaBox">
+    <section v-if="shared.showMetaBox">
       <slot name="meta-box" />
     </section>
-    <section v-if="drafts.showAppPreview">
+    <section v-if="shared.showAppPreview">
       <slot name="app-preview" />
     </section>
   </div>
@@ -22,12 +22,11 @@
 <script setup lang="ts">
 import { watch, onMounted, computed } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useDraftsStore, useSharedStore } from '../store';
+import { useSharedStore } from '../store';
 
-const drafts = useDraftsStore();
 const shared = useSharedStore();
 const { showMetaBox, showAppPreview, isSingleColumn, showSourceColumn } =
-  storeToRefs(drafts);
+  storeToRefs(shared);
 const { isLargeScreen } = storeToRefs(shared);
 
 const headerHeight = computed(() => shared.headerHeight);
@@ -39,29 +38,29 @@ const rightPosition = computed(() => {
 
 watch([showMetaBox, showAppPreview, isLargeScreen, showSourceColumn], ([a, b, c, d]) => {
   if (!a && !b) {
-    drafts.setContentSidebarAsFloating(false);
-    drafts.setSingleColumn(true);
+    shared.setContentSidebarAsFloating(false);
+    shared.setSingleColumn(true);
   }
   if (c && (a || b)) {
-    drafts.setContentSidebarAsFloating(false);
-    drafts.setSingleColumn(false);
+    shared.setContentSidebarAsFloating(false);
+    shared.setSingleColumn(false);
   }
   if (d && (a || b)) {
-    drafts.setContentSidebarAsFloating(true);
-    drafts.setSingleColumn(true);
+    shared.setContentSidebarAsFloating(true);
+    shared.setSingleColumn(true);
   }
 });
 
 watch(
   () => isSingleColumn.value,
   (value) => {
-    drafts.setContentSidebarAsFloating(value);
+    shared.setContentSidebarAsFloating(value);
   },
 );
 
 onMounted(() => {
   if (isSingleColumn.value) {
-    drafts.setContentSidebarAsFloating(true);
+    shared.setContentSidebarAsFloating(true);
   }
 });
 </script>
