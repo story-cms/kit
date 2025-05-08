@@ -1,22 +1,25 @@
 <template>
   <AppLayout>
-    <div>
-      <h3 class="mt-6 font-['Inter'] text-2xl font-semibold text-gray-800">
-        Interface: {{ language.language }}
-      </h3>
-      <UiToolbar
-        v-model="searchTerm"
-        :all-count="props.items.length"
-        :active-filter="activeFilter"
-        :sort-by="sortBy"
-        @update:active-filter="activeFilter = $event"
-        @sort="handleSort"
-      />
-    </div>
-
-    <section class="mt-5">
-      <div class="grid h-[calc(100vh-12rem)] grid-cols-[2fr_4fr] gap-x-6">
-        <div class="scrollbar-hide overflow-y-auto">
+    <template #header>
+      <ContentHeader :title="`Interface: ${language.language}`">
+        <template #extra-actions>
+          <UiToolbar
+            v-model="searchTerm"
+            :all-count="props.items.length"
+            :active-filter="activeFilter"
+            :sort-by="sortBy"
+            @update:active-filter="activeFilter = $event"
+            @sort="handleSort"
+          />
+        </template>
+      </ContentHeader>
+    </template>
+    <section>
+      <div
+        class="grid grid-cols-[2fr_4fr] gap-x-6"
+        :style="{ height: `calc(100vh - (${headerHeight}px + 1rem))` }"
+      >
+        <div class="overflow-y-auto scrollbar-hide">
           <div v-if="hasEmptyItems" class="sticky top-0 bg-gray-50">
             <button
               v-show="todoCount"
@@ -28,7 +31,7 @@
               }"
               @click="translateItems"
             >
-              <Icon class="w-auto text-gray-800" name="sparkles" />
+              <Icon class="text-gray-800 size-4" name="sparkles" />
               <span>
                 {{
                   isTranslating
@@ -38,14 +41,16 @@
               </span>
             </button>
           </div>
-          <UiStringItem
-            v-for="item in filteredItems"
-            v-show="filteredItems.length"
-            :key="item.key"
-            :item="item"
-            :is-selected="selectedItem?.key === item.key"
-            @click="selectItem(item)"
-          />
+          <div class="overflow-hidden bg-white rounded-lg shadow">
+            <UiStringItem
+              v-for="item in filteredItems"
+              v-show="filteredItems.length"
+              :key="item.key"
+              :item="item"
+              :is-selected="selectedItem?.key === item.key"
+              @click="selectItem(item)"
+            />
+          </div>
         </div>
         <div>
           <template v-if="filteredItems.length">
@@ -62,21 +67,21 @@
                 @apply-suggestion="handleApplySuggestion"
               />
             </form>
-            <div v-show="isTranslating" class="grid h-full w-full place-content-center">
+            <div v-show="isTranslating" class="grid w-full h-full place-content-center">
               <RivePlayer
                 url="https://res.cloudinary.com/redeem/raw/upload/v1743751242/story-cms-ui/audio_visualizer_resize_teno9b.riv"
               />
             </div>
           </template>
           <div v-else class="py-10 text-gray-500">
-            <p v-if="searchTerm" class="text-center text-sm">
+            <p v-if="searchTerm" class="text-sm text-center">
               No results found for "{{ searchTerm }}"
             </p>
           </div>
         </div>
         <div
           v-if="activeFilter === 'todo' && !todoCount && !searchTerm"
-          class="col-span-2 row-start-1 flex flex-col items-center justify-center"
+          class="flex flex-col items-center justify-center col-span-2 row-start-1"
         >
           <Icon class="size-96" name="inbox-zero" />
         </div>
@@ -91,6 +96,7 @@ import axios from 'axios';
 import { router } from '@inertiajs/vue3';
 import { AxiosError } from 'axios';
 
+import ContentHeader from '../shared/content-header.vue';
 import UiToolbar from './components/ui-toolbar.vue';
 import UiStringItem from './components/ui-string-item.vue';
 import UiCard from './components/ui-card.vue';
@@ -189,7 +195,8 @@ const filteredItems = computed(() => {
 
 const shared = useSharedStore();
 shared.setFromProps(props);
-// shared.setUiTodoCount(todoCount.value);
+
+const headerHeight = computed(() => shared.headerHeight);
 
 watch(todoCount, (newCount) => {
   shared.setUiTodoCount(newCount);

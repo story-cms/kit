@@ -1,20 +1,21 @@
 <template>
   <ul v-for="(_listItem, index) in listItems" :key="index">
     <li
-      class="relative mb-8 ml-3 border-gray-300 bg-transparent pl-3 pt-10"
+      class="relative pt-10 pl-3 mb-8 ml-3 bg-transparent border-gray-300"
       :class="{
         'border-l': isExpanded(index) && !isReadOnly,
-        'border-t': !isReadOnly && (!shared.isTranslation || drafts.isSingleColumn),
+        'border-t': !isReadOnly && !shared.isTranslation,
       }"
     >
       <div
-        v-if="shared.isTranslation && !drafts.isSingleColumn && !isReadOnly"
-        class="absolute left-0 right-0 top-0 w-[calc(47rem_*_2)] border-t border-gray-300"
+        v-if="!isReadOnly && shared.isTranslation"
+        class="absolute top-0 left-0 right-0 border-t border-gray-300"
+        :style="{ width: borderWidth }"
       ></div>
 
       <div
         v-if="!isReadOnly"
-        class="absolute -left-5 right-0 ml-2 flex items-center justify-between"
+        class="absolute right-0 flex items-center justify-between ml-2 -left-5"
         :class="{
           '-top-[17.6px]': shared.isTranslation,
           '-top-5': !shared.isTranslation,
@@ -28,27 +29,27 @@
           <icon
             v-if="isExpanded(index)"
             name="chevron-down"
-            class="icon mr-1"
+            class="mr-1 icon"
             aria-hidden="true"
           />
-          <icon v-else name="chevron-right" class="icon mr-1" aria-hidden="true" />
+          <icon v-else name="chevron-right" class="mr-1 icon" aria-hidden="true" />
           <span>
             {{ String(sectionTitle(index)) }}
           </span>
         </button>
         <div v-if="itemHasError(index)" class="text-accent-one">
-          <div class="rounded-full border bg-white p-2">
-            <Icon name="exclamation" class="h-10 w-10 text-red-500" />
+          <div class="p-2 bg-white border rounded-full">
+            <Icon name="exclamation" class="w-10 h-10 text-red-500" />
           </div>
         </div>
         <button
           v-if="canMutate"
           type="button"
-          class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
+          class="flex items-center justify-center w-10 h-10 text-gray-500 bg-white border rounded-full cursor-pointer"
           @click="emit('removeSet', index)"
         >
-          <span v-if="!isReadOnly" class="flex h-10 w-10 items-center justify-center">
-            <Icon name="trash" class="h-auto w-auto" />
+          <span v-if="!isReadOnly" class="flex items-center justify-center w-10 h-10">
+            <Icon name="trash" class="w-auto h-auto" />
           </span>
         </button>
       </div>
@@ -83,7 +84,7 @@
   <div v-if="canMutate" class="flex items-center gap-4">
     <AddItemButton :label="field.label" @add="emit('addSet')" />
     <div v-if="showEmptyListWarning()">
-      <div class="flex flex-row items-center rounded-full border bg-white p-2 text-error">
+      <div class="flex flex-row items-center p-2 bg-white border rounded-full text-error">
         <Icon name="exclamation" class="pr-2" />
         <p class="text-sm">At least one item is required</p>
       </div>
@@ -96,12 +97,7 @@ import { computed } from 'vue';
 import type { PropType } from 'vue';
 import type { FieldSpec } from '../../../types';
 import Icon from '../../shared/icon.vue';
-import {
-  useModelStore,
-  useWidgetsStore,
-  useSharedStore,
-  useDraftsStore,
-} from '../../store';
+import { useModelStore, useWidgetsStore, useSharedStore } from '../../store';
 import AddItemButton from '../../shared/add-item-button.vue';
 
 const props = defineProps({
@@ -130,7 +126,6 @@ const fields = field.value.fields as FieldSpec[];
 const model = useModelStore();
 const widgets = useWidgetsStore();
 const shared = useSharedStore();
-const drafts = useDraftsStore();
 
 const canMutate = computed(() => {
   if (props.isReadOnly) return false;
@@ -193,4 +188,9 @@ const showEmptyListWarning = (): boolean => {
   }
   return false;
 };
+
+const borderWidth = computed(() => {
+  if (shared.showSourceColumn) return `${shared.headerWidth - 30}px`;
+  return '100%';
+});
 </script>

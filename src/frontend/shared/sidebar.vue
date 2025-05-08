@@ -1,126 +1,159 @@
 <template>
-  <nav
+  <aside
     :class="[
-      shared.hasNonFloatingSidebar
-        ? 'sticky left-0 top-0 h-screen overflow-y-auto rounded-r-[20px] border pb-[26px] pt-9'
-        : 'fixed top-5 rounded-[20px] bg-white px-7 py-4 shadow-lg',
-      shared.hasOpenSidebar ? 'h-[calc(100vh-40px)]' : '',
-      'z-20 flex w-full max-w-96 flex-col',
+      'max-w-[320px] bg-white shadow-md transition-all duration-75',
+      shared.hasFloatingSidebar ? 'fixed inset-y-0 z-30' : 'sticky z-10',
+      shared.hasOpenSidebar
+        ? 'top-0 max-h-screen rounded-r-[20px]'
+        : 'top-3 mx-auto max-h-min rounded-full',
     ]"
   >
-    <div :class="[shared.hasNonFloatingSidebar ? 'px-10' : 'px-0']">
-      <div v-if="!shared.hasFeedback" class="flex justify-between">
-        <Link href="/">
-          <Icon name="home" />
-        </Link>
-        <button @click="goBack">
-          <Icon name="reply" />
-        </button>
-        <LanguageSelector
-          :is-expanded="shared.hasOpenSidebar"
-          :current-locale="currentLocale"
-          :current-language="form.language"
-          :languages="shared.languages"
-          @language-change="onLanguage"
-        />
-        <button @click="toggleMenu">
-          <Icon v-if="!shared.hasOpenSidebar" name="chevron-double-right" />
-          <Icon v-else name="chevron-double-left" />
-        </button>
-      </div>
-      <MessageCentre
-        v-else
-        :response="shared.messageCentre.response"
-        :message="shared.messageCentre.message"
-      />
-    </div>
-    <div v-if="shared.hasOpenSidebar" class="mt-14 grow">
-      <div class="grid grid-cols-1 gap-4 pl-8">
-        <Link
-          class="hover:gray-800 px-3 py-2 text-lg font-semibold leading-6 text-black"
-          href="/"
+    <nav :class="{ 'flex h-full flex-col justify-between': shared.hasOpenSidebar }">
+      <div>
+        <div
+          :class="[
+            'flex',
+            shared.hasOpenSidebar ? 'justify-between p-5' : 'flex-col gap-y-3 p-2',
+          ]"
         >
-          Dashboard
-        </Link>
-        <div v-for="story in shared.stories" :key="story">
-          <button
-            class="hover:gray-800 block px-3 py-2 text-lg font-semibold leading-6 text-black"
-            @click="onStory(story)"
-          >
-            {{ story }}
+          <Link :class="['nav-icon']" href="/">
+            <Icon name="home" />
+          </Link>
+          <button class="nav-icon" @click="goBack">
+            <Icon name="reply" />
+          </button>
+          <div v-if="isMultiLingual">
+            <button
+              v-if="shared.hasOpenSidebar"
+              class="relative flex items-center justify-center transition-all duration-75 rounded-full size-14"
+            >
+              <span
+                class="absolute right-2 top-4 rounded-[7px] bg-blue-100 px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-blue-800"
+              >
+                {{ currentLocale }}
+              </span>
+              <Icon name="translate" />
+            </button>
+            <LanguageSelector
+              v-if="!shared.hasOpenSidebar"
+              :current-locale="currentLocale"
+              :current-language="form.language"
+              :languages="shared.languages"
+              @language-change="onLanguage"
+            />
+          </div>
+          <button class="nav-icon" @click="toggleMenu">
+            <Icon v-if="!shared.hasOpenSidebar" name="chevron-double-right" />
+            <Icon v-else name="chevron-double-left" />
           </button>
         </div>
-        <Link
-          class="hover:gray-800 px-3 py-2 text-lg font-semibold leading-6 text-black"
-          href="/page"
-          >Pages</Link
-        >
-        <div v-if="isMultiLingual">
-          <span
-            v-if="currentLocale === 'en'"
-            class="hover:gray-800 cursor-not-allowed px-3 py-2 text-lg font-semibold leading-6 text-black opacity-50"
-            >Interface</span
-          >
-          <Link
-            v-else
-            class="hover:gray-800 px-3 py-2 text-lg font-semibold leading-6 text-black"
-            href="/ui"
-            >Interface
-            <span
-              class="absolute ml-2 rounded-full bg-red-100 px-1 py-[2px] text-xs font-medium leading-4 text-red-800"
-              >{{ shared.uiTodoCount }}</span
+        <div :class="[shared.hasOpenSidebar ? 'mt-4 flex flex-col px-4' : 'hidden']">
+          <section class="grid grid-cols-1">
+            <div v-for="story in shared.stories" :key="story">
+              <button
+                :class="[
+                  'nav-link',
+                  {
+                    active:
+                      story.toLowerCase() === shared.currentStoryName?.toLowerCase() &&
+                      ($page?.url === '/' ||
+                        $page?.url.startsWith('/chapter') ||
+                        $page?.url.startsWith('/draft')),
+                  },
+                ]"
+                @click="onStory(story)"
+              >
+                {{ story }}
+              </button>
+            </div>
+            <Link
+              :class="[
+                'nav-link',
+                {
+                  active: $page?.url.startsWith('/page'),
+                },
+              ]"
+              href="/page"
+              >Pages</Link
             >
-          </Link>
+            <div v-if="isMultiLingual">
+              <button
+                v-if="currentLocale === 'en'"
+                class="opacity-50 nav-link disabled:cursor-not-allowed"
+                disabled
+              >
+                Interface
+              </button>
+              <Link
+                v-else
+                :class="[
+                  'nav-link flex items-center justify-between',
+                  {
+                    active: $page?.url === '/ui',
+                  },
+                ]"
+                href="/ui"
+                ><span>Interface</span>
+                <span class="text-yellow-500">{{ shared.uiTodoCount }}</span>
+              </Link>
+            </div>
+          </section>
+          <div class="border-t border-gray-200 my-7"></div>
+          <section class="grid grid-cols-1">
+            <!-- <Link class="flex items-center nav-link gap-x-3" href="/profile">
+              <Icon name="user" />
+              <span>Profile</span>
+            </Link> -->
+            <Link
+              v-if="isAdmin"
+              :class="[
+                'nav-link flex items-center gap-x-3',
+                {
+                  active: $page?.url === '/user',
+                },
+              ]"
+              href="/user"
+            >
+              <Icon name="users" />
+              <span>Users</span>
+            </Link>
+            <Link
+              v-if="shared.meta.helpUrl"
+              class="flex items-center nav-link gap-x-3"
+              :href="shared.meta.helpUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Icon name="help" />
+              <span>Help</span>
+            </Link>
+            <button class="flex items-center nav-link gap-x-3" @click="signOut">
+              <Icon name="logout" />
+              <span>Logout</span>
+            </button>
+          </section>
         </div>
       </div>
-      <div class="mx-5 my-4 border-t border-gray-400"></div>
-      <div class="grid grid-cols-1 gap-y-6 pl-8">
-        <Link
-          v-if="isAdmin"
-          class="hover:gray-800 flex items-center gap-x-2 px-3 py-2 text-lg font-semibold leading-6 text-black"
-          href="/user"
-        >
-          <Icon name="users" />
-          <span> Users </span>
-        </Link>
-        <Link
-          v-if="shared.meta.helpUrl"
-          class="p y-2 items- hover:gray-800 flex items-center gap-x-2 px-3 text-lg font-semibold leading-6 text-black"
-          :href="shared.meta.helpUrl"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Icon name="question-mark" />
-          <span> Help </span>
-        </Link>
-        <button
-          class="hover:gray-800 flex items-center gap-x-2 px-3 py-2 text-lg font-semibold leading-6 text-black"
-          @click="signOut()"
-        >
-          <Icon name="logout" />
-          <span> Log out </span>
-        </button>
+      <div :class="[shared.hasOpenSidebar ? 'px-4 pb-4' : 'hidden']">
+        <DropUp
+          v-model="form.language"
+          :is-read-only="!shared.user.isManager"
+          :options="languageOptions"
+          @change="onLanguage"
+        />
       </div>
-    </div>
-    <div v-if="shared.hasOpenSidebar" class="flex items-center justify-center">
-      <DropUp
-        v-model="form.language"
-        :is-read-only="!shared.user.isManager"
-        :options="languageOptions"
-        @change="onLanguage"
-      />
-    </div>
-  </nav>
+    </nav>
+  </aside>
 </template>
 
 <script setup lang="ts">
-import { Link, useForm } from '@inertiajs/vue3';
 import { computed, watch } from 'vue';
-import DropUp from './drop-up.vue';
-import MessageCentre from './message-centre.vue';
-import Icon from './icon.vue';
-import LanguageSelector from './language-selector.vue';
 import { useSharedStore } from '../store';
+import { Link, useForm } from '@inertiajs/vue3';
+
+import Icon from '../shared/icon.vue';
+import LanguageSelector from './language-selector.vue';
+import DropUp from './drop-up.vue';
 
 const shared = useSharedStore();
 
@@ -174,9 +207,21 @@ watch(
     if (newVal && shared.isLargeScreen) {
       shared.setSidebarAsFloating(false);
     }
-    if (!newVal && shared.isLargeScreen) {
+    if (newVal && !shared.isLargeScreen) {
       shared.setSidebarAsFloating(true);
     }
+    if (!newVal) {
+      shared.setSidebarAsFloating(false);
+    }
   },
+  { immediate: true },
 );
 </script>
+<style lang="postcss" scoped>
+.nav-icon {
+  @apply flex size-14 items-center justify-center rounded-full transition-all duration-200 ease-in-out hover:bg-gray-100;
+}
+.nav-link {
+  @apply w-full rounded-full px-6 py-[18px] text-left text-sm font-semibold leading-5 transition-all duration-200 ease-in-out hover:bg-gray-100;
+}
+</style>

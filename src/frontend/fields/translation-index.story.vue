@@ -15,11 +15,11 @@
         :errors="sharedProps.errors"
         :meta="sharedProps.meta"
         :user="sharedProps.user"
-        :language="sharedProps.language"
+        :language="spanish"
         :languages="sharedProps.languages"
         :story-name="'John'"
         :stories="['John', 'Acts']"
-        :ui-progress="sharedProps.uiProgress"
+        :ui-todo-count="sharedProps.uiTodoCount"
       />
     </Variant>
   </Story>
@@ -27,7 +27,7 @@
 
 <script setup lang="ts">
 import TranslationIndex from './translation-index.vue';
-import { listInListSpec, listInListModel, sharedProps } from '../test/mocks';
+import { listInListSpec, listInListModel, sharedProps, spanish } from '../test/mocks';
 
 const fields = [
   { name: 'title', label: 'Title', widget: 'string' },

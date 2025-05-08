@@ -1,57 +1,83 @@
 <template>
   <AppLayout>
-    <div class="container p-3 mx-auto">
-      <div class="flex items-center justify-between my-4">
-        <h3 class="text-xl font-semibold">{{ meta.storyType }}: {{ props.storyName }}</h3>
-        <icon :name="iconName" class="w-8 h-8 text-black" @click.prevent="toggle" />
-      </div>
-
-      <div class="flex items-center justify-between mb-4">
-        <div class="flex space-x-6">
-          <input
-            v-model="filterNumber"
-            class="block w-24 px-3 py-1 text-sm font-normal leading-5 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-            :placeholder="meta.chapterType"
-          />
-          <AddItemButton
-            v-if="addStatus == AddStatus.Add"
-            :label="meta.chapterType"
-            @add="addDraft"
-          />
-          <button
-            v-if="addStatus == AddStatus.Wait"
-            type="button"
-            class="inline-flex items-center rounded-xl bg-indigo-50 px-3 py-[9px] text-sm font-medium leading-4 text-indigo-700 shadow-sm"
-            disabled
+    <template #header>
+      <ContentHeader :title="`${meta.storyType}: ${shared.currentStoryName}`">
+        <template #actions>
+          <icon :name="iconName" class="w-8 h-8 text-black" @click.prevent="toggle" />
+        </template>
+        <template #extra-actions>
+          <div
+            class="flex flex-col justify-between mb-4 gap-y-4 md:flex-row md:items-center md:gap-x-4"
           >
-            {{ `No more ${meta.chapterType}s available to translate` }}
-          </button>
-        </div>
-        <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
-      </div>
-      <div
-        class="grid grid-cols-1 gap-4"
-        :class="{
-          ' sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5': !isList,
-        }"
-      >
-        <index-card
-          v-for="item in filteredIndex"
-          :key="item.number"
-          :item="item"
-          :is-list="isList"
-          placeholder-image="https://res.cloudinary.com/onesheep/image/upload/v1684754051/Screenshot_2023-05-22_at_13.12.03_pnamdt.png"
-          :scope="currentTab"
-          :chapter-name="meta.chapterType"
-          @tap="onTap"
-        />
-      </div>
+            <div class="flex gap-x-4">
+              <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
+
+              <AddItemButton
+                v-if="addStatus == AddStatus.Add"
+                :label="meta.chapterType"
+                @add="addDraft"
+              />
+              <button
+                v-if="addStatus == AddStatus.Wait"
+                type="button"
+                class="inline-flex items-center rounded-xl bg-indigo-50 px-3 py-[9px] text-sm font-medium leading-4 text-indigo-700 shadow-sm"
+                disabled
+              >
+                {{ `No more ${meta.chapterType}s available to translate` }}
+              </button>
+            </div>
+
+            <div class="grid grid-cols-1">
+              <input
+                id="search"
+                v-model="filterNumber"
+                type="text"
+                name="search"
+                class="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pl-10 pr-3 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:pl-9 sm:text-sm/6"
+                :placeholder="meta.chapterType"
+              />
+              <Icon
+                name="search"
+                class="self-center col-start-1 row-start-1 ml-4 text-gray-400 pointer-events-none size-4"
+              />
+            </div>
+          </div>
+        </template>
+      </ContentHeader>
+    </template>
+    <div
+      :class="[
+        'grid gap-4',
+        {
+          'grid-cols-[repeat(auto-fit,_minmax(260px,_1fr))]':
+            !isList && filteredIndex.length > 3,
+        },
+        {
+          'grid-cols-[repeat(auto-fit,_minmax(260px,_260px))]':
+            !isList && filteredIndex.length <= 3,
+        },
+        {
+          'grid-cols-1': isList,
+        },
+      ]"
+    >
+      <index-card
+        v-for="item in filteredIndex"
+        :key="item.number"
+        :item="item"
+        :is-list="isList"
+        placeholder-image="https://res.cloudinary.com/onesheep/image/upload/v1684754051/Screenshot_2023-05-22_at_13.12.03_pnamdt.png"
+        :scope="currentTab"
+        :chapter-name="meta.chapterType"
+        @tap="onTap"
+      />
     </div>
   </AppLayout>
 </template>
 
 <script setup lang="ts">
 import AppLayout from '../shared/app-layout.vue';
+import ContentHeader from '../shared/content-header.vue';
 import { computed, ref } from 'vue';
 
 import Icon from '../shared/icon.vue';
@@ -64,7 +90,9 @@ import { useSharedStore } from '../store';
 
 const props = defineProps<DashboardProps & SharedPageProps>();
 
-useSharedStore().setFromProps(props);
+const shared = useSharedStore();
+
+shared.setFromProps(props);
 
 const isList = ref(false);
 const toggle = () => {

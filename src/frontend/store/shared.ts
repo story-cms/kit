@@ -7,7 +7,6 @@ import {
   LanguageSpecification,
   User,
   ResponseStatus,
-  
 } from '../../types';
 
 const defaultLanguage: LanguageSpecification = {
@@ -30,6 +29,7 @@ export const useSharedStore = defineStore('shared', () => {
     user.value = props.user;
     language.value = props.language;
     uiTodoCount.value = props.uiTodoCount;
+    currentStoryName.value = props.storyName;
   };
 
   // errors
@@ -60,10 +60,10 @@ export const useSharedStore = defineStore('shared', () => {
 
   // sidebar
 
-  const hasNonFloatingSidebar = ref(true);
+  const hasFloatingSidebar = ref(false);
 
   const setSidebarAsFloating = (isFloating: boolean) => {
-    hasNonFloatingSidebar.value = !isFloating;
+    hasFloatingSidebar.value = isFloating;
   };
 
   const hasOpenSidebar = ref(true);
@@ -72,11 +72,38 @@ export const useSharedStore = defineStore('shared', () => {
     hasOpenSidebar.value = isOpen;
   };
 
+  const currentStoryName = ref('');
+
+  // main and header
+
+  const isMainUnderHeader = ref(false);
+
+  const setMainUnderHeader = (isUnder: boolean) => {
+    isMainUnderHeader.value = isUnder;
+  };
+
+  const headerHeight = ref(0);
+  const headerWidth = ref(0);
+  const layoutWidth = ref(0);
+  const containerWidth = ref(0);
+
+  const setLayoutWidth = (fresh: number) => {
+    layoutWidth.value = fresh;
+  };
+
+  const setHeaderSize = (height: number, width: number) => {
+    headerHeight.value = height;
+    headerWidth.value = width;
+  };
+
+  const setContainerWidth = (fresh: number) => {
+    containerWidth.value = fresh;
+  };
 
   // ui counter
 
   const uiTodoCount: Ref<number> = ref(0);
-  
+
   const setUiTodoCount = (fresh: number) => {
     uiTodoCount.value = fresh;
   };
@@ -115,9 +142,30 @@ export const useSharedStore = defineStore('shared', () => {
     language.value = fresh;
   };
 
-  const isIntersecting = ref(false);
-  const setIsIntersecting = (fresh: boolean) => {
-    isIntersecting.value = fresh;
+  // content sidebar
+  const isSingleColumn = ref(false);
+  const setSingleColumn = (value: boolean) => {
+    isSingleColumn.value = value;
+  };
+
+  const showMetaBox = ref(true);
+  const setShowMetaBox = (value: boolean) => {
+    showMetaBox.value = value;
+  };
+
+  const showAppPreview = ref(true);
+  const setShowAppPreview = (value: boolean) => {
+    showAppPreview.value = value;
+  };
+
+  const hasFloatingContentSidebar = ref(false);
+  const setContentSidebarAsFloating = (value: boolean) => {
+    hasFloatingContentSidebar.value = value;
+  };
+
+  const showSourceColumn = ref(true);
+  const setSourceColumnAsHidden = (value: boolean) => {
+    showSourceColumn.value = value;
   };
 
   return {
@@ -128,17 +176,27 @@ export const useSharedStore = defineStore('shared', () => {
     user,
     messageCentre,
     hasFeedback,
-    
+
     isLargeScreen,
     setLargeScreen,
-    
-    isIntersecting,
-    setIsIntersecting,
-    
-    hasNonFloatingSidebar,
+
+    isMainUnderHeader,
+    setMainUnderHeader,
+    headerHeight,
+    headerWidth,
+    setHeaderSize,
+    layoutWidth,
+    setLayoutWidth,
+    containerWidth,
+    setContainerWidth,
+
+    hasFloatingSidebar,
     setSidebarAsFloating,
+
     hasOpenSidebar,
     setSidebarOpen,
+
+    currentStoryName,
 
     uiTodoCount,
     setUiTodoCount,
@@ -156,5 +214,20 @@ export const useSharedStore = defineStore('shared', () => {
     errorMessages,
     setFromProps,
     addMessage,
+
+    isSingleColumn,
+    setSingleColumn,
+
+    hasFloatingContentSidebar,
+    setContentSidebarAsFloating,
+
+    showSourceColumn,
+    setSourceColumnAsHidden,
+
+    showMetaBox,
+    setShowMetaBox,
+
+    showAppPreview,
+    setShowAppPreview,
   };
 });

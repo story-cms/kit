@@ -1,42 +1,42 @@
 <template>
   <Story title="Workflow Buttons" group="draft">
     <Variant title="Admin no review draft submitted" :setup-app="loadData">
-      <WorkflowButtons />
+      <WorkflowActions />
     </Variant>
     <Variant title="Admin has review draft submitted" :setup-app="loadData">
-      <WorkflowButtons />
+      <WorkflowActions />
     </Variant>
     <Variant title="Editor has review draft submitted" :setup-app="loadData">
-      <WorkflowButtons />
+      <WorkflowActions />
     </Variant>
     <Variant title="Editor no review draft submitted" :setup-app="loadData">
-      <WorkflowButtons />
+      <WorkflowActions />
     </Variant>
     <Variant title="Admin no review draft started" :setup-app="loadData">
-      <WorkflowButtons />
+      <WorkflowActions />
     </Variant>
     <Variant title="Admin no review draft started" :setup-app="loadData">
-      <WorkflowButtons />
+      <WorkflowActions />
     </Variant>
     <Variant title="Admin has review draft started" :setup-app="loadData">
-      <WorkflowButtons />
+      <WorkflowActions />
     </Variant>
     <Variant title="Editor has review draft started" :setup-app="loadData">
-      <WorkflowButtons />
+      <WorkflowActions />
     </Variant>
     <Variant title="Editor no review draft started" :setup-app="loadData">
-      <WorkflowButtons />
+      <WorkflowActions />
     </Variant>
     <Variant title="Admin no review draft started" :setup-app="loadData">
-      <WorkflowButtons />
+      <WorkflowActions />
     </Variant>
   </Story>
 </template>
 
 <script setup lang="ts">
-import WorkflowButtons from './workflow-buttons.vue';
+import WorkflowActions from './workflow-actions.vue';
 import { useSharedStore, useDraftsStore } from '../store';
-import { sharedProps } from '../../frontend/test/mocks';
+import { sharedProps } from '../test/mocks';
 
 import type { StoryHandler } from '../shared/helpers';
 

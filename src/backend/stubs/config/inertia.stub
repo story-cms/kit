@@ -52,6 +52,9 @@ const inertiaConfig = defineConfig({
     languages: () => storyConfig.languages,
     errors: (ctx) => ctx.session?.flashMessages.get('errors') ?? {},
     uiTodoCount: (ctx) => getTodoCount(ctx),
+    storyName: (ctx) => {
+      return ctx.params.story;
+    },
   },
 
   /**

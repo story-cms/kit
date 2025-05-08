@@ -25,6 +25,7 @@ const items = [
     source: 'Hello and Welcome!',
     translation: 'Hola y Bienvenido!',
     description: 'The main welcome message',
+    flag: 'recheck',
   },
   {
     key: 'welcomeSubtitle',
@@ -37,6 +38,7 @@ const items = [
     source: 'Discover amazing features in this app.',
     translation: 'Descubre funciones increíbles en esta aplicación.',
     description: 'Introduction message for new users',
+    flag: 'prefilled',
   },
   {
     key: 'featureHighlight1',
