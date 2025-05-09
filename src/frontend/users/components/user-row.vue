@@ -3,19 +3,21 @@
     <div class="flex items-center">
       <div class="size-11 shrink-0">
         <div class="grid size-11 place-items-center rounded-full bg-red-300">
-          <p class="font-extrabold text-white">
+          <p class="font-extrabold uppercase text-white">
             {{ user.initials }}
           </p>
         </div>
       </div>
       <div class="ml-4">
-        <div class="font-medium text-gray-900">{{ user.name }}</div>
+        <div class="font-medium capitalize text-gray-900">{{ user.name }}</div>
         <div class="text-gray-500">{{ user.email }}</div>
       </div>
     </div>
   </td>
   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-800">
-    <span class="rounded-full bg-gray-100 px-[10px] py-[2px]"> {{ user.role }}</span>
+    <span class="rounded-full bg-gray-100 px-[10px] py-[2px] capitalize">
+      {{ user.role }}</span
+    >
   </td>
   <td class="whitespace-nowrap px-3 py-4 text-sm text-blue-800">
     <span class="rounded-full bg-blue-100 px-[10px] py-[2px]"> {{ language }}</span>
@@ -51,7 +53,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import Icon from '../../shared/icon.vue';
-import type { User } from '../../../types';
+import type { UserMeta } from '../../../types';
 import { useSharedStore } from '../../store';
 
 const shared = useSharedStore();
@@ -64,7 +66,7 @@ const emit = defineEmits<{
 }>();
 
 const props = defineProps<{
-  user: User;
+  user: UserMeta;
 }>();
 
 const language = computed(() => {
