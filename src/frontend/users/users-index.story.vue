@@ -10,6 +10,7 @@
         :languages="sharedProps.languages"
         :stories="['John', 'Acts']"
         :ui-todo-count="sharedProps.uiTodoCount"
+        :story-name="'John'"
       />
     </Variant>
     <Variant title="With feedback" :setup-app="loadData">
@@ -22,6 +23,7 @@
         :languages="sharedProps.languages"
         :stories="['John', 'Acts']"
         :ui-todo-count="sharedProps.uiTodoCount"
+        :story-name="'John'"
       />
     </Variant>
   </Story>

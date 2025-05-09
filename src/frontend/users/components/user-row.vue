@@ -29,10 +29,21 @@
     </button>
     <div
       v-if="showDropdown"
-      class="z absolute -left-16 top-12 z-10 flex flex-col gap-2 rounded-lg border bg-white p-2 shadow-sm"
+      class="absolute -left-16 top-12 z-10 flex w-[164px] flex-col gap-2 rounded-lg border bg-white shadow-sm"
     >
-      <button class="px-4 py-2 text-sm text-gray-500">Update User</button>
-      <button class="px-4 py-2 text-sm text-gray-500">Remove User</button>
+      <button
+        class="py-4 pl-6 text-left text-sm text-gray-500 hover:bg-gray-100"
+        @click="(emit('update'), (showDropdown = false))"
+      >
+        Update User
+      </button>
+      <button
+        v-if="user.id != shared.user.id"
+        class="py-4 pl-6 text-left text-sm text-gray-500 hover:bg-gray-100"
+        @click="(emit('remove'), (showDropdown = false))"
+      >
+        Remove User
+      </button>
     </div>
   </td>
 </template>
@@ -43,9 +54,14 @@ import Icon from '../../shared/icon.vue';
 import type { User } from '../../../types';
 import { useSharedStore } from '../../store';
 
-const sharedStore = useSharedStore();
+const shared = useSharedStore();
 
 const showDropdown = ref(false);
+
+const emit = defineEmits<{
+  (e: 'update'): void;
+  (e: 'remove'): void;
+}>();
 
 const props = defineProps<{
   user: User;
@@ -56,7 +72,7 @@ const language = computed(() => {
     return 'All';
   }
 
-  return sharedStore.languages.find((language) => language.locale === props.user.language)
+  return shared.languages.find((language) => language.locale === props.user.language)
     ?.language;
 });
 </script>
