@@ -1,34 +1,49 @@
 <template>
   <AppLayout>
-    <div class="container px-3 mx-auto mt-10">
-      <div class="flow-root mt-8">
+    <template #header>
+      <ContentHeader title="User Management">
+        <template #actions>
+          <div class="flex items-center gap-x-6">
+            <button
+              type="button"
+              class="rounded-full border border-gray-300 bg-white p-2 shadow hover:bg-blue-100"
+              @click="onAdd()"
+            >
+              <Icon name="plus" class="text-gray-900" />
+            </button>
+          </div>
+        </template>
+      </ContentHeader>
+    </template>
+    <div>
+      <div class="mt-8 flow-root">
         <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
             <div class="overflow-hidden shadow ring-1 ring-black/5 sm:rounded-lg">
               <table class="min-w-full divide-y divide-gray-300">
-                <thead class="uppercase bg-gray-50">
+                <thead class="bg-gray-50 uppercase">
                   <tr>
                     <th
                       scope="col"
-                      class="py-3 pl-4 pr-3 text-xs font-medium tracking-wide text-left text-gray-500 uppercase sm:pl-6"
+                      class="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6"
                     >
                       Name
                     </th>
                     <th
                       scope="col"
-                      class="px-3 py-3 text-xs font-medium tracking-wide text-left text-gray-500 uppercase"
+                      class="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
                     >
                       Role
                     </th>
                     <th
                       scope="col"
-                      class="px-3 py-3 text-xs font-medium tracking-wide text-left text-gray-500 uppercase"
+                      class="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
                     >
                       Languages
                     </th>
                     <th
                       scope="col"
-                      class="px-3 py-3 text-xs font-medium tracking-wide text-left text-gray-500 uppercase"
+                      class="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
                     >
                       Last Activity
                     </th>
@@ -37,7 +52,7 @@
                     </th>
                   </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody class="divide-y divide-gray-200 bg-white">
                   <tr v-for="person in people" :key="person.email">
                     <UserRow :user="person" />
                   </tr>
@@ -48,7 +63,7 @@
         </div>
       </div>
     </div>
-    <div class="container p-3 mx-auto">
+    <div>
       <h2 class="mb-4 text-2xl font-bold leading-7 text-black">Manage Users</h2>
       <div v-if="otherError" class="py-4 text-error">
         {{ otherError }}
@@ -58,7 +73,7 @@
           <li
             v-for="user in users"
             :key="user.id"
-            class="flex justify-between py-2 text-xl border-b border-gray-300"
+            class="flex justify-between border-b border-gray-300 py-2 text-xl"
           >
             <div class="cursor-pointer" @click="focus(user)">
               {{ user.name }} &lt;{{ user.email }}&gt;
@@ -69,12 +84,12 @@
               class="cursor-pointer"
               @click="deleteUser(user)"
             >
-              <icon name="trash" class="w-10 h-10" />
+              <icon name="trash" class="h-10 w-10" />
             </button>
           </li>
         </ul>
         <div class="my-8">
-          <button type="button" class="w-32 btn btn-blue" @click="onAdd()">
+          <button type="button" class="btn btn-blue w-32" @click="onAdd()">
             Add User
           </button>
         </div>
@@ -134,10 +149,10 @@
             </p>
           </div>
 
-          <div class="flex my-8 space-x-4">
+          <div class="my-8 flex space-x-4">
             <!-- eslint-disable vue/no-v-html -->
-            <button class="w-32 btn btn-blue" type="submit" v-html="submitLabel"></button>
-            <button class="w-32 bg-white btn" type="button" @click.prevent="onCancel()">
+            <button class="btn btn-blue w-32" type="submit" v-html="submitLabel"></button>
+            <button class="btn w-32 bg-white" type="button" @click.prevent="onCancel()">
               Cancel
             </button>
           </div>
@@ -151,6 +166,7 @@
 import { computed, ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import AppLayout from '../shared/app-layout.vue';
+import ContentHeader from '../shared/content-header.vue';
 import Icon from '../shared/icon.vue';
 import UserRow from './components/user-row.vue';
 import { SharedPageProps, UsersProps, UserMeta, type User } from '../../types';
