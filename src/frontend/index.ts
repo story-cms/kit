@@ -25,7 +25,6 @@ import SelectField from './fields/select-field.vue';
 import IndexFilter from './shared/index-filter.vue';
 import AddItemButton from './shared/add-item-button.vue';
 import PublicLayout from './shared/public-layout.vue';
-import MakeSticky from './shared/make-sticky.vue';
 import PageIndexItem from './pages/page-index-item.vue';
 import DraftIndex from './fields/draft-index.vue';
 import TranslationIndex from './fields/translation-index.vue';
@@ -70,7 +69,6 @@ export {
   IndexFilter,
   AddItemButton,
   PublicLayout,
-  MakeSticky,
   PageIndexItem,
   DraftIndex,
   TranslationIndex,

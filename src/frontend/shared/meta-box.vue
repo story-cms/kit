@@ -1,19 +1,8 @@
 <template>
-  <div
-    class="relative max-w-[416px] bg-gray-200 p-9 font-['Inter'] text-gray-600 shadow-sm"
-    :class="{
-      'mt-3': props.isFloating,
-    }"
-  >
-    <button
-      v-if="props.isFloating"
-      type="button"
-      class="absolute -right-2 -top-2 inline-flex size-[42px] items-center justify-center rounded-full bg-white"
-      @click.prevent="emit('close')"
+  <div class="rounded-lg border border-gray-100 font-['Inter']">
+    <section
+      class="grid grid-cols-1 px-4 py-2 text-xs font-semibold leading-4 text-gray-500 gap-y-2 bg-gray-50"
     >
-      <icon name="cross" class="w-6 h-6" />
-    </button>
-    <section class="space-y-2 font-['Inter'] text-lg/7 font-bold">
       <div class="grid grid-cols-2">
         <p>{{ props.storyType }}</p>
         <span class="text-right place-self-end">{{ story }}</span>
@@ -23,8 +12,9 @@
         <span class="text-right place-self-end">{{ props.chapterType }}</span>
       </div>
     </section>
-    <div class="my-2 border-t border-gray-600"></div>
-    <section class="space-y-2 font-['Inter'] text-lg/7 font-medium">
+    <section
+      class="grid grid-cols-1 px-4 pt-2 pb-4 text-xs font-normal leading-4 text-gray-600 bg-white p gap-y-2"
+    >
       <div class="grid grid-cols-2">
         <p>Created</p>
         <span class="text-right place-self-end">{{ formatDate(props.createdAt) }}</span>
@@ -35,9 +25,7 @@
       </div>
       <div class="grid grid-cols-2">
         <p>Last Published</p>
-        <span class="font-bold text-right uppercase place-self-end">{{
-          publishedWhen
-        }}</span>
+        <span class="text-right place-self-end">{{ publishedWhen }}</span>
       </div>
     </section>
   </div>
@@ -45,7 +33,6 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import Icon from '../shared/icon.vue';
 import type { ChapterMeta, Meta } from '../../types';
 import { formatDate } from './helpers';
 import { useDraftsStore } from '../store';
@@ -64,6 +51,4 @@ const props = defineProps<Props>();
 const drafts = useDraftsStore();
 
 const story = computed(() => props.storyName ?? drafts.story.name);
-
-const emit = defineEmits(['close']);
 </script>

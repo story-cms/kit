@@ -3,19 +3,19 @@
     <div class="relative">
       <ListboxButton
         :disabled="isReadOnly"
-        class="relative py-2 pl-3 pr-10 text-lg font-semibold leading-6 text-left text-gray-700 rounded-md cursor-default text-nowrap focus:outline-none focus:ring-1"
+        class="relative w-full cursor-default text-nowrap rounded-md py-2 pl-3 pr-10 text-left text-sm font-semibold leading-5 text-gray-700 focus:outline-none focus:ring-1"
         :class="{ 'bg-gray-100': isReadOnly, 'bg-white': !isReadOnly }"
       >
         <div class="flex items-center gap-2">
-          <Icon name="translate" class="w-5 h-5" />
+          <Icon name="translate" class="size-6" />
           <span class="block w-32 truncate">{{ model }}</span>
         </div>
         <span
-          class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
+          class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
         >
           <Icon
             v-if="!isReadOnly"
-            class="w-5 h-5 text-gray-700"
+            class="size-6 text-gray-700"
             aria-hidden="true"
             name="chevron-down"
           />
@@ -28,7 +28,7 @@
         leave-to-class="opacity-0"
       >
         <ListboxOptions
-          class="absolute -left-7 bottom-full z-10 mb-1 max-h-[calc(100vh-10rem)] min-w-[18rem] overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+          class="absolute bottom-full z-10 mb-1 max-h-[calc(100vh-10rem)] min-w-[18rem] overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
         >
           <ListboxOption
             v-for="option in options"
@@ -64,7 +64,7 @@
                   'absolute inset-y-0 right-0 flex items-center pr-4',
                 ]"
               >
-                <Icon class="w-5 h-5" aria-hidden="true" name="check-simple" />
+                <Icon class="size-6" aria-hidden="true" name="check-simple" />
               </span>
             </li>
           </ListboxOption>

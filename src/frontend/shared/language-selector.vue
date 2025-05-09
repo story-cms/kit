@@ -1,21 +1,15 @@
 <template>
-  <div v-if="isExpanded" class="relative inline-block text-left">
-    <div class="relative">
-      <Icon name="translate" />
-      <span
-        class="absolute -top-2 left-5 rounded-[7px] bg-[#EDE9FE] px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-[#5B21B6]"
-        >{{ currentLocale }}</span
-      >
-    </div>
-  </div>
-  <Menu v-else as="div" class="relative inline-block text-left">
+  <Menu as="div" class="relative inline-block text-left">
     <div>
-      <MenuButton class="relative">
-        <Icon name="translate" />
+      <MenuButton
+        class="relative flex items-center justify-center transition-all duration-75 rounded-full size-14 hover:bg-gray-100"
+      >
         <span
-          class="absolute -top-2 left-5 rounded-[7px] bg-[#EDE9FE] px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-[#5B21B6]"
-          >{{ currentLocale }}</span
+          class="absolute right-2 top-4 rounded-[7px] bg-blue-100 px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-blue-800"
         >
+          {{ currentLocale }}
+        </span>
+        <Icon name="translate" />
       </MenuButton>
     </div>
 
@@ -28,19 +22,19 @@
       leave-to-class="transform scale-95 opacity-0"
     >
       <MenuItems
-        class="absolute left-0 z-10 w-56 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black/5 focus:outline-none"
+        class="absolute left-0 z-10 w-56 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black/5 focus:outline-none"
       >
-        <div class="py-1" v-for="language in languages" :key="language.language">
+        <div v-for="language in languages" :key="language.language" class="py-1">
           <MenuItem v-slot="{ active }">
             <button
-              @click="onLanguage(language.language)"
               :class="[
                 active ? 'bg-gray-100 text-gray-900 outline-none' : 'text-gray-700',
                 'flex w-full items-center gap-x-2 px-4 py-2 text-left text-sm',
               ]"
+              @click="onLanguage(language.language)"
             >
               <span> {{ language.language }}</span>
-              <Icon name="check" v-if="language.language === currentLanguage" />
+              <Icon v-if="language.language === currentLanguage" name="check" />
             </button>
           </MenuItem>
         </div>
@@ -51,15 +45,13 @@
 
 <script setup lang="ts">
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
-import Icon from './icon.vue';
+import Icon from '../shared/icon.vue';
 
 defineProps<{
-  isExpanded: boolean;
   currentLocale: string;
   currentLanguage: string;
   languages: Array<{ language: string }>;
 }>();
-
 const emit = defineEmits<{
   (e: 'languageChange', language: string): void;
 }>();

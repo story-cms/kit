@@ -1,12 +1,5 @@
 <template>
-  <div class="relative grid h-[844px] w-[407px] place-content-center bg-mobile-preview">
-    <button
-      v-if="props.isFloating"
-      class="absolute -right-2 -top-2 inline-flex h-[42px] w-[42px] items-center justify-center rounded-full bg-white"
-      @click.prevent="emit('close')"
-    >
-      <icon name="cross" class="w-6 h-6" />
-    </button>
+  <div class="bg-mobile-preview relative grid h-[844px] w-full place-content-center">
     <div
       ref="flutterTarget"
       class="h-[812px] w-[375px] transition-all [&>flutter-view]:rounded-[3.25rem]"
@@ -15,7 +8,6 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
-import Icon from '../shared/icon.vue';
 
 declare global {
   interface Window {
@@ -30,10 +22,6 @@ const props = defineProps({
   bundle: {
     type: Object,
     required: true,
-  },
-  isFloating: {
-    type: Boolean,
-    default: false,
   },
   number: {
     type: Number,
@@ -75,8 +63,6 @@ const flutterLoader = () => {
     },
   });
 };
-
-const emit = defineEmits(['close']);
 
 onMounted(() => {
   flutterLoader();

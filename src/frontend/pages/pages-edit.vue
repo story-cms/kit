@@ -1,29 +1,34 @@
 <template>
   <AppLayout>
-    <ContentHeader dir="ltr" :title="title" @delete="deletePage" @info="info">
-      <template #actions>
-        <BooleanField
-          :field="{
-            name: 'isPublished',
-            label: 'Published',
-            widget: 'boolean',
-            default: false,
-            tintColor: 'green-400',
-            labelOrder: 'start',
-          }"
-          :is-nested="true"
-        />
-      </template>
-    </ContentHeader>
+    <template #header>
+      <ContentHeader dir="ltr" :title="title">
+        <template #actions>
+          <DraftActions @delete="deletePage" />
+          <BooleanField
+            :field="{
+              name: 'isPublished',
+              label: 'Published',
+              widget: 'boolean',
+              default: false,
+              tintColor: 'green-400',
+              labelOrder: 'start',
+            }"
+            :is-nested="true"
+          />
+        </template>
+      </ContentHeader>
+    </template>
 
     <div
-      class="container relative mx-auto px-3"
-      :class="{
-        'grid grid-cols-[1fr,_416px] gap-x-8': isLargeScreen,
-        'mx-auto grid max-w-[1080px] grid-cols-[1fr]': !isLargeScreen || !showMetaBox,
-      }"
+      :class="[
+        'relative grid',
+        {
+          'grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn,
+          'mx-auto max-w-4xl grid-cols-1': shared.isSingleColumn,
+        },
+      ]"
     >
-      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8 bg-white py-4">
+      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="py-4 space-y-8 bg-white">
         <StringField
           :field="{
             name: 'title',
@@ -112,25 +117,16 @@
           class="px-8"
         />
       </form>
-      <div
-        :class="{
-          'right-4': !isLargeScreen,
-          'absolute block': shared.isIntersecting,
-          'fixed right-4 top-24': !shared.isIntersecting && !isLargeScreen,
-          'sticky top-24 [align-self:start]': isLargeScreen,
-        }"
-      >
-        <section v-if="showMetaBox">
+      <ContentSidebar>
+        <template #meta-box>
           <PageMetaBox
-            :is-floating="!isLargeScreen"
             :created-at="page.createdAt"
             :saved-at="savedAt"
             :updated-at="page.updatedAt"
             :published-at="publishedAt"
-            @close="showMetaBox = false"
           />
-        </section>
-      </div>
+        </template>
+      </ContentSidebar>
     </div>
   </AppLayout>
 </template>
@@ -151,7 +147,8 @@ import SelectField from '../fields/select-field.vue';
 import MarkdownField from '../fields/markdown-field.vue';
 import BooleanField from '../fields/boolean-field.vue';
 import PageMetaBox from './page-meta-box.vue';
-
+import DraftActions from '../fields/draft-actions.vue';
+import ContentSidebar from '../shared/content-sidebar.vue';
 const props = defineProps<PageEditProps & SharedPageProps>();
 
 type RequestPayload = {
@@ -168,6 +165,7 @@ let isRevertingPublished = false;
 const { bundle, page } = toRefs(props);
 const model = useModelStore();
 const shared = useSharedStore();
+
 model.setModel(bundle.value);
 shared.setFromProps(props);
 shared.clearErrors();
@@ -221,12 +219,6 @@ const deletePage = () => {
   });
 };
 
-const showMetaBox = ref(true);
-
-const isLargeScreen = computed(() => {
-  return shared.isLargeScreen;
-});
-
 watch(
   () => shared.errors,
   (newErrors) => {
@@ -238,20 +230,6 @@ watch(
   },
   { deep: true },
 );
-
-watch([showMetaBox, isLargeScreen], ([a, c]) => {
-  if (c) {
-    showMetaBox.value = a;
-  }
-});
-
-const info = () => {
-  showMetaBox.value = !showMetaBox.value;
-};
-
-watch(isLargeScreen, (newValue) => {
-  newValue ? (showMetaBox.value = true) : (showMetaBox.value = false);
-});
 
 onMounted(() => {
   model.$subscribe(() => {
@@ -265,5 +243,8 @@ onMounted(() => {
     title.value = model.getField('title', 'Page');
     isPublished.value = Boolean(model.getField('isPublished', false));
   });
+
+  shared.setShowAppPreview(false);
+  shared.setSourceColumnAsHidden(false);
 });
 </script>

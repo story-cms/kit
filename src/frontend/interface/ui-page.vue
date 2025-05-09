@@ -1,34 +1,37 @@
 <template>
   <AppLayout>
-    <div>
-      <h3 class="mt-6 font-['Inter'] text-2xl font-semibold text-gray-800">
-        Interface: {{ language.language }}
-      </h3>
-      <UiToolbar
-        v-model="searchTerm"
-        :all-count="props.items.length"
-        :active-filter="activeFilter"
-        :sort-by="sortBy"
-        @update:active-filter="activeFilter = $event"
-        @sort="handleSort"
-      />
-    </div>
-
-    <section class="mt-5">
-      <div class="grid h-[calc(100vh-12rem)] grid-cols-[2fr_4fr] gap-x-6">
+    <template #header>
+      <ContentHeader :title="`Interface: ${language.language}`">
+        <template #extra-actions>
+          <UiToolbar
+            v-model="searchTerm"
+            :all-count="props.items.length"
+            :active-filter="activeFilter"
+            :sort-by="sortBy"
+            @update:active-filter="activeFilter = $event"
+            @sort="handleSort"
+          />
+        </template>
+      </ContentHeader>
+    </template>
+    <section>
+      <div
+        class="grid grid-cols-[2fr_4fr] gap-x-6"
+        :style="{ height: `calc(100vh - (${headerHeight}px + 1rem))` }"
+      >
         <div class="overflow-y-auto scrollbar-hide">
           <div v-if="hasEmptyItems" class="sticky top-0 bg-gray-50">
             <button
               v-show="todoCount"
-              @click="translateItems"
               type="button"
               class="mb-4 flex w-full items-center justify-center gap-x-2 rounded-full py-[11px] text-sm font-medium leading-4 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               :class="{
                 'bg-blue-50': isTranslating,
                 'bg-white': !isTranslating,
               }"
+              @click="translateItems"
             >
-              <Icon class="w-auto text-gray-800" name="sparkles" />
+              <Icon class="text-gray-800 size-4" name="sparkles" />
               <span>
                 {{
                   isTranslating
@@ -38,14 +41,16 @@
               </span>
             </button>
           </div>
-          <UiStringItem
-            v-show="filteredItems.length"
-            v-for="item in filteredItems"
-            :key="item.key"
-            :item="item"
-            :is-selected="selectedItem?.key === item.key"
-            @click="selectItem(item)"
-          />
+          <div class="overflow-hidden bg-white rounded-lg shadow">
+            <UiStringItem
+              v-for="item in filteredItems"
+              v-show="filteredItems.length"
+              :key="item.key"
+              :item="item"
+              :is-selected="selectedItem?.key === item.key"
+              @click="selectItem(item)"
+            />
+          </div>
         </div>
         <div>
           <template v-if="filteredItems.length">
@@ -89,7 +94,9 @@
 import { reactive, ref, computed, watch } from 'vue';
 import axios from 'axios';
 import { router } from '@inertiajs/vue3';
+import { AxiosError } from 'axios';
 
+import ContentHeader from '../shared/content-header.vue';
 import UiToolbar from './components/ui-toolbar.vue';
 import UiStringItem from './components/ui-string-item.vue';
 import UiCard from './components/ui-card.vue';
@@ -188,7 +195,8 @@ const filteredItems = computed(() => {
 
 const shared = useSharedStore();
 shared.setFromProps(props);
-// shared.setUiTodoCount(todoCount.value);
+
+const headerHeight = computed(() => shared.headerHeight);
 
 watch(todoCount, (newCount) => {
   shared.setUiTodoCount(newCount);
@@ -244,7 +252,8 @@ const setFlag = async (key: string, state: FlagState) => {
         newState ? 'Flag set' : 'Flag removed',
       );
     }
-  } catch (_error) {
+  } catch (error) {
+    console.error(error);
     shared.addMessage(ResponseStatus.Failure, 'Error updating flag');
   }
 };
@@ -258,7 +267,9 @@ const save = async (payload: UiItemPayload) => {
     }
   } catch (error) {
     shared.addMessage(ResponseStatus.Failure, 'Error saving translation');
-    itemError.value = error.response?.data?.message || 'Error saving translation';
+    itemError.value =
+      (error as AxiosError<{ message: string }>).response?.data?.message ||
+      'Error saving translation';
   }
 };
 
@@ -283,6 +294,7 @@ const translateItems = async () => {
       shared.addMessage(ResponseStatus.Accomplishment, 'Items translated successfully');
     }
   } catch (error) {
+    console.error(error);
     shared.addMessage(ResponseStatus.Failure, 'Failed to translate items');
   } finally {
     isTranslating.value = false;

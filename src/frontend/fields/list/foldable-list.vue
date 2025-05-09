@@ -4,12 +4,13 @@
       class="relative pt-10 pl-3 mb-8 ml-3 bg-transparent border-gray-300"
       :class="{
         'border-l': isExpanded(index) && !isReadOnly,
-        'border-t': !isReadOnly && (!shared.isTranslation || drafts.isSingleColumn),
+        'border-t': !isReadOnly && !shared.isTranslation,
       }"
     >
       <div
-        v-if="shared.isTranslation && !drafts.isSingleColumn && !isReadOnly"
-        class="absolute left-0 right-0 top-0 w-[calc(47rem_*_2)] border-t border-gray-300"
+        v-if="!isReadOnly && shared.isTranslation"
+        class="absolute top-0 left-0 right-0 border-t border-gray-300"
+        :style="{ width: borderWidth }"
       ></div>
 
       <div
@@ -36,11 +37,7 @@
             {{ String(sectionTitle(index)) }}
           </span>
         </button>
-        <div
-          v-if="itemHasError(index)"
-          class="cursor-pointer text-accent-one"
-          @click.prevent="toggle(index)"
-        >
+        <div v-if="itemHasError(index)" class="text-accent-one">
           <div class="p-2 bg-white border rounded-full">
             <Icon name="exclamation" class="w-10 h-10 text-red-500" />
           </div>
@@ -63,7 +60,7 @@
             :class="{
               'rounded border border-gray-200 bg-white drop-shadow-sm':
                 item.widget != 'list',
-              'mt-8 rounded border border-gray-200  bg-white p-8 shadow': isIsland(
+              'mt-8 rounded border border-gray-200 bg-white p-8 shadow': isIsland(
                 item.widget,
               ),
             }"
@@ -86,10 +83,10 @@
   </ul>
   <div v-if="canMutate" class="flex items-center gap-4">
     <AddItemButton :label="field.label" @add="emit('addSet')" />
-    <div v-if="listNeedsItem()" class="cursor-pointer text-accent-one">
-      <div class="p-2 bg-white border rounded-full flex flex-row items-center">
-        <Icon name="exclamation" class="pr-2 text-red-500" />
-        <p class="text-sm text-error">At least one item is required</p>
+    <div v-if="showEmptyListWarning()">
+      <div class="flex flex-row items-center p-2 bg-white border rounded-full text-error">
+        <Icon name="exclamation" class="pr-2" />
+        <p class="text-sm">At least one item is required</p>
       </div>
     </div>
   </div>
@@ -100,12 +97,7 @@ import { computed } from 'vue';
 import type { PropType } from 'vue';
 import type { FieldSpec } from '../../../types';
 import Icon from '../../shared/icon.vue';
-import {
-  useModelStore,
-  useWidgetsStore,
-  useSharedStore,
-  useDraftsStore,
-} from '../../store';
+import { useModelStore, useWidgetsStore, useSharedStore } from '../../store';
 import AddItemButton from '../../shared/add-item-button.vue';
 
 const props = defineProps({
@@ -134,7 +126,6 @@ const fields = field.value.fields as FieldSpec[];
 const model = useModelStore();
 const widgets = useWidgetsStore();
 const shared = useSharedStore();
-const drafts = useDraftsStore();
 
 const canMutate = computed(() => {
   if (props.isReadOnly) return false;
@@ -187,19 +178,19 @@ const itemHasError = (index: number): boolean => {
   return false;
 };
 
-const listNeedsItem = (): boolean => {
+const showEmptyListWarning = (): boolean => {
   if (props.isReadOnly) return false;
-  let foundItem = false;
+  if (props.listItems.length > 0) return false;
+
   for (const key in shared.errors) {
     const needle = `bundle.${props.fieldPath}`;
-    if (key.startsWith(needle)) {
-      const remaining = key.slice(needle.length);
-      if (remaining.startsWith('.') && /\d+/.test(remaining.slice(1))) {
-        foundItem = true;
-      }
-    }
-    if (!foundItem && props.listItems.length === 0) return true;
-    return false;
+    if (key.startsWith(needle)) return true;
   }
+  return false;
 };
+
+const borderWidth = computed(() => {
+  if (shared.showSourceColumn) return `${shared.headerWidth - 30}px`;
+  return '100%';
+});
 </script>

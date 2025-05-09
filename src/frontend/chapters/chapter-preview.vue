@@ -1,68 +1,63 @@
 <template>
   <AppLayout>
-    <ContentHeader :title="chapterTitle" @info="info" @app-preview="appPreview">
-      <template #actions>
-        <button
-          type="button"
-          class="w-32 rounded-[38px] border border-blue-500 bg-blue-500 px-[15px] py-[9px] text-sm/5 font-medium text-white shadow"
-          @click.prevent="edit"
-        >
-          Edit
-        </button>
-      </template>
-    </ContentHeader>
+    <template #header>
+      <ContentHeader :title="chapterTitle">
+        <template #actions>
+          <DraftActions :can-delete="false" />
+          <button
+            type="button"
+            class="w-32 rounded-[38px] border border-blue-500 bg-blue-500 px-[15px] py-[9px] text-sm/5 font-medium text-white shadow"
+            @click.prevent="edit"
+          >
+            Edit
+          </button>
+        </template>
+      </ContentHeader>
+    </template>
 
     <div
-      class="container relative mx-auto px-3"
-      :class="{
-        'grid grid-cols-[1fr,_416px] gap-x-8': isLargeScreen,
-        'mx-auto grid max-w-[1080px] grid-cols-[1fr]':
-          !isLargeScreen || (!showMetaBox && !showAppPreview),
-      }"
+      :class="[
+        'relative grid',
+        {
+          'grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn,
+          'mx-auto max-w-4xl grid-cols-1': shared.isSingleColumn,
+        },
+      ]"
     >
       <!-- eslint-disable vue/no-v-html -->
-      <div class="-ml-8 border-s bg-white p-8 shadow-sm" v-html="bundleView"></div>
-
-      <div
-        :class="{
-          'right-4': !isLargeScreen,
-          'absolute block': shared.isIntersecting,
-          'fixed right-4 top-24': !shared.isIntersecting && !isLargeScreen,
-          'sticky top-24 [align-self:start]': isLargeScreen,
-        }"
-      >
-        <section v-if="showMetaBox">
+      <div class="p-8 bg-white shadow-sm" v-html="bundleView"></div>
+      <ContentSidebar>
+        <template #meta-box>
           <MetaBox
             :created-at="props.chapter.createdAt"
             :updated-at="props.chapter.updatedAt"
             :story-type="props.meta.storyType"
             :chapter-type="metaChapter"
             :published-when="publishedWhen"
-            :is-floating="!isLargeScreen"
-            :story-name="storyName"
-            @close="showMetaBox = false"
           />
-        </section>
-        <section v-if="meta.hasAppPreview && showAppPreview" class="mt-6">
-          <MobileAppPreview
-            v-if="bundle"
-            :is-floating="!isLargeScreen"
-            :bundle="bundle"
-            :number="props.chapter.number"
-            class="mt-2"
-            @close="showAppPreview = false"
-          />
-        </section>
-      </div>
+        </template>
+        <template #app-preview>
+          <div v-if="shared.meta.hasAppPreview">
+            <MobileAppPreview
+              v-if="bundle"
+              :bundle="bundle"
+              :number="props.chapter.number"
+              class="mt-2"
+            />
+          </div>
+        </template>
+      </ContentSidebar>
     </div>
   </AppLayout>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, onMounted } from 'vue';
+import { computed, onMounted } from 'vue';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
+import DraftActions from '../fields/draft-actions.vue';
 import MetaBox from '../shared/meta-box.vue';
+import ContentSidebar from '../shared/content-sidebar.vue';
 import MobileAppPreview from '../fields/mobile-app-preview.vue';
 import { formatDate, padZero, safeChapterTitle } from '../shared/helpers';
 import type { PreviewProps, SharedPageProps } from '../../types';
@@ -77,20 +72,6 @@ const chapterTitle =
   safeChapterTitle(props.title, props.storyName, props.chapter.number) ??
   `New ${props.meta.chapterType}`;
 
-const showMetaBox = ref(true);
-const showAppPreview = ref(true);
-
-const isLargeScreen = computed(() => {
-  return shared.isLargeScreen;
-});
-
-watch([showMetaBox, showAppPreview, isLargeScreen], ([a, b, c]) => {
-  if (c) {
-    showMetaBox.value = a;
-    showAppPreview.value = b;
-  }
-});
-
 const publishedWhen = computed(() => {
   return props.chapter.updatedAt === ''
     ? 'Unpublished'
@@ -101,23 +82,11 @@ const metaChapter = computed(
   () => `${padZero(props.chapter.number)} of ${padZero(props.chapterLimit)}`,
 );
 
-const info = () => {
-  showMetaBox.value = !showMetaBox.value;
-};
-
-const appPreview = () => {
-  showAppPreview.value = !showAppPreview.value;
-};
-
 const edit = () => {
   window.location.href = `/draft/${props.chapter.number}/edit`;
 };
 
 onMounted(() => {
-  if (shared.meta.hasAppPreview) {
-    showAppPreview.value = true;
-  } else {
-    showAppPreview.value = false;
-  }
+  shared.setSourceColumnAsHidden(false);
 });
 </script>

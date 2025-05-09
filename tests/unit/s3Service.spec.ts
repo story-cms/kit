@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 
 // import S3Service from '../../src/frontend/fields/attachments/s3-service';
 

@@ -1,23 +1,43 @@
 <template>
   <AppLayout>
-    <div class="container mx-auto px-3 py-3">
-      <div class="flex items-center justify-between">
-        <div class="space-x-6">
-          <AddItemButton label="Page" @add="addPage" />
-          <AddItemButton v-if="isShowingPublished" label="Divider" @add="addDivider" />
-        </div>
-        <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
-      </div>
-      <div class="my-8 flex flex-col space-y-8">
-        <div v-for="page in filteredItems" :key="page.id" @drop="onDrop">
-          <PageIndexItem
-            :page="page"
-            @remove-divider="deleteDivider(page.id)"
-            @tap="onTap"
-            @drag-start="fromIndex = items.indexOf(page)"
-            @drag-enter="toIndex = items.indexOf(page)"
-          />
-        </div>
+    <template #header>
+      <ContentHeader title="Pages">
+        <template #actions>
+          <div class="flex items-center gap-x-6">
+            <button
+              v-if="isShowingPublished"
+              type="button"
+              class="p-2 bg-blue-500 rounded-full shadow-md hover:bg-blue-700"
+              @click="addDivider"
+            >
+              <Icon name="divider" class="text-white" />
+            </button>
+            <button
+              type="button"
+              class="p-2 bg-blue-500 rounded-full shadow-md hover:bg-blue-700"
+              @click="addPage"
+            >
+              <Icon name="plus" class="text-white" />
+            </button>
+          </div>
+        </template>
+        <template #extra-actions>
+          <div class="flex items-center justify-between">
+            <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
+            <div class="space-x-6"></div>
+          </div>
+        </template>
+      </ContentHeader>
+    </template>
+    <div class="flex flex-col my-8 space-y-8">
+      <div v-for="page in filteredItems" :key="page.id" @drop="onDrop">
+        <PageIndexItem
+          :page="page"
+          @remove-divider="deleteDivider(page.id)"
+          @tap="onTap"
+          @drag-start="fromIndex = items.indexOf(page)"
+          @drag-enter="toIndex = items.indexOf(page)"
+        />
       </div>
     </div>
   </AppLayout>
@@ -30,8 +50,9 @@ import type { TabItem, PageItem, SharedPageProps, PageIndexProps } from '../../t
 import { usePagesStore, useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
 import IndexFilter from '../shared/index-filter.vue';
-import AddItemButton from '../shared/add-item-button.vue';
+import Icon from '../shared/icon.vue';
 import { debounce } from '../shared/helpers';
+import ContentHeader from '../shared/content-header.vue';
 import PageIndexItem from './page-index-item.vue';
 
 const props = defineProps<PageIndexProps & SharedPageProps>();

@@ -1,6 +1,6 @@
 <template>
   <Transition name="slide-fade">
-    <div class="shadow font-['Inter'] rounded-lg border border-gray-200">
+    <div v-if="true" class="rounded-lg bg-white font-['Inter'] shadow">
       <div class="grid grid-cols-2 px-8 pt-6 pb-4 gap-x-10">
         <div>
           <label :for="item.key" class="block font-medium text-gray-700 text-sm/5">
@@ -22,7 +22,7 @@
             />
             <p
               v-if="error"
-              class="text-[#FF2415] font-medium text-sm leading-[120%] mt-4 flex items-center gap-x-[11px]"
+              class="mt-4 flex items-center gap-x-[11px] text-sm font-medium leading-[120%] text-[#FF2415]"
             >
               <span>
                 <Icon name="exclamation-circle" />
@@ -53,12 +53,12 @@
           <div class="flex items-center justify-end gap-x-6">
             <button
               type="button"
-              @click="handleSetFlag(FlagState.RECHECK)"
-              class="p-3 border border-gray-300 rounded-full"
+              class="p-2 rounded-full size-10 hover:bg-gray-100"
               :disabled="!model"
+              @click="handleSetFlag(FlagState.RECHECK)"
             >
               <Icon
-                class="w-auto h-6"
+                class="size-6"
                 :class="{
                   'text-blue-500': item.flag === FlagState.RECHECK,
                   'text-gray-700': item.flag !== FlagState.RECHECK,
@@ -68,11 +68,11 @@
             </button>
             <button
               type="button"
+              class="p-2 rounded-full size-10 hover:bg-gray-100"
               @click="suggestAi"
-              class="p-3 border border-gray-300 rounded-full"
             >
               <Icon
-                class="w-auto h-6"
+                class="size-6"
                 :class="{
                   'text-blue-500': item.flag === FlagState.PREFILLED,
                   'text-gray-700': item.flag !== FlagState.PREFILLED,
@@ -82,6 +82,9 @@
             </button>
             <button
               type="button"
+              class="p-2 border border-gray-300 rounded-full disabled:border-gray-300 disabled:bg-gray-100"
+              :disabled="!model"
+              :class="{ 'border-green-800 bg-green-500': model }"
               @click="
                 emit('save', {
                   key: props.item.key,
@@ -90,9 +93,6 @@
                   isPrefilled: false,
                 })
               "
-              class="p-3 border border-gray-300 rounded-full disabled:border-gray-300 disabled:bg-gray-100"
-              :disabled="!model"
-              :class="{ 'bg-green-500 border-green-800': model }"
             >
               <Icon
                 class="w-auto h-6"
@@ -133,15 +133,15 @@
           <div v-show="suggestion.length > 0" class="flex gap-x-6">
             <button
               type="button"
+              class="w-32 rounded-[38px] border bg-white px-[15px] py-[9px] text-sm/5 font-medium text-gray-800 shadow hover:bg-green-400 focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset]"
               @click="discardSuggestion"
-              class="w-32 rounded-[38px] border px-[15px] py-[9px] text-sm/5 font-medium text-gray-800 shadow focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset] bg-white hover:bg-green-400"
             >
               Discard
             </button>
             <button
               type="button"
+              class="rounded-[38px] border bg-blue-500 px-[15px] py-[9px] text-sm/5 font-medium text-white shadow hover:bg-green-400 focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset]"
               @click="applySuggestion"
-              class="rounded-[38px] border px-[15px] py-[9px] text-sm/5 font-medium text-white shadow focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset] bg-blue-500 hover:bg-green-400"
             >
               Apply Suggestion
             </button>
@@ -208,6 +208,7 @@ const suggestAi = async () => {
       isLoading.value = false;
     }
   } catch (error) {
+    console.error('ui-card.suggestAi', error);
     isOpen.value = false;
     isLoading.value = false;
     shared.addMessage(ResponseStatus.Failure, 'Error generating suggestion');
