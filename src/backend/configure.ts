@@ -139,6 +139,8 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'validators/page.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/make_user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/fix_database.stub', {});
+  // NOTE: remove when this is resolved: https://github.com/adonisjs/inertia-starter-kit/issues/12
+  await codemods.makeUsingStub(stubsRoot, 'exceptions/handler.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/bootstrap.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/mock.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/rest.stub', {});
