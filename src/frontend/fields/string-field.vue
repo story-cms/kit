@@ -56,8 +56,15 @@ const modelValue = props.isReadOnly
   : ref(model.getField(fieldPath.value, ''));
 
 const update = (event: Event) => {
-  model.setField(fieldPath.value, (event.target as HTMLInputElement).value);
+  const value = (event.target as HTMLInputElement).value;
+  const convertedValue = convertTildaToUnicodeSpace(value);
+  model.setField(fieldPath.value, convertedValue);
 };
+
+function convertTildaToUnicodeSpace(text: string) {
+  // Replace ~ text with actual non-breaking space character
+  return text.replace(/~/g, '\u00A0');
+}
 
 model.$subscribe(() => {
   if (props.isReadOnly) return;
