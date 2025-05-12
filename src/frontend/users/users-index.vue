@@ -54,7 +54,11 @@
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                   <tr v-for="user in users" :key="user.id">
-                    <UserRow :user="user" />
+                    <UserRow
+                      :user="user"
+                      @update="focus(user)"
+                      @remove="deleteUser(user)"
+                    />
                   </tr>
                 </tbody>
               </table>
@@ -214,8 +218,11 @@ const deleteUser = (user: UserMeta) => {
   resetForm();
   formMode.value = 'hidden';
   form.delete(`/user/${user.id}`, {
+    onSuccess: () => {
+      shared.addMessage(ResponseStatus.Confirmation, 'User deleted successfully');
+    },
     onError: () => {
-      console.log('error');
+      shared.addMessage(ResponseStatus.Failure, 'Error... user not deleted');
     },
   });
 };
