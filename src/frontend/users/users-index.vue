@@ -6,7 +6,7 @@
           <div class="flex items-center gap-x-6">
             <button
               type="button"
-              class="rounded-full border border-gray-300 bg-white p-2 shadow hover:bg-blue-100"
+              class="p-2 bg-white border border-gray-300 rounded-full shadow hover:bg-blue-100"
               @click="onAdd()"
             >
               <Icon name="plus" class="text-gray-900" />
@@ -16,34 +16,34 @@
       </ContentHeader>
     </template>
     <div>
-      <section class="mt-8 flow-root">
+      <section class="flow-root mt-8">
         <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
             <div class="overflow-hidden shadow ring-1 ring-black/5 sm:rounded-lg">
               <table class="min-w-full divide-y divide-gray-300">
-                <thead class="bg-gray-50 uppercase">
+                <thead class="uppercase bg-gray-50">
                   <tr>
                     <th
                       scope="col"
-                      class="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6"
+                      class="py-3 pl-4 pr-3 text-xs font-medium tracking-wide text-left text-gray-500 uppercase sm:pl-6"
                     >
                       Name
                     </th>
                     <th
                       scope="col"
-                      class="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
+                      class="px-3 py-3 text-xs font-medium tracking-wide text-left text-gray-500 uppercase"
                     >
                       Role
                     </th>
                     <th
                       scope="col"
-                      class="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
+                      class="px-3 py-3 text-xs font-medium tracking-wide text-left text-gray-500 uppercase"
                     >
                       Languages
                     </th>
                     <th
                       scope="col"
-                      class="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
+                      class="px-3 py-3 text-xs font-medium tracking-wide text-left text-gray-500 uppercase"
                     >
                       Last Activity
                     </th>
@@ -52,7 +52,7 @@
                     </th>
                   </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-200 bg-white">
+                <tbody class="bg-white divide-y divide-gray-200">
                   <tr v-for="user in users" :key="user.id">
                     <UserRow :user="user" />
                   </tr>
@@ -62,76 +62,101 @@
           </div>
         </div>
       </section>
-      <section class="fixed inset-0 z-30 bg-gray-600 bg-opacity-60">
-        <div class="mx-auto flex h-full max-w-lg flex-col items-center justify-center">
-          <form
+      <section
+        :class="[
+          'inset-0 z-30 bg-gray-600 bg-opacity-60',
+          formMode == 'hidden' ? 'hidden' : 'fixed',
+        ]"
+      >
+        <div class="flex flex-col items-center justify-center h-full max-w-lg mx-auto">
+          <div
             class="relative w-full min-w-full rounded-lg bg-white px-20 pb-[75px] pt-[90px]"
-            @submit.prevent="submit"
           >
-            <div class="my-2">
-              <label class="input-label" for="name">Name:</label>
-              <div class="mt-[2px] pt-1">
-                <input id="name" v-model="form.name" class="input-field" />
-                <p v-if="form.errors.name" class="text-sm text-error">
-                  {{ form.errors.name[0] }}
-                </p>
+            <form class="relative" @submit.prevent="submit">
+              <div class="flex justify-end">
+                <button type="button" class="mb-6 -mr-4" @click.prevent="onCancel()">
+                  <Icon name="close" class="text-gray-900" />
+                </button>
               </div>
-            </div>
+              <div class="flex flex-col gap-y-[17px]">
+                <div>
+                  <label class="label" for="name">Name</label>
+                  <div class="mt-[3px] pt-1">
+                    <input
+                      id="name"
+                      v-model="form.name"
+                      class="input-field placeholder:text-sm placeholder:font-normal placeholder:leading-5 placeholder:text-gray-400"
+                      placeholder="John Doe"
+                    />
+                    <p v-if="form.errors.name" class="text-sm text-error">
+                      {{ form.errors.name[0] }}
+                    </p>
+                  </div>
+                </div>
 
-            <div class="my-2">
-              <label class="input-label" for="email">Email:</label>
-              <div class="mt-[2px] pt-1">
-                <input id="email" v-model="form.email" class="input-field" />
-                <p v-if="form.errors.email" class="text-sm text-error">
-                  {{ form.errors.email[0] }}
-                </p>
+                <div>
+                  <label class="label" for="email">Email</label>
+                  <div class="mt-[3px] pt-1">
+                    <input
+                      id="email"
+                      v-model="form.email"
+                      class="input-field placeholder:text-sm placeholder:font-normal placeholder:leading-5 placeholder:text-gray-400"
+                      placeholder="name@startjourneys.io"
+                    />
+                    <p v-if="form.errors.email" class="text-sm text-error">
+                      {{ form.errors.email[0] }}
+                    </p>
+                  </div>
+                </div>
+
+                <div v-if="focusId != shared.user.id">
+                  <label class="label" for="role">Role</label>
+                  <select id="role" v-model="form.role" class="input-field mt-[5px]">
+                    <option
+                      v-for="role in roles"
+                      :key="role"
+                      :value="role"
+                      :selected="role == form.role"
+                    >
+                      {{ role }}
+                    </option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="label" for="language">Language</label>
+                  <select
+                    id="language"
+                    v-model="form.language"
+                    class="input-field mt-[5px]"
+                  >
+                    <option value="*" :selected="form.language === '*'">
+                      All Languages
+                    </option>
+                    <option
+                      v-for="lang in shared.languages"
+                      :key="lang.locale"
+                      :value="lang.locale"
+                      :selected="lang.locale == form.language"
+                    >
+                      {{ lang.language }}
+                    </option>
+                  </select>
+                  <p v-if="form.errors.language" class="text-sm text-error">
+                    {{ form.errors.language[0] }}
+                  </p>
+                </div>
               </div>
-            </div>
-
-            <div v-if="focusId != shared.user.id" class="my-2">
-              <label class="input-label" for="role">Role:</label>
-              <select id="role" v-model="form.role" class="input-field">
-                <option
-                  v-for="role in roles"
-                  :key="role"
-                  :value="role"
-                  :selected="role == form.role"
-                >
-                  {{ role }}
-                </option>
-              </select>
-            </div>
-
-            <div class="my-2">
-              <label class="input-label" for="language">Language:</label>
-              <select id="language" v-model="form.language" class="input-field">
-                <option value="*" :selected="form.language === '*'">All Languages</option>
-                <option
-                  v-for="lang in shared.languages"
-                  :key="lang.locale"
-                  :value="lang.locale"
-                  :selected="lang.locale == form.language"
-                >
-                  {{ lang.language }}
-                </option>
-              </select>
-              <p v-if="form.errors.language" class="text-sm text-error">
-                {{ form.errors.language[0] }}
-              </p>
-            </div>
-
-            <div class="my-8 flex space-x-4">
-              <!-- eslint-disable vue/no-v-html -->
-              <button
-                class="btn btn-blue w-32"
-                type="submit"
-                v-html="submitLabel"
-              ></button>
-              <button class="btn w-32 bg-white" type="button" @click.prevent="onCancel()">
-                Cancel
-              </button>
-            </div>
-          </form>
+              <div class="mt-[78px] flex">
+                <!-- eslint-disable vue/no-v-html -->
+                <button
+                  class="mx-auto rounded-full bg-blue-500 px-9 py-[9px] text-[14px] font-bold leading-5 text-white shadow"
+                  type="submit"
+                  v-html="submitLabel"
+                ></button>
+              </div>
+            </form>
+          </div>
         </div>
       </section>
     </div>
@@ -236,5 +261,11 @@ const submit = () => {
   });
 };
 
-const submitLabel = computed(() => (formMode.value === 'update' ? 'Update' : 'Add'));
+const submitLabel = computed(() => (formMode.value === 'update' ? 'Update' : 'Add User'));
 </script>
+
+<style scoped>
+.label {
+  @apply text-base font-normal leading-7 text-black;
+}
+</style>
