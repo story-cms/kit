@@ -82,7 +82,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
   public get lastActivity(): string {
     // TODO: This is a temporary solution to get the last activity date.
     // We should use the last activity date from the drafts table instead.
-    const date = this.updatedAt || this.createdAt;
+   const date = this.updatedAt || this.createdAt;
     const now = DateTime.now();
     const diff = now.diff(date, 'days').days;
 
@@ -102,7 +102,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
             : day === 3 || day === 23
               ? 'rd'
               : 'th';
-      return `${day}${ordinal} ${date.toFormat('MMMM')}`;
+      return {{ '`${day}${ordinal} ${date.toFormat(\'MMMM\')}`' }};
     } else {
       return date.toFormat('dd/MM/yy');
     }
@@ -117,6 +117,8 @@ export default class User extends compose(BaseModel, AuthFinder) {
       email: this.email,
       role: this.role,
       language: this.language || 'en',
+      initials: this.initials,
+      lastActivity: this.lastActivity,
     };
   }
 }
