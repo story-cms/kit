@@ -78,6 +78,9 @@
                   <Icon name="close" class="text-gray-900" />
                 </button>
               </div>
+              <div v-if="otherError" class="py-4 text-error">
+                {{ otherError }}
+              </div>
               <div class="flex flex-col gap-y-[17px]">
                 <div>
                   <label class="label" for="name">Name</label>
@@ -170,7 +173,7 @@ import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
 import Icon from '../shared/icon.vue';
 import UserRow from './components/user-row.vue';
-import { SharedPageProps, UsersProps, UserMeta } from '../../types';
+import { SharedPageProps, UsersProps, UserMeta, ResponseStatus } from '../../types';
 import { useSharedStore } from '../store';
 
 const emptyForm = {
@@ -241,9 +244,11 @@ const submit = () => {
       onSuccess: () => {
         focusId.value = 0;
         formMode.value = 'hidden';
+        shared.addMessage(ResponseStatus.Confirmation, 'User created successfully');
       },
       onError: () => {
         console.log('error');
+        shared.addMessage(ResponseStatus.Failure, 'Error... user not created');
       },
     });
     return;
@@ -254,9 +259,11 @@ const submit = () => {
     onSuccess: () => {
       focusId.value = 0;
       formMode.value = 'hidden';
+      shared.addMessage(ResponseStatus.Confirmation, 'User updated successfully');
     },
     onError: () => {
       console.log('error');
+      shared.addMessage(ResponseStatus.Failure, 'Error... user not updated');
     },
   });
 };
