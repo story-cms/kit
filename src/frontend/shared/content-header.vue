@@ -1,5 +1,7 @@
 <template>
   <div class="px-3">
+    <slot name="welcome-banner"></slot>
+    <slot name="content-stats"></slot>
     <div class="flex items-center justify-between py-10">
       <h3
         class="font-['Inter'] text-2xl font-semibold leading-8 text-gray-800 [&>span]:text-gray-400"
