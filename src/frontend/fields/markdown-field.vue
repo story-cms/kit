@@ -56,8 +56,15 @@ const fieldPath = computed(() => {
 
 const update = (e: Editor, change: EditorChange) => {
   if (change.origin === 'setValue') return;
-  model.setField(fieldPath.value, e.getValue());
+  const value = e.getValue();
+  const convertedValue = convertTildaToUnicodeSpace(value);
+  model.setField(fieldPath.value, convertedValue);
 };
+
+function convertTildaToUnicodeSpace(text: string) {
+  // Replace ~ text with actual non-breaking space character
+  return text.replace(/~/g, '\u00A0');
+}
 
 const load = () => {
   nextTick().then(() => {
