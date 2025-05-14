@@ -1,0 +1,20 @@
+{{{
+  exports({ to: app.makePath('app/services/activity_service.ts') })
+}}}
+import Activity from '#models/activity';
+
+export default class ActivityService {
+  public async logAction(
+    userId: number,
+    locale: string,
+    entityType: Activity['entityType'],
+    action: Activity['action'],
+  ) {
+    const activity = new Activity();
+    activity.userId = userId;
+    activity.locale = locale;
+    activity.entityType = entityType;
+    activity.action = action;
+    await activity.save();
+  }
+}
