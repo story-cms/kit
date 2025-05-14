@@ -45,4 +45,4 @@ router
   .group(() => {
     users();
   })
-  .use(middleware.admin());
+  .use([middleware.admin(), middleware.auth()]);

@@ -14,10 +14,18 @@ import { trimmedErrors } from '#services/helpers';
 import storyConfig from '#config/story';
 import providers from '#config/providers';
 import { DraftEditProps } from '@story-cms/kit';
-
+import ActivityService from '#services/activity_service';
 import { draftValidator } from '#validators/bundle';
+import Activity from '#models/activity';
 
 export default class DraftsController {
+  private async logActivity(ctx: HttpContext, action: Activity['action']) {
+    if (!ctx.auth.user?.id) return;
+
+    const activity = new ActivityService();
+    await activity.logAction(ctx.auth.user.id, ctx.version.locale, 'draft', action);
+  }
+
   public async create(ctx: HttpContext) {
     if (!ctx.version || !ctx.story) return ctx.response.notFound();
 
@@ -39,6 +47,8 @@ export default class DraftsController {
       number,
       bundle,
     });
+    
+    await this.logActivity(ctx, 'create_draft');
 
     return ctx.response.redirect({{ '`/draft/${number}/edit`' }});
   }
@@ -119,6 +129,7 @@ export default class DraftsController {
 
       draft.bundle = ctx.request.input('bundle');
       await draft.save();
+      await this.logActivity(ctx, 'edit_draft');
       const service = new IndexService(story);
       await service.buildIndex(draft.version);
     } catch (e) {
@@ -154,6 +165,7 @@ export default class DraftsController {
     draft.status = 'submitted';
     draft.feedback = '';
     await draft.save();
+    await this.logActivity(ctx, 'submit_draft');
     await service.buildIndex(draft.version);
     return ctx.response.redirect().back();
   }
@@ -201,6 +213,7 @@ export default class DraftsController {
       chapter.useTransaction(trx);
       draft.useTransaction(trx);
       await chapter.save();
+      await this.logActivity(ctx, 'publish_draft');
       await draft.delete();
     });
 
@@ -222,6 +235,7 @@ export default class DraftsController {
     const version = { ...draft.version };
     await draft.delete();
     const service = new IndexService(story);
+    await this.logActivity(ctx, 'delete_draft');
     await service.buildIndex(version);
 
     return ctx.response.redirect('/', false, 303);

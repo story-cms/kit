@@ -107,7 +107,7 @@ export class UiService {
     return items;
   }
 
-  private async missingItems(locale: string): Promise<TranslationSource[]> {
+  public async missingItems(locale: string): Promise<TranslationSource[]> {
     const attributes = await UiAttribute.all();
     const source = await Ui.query().where('locale', this.sourceLocale);
     const translations = await Ui.query().where('locale', locale);
