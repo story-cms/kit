@@ -125,6 +125,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'models/draft.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'models/index.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'models/page.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'models/activity.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/story_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/index_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/ui_service.stub', {});
@@ -133,12 +134,15 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'services/admin_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/ai_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/helpers.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'services/activity_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/auth.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/bundle.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/page.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/make_user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/fix_database.stub', {});
+  // NOTE: remove when this is resolved: https://github.com/adonisjs/inertia-starter-kit/issues/12
+  await codemods.makeUsingStub(stubsRoot, 'exceptions/handler.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/bootstrap.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/mock.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/rest.stub', {});

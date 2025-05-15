@@ -6,7 +6,7 @@ import { compose } from '@adonisjs/core/helpers';
 import { BaseModel, column, computed } from '@adonisjs/lucid/orm';
 import hash from '@adonisjs/core/services/hash';
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid';
-import type { UserMeta } from '@story-cms/kit';
+import type { User as UserType } from '@story-cms/kit';
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -77,40 +77,11 @@ export default class User extends compose(BaseModel, AuthFinder) {
     return {{ '`${parts[0]}${parts[parts.length - 1]}`' }};
   }
 
-
   @computed()
-  public get lastActivity(): string {
-    // TODO: This is a temporary solution to get the last activity date.
-    // We should use the last activity date from the drafts table instead.
-   const date = this.updatedAt || this.createdAt;
-    const now = DateTime.now();
-    const diff = now.diff(date, 'days').days;
-
-    if (diff < 1) {
-      return 'Today';
-    } else if (diff < 2) {
-      return 'Yesterday';
-    } else if (diff < 7) {
-      return date.toFormat('cccc');
-    } else if (date.year === now.year) {
-      const day = date.day;
-      const ordinal =
-        day === 1 || day === 21 || day === 31
-          ? 'st'
-          : day === 2 || day === 22
-            ? 'nd'
-            : day === 3 || day === 23
-              ? 'rd'
-              : 'th';
-      return {{ '`${day}${ordinal} ${date.toFormat(\'MMMM\')}`' }};
-    } else {
-      return date.toFormat('dd/MM/yy');
-    }
-  }
-
-
-  @computed()
-  public get meta(): UserMeta {
+   public get meta(): Pick<
+    UserType,
+    'id' | 'name' | 'email' | 'role' | 'language' | 'initials'
+  > {
     return {
       id: this.id,
       name: this.name,
@@ -118,7 +89,6 @@ export default class User extends compose(BaseModel, AuthFinder) {
       role: this.role,
       language: this.language || 'en',
       initials: this.initials,
-      lastActivity: this.lastActivity,
     };
   }
 }

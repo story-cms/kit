@@ -21,7 +21,7 @@ const getTodoCount = async (ctx: HttpContext) => {
   if (storyConfig.languages.length < 2) return 0;
 
   // don't show todo count if user is not logged in
-  if (!ctx.auth.use('web')?.user) return 0;
+  if (!ctx.auth?.use('web')?.user) return 0;
 
   const locale = ctx.session?.get('locale');
   if (!locale) return 0;
@@ -47,13 +47,13 @@ const inertiaConfig = defineConfig({
   sharedData: {
     stories: () => storyConfig.stories.map((item) => item.name),
     meta: () => storyConfig.meta,
-    user: (ctx) => ctx.auth.use('web')?.user,
+    user: (ctx) => ctx.auth?.use('web')?.user,
     language: (ctx) => getLanguage(ctx.session?.get('locale') ?? 'en'),
     languages: () => storyConfig.languages,
     errors: (ctx) => ctx.session?.flashMessages.get('errors') ?? {},
     uiTodoCount: (ctx) => getTodoCount(ctx),
     storyName: (ctx) => {
-      return ctx.params.story;
+      return ctx.params?.story;
     },
   },
 
