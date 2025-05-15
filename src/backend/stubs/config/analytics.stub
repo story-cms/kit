@@ -14,6 +14,10 @@ const analyticsConfig = defineConfig({
     // Android app package name
     '',
   ],
+  // analytics key for chapter completion report
+  chapterCompletionReportKey: 'done_ot_read',
+  // cache key for analytics report
+  cacheKey: 'analytics',
 });
 
 export default analyticsConfig;

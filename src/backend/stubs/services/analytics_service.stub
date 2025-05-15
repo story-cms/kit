@@ -185,6 +185,8 @@ export class Analytics {
 export type AnalyticsConfig = {
   propertyId: string;
   streams: string[];
+  chapterCompletionReportKey: string;
+  cacheKey: string;
 };
 
 export type GoogleServiceAccountCredentials = {
