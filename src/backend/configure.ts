@@ -103,7 +103,6 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'controllers/ui_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/preview_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/indices_controller.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'controllers/analytics_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'factories/page_factory.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'factories/user_factory.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'factories/index_factory.stub', {});

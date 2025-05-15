@@ -236,10 +236,19 @@ export enum AddStatus {
   Wait,
 }
 
+export interface Stats {
+  name: string;
+  stat: string;
+  previousStat: string;
+  change: string;
+  changeType: string;
+}
+
 export interface DashboardProps {
   index: IndexReadyItem[];
   addStatus: AddStatus;
   storyName: string;
+  stats: Stats[];
 }
 
 export interface ChapterMeta {
