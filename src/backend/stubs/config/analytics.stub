@@ -1,0 +1,19 @@
+{{{
+  exports({ to: app.configPath('analytics.ts') })
+}}}
+import { defineConfig } from '#services/analytics_service';
+
+const analyticsConfig = defineConfig({
+  // Google Analytics property id
+
+  propertyId: '',
+  
+  streams: [
+    // iOS app bundle id
+    '',
+    // Android app package name
+    '',
+  ],
+});
+
+export default analyticsConfig;
