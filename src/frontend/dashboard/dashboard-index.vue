@@ -1,13 +1,14 @@
 <template>
   <AppLayout>
     <template #header>
-      <ContentHeader :title="`${meta.storyType}: ${shared.currentStoryName}`">
-        <template #actions>
-          <icon :name="iconName" class="w-8 h-8 text-black" @click.prevent="toggle" />
+      <ContentHeader title="Language translation">
+        <template #hero>
+          <WelcomeBanner />
+          <ContentStats :stats="stats" />
         </template>
         <template #extra-actions>
           <div
-            class="flex flex-col justify-between mb-4 gap-y-4 md:flex-row md:items-center md:gap-x-4"
+            class="mb-4 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
           >
             <div class="flex gap-x-4">
               <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
@@ -27,24 +28,22 @@
               </button>
             </div>
 
-            <div class="grid grid-cols-1">
-              <input
-                id="search"
-                v-model="filterNumber"
-                type="text"
-                name="search"
-                class="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pl-10 pr-3 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:pl-9 sm:text-sm/6"
-                :placeholder="meta.chapterType"
-              />
-              <Icon
-                name="search"
-                class="self-center col-start-1 row-start-1 ml-4 text-gray-400 pointer-events-none size-4"
-              />
+            <div class="flex gap-x-4">
+              <button
+                class="flex items-center gap-x-2 text-sm font-medium leading-4"
+                @click="toggle"
+              >
+                <span class="size-4 rounded-full bg-green-500"></span>Human
+              </button>
+              <button class="flex items-center gap-x-2 text-sm font-medium leading-4">
+                <span class="size-4 rounded-full bg-blue-500"></span>AI
+              </button>
             </div>
           </div>
         </template>
       </ContentHeader>
     </template>
+    <div></div>
     <div
       :class="[
         'grid gap-4',
@@ -78,9 +77,10 @@
 <script setup lang="ts">
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
+import WelcomeBanner from './welcome-banner.vue';
+import ContentStats from './content-stats.vue';
 import { computed, ref } from 'vue';
 
-import Icon from '../shared/icon.vue';
 import AddItemButton from '../shared/add-item-button.vue';
 import IndexFilter from '../shared/index-filter.vue';
 import IndexCard from '../chapters/index-card.vue';
@@ -108,9 +108,6 @@ const onFilter = (tab: string) => {
   currentTab.value = tab;
 };
 
-const iconName = computed(() => {
-  return isList.value ? 'list' : 'grid';
-});
 const filteredIndex = computed(() => {
   const needle = currentTab.value === 'Live' ? 'Live' : 'Draft';
 

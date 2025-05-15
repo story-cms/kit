@@ -44,74 +44,31 @@
         </dd>
       </div>
     </dl>
+    <!-- Loading skeleton -->
+    <dl
+      v-else
+      class="mt-5 grid grid-cols-1 gap-x-5 divide-gray-200 overflow-hidden rounded-lg md:grid-cols-3"
+    >
+      <div v-for="i in 3" :key="i" class="bg-white py-5 sm:p-6">
+        <div class="h-4 w-24 animate-pulse rounded bg-gray-200"></div>
+        <div class="mt-4 flex items-baseline justify-between md:block lg:flex">
+          <div class="flex items-baseline">
+            <div class="h-8 w-16 animate-pulse rounded bg-gray-200"></div>
+            <div class="ml-2 h-4 w-20 animate-pulse rounded bg-gray-200"></div>
+          </div>
+          <div
+            class="mt-2 h-6 w-20 animate-pulse rounded-full bg-gray-200 md:mt-2 lg:mt-0"
+          ></div>
+        </div>
+      </div>
+    </dl>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
 import Icon from '../shared/icon.vue';
-
-import axios from 'axios';
-
-interface Stats {
-  name: string;
-  stat: number;
-  previousStat: number;
-  change: string;
-  changeType: string;
-}
-
-const stats = ref<Stats[]>([]);
-
-const fetchStats = async () => {
-  try {
-    const response = await axios.get('/api/analytics');
-    const data = response.data;
-
-    // Calculate percentage changes
-    const calculateChange = (current: number, previous: number) => {
-      const change = ((current - previous) / previous) * 100;
-      return {
-        change: Math.abs(change).toFixed(2) + '%',
-        changeType: change >= 0 ? 'increase' : 'decrease',
-      };
-    };
-
-    stats.value = [
-      {
-        name: 'Total Installs',
-        stat: data.totalInstallCount.current,
-        previousStat: data.totalInstallCount.previous,
-        ...calculateChange(
-          data.totalInstallCount.current,
-          data.totalInstallCount.previous,
-        ),
-      },
-      {
-        name: 'Monthly Active Users',
-        stat: data.monthlyActiveUsers.current,
-        previousStat: data.monthlyActiveUsers.previous,
-        ...calculateChange(
-          data.monthlyActiveUsers.current,
-          data.monthlyActiveUsers.previous,
-        ),
-      },
-      {
-        name: 'Chapters Complete',
-        stat: data.chaptersCompleteCount.current,
-        previousStat: data.chaptersCompleteCount.previous,
-        ...calculateChange(
-          data.chaptersCompleteCount.current,
-          data.chaptersCompleteCount.previous,
-        ),
-      },
-    ];
-  } catch (error) {
-    console.error('Error fetching stats:', error);
-  }
-};
-
-onMounted(() => {
-  fetchStats();
-});
+import { Stats } from '../../types';
+defineProps<{
+  stats: Stats[];
+}>();
 </script>

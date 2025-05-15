@@ -1,7 +1,6 @@
 <template>
   <div>
-    <slot name="welcome-banner"></slot>
-    <slot name="content-stats"></slot>
+    <slot name="hero"></slot>
     <div class="flex items-center justify-between px-3 py-10">
       <h3
         class="font-['Inter'] text-2xl font-semibold leading-8 text-gray-800 [&>span]:text-gray-400"
