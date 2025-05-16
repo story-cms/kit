@@ -10,6 +10,7 @@
         :user="sharedProps.user"
         :stories="['John', 'Acts']"
         :ui-todo-count="sharedProps.uiTodoCount"
+        story-name="Ui Page"
       />
     </Variant>
   </Story>

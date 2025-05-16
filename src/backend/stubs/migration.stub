@@ -78,7 +78,8 @@ export default class extends BaseSchema {
         .notNullable()
         .defaultTo('started')
         .comment('for editorial workflow. No "published" or "approved" needed')
-
+      
+      table.integer('updated_by').unsigned().references('users.id')
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })
@@ -208,6 +209,7 @@ export default class extends BaseSchema {
         .nullable()
         .comment('prefilled by ai | recheck needed | null');
 
+      table.integer('updated_by').unsigned().references('users.id')
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })
@@ -223,6 +225,62 @@ export default class extends BaseSchema {
           'https://github.com/google/app-resource-bundle/wiki/ApplicationResourceBundleSpecification#placeholder-in-resource'
         )
     })
+
+      // ---------------------------------------
+      // Activity
+      // ---------------------------------------
+
+      this.schema.createTable('activities', (table) => {
+      table.increments('id');
+      table.integer('user_id').unsigned().references('users.id');
+      table.string('locale').notNullable().defaultTo('en');
+      table
+        .enum('entity_type', ['draft', 'chapter', 'page', 'user', 'ui'], {
+          useNative: true,
+          enumName: 'activity_entity_type',
+          existingType: false,
+        })
+        .notNullable();
+
+      table
+        .enum(
+          'action',
+          [
+            // Draft
+            'create_draft',
+            'edit_draft',
+            'submit_draft',
+            'publish_draft',
+            'delete_draft',
+            // Page
+            'create_page',
+            'delete_page',
+            'publish_page',
+            'unpublish_page',
+            'sort_page',
+            // Auth
+            'login',
+            'logout',
+            // User
+            'create_user',
+            'update_user',
+            'delete_user',
+            // UI
+            'flag_microcopy',
+            'bulk_translate',
+            'store_microcopy',
+          ],
+          {
+            useNative: true,
+            enumName: 'activity_action',
+            existingType: false,
+          },
+        )
+        .notNullable();
+
+      table.timestamp('created_at', { useTz: true });
+    });
+
   }
 
   async down() {

@@ -80,6 +80,10 @@ export async function configure(command: Configure) {
     codemods.overwriteExisting = false;
     await codemods.makeUsingStub(stubsRoot, 'config/story.stub', options);
   }
+  if ((await fileExists(command.app.configPath(), 'analytics.ts')) == false) {
+    codemods.overwriteExisting = false;
+    await codemods.makeUsingStub(stubsRoot, 'config/analytics.stub', {});
+  }
 
   codemods.overwriteExisting = true;
   await codemods.makeUsingStub(stubsRoot, 'config/inertia.stub', {});
@@ -125,6 +129,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'models/draft.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'models/index.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'models/page.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'models/activity.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/story_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/index_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/ui_service.stub', {});
@@ -133,6 +138,8 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'services/admin_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/ai_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/helpers.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'services/activity_service.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'services/analytics_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/auth.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/bundle.stub', {});
@@ -194,6 +201,13 @@ export async function configure(command: Configure) {
       OPENAI_API_KEY: `Env.schema.string(),`,
     },
     leadingComment: 'Configuration for the OpenAI API service',
+  });
+
+  await codemods.defineEnvValidations({
+    variables: {
+      GOOGLE_APPLICATION_CREDENTIALS_JSON: `Env.schema.string(),`,
+    },
+    leadingComment: 'Configuration for the Google Analytics service',
   });
 
   /**

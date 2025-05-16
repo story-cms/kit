@@ -236,10 +236,19 @@ export enum AddStatus {
   Wait,
 }
 
+export interface Stats {
+  name: string;
+  stat: string;
+  previousStat: string;
+  change: string;
+  changeType: string;
+}
+
 export interface DashboardProps {
   index: IndexReadyItem[];
   addStatus: AddStatus;
   storyName: string;
+  stats: Stats[];
 }
 
 export interface ChapterMeta {
@@ -257,12 +266,9 @@ export interface PreviewProps {
   chapterLimit: number;
 }
 
-export interface UserMeta {
-  id: number;
-  name: string;
-  email: string;
-  language: string;
-  role: string;
+export interface UserMeta
+  extends Pick<User, 'id' | 'name' | 'email' | 'role' | 'language' | 'initials'> {
+  lastActivity: string;
 }
 
 export interface UsersProps {

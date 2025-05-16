@@ -1,0 +1,23 @@
+{{{
+  exports({ to: app.configPath('analytics.ts') })
+}}}
+import { defineConfig } from '#services/analytics_service';
+
+const analyticsConfig = defineConfig({
+  // Google Analytics property id
+
+  propertyId: '',
+  
+  streams: [
+    // iOS app bundle id
+    '',
+    // Android app package name
+    '',
+  ],
+  // analytics key for chapter completion report
+  chapterCompletionReportKey: 'done_ot_read',
+  // cache key for analytics report
+  cacheKey: 'analytics',
+});
+
+export default analyticsConfig;

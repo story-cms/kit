@@ -2,13 +2,14 @@
   exports({ to: app.makePath('start/routes/auth.ts') })
 }}}
 import router from '@adonisjs/core/services/router';
+import { middleware } from '#start/kernel';
 const AuthController = () => import('#controllers/auth_controller');
 const ForgotPasswordController = () => import('#controllers/forgot_password_controller');
 
 export default () => {
   router.get('/login', [AuthController, 'index']);
   router.post('/login', [AuthController, 'store']);
-  router.get('/logout', [AuthController, 'logout']);
+  router.get('/logout', [AuthController, 'logout']).middleware(middleware.auth());
 
   router.get('/forgot-password', [ForgotPasswordController, 'index']);
   router.post('/forgot-password', [ForgotPasswordController, 'forgotPassword']);
