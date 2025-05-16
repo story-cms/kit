@@ -33,13 +33,14 @@
       />
     </svg>
     <div class="absolute inset-0 flex items-center justify-center">
-      <div v-if="humanPercentage === 100">
+      <div v-if="donePercentage === 100">
         <Icon name="check" class="w-4 h-auto text-green-500" />
       </div>
       <span v-else class="text-sm font-normal leading-[14px] text-gray-800"
-        >{{ humanPercentage + aiPercentage }}%</span
+        >{{ donePercentage + draftPercentage }}%</span
       >
     </div>
+    <p class="text-sm font-normal leading-[14px] text-gray-800">{{ name }}</p>
   </div>
 </template>
 <script setup lang="ts">
@@ -47,24 +48,22 @@ import { computed } from 'vue';
 import Icon from '../shared/icon.vue';
 
 const props = defineProps<{
-  human: number;
-  ai: number;
+  done: number;
+  draft: number;
+  total: number;
+  name: string;
 }>();
 
-const total = computed(() => {
-  return props.human + props.ai;
+const donePercentage = computed(() => {
+  return Math.ceil((props.done / props.total) * 100);
 });
 
-const humanPercentage = computed(() => {
-  return (props.human / total.value) * 100;
-});
-
-const aiPercentage = computed(() => {
-  return (props.ai / total.value) * 100;
+const draftPercentage = computed(() => {
+  return Math.ceil((props.draft / props.total) * 100);
 });
 
 const grayPercentage = computed(() => {
-  return 100 - (humanPercentage.value + aiPercentage.value);
+  return 100 - (donePercentage.value + draftPercentage.value);
 });
 
 const circleWidth = 66;
@@ -75,11 +74,11 @@ const circleRadius = circleWidth / 2 - 6;
 
 const circumference = 2 * Math.PI * circleRadius;
 const greenSegment = computed(() => {
-  return circumference * (humanPercentage.value / 100);
+  return circumference * (donePercentage.value / 100);
 });
 
 const blueSegment = computed(() => {
-  return circumference * (aiPercentage.value / 100);
+  return circumference * (draftPercentage.value / 100);
 });
 
 const graySegment = computed(() => {

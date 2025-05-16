@@ -44,7 +44,22 @@
       </ContentHeader>
     </template>
     <div class="grid grid-cols-2 gap-x-9">
-      <LanguageBlock />
+      <LanguageBlock
+        :stats="[
+          {
+            name: 'Interface',
+            done: 70,
+            draft: 10,
+            total: 100,
+          },
+          {
+            name: 'Content',
+            done: 50,
+            draft: 20,
+            total: 100,
+          },
+        ]"
+      />
     </div>
     <div
       :class="[
