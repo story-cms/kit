@@ -33,25 +33,34 @@
       />
     </svg>
     <div class="absolute inset-0 flex items-center justify-center">
-      <span class="text-sm font-normal leading-[14px] text-gray-800"
+      <div v-if="humanPercentage === 100">
+        <Icon name="check" class="w-4 h-auto text-green-500" />
+      </div>
+      <span v-else class="text-sm font-normal leading-[14px] text-gray-800"
         >{{ humanPercentage + aiPercentage }}%</span
       >
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
+import Icon from '../shared/icon.vue';
 
-const human = ref(50);
-const ai = ref(50);
-const total = ref(100);
+const props = defineProps<{
+  human: number;
+  ai: number;
+}>();
+
+const total = computed(() => {
+  return props.human + props.ai;
+});
 
 const humanPercentage = computed(() => {
-  return (human.value / total.value) * 100;
+  return (props.human / total.value) * 100;
 });
 
 const aiPercentage = computed(() => {
-  return (ai.value / total.value) * 100;
+  return (props.ai / total.value) * 100;
 });
 
 const grayPercentage = computed(() => {

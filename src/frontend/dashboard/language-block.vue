@@ -1,8 +1,8 @@
 <template>
   <div class="grid grid-cols-2 bg-white gap-x-9">
-    <Ring />
+    <Ring :human="100" :ai="11" :total="100" />
 
-    <Ring />
+    <Ring :human="0" :ai="100" :total="100" />
   </div>
 </template>
 <script setup lang="ts">
