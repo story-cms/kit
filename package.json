@@ -45,6 +45,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.697.0",
     "@aws-sdk/lib-storage": "^3.697.0",
+    "@google-analytics/data": "^5.1.0",
     "@headlessui/vue": "^1.7.22",
     "@inertiajs/vue3": "^2.0.2",
     "@poppinss/utils": "^6.7.3",
@@ -106,7 +107,7 @@
   },
   "other": {},
   "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "^4.40.0",
-    "@esbuild/linux-x64": "^0.25.4"
+    "@esbuild/linux-x64": "^0.25.4",
+    "@rollup/rollup-linux-x64-gnu": "^4.40.0"
   }
 }

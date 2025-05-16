@@ -8,7 +8,7 @@
         </template>
         <template #extra-actions>
           <div
-            class="mb-4 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
+            class="flex flex-col justify-between mb-4 gap-y-4 md:flex-row md:items-center md:gap-x-4"
           >
             <div class="flex gap-x-4">
               <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
@@ -30,20 +30,22 @@
 
             <div class="flex gap-x-4">
               <button
-                class="flex items-center gap-x-2 text-sm font-medium leading-4"
+                class="flex items-center text-sm font-medium leading-4 gap-x-2"
                 @click="toggle"
               >
-                <span class="size-4 rounded-full bg-green-500"></span>Human
+                <span class="bg-green-500 rounded-full size-4"></span>Human
               </button>
-              <button class="flex items-center gap-x-2 text-sm font-medium leading-4">
-                <span class="size-4 rounded-full bg-blue-500"></span>AI
+              <button class="flex items-center text-sm font-medium leading-4 gap-x-2">
+                <span class="bg-blue-500 rounded-full size-4"></span>AI
               </button>
             </div>
           </div>
         </template>
       </ContentHeader>
     </template>
-    <div></div>
+    <div class="grid grid-cols-2 gap-x-9">
+      <LanguageBlock />
+    </div>
     <div
       :class="[
         'grid gap-4',
@@ -79,6 +81,7 @@ import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
 import WelcomeBanner from './welcome-banner.vue';
 import ContentStats from './content-stats.vue';
+import LanguageBlock from './language-block.vue';
 import { computed, ref } from 'vue';
 
 import AddItemButton from '../shared/add-item-button.vue';
