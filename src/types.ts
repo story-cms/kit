@@ -259,7 +259,7 @@ export interface PreviewProps {
 
 export interface UserMeta
   extends Pick<User, 'id' | 'name' | 'email' | 'role' | 'language' | 'initials'> {
-  lastActivity: string;
+  lastActivity: string | null;
 }
 
 export interface UsersProps {
