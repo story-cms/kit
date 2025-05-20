@@ -1,46 +1,50 @@
 <template>
-  <div class="relative flex items-center justify-center border-2 border-pink-600">
-    <svg class="-rotate-90" :height="circleWidth" :width="circleWidth">
-      <!-- Green segment -->
-      <circle
-        class="fill-transparent stroke-green-500 stroke-[6px]"
-        stroke="currentColor"
-        :r="circleRadius"
-        :cx="center"
-        :cy="center"
-        :stroke-dasharray="`${greenSegment} ${circumference}`"
-        stroke-dashoffset="0"
-      />
-      <!-- Blue segment -->
-      <circle
-        class="fill-transparent stroke-blue-500 stroke-[6px]"
-        stroke="currentColor"
-        :r="circleRadius"
-        :cx="center"
-        :cy="center"
-        :stroke-dasharray="`${blueSegment} ${circumference}`"
-        :stroke-dashoffset="`-${greenSegment}`"
-      />
-      <!-- Gray segment -->
-      <circle
-        class="fill-transparent stroke-gray-50 stroke-[6px]"
-        stroke="currentColor"
-        :r="circleRadius"
-        :cx="center"
-        :cy="center"
-        :stroke-dasharray="`${graySegment} ${circumference}`"
-        :stroke-dashoffset="`-${greenSegment + blueSegment}`"
-      />
-    </svg>
-    <div class="absolute inset-0 flex items-center justify-center">
-      <div v-if="donePercentage === 100">
-        <Icon name="check" class="w-4 h-auto text-green-500" />
+  <div>
+    <div class="relative flex flex-col items-center justify-center">
+      <svg class="-rotate-90" :height="circleWidth" :width="circleWidth">
+        <!-- Green segment -->
+        <circle
+          class="fill-transparent stroke-green-500 stroke-[6px]"
+          stroke="currentColor"
+          :r="circleRadius"
+          :cx="center"
+          :cy="center"
+          :stroke-dasharray="`${greenSegment} ${circumference}`"
+          stroke-dashoffset="0"
+        />
+        <!-- Blue segment -->
+        <circle
+          class="fill-transparent stroke-blue-500 stroke-[6px]"
+          stroke="currentColor"
+          :r="circleRadius"
+          :cx="center"
+          :cy="center"
+          :stroke-dasharray="`${blueSegment} ${circumference}`"
+          :stroke-dashoffset="`-${greenSegment}`"
+        />
+        <!-- Gray segment -->
+        <circle
+          class="fill-transparent stroke-gray-50 stroke-[6px]"
+          stroke="currentColor"
+          :r="circleRadius"
+          :cx="center"
+          :cy="center"
+          :stroke-dasharray="`${graySegment} ${circumference}`"
+          :stroke-dashoffset="`-${greenSegment + blueSegment}`"
+        />
+      </svg>
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div v-if="donePercentage === 100">
+          <Icon name="check" class="h-auto w-4 text-green-500" />
+        </div>
+        <span v-else class="text-sm font-normal leading-none text-gray-800"
+          >{{ donePercentage + draftPercentage }}%</span
+        >
       </div>
-      <span v-else class="text-sm font-normal leading-[14px] text-gray-800"
-        >{{ donePercentage + draftPercentage }}%</span
-      >
     </div>
-    <p class="text-sm font-normal leading-[14px] text-gray-800">{{ name }}</p>
+    <p class="text-center text-sm font-medium leading-4 text-gray-500">
+      {{ name }}
+    </p>
   </div>
 </template>
 <script setup lang="ts">
