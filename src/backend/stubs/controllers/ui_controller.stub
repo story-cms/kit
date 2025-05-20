@@ -6,16 +6,8 @@ import { UiService } from '#services/ui_service';
 import { UiPageProps } from '@story-cms/kit';
 import storyConfig from '#config/story';
 import Activity from '#models/activity';
-import ActivityService from '#services/activity_service';
 
 export default class UisController {
-  private async logActivity(ctx: HttpContext, action: Activity['action']) {
-    if (!ctx.auth.user?.id) return;
-
-    const activity = new ActivityService();
-    await activity.logAction(ctx.auth.user.id, ctx.version.locale, 'ui', action);
-  }
-
   // render the UI page with the translation
   public async index(ctx: HttpContext) {
     if (!ctx.version) return ctx.response.notFound();
@@ -57,7 +49,11 @@ export default class UisController {
     try {
       // use the service to validate and store the payload
       await service.store(locale, ctx.request.all());
-      await this.logActivity(ctx, 'store_microcopy');
+      await Activity.create({
+        userId: ctx.auth.user?.id,
+        locale: ctx.version.locale,
+        action: 'stored microcopy',
+      });
     } catch (error) {
       return ctx.response.abort({ message: (error as Error).message }, 422);
     }
@@ -74,8 +70,12 @@ export default class UisController {
     const service = new UiService(this.sourceLocale);
 
     try {
-      await service.fillMissing(locale);
-      await this.logActivity(ctx, 'bulk_translate');
+      const count = await service.fillMissing(locale);
+      await Activity.create({
+        userId: ctx.auth.user?.id,
+        locale: ctx.version.locale,
+        action: {{ '`bulk translated ${count} items`' }},
+      });
     } catch (error) {
       return ctx.response.internalServerError({ error: 'Failed to translate items' });
     }
@@ -108,7 +108,11 @@ export default class UisController {
         ctx.request.input('key'),
         ctx.request.input('state'),
       );
-      await this.logActivity(ctx, 'flag_microcopy');
+      await Activity.create({
+        userId: ctx.auth.user?.id,
+        locale: ctx.version.locale,
+        action: 'flagged microcopy',
+      });
     } catch (error) {
       return ctx.response.internalServerError();
     }
