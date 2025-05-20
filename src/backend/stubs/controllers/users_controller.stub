@@ -16,18 +16,6 @@ import {
 } from '#validators/user';
 
 export default class UsersController {
-  private async getLastActivityTime(userId: number): Promise<string | null> {
-    const activity = await Activity.query()
-      .where('userId', userId)
-      .orderBy('createdAt', 'desc')
-      .first();
-
-    if (!activity) {
-      return null;
-    }
-    return activity.createdAt.toISO();
-  }
-
   // show a list of all users
   public async index(ctx: HttpContext) {
     const users = await User.all();
