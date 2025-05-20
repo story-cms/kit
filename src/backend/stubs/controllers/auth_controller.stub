@@ -13,6 +13,11 @@ export default class AuthController {
   public async store(ctx: HttpContext) {
     const { email, password } = ctx.request.only(['email', 'password']);
 
+    if (email.startsWith('redacted+')) {
+      ctx.session.flash('errorsBag', { credentials: 'Invalid username or password' });
+      ctx.response.redirect().back();
+    }
+
     try {
       const user = await User.verifyCredentials(email, password);
       await ctx.auth.use('web').login(user);

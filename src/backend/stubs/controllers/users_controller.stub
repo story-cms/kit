@@ -3,78 +3,41 @@
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
 
-import { DateTime } from 'luxon';
 import vine from '@vinejs/vine';
 import { UsersProps } from '@story-cms/kit';
 import User from '#models/user';
 import Activity from '#models/activity';
-import ActivityService from '#services/activity_service';
+
 import {
   createUserValidator,
   updateUserValidator,
   validationMessages,
 } from '#validators/user';
-import Page from '#models/page';
-import Ui from '#models/ui';
-import Draft from '#models/draft';
-import Chapter from '#models/chapter';
 
 export default class UsersController {
-  private async logActivity(
-    userId: number | undefined,
-    locale: string,
-    action: Activity['action'],
-  ) {
-    if (!userId) return;
-
-    const activity = new ActivityService();
-    await activity.logAction(userId, locale, 'user', action);
-  }
-
-  private async getLastActivity(userId: number): Promise<string> {
+  private async getLastActivityTime(userId: number): Promise<string | null> {
     const activity = await Activity.query()
       .where('userId', userId)
       .orderBy('createdAt', 'desc')
       .first();
 
     if (!activity) {
-      return 'No activity';
+      return null;
     }
-
-    const date = activity.createdAt;
-    const now = DateTime.now();
-    const diff = now.diff(date, 'days').days;
-
-    if (diff < 1) {
-      return 'Today';
-    } else if (diff < 2) {
-      return 'Yesterday';
-    } else if (diff < 7) {
-      return date.toFormat('cccc');
-    } else if (date.year === now.year) {
-      const day = date.day;
-      const ordinal =
-        day === 1 || day === 21 || day === 31
-          ? 'st'
-          : day === 2 || day === 22
-            ? 'nd'
-            : day === 3 || day === 23
-              ? 'rd'
-              : 'th';
-      return {{ '`${day}${ordinal} ${date.toFormat(\'MMMM\')}`' }};
-    } else {
-      return date.toFormat('dd/MM/yy');
-    }
+    return activity.createdAt.toISO();
   }
 
   // show a list of all users
   public async index(ctx: HttpContext) {
     const users = await User.all();
+
+    const activeUsers = users.filter((user) => !(user.name === 'redacted'));
+
     const props: UsersProps = {
       users: await Promise.all(
-        users.map(async (user: User) => ({
+        activeUsers.map(async (user: User) => ({
           ...user.meta,
-          lastActivity: await this.getLastActivity(user.id),
+          lastActivity: await this.getLastActivityTime(user.id),
         })),
       ),
     };
@@ -95,7 +58,11 @@ export default class UsersController {
       user.role = payload.role;
       user.language = payload.language;
       user.save();
-      await this.logActivity(auth.user?.id, session.get('locale'), 'update_user');
+      Activity.create({
+        userId: auth.user?.id,
+        locale: session.get('locale'),
+        action: {{ '`updated user with id ${user.id}`' }},
+      });
     } catch (e) {
       session.flash('errorsBag', { other: e.message });
     }
@@ -108,17 +75,15 @@ export default class UsersController {
     const id = Number(params.id);
     const user = await User.findOrFail(id);
     try {
-      // Set updatedBy to null in all related records to prevent foreign key constraint errors
-      await Page.query().where('updatedBy', id).update({ updatedBy: null });
-      await Ui.query().where('updatedBy', id).update({ updatedBy: null });
-      await Draft.query().where('updatedBy', id).update({ updatedBy: null });
-      await Chapter.query().where('updatedBy', id).update({ updatedBy: null });
-      // Delete all activities for the user to prevent foreign key constraint errors
-      await Activity.query().where('userId', id).delete();
-
-      // Now we can safely delete the user
-      await user.delete();
-      await this.logActivity(auth.user?.id, session.get('locale'), 'delete_user');
+      const random = Math.random().toString(36).substring(2, 15);
+      user.name = 'redacted';
+      user.email = {{ '`redacted+${random}`' }};
+      user.save();
+      await Activity.create({
+        userId: auth.user?.id,
+        locale: session.get('locale'),
+        action: {{ '`deleted user with id ${user.id}`' }},
+      });
     } catch (e) {
       session.flash('errorsBag', { other: e.message });
     }
@@ -132,8 +97,12 @@ export default class UsersController {
     const payload = await request.validateUsing(createUserValidator);
 
     try {
-      await User.create({ ...payload, password: 'pending' });
-      await this.logActivity(auth.user?.id, session.get('locale'), 'create_user');
+      const user = await User.create({ ...payload, password: 'pending' });
+      await Activity.create({
+        userId: auth.user?.id,
+        locale: session.get('locale'),
+        action: {{ '`created user with id ${user.id}`' }},
+      });
     } catch (e) {
       // logger.error(e.message)
       session.flash('errorsBag', { other: e.message });
