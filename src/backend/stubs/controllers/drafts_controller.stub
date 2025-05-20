@@ -6,6 +6,7 @@ import type { HttpContext } from '@adonisjs/core/http';
 import db from '@adonisjs/lucid/services/db';
 import Chapter from '#models/chapter';
 import Draft from '#models/draft';
+import Activity from '#models/activity';
 import DraftService from '#services/draft_service';
 import IndexService from '#services/index_service';
 import StoryService from '#services/story_service';
@@ -14,18 +15,9 @@ import { trimmedErrors } from '#services/helpers';
 import storyConfig from '#config/story';
 import providers from '#config/providers';
 import { DraftEditProps } from '@story-cms/kit';
-import ActivityService from '#services/activity_service';
 import { draftValidator } from '#validators/bundle';
-import Activity from '#models/activity';
 
 export default class DraftsController {
-  private async logActivity(ctx: HttpContext, action: Activity['action']) {
-    if (!ctx.auth.user?.id) return;
-
-    const activity = new ActivityService();
-    await activity.logAction(ctx.auth.user.id, ctx.version.locale, 'draft', action);
-  }
-
   public async create(ctx: HttpContext) {
     if (!ctx.version || !ctx.story) return ctx.response.notFound();
 
@@ -48,7 +40,11 @@ export default class DraftsController {
       bundle,
     });
     
-    await this.logActivity(ctx, 'create_draft');
+    await Activity.create({
+      userId: ctx.auth.user?.id,
+      locale: ctx.version?.locale,
+      action: {{ '`created draft for ${storyConfig.meta.storyType} ${ctx.story.name} ${storyConfig.meta.chapterType} ${number}`' }},
+    });
 
     return ctx.response.redirect({{ '`/draft/${number}/edit`' }});
   }
@@ -129,7 +125,11 @@ export default class DraftsController {
 
       draft.bundle = ctx.request.input('bundle');
       await draft.save();
-      await this.logActivity(ctx, 'edit_draft');
+      await Activity.create({
+        userId: ctx.auth.user?.id,
+        locale: ctx.version?.locale,
+        action: {{ '`updated draft for ${storyConfig.meta.storyType} ${ctx.story.name} ${storyConfig.meta.chapterType} ${draft.number}`' }},
+      });
       const service = new IndexService(story);
       await service.buildIndex(draft.version);
     } catch (e) {
@@ -165,17 +165,26 @@ export default class DraftsController {
     draft.status = 'submitted';
     draft.feedback = '';
     await draft.save();
-    await this.logActivity(ctx, 'submit_draft');
+    await Activity.create({
+      userId: ctx.auth.user?.id,
+      locale: ctx.version?.locale,
+      action: {{ '`submitted draft for ${storyConfig.meta.storyType} ${ctx.story.name} ${storyConfig.meta.chapterType} ${draft.number}`' }},
+    });
     await service.buildIndex(draft.version);
     return ctx.response.redirect().back();
   }
 
-  public async reject({ request, response, params }: HttpContext) {
+  public async reject({ request, response, params, auth }: HttpContext) {
     const id = Number(params.id);
     const draft = await Draft.findOrFail(id);
     draft.status = 'started';
     draft.feedback = request.input('feedback');
     await draft.save();
+    await Activity.create({
+      userId: auth.user?.id,
+      locale: params.version?.locale,
+      action: {{ '`rejected draft for ${storyConfig.meta.storyType} ${params.story.name} ${storyConfig.meta.chapterType} ${draft.number}`' }},
+    });
     return response.redirect().back();
   }
 
@@ -213,7 +222,11 @@ export default class DraftsController {
       chapter.useTransaction(trx);
       draft.useTransaction(trx);
       await chapter.save();
-      await this.logActivity(ctx, 'publish_draft');
+      await Activity.create({
+        userId: ctx.auth.user?.id,
+        locale: ctx.version?.locale,
+        action: {{ '`published chapter for ${storyConfig.meta.storyType} ${ctx.story.name} ${storyConfig.meta.chapterType} ${chapter.number}`' }},
+      });
       await draft.delete();
     });
 
@@ -234,8 +247,12 @@ export default class DraftsController {
 
     const version = { ...draft.version };
     await draft.delete();
+    await Activity.create({
+      userId: ctx.auth.user?.id,
+      locale: ctx.version?.locale,
+      action: {{ '`deleted draft for ${storyConfig.meta.storyType} ${ctx.story.name} ${storyConfig.meta.chapterType} ${draft.number}`' }},
+    });
     const service = new IndexService(story);
-    await this.logActivity(ctx, 'delete_draft');
     await service.buildIndex(version);
 
     return ctx.response.redirect('/', false, 303);

@@ -1,7 +1,6 @@
 {{{
   exports({ to: app.makePath('app/models/activity.ts') })
 }}}
-
 import { DateTime } from 'luxon';
 import { BaseModel, column } from '@adonisjs/lucid/orm';
 
@@ -16,28 +15,7 @@ export default class Activity extends BaseModel {
   declare locale: string;
 
   @column()
-  declare action:
-    | 'create_draft'
-    | 'edit_draft'
-    | 'submit_draft'
-    | 'publish_draft'
-    | 'delete_draft'
-    | 'create_page'
-    | 'delete_page'
-    | 'publish_page'
-    | 'unpublish_page'
-    | 'sort_page'
-    | 'login'
-    | 'logout'
-    | 'create_user'
-    | 'update_user'
-    | 'delete_user'
-    | 'flag_microcopy'
-    | 'bulk_translate'
-    | 'store_microcopy';
-
-  @column()
-  declare entityType: 'draft' | 'chapter' | 'page' | 'user' | 'ui';
+  declare action: string;
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime;

@@ -8,7 +8,6 @@ import Page, { PageVersion } from '#models/page';
 import storyConfig from '#config/story';
 import PageService from '#services/page_service';
 import Activity from '#models/activity';
-import ActivityService from '#services/activity_service';
 
 import { Session } from '@adonisjs/session';
 import providers from '#config/providers';
@@ -19,16 +18,6 @@ import { PageValidator, errorMessages } from '#validators/page';
 import { trimmedErrors } from '#services/helpers';
 
 export default class PagesController {
-  private async logActivity(
-    userId: number | undefined,
-    locale: string,
-    action: Activity['action'],
-  ) {
-    if (!userId) return;
-    const activity = new ActivityService();
-    await activity.logAction(userId, locale, 'page', action);
-  }
-
   public async get({ request }: HttpContext) {
     const locale = request.qs()['locale'] || 'en';
 
@@ -71,7 +60,11 @@ export default class PagesController {
       updatedBy: auth.user?.id,
     });
 
-    await this.logActivity(auth.user?.id, session.get('locale'), 'create_page');
+     await Activity.create({
+      userId: auth.user?.id,
+      locale: session.get('locale'),
+      action: {{ '`created page ${page.id}`' }},
+    });
     return response.redirect({{ '`/page/${page.id}/edit`' }}, false, 303);
   }
 
@@ -80,7 +73,11 @@ export default class PagesController {
     const page = await Page.findOrFail(id);
     try {
       await page.delete();
-      await this.logActivity(auth.user?.id, session.get('locale'), 'delete_page');
+      await Activity.create({
+        userId: auth.user?.id,
+        locale: session.get('locale'),
+        action: {{ '`deleted page ${page.id}`' }},
+      });
     } catch (e) {
       session.flash('errorsBag', { other: e.message });
     }
@@ -113,17 +110,17 @@ export default class PagesController {
     page.isPublished = payload.isPublished;
     await page.save();
     if (payload.isPublished) {
-      await this.logActivity(
-        ctx.auth.user?.id,
-        ctx.session.get('locale'),
-        'publish_page',
-      );
+      await Activity.create({
+        userId: ctx.auth.user?.id,
+        locale: ctx.session.get('locale'),
+        action: {{ '`published page ${page.id}`' }},
+      });
     } else {
-      await this.logActivity(
-        ctx.auth.user?.id,
-        ctx.session.get('locale'),
-        'unpublish_page',
-      );
+      await Activity.create({
+        userId: ctx.auth.user?.id,
+        locale: ctx.session.get('locale'),
+        action: {{ '`updated page ${page.id}`' }},
+      });
     }
 
     return ctx.response.redirect().back();
@@ -141,7 +138,11 @@ export default class PagesController {
       await page.save();
     }
 
-     await this.logActivity(auth.user?.id, session.get('locale'), 'sort_page');
+    await Activity.create({
+      userId: auth.user?.id,
+      locale: session.get('locale'),
+      action: 'sorted pages',
+    });
 
     return response.redirect().back();
   }

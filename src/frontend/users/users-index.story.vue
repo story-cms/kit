@@ -45,7 +45,7 @@ const users: UserMeta[] = [
     role: 'Member',
 
     language: 'en',
-    lastActivity: '2021-01-01',
+    lastActivity: '2025-05-18T12:10:38.405+00:00',
   },
   // TODO: Add more users with different roles and names
   {
@@ -56,7 +56,7 @@ const users: UserMeta[] = [
     role: 'Admin',
 
     language: 'en',
-    lastActivity: 'Yesterday',
+    lastActivity: null,
   },
   {
     id: 3,
@@ -66,7 +66,7 @@ const users: UserMeta[] = [
     role: 'Editor',
 
     language: 'es',
-    lastActivity: 'Tuesday',
+    lastActivity: null,
   },
   {
     id: 4,
@@ -76,7 +76,7 @@ const users: UserMeta[] = [
     role: 'Member',
 
     language: 'es',
-    lastActivity: 'Yesterday',
+    lastActivity: '2025-05-17T12:10:38.405+00:00',
   },
   {
     id: 5,
@@ -86,7 +86,7 @@ const users: UserMeta[] = [
     role: 'Member',
 
     language: 'en',
-    lastActivity: '7th April',
+    lastActivity: '2025-03-01T12:10:38.405+00:00',
   },
   {
     id: 6,
@@ -96,7 +96,7 @@ const users: UserMeta[] = [
     role: 'Member',
 
     language: 'es',
-    lastActivity: 'Monday',
+    lastActivity: '2025-05-19T12:10:38.405+00:00',
   },
   {
     id: 7,
@@ -106,7 +106,7 @@ const users: UserMeta[] = [
     role: 'Member',
 
     language: '*',
-    lastActivity: 'Friday',
+    lastActivity: '2025-04-19T12:10:38.405+00:00',
   },
 ];
 

@@ -4,20 +4,8 @@
 import type { HttpContext } from '@adonisjs/core/http';
 import User from '#models/user';
 import Activity from '#models/activity';
-import ActivityService from '#services/activity_service';
 
 export default class AuthController {
-  private async logActivity(
-    userId: number | undefined,
-    locale: string,
-    action: Activity['action'],
-  ) {
-    if (!userId) return;
-
-    const activity = new ActivityService();
-    await activity.logAction(userId, locale, 'user', action);
-  }
-
   public async index(ctx: HttpContext) {
     return ctx.inertia.render('Login');
   }
@@ -25,10 +13,19 @@ export default class AuthController {
   public async store(ctx: HttpContext) {
     const { email, password } = ctx.request.only(['email', 'password']);
 
+    if (email.startsWith('redacted+')) {
+      ctx.session.flash('errorsBag', { credentials: 'Invalid username or password' });
+      ctx.response.redirect().back();
+    }
+
     try {
       const user = await User.verifyCredentials(email, password);
       await ctx.auth.use('web').login(user);
-      await this.logActivity(user.id, user.defaultLanguage(), 'login');
+      await Activity.create({
+        userId: user.id,
+        locale: user.defaultLanguage(),
+        action: 'logged in',
+      });
       ctx.session.put('locale', user.defaultLanguage());
       ctx.response.redirect('/');
     } catch {
@@ -39,7 +36,11 @@ export default class AuthController {
 
   public async logout(ctx: HttpContext) {
     ctx.session.clear();
-    await this.logActivity(ctx.auth.user?.id, ctx.version.locale, 'logout');
+    await Activity.create({
+      userId: ctx.auth.user?.id,
+      locale: ctx.version?.locale,
+      action: 'logged out',
+    });
     await ctx.auth.use('web').logout();
     ctx.response.redirect('/login');
   }
