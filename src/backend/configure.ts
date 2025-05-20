@@ -8,15 +8,25 @@ async function addMigrations(command: Configure, codemods: Codemods) {
   const path = command.app.migrationsPath();
   const migrations = await fsReadAll(path);
   const baseMigrationExists = migrations.some((file) => file.endsWith('_base.ts'));
+  const auditMigrationExists = migrations.some((file) => file.endsWith('audit.ts'));
 
-  if (baseMigrationExists) return;
+  if (!baseMigrationExists) {
+    await codemods.makeUsingStub(stubsRoot, 'migrations/base.stub', {
+      migration: {
+        folder: 'database/migrations',
+        fileName: `${new Date().getTime()}_base.ts`,
+      },
+    });
+  }
 
-  await codemods.makeUsingStub(stubsRoot, 'migration.stub', {
-    migration: {
-      folder: 'database/migrations',
-      fileName: `${new Date().getTime()}_base.ts`,
-    },
-  });
+  if (!auditMigrationExists) {
+    await codemods.makeUsingStub(stubsRoot, 'migrations/audit.stub', {
+      migration: {
+        folder: 'database/migrations',
+        fileName: `${new Date().getTime()}_audit.ts`,
+      },
+    });
+  }
 }
 
 async function getOptions(command: Configure): Promise<ConfigOptions> {
