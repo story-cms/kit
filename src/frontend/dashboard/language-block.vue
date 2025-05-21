@@ -12,7 +12,7 @@
     </div>
     <div v-else class="flex grow justify-between">
       <Ring
-        v-for="item in stats"
+        v-for="item in progress"
         :key="item.name"
         :done="item.done"
         :draft="item.draft"
@@ -36,7 +36,7 @@ import Ring from './ring.vue';
 import Icon from '../shared/icon.vue';
 
 const props = defineProps<{
-  stats: {
+  progress: {
     name: string;
     done: number;
     draft: number;
@@ -47,9 +47,9 @@ const props = defineProps<{
   lastUpdate: string;
 }>();
 
-const { stats, language, locale, lastUpdate } = toRefs(props);
+const { progress, language, locale, lastUpdate } = toRefs(props);
 
 const hasCompleteRings = computed(() => {
-  return stats.value.every((stat) => stat.done === stat.total);
+  return progress.value.every((stat) => stat.done === stat.total);
 });
 </script>
