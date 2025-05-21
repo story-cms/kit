@@ -174,18 +174,20 @@ export default class DraftsController {
     return ctx.response.redirect().back();
   }
 
-  public async reject({ request, response, params, auth }: HttpContext) {
-    const id = Number(params.id);
+  public async reject(ctx: HttpContext) {
+    if (!ctx.story) return ctx.response.notFound();
+
+    const id = Number(ctx.params.id);
     const draft = await Draft.findOrFail(id);
     draft.status = 'started';
-    draft.feedback = request.input('feedback');
+    draft.feedback = ctx.request.input('feedback');
     await draft.save();
     await Activity.create({
-      userId: auth.user?.id,
-      locale: params.version?.locale,
-      action: {{ '`rejected draft for ${storyConfig.meta.storyType} ${params.story.name} ${storyConfig.meta.chapterType} ${draft.number}`' }},
+      userId: ctx.auth.user?.id,
+      locale: ctx.version?.locale,
+      action: {{ '`rejected draft for ${storyConfig.meta.storyType} ${ctx.story.name} ${storyConfig.meta.chapterType} ${draft.number}`' }},
     });
-    return response.redirect().back();
+    return ctx.response.redirect().back();
   }
 
   public async publish(ctx: HttpContext) {
