@@ -1,0 +1,38 @@
+{{{
+  exports({
+    to: app.makePath(migration.folder, migration.fileName)
+  })
+}}}
+
+import { BaseSchema } from '@adonisjs/lucid/schema';
+
+export default class extends BaseSchema {
+  protected tableName = 'activities';
+
+  async up() {
+    this.schema.createTable(this.tableName, (table) => {
+      table.increments('id');
+      table.integer('user_id').unsigned().references('users.id');
+      table.string('locale').notNullable();
+      table.string('action').notNullable();
+      table.timestamp('created_at');
+    });
+
+    this.schema.alterTable('drafts', (table) => {
+      table.integer('updated_by').unsigned().references('users.id');
+    });
+    this.schema.alterTable('uis', (table) => {
+      table.integer('updated_by').unsigned().references('users.id');
+    });
+  }
+
+  async down() {
+    this.schema.dropTable(this.tableName);
+    this.schema.alterTable('drafts', (table) => {
+      table.dropColumn('updated_by');
+    });
+    this.schema.alterTable('uis', (table) => {
+      table.dropColumn('updated_by');
+    });
+  }
+}

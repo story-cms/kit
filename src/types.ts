@@ -257,12 +257,9 @@ export interface PreviewProps {
   chapterLimit: number;
 }
 
-export interface UserMeta {
-  id: number;
-  name: string;
-  email: string;
-  language: string;
-  role: string;
+export interface UserMeta
+  extends Pick<User, 'id' | 'name' | 'email' | 'role' | 'language' | 'initials'> {
+  lastActivity: string | null;
 }
 
 export interface UsersProps {

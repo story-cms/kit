@@ -3,6 +3,7 @@
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
 import User from '#models/user';
+import Activity from '#models/activity';
 
 export default class AuthController {
   public async index(ctx: HttpContext) {
@@ -12,9 +13,19 @@ export default class AuthController {
   public async store(ctx: HttpContext) {
     const { email, password } = ctx.request.only(['email', 'password']);
 
+    if (email.startsWith('redacted+')) {
+      ctx.session.flash('errorsBag', { credentials: 'Invalid username or password' });
+      ctx.response.redirect().back();
+    }
+
     try {
       const user = await User.verifyCredentials(email, password);
       await ctx.auth.use('web').login(user);
+      await Activity.create({
+        userId: user.id,
+        locale: user.defaultLanguage(),
+        action: 'logged in',
+      });
       ctx.session.put('locale', user.defaultLanguage());
       ctx.response.redirect('/');
     } catch {
@@ -25,6 +36,11 @@ export default class AuthController {
 
   public async logout(ctx: HttpContext) {
     ctx.session.clear();
+    await Activity.create({
+      userId: ctx.auth.user?.id,
+      locale: ctx.version?.locale,
+      action: 'logged out',
+    });
     await ctx.auth.use('web').logout();
     ctx.response.redirect('/login');
   }

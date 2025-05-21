@@ -1,0 +1,147 @@
+{{{ 
+  exports({ to: app.makePath('tests/unit/user_service.spec.ts') }) 
+}}}
+import { test } from '@japa/runner';
+import { UserService } from '#services/user_service';
+import User from '#models/user';
+import Activity from '#models/activity';
+import { DateTime } from 'luxon';
+
+test.group('UserService', (group) => {
+  group.each.teardown(async () => {
+    await Activity.query().delete();
+    await User.query().delete();
+  });
+
+  test('latest() returns active users with their last activity times', async ({
+    assert,
+  }) => {
+    // Create test users
+    await User.createMany([
+      {
+        id: 1,
+        name: 'John Doe',
+        email: 'john@example.com',
+        password: 'secret',
+        language: 'en',
+        role: 'editor',
+      },
+      {
+        id: 2,
+        name: 'Jane Smith',
+        email: 'jane@example.com',
+        password: 'secret',
+        language: 'en',
+        role: 'editor',
+      },
+      {
+        id: 3,
+        name: 'redacted',
+        email: 'redacted@example.com',
+        password: 'secret',
+        language: 'en',
+        role: 'editor',
+      },
+      {
+        id: 4,
+        name: 'James Doe',
+        email: 'james@example.com',
+        password: 'secret',
+        language: 'en',
+        role: 'editor',
+      },
+    ]);
+
+    // Create activities for users
+    await Activity.createMany([
+      {
+        userId: 1,
+        locale: 'en',
+        action: 'login',
+        createdAt: DateTime.fromISO('2024-02-01'),
+      },
+      {
+        userId: 2,
+        locale: 'en',
+        action: 'login',
+        createdAt: DateTime.fromISO('2024-03-02'),
+      },
+      {
+        userId: 1,
+        locale: 'en',
+        action: 'logout',
+        createdAt: DateTime.fromISO('2024-03-01'),
+      },
+    ]);
+
+    const userService = new UserService();
+    const result = (await userService.latest()) as any[];
+
+    // Verify results
+    // Should only include non-redacted users,
+    // but includes users without any activity
+    assert.lengthOf(result, 3);
+    assert.containsSubset(result[0], {
+      id: 1,
+      name: 'John Doe',
+      email: 'john@example.com',
+      role: 'editor',
+      language: 'en',
+      initials: 'JD',
+    });
+    assert.isTrue(result[0].lastActivity.toISOString().startsWith('2024-03-01'));
+    assert.containsSubset(result?.[1], {
+      id: 2,
+      name: 'Jane Smith',
+      email: 'jane@example.com',
+      role: 'editor',
+      language: 'en',
+      initials: 'JS',
+    });
+    assert.isTrue(result[1].lastActivity.toISOString().startsWith('2024-03-02'));
+  });
+
+  test('latest() handles users with no activity', async ({ assert }) => {
+    // Create a user with no activities
+    await User.create({
+      id: 3,
+      name: 'No Activity User',
+      email: 'noactivity@example.com',
+      password: 'secret',
+      language: 'en',
+      role: 'editor',
+    });
+
+    const userService = new UserService();
+    const result = await userService.latest();
+
+    // Verify results
+    assert.lengthOf(result, 1);
+    assert.containsSubset(result[0], {
+      id: 3,
+      name: 'No Activity User',
+      email: 'noactivity@example.com',
+      role: 'editor',
+      language: 'en',
+      initials: 'NU',
+      lastActivity: null,
+    });
+  });
+
+  test('latest() excludes redacted users', async ({ assert }) => {
+    // Create a redacted user
+    await User.create({
+      name: 'redacted',
+      email: 'redacted@example.com',
+      password: 'secret',
+      language: 'en',
+      role: 'editor',
+    });
+
+    const userService = new UserService();
+    const result = await userService.latest();
+
+    // Verify results
+    assert.lengthOf(result, 0);
+  });
+});

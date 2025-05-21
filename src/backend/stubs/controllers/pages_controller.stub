@@ -7,6 +7,7 @@ import type { HttpContext } from '@adonisjs/core/http';
 import Page, { PageVersion } from '#models/page';
 import storyConfig from '#config/story';
 import PageService from '#services/page_service';
+import Activity from '#models/activity';
 
 import { Session } from '@adonisjs/session';
 import providers from '#config/providers';
@@ -59,14 +60,24 @@ export default class PagesController {
       updatedBy: auth.user?.id,
     });
 
+     await Activity.create({
+      userId: auth.user?.id,
+      locale: session.get('locale'),
+      action: {{ '`created page ${page.id}`' }},
+    });
     return response.redirect({{ '`/page/${page.id}/edit`' }}, false, 303);
   }
 
-  public async destroy({ params, response, session }: HttpContext) {
+  public async destroy({ params, response, session, auth }: HttpContext) {
     const id = Number(params.id);
     const page = await Page.findOrFail(id);
     try {
       await page.delete();
+      await Activity.create({
+        userId: auth.user?.id,
+        locale: session.get('locale'),
+        action: {{ '`deleted page ${page.id}`' }},
+      });
     } catch (e) {
       session.flash('errorsBag', { other: e.message });
     }
@@ -98,11 +109,24 @@ export default class PagesController {
 
     page.isPublished = payload.isPublished;
     await page.save();
+    if (payload.isPublished) {
+      await Activity.create({
+        userId: ctx.auth.user?.id,
+        locale: ctx.session.get('locale'),
+        action: {{ '`published page ${page.id}`' }},
+      });
+    } else {
+      await Activity.create({
+        userId: ctx.auth.user?.id,
+        locale: ctx.session.get('locale'),
+        action: {{ '`updated page ${page.id}`' }},
+      });
+    }
 
     return ctx.response.redirect().back();
   }
 
-  public async sort({ response, request, session }: HttpContext) {
+  public async sort({ response, request, session, auth }: HttpContext) {
     const version = versionFromSession(session);
 
     // use the service to sort the pages in memory
@@ -113,6 +137,12 @@ export default class PagesController {
     for (const page of pages) {
       await page.save();
     }
+
+    await Activity.create({
+      userId: auth.user?.id,
+      locale: session.get('locale'),
+      action: 'sorted pages',
+    });
 
     return response.redirect().back();
   }

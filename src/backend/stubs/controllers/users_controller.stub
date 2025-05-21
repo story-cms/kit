@@ -6,6 +6,9 @@ import type { HttpContext } from '@adonisjs/core/http';
 import vine from '@vinejs/vine';
 import { UsersProps } from '@story-cms/kit';
 import User from '#models/user';
+import Activity from '#models/activity';
+import { UserService } from '#services/user_service';
+
 import {
   createUserValidator,
   updateUserValidator,
@@ -15,18 +18,18 @@ import {
 export default class UsersController {
   // show a list of all users
   public async index(ctx: HttpContext) {
-    const users = await User.all();
+    const userService = new UserService();
+    const users = await userService.latest();
+
     const props: UsersProps = {
-      users: users.map((user: User) => user.meta),
+      users,
     };
 
-    return ctx.inertia.render('UsersIndex', {
-      ...props,
-    });
+    return ctx.inertia.render('UsersIndex', { ...props });
   }
 
   // patch a user's information
-  public async update({ request, response, params, session }: HttpContext) {
+  public async update({ request, response, params, session, auth }: HttpContext) {
     const id = Number(params.id);
     const user = await User.findOrFail(id);
 
@@ -38,6 +41,11 @@ export default class UsersController {
       user.role = payload.role;
       user.language = payload.language;
       user.save();
+      Activity.create({
+        userId: auth.user?.id,
+        locale: session.get('locale'),
+        action: {{ '`updated user with id ${user.id}`' }},
+      });
     } catch (e) {
       session.flash('errorsBag', { other: e.message });
     }
@@ -46,11 +54,19 @@ export default class UsersController {
   }
 
   // delete a user
-  public async destroy({ response, params, session }: HttpContext) {
+  public async destroy({ response, params, session, auth }: HttpContext) {
     const id = Number(params.id);
     const user = await User.findOrFail(id);
     try {
-      await user.delete();
+      const random = Math.random().toString(36).substring(2, 15);
+      user.name = 'redacted';
+      user.email = {{ '`redacted+${random}`' }};
+      user.save();
+      await Activity.create({
+        userId: auth.user?.id,
+        locale: session.get('locale'),
+        action: {{ '`deleted user with id ${user.id}`' }},
+      });
     } catch (e) {
       session.flash('errorsBag', { other: e.message });
     }
@@ -59,12 +75,17 @@ export default class UsersController {
   }
 
   // create a new user
-  public async store({ request, response, session }: HttpContext) {
+  public async store({ request, response, session, auth }: HttpContext) {
     vine.messagesProvider = validationMessages;
     const payload = await request.validateUsing(createUserValidator);
 
     try {
-      await User.create({ ...payload, password: 'pending' });
+      const user = await User.create({ ...payload, password: 'pending' });
+      await Activity.create({
+        userId: auth.user?.id,
+        locale: session.get('locale'),
+        action: {{ '`created user with id ${user.id}`' }},
+      });
     } catch (e) {
       // logger.error(e.message)
       session.flash('errorsBag', { other: e.message });
