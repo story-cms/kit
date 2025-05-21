@@ -244,11 +244,26 @@ export interface Stats {
   changeType: string;
 }
 
+export interface Progress {
+  name: string;
+  done: number;
+  draft: number;
+  total: number;
+  lastUpdated: string;
+}
+
+export interface TranslationProgress {
+  progress: Progress[];
+  language: string;
+  locale: string;
+}
+
 export interface DashboardProps {
   index: IndexReadyItem[];
   addStatus: AddStatus;
   storyName: string;
   stats: Stats[];
+  translationProgress: TranslationProgress[];
 }
 
 export interface ChapterMeta {

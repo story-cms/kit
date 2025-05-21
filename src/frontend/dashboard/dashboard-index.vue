@@ -8,7 +8,7 @@
         </template>
         <template #extra-actions>
           <div
-            class="flex flex-col justify-between mb-4 gap-y-4 md:flex-row md:items-center md:gap-x-4"
+            class="mb-4 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
           >
             <div class="flex gap-x-4">
               <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
@@ -30,13 +30,13 @@
 
             <div class="flex gap-x-4">
               <button
-                class="flex items-center text-sm font-medium leading-4 gap-x-2"
+                class="flex items-center gap-x-2 text-sm font-medium leading-4"
                 @click="toggle"
               >
-                <span class="bg-green-500 rounded-full size-4"></span>Human
+                <span class="size-4 rounded-full bg-green-500"></span>Human
               </button>
-              <button class="flex items-center text-sm font-medium leading-4 gap-x-2">
-                <span class="bg-blue-500 rounded-full size-4"></span>AI
+              <button class="flex items-center gap-x-2 text-sm font-medium leading-4">
+                <span class="size-4 rounded-full bg-blue-500"></span>AI
               </button>
             </div>
           </div>
@@ -45,118 +45,11 @@
     </template>
     <div class="flex flex-wrap gap-8">
       <LanguageBlock
-        :progress="[
-          {
-            name: 'Interface',
-            done: 100,
-            draft: 0,
-            total: 100,
-          },
-          {
-            name: 'Content',
-            done: 48,
-            draft: 0,
-            total: 48,
-          },
-        ]"
-        language="German"
-        locale="DE"
-        lastUpdate="2025-05-20"
-      />
-      <LanguageBlock
-        :progress="[
-          {
-            name: 'Interface',
-            done: 75,
-            draft: 0,
-            total: 100,
-          },
-          {
-            name: 'Content',
-            done: 48,
-            draft: 0,
-            total: 48,
-          },
-        ]"
-        language="German"
-        locale="DE"
-        last-update="2025-05-20"
-      />
-      <LanguageBlock
-        :progress="[
-          {
-            name: 'Interface',
-            done: 60,
-            draft: 10,
-            total: 100,
-          },
-          {
-            name: 'Content',
-            done: 48,
-            draft: 0,
-            total: 48,
-          },
-        ]"
-        language="German"
-        locale="DE"
-        last-update="2025-05-20"
-      />
-      <LanguageBlock
-        :progress="[
-          {
-            name: 'Interface',
-            done: 60,
-            draft: 10,
-            total: 100,
-          },
-          {
-            name: 'Content',
-            done: 48,
-            draft: 0,
-            total: 48,
-          },
-        ]"
-        language="German"
-        locale="DE"
-        last-update="2025-05-20"
-      />
-      <LanguageBlock
-        :progress="[
-          {
-            name: 'Interface',
-            done: 60,
-            draft: 10,
-            total: 100,
-          },
-          {
-            name: 'Content',
-            done: 48,
-            draft: 0,
-            total: 48,
-          },
-        ]"
-        language="German"
-        locale="DE"
-        last-update="2025-05-20"
-      />
-      <LanguageBlock
-        :progress="[
-          {
-            name: 'Interface',
-            done: 60,
-            draft: 10,
-            total: 100,
-          },
-          {
-            name: 'Content',
-            done: 48,
-            draft: 0,
-            total: 48,
-          },
-        ]"
-        language="German"
-        locale="DE"
-        lastUpdate="2025-05-20"
+        v-for="progress in translationProgress"
+        :key="progress.language"
+        :progress="progress.progress"
+        :language="progress.language"
+        :locale="progress.locale"
       />
     </div>
     <div

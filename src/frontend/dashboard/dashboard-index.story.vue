@@ -58,6 +58,35 @@
             changeType: 'decrease',
           },
         ]"
+        :translation-progress="translationProgress"
+      />
+    </Variant>
+    <Variant title="Ring">
+      <div class="mx-auto flex w-full gap-x-4 rounded-lg bg-white p-8">
+        <Ring :done="10" :draft="10" :total="100" :name="'Interface'" />
+        <Ring :done="200" :draft="50" :total="300" :name="'Content'" />
+      </div>
+    </Variant>
+    <Variant title="Language block">
+      <LanguageBlock
+        :progress="[
+          {
+            name: 'English',
+            done: 10,
+            draft: 10,
+            total: 100,
+            lastUpdated: new Date('2025-04-21').toLocaleDateString(),
+          },
+          {
+            name: 'French',
+            done: 200,
+            draft: 50,
+            total: 300,
+            lastUpdated: new Date('2025-03-21').toLocaleDateString(),
+          },
+        ]"
+        :language="'German'"
+        :locale="'de'"
       />
     </Variant>
   </Story>
@@ -67,4 +96,49 @@
 import { sharedProps } from '../test/mocks';
 import { AddStatus } from '../../types';
 import DashboardIndex from './dashboard-index.vue';
+import Ring from './ring.vue';
+import LanguageBlock from './language-block.vue';
+
+const translationProgress = [
+  {
+    progress: [
+      {
+        name: 'Interface',
+        done: 100,
+        draft: 0,
+        total: 100,
+        lastUpdated: new Date('2025-04-21').toLocaleDateString(),
+      },
+      {
+        name: 'Content',
+        done: 200,
+        draft: 0,
+        total: 200,
+        lastUpdated: new Date('2025-04-21').toLocaleDateString(),
+      },
+    ],
+    language: 'German',
+    locale: 'de',
+  },
+  {
+    progress: [
+      {
+        name: 'Interface',
+        done: 75,
+        draft: 0,
+        total: 100,
+        lastUpdated: new Date('2025-04-21').toLocaleDateString(),
+      },
+      {
+        name: 'Content',
+        done: 150,
+        draft: 50,
+        total: 200,
+        lastUpdated: new Date('2025-04-21').toLocaleDateString(),
+      },
+    ],
+    language: 'Bengali',
+    locale: 'bn',
+  },
+];
 </script>
