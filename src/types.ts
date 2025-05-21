@@ -200,7 +200,6 @@ export interface SharedPageProps {
   stories: string[];
   user: User;
   uiTodoCount: number;
-  storyName: string;
 }
 
 export interface PageMeta {
@@ -236,10 +235,11 @@ export enum AddStatus {
   Wait,
 }
 
-export interface DashboardProps {
+export interface StoryIndexProps {
   index: IndexReadyItem[];
   addStatus: AddStatus;
   storyName: string;
+  storyId: number;
 }
 
 export interface ChapterMeta {

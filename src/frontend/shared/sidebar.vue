@@ -30,14 +30,14 @@
               <span
                 class="absolute right-2 top-4 rounded-[7px] bg-blue-100 px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-blue-800"
               >
-                {{ currentLocale }}
+                {{ locale }}
               </span>
               <Icon name="translate" />
             </button>
             <LanguageSelector
               v-if="!shared.hasOpenSidebar"
-              :current-locale="currentLocale"
-              :current-language="form.language"
+              :current-locale="locale"
+              :current-language="shared.language.language"
               :languages="shared.languages"
               :is-read-only="!shared.user.isManager"
               @language-change="onLanguage"
@@ -50,36 +50,32 @@
         </div>
         <div :class="[shared.hasOpenSidebar ? 'mt-4 flex flex-col px-4' : 'hidden']">
           <section class="grid grid-cols-1">
-            <div v-for="story in shared.stories" :key="story">
-              <button
-                :class="[
-                  'nav-link',
-                  {
-                    active:
-                      story.toLowerCase() === shared.currentStoryName?.toLowerCase() &&
-                      ($page?.url === '/' ||
-                        $page?.url.startsWith('/chapter') ||
-                        $page?.url.startsWith('/draft')),
-                  },
-                ]"
-                @click="onStory(story)"
-              >
-                {{ story }}
-              </button>
-            </div>
+            <Link
+              v-for="(story, index) in shared.stories"
+              :key="index"
+              :class="[
+                'nav-link',
+                {
+                  active: story.toLowerCase() === shared.currentStoryName?.toLowerCase(),
+                },
+              ]"
+              :href="`${locale}/story/${index + 1}`"
+            >
+              {{ story }}
+            </Link>
             <Link
               :class="[
                 'nav-link',
                 {
-                  active: $page?.url.startsWith('/page'),
+                  active: $page?.url.includes('/page'),
                 },
               ]"
-              href="/page"
+              :href="`${locale}/page`"
               >Pages</Link
             >
             <div v-if="isMultiLingual">
               <button
-                v-if="currentLocale === 'en'"
+                v-if="locale === 'en'"
                 class="nav-link opacity-50 disabled:cursor-not-allowed"
                 disabled
               >
@@ -90,10 +86,10 @@
                 :class="[
                   'nav-link flex items-center justify-between',
                   {
-                    active: $page?.url === '/ui',
+                    active: $page?.url.includes('/ui'),
                   },
                 ]"
-                href="/ui"
+                :href="`${locale}/ui`"
                 ><span>Interface</span>
                 <span class="text-yellow-500">{{ shared.uiTodoCount }}</span>
               </Link>
@@ -137,7 +133,7 @@
       </div>
       <div :class="[shared.hasOpenSidebar ? 'px-4 pb-4' : 'hidden']">
         <DropUp
-          v-model="form.language"
+          v-model="shared.language.language"
           :is-read-only="!shared.user.isManager"
           :options="languageOptions"
           @change="onLanguage"
@@ -150,44 +146,51 @@
 <script setup lang="ts">
 import { computed, watch } from 'vue';
 import { useSharedStore } from '../store';
-import { Link, useForm } from '@inertiajs/vue3';
+import { Link, router, usePage } from '@inertiajs/vue3';
 
 import Icon from '../shared/icon.vue';
 import LanguageSelector from './language-selector.vue';
 import DropUp from './drop-up.vue';
 
 const shared = useSharedStore();
-
-const form = useForm({
-  language: shared.language.language as string,
-  story: null,
-});
+const page = usePage();
 
 const onLanguage = async (lang: string) => {
-  if (lang === form.language) return;
-  form.language = lang;
-  form.story = null;
-  form.post('/switch');
+  if (lang === shared.locale) return;
+  const newPath = newPathFromLocale(lang);
+  // window.location.href = newPath;
+  router.get(newPath);
 };
 
-const onStory = async (story: string) => {
-  // @ts-expect-error - Ignoring type mismatch for now
-  form.story = story;
-  // @ts-expect-error - Ignoring type mismatch for now
-  form.language = null;
-  form.post('/switch');
+const newPathFromLocale = (targetLocale: string) => {
+  if (page.url.includes('/ui')) {
+    return `/${targetLocale}/ui`;
+  }
+
+  if (page.url.includes('/page')) {
+    return `/${targetLocale}/page`;
+  }
+
+  if (page.url.includes('/story/')) {
+    const part = page.url.split('/story/')[1];
+    const storyId = part.split('/')[0];
+    return `/${targetLocale}/story/${storyId}`;
+  }
+
+  return '/';
 };
 
 const signOut = () => {
-  window.location.href = '/logout';
+  // window.location.href = '/logout';
+  router.get('/logout');
 };
 
 const isMultiLingual = computed(() => shared.languages.length > 1);
 
 const isAdmin = computed(() => shared.user.isAdmin);
 
-const currentLocale = computed(() => {
-  return shared.languages.find((l) => l.language === form.language)?.locale ?? 'en';
+const locale = computed(() => {
+  return shared.locale ?? 'en';
 });
 
 const goBack = () => {
@@ -218,6 +221,7 @@ watch(
   { immediate: true },
 );
 </script>
+
 <style lang="postcss" scoped>
 .nav-icon {
   @apply flex size-14 items-center justify-center rounded-full transition-all duration-200 ease-in-out hover:bg-gray-100;

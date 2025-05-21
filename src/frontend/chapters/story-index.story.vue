@@ -1,29 +1,30 @@
 <template>
-  <Story title="Dashboard Index">
+  <Story title="Story Index" group="chapter">
     <Variant title="Index">
-      <DashboardIndex
+      <StoryIndex
         :index="[
           {
             number: 1,
             imageUrl:
               'https://res.cloudinary.com/onesheep/image/upload/v1684754051/Screenshot_2023-05-22_at_13.12.03_pnamdt.png',
             title: 'Sample Item 1',
-            tags: ['tag1', 'tag2'],
+            tags: ['Live', 'Draft'],
           },
           {
             number: 2,
             imageUrl:
               'https://res.cloudinary.com/onesheep/image/upload/v1684754051/Screenshot_2023-05-22_at_13.12.03_pnamdt.png',
             title: 'Sample Item 2',
-            tags: ['tag3', 'tag4'],
+            tags: ['Live'],
           },
         ]"
         :add-status="AddStatus.Add"
-        :story-name="sharedProps.meta.name"
+        story-name="John"
+        :story-id="1"
         :meta="sharedProps.meta"
         :language="sharedProps.language"
         :languages="sharedProps.languages"
-        :stories="[]"
+        :stories="['John', 'Luke']"
         :user="{
           id: 1,
           name: 'Test User',
@@ -43,5 +44,5 @@
 <script setup lang="ts">
 import { sharedProps } from '../test/mocks';
 import { AddStatus } from '../../types';
-import DashboardIndex from './dashboard-index.vue';
+import StoryIndex from './story-index.vue';
 </script>

@@ -3,11 +3,11 @@
     <template #header>
       <ContentHeader :title="`${meta.storyType}: ${shared.currentStoryName}`">
         <template #actions>
-          <icon :name="iconName" class="w-8 h-8 text-black" @click.prevent="toggle" />
+          <icon :name="iconName" class="h-8 w-8 text-black" @click.prevent="toggle" />
         </template>
         <template #extra-actions>
           <div
-            class="flex flex-col justify-between mb-4 gap-y-4 md:flex-row md:items-center md:gap-x-4"
+            class="mb-4 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
           >
             <div class="flex gap-x-4">
               <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
@@ -38,7 +38,7 @@
               />
               <Icon
                 name="search"
-                class="self-center col-start-1 row-start-1 ml-4 text-gray-400 pointer-events-none size-4"
+                class="pointer-events-none col-start-1 row-start-1 ml-4 size-4 self-center text-gray-400"
               />
             </div>
           </div>
@@ -85,14 +85,15 @@ import AddItemButton from '../shared/add-item-button.vue';
 import IndexFilter from '../shared/index-filter.vue';
 import IndexCard from '../chapters/index-card.vue';
 
-import { SharedPageProps, DashboardProps, AddStatus, IndexReadyItem } from '../../types';
+import { SharedPageProps, StoryIndexProps, AddStatus, IndexReadyItem } from '../../types';
 import { useSharedStore } from '../store';
 
-const props = defineProps<DashboardProps & SharedPageProps>();
+const props = defineProps<StoryIndexProps & SharedPageProps>();
 
 const shared = useSharedStore();
 
 shared.setFromProps(props);
+shared.setCurrentStoryName(props.storyName);
 
 const isList = ref(false);
 const toggle = () => {
@@ -102,7 +103,8 @@ const toggle = () => {
 const filterNumber = ref<string | null>(null);
 const currentTab = ref('Live');
 
-const addDraft = () => (window.location.href = '/draft/create');
+const addDraft = () =>
+  (window.location.href = `${shared.locale}/story/${props.storyId}/draft/create`);
 
 const onFilter = (tab: string) => {
   currentTab.value = tab;
@@ -141,10 +143,11 @@ const tabs = computed(() => {
 
 const onTap = (item: IndexReadyItem) => {
   if (currentTab.value == 'Drafts') {
-    window.location.href = `/draft/${item.number}/edit`;
+    // :locale/story/:storyId/draft/:number/edit
+    window.location.href = `${shared.locale}/story/${props.storyId}/draft/${item.number}/edit`;
   } else {
-    // window.location.href = `/draft/${item.number}/edit`;
-    window.location.href = `/chapter/${item.number}`;
+    // :locale/story/:storyId/chapter/:number
+    window.location.href = `${shared.locale}/story/${props.storyId}/chapter/${item.number}`;
   }
 };
 </script>

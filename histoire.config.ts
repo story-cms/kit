@@ -17,7 +17,7 @@ export default defineConfig({
       },
       {
         id: 'chapter',
-        title: 'Chapter Index',
+        title: 'Chapter',
       },
       {
         id: 'draft',

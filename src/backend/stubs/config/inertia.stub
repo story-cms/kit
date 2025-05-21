@@ -48,13 +48,10 @@ const inertiaConfig = defineConfig({
     stories: () => storyConfig.stories.map((item) => item.name),
     meta: () => storyConfig.meta,
     user: (ctx) => ctx.auth?.use('web')?.user,
-    language: (ctx) => getLanguage(ctx.session?.get('locale') ?? 'en'),
+    language: (ctx) => getLanguage(ctx.params.locale ?? 'en'),
     languages: () => storyConfig.languages,
     errors: (ctx) => ctx.session?.flashMessages.get('errors') ?? {},
     uiTodoCount: (ctx) => getTodoCount(ctx),
-    storyName: (ctx) => {
-      return ctx.params?.story;
-    },
   },
 
   /**
