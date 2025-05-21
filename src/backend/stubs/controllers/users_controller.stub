@@ -2,12 +2,12 @@
   exports({ to: app.makePath('app/controllers/users_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
-import db from '@adonisjs/lucid/services/db';
 
 import vine from '@vinejs/vine';
 import { UsersProps } from '@story-cms/kit';
 import User from '#models/user';
 import Activity from '#models/activity';
+import { UserService } from '#services/user_service';
 
 import {
   createUserValidator,
@@ -18,29 +18,11 @@ import {
 export default class UsersController {
   // show a list of all users
   public async index(ctx: HttpContext) {
-    const users = await User.all();
-    const activeUsers = users.filter((user) => !(user.name === 'redacted'));
-
-    // Get all last activity times in a single query
-    const lastActivities = await Activity.query()
-      .select('userId')
-      .select(db.raw('MAX(created_at) as last_activity'))
-      .whereIn(
-        'userId',
-        activeUsers.map((user) => user.id),
-      )
-      .groupBy('userId');
-
-    // Create a map of userId to last activity time
-    const activityMap = new Map(
-      lastActivities.map((activity) => [activity.userId, activity.$extras.last_activity]),
-    );
+    const userService = new UserService();
+    const users = await userService.latest();
 
     const props: UsersProps = {
-      users: activeUsers.map((user: User) => ({
-        ...user.meta,
-        lastActivity: activityMap.get(user.id) || null,
-      })),
+      users,
     };
 
     return ctx.inertia.render('UsersIndex', { ...props });
