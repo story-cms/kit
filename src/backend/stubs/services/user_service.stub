@@ -1,0 +1,28 @@
+{{{ 
+  exports({ to: app.makePath('app/services/user_service.ts') }) 
+}}}
+import Activity from '#models/activity';
+import User from '#models/user';
+import db from '@adonisjs/lucid/services/db';
+import { UserMeta } from '@story-cms/kit';
+
+export class UserService {
+  async latest(): Promise<UserMeta[]> {
+    const activities = await Activity.query()
+      .select('userId')
+      .select(db.raw('MAX(created_at) as last_activity'))
+      .groupBy('userId');
+
+    const users = await User.query().where('name', '!=', 'redacted');
+
+    const list = users.map<UserMeta>((user) => {
+      const activity = activities.find((a) => a.userId === user.id);
+      return {
+        ...user.meta,
+        lastActivity: activity?.$extras.last_activity || null,
+      };
+    });
+
+    return list;
+  }
+}

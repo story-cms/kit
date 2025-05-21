@@ -47,12 +47,10 @@
               <span
                 :class="[
                   value ? 'font-semibold' : 'font-normal',
-                  'flex items-center gap-2 truncate',
+                  'grid grid-cols-2 gap-x-2 truncate',
                 ]"
               >
-                <span>
-                  {{ option }}
-                </span>
+                <span> {{ option }} </span>
 
                 <Icon v-if="model === option" name="check" />
               </span>
