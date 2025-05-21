@@ -146,33 +146,37 @@
 <script setup lang="ts">
 import { computed, watch } from 'vue';
 import { useSharedStore } from '../store';
-import { Link, router, usePage } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
 
 import Icon from '../shared/icon.vue';
 import LanguageSelector from './language-selector.vue';
 import DropUp from './drop-up.vue';
 
 const shared = useSharedStore();
-const page = usePage();
 
 const onLanguage = async (lang: string) => {
-  if (lang === shared.locale) return;
-  const newPath = newPathFromLocale(lang);
-  // window.location.href = newPath;
+  const newLocale = shared.languages.find((l) => l.language === lang)?.locale;
+  if (!newLocale) return;
+  if (newLocale === shared.locale) return;
+
+  const newPath = newPathFromLocale(newLocale);
   router.get(newPath);
 };
 
 const newPathFromLocale = (targetLocale: string) => {
-  if (page.url.includes('/ui')) {
+  // const url = usePage().url;  not working
+  const url = window.location.href;
+
+  if (url.includes('/ui')) {
     return `/${targetLocale}/ui`;
   }
 
-  if (page.url.includes('/page')) {
+  if (url.includes('/page')) {
     return `/${targetLocale}/page`;
   }
 
-  if (page.url.includes('/story/')) {
-    const part = page.url.split('/story/')[1];
+  if (url.includes('/story/')) {
+    const part = url.split('/story/')[1];
     const storyId = part.split('/')[0];
     return `/${targetLocale}/story/${storyId}`;
   }
@@ -181,7 +185,6 @@ const newPathFromLocale = (targetLocale: string) => {
 };
 
 const signOut = () => {
-  // window.location.href = '/logout';
   router.get('/logout');
 };
 
