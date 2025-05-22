@@ -67,7 +67,7 @@
               :class="[
                 'nav-link',
                 {
-                  active: $page?.url.includes('/page'),
+                  active: $page?.url.includes(`/${locale}/page`),
                 },
               ]"
               :href="`/${locale}/page`"
@@ -86,7 +86,7 @@
                 :class="[
                   'nav-link flex items-center justify-between',
                   {
-                    active: $page?.url.includes('/ui'),
+                    active: $page?.url.includes('ui'),
                   },
                 ]"
                 :href="`/${locale}/ui`"
@@ -109,7 +109,7 @@
                   active: $page?.url === '/user',
                 },
               ]"
-              href="/user"
+              :href="`/${locale}/user`"
             >
               <Icon name="users" />
               <span>Users</span>
@@ -182,10 +182,6 @@ const newPathFromLocale = (targetLocale: string) => {
   }
 
   return '/';
-};
-
-const signOut = () => {
-  router.get('/logout');
 };
 
 const isMultiLingual = computed(() => shared.languages.length > 1);
