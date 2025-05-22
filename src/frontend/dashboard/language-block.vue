@@ -48,9 +48,14 @@ const hasCompleteRings = computed(() => {
 
 const lastUpdate = computed(() => {
   // Get the most recent update
-  return progress.value
+  const timestamp = progress.value
     .map((stat) => stat.lastUpdated)
     .sort()
     .pop();
+
+  if (!timestamp) return '';
+
+  const date = new Date(timestamp);
+  return date.toISOString().split('T')[0];
 });
 </script>

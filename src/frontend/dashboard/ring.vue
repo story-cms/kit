@@ -1,5 +1,14 @@
 <template>
   <div>
+    <div class="flex flex-col text-xs">
+      <span>Done: {{ done }}</span>
+      <span>Draft: {{ draft }}</span>
+      <span>Total: {{ total }}</span>
+      <span>Name: {{ name }}</span>
+      <span>Gray: {{ grayPercentage }}</span>
+      <span>Green: {{ donePercentage }}</span>
+      <span>Blue: {{ draftPercentage }}</span>
+    </div>
     <div class="relative flex flex-col items-center justify-center">
       <svg class="-rotate-90" :height="circleWidth" :width="circleWidth">
         <!-- Green segment -->
@@ -50,20 +59,16 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import Icon from '../shared/icon.vue';
+import { Progress } from '../../types';
 
-const props = defineProps<{
-  done: number;
-  draft: number;
-  total: number;
-  name: string;
-}>();
+const props = defineProps<Progress>();
 
 const donePercentage = computed(() => {
-  return Math.ceil((props.done / props.total) * 100);
+  return Math.round((props.done / props.total) * 100);
 });
 
 const draftPercentage = computed(() => {
-  return Math.ceil((props.draft / props.total) * 100);
+  return Math.round((props.draft / props.total) * 100);
 });
 
 const grayPercentage = computed(() => {

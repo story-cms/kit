@@ -75,14 +75,14 @@
             done: 10,
             draft: 10,
             total: 100,
-            lastUpdated: new Date('2025-04-21').toLocaleDateString(),
+            lastUpdated: '2025-05-19T15:05:30.732+00:00',
           },
           {
             name: 'French',
             done: 200,
             draft: 50,
             total: 300,
-            lastUpdated: new Date('2025-03-21').toLocaleDateString(),
+            lastUpdated: '2025-05-19T15:05:30.732+00:00',
           },
         ]"
         :language="'German'"
