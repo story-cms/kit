@@ -4,13 +4,12 @@
       <ContentHeader :title="chapterTitle">
         <template #actions>
           <DraftActions :can-delete="false" />
-          <button
-            type="button"
-            class="w-32 rounded-[38px] border border-blue-500 bg-blue-500 px-[15px] py-[9px] text-sm/5 font-medium text-white shadow"
-            @click.prevent="edit"
+          <Link
+            class="w-32 rounded-[38px] border border-blue-500 bg-blue-500 px-[15px] py-[9px] text-center text-sm/5 font-medium text-white shadow"
+            :href="`/${shared.locale}/story/${props.storyId}/draft/${props.chapter.number}/edit`"
           >
             Edit
-          </button>
+          </Link>
         </template>
       </ContentHeader>
     </template>
@@ -52,8 +51,9 @@
 </template>
 
 <script setup lang="ts">
-import { router } from '@inertiajs/vue3';
 import { computed, onMounted } from 'vue';
+import { Link } from '@inertiajs/vue3';
+
 import type { PreviewProps, SharedPageProps } from '../../types';
 import DraftActions from '../fields/draft-actions.vue';
 import MobileAppPreview from '../fields/mobile-app-preview.vue';
@@ -82,12 +82,6 @@ const publishedWhen = computed(() => {
 const metaChapter = computed(
   () => `${padZero(props.chapter.number)} of ${padZero(props.chapterLimit)}`,
 );
-
-const edit = () => {
-  router.get(
-    `/${shared.locale}/story/${props.storyId}/draft/${props.chapter.number}/edit`,
-  );
-};
 
 onMounted(() => {
   shared.setSourceColumnAsHidden(false);
