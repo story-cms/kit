@@ -181,7 +181,7 @@ const newPathFromLocale = (targetLocale: string) => {
     return `/${targetLocale}/story/${storyId}`;
   }
 
-  return '/';
+  return `/${targetLocale}`;
 };
 
 const isMultiLingual = computed(() => shared.languages.length > 1);
