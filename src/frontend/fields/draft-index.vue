@@ -48,21 +48,21 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import AppLayout from '../shared/app-layout.vue';
 
-import { router } from '@inertiajs/vue3';
 import type { Errors } from '@inertiajs/core';
-import { padZero, debounce, formatDate, safeChapterTitle } from '../shared/helpers';
-import type { FieldSpec, DraftEditProps, SharedPageProps } from '../../types';
+import { router } from '@inertiajs/vue3';
+import type { DraftEditProps, FieldSpec, SharedPageProps } from '../../types';
 import { ResponseStatus } from '../../types';
-import { useDraftsStore, useModelStore, useSharedStore, useWidgetsStore } from '../store';
 import ContentHeader from '../shared/content-header.vue';
-import DraftActions from './draft-actions.vue';
-import WorkflowActions from './workflow-actions.vue';
 import ContentSidebar from '../shared/content-sidebar.vue';
+import { debounce, formatDate, padZero, safeChapterTitle } from '../shared/helpers';
 import MetaBox from '../shared/meta-box.vue';
+import { useDraftsStore, useModelStore, useSharedStore, useWidgetsStore } from '../store';
+import DraftActions from './draft-actions.vue';
 import MobileAppPreview from './mobile-app-preview.vue';
+import WorkflowActions from './workflow-actions.vue';
 
 const props = defineProps<DraftEditProps & SharedPageProps>();
 
@@ -116,49 +116,65 @@ const onError = (_errors: Errors, message: string) => {
 };
 
 const save = debounce(2000, () => {
-  router.post(`/draft/${props.draft.id}/save`, getPayload(), {
-    preserveScroll: true,
-    onSuccess: () => {
-      onSuccess();
-      if (props.user.role === 'admin') return;
-      drafts.setStatus('started');
+  router.post(
+    `/${shared.locale}/story/${props.storyId}/draft/${props.draft.id}/save`,
+    getPayload(),
+    {
+      preserveScroll: true,
+      onSuccess: () => {
+        onSuccess();
+        if (props.user.role === 'admin') return;
+        drafts.setStatus('started');
+      },
+      onError: (e) => onError(e, `${props.meta.chapterType} not saved`),
     },
-    onError: (e) => onError(e, `${props.meta.chapterType} not saved`),
-  });
+  );
 });
 
 const deleteDraft = () => {
-  router.delete(`/draft/${props.draft.id}`, {
+  router.delete(`/${shared.locale}/story/${props.storyId}/draft/${props.draft.id}`, {
     onSuccess: () => onSuccess('Draft successfully deleted'),
     onError: (e) => onError(e, 'Error deleting draft'),
   });
 };
 
 const submit = () => {
-  router.post(`/draft/${props.draft.id}/submit`, getPayload(), {
-    onSuccess: () => onSuccess(`${props.meta.chapterType} submitted for review`),
-    onError: (e) =>
-      onError(e, 'Draft not submitted. Please review and correct any errors.'),
-  });
+  router.post(
+    `/${shared.locale}/story/${props.storyId}/draft/${props.draft.id}/submit`,
+    getPayload(),
+    {
+      onSuccess: () => onSuccess(`${props.meta.chapterType} submitted for review`),
+      onError: (e) =>
+        onError(e, 'Draft not submitted. Please review and correct any errors.'),
+    },
+  );
 };
 
 const publish = () => {
   widgets.setIsDirty(true);
-  router.post(`/draft/${props.draft.id}/publish`, getPayload(), {
-    onSuccess: () => onSuccess(`${props.meta.chapterType} published successfully`),
-    onError: (e) =>
-      onError(
-        e,
-        `${props.meta.chapterType} not published. Please review and correct any errors.`,
-      ),
-  });
+  router.post(
+    `/${shared.locale}/story/${props.storyId}/draft/${props.draft.id}/publish`,
+    getPayload(),
+    {
+      onSuccess: () => onSuccess(`${props.meta.chapterType} published successfully`),
+      onError: (e) =>
+        onError(
+          e,
+          `${props.meta.chapterType} not published. Please review and correct any errors.`,
+        ),
+    },
+  );
 };
 
 const reject = () => {
-  router.post(`/draft/${props.draft.id}/reject`, getPayload(), {
-    onSuccess: () => onSuccess('Draft sent back for fixing'),
-    onError: (e) => onError(e, 'Error sending draft back'),
-  });
+  router.post(
+    `/${shared.locale}/story/${props.storyId}/draft/${props.draft.id}/reject`,
+    getPayload(),
+    {
+      onSuccess: () => onSuccess('Draft sent back for fixing'),
+      onError: (e) => onError(e, 'Error sending draft back'),
+    },
+  );
 };
 
 const publishedWhen = computed(() => {

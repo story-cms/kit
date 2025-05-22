@@ -25,7 +25,7 @@
       ]"
     >
       <!-- eslint-disable vue/no-v-html -->
-      <div class="p-8 bg-white shadow-sm" v-html="bundleView"></div>
+      <div class="bg-white p-8 shadow-sm" v-html="bundleView"></div>
       <ContentSidebar>
         <template #meta-box>
           <MetaBox
@@ -52,15 +52,16 @@
 </template>
 
 <script setup lang="ts">
+import { router } from '@inertiajs/vue3';
 import { computed, onMounted } from 'vue';
+import type { PreviewProps, SharedPageProps } from '../../types';
+import DraftActions from '../fields/draft-actions.vue';
+import MobileAppPreview from '../fields/mobile-app-preview.vue';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
-import DraftActions from '../fields/draft-actions.vue';
-import MetaBox from '../shared/meta-box.vue';
 import ContentSidebar from '../shared/content-sidebar.vue';
-import MobileAppPreview from '../fields/mobile-app-preview.vue';
 import { formatDate, padZero, safeChapterTitle } from '../shared/helpers';
-import type { PreviewProps, SharedPageProps } from '../../types';
+import MetaBox from '../shared/meta-box.vue';
 import { useSharedStore } from '../store';
 
 const props = defineProps<PreviewProps & SharedPageProps>();
@@ -83,7 +84,9 @@ const metaChapter = computed(
 );
 
 const edit = () => {
-  window.location.href = `/draft/${props.chapter.number}/edit`;
+  router.get(
+    `/${shared.locale}/story/${props.storyId}/draft/${props.chapter.number}/edit`,
+  );
 };
 
 onMounted(() => {

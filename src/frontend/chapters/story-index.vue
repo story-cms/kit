@@ -76,6 +76,8 @@
 </template>
 
 <script setup lang="ts">
+import { router } from '@inertiajs/vue3';
+
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
 import { computed, ref } from 'vue';
@@ -104,7 +106,7 @@ const filterNumber = ref<string | null>(null);
 const currentTab = ref('Live');
 
 const addDraft = () =>
-  (window.location.href = `${shared.locale}/story/${props.storyId}/draft/create`);
+  router.get(`/${shared.locale}/story/${props.storyId}/draft/create`);
 
 const onFilter = (tab: string) => {
   currentTab.value = tab;
@@ -143,11 +145,9 @@ const tabs = computed(() => {
 
 const onTap = (item: IndexReadyItem) => {
   if (currentTab.value == 'Drafts') {
-    // :locale/story/:storyId/draft/:number/edit
-    window.location.href = `${shared.locale}/story/${props.storyId}/draft/${item.number}/edit`;
+    router.get(`/${shared.locale}/story/${props.storyId}/draft/${item.number}/edit`);
   } else {
-    // :locale/story/:storyId/chapter/:number
-    window.location.href = `${shared.locale}/story/${props.storyId}/chapter/${item.number}`;
+    router.get(`/${shared.locale}/story/${props.storyId}/chapter/${item.number}`);
   }
 };
 </script>

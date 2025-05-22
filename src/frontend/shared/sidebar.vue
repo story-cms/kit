@@ -16,7 +16,7 @@
             shared.hasOpenSidebar ? 'justify-between p-5' : 'flex-col gap-y-3 p-2',
           ]"
         >
-          <Link :class="['nav-icon']" href="/">
+          <Link :class="['nav-icon']" :href="`/${locale}`">
             <Icon name="home" />
           </Link>
           <button class="nav-icon" @click="goBack">

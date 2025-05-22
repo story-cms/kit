@@ -190,6 +190,7 @@ export interface DraftEditProps {
   lastPublished: string; // drafts
   providers: Providers; // widgets
   storyName: string;
+  storyId: number;
 }
 
 export interface SharedPageProps {
@@ -253,6 +254,7 @@ export interface PreviewProps {
   bundle: any;
   bundleView: string;
   storyName: string;
+  storyId: number;
   title: string;
   chapterLimit: number;
 }
