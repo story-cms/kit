@@ -28,7 +28,7 @@
         },
       ]"
     >
-      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="py-4 space-y-8 bg-white">
+      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8 bg-white py-4">
         <StringField
           :field="{
             name: 'title',
@@ -195,7 +195,7 @@ const isLink = computed((): boolean => selection.value === 'link');
 const save = debounce(1000, () => {
   shared.clearErrors();
 
-  router.post(`/page/${props.page.id}`, getPayload(), {
+  router.post(`/${shared.locale}/page/${props.page.id}`, getPayload(), {
     preserveScroll: true,
 
     onSuccess: () => {
@@ -213,7 +213,7 @@ const save = debounce(1000, () => {
 });
 
 const deletePage = () => {
-  router.delete(`/page/${props.page.id}`, {
+  router.delete(`/${shared.locale}/page/${props.page.id}`, {
     onSuccess: () => shared.addMessage(ResponseStatus.Confirmation, 'Page deleted'),
     onError: () => shared.addMessage(ResponseStatus.Failure, 'Error deleting page'),
   });
