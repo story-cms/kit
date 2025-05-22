@@ -59,7 +59,7 @@
                   active: story.toLowerCase() === shared.currentStoryName?.toLowerCase(),
                 },
               ]"
-              :href="`${locale}/story/${index + 1}`"
+              :href="`/${locale}/story/${index + 1}`"
             >
               {{ story }}
             </Link>
@@ -70,7 +70,7 @@
                   active: $page?.url.includes('/page'),
                 },
               ]"
-              :href="`${locale}/page`"
+              :href="`/${locale}/page`"
               >Pages</Link
             >
             <div v-if="isMultiLingual">
@@ -89,7 +89,7 @@
                     active: $page?.url.includes('/ui'),
                   },
                 ]"
-                :href="`${locale}/ui`"
+                :href="`/${locale}/ui`"
                 ><span>Interface</span>
                 <span class="text-yellow-500">{{ shared.uiTodoCount }}</span>
               </Link>
@@ -124,10 +124,10 @@
               <Icon name="help" />
               <span>Support</span>
             </Link>
-            <button class="nav-link flex items-center gap-x-3" @click="signOut">
+            <Link class="nav-link flex items-center gap-x-3" href="/logout">
               <Icon name="logout" />
               <span>Logout</span>
-            </button>
+            </Link>
           </section>
         </div>
       </div>
