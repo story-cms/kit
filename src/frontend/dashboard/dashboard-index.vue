@@ -87,6 +87,7 @@ import IndexCard from '../chapters/index-card.vue';
 
 import { SharedPageProps, DashboardProps, AddStatus, IndexReadyItem } from '../../types';
 import { useSharedStore } from '../store';
+import { router } from '@inertiajs/vue3';
 
 const props = defineProps<DashboardProps & SharedPageProps>();
 
@@ -102,7 +103,7 @@ const toggle = () => {
 const filterNumber = ref<string | null>(null);
 const currentTab = ref('Live');
 
-const addDraft = () => (window.location.href = '/draft/create');
+const addDraft = () => router.visit('/draft/create');
 
 const onFilter = (tab: string) => {
   currentTab.value = tab;
@@ -141,10 +142,9 @@ const tabs = computed(() => {
 
 const onTap = (item: IndexReadyItem) => {
   if (currentTab.value == 'Drafts') {
-    window.location.href = `/draft/${item.number}/edit`;
+    router.visit(`/draft/${item.number}/edit`);
   } else {
-    // window.location.href = `/draft/${item.number}/edit`;
-    window.location.href = `/chapter/${item.number}`;
+    router.visit(`/chapter/${item.number}`);
   }
 };
 </script>

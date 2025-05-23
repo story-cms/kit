@@ -150,7 +150,7 @@
 <script setup lang="ts">
 import { computed, watch } from 'vue';
 import { useSharedStore } from '../store';
-import { Link, useForm } from '@inertiajs/vue3';
+import { Link, router, useForm } from '@inertiajs/vue3';
 
 import Icon from '../shared/icon.vue';
 import LanguageSelector from './language-selector.vue';
@@ -179,7 +179,7 @@ const onStory = async (story: string) => {
 };
 
 const signOut = () => {
-  window.location.href = '/logout';
+  router.visit('/logout');
 };
 
 const isMultiLingual = computed(() => shared.languages.length > 1);
