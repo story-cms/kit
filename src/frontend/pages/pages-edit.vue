@@ -243,8 +243,5 @@ onMounted(() => {
     title.value = model.getField('title', 'Page');
     isPublished.value = Boolean(model.getField('isPublished', false));
   });
-
-  shared.setShowAppPreview(false);
-  shared.setSourceColumnAsHidden(false);
 });
 </script>
