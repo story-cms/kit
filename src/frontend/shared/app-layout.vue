@@ -2,22 +2,19 @@
   <div ref="layout" class="bg-gray-50">
     <div
       ref="container"
-      :class="[
-        'container relative mx-auto grid min-h-screen px-3 transition-all duration-75',
-
-        {
-          'grid-cols-[96px_auto]':
-            (!shared.isLargeScreen || !shared.hasOpenSidebar) &&
-            !shared.hasFloatingSidebar,
-        },
-        {
-          'grid-cols-[320px_auto] gap-x-3': shared.isLargeScreen,
-        },
-      ]"
+      :class="['relative mx-auto min-h-screen px-3 transition-all duration-75']"
     >
       <Sidebar />
-      <div class="relative">
-        <div class="pb-6 mx-auto">
+      <div
+        :class="[
+          'relative',
+          {
+            'ml-[84px]': !shared.isLargeScreen || !shared.hasOpenSidebar,
+            'ml-[264px]': shared.isLargeScreen && shared.hasOpenSidebar,
+          },
+        ]"
+      >
+        <div class="max-w-6xl pb-6 mx-auto">
           <header
             ref="header"
             :class="[
@@ -56,6 +53,7 @@ const header = ref<HTMLElement | null>(null);
 const main = ref<HTMLElement | null>(null);
 const layout = ref<HTMLElement | null>(null);
 const container = ref<HTMLElement | null>(null);
+
 const onScroll = () => {
   if (header.value && main.value) {
     const headerRect = header.value.getBoundingClientRect();
@@ -86,7 +84,6 @@ const setDimensions = () => {
 const resizeHook = () => {
   const fresh = document.documentElement.clientWidth;
   shared.setLargeScreen(fresh >= 1280);
-  shared.setSidebarOpen(fresh >= 1280);
   shared.setSingleColumn(fresh < 1280);
 
   if (!shared.isLargeScreen && shared.hasOpenSidebar) {
