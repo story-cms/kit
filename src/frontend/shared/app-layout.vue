@@ -86,22 +86,28 @@ const resizeHook = () => {
   shared.setLargeScreen(fresh >= 1280);
   shared.setSingleColumn(fresh < 1280);
 
-  if (!shared.isLargeScreen && shared.hasOpenSidebar) {
-    shared.setSidebarAsFloating(true);
+  if (shared.isTranslation && shared.showSourceColumn) {
+    shared.setSingleColumn(true);
   }
 
-  if (shared.isLargeScreen && shared.hasOpenSidebar) {
-    shared.setSidebarAsFloating(false);
-  }
-  if (!shared.isLargeScreen) {
-    shared.setShowAppPreview(false);
-    shared.setShowMetaBox(false);
-  }
-  if (shared.isLargeScreen) {
-    shared.setShowAppPreview(true);
-    shared.setShowMetaBox(true);
-    shared.setContentSidebarAsFloating(false);
-    shared.setSingleColumn(false);
+  if (!shared.isTranslation) {
+    if (!shared.isLargeScreen && shared.hasOpenSidebar) {
+      shared.setSidebarAsFloating(true);
+    }
+
+    if (shared.isLargeScreen && shared.hasOpenSidebar) {
+      shared.setSidebarAsFloating(false);
+    }
+    if (!shared.isLargeScreen) {
+      shared.setShowAppPreview(false);
+      shared.setShowMetaBox(false);
+    }
+    if (shared.isLargeScreen) {
+      shared.setShowAppPreview(true);
+      shared.setShowMetaBox(true);
+      shared.setContentSidebarAsFloating(false);
+      shared.setSingleColumn(false);
+    }
   }
 
   setDimensions();
