@@ -38,6 +38,14 @@ export default class Chapter extends BaseModel {
     return start;
   }
 
+  public get escapedBundle() {
+    const start =
+      typeof this.bundle === 'string' ? this.bundle : JSON.stringify(this.bundle);
+    const cleaned = start.replace(/\u00A0/g, '\\\\u00A0');
+    const parsed = JSON.parse(cleaned);
+    return parsed;
+  }
+
   public get index(): IndexItem {
     return {
       number: this.number,
