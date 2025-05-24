@@ -37,8 +37,8 @@
 import { computed, ref, nextTick, onMounted } from 'vue';
 import type { FieldSpec } from '../../types';
 import { useModelStore, useSharedStore } from '../store';
-import { commonProps } from '../shared/helpers';
-import type { Editor, EditorChange } from 'codemirror';
+import { commonProps, expandShortcuts } from '../shared/helpers';
+import type { Editor, EditorChange, Position } from 'codemirror';
 import { customToolbarButtons, defaultButtons } from './markdown/toolbar-buttons';
 
 const props = defineProps({
@@ -47,6 +47,7 @@ const props = defineProps({
 
 const model = useModelStore();
 const shared = useSharedStore();
+let cursor: Position = { line: 0, ch: 0 };
 
 const field = computed(() => props.field as FieldSpec);
 const fieldPath = computed(() => {
@@ -55,16 +56,15 @@ const fieldPath = computed(() => {
 });
 
 const update = (e: Editor, change: EditorChange) => {
-  if (change.origin === 'setValue') return;
+  if (change.origin === 'setValue') {
+    mde?.codemirror.setCursor(cursor);
+    return;
+  }
   const value = e.getValue();
-  const convertedValue = convertTildaToUnicodeSpace(value);
-  model.setField(fieldPath.value, convertedValue);
+  cursor = mde?.codemirror.getCursor() ?? { line: 0, ch: 0 };
+  const expanded = expandShortcuts(value);
+  model.setField(fieldPath.value, expanded);
 };
-
-function convertTildaToUnicodeSpace(text: string) {
-  // Replace ~ text with actual non-breaking space character
-  return text.replace(/~/g, '\u00A0');
-}
 
 const load = () => {
   nextTick().then(() => {
@@ -77,8 +77,9 @@ const load = () => {
     }
 
     const fresh = model.getField(fieldPath.value, '') as unknown as string;
+    // if the value was changed via the textarea, we are done
     if (fresh === mde?.value()) return;
-
+    // apply changes made programmatically
     mde?.codemirror.setValue(fresh);
   });
 };

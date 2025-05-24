@@ -50,7 +50,7 @@ export default class ChaptersController {
 
     const chapter = await Chapter.query().where(specifier).firstOrFail();
 
-    return { number: chapter.number, bundle: chapter.bundle };
+    return { number: chapter.number, bundle: chapter.escapedBundle };
   }
 
   public async range(ctx: HttpContext) {
