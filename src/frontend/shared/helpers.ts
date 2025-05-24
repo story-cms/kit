@@ -26,6 +26,11 @@ export const commonProps = {
   },
 };
 
+export const expandShortcuts = (text: string) => {
+  // tilde -> non-breaking space character
+  return text.replace(/~/g, '\u00A0');
+};
+
 export const padZero = (value: number): string => (value > 9 ? `${value}` : `0${value}`);
 
 export const formatDate = (value: string): string => {
