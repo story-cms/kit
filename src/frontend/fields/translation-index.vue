@@ -304,6 +304,7 @@ onMounted(() => {
   if (shared.meta.hasAppPreview) {
     shared.setShowAppPreview(false);
   }
+  shared.setIsTranslationIndex(true);
 });
 onUnmounted(() => {
   shared.setSingleColumn(false);
@@ -311,5 +312,6 @@ onUnmounted(() => {
   if (shared.meta.hasAppPreview) {
     shared.setShowAppPreview(true);
   }
+  shared.setIsTranslationIndex(false);
 });
 </script>

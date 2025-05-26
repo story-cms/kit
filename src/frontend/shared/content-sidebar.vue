@@ -42,7 +42,7 @@ watch([showMetaBox, showAppPreview, isLargeScreen, showSourceColumn], ([a, b, c,
     shared.setSingleColumn(true);
   }
 
-  if (shared.isTranslation) {
+  if (shared.isTranslationIndex) {
     if (c && (a || b)) {
       shared.setContentSidebarAsFloating(false);
       shared.setSingleColumn(false);
@@ -56,7 +56,7 @@ watch([showMetaBox, showAppPreview, isLargeScreen, showSourceColumn], ([a, b, c,
       shared.setSingleColumn(true);
     }
   }
-  if (!shared.isTranslation) {
+  if (!shared.isTranslationIndex) {
     if (c && (a || b)) {
       shared.setContentSidebarAsFloating(false);
       shared.setSingleColumn(false);
