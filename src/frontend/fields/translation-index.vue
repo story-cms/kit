@@ -118,7 +118,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, onUnmounted } from 'vue';
 import { router } from '@inertiajs/vue3';
 import type { Errors } from '@inertiajs/core';
 import type { FieldSpec, DraftEditProps, SharedPageProps } from '../../types';
@@ -304,7 +304,12 @@ onMounted(() => {
   if (shared.meta.hasAppPreview) {
     shared.setShowAppPreview(false);
   }
-  shared.setContentSidebarAsFloating(false);
-  shared.setSidebarOpen(false);
+});
+onUnmounted(() => {
+  shared.setSingleColumn(false);
+  shared.setShowMetaBox(true);
+  if (shared.meta.hasAppPreview) {
+    shared.setShowAppPreview(true);
+  }
 });
 </script>
