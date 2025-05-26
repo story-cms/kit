@@ -132,7 +132,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, toRefs, watch } from 'vue';
+import { ref, computed, onMounted, toRefs, watch, onUnmounted } from 'vue';
 import { DateTime } from 'luxon';
 import { router } from '@inertiajs/vue3';
 import type { SharedPageProps, PageEditProps } from '../../types';
@@ -243,5 +243,13 @@ onMounted(() => {
     title.value = model.getField('title', 'Page');
     isPublished.value = Boolean(model.getField('isPublished', false));
   });
+  if (shared.meta.hasAppPreview) {
+    shared.setShowAppPreview(false);
+  }
+});
+onUnmounted(() => {
+  if (shared.meta.hasAppPreview) {
+    shared.setShowAppPreview(true);
+  }
 });
 </script>
