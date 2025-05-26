@@ -37,17 +37,33 @@ const rightPosition = computed(() => {
 });
 
 watch([showMetaBox, showAppPreview, isLargeScreen, showSourceColumn], ([a, b, c, d]) => {
-  if (!a && !b) {
-    shared.setContentSidebarAsFloating(false);
-    shared.setSingleColumn(true);
+  if (shared.isTranslation) {
+    if (!a && !b) {
+      shared.setContentSidebarAsFloating(false);
+      shared.setSingleColumn(true);
+    }
+    if (c && (a || b)) {
+      shared.setContentSidebarAsFloating(false);
+      shared.setSingleColumn(false);
+    }
+    if (d && (a || b)) {
+      shared.setContentSidebarAsFloating(true);
+      shared.setSingleColumn(true);
+    }
   }
-  if (c && (a || b)) {
-    shared.setContentSidebarAsFloating(false);
-    shared.setSingleColumn(false);
-  }
-  if (d && (a || b)) {
-    shared.setContentSidebarAsFloating(true);
-    shared.setSingleColumn(true);
+  if (!shared.isTranslation) {
+    if (!a && !b) {
+      shared.setContentSidebarAsFloating(false);
+      shared.setSingleColumn(true);
+    }
+    if (c && (a || b)) {
+      shared.setContentSidebarAsFloating(false);
+      shared.setSingleColumn(false);
+    }
+    if (!c && (a || b)) {
+      shared.setContentSidebarAsFloating(true);
+      shared.setSingleColumn(true);
+    }
   }
 });
 

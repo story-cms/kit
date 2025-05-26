@@ -301,7 +301,9 @@ onMounted(() => {
 
   shared.setSingleColumn(true);
   shared.setShowMetaBox(false);
-  shared.setShowAppPreview(false);
+  if (shared.meta.hasAppPreview) {
+    shared.setShowAppPreview(false);
+  }
   shared.setContentSidebarAsFloating(false);
   shared.setSidebarOpen(false);
 });

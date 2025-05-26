@@ -91,21 +91,21 @@ const resizeHook = () => {
   }
 
   if (!shared.isTranslation) {
-    if (!shared.isLargeScreen && shared.hasOpenSidebar) {
-      shared.setSidebarAsFloating(true);
-    }
-
-    if (shared.isLargeScreen && shared.hasOpenSidebar) {
-      shared.setSidebarAsFloating(false);
-    }
     if (!shared.isLargeScreen) {
-      shared.setShowAppPreview(false);
+      shared.setSidebarAsFloating(true);
+      shared.setSingleColumn(true);
+      if (shared.meta.hasAppPreview) {
+        shared.setShowAppPreview(false);
+      }
       shared.setShowMetaBox(false);
     }
+
     if (shared.isLargeScreen) {
-      shared.setShowAppPreview(true);
+      shared.setSidebarAsFloating(false);
+      if (shared.meta.hasAppPreview) {
+        shared.setShowAppPreview(true);
+      }
       shared.setShowMetaBox(true);
-      shared.setContentSidebarAsFloating(false);
       shared.setSingleColumn(false);
     }
   }
@@ -118,6 +118,7 @@ onBeforeMount(() => {
 });
 
 onMounted(() => {
+  shared.setShowAppPreview(shared.meta.hasAppPreview);
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', resizeHook);
   resizeHook();
