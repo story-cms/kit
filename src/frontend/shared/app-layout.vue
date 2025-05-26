@@ -84,32 +84,6 @@ const setDimensions = () => {
 const resizeHook = () => {
   const fresh = document.documentElement.clientWidth;
   shared.setLargeScreen(fresh >= 1280);
-  shared.setSingleColumn(fresh < 1280);
-
-  if (shared.isTranslation && shared.showSourceColumn) {
-    shared.setSingleColumn(true);
-  }
-
-  if (!shared.isTranslation) {
-    if (!shared.isLargeScreen) {
-      shared.setSidebarAsFloating(true);
-      shared.setSingleColumn(true);
-      if (shared.meta.hasAppPreview) {
-        shared.setShowAppPreview(false);
-      }
-      shared.setShowMetaBox(false);
-    }
-
-    if (shared.isLargeScreen) {
-      shared.setSidebarAsFloating(false);
-      if (shared.meta.hasAppPreview) {
-        shared.setShowAppPreview(true);
-      }
-      shared.setShowMetaBox(true);
-      shared.setSingleColumn(false);
-    }
-  }
-
   setDimensions();
 };
 

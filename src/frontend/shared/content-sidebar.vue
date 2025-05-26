@@ -37,11 +37,12 @@ const rightPosition = computed(() => {
 });
 
 watch([showMetaBox, showAppPreview, isLargeScreen, showSourceColumn], ([a, b, c, d]) => {
+  if (!a && !b) {
+    shared.setContentSidebarAsFloating(false);
+    shared.setSingleColumn(true);
+  }
+
   if (shared.isTranslation) {
-    if (!a && !b) {
-      shared.setContentSidebarAsFloating(false);
-      shared.setSingleColumn(true);
-    }
     if (c && (a || b)) {
       shared.setContentSidebarAsFloating(false);
       shared.setSingleColumn(false);
@@ -50,12 +51,12 @@ watch([showMetaBox, showAppPreview, isLargeScreen, showSourceColumn], ([a, b, c,
       shared.setContentSidebarAsFloating(true);
       shared.setSingleColumn(true);
     }
-  }
-  if (!shared.isTranslation) {
-    if (!a && !b) {
-      shared.setContentSidebarAsFloating(false);
+    if (!c && !d) {
+      shared.setContentSidebarAsFloating(true);
       shared.setSingleColumn(true);
     }
+  }
+  if (!shared.isTranslation) {
     if (c && (a || b)) {
       shared.setContentSidebarAsFloating(false);
       shared.setSingleColumn(false);
