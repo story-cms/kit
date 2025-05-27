@@ -27,10 +27,6 @@ const props = defineProps<{
 
 const isFloating = ref(false);
 
-const setIsFloating = (value: boolean) => {
-  isFloating.value = value;
-};
-
 const shared = useSharedStore();
 const { showMetaBox, showAppPreview, isSingleColumn, showSourceColumn } =
   storeToRefs(shared);
@@ -44,13 +40,13 @@ const rightPosition = computed(() => {
 });
 
 const setSingleColumnAndFloating = (value: boolean) => {
-  setIsFloating(value);
+  isFloating.value = value;
   shared.setSingleColumn(value);
 };
 
 watch([showMetaBox, showAppPreview, isLargeScreen, showSourceColumn], ([a, b, c, d]) => {
   if (!a && !b) {
-    setIsFloating(false);
+    isFloating.value = false;
     shared.setSingleColumn(true);
   }
 
@@ -78,13 +74,13 @@ watch([showMetaBox, showAppPreview, isLargeScreen, showSourceColumn], ([a, b, c,
 watch(
   () => isSingleColumn.value,
   (value) => {
-    setIsFloating(value);
+    isFloating.value = value;
   },
 );
 
 onMounted(() => {
   if (isSingleColumn.value) {
-    setIsFloating(true);
+    isFloating.value = true;
   }
 });
 </script>
