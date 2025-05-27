@@ -90,6 +90,10 @@ export async function configure(command: Configure) {
     codemods.overwriteExisting = false;
     await codemods.makeUsingStub(stubsRoot, 'config/story.stub', options);
   }
+  if ((await fileExists(command.app.configPath(), 'analytics.ts')) == false) {
+    codemods.overwriteExisting = false;
+    await codemods.makeUsingStub(stubsRoot, 'config/analytics.stub', {});
+  }
 
   codemods.overwriteExisting = true;
   await codemods.makeUsingStub(stubsRoot, 'config/inertia.stub', {});
@@ -207,6 +211,13 @@ export async function configure(command: Configure) {
       OPENAI_API_KEY: `Env.schema.string(),`,
     },
     leadingComment: 'Configuration for the OpenAI API service',
+  });
+
+  await codemods.defineEnvValidations({
+    variables: {
+      GOOGLE_APPLICATION_CREDENTIALS_JSON: `Env.schema.string(),`,
+    },
+    leadingComment: 'Configuration for the Google Analytics service',
   });
 
   /**

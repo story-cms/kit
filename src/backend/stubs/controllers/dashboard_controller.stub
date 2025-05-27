@@ -5,9 +5,33 @@ import type { HttpContext } from '@adonisjs/core/http';
 import vine from '@vinejs/vine';
 import IndexService from '#services/index_service';
 import storyConfig from '#config/story';
-import { DashboardProps, AddStatus } from '@story-cms/kit';
+import { DashboardProps, AddStatus, Stats } from '@story-cms/kit';
+
+import config from '#config/analytics';
+import cache from '@adonisjs/cache/services/main';
+import { Analytics } from '#services/analytics_service';
 
 export default class DashboardController {
+  private async getAnalyticsReport() {
+    const cachedReport = await cache.get({ key: config.cacheKey });
+    if (cachedReport) {
+      return cachedReport;
+    }
+    const ga = new Analytics(config);
+    const report = await ga.report(config.chapterCompletionReportKey);
+    await cache.set({ key: config.cacheKey, value: report, ttl: '1h' });
+
+    return report;
+  }
+
+  private calculateChange(current: number, previous: number) {
+    const change = ((current - previous) / previous) * 100;
+    return {
+      change: Math.abs(change).toFixed(2) + '%',
+      changeType: change >= 0 ? 'increase' : 'decrease',
+    };
+  }
+
   public async index(ctx: HttpContext) {
     if (!ctx.version || !ctx.story) return ctx.response.notFound();
 
@@ -18,7 +42,38 @@ export default class DashboardController {
 
     const addStatus: AddStatus = await service.getAddStatus(ctx.version);
     const index = await service.getItems(version);
-    const props: DashboardProps = { index, addStatus, storyName: story.name };
+
+    let stats: Stats[] = [];
+    try {
+      const report = await this.getAnalyticsReport();
+
+      stats = [
+        {
+          name: 'Total Installs',
+          stat: report.totals[0].toLocaleString(),
+          previousStat: report.totals[1].toLocaleString(),
+          ...this.calculateChange(report.totals[0], report.totals[1]),
+        },
+        {
+          name: 'Monthly Active Users',
+          stat: report.totals[1].toLocaleString(),
+          previousStat: report.totals[2].toLocaleString(),
+          ...this.calculateChange(report.totals[1], report.totals[2]),
+        },
+        {
+          name: 'Chapters Complete',
+          stat: report.totals[2].toLocaleString(),
+          previousStat: report.totals[3].toLocaleString(),
+          ...this.calculateChange(report.totals[2], report.totals[3]),
+        },
+      ];
+    } catch (error) {
+      console.error(error);
+      stats = [];
+    }
+
+
+    const props: DashboardProps = { index, addStatus, storyName: story.name, stats, };
 
     return ctx.inertia.render('DashboardIndex', { ...props });
   }
