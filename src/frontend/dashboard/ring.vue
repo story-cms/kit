@@ -1,14 +1,5 @@
 <template>
   <div>
-    <div class="flex flex-col text-xs">
-      <span>Done: {{ done }}</span>
-      <span>Draft: {{ draft }}</span>
-      <span>Total: {{ total }}</span>
-      <span>Name: {{ name }}</span>
-      <span>Gray: {{ grayPercentage }}</span>
-      <span>Green: {{ donePercentage }}</span>
-      <span>Blue: {{ draftPercentage }}</span>
-    </div>
     <div class="relative flex flex-col items-center justify-center">
       <svg class="-rotate-90" :height="circleWidth" :width="circleWidth">
         <!-- Green segment -->
@@ -44,14 +35,14 @@
       </svg>
       <div class="absolute inset-0 flex items-center justify-center">
         <div v-if="donePercentage === 100">
-          <Icon name="check" class="h-auto w-4 text-green-500" />
+          <Icon name="check" class="w-4 h-auto text-green-500" />
         </div>
         <span v-else class="text-sm font-normal leading-none text-gray-800"
           >{{ donePercentage + draftPercentage }}%</span
         >
       </div>
     </div>
-    <p class="text-center text-sm font-medium leading-4 text-gray-500">
+    <p class="text-sm font-medium leading-4 text-center text-gray-500">
       {{ name }}
     </p>
   </div>

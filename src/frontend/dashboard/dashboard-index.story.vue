@@ -62,9 +62,21 @@
       />
     </Variant>
     <Variant title="Ring">
-      <div class="mx-auto flex w-full gap-x-4 rounded-lg bg-white p-8">
-        <Ring :done="10" :draft="10" :total="100" :name="'Interface'" />
-        <Ring :done="200" :draft="50" :total="300" :name="'Content'" />
+      <div class="flex w-full p-8 mx-auto bg-white rounded-lg gap-x-4">
+        <Ring
+          :done="10"
+          :draft="10"
+          :total="100"
+          :name="'Interface'"
+          :last-updated="new Date('2025-05-19T15:05:30.732+00:00').toLocaleDateString()"
+        />
+        <Ring
+          :done="200"
+          :draft="50"
+          :total="300"
+          :name="'Content'"
+          :last-updated="new Date('2025-05-19T15:05:30.732+00:00').toLocaleDateString()"
+        />
       </div>
     </Variant>
     <Variant title="Language block">
