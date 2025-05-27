@@ -157,11 +157,6 @@ export const useSharedStore = defineStore('shared', () => {
     showSourceColumn.value = value;
   };
 
-  const isTranslationIndex = ref(false);
-  const setIsTranslationIndex = (value: boolean) => {
-    isTranslationIndex.value = value;
-  };
-
   return {
     stories,
     meta,
@@ -217,8 +212,5 @@ export const useSharedStore = defineStore('shared', () => {
 
     showAppPreview,
     setShowAppPreview,
-
-    isTranslationIndex,
-    setIsTranslationIndex,
   };
 });

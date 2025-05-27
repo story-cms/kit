@@ -21,6 +21,10 @@ import { watch, onMounted, computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useSharedStore } from '../store';
 
+const props = defineProps<{
+  isComplexLayout?: boolean;
+}>();
+
 const isFloating = ref(false);
 
 const setIsFloating = (value: boolean) => {
@@ -45,7 +49,7 @@ watch([showMetaBox, showAppPreview, isLargeScreen, showSourceColumn], ([a, b, c,
     shared.setSingleColumn(true);
   }
 
-  if (shared.isTranslationIndex) {
+  if (props.isComplexLayout) {
     if (c && (a || b)) {
       setIsFloating(false);
       shared.setSingleColumn(false);
@@ -59,7 +63,7 @@ watch([showMetaBox, showAppPreview, isLargeScreen, showSourceColumn], ([a, b, c,
       shared.setSingleColumn(true);
     }
   }
-  if (!shared.isTranslationIndex) {
+  if (!props.isComplexLayout) {
     if (c && (a || b)) {
       setIsFloating(false);
       shared.setSingleColumn(false);
