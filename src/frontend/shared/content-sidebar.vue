@@ -39,36 +39,32 @@ const rightPosition = computed(() => {
   return `${difference / 2 + 12}px`;
 });
 
-const setSingleColumnAndFloating = (value: boolean) => {
-  isFloating.value = value;
-  shared.setSingleColumn(value);
+const isSingleAndFloating = () => {
+  const isShowingElements = showMetaBox.value || showAppPreview.value;
+  // Small screen
+  if (!isLargeScreen.value) {
+    return true;
+  }
+  // Large screen
+  if (!isShowingElements) return true;
+
+  if (props.isComplexLayout) {
+    if (isShowingElements && !showSourceColumn.value) return false;
+    return true;
+  }
+
+  return false;
 };
 
-watch([showMetaBox, showAppPreview, isLargeScreen, showSourceColumn], ([a, b, c, d]) => {
-  if (!a && !b) {
+watch([showMetaBox, showAppPreview, isLargeScreen, showSourceColumn], () => {
+  if (!showMetaBox.value && !showAppPreview.value) {
     isFloating.value = false;
     shared.setSingleColumn(true);
   }
 
-  if (props.isComplexLayout) {
-    if (c && (a || b)) {
-      setSingleColumnAndFloating(false);
-    }
-    if (d && (a || b)) {
-      setSingleColumnAndFloating(true);
-    }
-    if (!c && !d) {
-      setSingleColumnAndFloating(true);
-    }
-  }
-  if (!props.isComplexLayout) {
-    if (c && (a || b)) {
-      setSingleColumnAndFloating(false);
-    }
-    if (!c && (a || b)) {
-      setSingleColumnAndFloating(true);
-    }
-  }
+  const setting = isSingleAndFloating();
+  shared.setSingleColumn(setting);
+  isFloating.value = setting;
 });
 
 watch(
