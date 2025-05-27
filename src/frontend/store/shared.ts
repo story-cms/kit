@@ -60,12 +60,6 @@ export const useSharedStore = defineStore('shared', () => {
 
   // sidebar
 
-  const hasFloatingSidebar = ref(false);
-
-  const setSidebarAsFloating = (isFloating: boolean) => {
-    hasFloatingSidebar.value = isFloating;
-  };
-
   const hasOpenSidebar = ref(true);
 
   const setSidebarOpen = (isOpen: boolean) => {
@@ -158,11 +152,6 @@ export const useSharedStore = defineStore('shared', () => {
     showAppPreview.value = value;
   };
 
-  const hasFloatingContentSidebar = ref(false);
-  const setContentSidebarAsFloating = (value: boolean) => {
-    hasFloatingContentSidebar.value = value;
-  };
-
   const showSourceColumn = ref(true);
   const setSourceColumnAsHidden = (value: boolean) => {
     showSourceColumn.value = value;
@@ -190,9 +179,6 @@ export const useSharedStore = defineStore('shared', () => {
     containerWidth,
     setContainerWidth,
 
-    hasFloatingSidebar,
-    setSidebarAsFloating,
-
     hasOpenSidebar,
     setSidebarOpen,
 
@@ -217,9 +203,6 @@ export const useSharedStore = defineStore('shared', () => {
 
     isSingleColumn,
     setSingleColumn,
-
-    hasFloatingContentSidebar,
-    setContentSidebarAsFloating,
 
     showSourceColumn,
     setSourceColumnAsHidden,

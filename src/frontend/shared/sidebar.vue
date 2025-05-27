@@ -1,11 +1,11 @@
 <template>
   <aside
     :class="[
-      'max-w-[320px] bg-white shadow-md transition-all duration-75',
-      shared.hasFloatingSidebar ? 'fixed inset-y-0 z-30' : 'sticky z-10',
+      'fixed inset-y-0 z-20 max-w-[320px] bg-white shadow-md transition-all duration-75',
+
       shared.hasOpenSidebar
-        ? 'top-0 max-h-screen rounded-r-[20px]'
-        : 'top-3 mx-auto max-h-min rounded-full',
+        ? 'left-0 top-0 max-h-screen rounded-r-[20px]'
+        : 'left-3 top-3 mx-auto max-h-min rounded-full',
     ]"
   >
     <nav :class="{ 'flex h-full flex-col justify-between': shared.hasOpenSidebar }">
@@ -25,7 +25,7 @@
           <div v-if="isMultiLingual">
             <button
               v-if="shared.hasOpenSidebar"
-              class="relative flex size-14 items-center justify-center rounded-full transition-all duration-75"
+              class="relative flex items-center justify-center transition-all duration-75 rounded-full size-14"
             >
               <span
                 class="absolute right-2 top-4 rounded-[7px] bg-blue-100 px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-blue-800"
@@ -80,7 +80,7 @@
             <div v-if="isMultiLingual">
               <button
                 v-if="currentLocale === 'en'"
-                class="nav-link opacity-50 disabled:cursor-not-allowed"
+                class="opacity-50 nav-link disabled:cursor-not-allowed"
                 disabled
               >
                 Interface
@@ -99,7 +99,7 @@
               </Link>
             </div>
           </section>
-          <div class="my-7 border-t border-gray-200"></div>
+          <div class="border-t border-gray-200 my-7"></div>
           <section class="grid grid-cols-1">
             <!-- <Link class="flex items-center nav-link gap-x-3" href="/profile">
               <Icon name="user" />
@@ -120,7 +120,7 @@
             </Link>
             <Link
               v-if="shared.meta.helpUrl"
-              class="nav-link flex items-center gap-x-3"
+              class="flex items-center nav-link gap-x-3"
               :href="shared.meta.helpUrl"
               target="_blank"
               rel="noopener noreferrer"
@@ -128,7 +128,7 @@
               <Icon name="help" />
               <span>Support</span>
             </Link>
-            <button class="nav-link flex items-center gap-x-3" @click="signOut">
+            <button class="flex items-center nav-link gap-x-3" @click="signOut">
               <Icon name="logout" />
               <span>Logout</span>
             </button>
@@ -148,9 +148,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from 'vue';
+import { computed } from 'vue';
 import { useSharedStore } from '../store';
-import { Link, useForm } from '@inertiajs/vue3';
+import { Link, router, useForm } from '@inertiajs/vue3';
 
 import Icon from '../shared/icon.vue';
 import LanguageSelector from './language-selector.vue';
@@ -179,7 +179,7 @@ const onStory = async (story: string) => {
 };
 
 const signOut = () => {
-  window.location.href = '/logout';
+  router.visit('/logout');
 };
 
 const isMultiLingual = computed(() => shared.languages.length > 1);
@@ -201,22 +201,6 @@ const toggleMenu = () => {
 const languageOptions = computed(() => {
   return shared.languages.map((l) => l.language) as string[];
 });
-
-watch(
-  () => shared.hasOpenSidebar,
-  (newVal) => {
-    if (newVal && shared.isLargeScreen) {
-      shared.setSidebarAsFloating(false);
-    }
-    if (newVal && !shared.isLargeScreen) {
-      shared.setSidebarAsFloating(true);
-    }
-    if (!newVal) {
-      shared.setSidebarAsFloating(false);
-    }
-  },
-  { immediate: true },
-);
 </script>
 <style lang="postcss" scoped>
 .nav-icon {

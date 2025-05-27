@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted, watch } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import AppLayout from '../shared/app-layout.vue';
 
 import { router } from '@inertiajs/vue3';
@@ -169,20 +169,6 @@ const metaChapter = computed(
   () => `${padZero(props.draft.number)} of ${padZero(props.spec.chapterLimit)}`,
 );
 
-const handleResponsiveLayout = () => {
-  if (shared.isLargeScreen) {
-    shared.setSingleColumn(false);
-  }
-  if (!shared.isLargeScreen) {
-    shared.setSingleColumn(true);
-  }
-};
-
-watch(
-  () => shared.isLargeScreen,
-  () => handleResponsiveLayout(),
-);
-
 onMounted(() => {
   model.$subscribe(() => {
     if (isSettingErrors) {
@@ -193,9 +179,6 @@ onMounted(() => {
     save();
     title.value = model.getField('title', defaultTitle.value);
   });
-
-  handleResponsiveLayout();
-  shared.setSourceColumnAsHidden(false);
 });
 
 const widgetFor = (key: number) => {

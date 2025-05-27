@@ -11,6 +11,8 @@
         :providers="{}"
         :stories="['John', 'Acts']"
         :user="sharedProps.user"
+        :story-name="'John'"
+        :ui-todo-count="0"
       />
     </Variant>
   </Story>
