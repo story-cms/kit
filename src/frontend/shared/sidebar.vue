@@ -148,7 +148,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from 'vue';
+import { computed } from 'vue';
 import { useSharedStore } from '../store';
 import { Link, router, useForm } from '@inertiajs/vue3';
 
@@ -201,22 +201,6 @@ const toggleMenu = () => {
 const languageOptions = computed(() => {
   return shared.languages.map((l) => l.language) as string[];
 });
-
-watch(
-  () => shared.hasOpenSidebar,
-  (newVal) => {
-    if (newVal && shared.isLargeScreen) {
-      shared.setSidebarAsFloating(false);
-    }
-    if (newVal && !shared.isLargeScreen) {
-      shared.setSidebarAsFloating(true);
-    }
-    if (!newVal) {
-      shared.setSidebarAsFloating(false);
-    }
-  },
-  { immediate: true },
-);
 </script>
 <style lang="postcss" scoped>
 .nav-icon {
