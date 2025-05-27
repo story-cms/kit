@@ -14,6 +14,7 @@
     </label>
     <div class="mt-[2px] pt-1 sm:col-span-2 sm:mt-0">
       <input
+        ref="inputRef"
         type="text"
         :name="field.label"
         :readonly="props.isReadOnly"
@@ -36,7 +37,7 @@
 import { computed, ref, nextTick } from 'vue';
 import type { FieldSpec } from '../../types';
 import { useModelStore, useSharedStore } from '../store/index';
-import { commonProps } from '../shared/helpers';
+import { commonProps, expandShortcuts } from '../shared/helpers';
 
 const props = defineProps({
   ...commonProps,
@@ -55,22 +56,27 @@ const modelValue = props.isReadOnly
   ? ref(model.getSourceField(fieldPath.value, ''))
   : ref(model.getField(fieldPath.value, ''));
 
+const inputRef = ref<HTMLInputElement | null>(null);
+let cursor: number | null = null;
+
 const update = (event: Event) => {
-  const value = (event.target as HTMLInputElement).value;
-  const convertedValue = convertTildaToUnicodeSpace(value);
+  const input = event.target as HTMLInputElement;
+  const value = input.value;
+  const convertedValue = expandShortcuts(value);
+  // when there are expansions, we need to remember the cursor position
+  cursor = convertedValue !== value ? (input.selectionStart ?? 0) : null;
   model.setField(fieldPath.value, convertedValue);
 };
-
-function convertTildaToUnicodeSpace(text: string) {
-  // Replace ~ text with actual non-breaking space character
-  return text.replace(/~/g, '\u00A0');
-}
 
 model.$subscribe(() => {
   if (props.isReadOnly) return;
 
+  modelValue.value = model.getField(fieldPath.value, '');
+  if (!cursor) return;
+
   nextTick().then(() => {
-    modelValue.value = model.getField(fieldPath.value, '');
+    inputRef.value?.setSelectionRange(cursor, cursor);
+    cursor = null;
   });
 });
 
