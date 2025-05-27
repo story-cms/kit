@@ -1,13 +1,10 @@
 <template>
   <div
     v-if="shared.showMetaBox || shared.showAppPreview"
-    :class="[
-      'w-[375px]',
-      shared.hasFloatingContentSidebar ? 'fixed' : 'sticky [align-self:start]',
-    ]"
+    :class="['w-[375px]', isFloating ? 'fixed' : 'sticky [align-self:start]']"
     :style="{
       top: `${headerHeight + 4}px`,
-      right: shared.hasFloatingContentSidebar ? rightPosition : '',
+      right: isFloating ? rightPosition : '',
     }"
   >
     <section v-if="shared.showMetaBox">
@@ -20,9 +17,15 @@
 </template>
 
 <script setup lang="ts">
-import { watch, onMounted, computed } from 'vue';
+import { watch, onMounted, computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useSharedStore } from '../store';
+
+const isFloating = ref(false);
+
+const setIsFloating = (value: boolean) => {
+  isFloating.value = value;
+};
 
 const shared = useSharedStore();
 const { showMetaBox, showAppPreview, isSingleColumn, showSourceColumn } =
@@ -38,31 +41,31 @@ const rightPosition = computed(() => {
 
 watch([showMetaBox, showAppPreview, isLargeScreen, showSourceColumn], ([a, b, c, d]) => {
   if (!a && !b) {
-    shared.setContentSidebarAsFloating(false);
+    setIsFloating(false);
     shared.setSingleColumn(true);
   }
 
   if (shared.isTranslationIndex) {
     if (c && (a || b)) {
-      shared.setContentSidebarAsFloating(false);
+      setIsFloating(false);
       shared.setSingleColumn(false);
     }
     if (d && (a || b)) {
-      shared.setContentSidebarAsFloating(true);
+      setIsFloating(true);
       shared.setSingleColumn(true);
     }
     if (!c && !d) {
-      shared.setContentSidebarAsFloating(true);
+      setIsFloating(true);
       shared.setSingleColumn(true);
     }
   }
   if (!shared.isTranslationIndex) {
     if (c && (a || b)) {
-      shared.setContentSidebarAsFloating(false);
+      setIsFloating(false);
       shared.setSingleColumn(false);
     }
     if (!c && (a || b)) {
-      shared.setContentSidebarAsFloating(true);
+      setIsFloating(true);
       shared.setSingleColumn(true);
     }
   }
@@ -71,13 +74,13 @@ watch([showMetaBox, showAppPreview, isLargeScreen, showSourceColumn], ([a, b, c,
 watch(
   () => isSingleColumn.value,
   (value) => {
-    shared.setContentSidebarAsFloating(value);
+    setIsFloating(value);
   },
 );
 
 onMounted(() => {
   if (isSingleColumn.value) {
-    shared.setContentSidebarAsFloating(true);
+    setIsFloating(true);
   }
 });
 </script>
