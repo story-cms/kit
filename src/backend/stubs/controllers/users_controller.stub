@@ -8,14 +8,23 @@ import { UsersProps } from '@story-cms/kit';
 import User from '#models/user';
 import Activity from '#models/activity';
 import { UserService } from '#services/user_service';
+import { randomBytes } from 'node:crypto';
 
 import {
   createUserValidator,
-  updateUserValidator,
-  validationMessages,
+  updateUserValidator
 } from '#validators/user';
 
 export default class UsersController {
+  private generateRandomString(): string {
+    const randomBytesBuffer = randomBytes(16);
+
+    return randomBytesBuffer
+      .toString('base64')
+      .replace(/[^a-zA-Z0-9]/g, '')
+      .substring(0, 16);
+  }
+
   // show a list of all users
   public async index(ctx: HttpContext) {
     const userService = new UserService();
@@ -34,7 +43,6 @@ export default class UsersController {
     const user = await User.findOrFail(id);
 
     try {
-      vine.messagesProvider = validationMessages;
       const payload = await request.validateUsing(updateUserValidator);
       user.name = payload.name;
       user.email = payload.email;
@@ -76,11 +84,11 @@ export default class UsersController {
 
   // create a new user
   public async store({ request, response, session, auth }: HttpContext) {
-    vine.messagesProvider = validationMessages;
     const payload = await request.validateUsing(createUserValidator);
 
     try {
-      const user = await User.create({ ...payload, password: 'pending' });
+      const randomString = this.generateRandomString();
+      const user = await User.create({ ...payload, password: randomString });
       await Activity.create({
         userId: auth.user?.id,
         locale: session.get('locale'),
