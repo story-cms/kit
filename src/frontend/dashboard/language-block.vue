@@ -5,12 +5,12 @@
     <div v-if="hasCompleteRings" class="grow">
       <div class="relative mx-auto size-24 rounded-full border-[3px] border-green-500">
         <div class="absolute inset-0 flex items-center justify-center">
-          <Icon name="check-large" class="w-6 h-auto text-green-500" />
+          <Icon name="check-large" class="h-auto w-6 text-green-500" />
         </div>
       </div>
-      <p class="mt-2 text-xs font-medium leading-4 text-center">All done</p>
+      <p class="mt-2 text-center text-xs font-medium leading-4">All done</p>
     </div>
-    <div v-else class="flex justify-between grow">
+    <div v-else class="flex grow justify-between">
       <Ring
         v-for="item in progress"
         :key="item.name"
