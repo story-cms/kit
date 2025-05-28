@@ -4,7 +4,7 @@
       <ContentHeader title="Language translation">
         <template #hero>
           <WelcomeBanner />
-          <ContentStats :stats="stats" />
+          <ContentStats />
         </template>
         <template #extra-actions>
           <div
@@ -26,7 +26,7 @@
                     To do
                     <span
                       class="ml-1 inline-flex items-center rounded-full bg-gray-100 px-2 py-1 text-xs font-medium leading-4 text-indigo-700"
-                      >{{ shared.uiTodoCount }}</span
+                      >{{ todoCount }}</span
                     >
                   </button>
 
@@ -64,7 +64,7 @@
     </template>
     <div class="flex flex-wrap gap-8">
       <LanguageBlock
-        v-for="progress in translationProgress"
+        v-for="progress in filteredProgress"
         :key="progress.language"
         :progress="progress.progress"
         :language="progress.language"
@@ -80,7 +80,7 @@ import ContentHeader from '../shared/content-header.vue';
 import WelcomeBanner from './welcome-banner.vue';
 import ContentStats from './content-stats.vue';
 import LanguageBlock from './language-block.vue';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 import { SharedPageProps, DashboardProps } from '../../types';
 import { useSharedStore } from '../store';
@@ -92,6 +92,25 @@ const shared = useSharedStore();
 shared.setFromProps(props);
 
 const activeFilter = ref<'todo' | 'all'>('todo');
+
+const todoCount = computed(() => {
+  return props.translationProgress.filter((progress) => {
+    return !progress.progress.every((stat) => stat.done === stat.total);
+  }).length;
+});
+
+const allCount = computed(() => {
+  return props.translationProgress.length;
+});
+
+const filteredProgress = computed(() => {
+  if (activeFilter.value === 'all') {
+    return props.translationProgress;
+  }
+  return props.translationProgress.filter((progress) => {
+    return !progress.progress.every((stat) => stat.done === stat.total);
+  });
+});
 
 const filter = (value: 'todo' | 'all') => {
   activeFilter.value = value;

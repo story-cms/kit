@@ -259,10 +259,7 @@ export interface TranslationProgress {
 }
 
 export interface DashboardProps {
-  stats: Stats[];
   translationProgress: TranslationProgress[];
-  todoCount: number;
-  allCount: number;
 }
 
 export interface ChapterMeta {

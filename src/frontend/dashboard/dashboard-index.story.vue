@@ -59,8 +59,6 @@
           },
         ]"
         :translation-progress="translationProgress"
-        :todo-count="10"
-        :all-count="100"
       />
     </Variant>
     <Variant title="Ring">
