@@ -59,10 +59,12 @@
           },
         ]"
         :translation-progress="translationProgress"
+        :todo-count="10"
+        :all-count="100"
       />
     </Variant>
     <Variant title="Ring">
-      <div class="flex w-full p-8 mx-auto bg-white rounded-lg gap-x-4">
+      <div class="mx-auto flex w-full gap-x-4 rounded-lg bg-white p-8">
         <Ring
           :done="10"
           :draft="10"

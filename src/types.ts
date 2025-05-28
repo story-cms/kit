@@ -259,11 +259,10 @@ export interface TranslationProgress {
 }
 
 export interface DashboardProps {
-  index: IndexReadyItem[];
-  addStatus: AddStatus;
-  storyName: string;
   stats: Stats[];
   translationProgress: TranslationProgress[];
+  todoCount: number;
+  allCount: number;
 }
 
 export interface ChapterMeta {

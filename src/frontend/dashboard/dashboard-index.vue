@@ -11,33 +11,52 @@
             class="mb-4 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
           >
             <div class="flex gap-x-4">
-              <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
+              <div class="flex items-center gap-x-4">
+                <span class="isolate inline-flex rounded-md shadow-sm">
+                  <button
+                    type="button"
+                    :class="[
+                      'relative inline-flex items-center rounded-l-md border-r px-4 py-2 text-sm font-medium leading-4 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10 disabled:cursor-not-allowed',
+                      activeFilter === 'todo'
+                        ? 'bg-indigo-50 text-indigo-700 ring-indigo-700'
+                        : 'bg-white text-gray-900',
+                    ]"
+                    @click="filter('todo')"
+                  >
+                    To do
+                    <span
+                      class="ml-1 inline-flex items-center rounded-full bg-gray-100 px-2 py-1 text-xs font-medium leading-4 text-indigo-700"
+                      >{{ shared.uiTodoCount }}</span
+                    >
+                  </button>
 
-              <AddItemButton
-                v-if="addStatus == AddStatus.Add"
-                :label="meta.chapterType"
-                @add="addDraft"
-              />
-              <button
-                v-if="addStatus == AddStatus.Wait"
-                type="button"
-                class="inline-flex items-center rounded-xl bg-indigo-50 px-3 py-[9px] text-sm font-medium leading-4 text-indigo-700 shadow-sm"
-                disabled
-              >
-                {{ `No more ${meta.chapterType}s available to translate` }}
-              </button>
+                  <button
+                    type="button"
+                    :class="[
+                      'relative -ml-px inline-flex items-center rounded-r-md px-3 py-2 text-sm font-medium leading-4 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10',
+                      activeFilter === 'all'
+                        ? 'bg-indigo-50 text-indigo-700 ring-indigo-700'
+                        : 'bg-white text-gray-900',
+                    ]"
+                    @click="filter('all')"
+                  >
+                    All
+                    <span
+                      class="ml-4 inline-flex items-center rounded-full bg-gray-100 px-2 py-1 text-xs font-medium leading-4 text-gray-700"
+                      >{{ allCount }}</span
+                    >
+                  </button>
+                </span>
+              </div>
             </div>
 
             <div class="flex gap-x-4">
-              <button
-                class="flex items-center gap-x-2 text-sm font-medium leading-4"
-                @click="toggle"
-              >
+              <div class="flex items-center gap-x-2 text-sm font-medium leading-4">
                 <span class="size-4 rounded-full bg-green-500"></span>Human
-              </button>
-              <button class="flex items-center gap-x-2 text-sm font-medium leading-4">
+              </div>
+              <div class="flex items-center gap-x-2 text-sm font-medium leading-4">
                 <span class="size-4 rounded-full bg-blue-500"></span>AI
-              </button>
+              </div>
             </div>
           </div>
         </template>
@@ -52,33 +71,6 @@
         :locale="progress.locale"
       />
     </div>
-    <div
-      :class="[
-        'grid gap-4',
-        {
-          'grid-cols-[repeat(auto-fit,_minmax(260px,_1fr))]':
-            !isList && filteredIndex.length > 3,
-        },
-        {
-          'grid-cols-[repeat(auto-fit,_minmax(260px,_260px))]':
-            !isList && filteredIndex.length <= 3,
-        },
-        {
-          'grid-cols-1': isList,
-        },
-      ]"
-    >
-      <index-card
-        v-for="item in filteredIndex"
-        :key="item.number"
-        :item="item"
-        :is-list="isList"
-        placeholder-image="https://res.cloudinary.com/onesheep/image/upload/v1684754051/Screenshot_2023-05-22_at_13.12.03_pnamdt.png"
-        :scope="currentTab"
-        :chapter-name="meta.chapterType"
-        @tap="onTap"
-      />
-    </div>
   </AppLayout>
 </template>
 
@@ -88,13 +80,9 @@ import ContentHeader from '../shared/content-header.vue';
 import WelcomeBanner from './welcome-banner.vue';
 import ContentStats from './content-stats.vue';
 import LanguageBlock from './language-block.vue';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 
-import AddItemButton from '../shared/add-item-button.vue';
-import IndexFilter from '../shared/index-filter.vue';
-import IndexCard from '../chapters/index-card.vue';
-
-import { SharedPageProps, DashboardProps, AddStatus, IndexReadyItem } from '../../types';
+import { SharedPageProps, DashboardProps } from '../../types';
 import { useSharedStore } from '../store';
 
 const props = defineProps<DashboardProps & SharedPageProps>();
@@ -103,54 +91,9 @@ const shared = useSharedStore();
 
 shared.setFromProps(props);
 
-const isList = ref(false);
-const toggle = () => {
-  isList.value = !isList.value;
-};
+const activeFilter = ref<'todo' | 'all'>('todo');
 
-const filterNumber = ref<string | null>(null);
-const currentTab = ref('Live');
-
-const addDraft = () => (window.location.href = '/draft/create');
-
-const onFilter = (tab: string) => {
-  currentTab.value = tab;
-};
-
-const filteredIndex = computed(() => {
-  const needle = currentTab.value === 'Live' ? 'Live' : 'Draft';
-
-  return props.index.filter((item) => {
-    const hasTag = item.tags.includes(needle);
-    if (!filterNumber.value) return hasTag;
-
-    return hasTag && item.number.toString().startsWith(filterNumber.value);
-  });
-});
-
-const tabs = computed(() => {
-  const liveCount = props.index.reduce(
-    (carry, item) => (item.tags.includes('Live') ? carry + 1 : carry),
-    0,
-  );
-
-  const draftCount = props.index.reduce(
-    (carry, item) => (item.tags.includes('Draft') ? carry + 1 : carry),
-    0,
-  );
-
-  return [
-    { label: 'Live', count: liveCount },
-    { label: 'Drafts', count: draftCount },
-  ];
-});
-
-const onTap = (item: IndexReadyItem) => {
-  if (currentTab.value == 'Drafts') {
-    window.location.href = `/draft/${item.number}/edit`;
-  } else {
-    // window.location.href = `/draft/${item.number}/edit`;
-    window.location.href = `/chapter/${item.number}`;
-  }
+const filter = (value: 'todo' | 'all') => {
+  activeFilter.value = value;
 };
 </script>
