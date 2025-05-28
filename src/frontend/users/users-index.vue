@@ -6,7 +6,7 @@
           <div class="flex items-center gap-x-6">
             <button
               type="button"
-              class="p-2 bg-white border border-gray-300 rounded-full shadow hover:bg-blue-100"
+              class="rounded-full border border-gray-300 bg-white p-2 shadow hover:bg-blue-100"
               @click="onAdd()"
             >
               <Icon name="plus" class="text-gray-900" />
@@ -16,34 +16,34 @@
       </ContentHeader>
     </template>
     <div>
-      <section class="flow-root mt-8">
+      <section class="mt-8 flow-root">
         <div class="-mx-4 -my-2 sm:-mx-6 lg:-mx-8">
           <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
             <div class="border-2 border-black/5 sm:rounded-lg">
               <table class="min-w-full divide-y divide-gray-300">
-                <thead class="uppercase bg-gray-50">
+                <thead class="bg-gray-50 uppercase">
                   <tr>
                     <th
                       scope="col"
-                      class="py-3 pl-4 pr-3 text-xs font-medium tracking-wide text-left text-gray-500 uppercase sm:pl-6"
+                      class="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6"
                     >
                       Name
                     </th>
                     <th
                       scope="col"
-                      class="px-3 py-3 text-xs font-medium tracking-wide text-left text-gray-500 uppercase"
+                      class="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
                     >
                       Role
                     </th>
                     <th
                       scope="col"
-                      class="px-3 py-3 text-xs font-medium tracking-wide text-left text-gray-500 uppercase"
+                      class="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
                     >
                       Languages
                     </th>
                     <th
                       scope="col"
-                      class="px-3 py-3 text-xs font-medium tracking-wide text-left text-gray-500 uppercase"
+                      class="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
                     >
                       Last Activity
                     </th>
@@ -52,7 +52,7 @@
                     </th>
                   </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody class="divide-y divide-gray-200 bg-white">
                   <tr v-for="user in users" :key="user.id">
                     <UserRow
                       :user="user"
@@ -72,13 +72,13 @@
           formMode == 'hidden' ? 'hidden' : 'fixed',
         ]"
       >
-        <div class="flex flex-col items-center justify-center h-full max-w-lg mx-auto">
+        <div class="mx-auto flex h-full max-w-lg flex-col items-center justify-center">
           <div
             class="relative w-full min-w-full rounded-lg bg-white px-20 pb-[75px] pt-[90px]"
           >
             <form class="relative" @submit.prevent="submit">
               <div class="flex justify-end">
-                <button type="button" class="mb-6 -mr-4" @click.prevent="onCancel()">
+                <button type="button" class="-mr-4 mb-6" @click.prevent="onCancel()">
                   <Icon name="close" class="text-gray-900" />
                 </button>
               </div>
@@ -96,7 +96,7 @@
                       placeholder="John Doe"
                     />
                     <p v-if="form.errors.name" class="text-sm text-error">
-                      {{ form.errors.name[0] }}
+                      {{ form.errors.name }}
                     </p>
                   </div>
                 </div>
@@ -108,10 +108,10 @@
                       id="email"
                       v-model="form.email"
                       class="input-field placeholder:text-sm placeholder:font-normal placeholder:leading-5 placeholder:text-gray-400"
-                      placeholder="name@startjourneys.io"
+                      placeholder="you@example.com"
                     />
                     <p v-if="form.errors.email" class="text-sm text-error">
-                      {{ form.errors.email[0] }}
+                      {{ form.errors.email }}
                     </p>
                   </div>
                 </div>

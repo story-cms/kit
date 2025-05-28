@@ -11,8 +11,7 @@ import { UserService } from '#services/user_service';
 
 import {
   createUserValidator,
-  updateUserValidator,
-  validationMessages,
+  updateUserValidator
 } from '#validators/user';
 
 export default class UsersController {
@@ -34,7 +33,6 @@ export default class UsersController {
     const user = await User.findOrFail(id);
 
     try {
-      vine.messagesProvider = validationMessages;
       const payload = await request.validateUsing(updateUserValidator);
       user.name = payload.name;
       user.email = payload.email;
@@ -76,7 +74,6 @@ export default class UsersController {
 
   // create a new user
   public async store({ request, response, session, auth }: HttpContext) {
-    vine.messagesProvider = validationMessages;
     const payload = await request.validateUsing(createUserValidator);
 
     try {
