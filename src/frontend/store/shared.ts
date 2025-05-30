@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import type { Ref } from 'vue';
-import { computed, ref, reactive, toRefs } from 'vue';
+import { computed, ref, reactive } from 'vue';
 import {
   SharedPageProps,
   Meta,
@@ -22,7 +22,7 @@ export const useSharedStore = defineStore('shared', () => {
   const languages: Ref<LanguageSpecification[]> = ref([] as LanguageSpecification[]);
 
   const setFromProps = (props: SharedPageProps) => {
-    errors.value = toRefs(props.errors) as any;
+    errors.value = { ...props.errors };
     stories.value = props.stories;
     meta.value = props.meta;
     languages.value = props.languages;
