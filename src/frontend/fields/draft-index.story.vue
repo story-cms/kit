@@ -24,7 +24,7 @@
         :languages="sharedProps.languages"
         :story-name="'John'"
         :stories="['John', 'Acts']"
-        :ui-progress="sharedProps.uiProgress"
+        :ui-todo-count="0"
       />
     </Variant>
   </Story>
