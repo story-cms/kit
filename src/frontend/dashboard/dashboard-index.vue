@@ -3,11 +3,11 @@
     <template #header>
       <ContentHeader :title="`${meta.storyType}: ${shared.currentStoryName}`">
         <template #actions>
-          <icon :name="iconName" class="w-8 h-8 text-black" @click.prevent="toggle" />
+          <icon :name="iconName" class="h-8 w-8 text-black" @click.prevent="toggle" />
         </template>
         <template #extra-actions>
           <div
-            class="flex flex-col justify-between mb-4 gap-y-4 md:flex-row md:items-center md:gap-x-4"
+            class="mb-4 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
           >
             <div class="flex gap-x-4">
               <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
@@ -38,7 +38,7 @@
               />
               <Icon
                 name="search"
-                class="self-center col-start-1 row-start-1 ml-4 text-gray-400 pointer-events-none size-4"
+                class="pointer-events-none col-start-1 row-start-1 ml-4 size-4 self-center text-gray-400"
               />
             </div>
           </div>
@@ -110,7 +110,7 @@ const onFilter = (tab: string) => {
 };
 
 const iconName = computed(() => {
-  return isList.value ? 'list' : 'grid';
+  return isList.value ? 'grid' : 'list';
 });
 const filteredIndex = computed(() => {
   const needle = currentTab.value === 'Live' ? 'Live' : 'Draft';
