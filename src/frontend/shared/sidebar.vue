@@ -25,7 +25,7 @@
           <div v-if="isMultiLingual">
             <button
               v-if="shared.hasOpenSidebar"
-              class="relative flex items-center justify-center transition-all duration-75 rounded-full size-14"
+              class="relative flex size-14 items-center justify-center rounded-full transition-all duration-75"
             >
               <span
                 class="absolute right-2 top-4 rounded-[7px] bg-blue-100 px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-blue-800"
@@ -57,9 +57,9 @@
                   {
                     active:
                       story.toLowerCase() === shared.currentStoryName?.toLowerCase() &&
-                      ($page?.url === '/' ||
-                        $page?.url.startsWith('/chapter') ||
-                        $page?.url.startsWith('/draft')),
+                      (currentPath === '/' ||
+                        currentPath.startsWith('/chapter') ||
+                        currentPath.startsWith('/draft')),
                   },
                 ]"
                 @click="onStory(story)"
@@ -71,7 +71,7 @@
               :class="[
                 'nav-link',
                 {
-                  active: $page?.url.startsWith('/page'),
+                  active: currentPath.startsWith('/page'),
                 },
               ]"
               href="/page"
@@ -80,7 +80,7 @@
             <div v-if="isMultiLingual">
               <button
                 v-if="currentLocale === 'en'"
-                class="opacity-50 nav-link disabled:cursor-not-allowed"
+                class="nav-link opacity-50 disabled:cursor-not-allowed"
                 disabled
               >
                 Interface
@@ -90,7 +90,7 @@
                 :class="[
                   'nav-link flex items-center justify-between',
                   {
-                    active: $page?.url === '/ui',
+                    active: currentPath === '/ui',
                   },
                 ]"
                 href="/ui"
@@ -99,7 +99,7 @@
               </Link>
             </div>
           </section>
-          <div class="border-t border-gray-200 my-7"></div>
+          <div class="my-7 border-t border-gray-200"></div>
           <section class="grid grid-cols-1">
             <!-- <Link class="flex items-center nav-link gap-x-3" href="/profile">
               <Icon name="user" />
@@ -110,7 +110,7 @@
               :class="[
                 'nav-link flex items-center gap-x-3',
                 {
-                  active: $page?.url === '/user',
+                  active: currentPath === '/user',
                 },
               ]"
               href="/user"
@@ -120,7 +120,7 @@
             </Link>
             <Link
               v-if="shared.meta.helpUrl"
-              class="flex items-center nav-link gap-x-3"
+              class="nav-link flex items-center gap-x-3"
               :href="shared.meta.helpUrl"
               target="_blank"
               rel="noopener noreferrer"
@@ -128,7 +128,7 @@
               <Icon name="help" />
               <span>Support</span>
             </Link>
-            <button class="flex items-center nav-link gap-x-3" @click="signOut">
+            <button class="nav-link flex items-center gap-x-3" @click="signOut">
               <Icon name="logout" />
               <span>Logout</span>
             </button>
@@ -157,6 +157,8 @@ import LanguageSelector from './language-selector.vue';
 import DropUp from './drop-up.vue';
 
 const shared = useSharedStore();
+
+const currentPath = computed(() => window.location.pathname);
 
 const form = useForm({
   language: shared.language.language as string,
