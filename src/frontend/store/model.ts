@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ref, toRefs } from 'vue';
+import { ref } from 'vue';
 import type { Scripture, SharedPageProps, DraftEditProps } from '../../types';
 
 export const useModelStore = defineStore('model', () => {
@@ -80,11 +80,11 @@ export const useModelStore = defineStore('model', () => {
 
   const setFromProps = (props: DraftEditProps & SharedPageProps) => {
     if (props.bundle) {
-      model.value = toRefs(props.bundle);
+      model.value = { ...props.bundle };
     }
 
     if (props.source) {
-      source.value = toRefs(props.source);
+      source.value = props.source;
     }
   };
 
