@@ -64,7 +64,6 @@ import WorkflowActions from './workflow-actions.vue';
 import ContentSidebar from '../shared/content-sidebar.vue';
 import MetaBox from '../shared/meta-box.vue';
 import MobileAppPreview from './mobile-app-preview.vue';
-import BlockField from '../test/block-field.vue';
 
 const props = defineProps<DraftEditProps & SharedPageProps>();
 

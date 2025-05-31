@@ -57,7 +57,7 @@ const fieldPath = computed(() => {
 
 const update = (e: Editor, change: EditorChange) => {
   if (change.origin === 'setValue') {
-    mde?.codemirror.setCursor(cursor);
+    mde?.codemirror.setCursor(cursor, cursor.ch, { scroll: false });
     return;
   }
   const value = e.getValue();
