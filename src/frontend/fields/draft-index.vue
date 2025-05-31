@@ -22,6 +22,7 @@
           <component :is="widgetFor(index)" :field="item" :is-nested="false" />
         </div>
       </form>
+
       <ContentSidebar>
         <template #meta-box>
           <MetaBox
