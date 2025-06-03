@@ -1,6 +1,6 @@
 {
   "name": "@story-cms/kit",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "private": true,
   "type": "module",
   "scripts": {
@@ -48,7 +48,7 @@
     "@headlessui/vue": "^1.7.22",
     "@inertiajs/vue3": "^2.0.2",
     "@poppinss/utils": "^6.7.3",
-    "@rive-app/canvas": "^2.23.9",
+    "@rive-app/canvas": "^2.29.0",
     "@types/luxon": "^3.3.0",
     "easymde": "^2.18.0",
     "luxon": "^3.5.0",
@@ -106,7 +106,7 @@
   },
   "other": {},
   "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "^4.40.0",
-    "@esbuild/linux-x64": "^0.25.4"
+    "@esbuild/linux-x64": "^0.25.4",
+    "@rollup/rollup-linux-x64-gnu": "^4.40.0"
   }
 }

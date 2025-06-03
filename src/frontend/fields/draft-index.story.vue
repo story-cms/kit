@@ -30,6 +30,30 @@ import { sharedProps, listSpec, listModel } from '../test/mocks';
 
 const fields = [
   { name: 'title', label: 'Title', widget: 'string' },
+  {
+    widget: 'panel',
+    isRow: true,
+    fields: [
+      {
+        label: 'Cover Image',
+        name: 'imageUrl',
+        widget: 'image',
+        uploadPreset: 'episodes',
+        description: 'SVG, PNG, JPG, GIF up to 5MB',
+        extensions: ['.jpeg', '.jpg', '.png', '.svg'],
+        maxSize: 5662310,
+      },
+      {
+        label: 'Animation File',
+        name: 'animationUrl',
+        widget: 'animation',
+        uploadPreset: 'episodes',
+        description: 'RIV only',
+        extensions: ['.riv'],
+        maxSize: 2000000,
+      },
+    ],
+  },
   { ...listSpec },
   { name: 'image', label: 'Image', widget: 'image' },
   { name: 'description', label: 'Description', widget: 'string' },
@@ -49,6 +73,10 @@ const fields = [
 
 const bundle = {
   title: 'The Word Became Flesh',
+  imageUrl:
+    'https://res.cloudinary.com/onesheep/image/upload/v1669793982/cld-sample-2.jpg',
+  animationUrl:
+    'https://res.cloudinary.com/onesheep/raw/upload/v1685641667/cmsplayground/fnu2m4ogxi9wdhi91iqi.riv',
   ...listModel,
   image: 'https://source.unsplash.com/random/800x600',
   description: 'We will look at the first chapter of the book of John.',
