@@ -62,6 +62,7 @@ import MobileAppPreview from '../fields/mobile-app-preview.vue';
 import { formatDate, padZero, safeChapterTitle } from '../shared/helpers';
 import type { PreviewProps, SharedPageProps } from '../../types';
 import { useSharedStore } from '../store';
+import { router } from '@inertiajs/vue3';
 
 const props = defineProps<PreviewProps & SharedPageProps>();
 
@@ -83,7 +84,7 @@ const metaChapter = computed(
 );
 
 const edit = () => {
-  window.location.href = `/draft/${props.chapter.number}/edit`;
+  router.visit(`/draft/${props.chapter.number}/edit`);
 };
 
 onMounted(() => {

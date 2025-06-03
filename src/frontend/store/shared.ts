@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import type { Ref } from 'vue';
-import { computed, ref, reactive, toRefs } from 'vue';
+import { computed, ref, reactive } from 'vue';
 import {
   SharedPageProps,
   Meta,
@@ -22,7 +22,7 @@ export const useSharedStore = defineStore('shared', () => {
   const languages: Ref<LanguageSpecification[]> = ref([] as LanguageSpecification[]);
 
   const setFromProps = (props: SharedPageProps) => {
-    errors.value = toRefs(props.errors) as any;
+    errors.value = { ...props.errors };
     stories.value = props.stories;
     meta.value = props.meta;
     languages.value = props.languages;
@@ -59,12 +59,6 @@ export const useSharedStore = defineStore('shared', () => {
   };
 
   // sidebar
-
-  const hasFloatingSidebar = ref(false);
-
-  const setSidebarAsFloating = (isFloating: boolean) => {
-    hasFloatingSidebar.value = isFloating;
-  };
 
   const hasOpenSidebar = ref(true);
 
@@ -158,11 +152,6 @@ export const useSharedStore = defineStore('shared', () => {
     showAppPreview.value = value;
   };
 
-  const hasFloatingContentSidebar = ref(false);
-  const setContentSidebarAsFloating = (value: boolean) => {
-    hasFloatingContentSidebar.value = value;
-  };
-
   const showSourceColumn = ref(true);
   const setSourceColumnAsHidden = (value: boolean) => {
     showSourceColumn.value = value;
@@ -190,9 +179,6 @@ export const useSharedStore = defineStore('shared', () => {
     containerWidth,
     setContainerWidth,
 
-    hasFloatingSidebar,
-    setSidebarAsFloating,
-
     hasOpenSidebar,
     setSidebarOpen,
 
@@ -217,9 +203,6 @@ export const useSharedStore = defineStore('shared', () => {
 
     isSingleColumn,
     setSingleColumn,
-
-    hasFloatingContentSidebar,
-    setContentSidebarAsFloating,
 
     showSourceColumn,
     setSourceColumnAsHidden,

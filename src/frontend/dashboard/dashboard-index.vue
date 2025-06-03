@@ -8,11 +8,11 @@
         </template>
         <template #extra-actions>
           <div
-            class="mb-4 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
+            class="flex flex-col justify-between mb-4 gap-y-4 md:flex-row md:items-center md:gap-x-4"
           >
             <div class="flex gap-x-4">
               <div class="flex items-center gap-x-4">
-                <span class="isolate inline-flex rounded-md shadow-sm">
+                <span class="inline-flex rounded-md shadow-sm isolate">
                   <button
                     type="button"
                     :class="[
@@ -25,7 +25,7 @@
                   >
                     To do
                     <span
-                      class="ml-1 inline-flex items-center rounded-full bg-gray-100 px-2 py-1 text-xs font-medium leading-4 text-indigo-700"
+                      class="inline-flex items-center px-2 py-1 ml-1 text-xs font-medium leading-4 text-indigo-700 bg-gray-100 rounded-full"
                       >{{ todoCount }}</span
                     >
                   </button>
@@ -42,7 +42,7 @@
                   >
                     All
                     <span
-                      class="ml-4 inline-flex items-center rounded-full bg-gray-100 px-2 py-1 text-xs font-medium leading-4 text-gray-700"
+                      class="inline-flex items-center px-2 py-1 ml-4 text-xs font-medium leading-4 text-gray-700 bg-gray-100 rounded-full"
                       >{{ allCount }}</span
                     >
                   </button>
@@ -51,11 +51,11 @@
             </div>
 
             <div class="flex gap-x-4">
-              <div class="flex items-center gap-x-2 text-sm font-medium leading-4">
-                <span class="size-4 rounded-full bg-green-500"></span>Human
+              <div class="flex items-center text-sm font-medium leading-4 gap-x-2">
+                <span class="bg-green-500 rounded-full size-4"></span>Human
               </div>
-              <div class="flex items-center gap-x-2 text-sm font-medium leading-4">
-                <span class="size-4 rounded-full bg-blue-500"></span>AI
+              <div class="flex items-center text-sm font-medium leading-4 gap-x-2">
+                <span class="bg-blue-500 rounded-full size-4"></span>AI
               </div>
             </div>
           </div>

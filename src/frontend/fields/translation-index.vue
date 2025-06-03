@@ -92,7 +92,10 @@
           </div>
         </section>
       </div>
-      <ContentSidebar>
+      <ContentSidebar
+        :is-complex-layout="true"
+        :style="{ marginRight: `${marginRight}px` }"
+      >
         <template #meta-box>
           <MetaBox
             :created-at="props.draft.createdAt"
@@ -118,7 +121,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, onUnmounted } from 'vue';
 import { router } from '@inertiajs/vue3';
 import type { Errors } from '@inertiajs/core';
 import type { FieldSpec, DraftEditProps, SharedPageProps } from '../../types';
@@ -278,6 +281,16 @@ const getSourceItemsLength = (obj: NestedObject): SourceItem[] => {
 
 sourceItemsLength = getSourceItemsLength(model.source);
 
+const marginRight = computed(() => {
+  if (shared.isLargeScreen && shared.hasOpenSidebar) {
+    return (shared.layoutWidth - shared.headerWidth - 264) / 2 - 12;
+  }
+  if (shared.isLargeScreen && !shared.hasOpenSidebar) {
+    return (shared.layoutWidth - shared.headerWidth - 84) / 2 - 12;
+  }
+  return 0;
+});
+
 onMounted(() => {
   model.$subscribe(() => {
     if (isSettingErrors) {
@@ -291,8 +304,15 @@ onMounted(() => {
 
   shared.setSingleColumn(true);
   shared.setShowMetaBox(false);
-  shared.setShowAppPreview(false);
-  shared.setContentSidebarAsFloating(false);
-  shared.setSidebarOpen(false);
+  if (shared.meta.hasAppPreview) {
+    shared.setShowAppPreview(false);
+  }
+});
+onUnmounted(() => {
+  shared.setSingleColumn(false);
+  shared.setShowMetaBox(true);
+  if (shared.meta.hasAppPreview) {
+    shared.setShowAppPreview(true);
+  }
 });
 </script>

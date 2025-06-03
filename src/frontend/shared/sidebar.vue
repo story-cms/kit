@@ -1,11 +1,11 @@
 <template>
   <aside
     :class="[
-      'max-w-[320px] bg-white shadow-md transition-all duration-75',
-      shared.hasFloatingSidebar ? 'fixed inset-y-0 z-30' : 'sticky z-10',
+      'fixed inset-y-0 z-20 max-w-[320px] bg-white shadow-md transition-all duration-75',
+
       shared.hasOpenSidebar
-        ? 'top-0 max-h-screen rounded-r-[20px]'
-        : 'top-3 mx-auto max-h-min rounded-full',
+        ? 'left-0 top-0 max-h-screen rounded-r-[20px]'
+        : 'left-3 top-3 mx-auto max-h-min rounded-full',
     ]"
   >
     <nav :class="{ 'flex h-full flex-col justify-between': shared.hasOpenSidebar }">
@@ -57,9 +57,9 @@
                   {
                     active:
                       story.toLowerCase() === shared.currentStoryName?.toLowerCase() &&
-                      ($page?.url === '/' ||
-                        $page?.url.startsWith('/chapter') ||
-                        $page?.url.startsWith('/draft')),
+                      (currentPath === '/' ||
+                        currentPath.startsWith('/chapter') ||
+                        currentPath.startsWith('/draft')),
                   },
                 ]"
                 @click="onStory(story)"
@@ -71,7 +71,7 @@
               :class="[
                 'nav-link',
                 {
-                  active: $page?.url.startsWith('/page'),
+                  active: currentPath.startsWith('/page'),
                 },
               ]"
               href="/page"
@@ -90,7 +90,7 @@
                 :class="[
                   'nav-link flex items-center justify-between',
                   {
-                    active: $page?.url === '/ui',
+                    active: currentPath === '/ui',
                   },
                 ]"
                 href="/ui"
@@ -110,7 +110,7 @@
               :class="[
                 'nav-link flex items-center gap-x-3',
                 {
-                  active: $page?.url === '/user',
+                  active: currentPath === '/user',
                 },
               ]"
               href="/user"
@@ -148,15 +148,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from 'vue';
+import { computed } from 'vue';
 import { useSharedStore } from '../store';
-import { Link, useForm } from '@inertiajs/vue3';
+import { Link, router, useForm } from '@inertiajs/vue3';
 
 import Icon from '../shared/icon.vue';
 import LanguageSelector from './language-selector.vue';
 import DropUp from './drop-up.vue';
 
 const shared = useSharedStore();
+
+const currentPath = computed(() => window.location.pathname);
 
 const form = useForm({
   language: shared.language.language as string,
@@ -179,7 +181,7 @@ const onStory = async (story: string) => {
 };
 
 const signOut = () => {
-  window.location.href = '/logout';
+  router.visit('/logout');
 };
 
 const isMultiLingual = computed(() => shared.languages.length > 1);
@@ -201,22 +203,6 @@ const toggleMenu = () => {
 const languageOptions = computed(() => {
   return shared.languages.map((l) => l.language) as string[];
 });
-
-watch(
-  () => shared.hasOpenSidebar,
-  (newVal) => {
-    if (newVal && shared.isLargeScreen) {
-      shared.setSidebarAsFloating(false);
-    }
-    if (newVal && !shared.isLargeScreen) {
-      shared.setSidebarAsFloating(true);
-    }
-    if (!newVal) {
-      shared.setSidebarAsFloating(false);
-    }
-  },
-  { immediate: true },
-);
 </script>
 <style lang="postcss" scoped>
 .nav-icon {

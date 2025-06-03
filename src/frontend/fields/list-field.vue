@@ -1,22 +1,24 @@
 <template>
-  <FoldableList
-    v-if="field.canFold"
-    :field="field"
-    :field-path="fieldPath"
-    :list-items="listItems"
-    :is-read-only="props.isReadOnly"
-    @add-set="addSet"
-    @remove-set="removeSet"
-  />
-  <FlatList
-    v-else
-    :field="field"
-    :field-path="fieldPath"
-    :list-items="listItems"
-    :is-read-only="props.isReadOnly"
-    @add-set="addSet"
-    @remove-set="removeSet"
-  />
+  <div>
+    <FoldableList
+      v-if="field.canFold"
+      :field="field"
+      :field-path="fieldPath"
+      :list-items="listItems"
+      :is-read-only="props.isReadOnly"
+      @add-set="addSet"
+      @remove-set="removeSet"
+    />
+    <FlatList
+      v-else
+      :field="field"
+      :field-path="fieldPath"
+      :list-items="listItems"
+      :is-read-only="props.isReadOnly"
+      @add-set="addSet"
+      @remove-set="removeSet"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">

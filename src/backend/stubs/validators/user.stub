@@ -6,7 +6,7 @@ import vine, { SimpleMessagesProvider } from '@vinejs/vine'
 import { FieldContext } from '@vinejs/vine/types'
 import db from '@adonisjs/lucid/services/db'
 
-export const validationMessages = new SimpleMessagesProvider({
+vine.messagesProvider = new SimpleMessagesProvider({
   'name.required': "The name can't be blank.",
   'email.required': "The email can't be blank.",
   'email.unique': 'That email is already used.',
