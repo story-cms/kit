@@ -124,8 +124,9 @@ const processData = (data: any) => {
 
   // Process each metric
   for (const [key, value] of Object.entries(data)) {
-    const current = value.current as number;
-    const previous = value.previous as number;
+    const typedValue = value as { current: number; previous: number };
+    const current = typedValue.current;
+    const previous = typedValue.previous;
     const change = current - previous;
     const changeType = change >= 0 ? 'increase' : 'decrease';
 
@@ -149,7 +150,7 @@ const processData = (data: any) => {
 
 onMounted(() => {
   axios
-    .get('/api/stats')
+    .get('/api/v1/analytics')
     .then((response: { data: Stats[] }) => {
       if (response.data.length > 0) {
         stats.value = response.data;
