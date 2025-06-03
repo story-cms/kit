@@ -4,7 +4,7 @@
       <ContentHeader title="Language translation">
         <template #hero>
           <WelcomeBanner />
-          <ContentStats />
+          <ContentStats :stats="stats" />
         </template>
         <template #extra-actions>
           <div
@@ -80,9 +80,10 @@ import ContentHeader from '../shared/content-header.vue';
 import WelcomeBanner from './welcome-banner.vue';
 import ContentStats from './content-stats.vue';
 import LanguageBlock from './language-block.vue';
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+import axios, { AxiosError } from 'axios';
 
-import { SharedPageProps, DashboardProps } from '../../types';
+import { SharedPageProps, DashboardProps, Stats } from '../../types';
 import { useSharedStore } from '../store';
 
 const props = defineProps<DashboardProps & SharedPageProps>();
@@ -115,4 +116,48 @@ const filteredProgress = computed(() => {
 const filter = (value: 'todo' | 'all') => {
   activeFilter.value = value;
 };
+
+const stats = ref<Stats[]>([]);
+
+const processData = (data: any) => {
+  const stats: Stats[] = [];
+
+  // Process each metric
+  for (const [key, value] of Object.entries(data)) {
+    const current = value.current as number;
+    const previous = value.previous as number;
+    const change = current - previous;
+    const changeType = change >= 0 ? 'increase' : 'decrease';
+
+    // Format the name to be more readable
+    const name = key
+      .replace(/([A-Z])/g, ' $1') // Add space before capital letters
+      .replace(/^./, (str) => str.toUpperCase()) // Capitalize first letter
+      .trim();
+
+    stats.push({
+      name,
+      stat: current.toString(),
+      previousStat: previous.toString(),
+      change: Math.abs(change).toString(),
+      changeType,
+    });
+  }
+
+  return stats;
+};
+
+onMounted(() => {
+  axios
+    .get('/api/stats')
+    .then((response: { data: Stats[] }) => {
+      if (response.data.length > 0) {
+        stats.value = response.data;
+      }
+      stats.value = processData(response.data);
+    })
+    .catch((error: AxiosError) => {
+      console.error(error);
+    });
+});
 </script>
