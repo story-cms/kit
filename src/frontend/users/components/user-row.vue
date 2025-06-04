@@ -2,46 +2,46 @@
   <td class="px-3 py-4">
     <div class="flex items-center">
       <div class="size-11 shrink-0">
-        <div class="grid bg-red-300 rounded-full size-11 place-items-center">
-          <p class="font-extrabold text-white uppercase">
+        <div class="grid size-11 place-items-center rounded-full bg-red-300">
+          <p class="font-extrabold uppercase text-white">
             {{ user.initials }}
           </p>
         </div>
       </div>
       <div class="ml-4">
-        <div class="font-medium text-gray-900 capitalize">{{ user.name }}</div>
+        <div class="font-medium capitalize text-gray-900">{{ user.name }}</div>
         <div class="text-gray-500">{{ user.email }}</div>
       </div>
     </div>
   </td>
-  <td class="px-3 py-4 text-sm text-gray-800 whitespace-nowrap">
+  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-800">
     <span class="rounded-full bg-gray-100 px-[10px] py-[2px] capitalize">
       {{ user.role }}</span
     >
   </td>
-  <td class="px-3 py-4 text-sm text-blue-800 whitespace-nowrap">
+  <td class="whitespace-nowrap px-3 py-4 text-sm text-blue-800">
     <span class="rounded-full bg-blue-100 px-[10px] py-[2px]"> {{ language }}</span>
   </td>
-  <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
+  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
     {{ lastActivity }}
   </td>
   <td class="relative py-4 pl-3 pr-4 text-sm sm:pr-6">
     <button class="cursor-pointer" @click="showDropdown = !showDropdown">
-      <Icon name="dots-horizontal" class="w-5 h-5" />
+      <Icon name="dots-horizontal" class="h-5 w-5" />
     </button>
     <div
       v-if="showDropdown"
       class="absolute -left-16 top-12 z-10 flex w-[164px] flex-col gap-2 rounded-lg border bg-white shadow-sm"
     >
       <button
-        class="py-4 pl-6 text-sm text-left text-gray-500 hover:bg-gray-100"
+        class="py-4 pl-6 text-left text-sm text-gray-500 hover:bg-gray-100"
         @click="(emit('update'), (showDropdown = false))"
       >
         Update User
       </button>
       <button
         v-if="user.id != shared.user.id"
-        class="py-4 pl-6 text-sm text-left text-gray-500 hover:bg-gray-100"
+        class="py-4 pl-6 text-left text-sm text-gray-500 hover:bg-gray-100"
         @click="(emit('remove'), (showDropdown = false))"
       >
         Remove User
