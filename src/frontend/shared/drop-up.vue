@@ -47,7 +47,7 @@
               <span
                 :class="[
                   value ? 'font-semibold' : 'font-normal',
-                  'grid grid-cols-2 gap-x-2 truncate',
+                  'grid grid-cols-[auto_auto] gap-x-2 truncate',
                 ]"
               >
                 <span> {{ option }} </span>
