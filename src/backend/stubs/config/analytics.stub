@@ -4,19 +4,36 @@
 import { defineConfig } from '#services/analytics_service';
 
 const analyticsConfig = defineConfig({
-  // Google Analytics property id
 
+  /**
+   * Google Analytics property id
+   * example: https://analytics.google.com/analytics/web/?authuser=0&hl=en#/a185662381p256392516/admin/property/settings
+   */
   propertyId: '',
   
+  /**
+   * we can find the stream names in Google Analytics
+   * Settings > Data Collections > Data Streams
+   * https://analytics.google.com/analytics/web/?authuser=0&hl=en#/a185662381p256392516/admin/streams/table/2207984600
+   * example: [app (ios), app (android)]
+   * if the stream does not have a name, we can use the bundle ids with .ios and .android appended
+   * for example: [com.alphainternational.bioy.ios, com.multipie.bibleinoneyear.android]
+   */
   streams: [
-    // iOS app bundle id
+    // iOS app 
     '',
-    // Android app package name
+    // Android app
     '',
   ],
-  // analytics key for chapter completion report
+
+  /**
+   * analytics key for chapter completion report
+   */
   chapterCompletionReportKey: 'done_ot_read',
-  // cache key for analytics report
+
+  /**
+   * cache key for analytics report
+   */
   cacheKey: 'analytics',
 });
 
