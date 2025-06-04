@@ -1,0 +1,23 @@
+{{{
+  exports({ to: app.configPath('cache.ts') });
+}}}
+import { defineConfig, store, drivers } from '@adonisjs/cache';
+
+const cacheConfig = defineConfig({
+  default: 'default',
+
+  stores: {
+    default: store().useL1Layer(
+      drivers.memory({
+        maxSize: '10mb',
+        maxEntrySize: '1mb',
+      }),
+    ),
+  },
+});
+
+export default cacheConfig;
+
+declare module '@adonisjs/cache/types' {
+  interface CacheStores extends InferStores<typeof cacheConfig> {}
+}
