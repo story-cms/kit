@@ -1,5 +1,5 @@
 {{{
-  exports({ to: app.configPath('cache.ts') });
+  exports({ to: app.configPath('cache.ts') })
 }}}
 import { defineConfig, store, drivers } from '@adonisjs/cache';
 
