@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
+import { computed } from 'vue';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
 import DraftActions from '../fields/draft-actions.vue';
@@ -86,8 +86,4 @@ const metaChapter = computed(
 const edit = () => {
   router.visit(`/draft/${props.chapter.number}/edit`);
 };
-
-onMounted(() => {
-  shared.setSourceColumnAsHidden(false);
-});
 </script>

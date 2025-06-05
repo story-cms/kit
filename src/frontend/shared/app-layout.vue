@@ -14,7 +14,7 @@
           },
         ]"
       >
-        <div class="max-w-6xl pb-6 mx-auto">
+        <div class="pb-6 mx-auto max-w-7xl">
           <header
             ref="header"
             :class="[

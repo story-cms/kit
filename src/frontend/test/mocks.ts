@@ -505,7 +505,36 @@ export const english: LanguageSpecification = {
   language: 'English',
   languageDirection: 'ltr',
 };
-const languages: LanguageSpecification[] = [english, spanish];
+
+export const burmese: LanguageSpecification = {
+  locale: 'my',
+  language: 'Burmese - မြန်မာဘာသာ',
+  languageDirection: 'ltr',
+};
+export const ganda: LanguageSpecification = {
+  locale: 'lg',
+  language: 'Ganda - Luganda',
+  languageDirection: 'ltr',
+};
+export const german: LanguageSpecification = {
+  locale: 'de',
+  language: 'German - Deutsch',
+  languageDirection: 'ltr',
+};
+
+export const ukrainian: LanguageSpecification = {
+  locale: 'uk',
+  language: 'Ukrainian - Українська',
+  languageDirection: 'ltr',
+};
+const languages: LanguageSpecification[] = [
+  english,
+  spanish,
+  burmese,
+  ganda,
+  german,
+  ukrainian,
+];
 
 export const sharedProps: SharedPageProps = {
   stories,

@@ -21,7 +21,7 @@
         <slot></slot>
       </div>
 
-      <div v-else>
+      <div v-else class="h-48">
         <div
           v-if="!props.isReadOnly"
           class="relative mt-[2px] rounded-md border-2 border-dashed border-gray-300"
