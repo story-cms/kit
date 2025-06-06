@@ -79,7 +79,7 @@
       />
     </Variant>
     <Variant title="Content stats">
-      <ContentStats
+      <AnalyticStats
         :stats="[
           {
             name: 'Total Stories',
@@ -114,7 +114,7 @@ import { AddStatus } from '../../types';
 import DashboardIndex from './dashboard-index.vue';
 import Ring from './ring.vue';
 import LanguageBlock from './language-block.vue';
-import ContentStats from './content-stats.vue';
+import AnalyticStats from './analytic-stats.vue';
 
 const translationProgress = [
   {

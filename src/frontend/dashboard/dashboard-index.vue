@@ -4,7 +4,7 @@
       <ContentHeader title="Language translation">
         <template #hero>
           <WelcomeBanner />
-          <ContentStats :stats="stats" />
+          <AnalyticStats :stats="stats" />
         </template>
         <template #extra-actions>
           <div
@@ -78,7 +78,7 @@
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
 import WelcomeBanner from './welcome-banner.vue';
-import ContentStats from './content-stats.vue';
+import AnalyticStats from './analytic-stats.vue';
 import LanguageBlock from './language-block.vue';
 import { ref, computed, onMounted } from 'vue';
 import axios, { AxiosError } from 'axios';

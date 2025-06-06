@@ -5,11 +5,11 @@
     </h3>
     <dl
       v-if="stats.length > 0"
-      class="mt-5 grid grid-cols-1 gap-x-5 divide-gray-200 overflow-hidden rounded-lg md:grid-cols-3"
+      class="grid grid-cols-1 mt-5 overflow-hidden divide-gray-200 rounded-lg gap-x-5 md:grid-cols-3"
     >
-      <div v-for="item in stats" :key="item.name" class="bg-white py-5 sm:p-6">
+      <div v-for="item in stats" :key="item.name" class="py-5 bg-white sm:p-6">
         <dt class="text-base font-normal text-gray-900">{{ item.name }}</dt>
-        <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
+        <dd class="flex items-baseline justify-between mt-1 md:block lg:flex">
           <div class="flex items-baseline text-2xl font-semibold leading-8 text-gray-900">
             {{ item.stat }}
             <span class="ml-2 text-sm font-medium text-gray-500"
@@ -47,17 +47,17 @@
     <!-- Loading skeleton -->
     <dl
       v-else
-      class="mt-5 grid grid-cols-1 gap-x-5 divide-gray-200 overflow-hidden rounded-lg md:grid-cols-3"
+      class="grid grid-cols-1 mt-5 overflow-hidden divide-gray-200 rounded-lg gap-x-5 md:grid-cols-3"
     >
-      <div v-for="i in 3" :key="i" class="bg-white py-5 sm:p-6">
-        <div class="h-4 w-24 animate-pulse rounded bg-gray-200"></div>
-        <div class="mt-4 flex items-baseline justify-between md:block lg:flex">
+      <div v-for="i in 3" :key="i" class="py-5 bg-white sm:p-6">
+        <div class="w-24 h-4 bg-gray-200 rounded animate-pulse"></div>
+        <div class="flex items-baseline justify-between mt-4 md:block lg:flex">
           <div class="flex items-baseline">
-            <div class="h-8 w-16 animate-pulse rounded bg-gray-200"></div>
-            <div class="ml-2 h-4 w-20 animate-pulse rounded bg-gray-200"></div>
+            <div class="w-16 h-8 bg-gray-200 rounded animate-pulse"></div>
+            <div class="w-20 h-4 ml-2 bg-gray-200 rounded animate-pulse"></div>
           </div>
           <div
-            class="mt-2 h-6 w-20 animate-pulse rounded-full bg-gray-200 md:mt-2 lg:mt-0"
+            class="w-20 h-6 mt-2 bg-gray-200 rounded-full animate-pulse md:mt-2 lg:mt-0"
           ></div>
         </div>
       </div>
