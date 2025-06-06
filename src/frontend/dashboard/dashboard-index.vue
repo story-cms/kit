@@ -83,7 +83,7 @@ import LanguageBlock from './language-block.vue';
 import { ref, computed, onMounted } from 'vue';
 import axios, { AxiosError } from 'axios';
 
-import { SharedPageProps, DashboardProps, StatMetric } from '../../types';
+import { SharedPageProps, DashboardProps, StatMetric, RawMetrics } from '../../types';
 import { useSharedStore } from '../store';
 
 const props = defineProps<DashboardProps & SharedPageProps>();
