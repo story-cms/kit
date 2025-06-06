@@ -39,7 +39,7 @@
       />
     </Variant>
     <Variant title="Ring">
-      <div class="mx-auto flex w-full gap-x-4 rounded-lg bg-white p-8">
+      <div class="flex w-full p-8 mx-auto bg-white rounded-lg gap-x-4">
         <Ring
           :done="10"
           :draft="10"
@@ -78,31 +78,37 @@
         :locale="'de'"
       />
     </Variant>
-    <Variant title="Content stats">
+    <Variant title="Analytic stats">
       <AnalyticStats
-        :stats="[
+        :metrics="[
           {
-            name: 'Total Stories',
-            stat: '71,897',
-            previousStat: '70,946',
-            change: '12%',
-            changeType: 'increase',
+            name: 'Users',
+            stat: 71897,
+            previousStat: 70946,
           },
           {
-            name: 'Total Stories',
-            stat: '71,897',
-            previousStat: '70,946',
-            change: '12%',
-            changeType: 'increase',
+            name: 'Installs per week',
+            stat: 70897,
+            previousStat: 70956,
           },
           {
-            name: 'Total Stories',
-            stat: '71,897',
-            previousStat: '70,946',
-            change: '12%',
-            changeType: 'increase',
+            name: 'Users',
+            stat: 71897,
+            previousStat: 72946,
           },
         ]"
+      />
+    </Variant>
+    <Variant title="Stats tile">
+      <StatsTile :metric="{ name: 'Total Stories', stat: 71897, previousStat: 70946 }" />
+    </Variant>
+    <Variant title="Stats tile loading">
+      <StatsTile
+        :metric="{
+          name: '',
+          stat: 0,
+          previousStat: 0,
+        }"
       />
     </Variant>
   </Story>
@@ -115,6 +121,7 @@ import DashboardIndex from './dashboard-index.vue';
 import Ring from './ring.vue';
 import LanguageBlock from './language-block.vue';
 import AnalyticStats from './analytic-stats.vue';
+import StatsTile from './stats-tile.vue';
 
 const translationProgress = [
   {

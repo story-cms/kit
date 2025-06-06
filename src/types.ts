@@ -244,6 +244,12 @@ export interface Stats {
   changeType: string;
 }
 
+export interface StatMetric {
+  name: string;
+  stat: number;
+  previousStat: number;
+}
+
 export interface Progress {
   name: string;
   done: number;
