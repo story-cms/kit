@@ -23,7 +23,6 @@
         :meta="sharedProps.meta"
         :language="sharedProps.language"
         :languages="sharedProps.languages"
-        :stories="[]"
         :user="{
           id: 1,
           name: 'Test User',
@@ -34,7 +33,79 @@
           role: 'user',
           language: 'en',
         }"
-        :ui-todo-count="0"
+        :stories="sharedProps.stories"
+        :ui-todo-count="sharedProps.uiTodoCount"
+        :translation-progress="translationProgress"
+      />
+    </Variant>
+    <Variant title="Ring">
+      <div class="mx-auto flex w-full gap-x-4 rounded-lg bg-white p-8">
+        <Ring
+          :done="10"
+          :draft="10"
+          :total="100"
+          :name="'Interface'"
+          :last-updated="new Date('2025-05-19T15:05:30.732+00:00').toLocaleDateString()"
+        />
+        <Ring
+          :done="200"
+          :draft="50"
+          :total="300"
+          :name="'Content'"
+          :last-updated="new Date('2025-05-19T15:05:30.732+00:00').toLocaleDateString()"
+        />
+      </div>
+    </Variant>
+    <Variant title="Language block">
+      <LanguageBlock
+        :progress="[
+          {
+            name: 'English',
+            done: 10,
+            draft: 10,
+            total: 100,
+            lastUpdated: '2025-05-19T15:05:30.732+00:00',
+          },
+          {
+            name: 'French',
+            done: 200,
+            draft: 50,
+            total: 300,
+            lastUpdated: '2025-05-19T15:05:30.732+00:00',
+          },
+        ]"
+        :language="'German'"
+        :locale="'de'"
+      />
+    </Variant>
+    <Variant title="Analytic stats">
+      <AnalyticStats
+        :analytics-report="{
+          totalInstalls: { current: 71897, previous: 70946 },
+          monthlyActiveUsers: { current: 70897, previous: 70956 },
+          chaptersComplete: { current: 71897, previous: 72946 },
+        }"
+      />
+    </Variant>
+    <Variant title="Analytic stats loading">
+      <AnalyticStats
+        :analytics-report="{
+          totalInstalls: { current: 0, previous: 0 },
+          monthlyActiveUsers: { current: 0, previous: 0 },
+          chaptersComplete: { current: 0, previous: 0 },
+        }"
+      />
+    </Variant>
+    <Variant title="Stats tile">
+      <StatsTile :metric="{ name: 'Total Stories', stat: 71897, previousStat: 70946 }" />
+    </Variant>
+    <Variant title="Stats tile loading">
+      <StatsTile
+        :metric="{
+          name: '',
+          stat: 0,
+          previousStat: 0,
+        }"
       />
     </Variant>
   </Story>
@@ -44,4 +115,51 @@
 import { sharedProps } from '../test/mocks';
 import { AddStatus } from '../../types';
 import DashboardIndex from './dashboard-index.vue';
+import Ring from './ring.vue';
+import LanguageBlock from './language-block.vue';
+import AnalyticStats from './analytic-stats.vue';
+import StatsTile from './stats-tile.vue';
+
+const translationProgress = [
+  {
+    progress: [
+      {
+        name: 'Interface',
+        done: 100,
+        draft: 0,
+        total: 100,
+        lastUpdated: '2025-04-10 15:22:16.448+03',
+      },
+      {
+        name: 'Content',
+        done: 200,
+        draft: 0,
+        total: 200,
+        lastUpdated: '2025-04-10 15:22:16.448+03',
+      },
+    ],
+    language: 'German',
+    locale: 'de',
+  },
+  {
+    progress: [
+      {
+        name: 'Interface',
+        done: 75,
+        draft: 0,
+        total: 100,
+        lastUpdated: '2025-04-10 15:22:16.448+03',
+      },
+      {
+        name: 'Content',
+        done: 150,
+        draft: 50,
+        total: 200,
+        lastUpdated: '2025-04-10 15:22:16.448+03',
+      },
+    ],
+    language: 'Bengali',
+    locale: 'bn',
+  },
+];
 </script>
