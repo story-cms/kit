@@ -19,7 +19,7 @@ const props = defineProps<{
 const metrics = ref<StatMetric[]>([]);
 
 const processMetrics = () => {
-  if (!props.analyticsReport) return [];
+  if (!props.analyticsReport) return;
   for (const [key, value] of Object.entries(props.analyticsReport)) {
     const typedValue = value as { current: number; previous: number };
     const current = typedValue.current;
