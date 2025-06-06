@@ -3,8 +3,16 @@
     <h3 class="font-['Inter'] text-2xl font-semibold leading-8 text-gray-800">
       Analytics
     </h3>
-    <div class="mt-5 flex flex-col gap-5 lg:flex-row">
-      <StatsTile v-for="metric in metrics" :key="metric.name" :metric="metric" />
+    <div v-if="!error" class="mt-5 flex flex-col gap-5 lg:flex-row">
+      <StatsTile
+        v-for="metric in metrics"
+        :key="metric.name"
+        :metric="metric"
+        :is-loading="isLoading"
+      />
+    </div>
+    <div v-else class="text-red-500">
+      {{ error }}
     </div>
   </div>
 </template>
@@ -15,6 +23,8 @@ import { StatMetric, AnalyticsReport } from '../../types';
 import StatsTile from './stats-tile.vue';
 const props = defineProps<{
   analyticsReport: AnalyticsReport;
+  isLoading: boolean;
+  error: string | null;
 }>();
 const metrics = ref<StatMetric[]>([]);
 

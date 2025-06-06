@@ -4,7 +4,11 @@
       <ContentHeader title="Language translation">
         <template #hero>
           <WelcomeBanner />
-          <AnalyticStats v-if="analyticsReport" :analytics-report="analyticsReport" />
+          <AnalyticStats
+            :analytics-report="analyticsReport"
+            :is-loading="isLoading"
+            :error="error"
+          />
         </template>
         <template #extra-actions>
           <div
@@ -81,7 +85,7 @@ import WelcomeBanner from './welcome-banner.vue';
 import AnalyticStats from './analytic-stats.vue';
 import LanguageBlock from './language-block.vue';
 import { ref, computed, onMounted } from 'vue';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 
 import { SharedPageProps, DashboardProps, AnalyticsReport } from '../../types';
 import { useSharedStore } from '../store';
@@ -117,16 +121,27 @@ const filter = (value: 'todo' | 'all') => {
   activeFilter.value = value;
 };
 
-const analyticsReport = ref<AnalyticsReport>();
+const analyticsReport = ref<AnalyticsReport>({
+  totalInstalls: { current: 0, previous: 0 },
+  monthlyActiveUsers: { current: 0, previous: 0 },
+  chaptersComplete: { current: 0, previous: 0 },
+});
 
+const isLoading = ref(true);
+const error = ref<string | null>(null);
 onMounted(() => {
   axios
     .get('/analytics')
     .then((response) => {
+      Object.keys(analyticsReport.value).forEach((key) => {
+        delete analyticsReport.value[key as keyof AnalyticsReport];
+      });
       analyticsReport.value = response.data;
+      isLoading.value = false;
     })
-    .catch((error: AxiosError) => {
-      console.error(error);
+    .catch((error) => {
+      error.value = error.response?.data.message;
+      isLoading.value = false;
     });
 });
 </script>
