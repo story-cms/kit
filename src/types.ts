@@ -236,7 +236,7 @@ export enum AddStatus {
   Wait,
 }
 
-export interface RawMetrics {
+export interface AnalyticsReport {
   totalInstalls: {
     current: number;
     previous: number;
@@ -250,7 +250,6 @@ export interface RawMetrics {
     previous: number;
   };
 }
-
 export interface StatMetric {
   name: string;
   stat: number;

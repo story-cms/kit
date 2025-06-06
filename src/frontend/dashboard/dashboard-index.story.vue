@@ -39,7 +39,7 @@
       />
     </Variant>
     <Variant title="Ring">
-      <div class="flex w-full p-8 mx-auto bg-white rounded-lg gap-x-4">
+      <div class="mx-auto flex w-full gap-x-4 rounded-lg bg-white p-8">
         <Ring
           :done="10"
           :draft="10"
@@ -80,32 +80,20 @@
     </Variant>
     <Variant title="Analytic stats">
       <AnalyticStats
-        :metrics="[
-          {
-            name: 'Users',
-            stat: 71897,
-            previousStat: 70946,
-          },
-          {
-            name: 'Installs per week',
-            stat: 70897,
-            previousStat: 70956,
-          },
-          {
-            name: 'Users',
-            stat: 71897,
-            previousStat: 72946,
-          },
-        ]"
+        :analytics-report="{
+          totalInstalls: { current: 71897, previous: 70946 },
+          monthlyActiveUsers: { current: 70897, previous: 70956 },
+          chaptersComplete: { current: 71897, previous: 72946 },
+        }"
       />
     </Variant>
     <Variant title="Analytic stats loading">
       <AnalyticStats
-        :metrics="[
-          { name: 'Users', stat: 0, previousStat: 0 },
-          { name: 'Installs per week', stat: 0, previousStat: 0 },
-          { name: 'Users', stat: 0, previousStat: 0 },
-        ]"
+        :analytics-report="{
+          totalInstalls: { current: 0, previous: 0 },
+          monthlyActiveUsers: { current: 0, previous: 0 },
+          chaptersComplete: { current: 0, previous: 0 },
+        }"
       />
     </Variant>
     <Variant title="Stats tile">

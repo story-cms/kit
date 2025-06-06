@@ -4,15 +4,15 @@
       <ContentHeader title="Language translation">
         <template #hero>
           <WelcomeBanner />
-          <AnalyticStats :metrics="metrics" />
+          <AnalyticStats v-if="analyticsReport" :analytics-report="analyticsReport" />
         </template>
         <template #extra-actions>
           <div
-            class="flex flex-col justify-between mb-4 gap-y-4 md:flex-row md:items-center md:gap-x-4"
+            class="mb-4 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
           >
             <div class="flex gap-x-4">
               <div class="flex items-center gap-x-4">
-                <span class="inline-flex rounded-md shadow-sm isolate">
+                <span class="isolate inline-flex rounded-md shadow-sm">
                   <button
                     type="button"
                     :class="[
@@ -25,7 +25,7 @@
                   >
                     To do
                     <span
-                      class="inline-flex items-center px-2 py-1 ml-1 text-xs font-medium leading-4 text-indigo-700 bg-gray-100 rounded-full"
+                      class="ml-1 inline-flex items-center rounded-full bg-gray-100 px-2 py-1 text-xs font-medium leading-4 text-indigo-700"
                       >{{ todoCount }}</span
                     >
                   </button>
@@ -42,7 +42,7 @@
                   >
                     All
                     <span
-                      class="inline-flex items-center px-2 py-1 ml-4 text-xs font-medium leading-4 text-gray-700 bg-gray-100 rounded-full"
+                      class="ml-4 inline-flex items-center rounded-full bg-gray-100 px-2 py-1 text-xs font-medium leading-4 text-gray-700"
                       >{{ allCount }}</span
                     >
                   </button>
@@ -51,11 +51,11 @@
             </div>
 
             <div class="flex gap-x-4">
-              <div class="flex items-center text-sm font-medium leading-4 gap-x-2">
-                <span class="bg-green-500 rounded-full size-4"></span>Human
+              <div class="flex items-center gap-x-2 text-sm font-medium leading-4">
+                <span class="size-4 rounded-full bg-green-500"></span>Human
               </div>
-              <div class="flex items-center text-sm font-medium leading-4 gap-x-2">
-                <span class="bg-blue-500 rounded-full size-4"></span>AI
+              <div class="flex items-center gap-x-2 text-sm font-medium leading-4">
+                <span class="size-4 rounded-full bg-blue-500"></span>AI
               </div>
             </div>
           </div>
@@ -83,7 +83,7 @@ import LanguageBlock from './language-block.vue';
 import { ref, computed, onMounted } from 'vue';
 import axios, { AxiosError } from 'axios';
 
-import { SharedPageProps, DashboardProps, StatMetric, RawMetrics } from '../../types';
+import { SharedPageProps, DashboardProps, AnalyticsReport } from '../../types';
 import { useSharedStore } from '../store';
 
 const props = defineProps<DashboardProps & SharedPageProps>();
@@ -117,43 +117,13 @@ const filter = (value: 'todo' | 'all') => {
   activeFilter.value = value;
 };
 
-// Temporary metrics for the loading pulse
-const metrics = ref<StatMetric[]>([
-  { name: 'Stats', stat: 0, previousStat: 0 },
-  { name: 'Stats', stat: 0, previousStat: 0 },
-  { name: 'Stats', stat: 0, previousStat: 0 },
-]);
-
-const processData = (data: any) => {
-  const stats: StatMetric[] = [];
-
-  // Process each metric
-  for (const [key, value] of Object.entries(data)) {
-    const typedValue = value as { current: number; previous: number };
-    const current = typedValue.current;
-    const previous = typedValue.previous;
-
-    // Format the name to be more readable
-    const name = key
-      .replace(/([A-Z])/g, ' $1') // Add space before capital letters
-      .replace(/^./, (str) => str.toUpperCase()) // Capitalize first letter
-      .trim();
-
-    stats.push({
-      name,
-      stat: current,
-      previousStat: previous,
-    });
-  }
-  return stats;
-};
+const analyticsReport = ref<AnalyticsReport>();
 
 onMounted(() => {
   axios
     .get('/analytics')
     .then((response) => {
-      metrics.value = [];
-      metrics.value = processData(response.data);
+      analyticsReport.value = response.data;
     })
     .catch((error: AxiosError) => {
       console.error(error);
