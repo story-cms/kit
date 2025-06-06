@@ -140,7 +140,6 @@ const processData = (data: any) => {
       previousStat: previous,
     });
   }
-
   return stats;
 };
 
@@ -148,10 +147,7 @@ onMounted(() => {
   axios
     .get('/analytics')
     .then((response) => {
-      if (!response.data.length) return;
       metrics.value = processData(response.data);
-      console.log('metrics.value', metrics.value);
-      console.log('response.data', response.data);
     })
     .catch((error: AxiosError) => {
       console.error(error);

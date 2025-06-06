@@ -3,7 +3,7 @@
     <h3 class="font-['Inter'] text-2xl font-semibold leading-8 text-gray-800">
       Analytics
     </h3>
-    <div class="flex flex-wrap justify-between gap-5 mt-5">
+    <div class="flex flex-col gap-5 mt-5 lg:flex-row">
       <StatsTile v-for="metric in metrics" :key="metric.name" :metric="metric" />
     </div>
   </div>

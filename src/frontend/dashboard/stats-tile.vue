@@ -1,8 +1,8 @@
 <template>
-  <div class="w-full max-w-[376px] bg-white py-5 sm:p-6">
+  <div class="w-full p-6 bg-white">
     <div v-if="props.metric && props.metric.stat && props.metric.previousStat">
       <dt class="text-base font-normal text-gray-900">{{ props.metric.name }}</dt>
-      <dd class="mt-1 flex items-baseline justify-between">
+      <dd class="flex items-baseline justify-between mt-1">
         <div class="flex items-baseline text-2xl font-semibold leading-8 text-gray-900">
           {{ props.metric.stat }}
           <span class="ml-2 text-sm font-medium text-gray-500"
@@ -37,14 +37,14 @@
       </dd>
     </div>
     <div v-else>
-      <div class="h-4 w-24 animate-pulse rounded bg-gray-200"></div>
-      <div class="mt-4 flex items-baseline justify-between md:block lg:flex">
+      <div class="w-24 h-4 bg-gray-200 rounded animate-pulse"></div>
+      <div class="flex items-baseline justify-between mt-4 md:block lg:flex">
         <div class="flex items-baseline">
-          <div class="h-8 w-16 animate-pulse rounded bg-gray-200"></div>
-          <div class="ml-2 h-4 w-20 animate-pulse rounded bg-gray-200"></div>
+          <div class="w-16 h-8 bg-gray-200 rounded animate-pulse"></div>
+          <div class="w-20 h-4 ml-2 bg-gray-200 rounded animate-pulse"></div>
         </div>
         <div
-          class="mt-2 h-6 w-20 animate-pulse rounded-full bg-gray-200 md:mt-2 lg:mt-0"
+          class="w-20 h-6 mt-2 bg-gray-200 rounded-full animate-pulse md:mt-2 lg:mt-0"
         ></div>
       </div>
     </div>
