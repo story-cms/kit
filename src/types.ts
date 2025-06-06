@@ -236,14 +236,6 @@ export enum AddStatus {
   Wait,
 }
 
-export interface Stats {
-  name: string;
-  stat: string;
-  previousStat: string;
-  change: string;
-  changeType: string;
-}
-
 export interface StatMetric {
   name: string;
   stat: number;

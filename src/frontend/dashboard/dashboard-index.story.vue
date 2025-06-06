@@ -99,6 +99,15 @@
         ]"
       />
     </Variant>
+    <Variant title="Analytic stats loading">
+      <AnalyticStats
+        :metrics="[
+          { name: 'Users', stat: 0, previousStat: 0 },
+          { name: 'Installs per week', stat: 0, previousStat: 0 },
+          { name: 'Users', stat: 0, previousStat: 0 },
+        ]"
+      />
+    </Variant>
     <Variant title="Stats tile">
       <StatsTile :metric="{ name: 'Total Stories', stat: 71897, previousStat: 70946 }" />
     </Variant>

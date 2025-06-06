@@ -117,7 +117,12 @@ const filter = (value: 'todo' | 'all') => {
   activeFilter.value = value;
 };
 
-const metrics = ref<StatMetric[]>([]);
+// Temporary metrics for the loading pulse
+const metrics = ref<StatMetric[]>([
+  { name: 'Stats', stat: 0, previousStat: 0 },
+  { name: 'Stats', stat: 0, previousStat: 0 },
+  { name: 'Stats', stat: 0, previousStat: 0 },
+]);
 
 const processData = (data: any) => {
   const stats: StatMetric[] = [];
@@ -147,6 +152,7 @@ onMounted(() => {
   axios
     .get('/analytics')
     .then((response) => {
+      metrics.value = [];
       metrics.value = processData(response.data);
     })
     .catch((error: AxiosError) => {
