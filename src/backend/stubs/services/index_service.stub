@@ -11,7 +11,6 @@ import {
   Story,
   Part,
   AddStatus,
-  Progress,
 } from '@story-cms/kit';
 
 import storyConfig from '#config/story';
@@ -100,27 +99,6 @@ export default class IndexService {
 
   public get storyHasParts(): boolean {
     return !!this.story.parts;
-  }
-
-  public async getContentProgress(filter: Record<string, any>): Promise<Progress> {
-    const index = await Index.query().where(filter).orderBy('storyId').first();
-
-    if (!index) return { name: 'Content', done: 0, draft: 0, total: 0, lastUpdated: '' };
-
-    const done = index.publishedList.length;
-    const draft = index.draftsList.length + index.issuesList.length;
-    const lastUpdated = index.updatedAt;
-
-    const total =
-      storyConfig.stories.find((item) => item.id === filter.storyId)?.chapterLimit ?? 0;
-
-    return {
-      name: 'Content',
-      done,
-      draft,
-      total,
-      lastUpdated: lastUpdated.toString(),
-    };
   }
 
   public async getCurrentApiVersion(): Promise<number> {

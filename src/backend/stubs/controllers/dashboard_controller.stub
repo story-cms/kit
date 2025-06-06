@@ -3,19 +3,16 @@
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
 import vine from '@vinejs/vine';
-import IndexService from '#services/index_service';
 import Ui from '#models/ui';
 import storyConfig from '#config/story';
-import { DashboardProps, TranslationProgress } from '@story-cms/kit';
+import { DashboardProps, TranslationProgress, Progress } from '@story-cms/kit';
+import Index from '#models/index';
 
 export default class DashboardController {
     public async index(ctx: HttpContext) {
     if (!ctx.version || !ctx.story) return ctx.response.notFound();
 
-    const version = ctx.version;
     const story = ctx.story;
-
-    const indexService = new IndexService(story);
 
     const translationProgress: TranslationProgress[] = [];
     // exclude the source locale and sort alphabetically
@@ -23,12 +20,30 @@ export default class DashboardController {
       .filter((lang) => lang.locale !== 'en')
       .sort((a, b) => a.language.localeCompare(b.language));
 
+       const index = await Index.all();
+
+    const indexByLocale = index.reduce(
+      (acc, item) => {
+        acc[item.locale] = {
+          name: 'Content',
+          done: item.publishedList.length,
+          draft: item.draftsList.length + item.issuesList.length,
+          total: story.chapterLimit,
+          lastUpdated: item.updatedAt.toString(),
+        };
+        return acc;
+      },
+      {} as Record<string, Progress>,
+    );
+
     for (const language of languages) {
-      const contentProgress = await indexService.getContentProgress({
-        apiVersion: version.apiVersion,
-        locale: language.locale,
-        storyId: story.id,
-      });
+      const contentProgress = indexByLocale[language.locale] ?? {
+        name: 'Content',
+        done: 0,
+        draft: 0,
+        total: 0,
+        lastUpdated: '',
+      };
 
       const rows = await Ui.findManyBy({ locale: language.locale });
       const totalCount = rows.length;
