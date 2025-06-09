@@ -3,6 +3,7 @@
 }}}
 import env from '#start/env';
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
+import vine from '@vinejs/vine';
 
 export type AnalyticsReport = {
   totalInstalls: {
@@ -19,15 +20,28 @@ export type AnalyticsReport = {
   };
 };
 
+export const emptyReport: AnalyticsReport = {
+  totalInstalls: {
+    current: 0,
+    previous: 0,
+  },
+  monthlyActiveUsers: {
+    current: 0,
+    previous: 0,
+  },
+  chaptersComplete: {
+    current: 0,
+    previous: 0,
+  },
+};
+
 export class Analytics {
   protected client!: BetaAnalyticsDataClient;
   protected config: AnalyticsConfig;
 
   constructor(config: AnalyticsConfig) {
     this.config = config;
-    this.initializeClient().catch((error) => {
-      console.error('Failed to initialize Analytics client with credentials:', error);
-    });
+    this.initializeClient();
   }
 
   /**
@@ -188,6 +202,13 @@ export type AnalyticsConfig = {
   chapterCompletionReportKey: string;
   cacheKey: string;
 };
+
+export const analyticsConfigSchema = vine.object({
+  propertyId: vine.string().trim().minLength(5),
+  streams: vine.array(vine.string().trim().minLength(5)).minLength(1),
+  chapterCompletionReportKey: vine.string().trim().minLength(3),
+  cacheKey: vine.string().trim().minLength(1),
+});
 
 export type GoogleServiceAccountCredentials = {
   type: string;

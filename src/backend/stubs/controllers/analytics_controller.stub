@@ -3,19 +3,43 @@
 }}}
 import config from '#config/analytics';
 import cache from '@adonisjs/cache/services/main';
-import { Analytics } from '#services/analytics_service';
+import {
+  Analytics,
+  emptyReport,
+  analyticsConfigSchema,
+} from '#services/analytics_service';
+import type { HttpContext } from '@adonisjs/core/http';
+import vine from '@vinejs/vine';
 
 export default class AnalyticsController {
-  public async index() {
+  public async index({ logger, response }: HttpContext) {
     const cachedReport = await cache.get({ key: config.cacheKey });
     if (cachedReport) {
       return cachedReport;
     }
 
-    const ga = new Analytics(config);
-    const report = await ga.report(config.chapterCompletionReportKey);
-    await cache.set({ key: config.cacheKey, value: report, ttl: '1h' });
+    try {
+      // Validate the config before using it
+      const result = await vine.tryValidate({
+        schema: analyticsConfigSchema,
+        data: config,
+      });
 
-    return report;
+      if (result[0] instanceof Error) {
+        logger.error(result[0]);
+        return response.status(500).json({
+          message: 'Analytics config is invalid. Check config/analytics.ts',
+        });
+      }
+
+      const ga = new Analytics(config);
+      const report = await ga.report(config.chapterCompletionReportKey);
+      await cache.set({ key: config.cacheKey, value: report, ttl: '1h' });
+
+      return report;
+    } catch (error) {
+      logger.error(error);
+      return emptyReport;
+    }
   }
 }
