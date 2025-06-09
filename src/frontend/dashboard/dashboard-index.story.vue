@@ -39,19 +39,19 @@
       />
     </Variant>
     <Variant title="Ring">
-      <div class="mx-auto flex w-full gap-x-4 rounded-lg bg-white p-8">
+      <div class="flex w-full p-8 mx-auto bg-white rounded-lg gap-x-4">
         <Ring
           :done="10"
           :draft="10"
           :total="100"
-          :name="'Interface'"
+          name="Interface"
           :last-updated="new Date('2025-05-19T15:05:30.732+00:00').toLocaleDateString()"
         />
         <Ring
           :done="200"
           :draft="50"
           :total="300"
-          :name="'Content'"
+          name="Content"
           :last-updated="new Date('2025-05-19T15:05:30.732+00:00').toLocaleDateString()"
         />
       </div>
@@ -85,6 +85,8 @@
           monthlyActiveUsers: { current: 70897, previous: 70956 },
           chaptersComplete: { current: 71897, previous: 72946 },
         }"
+        :is-loading="false"
+        :error="null"
       />
     </Variant>
     <Variant title="Analytic stats loading">
@@ -94,6 +96,8 @@
           monthlyActiveUsers: { current: 0, previous: 0 },
           chaptersComplete: { current: 0, previous: 0 },
         }"
+        :is-loading="true"
+        :error="null"
       />
     </Variant>
     <Variant title="Stats tile">

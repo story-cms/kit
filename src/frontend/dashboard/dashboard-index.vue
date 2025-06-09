@@ -1,7 +1,7 @@
 <template>
   <AppLayout>
     <template #header>
-      <ContentHeader title="Language translation">
+      <ContentHeader :title="isMultiLingual ? 'Language translation' : ''">
         <template #hero>
           <WelcomeBanner />
           <AnalyticStats
@@ -12,7 +12,8 @@
         </template>
         <template #extra-actions>
           <div
-            class="mb-4 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
+            v-if="isMultiLingual"
+            class="flex flex-col justify-between mb-4 gap-y-4 md:flex-row md:items-center md:gap-x-4"
           >
             <div class="flex gap-x-4">
               <IndexFilter
@@ -26,18 +27,18 @@
             </div>
 
             <div class="flex gap-x-4">
-              <div class="flex items-center gap-x-2 text-sm font-medium leading-4">
-                <span class="size-4 rounded-full bg-green-500"></span>Human
+              <div class="flex items-center text-sm font-medium leading-4 gap-x-2">
+                <span class="bg-green-500 rounded-full size-4"></span>Human
               </div>
-              <div class="flex items-center gap-x-2 text-sm font-medium leading-4">
-                <span class="size-4 rounded-full bg-blue-500"></span>AI
+              <div class="flex items-center text-sm font-medium leading-4 gap-x-2">
+                <span class="bg-blue-500 rounded-full size-4"></span>AI
               </div>
             </div>
           </div>
         </template>
       </ContentHeader>
     </template>
-    <div class="flex flex-wrap gap-8">
+    <div v-if="isMultiLingual" class="flex flex-wrap gap-8">
       <LanguageBlock
         v-for="progress in filteredProgress"
         :key="progress.language"
@@ -98,6 +99,8 @@ const analyticsReport = ref<AnalyticsReport>({
   monthlyActiveUsers: { current: 0, previous: 0 },
   chaptersComplete: { current: 0, previous: 0 },
 });
+
+const isMultiLingual = computed(() => shared.languages.length > 1);
 
 const isLoading = ref(true);
 const error = ref<string | null>(null);
