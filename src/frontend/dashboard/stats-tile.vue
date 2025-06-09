@@ -1,22 +1,6 @@
 <template>
   <div class="w-full bg-white p-6">
-    <div
-      v-if="
-        isLoading || !props.metric || !props.metric.stat || !props.metric.previousStat
-      "
-    >
-      <div class="h-4 w-24 animate-pulse rounded bg-gray-200"></div>
-      <div class="mt-4 flex items-baseline justify-between md:block lg:flex">
-        <div class="flex items-baseline">
-          <div class="h-8 w-16 animate-pulse rounded bg-gray-200"></div>
-          <div class="ml-2 h-4 w-20 animate-pulse rounded bg-gray-200"></div>
-        </div>
-        <div
-          class="mt-2 h-6 w-20 animate-pulse rounded-full bg-gray-200 md:mt-2 lg:mt-0"
-        ></div>
-      </div>
-    </div>
-    <div v-else>
+    <div>
       <dt class="text-base font-normal text-gray-900">{{ props.metric.name }}</dt>
       <dd class="mt-1 flex items-baseline justify-between">
         <div class="flex items-baseline text-2xl font-semibold leading-8 text-gray-900">
@@ -55,27 +39,16 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, watch } from 'vue';
+import { computed } from 'vue';
 import { StatMetric } from '../../types';
 import Icon from '../shared/icon.vue';
 
 const props = defineProps<{
   metric: StatMetric;
-  isLoading?: boolean;
 }>();
 
 const changeType = computed(() =>
   props.metric.stat - props.metric.previousStat >= 0 ? 'increase' : 'decrease',
 );
 const change = computed(() => Math.abs(props.metric.stat - props.metric.previousStat));
-const isLoading = computed(() => props.isLoading);
-
-watch(
-  () => props.isLoading,
-  (newVal) => {
-    // isLoading.value = newVal;
-    console.log('newVal', newVal);
-  },
-  { immediate: true, deep: true, flush: 'post' },
-);
 </script>
