@@ -3,7 +3,10 @@
     <h3 class="font-['Inter'] text-2xl font-semibold leading-8 text-gray-800">
       Analytics
     </h3>
-    <div v-if="!error" class="mt-5 flex flex-col gap-5 lg:flex-row">
+    <div v-if="error" class="text-red-500">
+      {{ error }}
+    </div>
+    <div v-else class="mt-5 flex flex-col gap-5 lg:flex-row">
       <StatsTile
         v-for="metric in metrics"
         :key="metric.name"
@@ -11,16 +14,14 @@
         :is-loading="isLoading"
       />
     </div>
-    <div v-else class="text-red-500">
-      {{ error }}
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { ref, watch } from 'vue';
 import { StatMetric, AnalyticsReport } from '../../types';
 import StatsTile from './stats-tile.vue';
+
 const props = defineProps<{
   analyticsReport: AnalyticsReport;
   isLoading: boolean;
@@ -48,7 +49,13 @@ const processMetrics = () => {
   }
 };
 
-onMounted(() => {
-  processMetrics();
-});
+watch(
+  () => props.isLoading,
+  (newVal) => {
+    if (!newVal) {
+      processMetrics();
+    }
+  },
+  { immediate: true, deep: true, flush: 'pre' },
+);
 </script>
