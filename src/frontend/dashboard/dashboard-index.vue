@@ -15,43 +15,14 @@
             class="mb-4 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
           >
             <div class="flex gap-x-4">
-              <div class="flex items-center gap-x-4">
-                <span class="isolate inline-flex rounded-md shadow-sm">
-                  <button
-                    type="button"
-                    :class="[
-                      'relative inline-flex items-center rounded-l-md border-r px-4 py-2 text-sm font-medium leading-4 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10 disabled:cursor-not-allowed',
-                      activeFilter === 'todo'
-                        ? 'bg-indigo-50 text-indigo-700 ring-indigo-700'
-                        : 'bg-white text-gray-900',
-                    ]"
-                    @click="filter('todo')"
-                  >
-                    To do
-                    <span
-                      class="ml-1 inline-flex items-center rounded-full bg-gray-100 px-2 py-1 text-xs font-medium leading-4 text-indigo-700"
-                      >{{ todoCount }}</span
-                    >
-                  </button>
-
-                  <button
-                    type="button"
-                    :class="[
-                      'relative -ml-px inline-flex items-center rounded-r-md px-3 py-2 text-sm font-medium leading-4 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10',
-                      activeFilter === 'all'
-                        ? 'bg-indigo-50 text-indigo-700 ring-indigo-700'
-                        : 'bg-white text-gray-900',
-                    ]"
-                    @click="filter('all')"
-                  >
-                    All
-                    <span
-                      class="ml-4 inline-flex items-center rounded-full bg-gray-100 px-2 py-1 text-xs font-medium leading-4 text-gray-700"
-                      >{{ allCount }}</span
-                    >
-                  </button>
-                </span>
-              </div>
+              <IndexFilter
+                :tabs="[
+                  { label: 'To do', count: todoCount },
+                  { label: 'All', count: allCount },
+                ]"
+                :current-tab="activeFilter"
+                @change="filter"
+              />
             </div>
 
             <div class="flex gap-x-4">
@@ -83,6 +54,7 @@ import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
 import WelcomeBanner from './welcome-banner.vue';
 import AnalyticStats from './analytic-stats.vue';
+import IndexFilter from '../shared/index-filter.vue';
 import LanguageBlock from './language-block.vue';
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
@@ -96,7 +68,7 @@ const shared = useSharedStore();
 
 shared.setFromProps(props);
 
-const activeFilter = ref<'todo' | 'all'>('todo');
+const activeFilter = ref<'To do' | 'All'>('To do');
 
 const todoCount = computed(() => {
   return props.translationProgress.filter((progress) => {
@@ -109,7 +81,7 @@ const allCount = computed(() => {
 });
 
 const filteredProgress = computed(() => {
-  if (activeFilter.value === 'all') {
+  if (activeFilter.value === 'All') {
     return props.translationProgress;
   }
   return props.translationProgress.filter((progress) => {
@@ -117,7 +89,7 @@ const filteredProgress = computed(() => {
   });
 });
 
-const filter = (value: 'todo' | 'all') => {
+const filter = (value: 'To do' | 'All') => {
   activeFilter.value = value;
 };
 
