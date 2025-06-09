@@ -13,7 +13,7 @@
         <template #extra-actions>
           <div
             v-if="isMultiLingual"
-            class="flex flex-col justify-between mb-4 gap-y-4 md:flex-row md:items-center md:gap-x-4"
+            class="mb-4 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
           >
             <div class="flex gap-x-4">
               <IndexFilter
@@ -27,11 +27,11 @@
             </div>
 
             <div class="flex gap-x-4">
-              <div class="flex items-center text-sm font-medium leading-4 gap-x-2">
-                <span class="bg-green-500 rounded-full size-4"></span>Human
+              <div class="flex items-center gap-x-2 text-sm font-medium leading-4">
+                <span class="size-4 rounded-full bg-green-500"></span>Human
               </div>
-              <div class="flex items-center text-sm font-medium leading-4 gap-x-2">
-                <span class="bg-blue-500 rounded-full size-4"></span>AI
+              <div class="flex items-center gap-x-2 text-sm font-medium leading-4">
+                <span class="size-4 rounded-full bg-blue-500"></span>AI
               </div>
             </div>
           </div>
@@ -108,6 +108,12 @@ onMounted(() => {
   axios
     .get('/analytics')
     .then((response) => {
+      if (typeof response.data !== 'object') {
+        // TODO: if (!Array.isArray(response.data)) {
+        isLoading.value = false;
+        return;
+      }
+
       Object.keys(analyticsReport.value).forEach((key) => {
         delete analyticsReport.value[key as keyof AnalyticsReport];
       });
