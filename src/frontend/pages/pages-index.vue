@@ -94,7 +94,7 @@ const filteredItems = computed(() => {
 const isShowingPublished = computed(() => currentTab.value === 'Published');
 
 const onTap = (id: number) => {
-  router.visit(`/page/${id}/edit`);
+  router.visit(`/${shared.locale}/page/${id}/edit`);
 };
 
 const onDrop = () => {
@@ -121,7 +121,7 @@ const getPayload = (): postType => {
 };
 
 const save = debounce(1000, () => {
-  router.post('/page/sort', getPayload(), {
+  router.post(`/${shared.locale}/page/sort`, getPayload(), {
     onSuccess: (result) => {
       console.log('! saved', result.props);
     },
@@ -145,6 +145,6 @@ const deleteDivider = (id: number) => {
 };
 
 const addPage = () => {
-  router.visit('/page/create');
+  router.visit(`/${shared.locale}/page/create`);
 };
 </script>

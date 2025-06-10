@@ -241,7 +241,7 @@ const setFlag = async (key: string, state: FlagState) => {
   const newState = item?.flag === state ? null : state;
 
   try {
-    const response = await axios.post('/ui/flag', {
+    const response = await axios.post(`/${shared.locale}/ui/flag`, {
       key: key,
       state: newState,
     });
@@ -260,7 +260,7 @@ const setFlag = async (key: string, state: FlagState) => {
 
 const save = async (payload: UiItemPayload) => {
   try {
-    const response = await axios.post('/ui', payload);
+    const response = await axios.post(`/${shared.locale}/ui`, payload);
     if (response.status === 200) {
       router.reload({ only: ['ui', 'items'] });
       shared.addMessage(ResponseStatus.Accomplishment, 'Translation saved');
@@ -287,7 +287,7 @@ const translateItems = async () => {
     {} as Record<string, string>,
   );
   try {
-    const response = await axios.post('/ui/translate-bulk', payload);
+    const response = await axios.post(`/${shared.locale}/ui/translate-bulk`, payload);
 
     if (response.status === 200) {
       router.reload({ only: ['ui', 'items'] });

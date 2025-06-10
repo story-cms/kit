@@ -190,6 +190,7 @@ export interface DraftEditProps {
   lastPublished: string; // drafts
   providers: Providers; // widgets
   storyName: string;
+  storyId: number;
 }
 
 export interface SharedPageProps {
@@ -200,7 +201,6 @@ export interface SharedPageProps {
   stories: string[];
   user: User;
   uiTodoCount: number;
-  storyName: string;
 }
 
 export interface PageMeta {
@@ -235,6 +235,7 @@ export enum AddStatus {
   // eslint-disable-next-line
   Wait,
 }
+
 export interface StatMetric {
   name: string;
   stat: number;
@@ -270,6 +271,7 @@ export interface PreviewProps {
   bundle: any;
   bundleView: string;
   storyName: string;
+  storyId: number;
   title: string;
   chapterLimit: number;
 }
