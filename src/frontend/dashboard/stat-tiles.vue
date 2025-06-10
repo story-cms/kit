@@ -9,12 +9,7 @@
       </div>
       <div v-else class="mt-5 flex flex-col gap-5 lg:flex-row">
         <template v-if="!isLoading">
-          <StatsTile
-            v-for="stat in stats"
-            :key="stat.name"
-            :metric="stat"
-            :is-loading="isLoading"
-          />
+          <StatTile v-for="stat in stats" :key="stat.name" :metric="stat" />
         </template>
         <template v-else>
           <div v-for="i in 3" :key="i" class="w-full bg-white p-6">
@@ -37,11 +32,11 @@
 
 <script setup lang="ts">
 import { StatMetric } from '../../types';
-import StatsTile from './stats-tile.vue';
+import StatTile from './stat-tile.vue';
 
 defineProps<{
   stats: StatMetric[];
-  isLoading: boolean;
   error: string | null;
+  isLoading: boolean;
 }>();
 </script>

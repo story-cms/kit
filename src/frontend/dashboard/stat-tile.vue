@@ -1,8 +1,8 @@
 <template>
-  <div class="w-full bg-white p-6">
+  <div class="w-full p-6 bg-white">
     <div>
       <dt class="text-base font-normal text-gray-900">{{ props.metric.name }}</dt>
-      <dd class="mt-1 flex items-baseline justify-between">
+      <dd class="flex items-baseline justify-between mt-1">
         <div class="flex items-baseline text-2xl font-semibold leading-8 text-gray-900">
           {{ props.metric.stat }}
           <span class="ml-2 text-sm font-medium text-gray-500"

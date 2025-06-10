@@ -4,7 +4,7 @@
       <ContentHeader :title="isMultiLingual ? 'Language translation' : ''">
         <template #hero>
           <WelcomeBanner />
-          <AnalyticStats :stats="stats" :is-loading="isLoading" :error="error" />
+          <StatTiles :stats="stats" :is-loading="isLoading" :error="error" />
         </template>
         <template #extra-actions>
           <div
@@ -50,7 +50,7 @@
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
 import WelcomeBanner from './welcome-banner.vue';
-import AnalyticStats from './analytic-stats.vue';
+import StatTiles from './stat-tiles.vue';
 import IndexFilter from '../shared/index-filter.vue';
 import LanguageBlock from './language-block.vue';
 import { ref, computed, onMounted } from 'vue';
