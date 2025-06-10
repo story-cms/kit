@@ -167,6 +167,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'tests/functional/draft.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/page_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/user_service.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'tests/unit/progress_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/model.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'ops/Dockerfile.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'ops/compose.stub', { appName: 'todo' });
