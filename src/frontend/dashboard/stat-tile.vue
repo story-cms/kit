@@ -17,9 +17,9 @@
             ></span>
           </template>
           <template v-else>
-            {{ props.metric.stat }}
+            {{ props.metric.stat.toLocaleString() }}
             <span class="ml-2 text-sm font-medium text-gray-500"
-              >from {{ props.metric.previousStat }}</span
+              >from {{ props.metric.previousStat.toLocaleString() }}</span
             >
           </template>
         </div>
