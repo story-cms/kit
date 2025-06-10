@@ -3,22 +3,18 @@
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
 import vine from '@vinejs/vine';
-import IndexService from '#services/index_service';
 import storyConfig from '#config/story';
-import { DashboardProps, AddStatus } from '@story-cms/kit';
+import { DashboardProps } from '@story-cms/kit';
+import ProgressService from '#services/progress_service';
 
 export default class DashboardController {
   public async index(ctx: HttpContext) {
-    if (!ctx.version || !ctx.story) return ctx.response.notFound();
+    const progressService = new ProgressService();
+    const translationProgress = await progressService.progress();
 
-    const version = ctx.version;
-    const story = ctx.story;
-
-    const service = new IndexService(story);
-
-    const addStatus: AddStatus = await service.getAddStatus(ctx.version);
-    const index = await service.getItems(version);
-    const props: DashboardProps = { index, addStatus, storyName: story.name };
+    const props: DashboardProps = {
+      translationProgress: translationProgress ?? [],
+    };
 
     return ctx.inertia.render('DashboardIndex', { ...props });
   }

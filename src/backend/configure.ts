@@ -90,8 +90,13 @@ export async function configure(command: Configure) {
     codemods.overwriteExisting = false;
     await codemods.makeUsingStub(stubsRoot, 'config/story.stub', options);
   }
+  if ((await fileExists(command.app.configPath(), 'analytics.ts')) == false) {
+    codemods.overwriteExisting = false;
+    await codemods.makeUsingStub(stubsRoot, 'config/analytics.stub', {});
+  }
 
   codemods.overwriteExisting = true;
+  await codemods.makeUsingStub(stubsRoot, 'config/cache.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/inertia.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/providers.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/users_controller.stub', {});
@@ -107,6 +112,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'controllers/pages_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/admin_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/ui_controller.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'controllers/analytics_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/preview_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/indices_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'factories/page_factory.stub', {});
@@ -145,6 +151,8 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'services/admin_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/ai_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/helpers.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'services/analytics_service.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'services/progress_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/auth.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/bundle.stub', {});
@@ -159,6 +167,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'tests/functional/draft.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/page_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/user_service.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'tests/unit/progress_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/model.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'ops/Dockerfile.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'ops/compose.stub', { appName: 'todo' });
@@ -207,6 +216,13 @@ export async function configure(command: Configure) {
       OPENAI_API_KEY: `Env.schema.string(),`,
     },
     leadingComment: 'Configuration for the OpenAI API service',
+  });
+
+  await codemods.defineEnvValidations({
+    variables: {
+      GOOGLE_APPLICATION_CREDENTIALS_JSON: `Env.schema.string(),`,
+    },
+    leadingComment: 'Configuration for the Google Analytics service',
   });
 
   /**

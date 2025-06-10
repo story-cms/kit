@@ -235,11 +235,28 @@ export enum AddStatus {
   // eslint-disable-next-line
   Wait,
 }
+export interface StatMetric {
+  name: string;
+  stat: number;
+  previousStat: number;
+}
+
+export interface Progress {
+  name: string;
+  done: number;
+  draft: number;
+  total: number;
+  lastUpdated: string;
+}
+
+export interface TranslationProgress {
+  progress: Progress[];
+  language: string;
+  locale: string;
+}
 
 export interface DashboardProps {
-  index: IndexReadyItem[];
-  addStatus: AddStatus;
-  storyName: string;
+  translationProgress: TranslationProgress[];
 }
 
 export interface ChapterMeta {

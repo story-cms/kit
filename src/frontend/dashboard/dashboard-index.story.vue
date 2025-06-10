@@ -1,5 +1,5 @@
 <template>
-  <Story title="Dashboard Index">
+  <Story title="Dashboard Index" group="dashboard">
     <Variant title="Index">
       <DashboardIndex
         :index="[
@@ -23,7 +23,6 @@
         :meta="sharedProps.meta"
         :language="sharedProps.language"
         :languages="sharedProps.languages"
-        :stories="[]"
         :user="{
           id: 1,
           name: 'Test User',
@@ -34,7 +33,9 @@
           role: 'user',
           language: 'en',
         }"
-        :ui-todo-count="0"
+        :stories="sharedProps.stories"
+        :ui-todo-count="sharedProps.uiTodoCount"
+        :translation-progress="translationProgress"
       />
     </Variant>
   </Story>
@@ -44,4 +45,47 @@
 import { sharedProps } from '../test/mocks';
 import { AddStatus } from '../../types';
 import DashboardIndex from './dashboard-index.vue';
+
+const translationProgress = [
+  {
+    progress: [
+      {
+        name: 'Interface',
+        done: 100,
+        draft: 0,
+        total: 100,
+        lastUpdated: '2025-04-10 15:22:16.448+03',
+      },
+      {
+        name: 'Content',
+        done: 200,
+        draft: 0,
+        total: 200,
+        lastUpdated: '2025-04-10 15:22:16.448+03',
+      },
+    ],
+    language: 'German',
+    locale: 'de',
+  },
+  {
+    progress: [
+      {
+        name: 'Interface',
+        done: 75,
+        draft: 0,
+        total: 100,
+        lastUpdated: '2025-04-10 15:22:16.448+03',
+      },
+      {
+        name: 'Content',
+        done: 150,
+        draft: 50,
+        total: 200,
+        lastUpdated: '2025-04-10 15:22:16.448+03',
+      },
+    ],
+    language: 'Bengali',
+    locale: 'bn',
+  },
+];
 </script>
