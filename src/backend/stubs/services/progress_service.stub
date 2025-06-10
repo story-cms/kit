@@ -9,8 +9,6 @@ import Index from '#models/index';
 
 export default class ProgressService {
   public async progress(ctx: HttpContext) {
-    if (!ctx.version || !ctx.story) return ctx.response.notFound();
-
     const story = ctx.story;
     const translationProgress: TranslationProgress[] = [];
 
