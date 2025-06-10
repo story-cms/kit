@@ -10,7 +10,7 @@ import ProgressService from '#services/progress_service';
 export default class DashboardController {
   public async index(ctx: HttpContext) {
     const progressService = new ProgressService();
-    const translationProgress = await progressService.progress(ctx);
+    const translationProgress = await progressService.progress();
 
     const props: DashboardProps = {
       translationProgress: translationProgress ?? [],
