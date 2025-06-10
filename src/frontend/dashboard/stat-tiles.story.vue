@@ -1,13 +1,13 @@
 <template>
   <Story title="Stat tiles" group="dashboard">
-    <Variant title="Stats">
+    <Variant title="Stat tile">
+      <StatsTile :metric="{ name: 'Total Stories', stat: 71897, previousStat: 70946 }" />
+    </Variant>
+    <Variant title="Stat tiles">
       <StatTiles :stats="stats" :is-loading="false" :error="null" />
     </Variant>
-    <Variant title="Stats loading">
+    <Variant title="Stat tiles loading">
       <StatTiles :stats="stats" :is-loading="true" :error="null" />
-    </Variant>
-    <Variant title="Stats tile">
-      <StatsTile :metric="{ name: 'Total Stories', stat: 71897, previousStat: 70946 }" />
     </Variant>
   </Story>
 </template>
