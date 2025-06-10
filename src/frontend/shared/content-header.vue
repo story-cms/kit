@@ -1,7 +1,7 @@
 <template>
   <div>
     <slot name="hero"></slot>
-    <div class="flex items-center justify-between px-3 py-10">
+    <div class="flex items-center justify-between px-3" :class="title ? 'py-10' : ''">
       <h3
         class="font-['Inter'] text-2xl font-semibold leading-8 text-gray-800 [&>span]:text-gray-400"
         v-html="title"

@@ -1,39 +1,51 @@
 <template>
   <AppLayout>
     <template #header>
-      <ContentHeader :title="isMultiLingual ? 'Language translation' : ''">
+      <ContentHeader title="">
         <template #hero>
           <WelcomeBanner />
-          <StatTiles :stats="stats" :is-loading="isLoading" :error="error" />
-        </template>
-        <template #extra-actions>
-          <div
-            v-if="isMultiLingual"
-            class="mb-4 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
-          >
-            <div class="flex gap-x-4">
-              <IndexFilter
-                :tabs="[
-                  { label: 'To do', count: todoCount },
-                  { label: 'All', count: allCount },
-                ]"
-                :current-tab="activeFilter"
-                @change="filter"
-              />
-            </div>
-
-            <div class="flex gap-x-4">
-              <div class="flex items-center gap-x-2 text-sm font-medium leading-4">
-                <span class="size-4 rounded-full bg-green-500"></span>Human
-              </div>
-              <div class="flex items-center gap-x-2 text-sm font-medium leading-4">
-                <span class="size-4 rounded-full bg-blue-500"></span>AI
-              </div>
-            </div>
-          </div>
         </template>
       </ContentHeader>
     </template>
+
+    <div>
+      <StatTiles :stats="stats" :is-loading="isLoading" :error="error" />
+    </div>
+    <div>
+      <div>
+        <div class="flex items-center justify-between px-3 py-10">
+          <h3
+            class="font-['Inter'] text-2xl font-semibold leading-8 text-gray-800 [&>span]:text-gray-400"
+          >
+            {{ isMultiLingual ? 'Language translation' : '' }}
+          </h3>
+        </div>
+      </div>
+      <div
+        v-if="isMultiLingual"
+        class="mb-4 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
+      >
+        <div class="flex gap-x-4">
+          <IndexFilter
+            :tabs="[
+              { label: 'To do', count: todoCount },
+              { label: 'All', count: allCount },
+            ]"
+            :current-tab="activeFilter"
+            @change="filter"
+          />
+        </div>
+
+        <div class="flex gap-x-4">
+          <div class="flex items-center gap-x-2 text-sm font-medium leading-4">
+            <span class="size-4 rounded-full bg-green-500"></span>Human
+          </div>
+          <div class="flex items-center gap-x-2 text-sm font-medium leading-4">
+            <span class="size-4 rounded-full bg-blue-500"></span>AI
+          </div>
+        </div>
+      </div>
+    </div>
     <div v-if="isMultiLingual" class="flex flex-wrap gap-8">
       <LanguageBlock
         v-for="progress in filteredProgress"
