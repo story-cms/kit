@@ -235,21 +235,6 @@ export enum AddStatus {
   // eslint-disable-next-line
   Wait,
 }
-
-export interface AnalyticsReport {
-  totalInstalls: {
-    current: number;
-    previous: number;
-  };
-  monthlyActiveUsers: {
-    current: number;
-    previous: number;
-  };
-  chaptersComplete: {
-    current: number;
-    previous: number;
-  };
-}
 export interface StatMetric {
   name: string;
   stat: number;

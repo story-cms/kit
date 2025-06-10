@@ -10,9 +10,9 @@
       <div v-else class="mt-5 flex flex-col gap-5 lg:flex-row">
         <template v-if="!isLoading">
           <StatsTile
-            v-for="metric in metrics"
-            :key="metric.name"
-            :metric="metric"
+            v-for="stat in stats"
+            :key="stat.name"
+            :metric="stat"
             :is-loading="isLoading"
           />
         </template>
@@ -36,44 +36,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import { StatMetric, AnalyticsReport } from '../../types';
+import { StatMetric } from '../../types';
 import StatsTile from './stats-tile.vue';
 
-const props = defineProps<{
-  analyticsReport: AnalyticsReport;
+defineProps<{
+  stats: StatMetric[];
   isLoading: boolean;
   error: string | null;
 }>();
-const metrics = ref<StatMetric[]>([]);
-
-const processMetrics = () => {
-  if (!props.analyticsReport) return;
-  for (const [key, value] of Object.entries(props.analyticsReport)) {
-    const typedValue = value as { current: number; previous: number };
-    const current = typedValue.current;
-    const previous = typedValue.previous;
-
-    const name = key
-      .replace(/([A-Z])/g, ' $1') // Add space before capital letters
-      .replace(/^./, (str) => str.toUpperCase()) // Capitalize first letter
-      .trim();
-
-    metrics.value.push({
-      name: name,
-      stat: current,
-      previousStat: previous,
-    });
-  }
-};
-
-watch(
-  () => props.isLoading,
-  (newVal) => {
-    if (!newVal) {
-      processMetrics();
-    }
-  },
-  { immediate: true, deep: true, flush: 'pre' },
-);
 </script>

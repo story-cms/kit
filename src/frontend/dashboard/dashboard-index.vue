@@ -4,11 +4,7 @@
       <ContentHeader :title="isMultiLingual ? 'Language translation' : ''">
         <template #hero>
           <WelcomeBanner />
-          <AnalyticStats
-            :analytics-report="analyticsReport"
-            :is-loading="isLoading"
-            :error="error"
-          />
+          <AnalyticStats :stats="stats" :is-loading="isLoading" :error="error" />
         </template>
         <template #extra-actions>
           <div
@@ -60,7 +56,7 @@ import LanguageBlock from './language-block.vue';
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 
-import { SharedPageProps, DashboardProps, AnalyticsReport } from '../../types';
+import { SharedPageProps, DashboardProps, StatMetric } from '../../types';
 import { useSharedStore } from '../store';
 
 const props = defineProps<DashboardProps & SharedPageProps>();
@@ -94,30 +90,18 @@ const filter = (value: 'To do' | 'All') => {
   activeFilter.value = value;
 };
 
-const analyticsReport = ref<AnalyticsReport>({
-  totalInstalls: { current: 0, previous: 0 },
-  monthlyActiveUsers: { current: 0, previous: 0 },
-  chaptersComplete: { current: 0, previous: 0 },
-});
-
 const isMultiLingual = computed(() => shared.languages.length > 1);
 
 const isLoading = ref(true);
 const error = ref<string | null>(null);
+
+const stats = ref<StatMetric[]>([]);
+
 onMounted(() => {
   axios
     .get('/analytics')
     .then((response) => {
-      if (typeof response.data !== 'object') {
-        // TODO: if (!Array.isArray(response.data)) {
-        isLoading.value = false;
-        return;
-      }
-
-      Object.keys(analyticsReport.value).forEach((key) => {
-        delete analyticsReport.value[key as keyof AnalyticsReport];
-      });
-      analyticsReport.value = response.data;
+      stats.value = response.data;
       isLoading.value = false;
     })
     .catch((error) => {
