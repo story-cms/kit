@@ -13,12 +13,14 @@
     <div v-else class="flex grow justify-between">
       <Ring
         v-for="item in progress"
+        class="cursor-pointer"
         :key="item.name"
         :done="item.done"
         :draft="item.draft"
         :total="item.total"
         :name="item.name"
         :last-updated="item.lastUpdated"
+        @click="goTo(item)"
       />
     </div>
     <div :class="['flex flex-col gap-y-1', hasCompleteRings ? 'mt-3' : 'mt-10']">
@@ -33,11 +35,13 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import { toRefs, computed } from 'vue';
 import Ring from './ring.vue';
 import Icon from '../shared/icon.vue';
-import { TranslationProgress } from '../../types';
+import { Progress, TranslationProgress } from '../../types';
+import { router } from '@inertiajs/vue3';
 
 const props = defineProps<TranslationProgress>();
 
@@ -46,6 +50,16 @@ const { progress, language, locale } = toRefs(props);
 const hasCompleteRings = computed(() => {
   return progress.value.every((stat) => stat.done === stat.total);
 });
+
+const goTo = (item: Progress) => {
+  console.log(item);
+  if (item.name === 'Interface') {
+    router.visit(`/${locale.value}/ui`);
+    return;
+  }
+
+  router.visit(`/${locale.value}/story/1`);
+};
 
 const lastUpdate = computed(() => {
   // Get the most recent update
