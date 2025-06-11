@@ -29,21 +29,12 @@
         Hello
         {{ shared.isMainUnderHeader ? shared.user.name.split(' ')[0] : shared.user.name }}
       </h1>
-      <Transition
-        enter-active-class="transition duration-300 ease-out"
-        enter-from-class="opacity-0"
-        enter-to-class="opacity-100"
-        leave-active-class="transition duration-200 ease-in"
-        leave-from-class="opacity-100"
-        leave-to-class="opacity-0"
+      <p
+        v-show="!shared.isMainUnderHeader"
+        class="mt-[14px] text-2xl font-semibold leading-8"
       >
-        <p
-          v-show="!shared.isMainUnderHeader"
-          class="mt-[14px] text-2xl font-semibold leading-8"
-        >
-          Welcome to {{ shared.meta.name }}
-        </p>
-      </Transition>
+        Welcome to {{ shared.meta.name }}
+      </p>
     </div>
     <div :class="['flex flex-wrap gap-4']">
       <Link
