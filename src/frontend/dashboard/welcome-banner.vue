@@ -1,7 +1,7 @@
 <template>
   <section
     :class="[
-      'flex w-full items-center gap-y-7 px-3',
+      'flex w-full items-center gap-y-7 px-3 transition-all duration-300 ease-in-out',
       shared.isMainUnderHeader
         ? 'flex-row items-center justify-between py-5'
         : 'flex-col justify-center bg-white pb-[51px] pt-10 shadow',
@@ -47,26 +47,30 @@
     </div>
     <div :class="['flex flex-wrap gap-4']">
       <Link
-        href="/dashboard/new-page"
+        :href="`/${shared.locale}/page/create`"
         class="flex items-center gap-x-2 rounded-full bg-blue-50 px-3 py-[9px] text-sm font-bold leading-4 text-blue-700 shadow-[0px_1px_2px_0px_#0000000D] hover:bg-blue-100"
       >
         <Icon name="document-add" />
         New Page
       </Link>
       <Link
-        href="/dashboard/new-page"
+        v-if="shared.user.isManager"
+        :href="`/${shared.locale}/user`"
         class="flex items-center gap-x-2 rounded-full bg-blue-50 px-3 py-[9px] text-sm font-bold leading-4 text-blue-700 shadow-[0px_1px_2px_0px_#0000000D] hover:bg-blue-100"
       >
         <Icon name="user-add" />
         New User
       </Link>
-      <Link
-        href="/dashboard/new-page"
+      <a
+        v-if="shared.meta.helpUrl"
         class="flex items-center gap-x-2 rounded-full bg-blue-50 px-3 py-[9px] text-sm font-bold leading-4 text-blue-700 shadow-[0px_1px_2px_0px_#0000000D] hover:bg-blue-100"
+        :href="shared.meta.helpUrl"
+        target="_blank"
+        rel="noopener noreferrer"
       >
         <Icon name="question-mark-circle" />
         Get Support
-      </Link>
+      </a>
     </div>
   </section>
 </template>
