@@ -113,7 +113,14 @@ onMounted(() => {
   axios
     .get('/analytics')
     .then((response) => {
-      stats.value = response.data;
+      // check if response is an object
+      if (typeof response.data === 'object') {
+        console.log('response.data is object');
+        stats.value = response.data;
+      } else {
+        console.log('response.data is html');
+        stats.value = [];
+      }
       isLoading.value = false;
     })
     .catch((error) => {
