@@ -16,7 +16,7 @@
             shared.hasOpenSidebar ? 'justify-between p-5' : 'flex-col gap-y-3 p-2',
           ]"
         >
-          <Link :class="['nav-icon']" :href="`/${locale}`">
+          <Link :class="['nav-icon']" :href="`/${locale}/dashboard`">
             <Icon name="home" />
           </Link>
           <button class="nav-icon" @click="goBack">
@@ -114,7 +114,7 @@
               <Icon name="users" />
               <span>Users</span>
             </Link>
-            <Link
+            <a
               v-if="shared.meta.helpUrl"
               class="nav-link flex items-center gap-x-3"
               :href="shared.meta.helpUrl"
@@ -123,7 +123,7 @@
             >
               <Icon name="help" />
               <span>Support</span>
-            </Link>
+            </a>
             <Link class="nav-link flex items-center gap-x-3" href="/logout">
               <Icon name="logout" />
               <span>Logout</span>

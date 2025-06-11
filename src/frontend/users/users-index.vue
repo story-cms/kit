@@ -218,7 +218,7 @@ const focus = (user: UserMeta) => {
 const deleteUser = (user: UserMeta) => {
   resetForm();
   formMode.value = 'hidden';
-  form.delete(`/user/${user.id}`, {
+  form.delete(`/${shared.locale}/user/${user.id}`, {
     onSuccess: () => {
       shared.addMessage(ResponseStatus.Confirmation, 'User deleted successfully');
     },
@@ -248,7 +248,7 @@ const resetForm = () => {
 
 const submit = () => {
   if (formMode.value == 'add') {
-    form.post('/user', {
+    form.post(`/${shared.locale}/user`, {
       onSuccess: () => {
         focusId.value = 0;
         formMode.value = 'hidden';
@@ -263,7 +263,7 @@ const submit = () => {
   }
 
   // Update
-  form.put(`/user/${focusId.value}`, {
+  form.put(`/${shared.locale}/user/${focusId.value}`, {
     onSuccess: () => {
       focusId.value = 0;
       formMode.value = 'hidden';
