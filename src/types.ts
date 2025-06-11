@@ -182,6 +182,13 @@ export interface DraftMeta {
   createdAt: string;
 }
 
+export interface StoryIndexProps {
+  index: IndexReadyItem[];
+  addStatus: AddStatus;
+  storyName: string;
+  storyId: number;
+}
+
 export interface DraftEditProps {
   draft: DraftMeta; // drafts
   bundle: any; // model

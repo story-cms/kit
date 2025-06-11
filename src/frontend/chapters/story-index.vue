@@ -113,8 +113,9 @@ const onFilter = (tab: string) => {
 };
 
 const iconName = computed(() => {
-  return isList.value ? 'list' : 'grid';
+  return isList.value ? 'grid' : 'list';
 });
+
 const filteredIndex = computed(() => {
   const needle = currentTab.value === 'Live' ? 'Live' : 'Draft';
 
