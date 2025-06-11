@@ -7,14 +7,14 @@
             <button
               v-if="isShowingPublished"
               type="button"
-              class="p-2 bg-blue-500 rounded-full shadow-md hover:bg-blue-700"
+              class="rounded-full bg-blue-500 p-2 shadow-md hover:bg-blue-700"
               @click="addDivider"
             >
               <Icon name="divider" class="text-white" />
             </button>
             <button
               type="button"
-              class="p-2 bg-blue-500 rounded-full shadow-md hover:bg-blue-700"
+              class="rounded-full bg-blue-500 p-2 shadow-md hover:bg-blue-700"
               @click="addPage"
             >
               <Icon name="plus" class="text-white" />
@@ -29,7 +29,7 @@
         </template>
       </ContentHeader>
     </template>
-    <div class="flex flex-col my-8 space-y-8">
+    <div class="my-8 flex flex-col space-y-8">
       <div v-for="page in filteredItems" :key="page.id" @drop="onDrop">
         <PageIndexItem
           :page="page"
@@ -58,6 +58,7 @@ import PageIndexItem from './page-index-item.vue';
 const props = defineProps<PageIndexProps & SharedPageProps>();
 const shared = useSharedStore();
 shared.setFromProps(props);
+shared.setCurrentStoryName('');
 
 const pageStore = usePagesStore();
 const { pages } = toRefs(props);

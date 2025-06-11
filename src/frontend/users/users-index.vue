@@ -191,6 +191,7 @@ const props = defineProps<UsersProps & SharedPageProps>();
 
 const shared = useSharedStore();
 shared.setFromProps(props);
+shared.setCurrentStoryName('');
 
 const focusId = ref(0);
 const roles = ['admin', 'editor'];
