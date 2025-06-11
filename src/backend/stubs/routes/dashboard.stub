@@ -6,7 +6,9 @@ const DashboardController = () => import('#controllers/dashboard_controller');
 const AnalyticsController = () => import('#controllers/analytics_controller');
 
 export default () => {
-  router.get('/', [DashboardController, 'index']);
-  router.post('/switch', [DashboardController, 'switch']);
+  router.on('/').redirect('/:locale', {
+    locale: 'en',
+  });
+  router.get(':locale', [DashboardController, 'index']);
   router.get('/analytics', [AnalyticsController, 'index']);
 };

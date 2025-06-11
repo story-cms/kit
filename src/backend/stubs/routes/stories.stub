@@ -1,0 +1,25 @@
+{{{
+  exports({ to: app.makePath('start/routes/stories.ts') })
+}}}
+import router from '@adonisjs/core/services/router';
+const ChaptersController = () => import('#controllers/chapters_controller');
+const DraftsController = () => import('#controllers/drafts_controller');
+
+export default () => {
+  // chapters
+  router.on('/story/:storyId').redirect('/:locale/story/:storyId', {
+    locale: 'en',
+    storyId: 1,
+  });
+  router.get(':locale/story/:storyId', [ChaptersController, 'index']);
+  router.get(':locale/story/:storyId/chapter/:number', [ChaptersController, 'preview']);
+
+  // drafts
+  router.get(':locale/story/:storyId/draft/:number/edit', [DraftsController, 'edit']);
+  router.get(':locale/story/:storyId/draft/create', [DraftsController, 'create']);
+  router.delete(':locale/story/:storyId/draft/:id', [DraftsController, 'delete']);
+  router.post(':locale/story/:storyId/draft/:id/save', [DraftsController, 'save']);
+  router.post(':locale/story/:storyId/draft/:id/publish', [DraftsController, 'publish']);
+  router.post(':locale/story/:storyId/draft/:id/submit', [DraftsController, 'submit']);
+  router.post(':locale/story/:storyId/draft/:id/reject', [DraftsController, 'reject']);
+};
