@@ -36,7 +36,7 @@
   }
 
   .auth-input-field {
-    @apply relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-sm font-normal leading-5 text-gray-300 placeholder-gray-300 focus:z-10 focus:border-[--secondary-color] focus:outline-none focus:ring-[--secondary-color];
+    @apply relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-sm font-normal leading-5 text-gray-400 placeholder-gray-300 focus:z-10 focus:border-[--secondary-color] focus:outline-none focus:ring-[--secondary-color];
   }
 
   .auth-input-label {

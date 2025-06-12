@@ -1,17 +1,17 @@
 <template>
   <PublicLayout>
     <template #logo>
-      <img :src="meta.logo" alt="Logo" class="h-12 w-auto" />
+      <img :src="meta.logo" alt="Logo" class="h-auto w-[154px]" />
     </template>
 
     <div>
-      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+      <h2 class="mt-6 text-3xl font-bold leading-9 text-center text-black">
         Request Password Reset
       </h2>
-      <p v-if="errors && errors.email" class="mt-2 text-center text-sm text-error">
+      <p v-if="errors && errors.email" class="mt-2 text-sm text-center text-error">
         {{ errors.email[0] }}
       </p>
-      <p v-if="success" class="mt-2 text-center text-sm text-green-500">
+      <p v-if="success" class="mt-2 text-sm text-center text-green-500">
         We have sent you an e-mail with instructions to reset your password. Please use
         the link within 24hrs to reset your password.
       </p>
@@ -27,7 +27,7 @@
             type="email"
             autocomplete="email"
             required
-            class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-[--secondary-color] focus:outline-none focus:ring-[--secondary-color] sm:text-sm"
+            class="auth-input-field"
             placeholder="Email address"
           />
         </div>
@@ -36,7 +36,7 @@
       <div>
         <button
           type="submit"
-          class="group relative flex w-full justify-center rounded-md border border-transparent bg-[--primary-color] px-4 py-2 text-sm font-medium text-white hover:bg-[--secondary-color] focus:outline-none focus:ring-2 focus:ring-[--secondary-color] focus:ring-offset-2"
+          class="auth-button"
           :class="{ 'cursor-wait opacity-50': form.processing }"
           :disabled="form.processing"
         >
