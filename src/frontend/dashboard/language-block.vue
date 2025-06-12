@@ -13,8 +13,8 @@
     <div v-else class="flex grow justify-between">
       <Ring
         v-for="item in progress"
-        class="cursor-pointer"
         :key="item.name"
+        class="cursor-pointer"
         :done="item.done"
         :draft="item.draft"
         :total="item.total"
