@@ -35,8 +35,8 @@ export default class CreateAccountController {
       return ctx.response.redirect().back();
     }
 
-    user.password = payload.password;
     user.resetToken = '';
+    user.password = payload.password;
     await user.save();
 
     return ctx.response.redirect().back();
