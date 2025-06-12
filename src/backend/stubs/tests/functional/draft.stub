@@ -1,21 +1,22 @@
 {{{ 
   exports({ to: app.makePath('tests/functional/draft.spec.ts') }) 
 }}}
-import { test } from '@japa/runner';
-import Draft from '#models/draft';
-import Chapter from '#models/chapter';
 import testUtils from '@adonisjs/core/services/test_utils';
+import { test } from '@japa/runner';
+
+import Chapter from '#models/chapter';
+import Draft from '#models/draft';
 
 import { ChapterFactory } from '#database/factories/chapter_factory';
-import { UserFactory } from '#database/factories/user_factory';
 import { DraftFactory } from '#database/factories/draft_factory';
+import { UserFactory } from '#database/factories/user_factory';
 import { draftOne } from '../mock.js';
 
 test.group('Draft GET', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction());
 
   test('Non authenticated should be redirected to login screen', async ({ client }) => {
-    const response = await client.get('/draft/1/edit');
+    const response = await client.get('/en/story/1/draft/1/edit');
     response.assertRedirectsTo('/login');
   });
 
@@ -28,7 +29,7 @@ test.group('Draft GET', (group) => {
       number: 1,
     }).create();
 
-    const response = await client.get('/draft/1/edit').loginAs(user);
+    const response = await client.get('/en/story/1/draft/1/edit').loginAs(user);
     response.assertStatus(200);
   });
 
@@ -46,7 +47,7 @@ test.group('Draft GET', (group) => {
 
     assert.isNull(draft);
 
-    const response = await client.get('/draft/1/edit').loginAs(user);
+    const response = await client.get('/en/story/1/draft/1/edit').loginAs(user);
 
     response.assertStatus(200);
 
@@ -59,7 +60,7 @@ test.group('Draft GET', (group) => {
   test('HTTP error if non existing Chapter is requested', async ({ client }) => {
     const user = await UserFactory.create();
 
-    const response = await client.get('/draft/1/edit').loginAs(user);
+    const response = await client.get('/en/story/1/draft/1/edit').loginAs(user);
     response.assertStatus(404);
   });
 });
@@ -74,7 +75,7 @@ test.group('Draft DELETE', (group) => {
       number: 1,
     }).create();
 
-    const response = await client.delete({{ '`/draft/${draft.id}`' }}).withCsrfToken();
+    const response = await client.delete({{ '`/en/story/1/draft/${draft.id}`' }}).withCsrfToken();
     response.assertRedirectsTo('/login');
   });
 
@@ -91,7 +92,7 @@ test.group('Draft DELETE', (group) => {
     }).create();
 
     const response = await client
-      .delete({{ '`/draft/${draft.id}`' }})
+      .delete({{ '`/en/story/1/draft/${draft.id}`' }})
       .loginAs(user)
       .withCsrfToken();
 
@@ -125,7 +126,7 @@ test.group('Draft updating', (group) => {
     }).create();
 
     let response = await client
-      .post({{ '`/draft/${draft.id}/save`' }})
+      .post({{ '`/en/story/1/draft/${draft.id}/save`' }})
       .field('feedback', draft.feedback)
       .field('bundle', '{"title": "Adam and Eve updated"}')
       .loginAs(user)
@@ -141,7 +142,7 @@ test.group('Draft updating', (group) => {
     await draft.save();
 
     response = await client
-      .post({{ '`/draft/${draft.id}/save`' }})
+      .post({{ '`/en/story/1/draft/${draft.id}/save`' }})
       .field('feedback', draft.feedback)
       .field('bundle', '{"title": "Adam and Eve updated again!"}')
       .loginAs(user)
@@ -165,7 +166,7 @@ test.group('Draft updating', (group) => {
 
     // with incomplete bundle nothing is updated
     let response = await client
-      .post({{ '`/draft/${draft.id}/submit`' }})
+      .post({{ '`/en/story/1/draft/${draft.id}/submit`' }})
       .form({ bundle: JSON.parse('{"title": ""}') })
       .loginAs(user)
       .withCsrfToken();
@@ -176,7 +177,7 @@ test.group('Draft updating', (group) => {
     assert.equal(draft.status, 'started');
 
     response = await client
-      .post({{ '`/draft/${draft.id}/submit`' }})
+      .post({{ '`/en/story/1/draft/${draft.id}/submit`' }})
       .form({ bundle: JSON.parse(draftOne) })
       .loginAs(user)
       .withCsrfToken();
@@ -203,7 +204,7 @@ test.group('Draft updating', (group) => {
 
     // with incomplete bundle nothing is updated
     let response = await client
-      .post({{ '`/draft/${draft.id}/reject`' }})
+      .post({{ '`/en/story/1/draft/${draft.id}/reject`' }})
       .field('feedback', 'please fix the quote from Johnathan Edwards')
       .loginAs(user)
       .withCsrfToken();
@@ -228,7 +229,7 @@ test.group('Draft updating', (group) => {
 
     // with incomplete bundle nothing is published or changed
     let response = await client
-      .post({{ '`/draft/${draft.id}/publish`' }})
+      .post({{ '`/en/story/1/draft/${draft.id}/publish`' }})
       .form({ bundle: JSON.parse('{"title": ""}') })
       .loginAs(user)
       .withCsrfToken();
@@ -241,12 +242,12 @@ test.group('Draft updating', (group) => {
 
     // publishing where there are no corresponding chapters
     response = await client
-      .post({{ '`/draft/${draft.id}/publish`' }})
+      .post({{ '`/en/story/1/draft/${draft.id}/publish`' }})
       .form({ bundle: JSON.parse(draftOne) })
       .loginAs(user)
       .withCsrfToken();
 
-    response.assertRedirectsTo('/');
+    response.assertRedirectsTo('/en/story/1');
 
     const missing = await Draft.find(draft.id);
     assert.isNull(missing);
