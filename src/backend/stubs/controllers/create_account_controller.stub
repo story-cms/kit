@@ -1,0 +1,44 @@
+{{{
+  exports({ to: app.makePath('app/controllers/create_account_controller.ts') })
+}}}
+import { HttpContext } from '@adonisjs/core/http';
+import User from '#models/user';
+import { newPasswordValidator } from '#validators/auth';
+
+export default class CreateAccountController {
+  public async show(ctx: HttpContext) {
+    const { token } = ctx.params;
+    const user = await User.findBy('resetToken', token);
+    if (!user) {
+      return ctx.response.redirect('/');
+    }
+
+    const email = user.email;
+    return ctx.inertia.render('CreateAccount', {
+      email,
+    });
+  }
+
+  public async updatePassword(ctx: HttpContext) {
+    const { token } = ctx.params;
+    const payload = await ctx.request.validateUsing(newPasswordValidator);
+
+    const user = await User.findBy('resetToken', token);
+
+    if (!user) {
+      return ctx.response.redirect('/');
+    }
+
+    const sameToken = token === user.resetToken;
+    if (!sameToken || token === '') {
+      ctx.session.flash('errorsBag', { token: 'Invalid Token' });
+      return ctx.response.redirect().back();
+    }
+
+    user.password = payload.password;
+    user.resetToken = '';
+    await user.save();
+
+    // Send success message
+  }
+}

@@ -101,6 +101,11 @@ export async function configure(command: Configure) {
     'controllers/forgot_password_controller.stub',
     {},
   );
+  await codemods.makeUsingStub(
+    stubsRoot,
+    'controllers/create_account_controller.stub',
+    {},
+  );
   await codemods.makeUsingStub(stubsRoot, 'controllers/dashboard_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/chapters_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/drafts_controller.stub', {});
