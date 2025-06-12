@@ -41,6 +41,7 @@ export default class Chapter extends BaseModel {
   public get escapedBundle() {
     const start =
       typeof this.bundle === 'string' ? this.bundle : JSON.stringify(this.bundle);
+    // eslint-disable-next-line no-irregular-whitespace
     const cleaned = start.replace(/\u00A0/g, '\\\\u00A0');
     const parsed = JSON.parse(cleaned);
     return parsed;
