@@ -2,17 +2,18 @@
   exports({ to: app.makePath('app/controllers/users_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
-
 import { UsersProps } from '@story-cms/kit';
 import User from '#models/user';
 import Activity from '#models/activity';
 import { UserService } from '#services/user_service';
 import { randomBytes } from 'node:crypto';
+import { DateTime } from 'luxon';
+import string from '@adonisjs/core/helpers/string';
+import config from '@adonisjs/core/services/config';
+import mail from '@adonisjs/mail/services/main';
+import env from '#start/env';
 
-import {
-  createUserValidator,
-  updateUserValidator
-} from '#validators/user';
+import { createUserValidator, updateUserValidator } from '#validators/user';
 
 export default class UsersController {
   private generateRandomString(): string {
@@ -97,7 +98,7 @@ export default class UsersController {
       await Activity.create({
         userId: auth.user?.id,
         locale: session.get('locale'),
-        action: {{ `created user with id ${user.id}` }},
+        action: {{ '`created user with id ${user.id}`' }},
       });
       const appUrl = request.completeUrl().split('/user')[0];
       const appName = config.get('story.meta.name');
@@ -110,7 +111,7 @@ export default class UsersController {
           .htmlView('emails/create_account', {
             name: user.name,
             appName: appName,
-            link: {{ `${appUrl}/create-account/${user.resetToken}` }},
+            link: {{ '`${appUrl}/create-account/${user.resetToken}`' }},
           });
       });
     } catch (e) {
@@ -121,3 +122,4 @@ export default class UsersController {
     return response.redirect('/user', false, 303);
   }
 }
+

@@ -120,6 +120,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'factories/draft_factory.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'factories/chapter_factory.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'mail/forget_password.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'mail/create_account.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/users.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/auth.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/routes.stub', {});
@@ -166,16 +167,6 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/user_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/model.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'ops/Dockerfile.stub', {});
-  await codemods.makeUsingStub(
-    stubsRoot,
-    'resources/views/emails/forget_password.edge',
-    {},
-  );
-  await codemods.makeUsingStub(
-    stubsRoot,
-    'resources/views/emails/create_account.edge',
-    {},
-  );
   await codemods.makeUsingStub(stubsRoot, 'ops/compose.stub', { appName: 'todo' });
   await codemods.makeUsingStub(stubsRoot, 'tailwind.stub', {});
   await addMigrations(command, codemods);

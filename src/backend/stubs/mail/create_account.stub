@@ -213,8 +213,8 @@
                               color: #000000;
                             "
                           >
-                            Hi {{ name }}, you have been invited to collaborate on the
-                            {{ appName }} app.
+                            Hi \{\{ name \}\}, you have been invited to collaborate on the
+                          \{\{ appName \}\} app.
                           </div>
                         </td>
                       </tr>
@@ -272,7 +272,7 @@
                                 valign="middle"
                               >
                                 <a
-                                  href="{{ link }}"
+                                  href="\{\{ link  \}\}"
                                   style="
                                     display: inline-block;
                                     background: #002666;

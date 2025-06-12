@@ -6,7 +6,7 @@ import User from '#models/user';
 import { newPasswordValidator } from '#validators/auth';
 
 export default class CreateAccountController {
-  public async show(ctx: HttpContext) {
+  public async index(ctx: HttpContext) {
     const { token } = ctx.params;
     const user = await User.findBy('resetToken', token);
     if (!user) {
@@ -39,6 +39,6 @@ export default class CreateAccountController {
     user.resetToken = '';
     await user.save();
 
-    // Send success message
+    return ctx.response.redirect().back();
   }
 }

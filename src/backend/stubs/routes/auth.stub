@@ -16,6 +16,6 @@ export default () => {
   router.post('/forgot-password', [ForgotPasswordController, 'forgotPassword']);
   router.get('/reset-password/:token', [ForgotPasswordController, 'resetRequest']);
   router.post('/reset-password/:token', [ForgotPasswordController, 'resetPassword']);
-  router.get('/create-account/:token', [CreateAccountController, 'show']);
+  router.get('/create-account/:token', [CreateAccountController, 'index']);
   router.post('/create-account/:token', [CreateAccountController, 'updatePassword']);
 };
