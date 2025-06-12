@@ -2,11 +2,11 @@
 {{{
   exports({ to: app.configPath('inertia.ts') })
 }}}
+import storyConfig from '#config/story';
+import { getTodoCount } from '#services/helpers';
 import { defineConfig } from '@adonisjs/inertia';
 import type { InferSharedProps } from '@adonisjs/inertia/types';
-import storyConfig from '#config/story';
 import { LanguageSpecification } from '@story-cms/kit';
-import { getTodoCount } from '#services/helpers';
 
 const getLanguage = (locale: string | null): LanguageSpecification => {
   const found =

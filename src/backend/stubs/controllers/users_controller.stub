@@ -1,31 +1,35 @@
 {{{
   exports({ to: app.makePath('app/controllers/users_controller.ts') })
 }}}
-import type { HttpContext } from '@adonisjs/core/http';
-
-import { UsersProps } from '@story-cms/kit';
-import User from '#models/user';
-import Activity from '#models/activity';
-import { UserService } from '#services/user_service';
 import { randomBytes } from 'node:crypto';
 
-import {
-  createUserValidator,
-  updateUserValidator
-} from '#validators/user';
+import type { HttpContext } from '@adonisjs/core/http';
+import { UsersProps } from '@story-cms/kit';
+import vine from '@vinejs/vine';
+
+import Activity from '#models/activity';
+import User from '#models/user';
+import { storyContextFrom } from '#services/helpers';
+import { UserService } from '#services/user_service';
+import { validationMessages } from '#validators/auth';
+import { createUserValidator, updateUserValidator } from '#validators/user';
 
 export default class UsersController {
-  private generateRandomString(): string {
-    const randomBytesBuffer = randomBytes(16);
-
-    return randomBytesBuffer
-      .toString('base64')
-      .replace(/[^a-zA-Z0-9]/g, '')
-      .substring(0, 16);
-  }
 
   // show a list of all users
   public async index(ctx: HttpContext) {
+    const defaultUrl = {{ '`/${ctx.auth.user?.defaultLanguage()}/user`' }};
+
+    // if no locale specified, redirect to defaultUrl
+    if (!ctx.params.locale) {
+      return ctx.response.redirect(defaultUrl);
+    }
+
+    // if locale is not allowed, redirect to defaultUrl
+    if (!ctx.auth.user?.isAllowed(ctx.params.locale)) {
+      return ctx.response.redirect(defaultUrl);
+    }
+
     const userService = new UserService();
     const users = await userService.latest();
 
@@ -37,32 +41,34 @@ export default class UsersController {
   }
 
   // patch a user's information
-  public async update({ request, response, params, session, auth }: HttpContext) {
-    const id = Number(params.id);
+  public async update(ctx: HttpContext) {
+    const { version } = storyContextFrom(ctx);
+    const id = Number(ctx.params.id);
     const user = await User.findOrFail(id);
 
     try {
-      const payload = await request.validateUsing(updateUserValidator);
+      const payload = await ctx.request.validateUsing(updateUserValidator);
       user.name = payload.name;
       user.email = payload.email;
       user.role = payload.role;
       user.language = payload.language;
       user.save();
       Activity.create({
-        userId: auth.user?.id,
-        locale: session.get('locale'),
+        userId: ctx.auth.user?.id,
+        locale: version.locale,
         action: {{ '`updated user with id ${user.id}`' }},
       });
     } catch (e) {
-      session.flash('errorsBag', { other: e.message });
+      ctx.session.flash('errorsBag', { other: e.message });
     }
 
-    return response.redirect('/user', false, 303);
+    return ctx.response.redirect({{ '`/${version.locale}/user`' }}, false, 303);
   }
 
   // delete a user
-  public async destroy({ response, params, session, auth }: HttpContext) {
-    const id = Number(params.id);
+  public async destroy(ctx: HttpContext) {
+    const { version } = storyContextFrom(ctx);
+    const id = Number(ctx.params.id);
     const user = await User.findOrFail(id);
     try {
       const random = Math.random().toString(36).substring(2, 15);
@@ -70,34 +76,45 @@ export default class UsersController {
       user.email = {{ '`redacted+${random}`' }};
       user.save();
       await Activity.create({
-        userId: auth.user?.id,
-        locale: session.get('locale'),
+        userId: ctx.auth.user?.id,
+        locale: version.locale,
         action: {{ '`deleted user with id ${user.id}`' }},
       });
     } catch (e) {
-      session.flash('errorsBag', { other: e.message });
+      ctx.session.flash('errorsBag', { other: e.message });
     }
 
-    return response.redirect('/user', false, 303);
+    return ctx.response.redirect({{ '`/${version.locale}/user`' }}, false, 303);
   }
 
   // create a new user
-  public async store({ request, response, session, auth }: HttpContext) {
-    const payload = await request.validateUsing(createUserValidator);
+  public async store(ctx: HttpContext) {
+    vine.messagesProvider = validationMessages;
+    const payload = await ctx.request.validateUsing(createUserValidator);
+    const { version } = storyContextFrom(ctx);
 
     try {
       const randomString = this.generateRandomString();
       const user = await User.create({ ...payload, password: randomString });
       await Activity.create({
-        userId: auth.user?.id,
-        locale: session.get('locale'),
+        userId: ctx.auth.user?.id,
+        locale: version.locale,
         action: {{ '`created user with id ${user.id}`' }},
       });
     } catch (e) {
-      // logger.error(e.message)
-      session.flash('errorsBag', { other: e.message });
+      ctx.logger.error(e.message);
+      ctx.session.flash('errorsBag', { other: e.message });
     }
 
-    return response.redirect('/user', false, 303);
+    return ctx.response.redirect({{ '`/${version.locale}/user`' }}, false, 303);
+  }
+
+  private generateRandomString(): string {
+    const randomBytesBuffer = randomBytes(16);
+
+    return randomBytesBuffer
+      .toString('base64')
+      .replace(/[^a-zA-Z0-9]/g, '')
+      .substring(0, 16);
   }
 }

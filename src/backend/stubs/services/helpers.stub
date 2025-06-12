@@ -1,11 +1,12 @@
 {{{ 
   exports({ to: app.makePath('app/services/helpers.ts') }) 
 }}}
-import { HttpContext } from '@adonisjs/core/http';
 import storyConfig from '#config/story';
-import { Story, Version } from '@story-cms/kit';
 import { PageVersion } from '#models/page';
 import { UiService } from '#services/ui_service';
+import { errors } from '@adonisjs/core';
+import { HttpContext } from '@adonisjs/core/http';
+import { Story, Version } from '@story-cms/kit';
 
 export function trimmedErrors(e: any): Record<string, string[]> {
   let errors = e.messages.reduce((acc: Record<string, string[]>, error: any) => {
@@ -42,7 +43,12 @@ export const storyFrom = (ctx: HttpContext): Story | undefined => {
 export const storyContextFrom = (
   ctx: HttpContext,
 ): { story: Story | undefined; version: Version } => {
+  if (!ctx.auth.use('web')?.user?.isAllowed(ctx.params.locale)) {
+    throw errors.E_ROUTE_NOT_FOUND;
+  }
+
   const story = storyFrom(ctx);
+
   const version = <Version>{
     apiVersion: 1,
     locale: ctx.params.locale,
@@ -52,6 +58,10 @@ export const storyContextFrom = (
 };
 
 export const pagesContextFrom = (ctx: HttpContext): PageVersion => {
+  if (!ctx.auth.use('web')?.user?.isAllowed(ctx.params.locale)) {
+    throw errors.E_ROUTE_NOT_FOUND;
+  }
+
   return {
     apiVersion: storyConfig.pages.schemaVersion,
     locale: ctx.params.locale || 'en',

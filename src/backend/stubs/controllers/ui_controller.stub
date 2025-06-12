@@ -2,18 +2,21 @@
   exports({ to: app.makePath('app/controllers/ui_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
-import { UiService } from '#services/ui_service';
-import { UiPageProps } from '@story-cms/kit';
+
 import storyConfig from '#config/story';
 import Activity from '#models/activity';
+import { apiContextFrom, storyContextFrom } from '#services/helpers';
+import { UiService } from '#services/ui_service';
+import { UiPageProps, Version } from '@story-cms/kit';
 
 export default class UisController {
   // render the UI page with the translation
   public async index(ctx: HttpContext) {
-    if (!ctx.version) return ctx.response.notFound();
-    const locale = ctx.version.locale;
-    const service = new UiService(this.sourceLocale);
+    const { version } = storyContextFrom(ctx);
+    if (version === undefined) return ctx.response.notFound();
 
+    const locale = version.locale;
+    const service = new UiService(this.sourceLocale);
     const items = await service.items(locale);
     const props: UiPageProps = {
       items,
@@ -25,33 +28,35 @@ export default class UisController {
 
   // API endpoint to get the translation for a specific locale
   public async translation(ctx: HttpContext) {
-    if (!ctx.version) return ctx.response.notFound();
+    const { version } = apiContextFrom(ctx);
 
-    if (!this.isTranslation(ctx))
+    if (!version) return ctx.response.notFound();
+
+    if (!this.isTranslation(version))
       return ctx.response.unprocessableEntity('Cannot download the source language');
 
     const service = new UiService(this.sourceLocale);
-    const rendered = await service.translation(ctx.version.locale);
+    const rendered = await service.translation(version.locale);
 
     return ctx.response.json(rendered);
   }
 
   // persist a translated item
   public async store(ctx: HttpContext) {
-    if (!ctx.version) return ctx.response.notFound();
+    const { version } = storyContextFrom(ctx);
+    if (!version) return ctx.response.notFound();
 
-    if (!this.isTranslation(ctx))
+    if (!this.isTranslation(version))
       return ctx.response.unprocessableEntity('Cannot store source language');
 
-    const locale = ctx.version.locale;
-    const service = new UiService(locale);
+    const service = new UiService(version.locale);
 
     try {
       // use the service to validate and store the payload
-      await service.store(locale, ctx.request.all());
+      await service.store(version.locale, ctx.request.all());
       await Activity.create({
         userId: ctx.auth.user?.id,
-        locale: ctx.version.locale,
+        locale: version.locale,
         action: 'stored microcopy',
       });
     } catch (error) {
@@ -60,20 +65,21 @@ export default class UisController {
   }
 
   public async translateBulk(ctx: HttpContext) {
-    if (!ctx.version) return ctx.response.notFound();
+    const { version } = storyContextFrom(ctx);
+    if (!version) return ctx.response.notFound();
 
-    if (!this.isTranslation(ctx)) {
+    if (!this.isTranslation(version)) {
       return ctx.response.unprocessableEntity('Cannot translate source language');
     }
 
-    const locale = ctx.version.locale;
     const service = new UiService(this.sourceLocale);
 
     try {
-      const count = await service.fillMissing(locale);
+      const count = await service.fillMissing(version.locale);
+
       await Activity.create({
         userId: ctx.auth.user?.id,
-        locale: ctx.version.locale,
+        locale: version.locale,
         action: {{ '`bulk translated ${count} items`' }},
       });
     } catch (error) {
@@ -83,34 +89,35 @@ export default class UisController {
   }
 
   public async suggest(ctx: HttpContext) {
-    if (!ctx.version) return ctx.response.notFound();
+    const { version } = storyContextFrom(ctx);
+    if (!version) return ctx.response.notFound();
 
-    if (!this.isTranslation(ctx)) {
+    if (!this.isTranslation(version)) {
       return ctx.response.unprocessableEntity('Cannot suggest translation');
     }
 
-    const locale = ctx.version.locale;
     const key = ctx.request.input('key');
-
     const service = new UiService(this.sourceLocale);
-    const suggestion = await service.suggest(locale, key);
+    const suggestion = await service.suggest(version.locale, key);
 
     return ctx.response.json({ suggestion });
   }
 
   public async flag(ctx: HttpContext) {
-    if (!ctx.version) return ctx.response.notFound();
+    const { version } = storyContextFrom(ctx);
+    if (!version) return ctx.response.notFound();
 
-    const service = new UiService(ctx.version.locale);
+    const service = new UiService(version.locale);
     try {
       await service.flag(
-        ctx.version.locale,
+        version.locale,
         ctx.request.input('key'),
         ctx.request.input('state'),
       );
+
       await Activity.create({
         userId: ctx.auth.user?.id,
-        locale: ctx.version.locale,
+        locale: version.locale,
         action: 'flagged microcopy',
       });
     } catch (error) {
@@ -136,8 +143,8 @@ export default class UisController {
     }
   }
 
-  protected isTranslation(ctx: HttpContext) {
-    const locale = ctx.version?.locale;
+  protected isTranslation(version: Version | undefined): boolean {
+    const locale = version?.locale;
     return locale !== this.sourceLocale;
   }
 
@@ -145,4 +152,3 @@ export default class UisController {
     return storyConfig.languages[0].locale;
   }
 }
-

@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue';
 import dts from 'vite-plugin-dts';
 import path from 'node:path';
 
+// TODO: https://github.com/vitejs/vite/discussions/8483#discussioncomment-13411070
 export default defineConfig({
   plugins: [
     vue(),

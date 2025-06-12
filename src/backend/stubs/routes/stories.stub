@@ -2,6 +2,7 @@
   exports({ to: app.makePath('start/routes/stories.ts') })
 }}}
 import router from '@adonisjs/core/services/router';
+
 const ChaptersController = () => import('#controllers/chapters_controller');
 const DraftsController = () => import('#controllers/drafts_controller');
 

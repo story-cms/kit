@@ -1,19 +1,36 @@
 {{{
   exports({ to: app.makePath('app/controllers/chapters_controller.ts') })
 }}}
-
-import type { HttpContext } from '@adonisjs/core/http';
-import { marked } from 'marked';
-import edge from 'edge.js';
 import Chapter from '#models/chapter';
-import { PreviewProps } from '@story-cms/kit';
+import { apiContextFrom, storyContextFrom } from '#services/helpers';
+import IndexService from '#services/index_service';
+import type { HttpContext } from '@adonisjs/core/http';
+import { AddStatus, PreviewProps, StoryIndexProps } from '@story-cms/kit';
+import edge from 'edge.js';
+import { marked } from 'marked';
 
 export default class ChaptersController {
-  public async preview(ctx: HttpContext) {
-    if (!ctx.version || !ctx.story) return ctx.response.notFound();
+  public async index(ctx: HttpContext) {
+    const { story, version } = storyContextFrom(ctx);
+    if (story === undefined) return ctx.response.notFound();
 
-    const version = ctx.version!;
-    const story = ctx.story!;
+    const service = new IndexService(story);
+
+    const addStatus: AddStatus = await service.getAddStatus(version);
+    const index = await service.getItems(version);
+    const props: StoryIndexProps = {
+      index,
+      addStatus,
+      storyName: story.name,
+      storyId: story.id,
+    };
+
+    return ctx.inertia.render('StoryIndex', { ...props });
+  }
+
+  public async preview(ctx: HttpContext) {
+    const { story, version } = storyContextFrom(ctx);
+    if (story === undefined) return ctx.response.notFound();
 
     const specifier = {
       apiVersion: version.apiVersion,
@@ -32,6 +49,7 @@ export default class ChaptersController {
       chapter: chapter.meta,
       bundleView: bundleView,
       storyName: story.name,
+      storyId: story.id,
       chapterLimit: story.chapterLimit,
       title: chapter.index.title,
       bundle: chapter.bundle,
@@ -41,10 +59,10 @@ export default class ChaptersController {
   }
 
   public async get(ctx: HttpContext) {
-    if (!ctx.version || !ctx.story) return ctx.response.notFound();
+    const { version } = apiContextFrom(ctx);
 
     const specifier = {
-      ...ctx.version,
+      ...version,
       number: Number(ctx.params.number),
     };
 
@@ -54,13 +72,13 @@ export default class ChaptersController {
   }
 
   public async range(ctx: HttpContext) {
-    if (!ctx.version || !ctx.story) return ctx.response.notFound();
+    const { version } = apiContextFrom(ctx);
 
     const page = ctx.request.qs()['page'] || 1;
 
     const chapters = await Chapter.query()
       .whereBetween('number', [ctx.params.from, ctx.params.to])
-      .where(ctx.version)
+      .where(version)
       .orderBy('number', 'asc')
       .paginate(page, 20);
 

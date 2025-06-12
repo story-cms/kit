@@ -1,21 +1,17 @@
 {{{
   exports({ to: app.makePath('app/controllers/pages_controller.ts') })
 }}}
-
 import type { HttpContext } from '@adonisjs/core/http';
-
-import Page, { PageVersion } from '#models/page';
-import storyConfig from '#config/story';
-import PageService from '#services/page_service';
-import Activity from '#models/activity';
-
-import { Session } from '@adonisjs/session';
-import providers from '#config/providers';
 import { PageEditProps } from '@story-cms/kit';
 import vine from '@vinejs/vine';
 
+import providers from '#config/providers';
+import storyConfig from '#config/story';
+import Activity from '#models/activity';
+import Page from '#models/page';
+import { pagesContextFrom, trimmedErrors } from '#services/helpers';
+import PageService from '#services/page_service';
 import { PageValidator, errorMessages } from '#validators/page';
-import { trimmedErrors } from '#services/helpers';
 
 export default class PagesController {
   public async get({ request }: HttpContext) {
@@ -30,11 +26,11 @@ export default class PagesController {
     return { pages: items };
   }
 
-  public async index({ inertia, session }: HttpContext) {
-    const version = versionFromSession(session);
+  public async index(ctx: HttpContext) {
+    const version = pagesContextFrom(ctx);
     const service = new PageService(version);
     const pages = await service.getPageItems();
-    return inertia.render('PagesIndex', {
+    return ctx.inertia.render('PagesIndex', {
       pages: pages,
     });
   }
@@ -51,41 +47,45 @@ export default class PagesController {
     return inertia.render('PagesEdit', { ...props });
   }
 
-  public async create({ response, session, auth }: HttpContext) {
+  public async create(ctx: HttpContext) {
+    const version = pagesContextFrom(ctx);
     const page = await Page.create({
-      locale: session.get('locale') || 'en',
+      locale: version.locale,
       apiVersion: storyConfig.pages.schemaVersion,
       order: 1,
       bundle: '{"group":1}',
-      updatedBy: auth.user?.id,
+      updatedBy: ctx.auth.user?.id,
     });
 
-     await Activity.create({
-      userId: auth.user?.id,
-      locale: session.get('locale'),
+    await Activity.create({
+      userId: ctx.auth.user?.id,
+      locale: version.locale,
       action: {{ '`created page ${page.id}`' }},
     });
-    return response.redirect({{ '`/page/${page.id}/edit`' }}, false, 303);
+
+    return ctx.response.redirect({{ '`/${version.locale}/page/${page.id}/edit`' }}, false, 303);
   }
 
-  public async destroy({ params, response, session, auth }: HttpContext) {
-    const id = Number(params.id);
+  public async destroy(ctx: HttpContext) {
+    const version = pagesContextFrom(ctx);
+    const id = Number(ctx.params.id);
     const page = await Page.findOrFail(id);
     try {
       await page.delete();
       await Activity.create({
-        userId: auth.user?.id,
-        locale: session.get('locale'),
+        userId: ctx.auth.user?.id,
+        locale: version.locale,
         action: {{ '`deleted page ${page.id}`' }},
       });
     } catch (e) {
-      session.flash('errorsBag', { other: e.message });
+      ctx.session.flash('errorsBag', { other: e.message });
     }
 
-    return response.redirect('/page', false, 303);
+    return ctx.response.redirect({{ '`/${version.locale}/page`' }}, false, 303);
   }
 
   public async update(ctx: HttpContext) {
+    const version = pagesContextFrom(ctx);
     let payload;
     try {
       // constructing the validator first so we can have a
@@ -112,13 +112,13 @@ export default class PagesController {
     if (payload.isPublished) {
       await Activity.create({
         userId: ctx.auth.user?.id,
-        locale: ctx.session.get('locale'),
+        locale: version.locale,
         action: {{ '`published page ${page.id}`' }},
       });
     } else {
       await Activity.create({
         userId: ctx.auth.user?.id,
-        locale: ctx.session.get('locale'),
+        locale: version.locale,
         action: {{ '`updated page ${page.id}`' }},
       });
     }
@@ -126,12 +126,12 @@ export default class PagesController {
     return ctx.response.redirect().back();
   }
 
-  public async sort({ response, request, session, auth }: HttpContext) {
-    const version = versionFromSession(session);
+  public async sort(ctx: HttpContext) {
+    const version = pagesContextFrom(ctx);
 
     // use the service to sort the pages in memory
     const service = new PageService(version);
-    const pages = await service.pagesFromItems(request.input('items'));
+    const pages = await service.pagesFromItems(ctx.request.input('items'));
 
     // save all the pages
     for (const page of pages) {
@@ -139,12 +139,12 @@ export default class PagesController {
     }
 
     await Activity.create({
-      userId: auth.user?.id,
-      locale: session.get('locale'),
+      userId: ctx.auth.user?.id,
+      locale: version.locale,
       action: 'sorted pages',
     });
 
-    return response.redirect().back();
+    return ctx.response.redirect().back();
   }
 }
 
@@ -156,11 +156,4 @@ const prepend = (plain: Record<string, string[]>): Object => {
     result[{{ '`bundle.${key}`' }}] = plain[key];
   }
   return result;
-};
-
-const versionFromSession = (session: Session): PageVersion => {
-  return {
-    locale: session.get('locale') || 'en',
-    apiVersion: storyConfig.pages.schemaVersion,
-  } as PageVersion;
 };
