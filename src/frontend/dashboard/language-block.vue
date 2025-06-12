@@ -52,7 +52,6 @@ const hasCompleteRings = computed(() => {
 });
 
 const goTo = (item: Progress) => {
-  console.log(item);
   if (item.name === 'Interface') {
     router.visit(`/${locale.value}/ui`);
     return;
