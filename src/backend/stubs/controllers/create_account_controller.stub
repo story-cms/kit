@@ -39,6 +39,9 @@ export default class CreateAccountController {
     user.password = payload.password;
     await user.save();
 
-    return ctx.response.redirect().back();
+    return ctx.response
+      .redirect()
+      .withQs({ message: 'registration_success' })
+      .toRoute('/login');
   }
 }

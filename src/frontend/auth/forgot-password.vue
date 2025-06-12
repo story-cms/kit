@@ -9,7 +9,7 @@
         Request Password Reset
       </h2>
       <p v-if="errors && errors.email" class="mt-2 text-sm text-center text-error">
-        {{ errors.email[0] }}
+        {{ errors.email }}
       </p>
       <p v-if="success" class="mt-2 text-sm text-center text-green-500">
         We have sent you an e-mail with instructions to reset your password. Please use
@@ -52,7 +52,7 @@ import PublicLayout from '../shared/public-layout.vue';
 import { useForm } from '@inertiajs/vue3';
 import { ref, PropType } from 'vue';
 import { Meta } from '../../types';
-// 'errors', 'result', 'meta']
+
 defineProps({
   errors: {
     type: Object,

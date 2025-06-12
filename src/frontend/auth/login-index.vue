@@ -10,6 +10,9 @@
     <p v-if="errors && errors.credentials" class="mt-2 text-sm text-center text-error">
       {{ errors.credentials }}
     </p>
+    <p v-if="message" class="mt-2 text-sm text-center">
+      {{ message }}
+    </p>
     <form class="space-y-6" @submit.prevent="submit">
       <div class="flex flex-col gap-y-6">
         <div>
@@ -78,7 +81,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue';
+import { PropType, computed } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import { Meta } from '../../types';
 import PublicLayout from '../shared/public-layout.vue';
@@ -99,6 +102,18 @@ const form = useForm({
   email: null,
   password: null,
   remember: false,
+});
+
+const msg = new URLSearchParams(window.location.search).get('message');
+
+const message = computed(() => {
+  if (msg === 'registration_success') {
+    return 'Account created successfully. Please login.';
+  }
+  if (msg === 'password_reset_success') {
+    return 'Password reset successful. Please login.';
+  }
+  return '';
 });
 
 const submit = () => form.post('/login');

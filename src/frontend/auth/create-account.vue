@@ -8,12 +8,6 @@
       <h2 class="mt-6 mb-16 text-3xl font-bold leading-9 text-center text-black">
         Create your account
       </h2>
-      <p v-if="success" class="mt-2 text-sm text-center text-green-500">
-        Account created successfully
-      </p>
-      <a href="/login"
-        ><button v-if="success" type="submit" class="auth-button">Login</button></a
-      >
 
       <div v-if="errors">
         <p v-if="errors.password" class="mt-2 text-sm text-center text-error">
@@ -25,7 +19,7 @@
         </p>
       </div>
     </div>
-    <form v-if="!success" class="space-y-11" @submit.prevent="submit">
+    <form class="space-y-11" @submit.prevent="submit">
       <div class="flex flex-col gap-y-6">
         <div>
           <label for="email" class="auth-input-label">Email Address</label>
@@ -77,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, ref, onMounted } from 'vue';
+import { PropType, onMounted } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import PublicLayout from '../shared/public-layout.vue';
 import { Meta } from '../../types';
@@ -97,7 +91,6 @@ const props = defineProps({
   },
 });
 
-const success = ref(false);
 const form = useForm({
   email: '',
   password: '',
@@ -106,11 +99,7 @@ const form = useForm({
 
 const submit = async () => {
   const token = window.location.href.split('create-account/')[1];
-  form.post(`/create-account/${token}`, {
-    onSuccess() {
-      success.value = true;
-    },
-  });
+  form.post(`/create-account/${token}`);
 };
 
 onMounted(() => {
