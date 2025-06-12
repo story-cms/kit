@@ -43,8 +43,8 @@ const users: UserMeta[] = [
     initials: 'LW',
     email: 'lindsay.walton@example.com',
     role: 'Member',
-
     language: 'en',
+    hasPendingInvite: false,
     lastActivity: '2025-05-18T12:10:38.405+00:00',
   },
   // TODO: Add more users with different roles and names
@@ -54,8 +54,8 @@ const users: UserMeta[] = [
     initials: 'JD',
     email: 'john.doe@example.com',
     role: 'Admin',
-
     language: 'en',
+    hasPendingInvite: false,
     lastActivity: null,
   },
   {
@@ -64,8 +64,8 @@ const users: UserMeta[] = [
     initials: 'JS',
     email: 'jane.smith@example.com',
     role: 'Editor',
-
     language: 'es',
+    hasPendingInvite: false,
     lastActivity: null,
   },
   {
@@ -74,8 +74,8 @@ const users: UserMeta[] = [
     initials: 'AJ',
     email: 'alice.johnson@example.com',
     role: 'Member',
-
     language: 'es',
+    hasPendingInvite: true,
     lastActivity: '2025-05-17T12:10:38.405+00:00',
   },
   {
@@ -84,8 +84,8 @@ const users: UserMeta[] = [
     initials: 'BB',
     email: 'bob.brown@example.com',
     role: 'Member',
-
     language: 'en',
+    hasPendingInvite: false,
     lastActivity: '2025-03-01T12:10:38.405+00:00',
   },
   {
@@ -94,8 +94,8 @@ const users: UserMeta[] = [
     initials: 'CD',
     email: 'charlie.davis@example.com',
     role: 'Member',
-
     language: 'es',
+    hasPendingInvite: false,
     lastActivity: '2025-05-19T12:10:38.405+00:00',
   },
   {
@@ -104,8 +104,8 @@ const users: UserMeta[] = [
     initials: 'DE',
     email: 'diana.evans@example.com',
     role: 'Member',
-
     language: '*',
+    hasPendingInvite: false,
     lastActivity: '2025-04-19T12:10:38.405+00:00',
   },
 ];
