@@ -237,7 +237,7 @@ export default class DraftsController {
     const service = new IndexService(story);
     await service.buildIndex(version);
 
-    return ctx.response.redirect({{ '`/${version.locale}/story/${story.id}' }});
+    return ctx.response.redirect({{ '`/${version.locale}/story/${story.id}`' }});
   }
 
   public async delete(ctx: HttpContext) {
