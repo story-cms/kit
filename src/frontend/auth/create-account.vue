@@ -28,7 +28,7 @@
     <form v-if="!success" class="space-y-11" @submit.prevent="submit">
       <div class="flex flex-col gap-y-6">
         <div>
-          <label for="email" class="auth-input-label">Email address</label>
+          <label for="email" class="auth-input-label">Email Address</label>
           <div class="mt-1">
             <span
               class="relative block w-full px-3 py-2 text-sm font-normal leading-5 text-gray-300 placeholder-gray-300 border border-gray-300 rounded-md appearance-none"
