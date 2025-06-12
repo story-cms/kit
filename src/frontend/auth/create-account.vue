@@ -12,13 +12,7 @@
         Account created successfully
       </p>
       <a href="/login"
-        ><button
-          v-if="success"
-          type="submit"
-          class="group relative mx-auto mt-4 flex justify-center rounded-full border border-transparent bg-[--primary-color] px-4 py-2 text-sm font-medium text-white hover:bg-[--secondary-color]"
-        >
-          Login
-        </button></a
+        ><button v-if="success" type="submit" class="auth-button">Login</button></a
       >
 
       <div v-if="errors">
@@ -34,21 +28,17 @@
     <form v-if="!success" class="space-y-11" @submit.prevent="submit">
       <div class="flex flex-col gap-y-6">
         <div>
-          <label for="email" class="block text-sm font-medium text-gray-900"
-            >Email address</label
-          >
+          <label for="email" class="auth-input-label">Email address</label>
           <div class="mt-1">
             <span
-              class="relative block w-full px-3 py-2 text-gray-300 placeholder-gray-300 border border-gray-300 rounded-md appearance-none sm:text-sm"
+              class="relative block w-full px-3 py-2 text-sm font-normal leading-5 text-gray-300 placeholder-gray-300 border border-gray-300 rounded-md appearance-none"
             >
               {{ form.email }}
             </span>
           </div>
         </div>
         <div>
-          <label for="password" class="block text-sm font-medium text-gray-900"
-            >Password</label
-          >
+          <label for="password" class="auth-input-label">Password</label>
           <div class="mt-1">
             <input
               id="password"
@@ -57,15 +47,13 @@
               name="password"
               autocomplete="password"
               required
-              class="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-[--secondary-color] focus:outline-none focus:ring-[--secondary-color] sm:text-sm"
+              class="auth-input-field"
               :class="{ 'border-red-500': errors.password || errors.confirmPassword }"
             />
           </div>
         </div>
         <div>
-          <label for="confirm-password" class="block text-sm font-medium text-gray-900"
-            >Confirm Password</label
-          >
+          <label for="confirm-password" class="auth-input-label">Confirm Password</label>
           <div class="mt-1">
             <input
               id="confirm-password"
@@ -74,7 +62,7 @@
               name="confirm-password"
               autocomplete="confirm-password"
               required
-              class="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-[--secondary-color] focus:outline-none focus:ring-[--secondary-color] sm:text-sm"
+              class="auth-input-field"
               :class="{ 'border-red-500': errors.password || errors.confirmPassword }"
             />
           </div>
@@ -82,12 +70,7 @@
       </div>
 
       <div>
-        <button
-          type="submit"
-          class="group relative mx-auto flex justify-center rounded-full border border-transparent bg-[--primary-color] px-4 py-2 text-sm font-medium text-white hover:bg-[--secondary-color]"
-        >
-          Set your password
-        </button>
+        <button type="submit" class="auth-button">Set your password</button>
       </div>
     </form>
   </PublicLayout>

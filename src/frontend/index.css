@@ -34,6 +34,17 @@
   .active {
     @apply bg-blue-50 transition-all duration-200 ease-in-out;
   }
+
+  .auth-input-field {
+    @apply relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-sm font-normal leading-5 text-gray-300 placeholder-gray-300 focus:z-10 focus:border-[--secondary-color] focus:outline-none focus:ring-[--secondary-color];
+  }
+
+  .auth-input-label {
+    @apply block text-sm font-medium leading-5 text-gray-700;
+  }
+  .auth-button {
+    @apply relative mx-auto flex justify-center rounded-full border border-transparent bg-[--primary-color] px-4 py-2 text-sm font-medium text-white hover:bg-[--secondary-color];
+  }
 }
 
 :root {

@@ -1,44 +1,48 @@
 <template>
   <PublicLayout>
     <template #logo>
-      <img :src="meta.logo" alt="Logo" class="h-12 w-auto" />
+      <img :src="meta.logo" alt="Logo" class="h-auto w-[154px]" />
     </template>
-    <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+    <h2 class="mt-6 mb-16 text-3xl font-bold leading-9 text-center text-black">
       Sign in to your account
     </h2>
 
-    <p v-if="errors && errors.credentials" class="mt-2 text-center text-sm text-error">
+    <p v-if="errors && errors.credentials" class="mt-2 text-sm text-center text-error">
       {{ errors.credentials }}
     </p>
-    <form class="mt-8 space-y-6" @submit.prevent="submit">
-      <div class="-space-y-px rounded-md shadow-sm">
+    <form class="space-y-6" @submit.prevent="submit">
+      <div class="flex flex-col gap-y-6">
         <div>
-          <label for="email-address" class="sr-only">Email address</label>
-          <input
-            id="email-address"
-            v-model="form.email"
-            name="email"
-            type="email"
-            autocomplete="email"
-            required
-            class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-[--secondary-color] focus:outline-none focus:ring-[--secondary-color] sm:text-sm"
-            :class="{ 'border-red': form.errors.email }"
-            placeholder="Email address"
-          />
+          <label for="email-address" class="auth-input-label">Email address</label>
+          <div class="mt-1">
+            <input
+              id="email-address"
+              v-model="form.email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              required
+              class="auth-input-field"
+              :class="{ 'border-red': form.errors.email }"
+              placeholder="Email address"
+            />
+          </div>
         </div>
         <div>
-          <label for="password" class="sr-only">Password</label>
-          <input
-            id="password"
-            v-model="form.password"
-            name="password"
-            type="password"
-            autocomplete="current-password"
-            required
-            class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-[--secondary-color] focus:outline-none focus:ring-[--secondary-color] sm:text-sm"
-            :class="{ 'border-red': form.errors.password }"
-            placeholder="Password"
-          />
+          <label for="password" class="auth-input-label">Password</label>
+          <div class="mt-1">
+            <input
+              id="password"
+              v-model="form.password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              required
+              class="auth-input-field"
+              :class="{ 'border-red': form.errors.password }"
+              placeholder="Password"
+            />
+          </div>
         </div>
       </div>
 
@@ -51,7 +55,7 @@
             type="checkbox"
             class="h-4 w-4 rounded border-gray-300 text-[--primary-color] focus:ring-[--secondary-color]"
           />
-          <label for="remember-me" class="ml-2 block text-sm text-gray-900">
+          <label for="remember-me" class="block ml-2 text-sm text-gray-900">
             Remember me
           </label>
         </div>
@@ -67,12 +71,7 @@
       </div>
 
       <div>
-        <button
-          type="submit"
-          class="relative flex w-full justify-center rounded-md border border-transparent bg-[--primary-color] px-4 py-2 text-sm font-medium text-white hover:bg-[--secondary-color] focus:outline-none focus:ring-2 focus:ring-purple focus:ring-offset-2"
-        >
-          Sign in
-        </button>
+        <button type="submit" class="auth-button">Sign in</button>
       </div>
     </form>
   </PublicLayout>
