@@ -1,7 +1,7 @@
 <template>
   <Story title="Auth Index" group="users">
     <Variant title="Index">
-      <CreateAccount :meta="sharedProps.meta" />
+      <CreateAccount :meta="sharedProps.meta" email="john@doe.com" />
     </Variant>
   </Story>
 </template>

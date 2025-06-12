@@ -37,6 +37,8 @@
 }
 
 :root {
+  --primary-color: #39ccfb;
+  --secondary-color: #34d399;
   --arabic-font-family: 'Amiri', serif;
   --rtl-font-size: 20px;
 }
