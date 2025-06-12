@@ -166,6 +166,16 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/user_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/model.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'ops/Dockerfile.stub', {});
+  await codemods.makeUsingStub(
+    stubsRoot,
+    'resources/views/emails/forget_password.edge',
+    {},
+  );
+  await codemods.makeUsingStub(
+    stubsRoot,
+    'resources/views/emails/create_account.edge',
+    {},
+  );
   await codemods.makeUsingStub(stubsRoot, 'ops/compose.stub', { appName: 'todo' });
   await codemods.makeUsingStub(stubsRoot, 'tailwind.stub', {});
   await addMigrations(command, codemods);

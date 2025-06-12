@@ -87,11 +87,31 @@ export default class UsersController {
 
     try {
       const randomString = this.generateRandomString();
-      const user = await User.create({ ...payload, password: randomString });
+      const token = string.generateRandom(32);
+      const user = await User.create({
+        ...payload,
+        password: randomString,
+        resetToken: token,
+        resetTokenCreatedAt: DateTime.now(),
+      });
       await Activity.create({
         userId: auth.user?.id,
         locale: session.get('locale'),
-        action: {{ '`created user with id ${user.id}`' }},
+        action: {{ `created user with id ${user.id}` }},
+      });
+      const appUrl = request.completeUrl().split('/user')[0];
+      const appName = config.get('story.meta.name');
+      // send email to the user
+      await mail.send((message) => {
+        message
+          .from(env.get('MAIL_FROM_ADDRESS', ''))
+          .to(user.email)
+          .subject('Create your account')
+          .htmlView('emails/create_account', {
+            name: user.name,
+            appName: appName,
+            link: {{ `${appUrl}/create-account/${user.resetToken}` }},
+          });
       });
     } catch (e) {
       // logger.error(e.message)
