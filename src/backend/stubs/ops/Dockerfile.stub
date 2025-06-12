@@ -1,7 +1,6 @@
 {{{
   exports({ to: app.makePath('Dockerfile') })
 }}}
-
 ARG NODE_IMAGE=node:22.14.0-alpine
 
 FROM --platform=linux/amd64 $NODE_IMAGE AS base

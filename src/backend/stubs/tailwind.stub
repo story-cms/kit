@@ -3,7 +3,7 @@
 }}}
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./inertia/**/*.{vue,js,ts}'],
+  content: ['./inertia/**/*.{vue,js,ts}', './resources/**/*.{vue,js,ts,edge}'],
   theme: {
     extend: {},
   },
