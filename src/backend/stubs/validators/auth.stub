@@ -3,7 +3,7 @@
 }}}
 import vine, { SimpleMessagesProvider } from '@vinejs/vine';
 
-export const validationMessages = new SimpleMessagesProvider({
+vine.messagesProvider = new SimpleMessagesProvider({
   'email.required': "The email can't be blank.",
   'email.email': 'Enter a valid email address.',
   'password.confirmed': 'Those two passwords are not the same.',

@@ -7,6 +7,7 @@ import UsersIndex from './users/users-index.vue';
 import StoryIndex from './chapters/story-index.vue';
 import DashboardIndex from './dashboard/dashboard-index.vue';
 import Login from './auth/login-index.vue';
+import CreateAccount from './auth/create-account.vue';
 import ForgotPassword from './auth/forgot-password.vue';
 import ResetPassword from './auth/reset-password.vue';
 import IndexCard from './chapters/index-card.vue';
@@ -49,6 +50,7 @@ export {
   ContextMenu,
   StringField,
   Login,
+  CreateAccount,
   ForgotPassword,
   ResetPassword,
   StoryIndex,
