@@ -4,6 +4,7 @@ import DropDown from './shared/drop-down.vue';
 import StringField from './fields/string-field.vue';
 import ContextMenu from './shared/context-menu.vue';
 import UsersIndex from './users/users-index.vue';
+import StoryIndex from './chapters/story-index.vue';
 import DashboardIndex from './dashboard/dashboard-index.vue';
 import Login from './auth/login-index.vue';
 import CreateAccount from './auth/create-account.vue';
@@ -52,6 +53,7 @@ export {
   CreateAccount,
   ForgotPassword,
   ResetPassword,
+  StoryIndex,
   DashboardIndex,
   IndexCard,
   StatusTag,

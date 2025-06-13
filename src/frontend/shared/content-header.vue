@@ -1,6 +1,7 @@
 <template>
-  <div class="px-3">
-    <div class="flex items-center justify-between py-10">
+  <div>
+    <slot name="hero"></slot>
+    <div class="flex items-center justify-between px-3" :class="title ? 'py-10' : ''">
       <h3
         class="font-['Inter'] text-2xl font-semibold leading-8 text-gray-800 [&>span]:text-gray-400"
         v-html="title"
@@ -9,7 +10,7 @@
         <slot name="actions"></slot>
       </div>
     </div>
-    <div class="w-full">
+    <div class="w-full px-3">
       <slot name="extra-actions"></slot>
     </div>
   </div>

@@ -2,18 +2,20 @@
   exports({ to: app.makePath('app/controllers/preview_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
+
+import storyConfig from '#config/story';
 import Chapter from '#models/chapter';
 import Draft from '#models/draft';
-import storyConfig from '#config/story';
+import { apiContextFrom } from '#services/helpers';
 
 export default class PreviewController {
   public async get(ctx: HttpContext) {
-    if (!ctx.version || !ctx.story) return ctx.response.notFound();
+    const { story, version } = apiContextFrom(ctx);
 
     const specifier = {
-      storyId: ctx.story.id,
+      storyId: story.id,
       apiVersion: storyConfig.schemaVersion,
-      locale: ctx.version.locale,
+      locale: version.locale,
       number: Number(ctx.params.number),
     };
 

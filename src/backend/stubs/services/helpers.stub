@@ -1,9 +1,15 @@
 {{{ 
   exports({ to: app.makePath('app/services/helpers.ts') }) 
 }}}
+import storyConfig from '#config/story';
+import { PageVersion } from '#models/page';
+import { UiService } from '#services/ui_service';
+import { errors } from '@adonisjs/core';
+import { HttpContext } from '@adonisjs/core/http';
+import { Story, Version } from '@story-cms/kit';
 
 export function trimmedErrors(e: any): Record<string, string[]> {
-  let errors = e.messages.reduce((acc: Record<string, string[]>, error: any) => {
+  let trimmed = e.messages.reduce((acc: Record<string, string[]>, error: any) => {
     const field = error.field;
     if (!acc[field]) {
       acc[field] = [];
@@ -13,17 +19,103 @@ export function trimmedErrors(e: any): Record<string, string[]> {
   }, {});
 
   // only show the first 25 errors to avoid the cookie size limit
-  if (Object.keys(errors).length < 26) return errors;
+  if (Object.keys(trimmed).length < 26) return trimmed;
 
-  errors = Object.keys(errors)
+  trimmed = Object.keys(trimmed)
     .slice(0, 25)
     .reduce(
       (acc: Record<string, string[]>, key) => {
-        acc[key] = errors[key];
+        acc[key] = trimmed[key];
         return acc;
       },
       {} as Record<string, string[]>,
     );
 
-  return errors;
+  return trimmed;
 }
+
+export const storyFrom = (ctx: HttpContext): Story | undefined => {
+  const storyId = Number.parseInt(ctx.params.storyId);
+  const story = storyConfig.stories.find((s) => s.id === storyId);
+  return story;
+};
+
+export const storyContextFrom = (
+  ctx: HttpContext,
+): { story: Story | undefined; version: Version } => {
+  if (!ctx.auth.use('web')?.user?.isAllowed(ctx.params.locale)) {
+    throw errors.E_ROUTE_NOT_FOUND;
+  }
+
+  const story = storyFrom(ctx);
+
+  const version = <Version>{
+    apiVersion: 1,
+    locale: ctx.params.locale,
+    storyId: story?.id,
+  };
+  return { story, version };
+};
+
+export const pagesContextFrom = (ctx: HttpContext): PageVersion => {
+  if (!ctx.auth.use('web')?.user?.isAllowed(ctx.params.locale)) {
+    throw errors.E_ROUTE_NOT_FOUND;
+  }
+
+  return {
+    apiVersion: storyConfig.pages.schemaVersion,
+    locale: ctx.params.locale || 'en',
+  };
+};
+
+export const apiContextFrom = (ctx: HttpContext) => {
+  const story = getStoryFromQuery(ctx);
+  const locale = ctx.request.qs()['locale'] || storyConfig.languages[0].locale;
+  const version = <Version>{
+    apiVersion: 1,
+    locale: locale,
+    storyId: story?.id,
+  };
+  return { story, version };
+};
+
+export const getTodoCount = async (ctx: HttpContext) => {
+  // don't show todo count if there is only one language
+  if (storyConfig.languages.length < 2) return 0;
+
+  // don't show todo count if user is not logged in
+  if (!ctx.auth?.use('web')?.user) return 0;
+
+  const locale = ctx.params.locale;
+  if (!locale) return 0;
+
+  // count not needed for source language
+  if (locale === storyConfig.languages[0].locale) {
+    return 0;
+  }
+
+  const service = new UiService(storyConfig.languages[0].locale);
+  return await service.getTodoCount(locale);
+};
+
+const getStoryFromQuery = (ctx: HttpContext): Story => {
+  const defaultStory = storyConfig.stories[0];
+
+  // for api calls, try the query parameters
+  let storyId = ctx.request.qs()['storyId'];
+  if (storyId !== undefined) {
+    const story = storyConfig.stories.find((s) => s.id === Number(storyId));
+    if (story !== undefined) return story;
+  }
+
+  let storylabel = ctx.request.qs()['story'];
+  if (storylabel !== undefined) {
+    storylabel = storylabel.toLowerCase();
+    const story = storyConfig.stories.find(
+      (s) => s.name.toLocaleLowerCase() === storylabel,
+    );
+    if (story !== undefined) return story;
+  }
+
+  return defaultStory;
+};

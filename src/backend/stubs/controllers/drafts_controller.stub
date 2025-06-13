@@ -1,58 +1,56 @@
 {{{
   exports({ to: app.makePath('app/controllers/drafts_controller.ts') })
 }}}
-
 import type { HttpContext } from '@adonisjs/core/http';
 import db from '@adonisjs/lucid/services/db';
+import { DraftEditProps } from '@story-cms/kit';
+
+import providers from '#config/providers';
+import storyConfig from '#config/story';
+import Activity from '#models/activity';
 import Chapter from '#models/chapter';
 import Draft from '#models/draft';
-import Activity from '#models/activity';
 import DraftService from '#services/draft_service';
+import { storyContextFrom, trimmedErrors } from '#services/helpers';
 import IndexService from '#services/index_service';
 import StoryService from '#services/story_service';
-import { trimmedErrors } from '#services/helpers';
-
-import storyConfig from '#config/story';
-import providers from '#config/providers';
-import { DraftEditProps } from '@story-cms/kit';
 import { draftValidator } from '#validators/bundle';
 
 export default class DraftsController {
   public async create(ctx: HttpContext) {
-    if (!ctx.version || !ctx.story) return ctx.response.notFound();
+    const { story, version } = storyContextFrom(ctx);
+    if (story === undefined) return ctx.response.notFound();
 
-    const indexService = new IndexService(ctx.story);
-    const number = await indexService.getNewChapterNumber(ctx.version);
-    if (number > ctx.story.chapterLimit) return ctx.response.redirect('/');
+    const indexService = new IndexService(story);
+    const number = await indexService.getNewChapterNumber(version);
+    if (number > story.chapterLimit) return ctx.response.redirect('/');
 
-    const service = new DraftService(ctx.story);
+    const service = new DraftService(story);
     // TODO: set your own prefill fields
-    service.setPrefilledFields([
-      'imageUrl',
-      'type',
-    ]);
-    const bundle = await service.getDraftBundle(ctx.version, number);
+    service.setPrefilledFields(['imageUrl', 'type']);
+    const bundle = await service.getDraftBundle(version, number);
     if (bundle === null) return ctx.response.redirect('/');
 
     await Draft.create({
-      ...ctx.version,
+      ...version,
       number,
       bundle,
     });
-    
+
     await Activity.create({
       userId: ctx.auth.user?.id,
-      locale: ctx.version?.locale,
-      action: {{ '`created draft for ${storyConfig.meta.storyType} ${ctx.story.name} ${storyConfig.meta.chapterType} ${number}`' }},
+      locale: version.locale,
+      action: {{' `created draft for ${storyConfig.meta.storyType} ${story.name} ${storyConfig.meta.chapterType} ${number}`' }},
     });
 
-    return ctx.response.redirect({{ '`/draft/${number}/edit`' }});
+    return ctx.response.redirect(
+      {{ '`/${version.locale}/story/${story.id}/draft/${number}/edit`' }},
+    );
   }
 
   public async edit(ctx: HttpContext) {
-    if (!ctx.version || !ctx.story) return ctx.response.notFound();
-    const version = ctx.version;
-    const story = ctx.story;
+    const { story, version } = storyContextFrom(ctx);
+    if (story === undefined) return ctx.response.notFound();
 
     const specifier = {
       apiVersion: version.apiVersion,
@@ -92,6 +90,7 @@ export default class DraftsController {
       lastPublished,
       providers,
       storyName: story.name,
+      storyId: story.id,
     };
 
     const isTranslation = version.locale !== storyConfig.languages[0].locale;
@@ -115,9 +114,8 @@ export default class DraftsController {
 
   // Only saving the draft without performing any validation
   public async save(ctx: HttpContext) {
-    if (!ctx.story) return ctx.response.notFound();
-
-    const story = ctx.story;
+    const { story, version } = storyContextFrom(ctx);
+    if (!story) return ctx.response.notFound();
 
     try {
       const id = Number(ctx.params.id);
@@ -127,8 +125,8 @@ export default class DraftsController {
       await draft.save();
       await Activity.create({
         userId: ctx.auth.user?.id,
-        locale: ctx.version?.locale,
-        action: {{ '`updated draft for ${storyConfig.meta.storyType} ${ctx.story.name} ${storyConfig.meta.chapterType} ${draft.number}`' }},
+        locale: version.locale,
+        action: {{ '`updated draft for ${storyConfig.meta.storyType} ${story.name} ${storyConfig.meta.chapterType} ${draft.number}`' }},
       });
       const service = new IndexService(story);
       await service.buildIndex(draft.version);
@@ -141,9 +139,8 @@ export default class DraftsController {
   }
 
   public async submit(ctx: HttpContext) {
-    if (!ctx.story) return ctx.response.notFound();
-
-    const story = ctx.story!;
+    const { story, version } = storyContextFrom(ctx);
+    if (story === undefined) return ctx.response.notFound();
 
     const id = Number(ctx.params.id);
     const draft = await Draft.findOrFail(id);
@@ -167,33 +164,37 @@ export default class DraftsController {
     await draft.save();
     await Activity.create({
       userId: ctx.auth.user?.id,
-      locale: ctx.version?.locale,
-      action: {{ '`submitted draft for ${storyConfig.meta.storyType} ${ctx.story.name} ${storyConfig.meta.chapterType} ${draft.number}`' }},
+      locale: version.locale,
+      action: {{ '`submitted draft for ${storyConfig.meta.storyType} ${story.name} ${storyConfig.meta.chapterType} ${draft.number}`' }},
     });
     await service.buildIndex(draft.version);
     return ctx.response.redirect().back();
   }
 
   public async reject(ctx: HttpContext) {
-    if (!ctx.story) return ctx.response.notFound();
+    const { version, story } = storyContextFrom(ctx);
+    if (story === undefined) return ctx.response.notFound();
 
     const id = Number(ctx.params.id);
     const draft = await Draft.findOrFail(id);
     draft.status = 'started';
     draft.feedback = ctx.request.input('feedback');
+
     await draft.save();
+
     await Activity.create({
       userId: ctx.auth.user?.id,
-      locale: ctx.version?.locale,
-      action: {{ '`rejected draft for ${storyConfig.meta.storyType} ${ctx.story.name} ${storyConfig.meta.chapterType} ${draft.number}`' }},
+      locale: version.locale,
+      action: {{ '`rejected draft for ${storyConfig.meta.storyType} ${story.name} ${storyConfig.meta.chapterType} ${draft.number}`' }},
     });
+
     return ctx.response.redirect().back();
   }
 
   public async publish(ctx: HttpContext) {
-    if (!ctx.story) return ctx.response.notFound();
+    const { story } = storyContextFrom(ctx);
+    if (story === undefined) return ctx.response.notFound();
 
-    const story = ctx.story;
     const id = Number(ctx.params.id);
     const draft = await Draft.findOrFail(id);
 
@@ -226,8 +227,8 @@ export default class DraftsController {
       await chapter.save();
       await Activity.create({
         userId: ctx.auth.user?.id,
-        locale: ctx.version?.locale,
-        action: {{ '`published chapter for ${storyConfig.meta.storyType} ${ctx.story.name} ${storyConfig.meta.chapterType} ${chapter.number}`' }},
+        locale: version.locale,
+        action: {{ '`published chapter for ${storyConfig.meta.storyType} ${story.name} ${storyConfig.meta.chapterType} ${chapter.number}`' }},
       });
       await draft.delete();
     });
@@ -236,24 +237,25 @@ export default class DraftsController {
     const service = new IndexService(story);
     await service.buildIndex(version);
 
-    return ctx.response.redirect('/');
+    return ctx.response.redirect({{ '`/${version.locale}/story/${story.id}`' }});
   }
 
   public async delete(ctx: HttpContext) {
-    if (!ctx.story) return ctx.response.notFound();
-
-    const story = ctx.story;
+    const { story } = storyContextFrom(ctx);
+    if (story === undefined) return ctx.response.notFound();
 
     const id = Number(ctx.params.id);
     const draft = await Draft.findOrFail(id);
 
     const version = { ...draft.version };
     await draft.delete();
+
     await Activity.create({
       userId: ctx.auth.user?.id,
-      locale: ctx.version?.locale,
-      action: {{ '`deleted draft for ${storyConfig.meta.storyType} ${ctx.story.name} ${storyConfig.meta.chapterType} ${draft.number}`' }},
+      locale: version.locale,
+      action: {{ '`deleted draft for ${storyConfig.meta.storyType} ${story.name} ${storyConfig.meta.chapterType} ${draft.number}`' }},
     });
+
     const service = new IndexService(story);
     await service.buildIndex(version);
 

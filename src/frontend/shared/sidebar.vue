@@ -16,7 +16,7 @@
             shared.hasOpenSidebar ? 'justify-between p-5' : 'flex-col gap-y-3 p-2',
           ]"
         >
-          <Link :class="['nav-icon']" href="/">
+          <Link :class="['nav-icon']" :href="`/${locale}/dashboard`">
             <Icon name="home" />
           </Link>
           <button class="nav-icon" @click="goBack">
@@ -30,14 +30,14 @@
               <span
                 class="absolute right-2 top-4 rounded-[7px] bg-blue-100 px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-blue-800"
               >
-                {{ currentLocale }}
+                {{ locale }}
               </span>
               <Icon name="translate" />
             </button>
             <LanguageSelector
               v-if="!shared.hasOpenSidebar"
-              :current-locale="currentLocale"
-              :current-language="form.language"
+              :current-locale="locale"
+              :current-language="shared.language.language"
               :languages="shared.languages"
               :is-read-only="!shared.user.isManager"
               @language-change="onLanguage"
@@ -50,36 +50,32 @@
         </div>
         <div :class="[shared.hasOpenSidebar ? 'mt-4 flex flex-col px-4' : 'hidden']">
           <section class="grid grid-cols-1">
-            <div v-for="story in shared.stories" :key="story">
-              <button
-                :class="[
-                  'nav-link',
-                  {
-                    active:
-                      story.toLowerCase() === shared.currentStoryName?.toLowerCase() &&
-                      (currentPath === '/' ||
-                        currentPath.startsWith('/chapter') ||
-                        currentPath.startsWith('/draft')),
-                  },
-                ]"
-                @click="onStory(story)"
-              >
-                {{ story }}
-              </button>
-            </div>
+            <Link
+              v-for="(story, index) in shared.stories"
+              :key="index"
+              :class="[
+                'nav-link',
+                {
+                  active: story.toLowerCase() === shared.currentStoryName?.toLowerCase(),
+                },
+              ]"
+              :href="`/${locale}/story/${index + 1}`"
+            >
+              {{ story }}
+            </Link>
             <Link
               :class="[
                 'nav-link',
                 {
-                  active: currentPath.startsWith('/page'),
+                  active: $page?.url.includes(`/${locale}/page`),
                 },
               ]"
-              href="/page"
+              :href="`/${locale}/page`"
               >Pages</Link
             >
             <div v-if="isMultiLingual">
               <button
-                v-if="currentLocale === 'en'"
+                v-if="locale === 'en'"
                 class="nav-link opacity-50 disabled:cursor-not-allowed"
                 disabled
               >
@@ -90,10 +86,10 @@
                 :class="[
                   'nav-link flex items-center justify-between',
                   {
-                    active: currentPath === '/ui',
+                    active: $page?.url.includes('ui'),
                   },
                 ]"
-                href="/ui"
+                :href="`/${locale}/ui`"
                 ><span>Interface</span>
                 <span class="text-yellow-500">{{ shared.uiTodoCount }}</span>
               </Link>
@@ -110,15 +106,15 @@
               :class="[
                 'nav-link flex items-center gap-x-3',
                 {
-                  active: currentPath === '/user',
+                  active: $page?.url === '/user',
                 },
               ]"
-              href="/user"
+              :href="`/${locale}/user`"
             >
               <Icon name="users" />
               <span>Users</span>
             </Link>
-            <Link
+            <a
               v-if="shared.meta.helpUrl"
               class="nav-link flex items-center gap-x-3"
               :href="shared.meta.helpUrl"
@@ -127,17 +123,17 @@
             >
               <Icon name="help" />
               <span>Support</span>
-            </Link>
-            <button class="nav-link flex items-center gap-x-3" @click="signOut">
+            </a>
+            <Link class="nav-link flex items-center gap-x-3" href="/logout">
               <Icon name="logout" />
               <span>Logout</span>
-            </button>
+            </Link>
           </section>
         </div>
       </div>
       <div :class="[shared.hasOpenSidebar ? 'px-4 pb-4' : 'hidden']">
         <DropUp
-          v-model="form.language"
+          v-model="shared.language.language"
           :is-read-only="!shared.user.isManager"
           :options="languageOptions"
           @change="onLanguage"
@@ -150,7 +146,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useSharedStore } from '../store';
-import { Link, router, useForm } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
 
 import Icon from '../shared/icon.vue';
 import LanguageSelector from './language-selector.vue';
@@ -158,38 +154,42 @@ import DropUp from './drop-up.vue';
 
 const shared = useSharedStore();
 
-const currentPath = computed(() => window.location.pathname);
-
-const form = useForm({
-  language: shared.language.language as string,
-  story: null,
-});
-
 const onLanguage = async (lang: string) => {
-  if (lang === form.language) return;
-  form.language = lang;
-  form.story = null;
-  form.post('/switch');
+  const newLocale = shared.languages.find((l) => l.language === lang)?.locale;
+  if (!newLocale) return;
+  if (newLocale === shared.locale) return;
+
+  const newPath = newPathFromLocale(newLocale);
+  router.get(newPath);
 };
 
-const onStory = async (story: string) => {
-  // @ts-expect-error - Ignoring type mismatch for now
-  form.story = story;
-  // @ts-expect-error - Ignoring type mismatch for now
-  form.language = null;
-  form.post('/switch');
-};
+const newPathFromLocale = (targetLocale: string) => {
+  // const url = usePage().url;  not working
+  const url = window.location.href;
 
-const signOut = () => {
-  router.visit('/logout');
+  if (url.includes('/ui')) {
+    return `/${targetLocale}/ui`;
+  }
+
+  if (url.includes('/page')) {
+    return `/${targetLocale}/page`;
+  }
+
+  if (url.includes('/story/')) {
+    const part = url.split('/story/')[1];
+    const storyId = part.split('/')[0];
+    return `/${targetLocale}/story/${storyId}`;
+  }
+
+  return `/${targetLocale}/dashboard`;
 };
 
 const isMultiLingual = computed(() => shared.languages.length > 1);
 
 const isAdmin = computed(() => shared.user.isAdmin);
 
-const currentLocale = computed(() => {
-  return shared.languages.find((l) => l.language === form.language)?.locale ?? 'en';
+const locale = computed(() => {
+  return shared.locale ?? 'en';
 });
 
 const goBack = () => {
@@ -204,6 +204,7 @@ const languageOptions = computed(() => {
   return shared.languages.map((l) => l.language) as string[];
 });
 </script>
+
 <style lang="postcss" scoped>
 .nav-icon {
   @apply flex size-14 items-center justify-center rounded-full transition-all duration-200 ease-in-out hover:bg-gray-100;

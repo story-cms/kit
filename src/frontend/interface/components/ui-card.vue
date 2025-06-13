@@ -199,7 +199,7 @@ const suggestAi = async () => {
   isOpen.value = true;
 
   try {
-    const response = await axios.post('/ui/suggest', {
+    const response = await axios.post(`/${shared.locale}/ui/suggest`, {
       key: props.item.key,
       locale: shared.locale,
     });

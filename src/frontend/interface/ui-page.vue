@@ -19,7 +19,7 @@
         class="grid grid-cols-[2fr_4fr] gap-x-6"
         :style="{ height: `calc(100vh - (${headerHeight}px + 1rem))` }"
       >
-        <div class="overflow-y-auto scrollbar-hide">
+        <div class="scrollbar-hide overflow-y-auto">
           <div v-if="hasEmptyItems" class="sticky top-0 bg-gray-50">
             <button
               v-show="todoCount"
@@ -31,7 +31,7 @@
               }"
               @click="translateItems"
             >
-              <Icon class="text-gray-800 size-4" name="sparkles" />
+              <Icon class="size-4 text-gray-800" name="sparkles" />
               <span>
                 {{
                   isTranslating
@@ -41,7 +41,7 @@
               </span>
             </button>
           </div>
-          <div class="overflow-hidden bg-white rounded-lg shadow">
+          <div class="overflow-hidden rounded-lg bg-white shadow">
             <UiStringItem
               v-for="item in filteredItems"
               v-show="filteredItems.length"
@@ -67,21 +67,21 @@
                 @apply-suggestion="handleApplySuggestion"
               />
             </form>
-            <div v-show="isTranslating" class="grid w-full h-full place-content-center">
+            <div v-show="isTranslating" class="grid h-full w-full place-content-center">
               <RivePlayer
                 url="https://res.cloudinary.com/redeem/raw/upload/v1743751242/story-cms-ui/audio_visualizer_resize_teno9b.riv"
               />
             </div>
           </template>
           <div v-else class="py-10 text-gray-500">
-            <p v-if="searchTerm" class="text-sm text-center">
+            <p v-if="searchTerm" class="text-center text-sm">
               No results found for "{{ searchTerm }}"
             </p>
           </div>
         </div>
         <div
           v-if="activeFilter === 'todo' && !todoCount && !searchTerm"
-          class="flex flex-col items-center justify-center col-span-2 row-start-1"
+          class="col-span-2 row-start-1 flex flex-col items-center justify-center"
         >
           <Icon class="size-96" name="inbox-zero" />
         </div>
@@ -195,6 +195,7 @@ const filteredItems = computed(() => {
 
 const shared = useSharedStore();
 shared.setFromProps(props);
+shared.setCurrentStoryName('');
 
 const headerHeight = computed(() => shared.headerHeight);
 
@@ -241,7 +242,7 @@ const setFlag = async (key: string, state: FlagState) => {
   const newState = item?.flag === state ? null : state;
 
   try {
-    const response = await axios.post('/ui/flag', {
+    const response = await axios.post(`/${shared.locale}/ui/flag`, {
       key: key,
       state: newState,
     });
@@ -260,7 +261,7 @@ const setFlag = async (key: string, state: FlagState) => {
 
 const save = async (payload: UiItemPayload) => {
   try {
-    const response = await axios.post('/ui', payload);
+    const response = await axios.post(`/${shared.locale}/ui`, payload);
     if (response.status === 200) {
       router.reload({ only: ['ui', 'items'] });
       shared.addMessage(ResponseStatus.Accomplishment, 'Translation saved');
@@ -287,7 +288,7 @@ const translateItems = async () => {
     {} as Record<string, string>,
   );
   try {
-    const response = await axios.post('/ui/translate-bulk', payload);
+    const response = await axios.post(`/${shared.locale}/ui/translate-bulk`, payload);
 
     if (response.status === 200) {
       router.reload({ only: ['ui', 'items'] });

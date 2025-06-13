@@ -183,6 +183,13 @@ export interface DraftMeta {
   createdAt: string;
 }
 
+export interface StoryIndexProps {
+  index: IndexReadyItem[];
+  addStatus: AddStatus;
+  storyName: string;
+  storyId: number;
+}
+
 export interface DraftEditProps {
   draft: DraftMeta; // drafts
   bundle: any; // model
@@ -191,6 +198,7 @@ export interface DraftEditProps {
   lastPublished: string; // drafts
   providers: Providers; // widgets
   storyName: string;
+  storyId: number;
 }
 
 export interface SharedPageProps {
@@ -201,7 +209,6 @@ export interface SharedPageProps {
   stories: string[];
   user: User;
   uiTodoCount: number;
-  storyName: string;
 }
 
 export interface PageMeta {
@@ -237,10 +244,29 @@ export enum AddStatus {
   Wait,
 }
 
+export interface StatMetric {
+  name: string;
+  stat: number;
+  previousStat: number;
+}
+
+export interface Progress {
+  name: string;
+  done: number;
+  draft: number;
+  total: number;
+  lastUpdated: string;
+}
+
+export interface TranslationProgress {
+  progress: Progress[];
+  language: string;
+  locale: string;
+  isReadOnly: boolean;
+}
+
 export interface DashboardProps {
-  index: IndexReadyItem[];
-  addStatus: AddStatus;
-  storyName: string;
+  translationProgress: TranslationProgress[];
 }
 
 export interface ChapterMeta {
@@ -254,6 +280,7 @@ export interface PreviewProps {
   bundle: any;
   bundleView: string;
   storyName: string;
+  storyId: number;
   title: string;
   chapterLimit: number;
 }

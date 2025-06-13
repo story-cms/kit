@@ -1,5 +1,5 @@
 <template>
-  <div ref="layout" class="bg-gray-50">
+  <div ref="layout" class="bg-gray-50 pb-6">
     <div
       ref="container"
       :class="['relative mx-auto min-h-screen px-3 transition-all duration-75']"
@@ -14,7 +14,7 @@
           },
         ]"
       >
-        <div class="pb-6 mx-auto max-w-7xl">
+        <div class="mx-auto max-w-7xl pb-6">
           <header
             ref="header"
             :class="[
@@ -31,7 +31,7 @@
               :message="shared.messageCentre.message"
             />
           </header>
-          <main ref="main" class="h-full mt-1">
+          <main ref="main" class="mt-1 h-full">
             <slot />
           </main>
         </div>
@@ -53,7 +53,6 @@ const header = ref<HTMLElement | null>(null);
 const main = ref<HTMLElement | null>(null);
 const layout = ref<HTMLElement | null>(null);
 const container = ref<HTMLElement | null>(null);
-
 const onScroll = () => {
   if (header.value && main.value) {
     const headerRect = header.value.getBoundingClientRect();

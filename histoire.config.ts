@@ -16,8 +16,12 @@ export default defineConfig({
         title: 'Field Widgets',
       },
       {
+        id: 'dashboard',
+        title: 'Dashboard',
+      },
+      {
         id: 'chapter',
-        title: 'Chapter Index',
+        title: 'Chapter',
       },
       {
         id: 'draft',

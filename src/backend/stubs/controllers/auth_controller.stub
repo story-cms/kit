@@ -1,9 +1,9 @@
 {{{
   exports({ to: app.makePath('app/controllers/auth_controller.ts') })
 }}}
-import type { HttpContext } from '@adonisjs/core/http';
-import User from '#models/user';
 import Activity from '#models/activity';
+import User from '#models/user';
+import type { HttpContext } from '@adonisjs/core/http';
 
 export default class AuthController {
   public async index(ctx: HttpContext) {
@@ -26,8 +26,7 @@ export default class AuthController {
         locale: user.defaultLanguage(),
         action: 'logged in',
       });
-      ctx.session.put('locale', user.defaultLanguage());
-      ctx.response.redirect('/');
+      ctx.response.redirect({{ '`/${user.defaultLanguage()}/dashboard`' }});
     } catch {
       ctx.session.flash('errorsBag', { credentials: 'Invalid username or password' });
       ctx.response.redirect().back();
@@ -38,7 +37,7 @@ export default class AuthController {
     ctx.session.clear();
     await Activity.create({
       userId: ctx.auth.user?.id,
-      locale: ctx.version?.locale,
+      locale: 'en',
       action: 'logged out',
     });
     await ctx.auth.use('web').logout();
