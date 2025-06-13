@@ -261,6 +261,7 @@ export interface TranslationProgress {
   progress: Progress[];
   language: string;
   locale: string;
+  isReadOnly: boolean;
 }
 
 export interface DashboardProps {

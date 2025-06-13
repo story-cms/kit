@@ -20,6 +20,7 @@
         ]"
         language="German"
         locale="de"
+        :is-read-only="false"
       />
     </Variant>
     <Variant title="Read only">
@@ -42,6 +43,7 @@
         ]"
         language="German"
         locale="de"
+        :is-read-only="true"
       />
     </Variant>
     <Variant title="Completed">
@@ -64,6 +66,7 @@
         ]"
         language="German"
         locale="de"
+        :is-read-only="false"
       />
     </Variant>
   </Story>

@@ -1,6 +1,7 @@
 <template>
   <div
     class="flex max-w-52 flex-col rounded-2xl bg-white px-[18px] pb-3 pt-[18px] shadow"
+    :class="isReadOnly ? 'opacity-50' : ''"
   >
     <div v-if="hasCompleteRings" class="grow">
       <div class="relative mx-auto size-24 rounded-full border-[3px] border-green-500">
@@ -14,7 +15,7 @@
       <Ring
         v-for="item in progress"
         :key="item.name"
-        class="cursor-pointer"
+        :class="isReadOnly ? '' : 'cursor-pointer'"
         :done="item.done"
         :draft="item.draft"
         :total="item.total"
@@ -52,6 +53,8 @@ const hasCompleteRings = computed(() => {
 });
 
 const goTo = (item: Progress) => {
+  if (props.isReadOnly) return;
+
   if (item.name === 'Interface') {
     router.visit(`/${locale.value}/ui`);
     return;
