@@ -1,22 +1,19 @@
 {{{
   exports({ to: app.makePath('app/controllers/users_controller.ts') })
 }}}
-import { randomBytes } from 'node:crypto';
-import { DateTime } from 'luxon';
-import type { HttpContext } from '@adonisjs/core/http';
-import string from '@adonisjs/core/helpers/string';
-import config from '@adonisjs/core/services/config';
-import mail from '@adonisjs/mail/services/main';
-import { UsersProps } from '@story-cms/kit';
-import vine from '@vinejs/vine';
-
 import Activity from '#models/activity';
 import User from '#models/user';
 import { storyContextFrom } from '#services/helpers';
 import { UserService } from '#services/user_service';
 import env from '#start/env';
-import { validationMessages } from '#validators/auth';
 import { createUserValidator, updateUserValidator } from '#validators/user';
+import string from '@adonisjs/core/helpers/string';
+import type { HttpContext } from '@adonisjs/core/http';
+import config from '@adonisjs/core/services/config';
+import mail from '@adonisjs/mail/services/main';
+import { UsersProps } from '@story-cms/kit';
+import { DateTime } from 'luxon';
+import { randomBytes } from 'node:crypto';
 
 export default class UsersController {
 
@@ -93,7 +90,6 @@ export default class UsersController {
 
   // create a new user
   public async store(ctx: HttpContext) {
-    vine.messagesProvider = validationMessages;
     const payload = await ctx.request.validateUsing(createUserValidator);
     const { version } = storyContextFrom(ctx);
 
