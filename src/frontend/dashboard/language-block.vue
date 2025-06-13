@@ -1,7 +1,7 @@
 <template>
   <div
     class="flex max-w-52 flex-col rounded-2xl bg-white px-[18px] pb-3 pt-[18px] shadow"
-    :class="progress.isReadOnly ? 'opacity-50' : ''"
+    :class="progress.isReadOnly ? 'opacity-60' : ''"
   >
     <div v-if="hasCompleteRings" class="grow">
       <div class="relative mx-auto size-24 rounded-full border-[3px] border-green-500">

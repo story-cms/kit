@@ -20,7 +20,7 @@ export default class DashboardController {
     }
 
     const progressService = new ProgressService();
-    const translationProgress = await progressService.progress();
+    const translationProgress = await progressService.progress(ctx.auth.user!);
 
     const props: DashboardProps = {
       translationProgress: translationProgress ?? [],

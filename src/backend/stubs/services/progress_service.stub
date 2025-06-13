@@ -1,14 +1,14 @@
 {{{
   exports({ to: app.makePath('app/services/progress_service.ts') })
 }}}
-
 import { TranslationProgress, Progress, FlagState } from '@story-cms/kit';
 import storyConfig from '#config/story';
 import Ui from '#models/ui';
 import Index from '#models/index';
+import User from '#models/user';
 
 export default class ProgressService {
-  public async progress(): Promise<TranslationProgress[]> {
+  public async progress(user: User): Promise<TranslationProgress[]> {
     const translationProgress: TranslationProgress[] = [];
 
     const languages = storyConfig.languages
@@ -67,6 +67,7 @@ export default class ProgressService {
       translationProgress.push({
         locale: language.locale,
         language: language.language,
+        isReadOnly: !user.isAllowed(language.locale),
         progress: [
           contentProgress,
           {
