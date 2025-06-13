@@ -1,7 +1,7 @@
 <template>
   <div
     class="flex max-w-52 flex-col rounded-2xl bg-white px-[18px] pb-3 pt-[18px] shadow"
-    :class="isReadOnly ? 'opacity-50' : ''"
+    :class="progress.isReadOnly ? 'opacity-50' : ''"
   >
     <div v-if="hasCompleteRings" class="grow">
       <div class="relative mx-auto size-24 rounded-full border-[3px] border-green-500">
@@ -13,9 +13,9 @@
     </div>
     <div v-else class="flex grow justify-between">
       <Ring
-        v-for="item in progress"
+        v-for="item in progress.progress"
         :key="item.name"
-        :class="isReadOnly ? '' : 'cursor-pointer'"
+        :class="progress.isReadOnly ? '' : 'cursor-pointer'"
         :done="item.done"
         :draft="item.draft"
         :total="item.total"
@@ -26,9 +26,9 @@
     </div>
     <div :class="['flex flex-col gap-y-1', hasCompleteRings ? 'mt-3' : 'mt-10']">
       <p class="text-base font-bold leading-6 text-gray-800">
-        {{ language }}
+        {{ progress.language }}
 
-        <span class="uppercase"> ({{ locale }}) </span>
+        <span class="uppercase"> ({{ progress.locale }}) </span>
       </p>
       <p class="text-xs font-medium leading-4 text-gray-500">
         Last update: <span>{{ lastUpdate }}</span>
@@ -38,34 +38,32 @@
 </template>
 
 <script setup lang="ts">
-import { toRefs, computed } from 'vue';
+import { computed } from 'vue';
 import Ring from './ring.vue';
 import Icon from '../shared/icon.vue';
 import { Progress, TranslationProgress } from '../../types';
 import { router } from '@inertiajs/vue3';
 
-const props = defineProps<TranslationProgress>();
-
-const { progress, language, locale } = toRefs(props);
+const props = defineProps<{ progress: TranslationProgress }>();
 
 const hasCompleteRings = computed(() => {
-  return progress.value.every((stat) => stat.done === stat.total);
+  return props.progress.progress.every((stat) => stat.done === stat.total);
 });
 
 const goTo = (item: Progress) => {
-  if (props.isReadOnly) return;
+  if (props.progress.isReadOnly) return;
 
   if (item.name === 'Interface') {
-    router.visit(`/${locale.value}/ui`);
+    router.visit(`/${props.progress.locale}/ui`);
     return;
   }
 
-  router.visit(`/${locale.value}/story/1`);
+  router.visit(`/${props.progress.locale}/story/1`);
 };
 
 const lastUpdate = computed(() => {
   // Get the most recent update
-  const timestamp = progress.value
+  const timestamp = props.progress.progress
     .map((stat) => stat.lastUpdated)
     .sort()
     .pop();

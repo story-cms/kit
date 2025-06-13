@@ -50,9 +50,7 @@
       <LanguageBlock
         v-for="progress in filteredProgress"
         :key="progress.language"
-        :progress="progress.progress"
-        :language="progress.language"
-        :locale="progress.locale"
+        :progress="progress"
       />
     </div>
   </AppLayout>
