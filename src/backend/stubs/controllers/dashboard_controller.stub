@@ -1,50 +1,31 @@
 {{{
   exports({ to: app.makePath('app/controllers/dashboard_controller.ts') })
 }}}
-import type { HttpContext } from '@adonisjs/core/http';
-import vine from '@vinejs/vine';
-import storyConfig from '#config/story';
-import { DashboardProps } from '@story-cms/kit';
 import ProgressService from '#services/progress_service';
+import type { HttpContext } from '@adonisjs/core/http';
+import { DashboardProps } from '@story-cms/kit';
 
 export default class DashboardController {
   public async index(ctx: HttpContext) {
+    const defaultHome = {{ '`/${ctx.auth.user?.defaultLanguage()}/dashboard`' }};
+
+    // if no locale specified, redirect to defaultHome
+    if (!ctx.params.locale) {
+      return ctx.response.redirect(defaultHome);
+    }
+
+    // if locale is not allowed, redirect to defaultHome
+    if (!ctx.auth.user?.isAllowed(ctx.params.locale)) {
+      return ctx.response.redirect(defaultHome);
+    }
+
     const progressService = new ProgressService();
-    const translationProgress = await progressService.progress();
+    const translationProgress = await progressService.progress(ctx.auth.user!);
 
     const props: DashboardProps = {
       translationProgress: translationProgress ?? [],
     };
 
     return ctx.inertia.render('DashboardIndex', { ...props });
-  }
-
-  public async switch(ctx: HttpContext) {
-    const switchRequest = vine.compile(
-      vine.object({
-        language: vine.string().nullable(),
-        story: vine.string().nullable(),
-      }),
-    );
-    const payload = await switchRequest.validate(ctx.request.all());
-
-    // set the locale if it has been provided
-    if (payload.language) {
-      const language =
-        storyConfig.languages.find((lang) => lang.language === payload.language) ||
-        storyConfig.languages[0];
-      ctx.session.put('locale', language.locale);
-    }
-
-    // set the story if it has been provided
-    if (payload.story) {
-      const story =
-        storyConfig.stories.find((item) => item.name === payload.story) ||
-        storyConfig.stories[0];
-      ctx.session.put('storyId', story.id);
-    }
-
-    // force a page relaod to refresh the stores
-    return ctx.inertia.location('/');
   }
 }

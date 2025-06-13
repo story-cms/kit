@@ -65,6 +65,10 @@ export default class User extends compose(BaseModel, AuthFinder) {
     return this.role === 'admin';
   }
 
+  public isAllowed(locale: string): boolean {
+    return this.language === '*' || this.language === locale;
+  }
+
   @computed()
   public get initials(): string {
     const parts = this.name

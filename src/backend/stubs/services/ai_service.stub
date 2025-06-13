@@ -27,7 +27,7 @@ export class AiService {
     for (const batch of batches) {
       const prompt = this.createPrompt(input.outputLocales, batch);
 
-      const completion = await this.client.beta.chat.completions.parse({
+      const completion = await this.client.chat.completions.parse({
         messages: [
           { role: 'system', content: this.SYSTEM_PROMPT },
           { role: 'user', content: prompt },

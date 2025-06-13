@@ -2,11 +2,12 @@
   exports({ to: app.makePath('start/routes/dashboard.ts') })
 }}}
 import router from '@adonisjs/core/services/router';
+
 const DashboardController = () => import('#controllers/dashboard_controller');
 const AnalyticsController = () => import('#controllers/analytics_controller');
 
 export default () => {
   router.get('/', [DashboardController, 'index']);
-  router.post('/switch', [DashboardController, 'switch']);
+  router.get(':locale/dashboard', [DashboardController, 'index']);
   router.get('/analytics', [AnalyticsController, 'index']);
 };

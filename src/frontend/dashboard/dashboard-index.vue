@@ -50,9 +50,7 @@
       <LanguageBlock
         v-for="progress in filteredProgress"
         :key="progress.language"
-        :progress="progress.progress"
-        :language="progress.language"
-        :locale="progress.locale"
+        :progress="progress"
       />
     </div>
   </AppLayout>
@@ -113,7 +111,12 @@ onMounted(() => {
   axios
     .get('/analytics')
     .then((response) => {
-      stats.value = response.data;
+      // check if response is an object
+      if (typeof response.data === 'object') {
+        stats.value = response.data;
+      } else {
+        stats.value = [];
+      }
       isLoading.value = false;
     })
     .catch((error) => {

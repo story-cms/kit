@@ -1,7 +1,7 @@
 <template>
   <section
     :class="[
-      'flex w-full items-center gap-y-7 px-3',
+      'flex w-full items-center gap-y-7 px-3 transition-all duration-300 ease-out',
       shared.isMainUnderHeader
         ? 'flex-row items-center justify-between py-5'
         : 'flex-col justify-center bg-white pb-[51px] pt-10 shadow',
@@ -29,44 +29,39 @@
         Hello
         {{ shared.isMainUnderHeader ? shared.user.name.split(' ')[0] : shared.user.name }}
       </h1>
-      <Transition
-        enter-active-class="transition duration-300 ease-out"
-        enter-from-class="opacity-0"
-        enter-to-class="opacity-100"
-        leave-active-class="transition duration-200 ease-in"
-        leave-from-class="opacity-100"
-        leave-to-class="opacity-0"
+      <p
+        v-show="!shared.isMainUnderHeader"
+        class="mt-[14px] text-2xl font-semibold leading-8"
       >
-        <p
-          v-show="!shared.isMainUnderHeader"
-          class="mt-[14px] text-2xl font-semibold leading-8"
-        >
-          Welcome to {{ shared.meta.name }}
-        </p>
-      </Transition>
+        Welcome to {{ shared.meta.name }}
+      </p>
     </div>
     <div :class="['flex flex-wrap gap-4']">
       <Link
-        href="/dashboard/new-page"
+        :href="`/${shared.locale}/page/create`"
         class="flex items-center gap-x-2 rounded-full bg-blue-50 px-3 py-[9px] text-sm font-bold leading-4 text-blue-700 shadow-[0px_1px_2px_0px_#0000000D] hover:bg-blue-100"
       >
         <Icon name="document-add" />
         New Page
       </Link>
       <Link
-        href="/dashboard/new-page"
+        v-if="shared.user.isManager"
+        :href="`/${shared.locale}/user`"
         class="flex items-center gap-x-2 rounded-full bg-blue-50 px-3 py-[9px] text-sm font-bold leading-4 text-blue-700 shadow-[0px_1px_2px_0px_#0000000D] hover:bg-blue-100"
       >
         <Icon name="user-add" />
         New User
       </Link>
-      <Link
-        href="/dashboard/new-page"
+      <a
+        v-if="shared.meta.helpUrl"
         class="flex items-center gap-x-2 rounded-full bg-blue-50 px-3 py-[9px] text-sm font-bold leading-4 text-blue-700 shadow-[0px_1px_2px_0px_#0000000D] hover:bg-blue-100"
+        :href="shared.meta.helpUrl"
+        target="_blank"
+        rel="noopener noreferrer"
       >
         <Icon name="question-mark-circle" />
         Get Support
-      </Link>
+      </a>
     </div>
   </section>
 </template>

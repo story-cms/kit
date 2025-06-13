@@ -125,9 +125,8 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'routes/auth.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/routes.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/dashboard.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'routes/drafts.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'routes/chapters.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/pages.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'routes/stories.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/api.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/ui.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'inertia/app.stub', {});
@@ -226,20 +225,8 @@ export async function configure(command: Configure) {
   });
 
   /**
-   * Register provider
-   */
-  await codemods.updateRcFile((rcFile: any) => {
-    rcFile.addProvider('@story-cms/kit/story_provider');
-  });
-
-  /**
    * Register middleware
    */
-  await codemods.registerMiddleware('router', [
-    {
-      path: '@story-cms/kit/version_context_middleware',
-    },
-  ]);
 
   await codemods.registerMiddleware('named', [
     {

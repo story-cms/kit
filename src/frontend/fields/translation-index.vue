@@ -200,7 +200,7 @@ const onError = (_errors: Errors, message: string) => {
 };
 
 const deleteDraft = () => {
-  router.delete(`/draft/${props.draft.id}`, {
+  router.delete(`/${shared.locale}/story/${props.storyId}/draft/${props.draft.id}`, {
     onSuccess: () => onSuccess('Draft successfully deleted'),
     onError: (e) => onError(e, 'Error deleting draft'),
   });
@@ -209,43 +209,59 @@ const deleteDraft = () => {
 let isSettingErrors = false;
 
 const saveDraft = debounce(2000, () => {
-  router.post(`/draft/${props.draft.id}/save`, getPayload(), {
-    preserveScroll: true,
-    onSuccess: () => {
-      onSuccess();
-      if (props.user.role === 'admin') return;
-      drafts.setStatus('started');
+  router.post(
+    `/${shared.locale}/story/${props.storyId}/draft/${props.draft.id}/save`,
+    getPayload(),
+    {
+      preserveScroll: true,
+      onSuccess: () => {
+        onSuccess();
+        if (props.user.role === 'admin') return;
+        drafts.setStatus('started');
+      },
+      onError: (e) => onError(e, 'Error saving draft.'),
     },
-    onError: (e) => onError(e, 'Error saving draft.'),
-  });
+  );
 });
 
 const submitDraft = () => {
-  router.post(`/draft/${props.draft.id}/submit`, getPayload(), {
-    preserveScroll: true,
-    onSuccess: () => onSuccess(`${props.meta.chapterType} submitted for review`),
-    onError: (e) =>
-      onError(e, 'Draft not submitted. Please review and correct any errors.'),
-  });
+  router.post(
+    `/${shared.locale}/story/${props.storyId}/draft/${props.draft.id}/submit`,
+    getPayload(),
+    {
+      preserveScroll: true,
+      onSuccess: () => onSuccess(`${props.meta.chapterType} submitted for review`),
+      onError: (e) =>
+        onError(e, 'Draft not submitted. Please review and correct any errors.'),
+    },
+  );
 };
 
 const publishDraft = () => {
   widgets.setIsDirty(true);
 
-  router.post(`/draft/${props.draft.id}/publish`, getPayload(), {
-    preserveScroll: true,
-    onSuccess: () => onSuccess('Draft successfully published.'),
-    onError: (e) =>
-      onError(e, 'Draft not published. Please review and correct any errors.'),
-  });
+  router.post(
+    `/${shared.locale}/story/${props.storyId}/draft/${props.draft.id}/publish`,
+    getPayload(),
+    {
+      preserveScroll: true,
+      onSuccess: () => onSuccess('Draft successfully published.'),
+      onError: (e) =>
+        onError(e, 'Draft not published. Please review and correct any errors.'),
+    },
+  );
 };
 
 const reject = () => {
-  router.post(`/draft/${props.draft.id}/reject`, getPayload(), {
-    preserveScroll: true,
-    onSuccess: () => onSuccess('Draft sent back for fixing.'),
-    onError: (e) => onError(e, 'Draft could not be sent back.'),
-  });
+  router.post(
+    `/${shared.locale}/story/${props.storyId}/draft/${props.draft.id}/reject`,
+    getPayload(),
+    {
+      preserveScroll: true,
+      onSuccess: () => onSuccess('Draft sent back for fixing.'),
+      onError: (e) => onError(e, 'Draft could not be sent back.'),
+    },
+  );
 };
 
 interface SourceItem {

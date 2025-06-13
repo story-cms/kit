@@ -18,11 +18,12 @@ test.group('ProgressService', (group) => {
     const service = new ProgressService();
 
     // Create user
-    await User.create({
+    const user = await User.create({
       id: 1,
       name: 'Test User',
       email: 'test@test.com',
       password: 'password',
+      language: '*',
     });
 
     // Create test data
@@ -119,7 +120,7 @@ test.group('ProgressService', (group) => {
     ]);
 
     // 2. act
-    const result = await service.progress();
+    const result = await service.progress(user);
 
     // 3. assert
     assert.isArray(result);

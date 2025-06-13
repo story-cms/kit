@@ -53,7 +53,6 @@ const header = ref<HTMLElement | null>(null);
 const main = ref<HTMLElement | null>(null);
 const layout = ref<HTMLElement | null>(null);
 const container = ref<HTMLElement | null>(null);
-
 const onScroll = () => {
   if (header.value && main.value) {
     const headerRect = header.value.getBoundingClientRect();
