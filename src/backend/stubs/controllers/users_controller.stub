@@ -107,7 +107,7 @@ export default class UsersController {
         locale: version.locale,
         action: {{ '`created user with id ${user.id}`' }},
       });
-      const appUrl = ctx.request.completeUrl().split('/user')[0];
+      const appUrl = new URL(ctx.request.completeUrl()).origin;
       const appName = config.get('story.meta.name');
       // send email to the user
       await mail.send((message) => {
