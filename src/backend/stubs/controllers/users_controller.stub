@@ -116,7 +116,7 @@ export default class UsersController {
           .to(user.email)
           .subject('Create your account')
           .htmlView('emails/create_account', {
-            name: user.name,
+            inviter: auth.user?.name
             appName: appName,
             link: {{ '`${appUrl}/create-account/${user.resetToken}`' }},
           });
