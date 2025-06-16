@@ -7,8 +7,8 @@ import vine, { SimpleMessagesProvider } from '@vinejs/vine';
 import { FieldContext } from '@vinejs/vine/types';
 
 vine.messagesProvider = new SimpleMessagesProvider({
-  'name.required': "The name can't be blank.",
-  'email.required': "The email can't be blank.",
+  'name.required': 'This field is required',
+  'email.required': 'This field is required',
   'email.unique': 'That email is already used.',
   'email.email': 'Enter a valid email address.',
 });
