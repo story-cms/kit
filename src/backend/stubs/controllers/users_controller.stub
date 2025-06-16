@@ -1,18 +1,19 @@
 {{{
   exports({ to: app.makePath('app/controllers/users_controller.ts') })
 }}}
-import { randomBytes } from 'node:crypto';
-
-import type { HttpContext } from '@adonisjs/core/http';
-import { UsersProps } from '@story-cms/kit';
-import vine from '@vinejs/vine';
-
 import Activity from '#models/activity';
 import User from '#models/user';
 import { storyContextFrom } from '#services/helpers';
 import { UserService } from '#services/user_service';
-import { validationMessages } from '#validators/auth';
+import env from '#start/env';
 import { createUserValidator, updateUserValidator } from '#validators/user';
+import string from '@adonisjs/core/helpers/string';
+import type { HttpContext } from '@adonisjs/core/http';
+import config from '@adonisjs/core/services/config';
+import mail from '@adonisjs/mail/services/main';
+import { UsersProps } from '@story-cms/kit';
+import { DateTime } from 'luxon';
+import { randomBytes } from 'node:crypto';
 
 export default class UsersController {
 
@@ -89,17 +90,36 @@ export default class UsersController {
 
   // create a new user
   public async store(ctx: HttpContext) {
-    vine.messagesProvider = validationMessages;
     const payload = await ctx.request.validateUsing(createUserValidator);
     const { version } = storyContextFrom(ctx);
 
     try {
       const randomString = this.generateRandomString();
-      const user = await User.create({ ...payload, password: randomString });
+      const token = string.generateRandom(32);
+      const user = await User.create({
+        ...payload,
+        password: randomString,
+        resetToken: token,
+        resetTokenCreatedAt: DateTime.now(),
+      });
       await Activity.create({
         userId: ctx.auth.user?.id,
         locale: version.locale,
         action: {{ '`created user with id ${user.id}`' }},
+      });
+      const appUrl = new URL(ctx.request.completeUrl()).origin;
+      const appName = config.get('story.meta.name');
+      // send email to the user
+      await mail.send((message) => {
+        message
+          .from(env.get('MAIL_FROM_ADDRESS', ''))
+          .to(user.email)
+          .subject('Create your account')
+          .htmlView('emails/create_account', {
+            inviter: ctx.auth.user?.name,
+            appName: appName,
+            link: {{ '`${appUrl}/create-account/${user.resetToken}`' }},
+          });
       });
     } catch (e) {
       ctx.logger.error(e.message);
@@ -118,3 +138,4 @@ export default class UsersController {
       .substring(0, 16);
   }
 }
+

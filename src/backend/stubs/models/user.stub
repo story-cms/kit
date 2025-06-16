@@ -82,9 +82,14 @@ export default class User extends compose(BaseModel, AuthFinder) {
   }
 
   @computed()
-   public get meta(): Pick<
+  public get hasPendingInvite(): boolean {
+    return this.resetToken !== '';
+  }
+
+  @computed()
+  public get meta(): Pick<
     UserType,
-    'id' | 'name' | 'email' | 'role' | 'language' | 'initials'
+    'id' | 'name' | 'email' | 'role' | 'language' | 'initials' | 'hasPendingInvite'
   > {
     return {
       id: this.id,
@@ -93,6 +98,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
       role: this.role,
       language: this.language || 'en',
       initials: this.initials,
+      hasPendingInvite: this.hasPendingInvite,
     };
   }
 }

@@ -16,8 +16,9 @@
   </td>
   <td class="px-3 py-4 text-sm text-gray-800 whitespace-nowrap">
     <span class="rounded-full bg-gray-100 px-[10px] py-[2px] capitalize">
-      {{ user.role }}</span
-    >
+      <span v-if="user.hasPendingInvite" class="normal-case">Invite pending</span>
+      <span v-else>{{ user.role }}</span>
+    </span>
   </td>
   <td class="px-3 py-4 text-sm text-blue-800 whitespace-nowrap">
     <span class="rounded-full bg-blue-100 px-[10px] py-[2px]"> {{ language }}</span>

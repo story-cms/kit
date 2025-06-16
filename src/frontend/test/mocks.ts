@@ -428,6 +428,7 @@ export const user = {
   isAdmin: true,
   role: 'editor',
   language: 'en',
+  hasPendingInvite: false,
 };
 
 export const stories = ['John', 'Acts'];

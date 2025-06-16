@@ -5,6 +5,7 @@ import router from '@adonisjs/core/services/router';
 import { middleware } from '#start/kernel';
 const AuthController = () => import('#controllers/auth_controller');
 const ForgotPasswordController = () => import('#controllers/forgot_password_controller');
+const CreateAccountController = () => import('#controllers/create_account_controller');
 
 export default () => {
   router.get('/login', [AuthController, 'index']);
@@ -15,4 +16,6 @@ export default () => {
   router.post('/forgot-password', [ForgotPasswordController, 'forgotPassword']);
   router.get('/reset-password/:token', [ForgotPasswordController, 'resetRequest']);
   router.post('/reset-password/:token', [ForgotPasswordController, 'resetPassword']);
+  router.get('/create-account/:token', [CreateAccountController, 'index']);
+  router.post('/create-account/:token', [CreateAccountController, 'updatePassword']);
 };

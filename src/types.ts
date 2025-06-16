@@ -172,6 +172,7 @@ export interface User {
   isAdmin: boolean;
   role: string;
   language: string;
+  hasPendingInvite: boolean;
 }
 
 export interface DraftMeta {
@@ -285,7 +286,10 @@ export interface PreviewProps {
 }
 
 export interface UserMeta
-  extends Pick<User, 'id' | 'name' | 'email' | 'role' | 'language' | 'initials'> {
+  extends Pick<
+    User,
+    'id' | 'name' | 'email' | 'role' | 'language' | 'initials' | 'hasPendingInvite'
+  > {
   lastActivity: string | null;
 }
 
