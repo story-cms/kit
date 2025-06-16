@@ -213,33 +213,11 @@
                               color: #000000;
                             "
                           >
-                            Hi \{\{ name \}\}, you have been invited to collaborate on the
-                          \{\{ appName \}\} app.
+                          \{\{ inviter \}\} has invited you to \{\{ appName \}\} content management system. To accept the invite and create an account you will need to set a new password by tapping the button below.
                           </div>
                         </td>
                       </tr>
-                      <tr>
-                        <td
-                          align="left"
-                          style="
-                            font-size: 0px;
-                            padding: 10px 25px;
-                            word-break: break-word;
-                          "
-                        >
-                          <div
-                            style="
-                              font-family: Ubuntu, Helvetica, Arial, sans-serif;
-                              font-size: 16px;
-                              line-height: 1;
-                              text-align: left;
-                              color: #000000;
-                            "
-                          >
-                            Please click on the link below create your account.
-                          </div>
-                        </td>
-                      </tr>
+
                       <tr>
                         <td
                           align="center"
@@ -290,7 +268,7 @@
                                   "
                                   target="_blank"
                                 >
-                                  Create Account
+                              Accept Invite
                                 </a>
                               </td>
                             </tr>
