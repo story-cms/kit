@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full bg-white p-6">
+  <div class="w-full rounded-lg bg-white p-6 shadow">
     <div>
       <dt class="text-base font-normal text-gray-900">
         <span

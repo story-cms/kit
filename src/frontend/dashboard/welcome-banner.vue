@@ -1,7 +1,7 @@
 <template>
   <section
     :class="[
-      'flex w-full items-center gap-y-7 px-3 transition-all duration-300 ease-out',
+      'flex w-full items-center gap-y-7 rounded-b-lg px-3 transition-all duration-300 ease-out',
       shared.isMainUnderHeader
         ? 'flex-row items-center justify-between py-5'
         : 'flex-col justify-center bg-white pb-[51px] pt-10 shadow',
