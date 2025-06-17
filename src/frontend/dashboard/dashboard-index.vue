@@ -36,12 +36,14 @@
           />
         </div>
 
-        <div class="flex gap-x-4">
-          <div class="flex items-center gap-x-2 text-sm font-medium leading-4">
-            <span class="size-4 rounded-full bg-green-500"></span>Human
+        <div class="flex gap-x-6">
+          <div class="flex items-center justify-center gap-x-2">
+            <Icon name="pie-chart" class="size-5 text-green-500" />
+            <span class="text-sm font-medium leading-4">Human</span>
           </div>
-          <div class="flex items-center gap-x-2 text-sm font-medium leading-4">
-            <span class="size-4 rounded-full bg-blue-500"></span>AI
+          <div class="flex items-center justify-center gap-x-2">
+            <Icon name="pie-chart" class="size-5 text-blue-500" />
+            <span class="text-sm font-medium leading-4">AI</span>
           </div>
         </div>
       </div>
@@ -63,6 +65,7 @@ import WelcomeBanner from './welcome-banner.vue';
 import StatTiles from './stat-tiles.vue';
 import IndexFilter from '../shared/index-filter.vue';
 import LanguageBlock from './language-block.vue';
+import Icon from '../shared/icon.vue';
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 
