@@ -23,9 +23,9 @@
       </div>
       <div
         v-if="isMultiLingual"
-        class="mb-7 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
+        class="mb-7 flex flex-col justify-between gap-y-4 px-3 md:flex-row md:items-center md:gap-x-4"
       >
-        <div class="flex gap-x-4 px-3">
+        <div class="flex gap-x-4">
           <IndexFilter
             :tabs="[
               { label: 'To do', count: todoCount },
@@ -48,7 +48,15 @@
         </div>
       </div>
     </div>
-    <div v-if="isMultiLingual" class="flex flex-wrap gap-8">
+    <div
+      v-if="isMultiLingual"
+      class="grid grid-cols-[repeat(auto-fit,_minmax(207px,_207px))] justify-center gap-x-[34px] gap-y-[27px]"
+      :class="
+        filteredProgress.length > 3
+          ? 'min-[490px]:justify-between'
+          : 'min-[490px]:justify-start'
+      "
+    >
       <LanguageBlock
         v-for="progress in filteredProgress"
         :key="progress.language"
