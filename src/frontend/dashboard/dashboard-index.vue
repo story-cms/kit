@@ -25,7 +25,7 @@
         v-if="isMultiLingual"
         class="mb-4 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
       >
-        <div class="flex gap-x-4">
+        <div class="flex gap-x-4 px-3">
           <IndexFilter
             :tabs="[
               { label: 'To do', count: todoCount },
