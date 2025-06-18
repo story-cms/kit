@@ -41,14 +41,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, onUnmounted, onBeforeMount } from 'vue';
+import {
+  ref,
+  onMounted,
+  onBeforeUnmount,
+  onUnmounted,
+  onBeforeMount,
+  computed,
+} from 'vue';
 import { useSharedStore } from '../store';
-
 import MessageCentre from './message-centre.vue';
+
+defineExpose({
+  name: 'built-in-sidebar',
+});
 
 const shared = useSharedStore();
 
-const Sidebar = shared.sidebar;
+const Sidebar = computed(() => {
+  console.log('! Sidebar fetched', shared.sidebar);
+  return shared.sidebar;
+});
 
 const header = ref<HTMLElement | null>(null);
 const main = ref<HTMLElement | null>(null);
@@ -102,6 +115,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', onScroll);
 });
+
 onUnmounted(() => {
   window.removeEventListener('resize', resizeHook);
 });
