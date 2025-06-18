@@ -70,6 +70,7 @@ const changeType = computed(() =>
 
 const changePercentage = computed(() => {
   const change = props.metric.stat - props.metric.previousStat;
+  if (props.metric.previousStat === 0) return '0%';
   const percentage = Math.abs(change / props.metric.previousStat) * 100;
   return `${percentage.toFixed(0)}%`;
 });
