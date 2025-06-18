@@ -1,19 +1,19 @@
 <template>
-  <div class="w-full rounded-lg bg-white p-6 shadow">
+  <div class="w-full p-6 bg-white rounded-lg shadow">
     <div>
       <dt class="text-base font-normal text-gray-900">
         <span
           v-if="isLoading"
-          class="inline-block h-4 w-32 animate-pulse rounded bg-gray-200"
+          class="inline-block w-32 h-4 bg-gray-200 rounded animate-pulse"
         ></span>
         <span v-else>{{ props.metric.name }}</span>
       </dt>
-      <dd class="mt-1 flex items-baseline justify-between">
+      <dd class="flex items-baseline justify-between mt-1">
         <div class="flex items-baseline text-2xl font-semibold leading-8 text-gray-900">
           <template v-if="isLoading">
-            <span class="inline-block h-8 w-24 animate-pulse rounded bg-gray-200"></span>
+            <span class="inline-block w-24 h-8 bg-gray-200 rounded animate-pulse"></span>
             <span
-              class="ml-2 inline-block h-4 w-16 animate-pulse rounded bg-gray-200"
+              class="inline-block w-16 h-4 ml-2 bg-gray-200 rounded animate-pulse"
             ></span>
           </template>
           <template v-else>
@@ -47,9 +47,9 @@
           <span class="sr-only">
             {{ changeType === 'increase' ? 'Increased' : 'Decreased' }} by
           </span>
-          {{ change }}
+          {{ changePercentage }}
         </div>
-        <div v-else class="inline-block h-6 w-16 animate-pulse rounded bg-gray-200"></div>
+        <div v-else class="inline-block w-16 h-6 bg-gray-200 rounded animate-pulse"></div>
       </dd>
     </div>
   </div>
@@ -67,5 +67,10 @@ const props = defineProps<{
 const changeType = computed(() =>
   props.metric.stat - props.metric.previousStat >= 0 ? 'increase' : 'decrease',
 );
-const change = computed(() => Math.abs(props.metric.stat - props.metric.previousStat));
+
+const changePercentage = computed(() => {
+  const change = props.metric.stat - props.metric.previousStat;
+  const percentage = Math.abs(change / props.metric.previousStat) * 100;
+  return `${percentage.toFixed(0)}%`;
+});
 </script>
