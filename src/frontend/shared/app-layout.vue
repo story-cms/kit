@@ -52,10 +52,6 @@ import {
 import { useSharedStore } from '../store';
 import MessageCentre from './message-centre.vue';
 
-defineExpose({
-  name: 'built-in-sidebar',
-});
-
 const shared = useSharedStore();
 
 const Sidebar = computed(() => {
