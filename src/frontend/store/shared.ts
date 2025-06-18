@@ -8,6 +8,7 @@ import {
   User,
   ResponseStatus,
 } from '../../types';
+import standardSidebar from '../shared/sidebar.vue';
 
 const defaultLanguage: LanguageSpecification = {
   locale: 'en',
@@ -58,6 +59,12 @@ export const useSharedStore = defineStore('shared', () => {
   };
 
   // sidebar
+
+  const sidebar = ref<typeof standardSidebar>(standardSidebar);
+
+  const setSidebar = (fresh: typeof standardSidebar) => {
+    sidebar.value = fresh;
+  };
 
   const hasOpenSidebar = ref(true);
 
@@ -181,6 +188,8 @@ export const useSharedStore = defineStore('shared', () => {
     containerWidth,
     setContainerWidth,
 
+    sidebar,
+    setSidebar,
     hasOpenSidebar,
     setSidebarOpen,
 

@@ -44,10 +44,11 @@
 import { ref, onMounted, onBeforeUnmount, onUnmounted, onBeforeMount } from 'vue';
 import { useSharedStore } from '../store';
 
-import Sidebar from './sidebar.vue';
 import MessageCentre from './message-centre.vue';
 
 const shared = useSharedStore();
+
+const Sidebar = shared.sidebar;
 
 const header = ref<HTMLElement | null>(null);
 const main = ref<HTMLElement | null>(null);
