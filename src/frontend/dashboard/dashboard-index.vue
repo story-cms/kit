@@ -23,7 +23,7 @@
       </div>
       <div
         v-if="isMultiLingual"
-        class="mb-4 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
+        class="mb-7 flex flex-col justify-between gap-y-4 px-3 md:flex-row md:items-center md:gap-x-4"
       >
         <div class="flex gap-x-4">
           <IndexFilter
@@ -36,17 +36,27 @@
           />
         </div>
 
-        <div class="flex gap-x-4">
-          <div class="flex items-center gap-x-2 text-sm font-medium leading-4">
-            <span class="size-4 rounded-full bg-green-500"></span>Human
+        <div class="flex gap-x-6">
+          <div class="flex items-center justify-center gap-x-2">
+            <Icon name="pie-chart" class="size-5 text-green-500" />
+            <span class="text-sm font-medium leading-4">Human</span>
           </div>
-          <div class="flex items-center gap-x-2 text-sm font-medium leading-4">
-            <span class="size-4 rounded-full bg-blue-500"></span>AI
+          <div class="flex items-center justify-center gap-x-2">
+            <Icon name="pie-chart" class="size-5 text-blue-500" />
+            <span class="text-sm font-medium leading-4">AI</span>
           </div>
         </div>
       </div>
     </div>
-    <div v-if="isMultiLingual" class="flex flex-wrap gap-8">
+    <div
+      v-if="isMultiLingual"
+      class="grid grid-cols-[repeat(auto-fit,_minmax(207px,_207px))] justify-center gap-x-[34px] gap-y-[27px]"
+      :class="
+        filteredProgress.length > 3
+          ? 'min-[490px]:justify-between'
+          : 'min-[490px]:justify-start'
+      "
+    >
       <LanguageBlock
         v-for="progress in filteredProgress"
         :key="progress.language"
@@ -63,6 +73,7 @@ import WelcomeBanner from './welcome-banner.vue';
 import StatTiles from './stat-tiles.vue';
 import IndexFilter from '../shared/index-filter.vue';
 import LanguageBlock from './language-block.vue';
+import Icon from '../shared/icon.vue';
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 

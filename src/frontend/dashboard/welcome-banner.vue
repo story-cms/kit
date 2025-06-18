@@ -1,7 +1,7 @@
 <template>
   <section
     :class="[
-      'flex w-full items-center gap-y-7 px-3 transition-all duration-300 ease-out',
+      'flex w-full items-center gap-y-7 rounded-b-lg px-3 transition-all duration-300 ease-out',
       shared.isMainUnderHeader
         ? 'flex-row items-center justify-between py-5'
         : 'flex-col justify-center bg-white pb-[51px] pt-10 shadow',
@@ -39,7 +39,7 @@
     <div :class="['flex flex-wrap gap-4']">
       <Link
         :href="`/${shared.locale}/page/create`"
-        class="flex items-center gap-x-2 rounded-full bg-blue-50 px-3 py-[9px] text-sm font-bold leading-4 text-blue-700 shadow-[0px_1px_2px_0px_#0000000D] hover:bg-blue-100"
+        class="flex items-center gap-x-2 rounded-full bg-blue-50 px-3 py-[9px] text-sm font-medium leading-4 text-blue-700 shadow-[0px_1px_2px_0px_#0000000D] hover:bg-blue-100"
       >
         <Icon name="document-add" />
         New Page
@@ -47,14 +47,14 @@
       <Link
         v-if="shared.user.isManager"
         :href="`/${shared.locale}/user`"
-        class="flex items-center gap-x-2 rounded-full bg-blue-50 px-3 py-[9px] text-sm font-bold leading-4 text-blue-700 shadow-[0px_1px_2px_0px_#0000000D] hover:bg-blue-100"
+        class="flex items-center gap-x-2 rounded-full bg-blue-50 px-3 py-[9px] text-sm font-medium leading-4 text-blue-700 shadow-[0px_1px_2px_0px_#0000000D] hover:bg-blue-100"
       >
         <Icon name="user-add" />
         New User
       </Link>
       <a
         v-if="shared.meta.helpUrl"
-        class="flex items-center gap-x-2 rounded-full bg-blue-50 px-3 py-[9px] text-sm font-bold leading-4 text-blue-700 shadow-[0px_1px_2px_0px_#0000000D] hover:bg-blue-100"
+        class="flex items-center gap-x-2 rounded-full bg-blue-50 px-3 py-[9px] text-sm font-medium leading-4 text-blue-700 shadow-[0px_1px_2px_0px_#0000000D] hover:bg-blue-100"
         :href="shared.meta.helpUrl"
         target="_blank"
         rel="noopener noreferrer"
