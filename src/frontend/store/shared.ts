@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import type { Ref } from 'vue';
-import { computed, ref, reactive } from 'vue';
+import { computed, ref, reactive, shallowRef } from 'vue';
 import {
   SharedPageProps,
   Meta,
@@ -60,7 +60,7 @@ export const useSharedStore = defineStore('shared', () => {
 
   // sidebar
 
-  const sidebar = ref<typeof standardSidebar>(standardSidebar);
+  const sidebar = shallowRef<typeof standardSidebar>(standardSidebar);
 
   const setSidebar = (fresh: typeof standardSidebar) => {
     sidebar.value = fresh;
