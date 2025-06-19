@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex max-w-52 flex-col rounded-lg bg-white px-[18px] pb-3 pt-[18px] shadow"
+    class="flex h-56 w-52 flex-col rounded-lg bg-white px-[18px] pb-3 pt-[18px] shadow"
     :class="progress.isReadOnly ? 'opacity-60' : ''"
   >
     <div v-if="hasCompleteRings" class="grow">
