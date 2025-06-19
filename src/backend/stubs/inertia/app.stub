@@ -5,9 +5,9 @@
 /// <reference path="../../adonisrc.ts" />
 /// <reference path="../../config/inertia.ts" />
 
-import '@story-cms/kit/styles.css';
-import '../css/app.css';
 import '@story-cms/kit/index.css';
+import '../css/app.css';
+import '@story-cms/kit/styles.css';
 import { createApp, h } from 'vue';
 import type { DefineComponent } from 'vue';
 import { resolvePageComponent } from '@adonisjs/inertia/helpers';
