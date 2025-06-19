@@ -54,7 +54,7 @@
         </div>
         <div>
           <template v-if="filteredItems.length">
-            <form v-show="!isTranslating">
+            <form v-if="!isTranslating">
               <UiCard
                 v-if="selectedItem"
                 :key="selectedItem.key"
@@ -67,7 +67,7 @@
                 @apply-suggestion="handleApplySuggestion"
               />
             </form>
-            <div v-show="isTranslating" class="grid h-full w-full place-content-center">
+            <div v-else class="grid h-full w-full place-content-center">
               <RivePlayer
                 url="https://res.cloudinary.com/redeem/raw/upload/v1743751242/story-cms-ui/audio_visualizer_resize_teno9b.riv"
               />
