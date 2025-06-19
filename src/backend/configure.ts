@@ -23,7 +23,7 @@ async function addMigrations(command: Configure, codemods: Codemods) {
     await codemods.makeUsingStub(stubsRoot, 'migrations/audit.stub', {
       migration: {
         folder: 'database/migrations',
-        fileName: `${new Date().getTime()}_audit.ts`,
+        fileName: `${new Date().getTime() + 100}_audit.ts`,
       },
     });
   }
@@ -189,6 +189,7 @@ export async function configure(command: Configure) {
   await codemods.defineEnvVariables({ CLOUDINARY_PRESET: 'pending' });
   await codemods.defineEnvVariables({ BIBLE_API_KEY: 'redacted' });
   await codemods.defineEnvVariables({ OPENAI_API_KEY: 'redacted' });
+  await codemods.defineEnvVariables({ GOOGLE_APPLICATION_CREDENTIALS_JSON: 'redacted' });
 
   /**
    * Define environment variables validations
