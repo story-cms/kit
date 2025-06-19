@@ -1,4 +1,5 @@
 import AppLayout from './shared/app-layout.vue';
+import ContentHeader from './shared/content-header.vue';
 import Icon from './shared/icon.vue';
 import DropDown from './shared/drop-down.vue';
 import StringField from './fields/string-field.vue';
@@ -44,6 +45,7 @@ export { commonProps } from './shared/helpers';
 
 export {
   AppLayout,
+  ContentHeader,
   UsersIndex,
   Icon,
   DropDown,
