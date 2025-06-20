@@ -43,6 +43,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, onUnmounted, onBeforeMount } from 'vue';
 import { useSharedStore } from '../store';
+import axios from 'axios';
 
 import Sidebar from './sidebar.vue';
 import MessageCentre from './message-centre.vue';
@@ -90,12 +91,21 @@ onBeforeMount(() => {
   resizeHook();
 });
 
+const checkAuth = () => {
+  axios.get('/auth-check').then((response) => {
+    if (!response.data) {
+      window.location.href = '/auth-redirect';
+    }
+  });
+};
+
 onMounted(() => {
   shared.setShowAppPreview(shared.meta.hasAppPreview);
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', resizeHook);
   resizeHook();
   setDimensions();
+  window.addEventListener('focus', checkAuth, { passive: true });
 });
 
 onBeforeUnmount(() => {
@@ -103,5 +113,6 @@ onBeforeUnmount(() => {
 });
 onUnmounted(() => {
   window.removeEventListener('resize', resizeHook);
+  window.removeEventListener('focus', checkAuth);
 });
 </script>
