@@ -43,4 +43,15 @@ export default class AuthController {
     await ctx.auth.use('web').logout();
     ctx.response.redirect('/login');
   }
+
+  public async authCheck(ctx: HttpContext) {
+    return !!ctx.auth.user;
+  }
+
+  public async authRedirect(ctx: HttpContext) {
+    return ctx.response
+      .redirect()
+      .withQs({ message: 'session_expired' })
+      .toRoute('/login');
+  }
 }

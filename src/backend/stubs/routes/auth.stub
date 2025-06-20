@@ -12,6 +12,9 @@ export default () => {
   router.post('/login', [AuthController, 'store']);
   router.get('/logout', [AuthController, 'logout']).middleware(middleware.auth());
 
+  router.get('/auth-check', [AuthController, 'authCheck']);
+  router.get('/auth-redirect', [AuthController, 'authRedirect']);
+
   router.get('/forgot-password', [ForgotPasswordController, 'index']);
   router.post('/forgot-password', [ForgotPasswordController, 'forgotPassword']);
   router.get('/reset-password/:token', [ForgotPasswordController, 'resetRequest']);
