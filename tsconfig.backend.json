@@ -3,7 +3,14 @@
   "compilerOptions": {
     "skipLibCheck": true,
     "lib": ["ESNext"],
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "strictNullChecks": true,
+    "removeComments": true
   },
   "include": ["src/backend/**/*"]
 }

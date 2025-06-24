@@ -1,6 +1,6 @@
 {
   "name": "@story-cms/kit",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,7 +8,7 @@
     "todo-lint": "eslint .",
     "clean": "del-cli dist",
     "ui:build": "vite build",
-    "backend:build": "tsup-node && tsc -p tsconfig.backend.json --emitDeclarationOnly --declaration",
+    "backend:build": "tsc -p tsconfig.backend.json",
     "copy:templates": "copyfiles --up 3 \"src/backend/stubs/**/*.stub\" dist/backend",
     "build": "npm run ui:build && npm run backend:build",
     "prebuild": "npm run clean",
@@ -49,7 +49,7 @@
     "@rive-app/canvas": "^2.29.0",
     "@types/luxon": "^3.3.0",
     "easymde": "^2.18.0",
-    "luxon": "^3.5.0",
+    "luxon": "^3.6.1",
     "marked": "^15.0.3",
     "pinia": "^2.1.7",
     "tus-js-client": "^4.3.1",
@@ -58,6 +58,7 @@
   "//": {},
   "devDependencies": {
     "@adonisjs/core": "^6.2.3",
+    "@adonisjs/lucid": "^21.6.1",
     "@adonisjs/session": "^7.4.2",
     "@eslint/js": "^9.25.1",
     "@histoire/plugin-vue": "^0.17.17",
@@ -84,6 +85,8 @@
     "vite-plugin-dts": "^4.2.1"
   },
   "peerDependencies": {
+    "@adonisjs/lucid": "^21.6.1",
+    "luxon": "^3.6.1",
     "pinia": "^2.1.7",
     "vue": "^3.4.21"
   },
