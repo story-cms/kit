@@ -1,7 +1,7 @@
 {{{ 
   exports({ to: app.makePath('app/services/user_service.ts') }) 
 }}}
-import Activity from '#models/activity';
+import { Activity } from '@story-cms/kit';
 import User from '#models/user';
 import db from '@adonisjs/lucid/services/db';
 import { UserMeta } from '@story-cms/kit';

@@ -7,7 +7,7 @@ import vine from '@vinejs/vine';
 
 import providers from '#config/providers';
 import storyConfig from '#config/story';
-import Activity from '#models/activity';
+import { Activity } from '@story-cms/kit';
 import Page from '#models/page';
 import { pagesContextFrom, trimmedErrors } from '#services/helpers';
 import PageService from '#services/page_service';
