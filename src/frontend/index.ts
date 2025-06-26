@@ -30,6 +30,7 @@ import AddItemButton from './shared/add-item-button.vue';
 import PublicLayout from './shared/public-layout.vue';
 import PageIndexItem from './pages/page-index-item.vue';
 import DraftIndex from './fields/draft-index.vue';
+import DraftActions from './fields/draft-actions.vue';
 import TranslationIndex from './fields/translation-index.vue';
 import PagesIndex from './pages/pages-index.vue';
 import PagesEdit from './pages/pages-edit.vue';
@@ -77,6 +78,7 @@ export {
   PublicLayout,
   PageIndexItem,
   DraftIndex,
+  DraftActions, // TODO: remove this
   TranslationIndex,
   PagesIndex,
   PagesEdit,
