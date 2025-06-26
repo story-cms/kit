@@ -105,14 +105,14 @@ export interface Meta {
 export interface Story {
   id: number;
   name: string;
-  fields: Array<object>;
+  fields: FieldSpec[];
   chapterLimit: number;
   parts?: Array<object>;
 }
 
 export interface StorySpec {
   name: string;
-  fields: Array<object>;
+  fields: FieldSpec[];
   chapterLimit: number;
 }
 
