@@ -37,6 +37,7 @@ import PagesEdit from './pages/pages-edit.vue';
 import ChapterPreview from './chapters/chapter-preview.vue';
 import UiPage from './interface/ui-page.vue';
 import VideoField from './fields/video-field.vue';
+import { debounce } from './shared/helpers';
 
 export { createInertiaApp, usePage, router } from '@inertiajs/vue3';
 
@@ -79,6 +80,7 @@ export {
   PageIndexItem,
   DraftIndex,
   DraftActions, // TODO: remove this
+  debounce, // TODO: remove this
   TranslationIndex,
   PagesIndex,
   PagesEdit,
