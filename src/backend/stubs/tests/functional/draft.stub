@@ -96,7 +96,7 @@ test.group('Draft DELETE', (group) => {
       .loginAs(user)
       .withCsrfToken();
 
-    response.assertRedirectsTo('/');
+    response.assertRedirectsTo('/en/story/1');
 
     const draftFromDb = await Draft.query().where({ number: 1 }).first();
     assert.isNull(draftFromDb);
