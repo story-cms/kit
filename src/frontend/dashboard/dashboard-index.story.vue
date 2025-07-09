@@ -25,13 +25,53 @@
         :languages="sharedProps.languages"
         :user="{
           id: 1,
-          name: 'Test User',
+          name: 'Site Admin',
           initials: 'TU',
           email: 'test@example.com',
-          isManager: false,
+          isManager: true,
+          isAdmin: true,
+          role: 'admin',
+          language: '*',
+          hasPendingInvite: false,
+        }"
+        :stories="sharedProps.stories"
+        :ui-todo-count="sharedProps.uiTodoCount"
+        :translation-progress="translationProgress"
+        :is-read-only="false"
+      />
+    </Variant>
+    <Variant title="Editor">
+      <DashboardIndex
+        :index="[
+          {
+            number: 1,
+            imageUrl:
+              'https://res.cloudinary.com/onesheep/image/upload/v1684754051/Screenshot_2023-05-22_at_13.12.03_pnamdt.png',
+            title: 'Sample Item 1',
+            tags: ['tag1', 'tag2'],
+          },
+          {
+            number: 2,
+            imageUrl:
+              'https://res.cloudinary.com/onesheep/image/upload/v1684754051/Screenshot_2023-05-22_at_13.12.03_pnamdt.png',
+            title: 'Sample Item 2',
+            tags: ['tag3', 'tag4'],
+          },
+        ]"
+        :add-status="AddStatus.Add"
+        :story-name="sharedProps.meta.name"
+        :meta="sharedProps.meta"
+        :language="sharedProps.language"
+        :languages="sharedProps.languages"
+        :user="{
+          id: 1,
+          name: 'English Editor User',
+          initials: 'TU',
+          email: 'test@example.com',
+          isManager: true,
           isAdmin: false,
-          role: 'user',
-          language: 'en',
+          role: 'editor',
+          language: '*',
           hasPendingInvite: false,
         }"
         :stories="sharedProps.stories"
