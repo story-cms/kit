@@ -16,7 +16,10 @@
             shared.hasOpenSidebar ? 'justify-between p-5' : 'flex-col gap-y-3 p-2',
           ]"
         >
-          <Link :class="['nav-icon']" :href="`/${locale}/dashboard`">
+          <Link
+            :class="['nav-icon', { active: $page?.url.includes('/dashboard') }]"
+            :href="`/${locale}/dashboard`"
+          >
             <Icon name="home" />
           </Link>
           <button class="nav-icon" @click="goBack">
@@ -56,7 +59,7 @@
               :class="[
                 'nav-link',
                 {
-                  active: story.toLowerCase() === shared.currentStoryName?.toLowerCase(),
+                  active: $page?.url.includes(`/story/${index + 1}`),
                 },
               ]"
               :href="`/${locale}/story/${index + 1}`"
