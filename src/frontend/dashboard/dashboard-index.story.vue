@@ -32,10 +32,12 @@
           isAdmin: false,
           role: 'user',
           language: 'en',
+          hasPendingInvite: false,
         }"
         :stories="sharedProps.stories"
         :ui-todo-count="sharedProps.uiTodoCount"
         :translation-progress="translationProgress"
+        :is-read-only="false"
       />
     </Variant>
   </Story>
@@ -66,6 +68,7 @@ const translationProgress = [
     ],
     language: 'German',
     locale: 'de',
+    isReadOnly: false,
   },
   {
     progress: [
@@ -86,6 +89,7 @@ const translationProgress = [
     ],
     language: 'Bengali',
     locale: 'bn',
+    isReadOnly: false,
   },
 ];
 </script>
