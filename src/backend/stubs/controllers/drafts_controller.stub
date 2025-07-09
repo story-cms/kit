@@ -259,6 +259,6 @@ export default class DraftsController {
     const service = new IndexService(story);
     await service.buildIndex(version);
 
-    return ctx.response.redirect('/', false, 303);
+    return ctx.response.redirect({{ '`/${version.locale}/story/${story.id}`' }}, false, 303);
   }
 }
