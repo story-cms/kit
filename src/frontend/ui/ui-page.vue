@@ -103,7 +103,7 @@ import UiCard from './components/ui-card.vue';
 
 import { useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
-import { ResponseStatus, FlagState } from '../../constants';
+import { ResponseStatus, FlagState } from '../../types';
 import type { UiItem, UiPageProps, SharedPageProps, UiItemPayload } from '../../types';
 import Icon from '../shared/icon.vue';
 

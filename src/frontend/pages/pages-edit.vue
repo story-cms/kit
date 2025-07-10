@@ -135,8 +135,7 @@
 import { ref, computed, onMounted, toRefs, watch, onUnmounted } from 'vue';
 import { DateTime } from 'luxon';
 import { router } from '@inertiajs/vue3';
-import type { SharedPageProps, PageEditProps } from '../../types';
-import { ResponseStatus } from '../../constants';
+import { type SharedPageProps, type PageEditProps, ResponseStatus } from '../../types';
 import { useModelStore, useSharedStore, useWidgetsStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';

@@ -45,7 +45,7 @@
 </template>
 <script setup lang="ts">
 import Icon from './icon.vue';
-import type { ResponseStatus } from '../../constants';
+import { ResponseStatus } from '../../types';
 import { useSharedStore } from '../store';
 
 const shared = useSharedStore();

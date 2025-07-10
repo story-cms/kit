@@ -125,7 +125,7 @@ import { ref, onMounted, computed, onUnmounted } from 'vue';
 import { router } from '@inertiajs/vue3';
 import type { Errors } from '@inertiajs/core';
 import type { FieldSpec, DraftEditProps, SharedPageProps } from '../../types';
-import { ResponseStatus } from '../../constants';
+import { ResponseStatus } from '../../types';
 import { useSharedStore, useModelStore, useWidgetsStore, useDraftsStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';

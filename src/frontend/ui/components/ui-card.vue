@@ -156,8 +156,12 @@
 import { ref } from 'vue';
 import axios from 'axios';
 
-import { type UiItem, type UiItemPayload } from '../../../types';
-import { FlagState, ResponseStatus } from '../../../constants';
+import {
+  type UiItem,
+  type UiItemPayload,
+  FlagState,
+  ResponseStatus,
+} from '../../../types';
 import Icon from '../../shared/icon.vue';
 import { useSharedStore } from '../../store';
 

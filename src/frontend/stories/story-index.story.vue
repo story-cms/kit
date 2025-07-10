@@ -44,6 +44,6 @@
 
 <script setup lang="ts">
 import { sharedProps } from '../test/mocks';
-import { AddStatus } from '../../constants';
+import { AddStatus } from '../../types';
 import StoryIndex from './story-index.vue';
 </script>

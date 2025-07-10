@@ -1,8 +1,13 @@
 import { defineStore } from 'pinia';
 import type { Ref } from 'vue';
 import { computed, ref, reactive, shallowRef } from 'vue';
-import { SharedPageProps, Meta, LanguageSpecification, User } from '../../types';
-import { ResponseStatus } from '../../constants';
+import {
+  type SharedPageProps,
+  type Meta,
+  type LanguageSpecification,
+  type User,
+  ResponseStatus,
+} from '../../types';
 import standardSidebar from '../shared/sidebar.vue';
 
 const defaultLanguage: LanguageSpecification = {

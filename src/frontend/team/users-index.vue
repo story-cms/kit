@@ -178,7 +178,7 @@ import ContentHeader from '../shared/content-header.vue';
 import Icon from '../shared/icon.vue';
 import UserRow from './components/user-row.vue';
 import { SharedPageProps, UsersProps, UserMeta } from '../../types';
-import { ResponseStatus } from '../../constants';
+import { ResponseStatus } from '../../types';
 import { useSharedStore } from '../store';
 
 const emptyForm = {

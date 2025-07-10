@@ -79,8 +79,7 @@
 import { router } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
-import { AddStatus } from '../../constants';
-import { IndexReadyItem, SharedPageProps, StoryIndexProps } from '../../types';
+import { IndexReadyItem, SharedPageProps, StoryIndexProps, AddStatus } from '../../types';
 import AddItemButton from '../shared/add-item-button.vue';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
