@@ -28,6 +28,7 @@ import SelectField from './fields/select-field.vue';
 import IndexFilter from './shared/index-filter.vue';
 import AddItemButton from './shared/add-item-button.vue';
 import PublicLayout from './shared/public-layout.vue';
+import ToggleButton from './shared/toggle-button.vue';
 import PageIndexItem from './pages/page-index-item.vue';
 import DraftIndex from './stories/draft-index.vue';
 import TranslationIndex from './stories/translation-index.vue';
@@ -76,6 +77,7 @@ export {
   VideoField,
   IndexFilter,
   AddItemButton,
+  ToggleButton,
   PublicLayout,
   PageIndexItem,
   DraftIndex,
