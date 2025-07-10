@@ -27,6 +27,7 @@
       "import": "./dist/backend/index.js",
       "types": "./dist/backend/index.d.ts"
     },
+    "./constants": "./dist/constants.js",
     "./add_meta_noindex_middleware": "./dist/backend/middleware/add_meta_noindex.js",
     "./admin_middleware": "./dist/backend/middleware/admin.js",
     "./ui": {
