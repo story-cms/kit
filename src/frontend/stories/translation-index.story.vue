@@ -1,9 +1,10 @@
 <template>
-  <Story title="Draft Page" group="draft">
+  <Story title="Translation Page" group="stories">
     <Variant title="Index">
-      <DraftIndex
+      <TranslationIndex
         :draft="draft"
-        :bundle="bundle"
+        :bundle="{}"
+        :source="source"
         :spec="{
           name: 'John',
           chapterLimit: 21,
@@ -14,25 +15,26 @@
         :errors="sharedProps.errors"
         :meta="sharedProps.meta"
         :user="sharedProps.user"
-        :language="sharedProps.language"
+        :language="spanish"
         :languages="sharedProps.languages"
         :story-name="'John'"
         :stories="['John', 'Acts']"
         :ui-todo-count="sharedProps.uiTodoCount"
+        :story-id="1"
       />
     </Variant>
   </Story>
 </template>
 
 <script setup lang="ts">
-import DraftIndex from './draft-index.vue';
-import { sharedProps, listSpec, listModel } from '../test/mocks';
+import TranslationIndex from './translation-index.vue';
+import { listInListSpec, listInListModel, sharedProps, spanish } from '../test/mocks';
 
 const fields = [
   { name: 'title', label: 'Title', widget: 'string' },
   {
     widget: 'panel',
-    isRow: true,
+    isRow: false,
     fields: [
       {
         label: 'Cover Image',
@@ -54,9 +56,8 @@ const fields = [
       },
     ],
   },
-  { ...listSpec },
+  { ...listInListSpec },
   { name: 'image', label: 'Image', widget: 'image' },
-  { name: 'description', label: 'Description', widget: 'string' },
   { name: 'body', label: 'Body', widget: 'markdown' },
   {
     name: 'nested',
@@ -71,15 +72,15 @@ const fields = [
   },
 ];
 
-const bundle = {
+const source = {
   title: 'The Word Became Flesh',
   imageUrl:
     'https://res.cloudinary.com/onesheep/image/upload/v1669793982/cld-sample-2.jpg',
   animationUrl:
     'https://res.cloudinary.com/onesheep/raw/upload/v1685641667/cmsplayground/fnu2m4ogxi9wdhi91iqi.riv',
-  ...listModel,
-  image: 'https://source.unsplash.com/random/800x600',
+  ...listInListModel,
   description: 'We will look at the first chapter of the book of John.',
+  image: 'https://source.unsplash.com/random/800x600',
   body: '## The Word Became Flesh\n\nIn the beginning was the Word, and the Word was with God, and the Word was God. He was with God in the beginning. Through him all things were made; without him nothing was made that has been made. In him was life, and that life was the light of all mankind. The light shines in the darkness, and the darkness has not overcome it.',
   nested: {
     title: 'Verse 1 - 3',

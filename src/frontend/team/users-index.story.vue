@@ -1,5 +1,5 @@
 <template>
-  <Story title="Users Page" group="users">
+  <Story title="Users Page" group="team">
     <Variant title="Index">
       <UsersIndex
         :users="users"

@@ -28,7 +28,7 @@
         },
       ]"
     >
-      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="py-4 space-y-8 bg-white">
+      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8 bg-white py-4">
         <StringField
           :field="{
             name: 'title',
@@ -147,7 +147,7 @@ import SelectField from '../fields/select-field.vue';
 import MarkdownField from '../fields/markdown-field.vue';
 import BooleanField from '../fields/boolean-field.vue';
 import PageMetaBox from './page-meta-box.vue';
-import DraftActions from '../fields/draft-actions.vue';
+import DraftActions from '../shared/draft-actions.vue';
 import ContentSidebar from '../shared/content-sidebar.vue';
 const props = defineProps<PageEditProps & SharedPageProps>();
 

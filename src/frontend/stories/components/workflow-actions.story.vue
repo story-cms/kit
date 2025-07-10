@@ -1,5 +1,5 @@
 <template>
-  <Story title="Workflow Buttons" group="draft">
+  <Story title="Workflow Buttons" group="stories" :layout="{ type: 'grid', width: 500 }">
     <Variant title="Admin no review draft submitted" :setup-app="loadData">
       <WorkflowActions />
     </Variant>
@@ -35,10 +35,10 @@
 
 <script setup lang="ts">
 import WorkflowActions from './workflow-actions.vue';
-import { useSharedStore, useDraftsStore } from '../store';
-import { sharedProps } from '../test/mocks';
+import { useSharedStore, useDraftsStore } from '../../store';
+import { sharedProps } from '../../test/mocks';
 
-import type { StoryHandler } from '../shared/helpers';
+import type { StoryHandler } from '../../shared/helpers';
 
 const loadData: StoryHandler = ({ variant }): void => {
   const shared = useSharedStore();
