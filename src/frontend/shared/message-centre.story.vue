@@ -29,5 +29,5 @@
 
 <script setup lang="ts">
 import MessageCentre from './message-centre.vue';
-import { ResponseStatus } from '../../types';
+import { ResponseStatus } from '../../constants';
 </script>

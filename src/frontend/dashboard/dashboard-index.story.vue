@@ -85,7 +85,7 @@
 
 <script setup lang="ts">
 import { sharedProps } from '../test/mocks';
-import { AddStatus } from '../../types';
+import { AddStatus } from '../../constants';
 import DashboardIndex from './dashboard-index.vue';
 
 const translationProgress = [

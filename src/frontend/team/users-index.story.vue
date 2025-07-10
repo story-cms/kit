@@ -33,7 +33,7 @@
 import UsersIndex from './users-index.vue';
 import { sharedProps } from '../test/mocks';
 import type { UserMeta } from '../../types';
-import { ResponseStatus } from '../../types';
+import { ResponseStatus } from '../../constants';
 import { useSharedStore } from '../store';
 
 const users: UserMeta[] = [

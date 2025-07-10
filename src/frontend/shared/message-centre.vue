@@ -14,27 +14,27 @@
       leave-to-class="transform -translate-y-2 opacity-0"
     >
       <div v-if="message" class="text-sm font-medium leading-4">
-        <div v-if="response === 0" class="flex items-center w-full gap-x-6">
+        <div v-if="response === 0" class="flex w-full items-center gap-x-6">
           <Icon
-            class="inline-flex items-center w-auto h-6 text-red-500"
+            class="inline-flex h-6 w-auto items-center text-red-500"
             :name="'exclamation'"
           />
           <p class="max-w-full">{{ message }}</p>
         </div>
-        <div v-if="response === 1" class="flex items-center w-full gap-x-6">
-          <Icon class="inline-flex items-center w-6 h-6 text-blue-500" :name="'check'" />
+        <div v-if="response === 1" class="flex w-full items-center gap-x-6">
+          <Icon class="inline-flex h-6 w-6 items-center text-blue-500" :name="'check'" />
           <p class="max-w-full">{{ message }}</p>
         </div>
-        <div v-if="response === 2" class="flex items-center w-full gap-x-6">
+        <div v-if="response === 2" class="flex w-full items-center gap-x-6">
           <Icon
-            class="inline-flex items-center w-6 h-6 text-green-500"
+            class="inline-flex h-6 w-6 items-center text-green-500"
             :name="'badge-check'"
           />
           <p class="max-w-full">{{ message }}</p>
         </div>
-        <div v-if="response === 3" class="flex items-center w-full gap-x-6">
+        <div v-if="response === 3" class="flex w-full items-center gap-x-6">
           <Icon
-            class="inline-flex items-center w-6 h-6 text-yellow-500"
+            class="inline-flex h-6 w-6 items-center text-yellow-500"
             :name="'information-circle'"
           />
           <p class="max-w-full">{{ message }}</p>
@@ -45,7 +45,7 @@
 </template>
 <script setup lang="ts">
 import Icon from './icon.vue';
-import type { ResponseStatus } from '../../types';
+import type { ResponseStatus } from '../../constants';
 import { useSharedStore } from '../store';
 
 const shared = useSharedStore();

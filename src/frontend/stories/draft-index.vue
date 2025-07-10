@@ -56,7 +56,7 @@ import { router } from '@inertiajs/vue3';
 import type { Errors } from '@inertiajs/core';
 import { padZero, debounce, formatDate, safeChapterTitle } from '../shared/helpers';
 import type { FieldSpec, DraftEditProps, SharedPageProps } from '../../types';
-import { ResponseStatus } from '../../types';
+import { ResponseStatus } from '../../constants';
 import { useDraftsStore, useModelStore, useSharedStore, useWidgetsStore } from '../store';
 import ContentHeader from '../shared/content-header.vue';
 import DraftActions from '../shared/draft-actions.vue';

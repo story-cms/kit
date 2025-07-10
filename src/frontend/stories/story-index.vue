@@ -77,18 +77,17 @@
 
 <script setup lang="ts">
 import { router } from '@inertiajs/vue3';
-
-import AppLayout from '../shared/app-layout.vue';
-import ContentHeader from '../shared/content-header.vue';
 import { computed, ref } from 'vue';
 
-import Icon from '../shared/icon.vue';
+import { AddStatus } from '../../constants';
+import { IndexReadyItem, SharedPageProps, StoryIndexProps } from '../../types';
 import AddItemButton from '../shared/add-item-button.vue';
+import AppLayout from '../shared/app-layout.vue';
+import ContentHeader from '../shared/content-header.vue';
+import Icon from '../shared/icon.vue';
 import IndexFilter from '../shared/index-filter.vue';
-import IndexCard from './components/index-card.vue';
-
-import { SharedPageProps, StoryIndexProps, AddStatus, IndexReadyItem } from '../../types';
 import { useSharedStore } from '../store';
+import IndexCard from './components/index-card.vue';
 
 const props = defineProps<StoryIndexProps & SharedPageProps>();
 

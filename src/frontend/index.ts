@@ -42,6 +42,7 @@ import DraftActions from './shared/draft-actions.vue';
 export { createInertiaApp, usePage, router } from '@inertiajs/vue3';
 
 export * from './store/index';
+export * from '../constants';
 
 export { commonProps } from './shared/helpers';
 
