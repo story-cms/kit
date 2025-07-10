@@ -65,8 +65,8 @@
 import { useModelStore, useSharedStore } from '../store';
 
 import ListField from './list-field.vue';
-import ModelControl from './helpers/model-control.vue';
-import ErrorControl from './helpers/error-control.vue';
+import ModelControl from '../test/model-control.vue';
+import ErrorControl from '../test/error-control.vue';
 import {
   listSpec,
   listModel,
