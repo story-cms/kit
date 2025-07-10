@@ -39,7 +39,7 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useWidgetsStore, useSharedStore, useDraftsStore } from '../store';
+import { useWidgetsStore, useSharedStore, useDraftsStore } from '../../store';
 
 const widgets = useWidgetsStore();
 const shared = useSharedStore();

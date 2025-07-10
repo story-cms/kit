@@ -20,12 +20,8 @@ export default defineConfig({
         title: 'Dashboard',
       },
       {
-        id: 'chapter',
-        title: 'Chapter',
-      },
-      {
-        id: 'draft',
-        title: 'Drafts',
+        id: 'stories',
+        title: 'Stories',
       },
       {
         id: 'pages',
@@ -33,15 +29,15 @@ export default defineConfig({
       },
       {
         id: 'interface',
-        title: 'Interface',
+        title: 'UI',
       },
       {
-        id: 'users',
-        title: 'Users',
+        id: 'team',
+        title: 'Team',
       },
       {
         id: 'shared',
-        title: 'Shared Widgets',
+        title: 'Shared',
       },
     ],
   },

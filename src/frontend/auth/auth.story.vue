@@ -1,5 +1,5 @@
 <template>
-  <Story title="Auth Index" group="users">
+  <Story title="Auth Index" group="team">
     <Variant title="Index">
       <CreateAccount :meta="sharedProps.meta" email="john@doe.com" />
     </Variant>

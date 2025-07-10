@@ -21,7 +21,7 @@
                 class="ml-2"
                 @click="shared.setSourceColumnAsHidden(!shared.showSourceColumn)"
               >
-                <Icon name="eyeoff" class="block text-black cursor-pointer size-6" />
+                <Icon name="eyeoff" class="block size-6 cursor-pointer text-black" />
               </button>
             </p>
           </div>
@@ -129,12 +129,12 @@ import { ResponseStatus } from '../../types';
 import { useSharedStore, useModelStore, useWidgetsStore, useDraftsStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
-import DraftActions from '../fields/draft-actions.vue';
-import WorkflowActions from '../fields/workflow-actions.vue';
+import DraftActions from '../shared/draft-actions.vue';
+import WorkflowActions from './components/workflow-actions.vue';
 import Icon from '../shared/icon.vue';
 import ContentSidebar from '../shared/content-sidebar.vue';
 import MetaBox from '../shared/meta-box.vue';
-import MobileAppPreview from './mobile-app-preview.vue';
+import MobileAppPreview from '../shared/mobile-app-preview.vue';
 import { debounce, padZero, formatDate, safeChapterTitle } from '../shared/helpers';
 
 const props = defineProps<DraftEditProps & SharedPageProps>();
