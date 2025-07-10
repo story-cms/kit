@@ -8,7 +8,7 @@
         </template>
       </ContentHeader>
     </template>
-    <div class="container grid w-64 p-3 mx-auto space-y-16">
+    <div class="container mx-auto grid w-64 space-y-16 p-3">
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
         incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
@@ -44,11 +44,11 @@
 </template>
 
 <script setup lang="ts">
-import AppLayout from '../../shared/app-layout.vue';
-import ContentHeader from '../../shared/content-header.vue';
-import type { SharedPageProps } from '../../../types';
-import { ResponseStatus } from '../../../types';
-import { useSharedStore } from '../../store';
+import AppLayout from '../shared/app-layout.vue';
+import ContentHeader from '../shared/content-header.vue';
+import type { SharedPageProps } from '../../types';
+import { ResponseStatus } from '../../types';
+import { useSharedStore } from '../store';
 
 const props = defineProps<SharedPageProps>();
 const shared = useSharedStore();

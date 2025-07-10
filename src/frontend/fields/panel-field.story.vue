@@ -1,5 +1,5 @@
 <template>
-  <Story title="PanelField" group="widgets">
+  <Story title="Panel Field" group="widgets">
     <Variant title="Default" :setup-app="loadData">
       <PanelField :field="spec" />
       <ModelControl :model="panelModel" />
@@ -30,8 +30,8 @@
 
 <script lang="ts" setup>
 import PanelField from './panel-field.vue';
-import ModelControl from './helpers/model-control.vue';
-import ErrorControl from './helpers/error-control.vue';
+import ModelControl from '../test/model-control.vue';
+import ErrorControl from '../test/error-control.vue';
 import { useModelStore, useSharedStore } from '../store';
 
 import type { StoryHandler } from '../shared/helpers';

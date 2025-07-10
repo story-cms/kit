@@ -1,5 +1,5 @@
 <template>
-  <Story title="Message Center Page" group="users">
+  <Story title="Message Center Page" group="shared">
     <Variant title="Index">
       <MessageTest
         :errors="sharedProps.errors"
@@ -9,7 +9,6 @@
         :languages="sharedProps.languages"
         :stories="['John', 'Acts']"
         :ui-todo-count="sharedProps.uiTodoCount"
-        :story-name="sharedProps.storyName"
       />
     </Variant>
   </Story>
@@ -17,5 +16,5 @@
 
 <script setup lang="ts">
 import MessageTest from './message-test.vue';
-import { sharedProps } from '../../../frontend/test/mocks';
+import { sharedProps } from './mocks';
 </script>

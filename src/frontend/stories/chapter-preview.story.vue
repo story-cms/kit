@@ -1,5 +1,5 @@
 <template>
-  <Story title="Preview" group="chapter">
+  <Story title="Preview" group="stories">
     <Variant title="Minimal">
       <ChapterPreview
         :chapter="meta"

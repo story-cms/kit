@@ -1,5 +1,5 @@
 <template>
-  <Story title="Story Index" group="chapter">
+  <Story title="Story Index" group="stories">
     <Variant title="Index">
       <StoryIndex
         :index="[
@@ -34,6 +34,7 @@
           isAdmin: false,
           role: 'user',
           language: 'en',
+          hasPendingInvite: false,
         }"
         :ui-todo-count="0"
       />

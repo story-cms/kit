@@ -42,8 +42,8 @@
 <script setup lang="ts">
 import AudioField from './audio-field.vue';
 import PanelField from './panel-field.vue';
-import ErrorControl from './helpers/error-control.vue';
-import ModelControl from './helpers/model-control.vue';
+import ErrorControl from '../test/error-control.vue';
+import ModelControl from '../test/model-control.vue';
 import { useModelStore, useSharedStore } from '../store';
 import type { StoryHandler } from '../shared/helpers';
 

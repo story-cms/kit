@@ -73,9 +73,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import MarkdownField from './markdown-field.vue';
-import LanguageControl from './helpers/language-control.vue';
-import ErrorControl from './helpers/error-control.vue';
-import ModelControl from './helpers/model-control.vue';
+import LanguageControl from '../test/language-control.vue';
+import ErrorControl from '../test/error-control.vue';
+import ModelControl from '../test/model-control.vue';
 import { objectErrors, objectModel } from '../../frontend/test/mocks';
 import { useModelStore, useSharedStore } from '../store';
 import type { StoryHandler } from '../shared/helpers';

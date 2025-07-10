@@ -55,8 +55,8 @@ import { computed, onMounted } from 'vue';
 import { Link } from '@inertiajs/vue3';
 
 import type { PreviewProps, SharedPageProps } from '../../types';
-import DraftActions from '../fields/draft-actions.vue';
-import MobileAppPreview from '../fields/mobile-app-preview.vue';
+import DraftActions from '../shared/draft-actions.vue';
+import MobileAppPreview from '../shared/mobile-app-preview.vue';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
 import ContentSidebar from '../shared/content-sidebar.vue';

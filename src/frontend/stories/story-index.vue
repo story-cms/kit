@@ -85,7 +85,7 @@ import { computed, ref } from 'vue';
 import Icon from '../shared/icon.vue';
 import AddItemButton from '../shared/add-item-button.vue';
 import IndexFilter from '../shared/index-filter.vue';
-import IndexCard from '../chapters/index-card.vue';
+import IndexCard from './components/index-card.vue';
 
 import { SharedPageProps, StoryIndexProps, AddStatus, IndexReadyItem } from '../../types';
 import { useSharedStore } from '../store';

@@ -17,7 +17,7 @@
   <button
     v-if="canDelete"
     type="button"
-    class="bg-white action-button"
+    class="action-button bg-white"
     @click="emit('delete')"
   >
     <Icon name="trash" class="action-icon" />

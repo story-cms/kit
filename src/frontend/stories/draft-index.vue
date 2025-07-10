@@ -59,11 +59,11 @@ import type { FieldSpec, DraftEditProps, SharedPageProps } from '../../types';
 import { ResponseStatus } from '../../types';
 import { useDraftsStore, useModelStore, useSharedStore, useWidgetsStore } from '../store';
 import ContentHeader from '../shared/content-header.vue';
-import DraftActions from './draft-actions.vue';
-import WorkflowActions from './workflow-actions.vue';
+import DraftActions from '../shared/draft-actions.vue';
+import WorkflowActions from './components/workflow-actions.vue';
 import ContentSidebar from '../shared/content-sidebar.vue';
 import MetaBox from '../shared/meta-box.vue';
-import MobileAppPreview from './mobile-app-preview.vue';
+import MobileAppPreview from '../shared/mobile-app-preview.vue';
 
 const props = defineProps<DraftEditProps & SharedPageProps>();
 
