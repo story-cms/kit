@@ -225,12 +225,19 @@ export class UiService {
       }));
 
     await db.transaction(async (trx) => {
-      await Ui.query().where('locale', this.sourceLocale).useTransaction(trx).delete();
+      // replace the source data
+      await Ui.query({ client: trx }).where('locale', this.sourceLocale).delete();
       const ui = await Ui.createMany(fresh);
       result['ingested'] = ui.length;
-      await UiAttribute.query().useTransaction(trx).delete();
+
+      // replace the attributes
+      await UiAttribute.query({ client: trx }).delete();
       const rows = await UiAttribute.createMany(attributes);
       result['attributes'] = rows.length;
+
+      // delete stale items
+      const keep = keys.filter((key) => !key.startsWith('@'));
+      await Ui.query({ client: trx }).whereNotIn('key', keep).delete();
     });
 
     return result;
