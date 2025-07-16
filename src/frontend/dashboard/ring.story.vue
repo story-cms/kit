@@ -62,21 +62,4 @@
 
 <script setup lang="ts">
 import Ring from './ring.vue';
-const stats = [
-  {
-    name: 'Total Installs',
-    stat: 3950,
-    previousStat: 3571,
-  },
-  {
-    name: 'Monthly Active Users',
-    stat: 3771,
-    previousStat: 3412,
-  },
-  {
-    name: 'Chapters Complete',
-    stat: 2738,
-    previousStat: 2772,
-  },
-];
 </script>
