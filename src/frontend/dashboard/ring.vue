@@ -1,7 +1,12 @@
 <template>
   <div>
     <div class="relative flex flex-col items-center justify-center">
-      <svg class="-rotate-90" :height="circleWidth" :width="circleWidth">
+      <svg
+        v-if="label !== ''"
+        class="-rotate-90"
+        :height="circleWidth"
+        :width="circleWidth"
+      >
         <!-- Green segment -->
         <circle
           class="fill-transparent stroke-green-500 stroke-[6px]"
@@ -35,14 +40,14 @@
       </svg>
       <div class="absolute inset-0 flex items-center justify-center">
         <div v-if="donePercentage === 100">
-          <Icon name="check" class="w-4 h-auto text-green-500" />
+          <Icon name="check" class="h-auto w-4 text-green-500" />
         </div>
-        <span v-else class="text-sm font-normal leading-none text-gray-800"
-          >{{ donePercentage + draftPercentage }}%</span
-        >
+        <span v-else class="text-sm font-normal leading-none text-gray-800">{{
+          label
+        }}</span>
       </div>
     </div>
-    <p class="text-sm font-medium leading-4 text-center text-gray-500">
+    <p class="text-center text-sm font-medium leading-4 text-gray-500">
       {{ name }}
     </p>
   </div>
@@ -54,8 +59,30 @@ import { Progress } from '../../types';
 
 const props = defineProps<Progress>();
 
+const label = computed(() => {
+  const nr = donePercentage.value + draftPercentage.value;
+  if (isNaN(nr)) {
+    return '';
+  }
+
+  if (nr > 100) {
+    return '100%';
+  }
+
+  return `${nr}%`;
+});
+
+const isOverdone = computed(() => {
+  return props.done + props.draft > props.total;
+});
+
+const workingDone = computed(() => {
+  if (!isOverdone.value) return props.done;
+  return props.done - (props.done + props.draft - props.total);
+});
+
 const donePercentage = computed(() => {
-  return Math.round((props.done / props.total) * 100);
+  return Math.round((workingDone.value / props.total) * 100);
 });
 
 const draftPercentage = computed(() => {
@@ -73,6 +100,7 @@ const center = circleWidth / 2;
 const circleRadius = circleWidth / 2 - 6;
 
 const circumference = 2 * Math.PI * circleRadius;
+
 const greenSegment = computed(() => {
   return circumference * (donePercentage.value / 100);
 });
