@@ -5,17 +5,18 @@
       :class="errors.length > 0 ? 'border-red-500' : 'border-white'"
     >
       <VueDatePicker
-        :value="modelValue"
-        :inline="{ input: true }"
+        :model-value="modelValue"
+        inline
         text-input
         auto-apply
-        :enable-time-picker="props.enableTimePicker"
+        :enable-time-picker="field.enableTimePicker ?? false"
         time-picker-inline
         :is-24="false"
         position="center"
         :six-weeks="true"
         :state="!(errors.length > 0)"
         :readonly="props.isReadOnly"
+        @update:model-value="onUpdate"
       />
       <p v-if="errors.length > 0" class="p-3 text-sm text-red-500">
         {{ errors[0] }}
@@ -35,10 +36,6 @@ import { commonProps } from '../shared/helpers';
 
 const props = defineProps({
   ...commonProps,
-  enableTimePicker: {
-    type: Boolean,
-    default: false,
-  },
 });
 
 const model = useModelStore();
@@ -62,6 +59,11 @@ model.$subscribe(() => {
     modelValue.value = model.getField(fieldPath.value, field.value.default);
   });
 });
+
+const onUpdate = (date: Date) => {
+  if (props.isReadOnly) return;
+  model.setField(fieldPath.value, date);
+};
 
 const errors = computed(() => shared.errorMessages(fieldPath.value));
 </script>

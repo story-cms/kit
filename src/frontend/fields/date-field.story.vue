@@ -1,14 +1,27 @@
 <template>
   <Story title="Date Field" group="widgets">
     <Variant title="With time picker">
-      <DateField :enable-time-picker="true" />
+      <DateField
+        :field="{
+          name: 'releasedAt',
+          label: 'Released At',
+          widget: 'date',
+          enableTimePicker: true,
+        }"
+      />
     </Variant>
     <Variant title="Without time picker">
-      <DateField :enable-time-picker="false" />
+      <DateField
+        :field="{
+          name: 'releasedAt',
+          label: 'Released At',
+          widget: 'date',
+          enableTimePicker: false,
+        }"
+      />
     </Variant>
     <Variant title="With error" :setup-app="loadData">
       <DateField
-        :enable-time-picker="false"
         :field="{
           name: 'releasedAt',
           label: 'Released At',
@@ -21,12 +34,12 @@
     </Variant>
     <Variant title="Read only">
       <DateField
-        :enable-time-picker="false"
         :is-read-only="true"
         :field="{
           name: 'releasedAt',
           label: 'Released At',
           widget: 'date',
+          enableTimePicker: true,
         }"
       />
     </Variant>
