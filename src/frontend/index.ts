@@ -32,6 +32,7 @@ import ToggleButton from './shared/toggle-button.vue';
 import PageIndexItem from './pages/page-index-item.vue';
 import DraftIndex from './stories/draft-index.vue';
 import TranslationIndex from './stories/translation-index.vue';
+import ContentSidebar from './shared/content-sidebar.vue';
 import PagesIndex from './pages/pages-index.vue';
 import PagesEdit from './pages/pages-edit.vue';
 import ChapterPreview from './stories/chapter-preview.vue';
@@ -85,6 +86,7 @@ export {
   PublicLayout,
   PageIndexItem,
   DraftIndex,
+  ContentSidebar, // TODO: remove this
   DraftActions, // TODO: remove this
   debounce, // TODO: remove this
   TranslationIndex,
