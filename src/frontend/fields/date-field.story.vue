@@ -16,7 +16,7 @@
           name: 'releasedAt',
           label: 'Released At',
           widget: 'date',
-          enableTimePicker: true,
+          hasTimePicker: true,
         }"
       />
       <ModelControl :model="objectModel" />
@@ -41,7 +41,7 @@
           name: 'releasedAt',
           label: 'Released At',
           widget: 'date',
-          enableTimePicker: true,
+          hasTimePicker: true,
         }"
       />
     </Variant>

@@ -9,7 +9,7 @@
         inline
         text-input
         auto-apply
-        :enable-time-picker="field.enableTimePicker ?? false"
+        :enable-time-picker="field.hasTimePicker ?? false"
         time-picker-inline
         :is-24="false"
         position="center"
