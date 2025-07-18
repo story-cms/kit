@@ -39,6 +39,7 @@ import UiPage from './ui/ui-page.vue';
 import VideoField from './fields/video-field.vue';
 import { debounce } from './shared/helpers';
 import DraftActions from './shared/draft-actions.vue';
+import DateField from './fields/date-field.vue';
 
 export { createInertiaApp, usePage, router } from '@inertiajs/vue3';
 
@@ -88,4 +89,5 @@ export {
   PagesEdit,
   ChapterPreview,
   UiPage,
+  DateField,
 };

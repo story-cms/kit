@@ -19,7 +19,7 @@ Following are the widgets that are currently implemented:
 
 [string](#string), [number](#number), [markdown](#markdown), [image](#image),
 [audio](#audio), [boolean](#boolean), [select](#select), [object](#object),
-[panel](#panel), [list](#list), [scripture](#scripture)
+[panel](#panel), [list](#list), [scripture](#scripture), [date](#date)
 
 ---
 
@@ -138,7 +138,7 @@ example:
 },
 ```
 
-Image with file attributes
+image with file attributes:
 
 ```ts
 {
@@ -148,6 +148,33 @@ Image with file attributes
   description: 'SVG, PNG, JPG, GIF up to 2MB',
   extensions: ['.jpeg', '.jpg'],
   maxSize: 2000000,
+},
+```
+
+## date
+
+A date picker that renders a [DateField](#). It has one optional key called
+`hasTimePicker` which is a boolean that specifies whether the date picker should show a
+time picker.
+
+example:
+
+```ts
+{
+  label: 'Released At',
+  name: 'releasedAt',
+  widget: 'date',
+},
+```
+
+DateField with time picker
+
+```ts
+{
+  label: 'Released At',
+  name: 'releasedAt',
+  widget: 'date',
+  hasTimePicker: true,
 },
 ```
 

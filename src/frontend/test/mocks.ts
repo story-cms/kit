@@ -127,6 +127,7 @@ export const objectErrors = {
   'bundle.profile': ['required validation failed'],
   'bundle.address.zip': ['required validation failed'],
   'bundle.address.favoriteScripture': ['required validation failed'],
+  'bundle.releasedAt': ['required validation failed'],
 };
 
 export const listInObjectSpec: FieldSpec = {
@@ -138,6 +139,11 @@ export const listInObjectSpec: FieldSpec = {
       name: 'scriptureReference',
       label: 'Scripture Reference',
       widget: 'string',
+    },
+    {
+      name: 'releasedAt',
+      label: 'Released At',
+      widget: 'date',
     },
     {
       label: 'Notes',
@@ -153,6 +159,11 @@ export const listInObjectSpec: FieldSpec = {
           label: 'Frame content',
           name: 'content',
           widget: 'markdown',
+        },
+        {
+          name: 'releasedAt',
+          label: 'Released At',
+          widget: 'date',
         },
       ],
     },

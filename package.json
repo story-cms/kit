@@ -48,6 +48,7 @@
     "@poppinss/utils": "^6.7.3",
     "@rive-app/canvas": "^2.29.0",
     "@types/luxon": "^3.3.0",
+    "@vuepic/vue-datepicker": "^11.0.2",
     "easymde": "^2.18.0",
     "luxon": "^3.6.1",
     "marked": "^15.0.3",
