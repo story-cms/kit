@@ -138,16 +138,29 @@ example:
 },
 ```
 
-Image with file attributes
+## date
+
+A date picker that renders a [DateField](#). It has one special key called `hasTimePicker`
+which is a boolean that specifies whether the date picker should show a time picker.
+
+example:
 
 ```ts
 {
-  label: 'Image',
-  name: 'imageUrl',
-  widget: 'image',
-  description: 'SVG, PNG, JPG, GIF up to 2MB',
-  extensions: ['.jpeg', '.jpg'],
-  maxSize: 2000000,
+  label: 'Released At',
+  name: 'releasedAt',
+  widget: 'date',
+},
+```
+
+DateField with time picker
+
+```ts
+{
+  label: 'Released At',
+  name: 'releasedAt',
+  widget: 'date',
+  hasTimePicker: true,
 },
 ```
 
