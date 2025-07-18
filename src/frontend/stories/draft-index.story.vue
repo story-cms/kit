@@ -31,6 +31,7 @@ import { sharedProps, listSpec, listModel } from '../test/mocks';
 
 const fields = [
   { name: 'title', label: 'Title', widget: 'string' },
+  { name: 'date', label: 'Date', widget: 'date' },
   {
     widget: 'panel',
     isRow: true,

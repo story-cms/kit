@@ -141,6 +141,11 @@ export const listInObjectSpec: FieldSpec = {
       widget: 'string',
     },
     {
+      name: 'releasedAt',
+      label: 'Released At',
+      widget: 'date',
+    },
+    {
       label: 'Notes',
       name: 'notes',
       widget: 'list',
@@ -154,6 +159,11 @@ export const listInObjectSpec: FieldSpec = {
           label: 'Frame content',
           name: 'content',
           widget: 'markdown',
+        },
+        {
+          name: 'releasedAt',
+          label: 'Released At',
+          widget: 'date',
         },
       ],
     },
