@@ -34,7 +34,7 @@
         <ErrorControl :errors="objectErrors" />
       </template>
     </Variant>
-    <Variant title="Read only">
+    <Variant title="Read only" :setup-app="loadData">
       <DateField
         :is-read-only="true"
         :field="{
@@ -44,6 +44,7 @@
           hasTimePicker: true,
         }"
       />
+      <ModelControl :model="objectModel" />
     </Variant>
   </Story>
 </template>
