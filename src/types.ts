@@ -51,6 +51,7 @@ export interface FieldSpec {
   labelOrder?: string;
   folder?: string;
   collectionId?: string;
+  hasTimePicker?: boolean;
 }
 
 export interface Scripture {

@@ -12,6 +12,7 @@ import BooleanField from './boolean-field.vue';
 import SelectField from './select-field.vue';
 import NumberField from './number-field.vue';
 import VideoField from './video-field.vue';
+import DateField from './date-field.vue';
 export const widgetField = (widget: string) => {
   const up = widget[0].toUpperCase() + widget.substring(1);
   const name = `${up}Field`;
@@ -46,7 +47,8 @@ export const widgetField = (widget: string) => {
       return AnimationField;
     case 'VideoField':
       return VideoField;
-
+    case 'DateField':
+      return DateField;
     default:
       return NullField;
   }

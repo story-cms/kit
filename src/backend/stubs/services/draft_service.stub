@@ -110,6 +110,7 @@ export default class DraftService {
       case 'select':
       case 'number':
       case 'image':
+      case 'date':
       case 'animation':
         // check if subPath is already in the list
         if (this.prefilledFields.some((item) => item === field['name'])) break;

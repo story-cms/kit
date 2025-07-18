@@ -67,25 +67,17 @@ const spec = {
       name: 'description',
       widget: 'markdown',
     },
+    {
+      label: 'Expiry Date',
+      name: 'expiryDate',
+      widget: 'date',
+    },
   ],
 };
 
 const noLabel = {
+  ...spec,
   label: '',
-  name: 'note',
-  widget: 'panel',
-  fields: [
-    {
-      label: 'Title',
-      name: 'title',
-      widget: 'string',
-    },
-    {
-      label: 'Description',
-      name: 'description',
-      widget: 'markdown',
-    },
-  ],
 };
 
 const isRowWithNoLabel = {
@@ -110,6 +102,7 @@ const isRowWithNoLabel = {
 const panelModel = {
   title: 'John',
   description: '# Read about John',
+  expiryDate: '2025-07-04T12:00:00.000Z',
 };
 
 const panelErrors = {
