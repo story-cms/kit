@@ -2,7 +2,9 @@
   <div class="bg-white p-10">
     <label for="tags" class="block text-sm/6 font-medium text-gray-900">Tags</label>
     <div class="mt-2 flex rounded-md border border-gray-300 bg-white p-1">
-      <div class="flex items-center gap-2 px-3 text-base text-gray-500 sm:text-sm/6">
+      <div
+        class="flex flex-shrink-0 items-center gap-2 px-3 text-base text-gray-500 sm:text-sm/6"
+      >
         <span
           v-for="tag in tags"
           :key="tag"
