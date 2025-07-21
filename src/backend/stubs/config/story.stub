@@ -65,6 +65,82 @@ const storyConfig: StoryConfig = defineConfig({
       languageDirection: 'ltr',
       bibleVersion: 'de4e12af7f28f599-01',
     },
+    {
+      locale: 'ar',
+      language: 'Arabic: عربى',
+      languageDirection: 'rtl',
+      bibleVersion: 'b17e246951402e50-01',  // Biblica® Open New Arabic Version 2012
+    },
+    {
+      locale: 'id',
+      language: 'Bahasa Indonesia',
+      languageDirection: 'ltr',
+    },
+    {
+      locale: 'my',
+      language: 'Burmese - မြန်မာဘာသာ',
+      languageDirection: 'ltr',
+      bibleVersion: '218a7789e72a7d00-02',
+    },
+    {
+      locale: 'zh',
+      language: 'Chinese: 中文',
+      languageDirection: 'ltr',
+    },
+    {
+      locale: 'fr',
+      language: 'French: Français',
+      languageDirection: 'ltr',
+    },
+    {
+      locale: 'lg',
+      language: 'Ganda - Luganda',
+      languageDirection: 'ltr',
+      bibleVersion: 'da34f369635c82b8-01',
+    },
+    {
+      locale: 'de',
+      language: 'German - Deutsch',
+      languageDirection: 'ltr',
+      bibleVersion: '3e2eb613d45e131e-01',
+    },
+    {
+      locale: 'hi',
+      language: 'Hindi: हिंदी',
+      languageDirection: 'ltr',
+    },
+    {
+      locale: 'it',
+      language: 'Italian: Italiano',
+      languageDirection: 'ltr',
+    },
+    {
+      locale: 'es',
+      language: 'Spanish - Español',
+      languageDirection: 'ltr',
+      bibleVersion: '01c25b8715dbb632-01',
+    },
+    {
+      locale: 'th',
+      language: 'Thai: ภาษาไทย',
+      languageDirection: 'ltr',
+    },
+    {
+      locale: 'bo',
+      language: 'Tibetan: བོད་ཡིག',
+      languageDirection: 'ltr',
+    },
+    {
+      locale: 'uk',
+      language: 'Ukrainian - Українська',
+      languageDirection: 'ltr',
+      bibleVersion: '6c696cd1d82e2723-03',
+    },
+    {
+      locale: 'vi',
+      language: 'Vietnamese: Tiếng Việt',
+      languageDirection: 'ltr',
+    },
   ],
 
   schemaVersion: 1,
