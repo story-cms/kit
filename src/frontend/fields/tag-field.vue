@@ -3,7 +3,8 @@
     <label for="tags" class="block text-sm/6 font-medium text-gray-900">Tags</label>
     <div class="mt-2 flex rounded-md border border-gray-300 bg-white p-1">
       <div
-        class="flex flex-shrink-0 items-center gap-2 px-3 text-base text-gray-500 sm:text-sm/6"
+        class="flex flex-shrink-0 items-center gap-2 text-base text-gray-500 sm:text-sm/6"
+        :class="tags.length > 0 ? 'px-3' : 'px-0'"
       >
         <span
           v-for="tag in tags"
@@ -31,7 +32,8 @@
         v-model="newTag"
         type="text"
         name="tags"
-        class="-ml-3 block w-full grow rounded-r-md border-0 bg-white py-1 text-sm font-normal leading-5 text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
+        class="block w-full grow rounded-r-md border-0 bg-white py-1 text-sm font-normal leading-5 text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
+        :class="tags.length > 0 ? '-ml-3' : ''"
         @keyup.enter="addTag"
       />
     </div>
