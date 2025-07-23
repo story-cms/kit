@@ -1,6 +1,8 @@
 <template>
   <div class="bg-white p-10">
-    <label for="tags" class="block text-sm/6 font-medium text-gray-900">Tags</label>
+    <label :for="field.label" class="block text-sm/6 font-medium text-gray-900">{{
+      field.label
+    }}</label>
     <div class="mt-2 flex rounded-md border border-gray-300 bg-white p-1">
       <div
         class="flex flex-shrink-0 items-center gap-2 text-base text-gray-500 sm:text-sm/6"
@@ -34,26 +36,55 @@
         name="tags"
         class="block w-full grow rounded-r-md border-0 bg-white py-1 text-sm font-normal leading-5 text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
         :class="tags.length > 0 ? '-ml-3' : ''"
-        @keyup.enter="addTag"
+        @keyup.enter="onUpdate(newTag)"
       />
     </div>
+    <p v-if="errors.length > 0" class="text-sm text-error">{{ errors[0] }}</p>
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref, nextTick } from 'vue';
+import type { FieldSpec } from '../../types';
+import { useModelStore, useSharedStore } from '../store/index';
+import { commonProps } from '../shared/helpers';
 
-const tags = ref<string[]>(['work', 'ambition', 'work-life-balance']);
+const props = defineProps({
+  ...commonProps,
+});
+
+const model = useModelStore();
+const shared = useSharedStore();
+
+const field = computed(() => props.field as FieldSpec);
+const fieldPath = computed(() => {
+  if (!field.value?.name) return '';
+  if (props.rootPath === undefined) return field.value.name;
+  return `${props.rootPath}.${field.value.name}`;
+});
+
+const tags = props.isReadOnly
+  ? ref(model.getSourceField(fieldPath.value, ''))
+  : ref(model.getField(fieldPath.value, ''));
+
+model.$subscribe(() => {
+  if (props.isReadOnly) return;
+
+  nextTick().then(() => {
+    tags.value = model.getField(fieldPath.value, field.value.default);
+  });
+});
 
 const removeTag = (tag: string) => {
-  tags.value = tags.value.filter((t) => t !== tag);
+  tags.value = tags.value.filter((t: string) => t !== tag);
 };
 
-const newTag = ref('Somethin');
+const newTag = ref('');
 
-const addTag = () => {
-  if (newTag.value && !tags.value.includes(newTag.value)) {
-    tags.value.push(newTag.value);
-    newTag.value = '';
-  }
+const onUpdate = (tag: string) => {
+  if (props.isReadOnly) return;
+  model.setField(fieldPath.value, [...tags.value, tag]);
+  newTag.value = '';
 };
+
+const errors = computed(() => shared.errorMessages(fieldPath.value));
 </script>

@@ -13,6 +13,8 @@ import SelectField from './select-field.vue';
 import NumberField from './number-field.vue';
 import VideoField from './video-field.vue';
 import DateField from './date-field.vue';
+import TagField from './tag-field.vue';
+
 export const widgetField = (widget: string) => {
   const up = widget[0].toUpperCase() + widget.substring(1);
   const name = `${up}Field`;
@@ -49,6 +51,8 @@ export const widgetField = (widget: string) => {
       return VideoField;
     case 'DateField':
       return DateField;
+    case 'TagField':
+      return TagField;
     default:
       return NullField;
   }
