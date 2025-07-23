@@ -2,6 +2,7 @@
   <Story title="Tag Field" group="widgets">
     <Variant title="Default">
       <TagField :field="{ name: 'tags', label: 'Tags', widget: 'tag' }" />
+      <ModelControl :model="objectModel" />
     </Variant>
     <Variant title="With model" :setup-app="loadData">
       <TagField :field="{ name: 'tags', label: 'Tags', widget: 'tag' }" />
@@ -14,6 +15,10 @@
       />
       <ModelControl :model="objectModel" />
     </Variant>
+    <Variant title="With error" :setup-app="loadData">
+      <TagField :field="{ name: 'tags', label: 'Tags', widget: 'tag' }" />
+      <ModelControl :model="objectModel" />
+    </Variant>
   </Story>
 </template>
 
@@ -23,10 +28,7 @@ import { useModelStore, useSharedStore } from '../store';
 import type { StoryHandler } from '../shared/helpers';
 import ModelControl from '../test/model-control.vue';
 
-import { objectErrors } from '../../frontend/test/mocks';
-
 const objectModel = {
-  title: 'Draft',
   tags: ['simul', 'justus', 'et', 'peccator'],
 };
 
@@ -34,8 +36,15 @@ const loadData: StoryHandler = ({ variant }): void => {
   const store = useModelStore();
   const shared = useSharedStore();
 
+  if (variant?.title === 'Read Only') {
+    store.setSource(objectModel);
+    return;
+  }
+
   if (variant?.title === 'With error') {
-    shared.errors = objectErrors;
+    shared.errors = {
+      'bundle.tags': ['required validation failed'],
+    };
     return;
   }
   store.model = objectModel;
