@@ -14,7 +14,7 @@
           class="inline-flex flex-wrap items-center gap-1 rounded-full bg-[#E0F2FE] px-2 py-1 text-xs font-medium leading-4 text-blue-800"
         >
           {{ tag }}
-          <button @click="removeTag(tag)">
+          <button @click="onDelete(tag)">
             <svg
               width="8"
               height="8"
@@ -84,6 +84,15 @@ const onUpdate = (tag: string) => {
   if (props.isReadOnly) return;
   model.setField(fieldPath.value, [...tags.value, tag]);
   newTag.value = '';
+};
+
+const onDelete = (tag: string) => {
+  if (props.isReadOnly) return;
+  removeTag(tag);
+  model.setField(fieldPath.value, tags.value);
+  nextTick().then(() => {
+    tags.value = model.getField(fieldPath.value, '') as string;
+  });
 };
 
 const errors = computed(() => shared.errorMessages(fieldPath.value));
