@@ -43,7 +43,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref, nextTick, onMounted } from 'vue';
+import { computed, ref, nextTick } from 'vue';
 import type { FieldSpec } from '../../types';
 import { useModelStore, useSharedStore } from '../store/index';
 
@@ -68,6 +68,7 @@ const tagString = props.isReadOnly
   : ref(model.getField(fieldPath.value, ''));
 
 const stringToTags = (tagString: string) => {
+  if (tagString.length === 0) return [];
   return tagString.split(',').map((t: string) => t.trim());
 };
 
@@ -81,11 +82,8 @@ model.$subscribe(() => {
   });
 });
 
-const tags = ref<string[]>([]);
+const tags = ref<string[]>(stringToTags(tagString.value));
 
-onMounted(() => {
-  tags.value = stringToTags(tagString.value);
-});
 const newTag = ref('');
 
 const onUpdate = (tag: string) => {
