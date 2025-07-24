@@ -87,6 +87,7 @@ const tags = ref<string[]>(stringToTags(tagString.value));
 const newTag = ref('');
 
 const onUpdate = (tag: string) => {
+  if (tag.length === 0) return;
   const newTags = tag
     .split(',')
     .map((t) => t.trim())
