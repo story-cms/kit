@@ -13,9 +13,9 @@
       {{ field.label }}
     </label>
 
-    <div class="mt-[2px] flex rounded-md border border-gray-300 bg-white pb-1 pr-1 pt-1">
+    <div class="mt-[2px] flex rounded-md border border-gray-300 bg-white pb-1 pt-1">
       <div
-        class="flex flex-shrink-0 items-center gap-2 text-base text-gray-500 sm:text-sm/6"
+        class="flex flex-shrink-0 flex-wrap items-center gap-2 text-base text-gray-500 sm:text-sm/6"
         :class="tags.length > 0 ? 'px-3' : 'px-0'"
       >
         <span
