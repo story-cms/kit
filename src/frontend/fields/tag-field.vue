@@ -1,9 +1,19 @@
 <template>
-  <div class="bg-white p-10">
-    <label :for="field.label" class="block text-sm/6 font-medium text-gray-900">{{
-      field.label
-    }}</label>
-    <div class="mt-2 flex rounded-md border border-gray-300 bg-white p-1">
+  <div
+    :class="{
+      'rounded border border-gray-200 bg-white p-8 drop-shadow-sm': !isNested,
+      'mt-4': isNested,
+    }"
+  >
+    <label
+      :for="field.label"
+      class="input-label"
+      :class="{ 'text-gray-600': isReadOnly }"
+    >
+      {{ field.label }}
+    </label>
+
+    <div class="mt-[2px] flex rounded-md border border-gray-300 bg-white p-1">
       <div
         class="flex flex-shrink-0 items-center gap-2 text-base text-gray-500 sm:text-sm/6"
         :class="tags.length > 0 ? 'px-3' : 'px-0'"
@@ -14,7 +24,12 @@
           class="inline-flex flex-wrap items-center gap-1 rounded-full bg-[#E0F2FE] px-2 py-1 text-xs font-medium leading-4 text-blue-800"
         >
           {{ tag }}
-          <button @click="onDelete(tag)">
+          <button
+            role="button"
+            type="button"
+            :disabled="props.isReadOnly"
+            @click="removeTag(tag)"
+          >
             <svg
               width="8"
               height="8"
@@ -31,22 +46,24 @@
         </span>
       </div>
       <input
-        v-model="newTag"
+        ref="inputRef"
         type="text"
-        name="tags"
+        :name="field.label"
+        :disabled="props.isReadOnly"
+        :value="newTag"
         class="block w-full grow rounded-r-md border-0 bg-white py-1 text-sm font-normal leading-5 text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
         :class="tags.length > 0 ? '-ml-3' : ''"
-        @keyup.enter="onUpdate(newTag)"
+        @keyup.enter="update"
       />
     </div>
-    <p v-if="errors.length > 0" class="text-sm text-error">{{ errors[0] }}</p>
+    <p v-if="hasError" class="text-sm text-error">{{ errors[0] }}</p>
   </div>
 </template>
+
 <script setup lang="ts">
 import { computed, ref, nextTick } from 'vue';
 import type { FieldSpec } from '../../types';
 import { useModelStore, useSharedStore } from '../store/index';
-
 import { commonProps } from '../shared/helpers';
 
 const props = defineProps({
@@ -55,59 +72,55 @@ const props = defineProps({
 
 const model = useModelStore();
 const shared = useSharedStore();
+const newTag = ref('');
 
 const field = computed(() => props.field as FieldSpec);
 const fieldPath = computed(() => {
-  if (!field.value?.name) return '';
   if (props.rootPath === undefined) return field.value.name;
   return `${props.rootPath}.${field.value.name}`;
 });
 
-const tagString = props.isReadOnly
+const modelValue = props.isReadOnly
   ? ref(model.getSourceField(fieldPath.value, ''))
   : ref(model.getField(fieldPath.value, ''));
 
-const stringToTags = (tagString: string) => {
-  if (tagString.length === 0) return [];
-  return tagString.split(',').map((t: string) => t.trim());
+const inputRef = ref<HTMLInputElement | null>(null);
+let cursor: number | null = null;
+
+const update = (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  const value = input.value;
+  if (value.length === 0) return;
+  if (tags.value.includes(value)) return;
+  tags.value.push(value);
+  model.setField(fieldPath.value, tags.value.join(','));
+  newTag.value = '';
+};
+
+const removeTag = (tag: string) => {
+  const newTags = tags.value.filter((t: string) => t !== tag);
+  model.setField(fieldPath.value, newTags.join(','));
 };
 
 model.$subscribe(() => {
   if (props.isReadOnly) return;
 
+  modelValue.value = model.getField(fieldPath.value, '');
+  if (!cursor) return;
+
   nextTick().then(() => {
-    const fresh = model.getField(fieldPath.value) as string;
-    tagString.value = fresh;
-    tags.value = stringToTags(fresh);
+    inputRef.value?.setSelectionRange(cursor, cursor);
+    cursor = null;
   });
 });
 
-const tags = ref<string[]>(stringToTags(tagString.value));
-
-const newTag = ref('');
-
-const onUpdate = (tag: string) => {
-  if (tag.length === 0) return;
-  const newTags = tag
-    .split(',')
-    .map((t) => t.trim())
-    .filter((t) => t.length > 0 && !tags.value.includes(t));
-  if (newTags.length > 0) {
-    tags.value.push(...newTags);
-    tagString.value = tags.value.join(',');
-  }
-  model.setField(fieldPath.value, tagString.value);
-  newTag.value = '';
-};
-
-const onDelete = (tag: string) => {
-  tags.value = tags.value.filter((t) => t !== tag);
-  tagString.value = tags.value.join(',');
-  model.setField(fieldPath.value, tagString.value);
-  nextTick().then(() => {
-    tagString.value = model.getField(fieldPath.value) as string;
-  });
-};
-
 const errors = computed(() => shared.errorMessages(fieldPath.value));
+
+const hasError = computed(() => errors.value.length > 0 && !props.isReadOnly);
+
+const tags = computed(() => {
+  const tagString = modelValue.value;
+  if (tagString.length === 0) return [];
+  return tagString.split(',').map((t: string) => t.trim());
+});
 </script>
