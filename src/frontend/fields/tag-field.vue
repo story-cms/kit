@@ -43,9 +43,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref, nextTick } from 'vue';
+import { computed, ref, nextTick, onMounted } from 'vue';
 import type { FieldSpec } from '../../types';
 import { useModelStore, useSharedStore } from '../store/index';
+
 import { commonProps } from '../shared/helpers';
 
 const props = defineProps({
@@ -62,36 +63,50 @@ const fieldPath = computed(() => {
   return `${props.rootPath}.${field.value.name}`;
 });
 
-const tags = props.isReadOnly
+const tagString = props.isReadOnly
   ? ref(model.getSourceField(fieldPath.value, ''))
   : ref(model.getField(fieldPath.value, ''));
+
+const stringToTags = (tagString: string) => {
+  return tagString.split(',').map((t: string) => t.trim());
+};
 
 model.$subscribe(() => {
   if (props.isReadOnly) return;
 
   nextTick().then(() => {
-    tags.value = model.getField(fieldPath.value, field.value.default);
+    const fresh = model.getField(fieldPath.value) as string;
+    tagString.value = fresh;
+    tags.value = stringToTags(fresh);
   });
 });
 
-const removeTag = (tag: string) => {
-  tags.value = tags.value.filter((t: string) => t !== tag);
-};
+const tags = ref<string[]>([]);
 
+onMounted(() => {
+  tags.value = stringToTags(tagString.value);
+});
 const newTag = ref('');
 
 const onUpdate = (tag: string) => {
-  if (props.isReadOnly) return;
-  model.setField(fieldPath.value, [...tags.value, tag]);
+  const newTags = tag
+    .split(',')
+    .map((t) => t.trim())
+    .filter((t) => t.length > 0 && !tags.value.includes(t));
+  if (newTags.length > 0) {
+    tags.value.push(...newTags);
+    tagString.value = tags.value.join(',');
+  }
+  model.setField(fieldPath.value, tagString.value);
   newTag.value = '';
 };
 
 const onDelete = (tag: string) => {
-  if (props.isReadOnly) return;
-  removeTag(tag);
-  model.setField(fieldPath.value, tags.value);
+  tags.value = tags.value.filter((t) => t !== tag);
+  tagString.value = tags.value.join(',');
+  model.setField(fieldPath.value, tagString.value);
   nextTick().then(() => {
-    tags.value = model.getField(fieldPath.value, '') as string;
+    tagString.value = model.getField(fieldPath.value) as string;
   });
 };
 
