@@ -13,10 +13,18 @@
       {{ field.label }}
     </label>
 
-    <div class="mt-[2px] flex rounded-md border border-gray-300 bg-white pb-1 pt-1">
+    <div
+      class="mt-[2px] grid gap-x-2 rounded-md border border-gray-300 bg-white pb-1 pt-1"
+      :class="
+        tags.length > 0 && !props.isReadOnly
+          ? 'grid-cols-[auto_minmax(32%,_1fr)]'
+          : 'grid-cols-[1fr]'
+      "
+    >
       <div
-        class="flex flex-shrink-0 flex-wrap items-center gap-2 text-base text-gray-500 sm:text-sm/6"
-        :class="tags.length > 0 ? 'px-3' : 'px-0'"
+        class="flex flex-wrap items-center gap-2 text-base text-gray-500 sm:text-sm/6"
+        :class="tags.length > 0 ? 'pl-3' : 'px-0'"
+        @click="inputRef?.focus()"
       >
         <span
           v-for="tag in tags"
@@ -46,13 +54,12 @@
         </span>
       </div>
       <input
+        v-if="!props.isReadOnly"
         ref="inputRef"
         type="text"
         :name="field.label"
-        :disabled="props.isReadOnly"
         :value="newTag"
-        class="mr-1 block w-full grow rounded-r-md border-0 bg-white py-1 text-sm font-normal leading-5 text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
-        :class="tags.length > 0 ? '-ml-3' : ''"
+        class="ml-[2px] mr-1 block rounded-r-md border-0 bg-white py-1 text-sm font-normal leading-5 text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
         @keyup.enter="update"
       />
     </div>

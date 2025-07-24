@@ -1,5 +1,9 @@
 <template>
   <Story title="Tag Field" group="widgets">
+    <Variant title="Default">
+      <TagField :field="spec" />
+    </Variant>
+
     <Variant title="With model" :setup-app="loadData">
       <TagField :field="spec" />
       <ModelControl :model="objectModel" :is-inspect-only="true" />
@@ -50,7 +54,7 @@ const loadData: StoryHandler = ({ variant }): void => {
   }
   if (variant?.title === 'Readonly') {
     store.setSource({
-      tags: 'simul,justus,et,peccator',
+      tags: 'simul,justus,et,peccator,In principio erat Verbum, et Verbum erat apud Deum, et Deus erat Verbum.',
     });
   }
 };
