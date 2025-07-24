@@ -56,11 +56,10 @@
       <input
         v-if="!props.isReadOnly"
         ref="inputRef"
+        v-model="newTag"
         type="text"
         :name="field.label"
-        :value="newTag"
         class="ml-[2px] mr-1 block rounded-r-md border-0 bg-white py-1 text-sm font-normal leading-5 text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
-        @keyup.enter="update"
       />
     </div>
     <p v-if="hasError" class="text-sm text-error">{{ errors[0] }}</p>
@@ -68,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, nextTick } from 'vue';
+import { computed, ref, nextTick, watch } from 'vue';
 import type { FieldSpec } from '../../types';
 import { useModelStore, useSharedStore } from '../store/index';
 import { commonProps } from '../shared/helpers';
@@ -80,6 +79,14 @@ const props = defineProps({
 const model = useModelStore();
 const shared = useSharedStore();
 const newTag = ref('');
+
+watch(newTag, (value) => {
+  if (value.endsWith(',')) {
+    const newValue = value.slice(0, -1).trim();
+    update(newValue);
+    newTag.value = '';
+  }
+});
 
 const field = computed(() => props.field as FieldSpec);
 const fieldPath = computed(() => {
@@ -94,9 +101,7 @@ const modelValue = props.isReadOnly
 const inputRef = ref<HTMLInputElement | null>(null);
 let cursor: number | null = null;
 
-const update = (event: Event) => {
-  const input = event.target as HTMLInputElement;
-  const value = input.value;
+const update = (value: string) => {
   if (value.length === 0) return;
   if (tags.value.includes(value)) return;
   tags.value.push(value);

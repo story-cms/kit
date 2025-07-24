@@ -2,6 +2,7 @@
   <Story title="Tag Field" group="widgets">
     <Variant title="Default">
       <TagField :field="spec" />
+      <ModelControl :model="objectModel" :is-inspect-only="true" />
     </Variant>
 
     <Variant title="With model" :setup-app="loadData">
