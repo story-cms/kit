@@ -45,6 +45,21 @@ Example:
   default: 1,
 },
 ```
+## tag
+
+Suitable for tags and renders a [TagField](#).
+
+Tags are a comma separated list of strings.
+
+Example:
+
+```ts
+{
+  label: 'Tags',
+  name: 'tags',
+  widget: 'tag',
+},
+```
 
 ## markdown
 
