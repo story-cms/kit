@@ -128,6 +128,7 @@ export const objectErrors = {
   'bundle.address.zip': ['required validation failed'],
   'bundle.address.favoriteScripture': ['required validation failed'],
   'bundle.releasedAt': ['required validation failed'],
+  'bundle.tags': ['required validation failed'],
 };
 
 export const listInObjectSpec: FieldSpec = {
