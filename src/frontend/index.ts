@@ -2,6 +2,7 @@ import AppLayout from './shared/app-layout.vue';
 import ContentHeader from './shared/content-header.vue';
 import Icon from './shared/icon.vue';
 import DropDown from './shared/drop-down.vue';
+import TagField from './fields/tag-field.vue';
 import StringField from './fields/string-field.vue';
 import ContextMenu from './shared/context-menu.vue';
 import UsersIndex from './team/users-index.vue';
@@ -73,6 +74,7 @@ export {
   BooleanField,
   ListField,
   MarkdownField,
+  TagField,
   NullField,
   NumberField,
   ObjectField,
