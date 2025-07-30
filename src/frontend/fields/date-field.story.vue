@@ -44,7 +44,7 @@
           hasTimePicker: true,
         }"
       />
-      <ModelControl :model="objectModel" />
+      <ModelControl :model="readonlyModel" />
     </Variant>
   </Story>
 </template>
@@ -69,14 +69,54 @@ const objectModel = {
   },
 };
 
+const readonlyModel = {
+  ...objectModel,
+  releasedAt: '2027-04-01T07:30:00.000Z',
+};
+
 const loadData: StoryHandler = ({ variant }): void => {
   const store = useModelStore();
   const shared = useSharedStore();
+  store.model = objectModel;
 
   if (variant?.title === 'With error') {
     shared.errors = objectErrors;
-    return;
   }
-  store.model = objectModel;
+
+  if (variant?.title === 'Read only') {
+    store.setSource(readonlyModel);
+    store.model = readonlyModel;
+  }
 };
 </script>
+
+<docs lang="md">
+# Date Field
+
+A date picker that renders a DateField. It has one optional key called
+`hasTimePicker` which is a boolean that specifies whether the date picker should show a
+time picker.
+
+There is no time-zone configuration currently. The time that is picked is the browser's local time and then stored in the model as UTC.
+
+example:
+
+```ts
+{
+  label: 'Released At',
+  name: 'releasedAt',
+  widget: 'date',
+},
+```
+
+DateField with time picker
+
+```ts
+{
+  label: 'Released At',
+  name: 'releasedAt',
+  widget: 'date',
+  hasTimePicker: true,
+},
+```
+</docs>
