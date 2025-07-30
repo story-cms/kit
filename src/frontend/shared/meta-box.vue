@@ -13,7 +13,7 @@
     <section
       v-for="item in secondary"
       :key="item.label"
-      class="grid grid-cols-2 px-4 pb-4 pt-2 font-normal text-gray-600"
+      class="grid grid-cols-2 px-4 pb-2 font-normal text-gray-600"
     >
       <p>{{ item.label }}</p>
       <span class="place-self-end text-right">{{ item.value }}</span>
