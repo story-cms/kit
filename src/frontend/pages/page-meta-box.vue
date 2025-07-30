@@ -10,7 +10,6 @@ const props = defineProps<
   Pick<PageMeta, 'createdAt' | 'updatedAt'> & {
     savedAt: string;
     publishedAt: string;
-    isFloating?: boolean;
   }
 >();
 

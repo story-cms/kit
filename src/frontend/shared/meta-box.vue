@@ -1,25 +1,23 @@
 <template>
-  <div class="rounded-lg border bg-white font-['Inter'] text-gray-600 shadow">
-    <div
+  <div
+    class="rounded-lg border border-gray-100 bg-white font-['Inter'] text-xs leading-4 text-gray-600"
+  >
+    <section
       v-for="item in primary"
       :key="item.label"
-      class="grid grid-cols-2 bg-gray-50 px-4 py-2"
+      class="grid grid-cols-2 bg-gray-50 px-4 py-2 text-gray-500"
     >
-      <p class="text-sm font-semibold leading-5 text-gray-500">{{ item.label }}</p>
-      <span class="place-self-end text-right text-sm font-normal leading-5">{{
-        item.value
-      }}</span>
-    </div>
-    <div
+      <p class="font-semibold">{{ item.label }}</p>
+      <span class="place-self-end text-right font-normal">{{ item.value }}</span>
+    </section>
+    <section
       v-for="item in secondary"
       :key="item.label"
-      class="grid grid-cols-2 px-4 pb-2 text-gray-600"
+      class="grid grid-cols-2 px-4 pb-4 pt-2 font-normal text-gray-600"
     >
-      <p class="text-sm font-normal leading-5">{{ item.label }}</p>
-      <span class="place-self-end text-right text-sm font-normal leading-5">{{
-        item.value
-      }}</span>
-    </div>
+      <p>{{ item.label }}</p>
+      <span class="place-self-end text-right">{{ item.value }}</span>
+    </section>
   </div>
 </template>
 <script setup lang="ts">

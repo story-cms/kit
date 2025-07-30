@@ -26,11 +26,15 @@
       <ContentSidebar>
         <template #meta-box>
           <MetaBox
-            :created-at="props.draft.createdAt"
-            :updated-at="props.draft.updatedAt"
-            :story-type="props.meta.storyType"
-            :chapter-type="metaChapter"
-            :published-when="publishedWhen"
+            :primary="[
+              { label: props.meta.storyType, value: props.storyName },
+              { label: props.meta.chapterType, value: metaChapter },
+            ]"
+            :secondary="[
+              { label: 'Created', value: formatDate(props.draft.createdAt) },
+              { label: 'Auto-Saved', value: formatDate(props.draft.updatedAt) },
+              { label: 'Last Published', value: publishedWhen },
+            ]"
           />
         </template>
         <template #app-preview>
