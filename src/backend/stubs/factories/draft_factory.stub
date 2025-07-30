@@ -4,7 +4,7 @@
   })
 }}}
 import factory from '@adonisjs/lucid/factories';
-import Draft from '#models/draft';
+import { Draft } from '@story-cms/kit';
 
 export const DraftFactory = factory
   .define(Draft, async ({ faker }) => {

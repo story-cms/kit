@@ -7,9 +7,7 @@ import { DraftEditProps } from '@story-cms/kit';
 
 import providers from '#config/providers';
 import storyConfig from '#config/story';
-import Activity from '#models/activity';
-import Chapter from '#models/chapter';
-import Draft from '#models/draft';
+import { Activity, Chapter, Draft } from '@story-cms/kit';
 import DraftService from '#services/draft_service';
 import { storyContextFrom, trimmedErrors } from '#services/helpers';
 import IndexService from '#services/index_service';

@@ -1,11 +1,10 @@
 {{{
   exports({ to: app.makePath('app/controllers/chapters_controller.ts') })
 }}}
-import Chapter from '#models/chapter';
 import { apiContextFrom, storyContextFrom } from '#services/helpers';
 import IndexService from '#services/index_service';
 import type { HttpContext } from '@adonisjs/core/http';
-import { AddStatus, PreviewProps, StoryIndexProps } from '@story-cms/kit';
+import { AddStatus, PreviewProps, StoryIndexProps, Chapter } from '@story-cms/kit';
 import edge from 'edge.js';
 import { marked } from 'marked';
 

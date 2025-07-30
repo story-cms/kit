@@ -139,14 +139,12 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'inertia/css.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'resources/layout.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'resources/views/preview.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'resources/views/scripture.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'models/user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'models/ui.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'models/ui_attribute.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'models/chapter.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'models/draft.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'models/index.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'models/page.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'models/activity.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/story_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/index_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/ui_service.stub', {});

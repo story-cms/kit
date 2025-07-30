@@ -1,6 +1,3 @@
-{{{
-  exports({ to: app.makePath('app/models/activity.ts') })
-}}}
 import { DateTime } from 'luxon';
 import { BaseModel, column } from '@adonisjs/lucid/orm';
 

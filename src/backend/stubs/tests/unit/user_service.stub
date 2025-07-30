@@ -4,7 +4,7 @@
 import { test } from '@japa/runner';
 import { UserService } from '#services/user_service';
 import User from '#models/user';
-import Activity from '#models/activity';
+import { Activity } from '@story-cms/kit';
 import { DateTime } from 'luxon';
 
 test.group('UserService', (group) => {
