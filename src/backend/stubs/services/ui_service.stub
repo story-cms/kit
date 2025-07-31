@@ -2,10 +2,9 @@
   exports({ to: app.makePath('app/services/ui_service.ts') })
 }}}
 
-import UiAttribute from '#models/ui_attribute';
 import axios from 'axios';
 import db from '@adonisjs/lucid/services/db';
-import { Ui, UiItem, type UiItemPayload } from '@story-cms/kit';
+import { Ui, UiAttribute, UiItem, type UiItemPayload } from '@story-cms/kit';
 import storyConfig from '#config/story';
 import {
   AiService,
