@@ -23,7 +23,7 @@
           auto-apply
           :enable-time-picker="field.hasTimePicker ?? false"
           time-picker-inline
-          :is-24="false"
+          :is-24="true"
           position="center"
           :six-weeks="true"
           :state="!(errors.length > 0)"
@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, nextTick } from 'vue';
+import { computed, ref } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 
@@ -68,9 +68,7 @@ const modelValue = props.isReadOnly
 model.$subscribe(() => {
   if (props.isReadOnly) return;
 
-  nextTick().then(() => {
-    modelValue.value = model.getField(fieldPath.value, field.value.default);
-  });
+  modelValue.value = model.getField(fieldPath.value, field.value.default);
 });
 
 const onUpdate = (date: Date) => {
