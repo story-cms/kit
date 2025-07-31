@@ -361,3 +361,16 @@ export type StoryConfig = {
     tracking: string;
   };
 };
+
+export interface PageVersion {
+  apiVersion: number;
+  locale: string;
+}
+
+export interface PageBundle {
+  group: number;
+  title: string;
+  icon: string;
+  description: string;
+  body: string;
+}
