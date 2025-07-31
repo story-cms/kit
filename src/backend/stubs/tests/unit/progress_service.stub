@@ -4,7 +4,7 @@
 import { test } from '@japa/runner';
 import testUtils from '@adonisjs/core/services/test_utils';
 import ProgressService from '#services/progress_service';
-import Ui from '#models/ui';
+import { Ui } from '@story-cms/kit';
 import User from '#models/user';
 import Index from '#models/index';
 
