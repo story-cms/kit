@@ -2,11 +2,22 @@
   <Story title="Toggle Button" group="shared" :layout="{ type: 'grid', width: 300 }">
     <Variant title="Default">
       <ToggleButton
-        icon-on="dots-horizontal"
+        icon-on="sort-asc"
         icon-off="sort"
         label="Toggle"
-        :is-on="isOn"
-        @toggle="isOn = !isOn"
+        :is-on="one"
+        :is-active="false"
+        @toggle="one = !one"
+      />
+    </Variant>
+    <Variant title="Active">
+      <ToggleButton
+        icon-on="sort-asc"
+        icon-off="sort"
+        label="Toggle"
+        :is-on="two"
+        :is-active="true"
+        @toggle="two = !two"
       />
     </Variant>
   </Story>
@@ -15,5 +26,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import ToggleButton from './toggle-button.vue';
-const isOn = ref(false);
+const one = ref(false);
+const two = ref(false);
 </script>
