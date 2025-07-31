@@ -1,7 +1,7 @@
 {{{
   exports({ to: app.makePath('app/services/progress_service.ts') })
 }}}
-import { TranslationProgress, Progress, FlagState, Ui, Index } from '@story-cms/kit';
+import {  FlagState, Index, type Progress, type TranslationProgress, Ui, } from '@story-cms/kit';
 import storyConfig from '#config/story';
 import User from '#models/user';
 
