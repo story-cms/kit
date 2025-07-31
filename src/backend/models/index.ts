@@ -1,0 +1,51 @@
+import { DateTime } from 'luxon';
+import { BaseModel, column } from '@adonisjs/lucid/orm';
+import type { IndexItems } from '@story-cms/kit';
+
+export default class Index extends BaseModel {
+  @column({ isPrimary: true })
+  declare id: number;
+
+  @column()
+  declare apiVersion: number;
+
+  @column()
+  declare locale: string;
+
+  @column()
+  declare items: IndexItems;
+
+  @column()
+  declare publishedList: Array<number>;
+
+  @column()
+  declare draftsList: Array<number>;
+
+  @column()
+  declare issuesList: Array<number>;
+
+  @column()
+  declare storyId: number;
+
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime;
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime;
+
+  public get list() {
+    return this.items.root;
+  }
+
+  public get publicList() {
+    return this.items.root.filter((item) =>
+      this.publishedList.some((tag) => item.number === tag),
+    );
+  }
+
+  public sortItems() {
+    this.items.root.sort(function (a, b) {
+      return a.number - b.number;
+    });
+  }
+}
