@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { Icon } from '@story-cms/kit/ui';
+import Icon from './icon.vue';
 
 defineProps<{
   icon: string;
