@@ -27,12 +27,12 @@
         <template #meta-box>
           <MetaBox
             :primary="[
-              { label: props.meta.storyType, value: props.storyName },
-              { label: props.meta.chapterType, value: metaChapter },
+              { label: meta.storyType, value: storyName },
+              { label: meta.chapterType, value: metaChapter },
             ]"
             :secondary="[
-              { label: 'Created', value: formatDate(props.draft.createdAt) },
-              { label: 'Auto-Saved', value: formatDate(props.draft.updatedAt) },
+              { label: 'Created', value: formatDate(draft.createdAt) },
+              { label: 'Auto-Saved', value: formatDate(draft.updatedAt) },
               { label: 'Last Published', value: publishedWhen },
             ]"
           />

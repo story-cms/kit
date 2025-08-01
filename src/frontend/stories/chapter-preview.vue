@@ -29,8 +29,8 @@
         <template #meta-box>
           <MetaBox
             :primary="[
-              { label: props.meta.storyType, value: props.storyName },
-              { label: props.meta.chapterType, value: metaChapter },
+              { label: meta.storyType, value: storyName },
+              { label: meta.chapterType, value: metaChapter },
             ]"
             :secondary="[
               { label: 'Created', value: formatDate(props.chapter.createdAt) },

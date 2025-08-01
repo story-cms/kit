@@ -1,5 +1,5 @@
 <template>
-  <MetaBox :primary="primary" />
+  <MetaBox :primary="primary" :secondary="[]" />
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
