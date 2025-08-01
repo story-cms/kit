@@ -45,6 +45,7 @@ Example:
   default: 1,
 },
 ```
+
 ## tag
 
 Suitable for tags and renders a [TagField](#).
@@ -171,6 +172,9 @@ image with file attributes:
 A date picker that renders a [DateField](#). It has one optional key called
 `hasTimePicker` which is a boolean that specifies whether the date picker should show a
 time picker.
+
+There is no time-zone configuration currently. The time that is picked is the browser's
+local time and then stored in the model as UTC.
 
 example:
 

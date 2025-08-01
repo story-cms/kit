@@ -4,8 +4,7 @@
   })
 }}}
 import factory from '@adonisjs/lucid/factories';
-import Page from '#models/page';
-import { PageBundle } from '@story-cms/kit';
+import { PageBundle, Page } from '@story-cms/kit';
 
 export const PageFactory = factory
   .define(Page, async ({ faker }) => {

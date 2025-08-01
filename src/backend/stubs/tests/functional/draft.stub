@@ -4,8 +4,7 @@
 import testUtils from '@adonisjs/core/services/test_utils';
 import { test } from '@japa/runner';
 
-import Chapter from '#models/chapter';
-import Draft from '#models/draft';
+import { Chapter, Draft } from '@story-cms/kit';
 
 import { ChapterFactory } from '#database/factories/chapter_factory';
 import { DraftFactory } from '#database/factories/draft_factory';

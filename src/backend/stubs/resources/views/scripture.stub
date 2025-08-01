@@ -1,0 +1,6 @@
+{{{
+  exports({ to: app.makePath('resources/views/components/scripture.edge') })
+}}}
+<p>
+\{\{\{ passage.verse.replace(/{{'`(\d+)`'}}/gm, '<span class="text-black align-super">$1</span>') \}\}\}
+</p>

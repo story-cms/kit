@@ -2,11 +2,10 @@
   exports({ to: app.makePath('app/services/helpers.ts') }) 
 }}}
 import storyConfig from '#config/story';
-import { PageVersion } from '#models/page';
 import { UiService } from '#services/ui_service';
 import { errors } from '@adonisjs/core';
 import { HttpContext } from '@adonisjs/core/http';
-import { Story, Version } from '@story-cms/kit';
+import { Story, Version, PageVersion } from '@story-cms/kit';
 
 export function trimmedErrors(e: any): Record<string, string[]> {
   let trimmed = e.messages.reduce((acc: Record<string, string[]>, error: any) => {

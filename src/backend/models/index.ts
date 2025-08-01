@@ -1,7 +1,3 @@
-{{{
-  exports({ to: app.makePath('app/models/index.ts') })
-}}}
-
 import { DateTime } from 'luxon';
 import { BaseModel, column } from '@adonisjs/lucid/orm';
 import type { IndexItems } from '@story-cms/kit';

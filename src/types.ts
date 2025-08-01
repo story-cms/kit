@@ -1,3 +1,35 @@
+/// ----------------------------------------------------
+//  these enums can not be imported into vue files
+/// ----------------------------------------------------
+export enum AddStatus {
+  // eslint-disable-next-line
+  Full,
+  // eslint-disable-next-line
+  Add,
+  // eslint-disable-next-line
+  Wait,
+}
+
+export enum ResponseStatus {
+  // eslint-disable-next-line
+  Failure,
+  // eslint-disable-next-line
+  Confirmation,
+  // eslint-disable-next-line
+  Accomplishment,
+  // eslint-disable-next-line
+  Neutral,
+  // eslint-disable-next-line
+  None,
+}
+
+export enum FlagState {
+  PREFILLED = 'prefilled',
+  RECHECK = 'recheck',
+}
+
+/// ----------------------------------------------------
+
 export interface Version {
   apiVersion: number;
   storyId: number;
@@ -106,14 +138,14 @@ export interface Meta {
 export interface Story {
   id: number;
   name: string;
-  fields: Array<object>;
+  fields: FieldSpec[];
   chapterLimit: number;
   parts?: Array<object>;
 }
 
 export interface StorySpec {
   name: string;
-  fields: Array<object>;
+  fields: FieldSpec[];
   chapterLimit: number;
 }
 
@@ -236,15 +268,6 @@ export interface PageEditProps {
   providers: Providers; // widgets
 }
 
-export enum AddStatus {
-  // eslint-disable-next-line
-  Full,
-  // eslint-disable-next-line
-  Add,
-  // eslint-disable-next-line
-  Wait,
-}
-
 export interface StatMetric {
   name: string;
   stat: number;
@@ -298,19 +321,6 @@ export interface UsersProps {
   users: UserMeta[];
 }
 
-export enum ResponseStatus {
-  // eslint-disable-next-line
-  Failure,
-  // eslint-disable-next-line
-  Confirmation,
-  // eslint-disable-next-line
-  Accomplishment,
-  // eslint-disable-next-line
-  Neutral,
-  // eslint-disable-next-line
-  None,
-}
-
 export interface UiItem {
   key: string;
   source: string;
@@ -352,7 +362,15 @@ export type StoryConfig = {
   };
 };
 
-export enum FlagState {
-  PREFILLED = 'prefilled',
-  RECHECK = 'recheck',
+export interface PageVersion {
+  apiVersion: number;
+  locale: string;
+}
+
+export interface PageBundle {
+  group: number;
+  title: string;
+  icon: string;
+  description: string;
+  body: string;
 }

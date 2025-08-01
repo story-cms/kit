@@ -1,10 +1,6 @@
-{{{
-  exports({ to: app.makePath('app/models/draft.ts') })
-}}}
-
 import { DateTime } from 'luxon';
 import { BaseModel, column } from '@adonisjs/lucid/orm';
-import { IndexItem, Specifier, Version, DraftMeta } from '@story-cms/kit';
+import { IndexItem, Specifier, Version, DraftMeta } from '../../types';
 
 export default class Draft extends BaseModel {
   @column({ isPrimary: true })

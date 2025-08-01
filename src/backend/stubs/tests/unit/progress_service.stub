@@ -4,9 +4,8 @@
 import { test } from '@japa/runner';
 import testUtils from '@adonisjs/core/services/test_utils';
 import ProgressService from '#services/progress_service';
-import Ui from '#models/ui';
+import { Ui, Index } from '@story-cms/kit';
 import User from '#models/user';
-import Index from '#models/index';
 
 test.group('ProgressService', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction());

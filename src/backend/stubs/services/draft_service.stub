@@ -1,8 +1,7 @@
 {{{ 
   exports({ to: app.makePath('app/services/draft_service.ts') }) 
 }}}
-import Chapter from '#models/chapter';
-import { FieldMap, FieldSpec, Story, Version } from '@story-cms/kit';
+import { FieldMap, FieldSpec, Story, Version, Chapter } from '@story-cms/kit';
 import storyConfig from '#config/story';
 
 export default class DraftService {

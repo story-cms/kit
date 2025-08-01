@@ -1,9 +1,6 @@
-{{{
-  exports({ to: app.makePath('app/models/chapter.ts') })
-}}}
 import { DateTime } from 'luxon';
 import { BaseModel, column } from '@adonisjs/lucid/orm';
-import { IndexItem, Specifier, ChapterMeta } from '@story-cms/kit';
+import { IndexItem, Specifier, ChapterMeta } from '../../types';
 
 export default class Chapter extends BaseModel {
   @column({ isPrimary: true })
@@ -42,7 +39,7 @@ export default class Chapter extends BaseModel {
     const start =
       typeof this.bundle === 'string' ? this.bundle : JSON.stringify(this.bundle);
     // eslint-disable-next-line no-irregular-whitespace
-    {{ 'const cleaned = start.replace(/\u00A0/g, '\\\\u00A0');' }}
+    const cleaned = start.replace(/\u00A0/g, '\\\\u00A0');
     const parsed = JSON.parse(cleaned);
     return parsed;
   }

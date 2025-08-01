@@ -4,7 +4,7 @@
 import type { HttpContext } from '@adonisjs/core/http';
 
 import storyConfig from '#config/story';
-import Activity from '#models/activity';
+import { Activity } from '@story-cms/kit';
 import { apiContextFrom, storyContextFrom } from '#services/helpers';
 import { UiService } from '#services/ui_service';
 import { UiPageProps, Version } from '@story-cms/kit';
