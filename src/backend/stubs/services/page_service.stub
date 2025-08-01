@@ -2,8 +2,7 @@
   exports({ to: app.makePath('app/services/page_service.ts') }) 
 }}}
 
-import Page, { PageVersion, PageBundle } from '#models/page';
-import { PageItem } from '@story-cms/kit';
+import { Page, PageVersion, PageBundle, PageItem } from '@story-cms/kit';
 import storyConfig from '#config/story';
 
 export default class PageService {
