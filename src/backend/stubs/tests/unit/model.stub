@@ -10,7 +10,7 @@ import { UserFactory } from '#database/factories/user_factory';
 import { ChapterFactory } from '#database/factories/chapter_factory';
 import { IndexFactory } from '#database/factories/index_factory';
 import { DraftFactory } from '#database/factories/draft_factory';
-import storyConfig from '#config/story';
+import cmsConfig from '#config/cms';
 import { PageFactory } from '#database/factories/page_factory';
 
 test.group('User', (group) => {
@@ -252,7 +252,7 @@ test.group('Page', (group) => {
   });
 
   test('it can add tracking to links', async ({ assert }) => {
-    const tracking = storyConfig.pages.tracking;
+    const tracking = cmsConfig.pages.tracking;
 
     const page = await PageFactory.merge({
       bundle: JSON.stringify({

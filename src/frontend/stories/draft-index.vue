@@ -18,7 +18,7 @@
       ]"
     >
       <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8">
-        <div v-for="(item, index) in drafts.story.fields" :key="index">
+        <div v-for="(item, index) in drafts.fields" :key="index">
           <component :is="widgetFor(index)" :field="item" :is-nested="false" />
         </div>
       </form>
@@ -187,7 +187,7 @@ const publishedWhen = computed(() => {
 });
 
 const metaChapter = computed(
-  () => `${padZero(props.draft.number)} of ${padZero(props.spec.chapterLimit)}`,
+  () => `${padZero(props.draft.number)} of ${padZero(props.chapterLimit)}`,
 );
 
 onMounted(() => {
@@ -203,7 +203,7 @@ onMounted(() => {
 });
 
 const widgetFor = (key: number) => {
-  const widget = (props.spec.fields as FieldSpec[])[key].widget;
+  const widget = (props.fields as FieldSpec[])[key].widget;
   return widgets.picker(widget);
 };
 </script>

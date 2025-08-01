@@ -6,12 +6,11 @@ import db from '@adonisjs/lucid/services/db';
 import { DraftEditProps } from '@story-cms/kit';
 
 import providers from '#config/providers';
-import storyConfig from '#config/story';
+import cmsConfig from '#config/cms';
 import { Activity, Chapter, Draft } from '@story-cms/kit';
 import DraftService from '#services/draft_service';
 import { storyContextFrom, trimmedErrors } from '#services/helpers';
 import IndexService from '#services/index_service';
-import StoryService from '#services/story_service';
 import { draftValidator } from '#validators/bundle';
 
 export default class DraftsController {
@@ -38,7 +37,7 @@ export default class DraftsController {
     await Activity.create({
       userId: ctx.auth.user?.id,
       locale: version.locale,
-      action: {{' `created draft for ${storyConfig.meta.storyType} ${story.name} ${storyConfig.meta.chapterType} ${number}`' }},
+      action: {{' `created draft for ${story.name} # ${number}`' }},
     });
 
     return ctx.response.redirect(
@@ -80,18 +79,17 @@ export default class DraftsController {
     const indexService = new IndexService(story);
     await indexService.buildIndex(version);
 
-    const service = new StoryService(story);
     const data: DraftEditProps = {
       draft: draft.meta,
       bundle: draft!.bundle,
-      spec: service.spec,
+      fields: story.fields,
       lastPublished,
       providers,
       storyName: story.name,
       storyId: story.id,
     };
 
-    const isTranslation = version.locale !== storyConfig.languages[0].locale;
+    const isTranslation = version.locale !== cmsConfig.languages.languages[0].locale;
 
     if (!isTranslation) {
       return ctx.inertia.render('DraftIndex', { ...data });
@@ -100,7 +98,7 @@ export default class DraftsController {
     const source = await Chapter.query()
       .where({
         ...specifier,
-        locale: storyConfig.languages[0].locale,
+        locale: cmsConfig.languages.languages[0].locale,
       })
       .first();
 
@@ -124,7 +122,7 @@ export default class DraftsController {
       await Activity.create({
         userId: ctx.auth.user?.id,
         locale: version.locale,
-        action: {{ '`updated draft for ${storyConfig.meta.storyType} ${story.name} ${storyConfig.meta.chapterType} ${draft.number}`' }},
+        action: {{ '`updated draft for ${story.name} # ${draft.number}`' }},
       });
       const service = new IndexService(story);
       await service.buildIndex(draft.version);
@@ -163,7 +161,7 @@ export default class DraftsController {
     await Activity.create({
       userId: ctx.auth.user?.id,
       locale: version.locale,
-      action: {{ '`submitted draft for ${storyConfig.meta.storyType} ${story.name} ${storyConfig.meta.chapterType} ${draft.number}`' }},
+      action: {{ '`submitted draft for ${story.name} # ${draft.number}`' }},
     });
     await service.buildIndex(draft.version);
     return ctx.response.redirect().back();
@@ -183,7 +181,7 @@ export default class DraftsController {
     await Activity.create({
       userId: ctx.auth.user?.id,
       locale: version.locale,
-      action: {{ '`rejected draft for ${storyConfig.meta.storyType} ${story.name} ${storyConfig.meta.chapterType} ${draft.number}`' }},
+      action: {{ '`rejected draft for ${story.name} # ${draft.number}`' }},
     });
 
     return ctx.response.redirect().back();
@@ -226,7 +224,7 @@ export default class DraftsController {
       await Activity.create({
         userId: ctx.auth.user?.id,
         locale: version.locale,
-        action: {{ '`published chapter for ${storyConfig.meta.storyType} ${story.name} ${storyConfig.meta.chapterType} ${chapter.number}`' }},
+        action: {{ '`published chapter for ${story.name} # ${chapter.number}`' }},
       });
       await draft.delete();
     });
@@ -251,7 +249,7 @@ export default class DraftsController {
     await Activity.create({
       userId: ctx.auth.user?.id,
       locale: version.locale,
-      action: {{ '`deleted draft for ${storyConfig.meta.storyType} ${story.name} ${storyConfig.meta.chapterType} ${draft.number}`' }},
+      action: {{ '`deleted draft for ${story.name} # ${draft.number}`' }},
     });
 
     const service = new IndexService(story);

@@ -4,7 +4,7 @@
 import { test } from '@japa/runner';
 import { PageFactory } from '#database/factories/page_factory';
 import PageService from '#services/page_service';
-import storyConfig from '#config/story';
+import cmsConfig from '#config/cms';
 import testUtils from '@adonisjs/core/services/test_utils';
 
 test.group('Page service', (group) => {
@@ -282,7 +282,7 @@ test.group('Page service', (group) => {
     const clientPages = await service.getPageItemsForClient();
 
     // assert
-    const tracking = storyConfig['pages']['tracking'];
+    const tracking = cmsConfig.pages.tracking;
     assert.equal(clientPages.length, 3);
     // non links not affected
     const page2 = clientPages[1];

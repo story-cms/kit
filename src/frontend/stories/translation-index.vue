@@ -53,7 +53,7 @@
         <section class="row-subgrid">
           <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="row-subgrid gap-y-8">
             <div
-              v-for="(item, index) in spec.fields"
+              v-for="(item, index) in fields"
               :key="index"
               class="grid grid-rows-[subgrid]"
               :style="{
@@ -71,7 +71,7 @@
         <section :class="['row-subgrid', { hidden: !shared.showSourceColumn }]">
           <div dir="ltr" class="row-subgrid gap-y-8">
             <div
-              v-for="(item, index) in spec.fields"
+              v-for="(item, index) in fields"
               :key="index"
               class="grid grid-rows-[subgrid]"
               :style="{
@@ -169,12 +169,12 @@ const chapterTitle = computed(() => {
 });
 
 const widgetFor = (key: number) => {
-  const widget = (props.spec.fields as FieldSpec[])[key].widget;
+  const widget = (props.fields as FieldSpec[])[key].widget;
   return widgets.picker(widget);
 };
 
 const metaChapter = computed(
-  () => `${padZero(props.draft.number)} of ${padZero(props.spec.chapterLimit)}`,
+  () => `${padZero(props.draft.number)} of ${padZero(props.chapterLimit)}`,
 );
 
 const publishedWhen = computed(() => {
