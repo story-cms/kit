@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, onUnmounted, onBeforeMount } from 'vue';
+import { ref, onMounted, onUnmounted, onBeforeMount } from 'vue';
 import { useSharedStore } from '../store';
 
 import Sidebar from './sidebar.vue';
@@ -56,14 +56,6 @@ const layout = ref<HTMLElement | null>(null);
 const container = ref<HTMLElement | null>(null);
 const sentinel = ref<HTMLElement | null>(null);
 let observer: IntersectionObserver | null = null;
-
-const onScroll = () => {
-  if (header.value && main.value) {
-    const headerRect = header.value.getBoundingClientRect();
-    shared.setHeaderSize(headerRect.height, headerRect.width);
-  }
-  setDimensions();
-};
 
 const setDimensions = () => {
   if (header.value) {
@@ -94,7 +86,6 @@ onBeforeMount(() => {
 
 onMounted(() => {
   shared.setShowAppPreview(shared.meta.hasAppPreview);
-  window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', resizeHook);
   resizeHook();
   setDimensions();
@@ -113,9 +104,6 @@ onMounted(() => {
   }
 });
 
-onBeforeUnmount(() => {
-  window.removeEventListener('scroll', onScroll);
-});
 onUnmounted(() => {
   window.removeEventListener('resize', resizeHook);
   if (observer && sentinel.value) {
