@@ -6,7 +6,7 @@
           <DraftActions :can-delete="false" />
           <Link
             class="w-32 rounded-[38px] border border-blue-500 bg-blue-500 px-[15px] py-[9px] text-center text-sm/5 font-medium text-white shadow"
-            :href="`/${shared.locale}/story/${props.storyId}/draft/${props.chapter.number}/edit`"
+            :href="`/${shared.locale}/story/${storyId}/draft/${chapter.number}/edit`"
           >
             Edit
           </Link>
@@ -28,11 +28,15 @@
       <ContentSidebar>
         <template #meta-box>
           <MetaBox
-            :created-at="props.chapter.createdAt"
-            :updated-at="props.chapter.updatedAt"
-            :story-type="props.meta.storyType"
-            :chapter-type="metaChapter"
-            :published-when="publishedWhen"
+            :primary="[
+              { label: meta.storyType, value: storyName },
+              { label: meta.chapterType, value: metaChapter },
+            ]"
+            :secondary="[
+              { label: 'Created', value: formatDate(chapter.createdAt) },
+              { label: 'Auto-Saved', value: formatDate(chapter.updatedAt) },
+              { label: 'Last Published', value: publishedWhen },
+            ]"
           />
         </template>
         <template #app-preview>
@@ -40,7 +44,7 @@
             <MobileAppPreview
               v-if="bundle"
               :bundle="bundle"
-              :number="props.chapter.number"
+              :number="chapter.number"
               class="mt-2"
             />
           </div>

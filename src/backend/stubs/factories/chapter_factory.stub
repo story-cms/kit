@@ -4,7 +4,7 @@
   })
 }}}
 import factory from '@adonisjs/lucid/factories';
-import Chapter from '#models/chapter';
+import { Chapter } from '@story-cms/kit';
 
 export const ChapterFactory = factory
   .define(Chapter, async () => {

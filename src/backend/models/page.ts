@@ -1,10 +1,6 @@
-{{{
-  exports({ to: app.makePath('app/models/page.ts') })
-}}}
-
 import { DateTime } from 'luxon';
 import { BaseModel, column } from '@adonisjs/lucid/orm';
-import { PageMeta } from '@story-cms/kit';
+import { PageMeta, PageBundle } from '@story-cms/kit';
 
 export default class Page extends BaseModel {
   @column({ isPrimary: true })
@@ -84,7 +80,7 @@ export default class Page extends BaseModel {
     if (!this.isLink) return bundle;
 
     const glue = bundle.body.split('?').length === 1 ? '?' : '&';
-    bundle.body = {{ '`${bundle.body}${glue}${tracking}`' }};
+    bundle.body = `${bundle.body}${glue}${tracking}`;
     return bundle;
   }
 
@@ -95,17 +91,4 @@ export default class Page extends BaseModel {
       updatedAt: this.updatedAt.toString(),
     };
   }
-}
-
-export interface PageVersion {
-  apiVersion: number;
-  locale: string;
-}
-
-export interface PageBundle {
-  group: number;
-  title: string;
-  icon: string;
-  description: string;
-  body: string;
 }

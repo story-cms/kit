@@ -1,9 +1,7 @@
 {{{ 
   exports({ to: app.makePath('app/services/index_service.ts') }) 
 }}}
-import Chapter from '#models/chapter';
-import Draft from '#models/draft';
-import Index from '#models/index';
+import { Index, Chapter, Draft } from '@story-cms/kit';
 import {
   IndexItem,
   Version,

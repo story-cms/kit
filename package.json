@@ -9,7 +9,7 @@
     "clean": "del-cli dist",
     "ui:build": "vite build",
     "backend:build": "tsc -p tsconfig.backend.json",
-    "copy:templates": "copyfiles --up 3 \"src/backend/stubs/**/*.stub\" dist/backend",
+    "copy:templates": "copyfiles --up 3 \"src/backend/stubs/**/*.stub\" dist/backend/stubs",
     "build": "npm run ui:build && npm run backend:build",
     "prebuild": "npm run clean",
     "postbuild": "npm run copy:templates",

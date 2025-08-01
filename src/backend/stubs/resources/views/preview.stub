@@ -4,4 +4,15 @@
 <section>
   <div class="mb-1 text-sm font-medium leading-5 text-gray-400">Title</div>
   <div class="text-2xl">\{\{ bundle.title \}\}</div>
+
+  <div class="mt-6 mb-1 text-sm font-medium leading-5 text-gray-400">Passage</div>
+  @if(bundle.passage)
+  @!component('components/scripture', {passage: bundle.passage})
+  @end
+
+  <div class="mt-6 mb-1 text-sm font-medium leading-5 text-gray-400">Description</div>
+  @if(bundle.description)
+  <p>\{\{\{ marked.parse(bundle.description) \}\}\}</p>
+  @end
+
 </section>

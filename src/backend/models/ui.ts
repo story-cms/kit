@@ -1,7 +1,3 @@
-{{{
-  exports({ to: app.makePath('app/models/ui.ts') })
-}}}
-
 import { DateTime } from 'luxon';
 import { BaseModel, column } from '@adonisjs/lucid/orm';
 
@@ -20,7 +16,7 @@ export default class Ui extends BaseModel {
 
   @column()
   declare flag: string | null;
-  
+
   @column()
   declare updatedBy: number;
 

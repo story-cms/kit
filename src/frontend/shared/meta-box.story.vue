@@ -2,22 +2,32 @@
   <Story title="Meta Box" group="shared">
     <Variant title="Default">
       <MetaBox
-        story-name="Adam & Eve"
-        :created-at="meta.createdAt"
-        :updated-at="meta.updatedAt"
-        :story-type="'Story'"
-        :chapter-type="'01 of 42'"
-        :published-when="'2021-10-10T14:48:00.000000Z'"
+        :primary="[
+          { label: 'Story', value: 'Adam & Eve' },
+          { label: 'Chapter', value: '01 of 42' },
+          { label: 'Published', value: '2021-10-10T14:48:00.000000Z' },
+        ]"
+        :secondary="[
+          { label: 'Created', value: '2023-10-04 15:50:45.587+03' },
+          { label: 'Auto-Saved', value: '2023-10-18 11:24:49.216+03' },
+          { label: 'Last Published', value: '2021-10-10T14:48:00.000000Z' },
+        ]"
       />
     </Variant>
     <Variant title="Wrapping story title">
       <MetaBox
-        :created-at="meta.createdAt"
-        :updated-at="meta.updatedAt"
-        :story-type="'Story'"
-        :chapter-type="'01 of 42'"
-        :published-when="'2021-10-10T14:48:00.000000Z'"
-        story-name="The long wrapping title"
+        :primary="[
+          { label: 'Story', value: 'The long wrapping title' },
+          { label: 'Chapter', value: '01 of 42' },
+          { label: 'Published', value: '2021-10-10T14:48:00.000000Z' },
+        ]"
+        :secondary="[
+          { label: 'Created', value: '2023-10-04 15:50:45.587+03' },
+          { label: 'Auto-Saved', value: '2023-10-18 11:24:49.216+03' },
+          { label: 'Last Published', value: '2021-10-10T14:48:00.000000Z' },
+        ]"
+      />
+
       />
     </Variant>
   </Story>
@@ -25,9 +35,4 @@
 
 <script setup lang="ts">
 import MetaBox from './meta-box.vue';
-const meta = {
-  number: 1,
-  createdAt: '2023-10-04 15:50:45.587+03',
-  updatedAt: '2023-10-18 11:24:49.216+03',
-};
 </script>

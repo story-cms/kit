@@ -4,6 +4,7 @@
     "skipLibCheck": true,
     "lib": ["ESNext"],
     "outDir": "./dist",
+    "rootDir": "./src",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "strictBindCallApply": true,

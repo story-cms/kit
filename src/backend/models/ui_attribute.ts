@@ -1,7 +1,3 @@
-{{{
-  exports({ to: app.makePath('app/models/ui_attribute.ts') })
-}}}
-
 import { BaseModel, column } from '@adonisjs/lucid/orm';
 
 export default class UiAttribute extends BaseModel {

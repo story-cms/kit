@@ -98,11 +98,15 @@
       >
         <template #meta-box>
           <MetaBox
-            :created-at="props.draft.createdAt"
-            :updated-at="props.draft.updatedAt"
-            :story-type="props.meta.storyType"
-            :chapter-type="metaChapter"
-            :published-when="publishedWhen"
+            :primary="[
+              { label: meta.storyType, value: storyName },
+              { label: meta.chapterType, value: metaChapter },
+            ]"
+            :secondary="[
+              { label: 'Created', value: formatDate(draft.createdAt) },
+              { label: 'Auto-Saved', value: formatDate(draft.updatedAt) },
+              { label: 'Last Published', value: publishedWhen },
+            ]"
           />
         </template>
         <template #app-preview>

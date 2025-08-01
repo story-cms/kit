@@ -42,6 +42,11 @@ import VideoField from './fields/video-field.vue';
 import { debounce } from './shared/helpers';
 import DraftActions from './shared/draft-actions.vue';
 import DateField from './fields/date-field.vue';
+import ActionButton from './shared/action-button.vue';
+import IconButton from './shared/icon-button.vue';
+import LabelButton from './shared/label-button.vue';
+import ListSwitcher from './shared/list-switcher.vue';
+import MetaBox from './shared/meta-box.vue';
 
 export { createInertiaApp, usePage, router } from '@inertiajs/vue3';
 
@@ -97,4 +102,9 @@ export {
   ChapterPreview,
   UiPage,
   DateField,
+  ActionButton,
+  IconButton,
+  LabelButton,
+  ListSwitcher,
+  MetaBox,
 };
