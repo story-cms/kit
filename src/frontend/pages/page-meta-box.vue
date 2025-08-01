@@ -1,38 +1,28 @@
 <template>
-  <div class="rounded-lg border border-gray-100 font-['Inter']">
-    <section
-      class="grid grid-cols-1 p-4 text-xs font-normal leading-4 bg-gray-200 gap-y-2"
-    >
-      <div class="grid grid-cols-2">
-        <p>Created</p>
-        <span class="text-right place-self-end">{{ formatDate(props.createdAt) }}</span>
-      </div>
-      <div class="grid grid-cols-2">
-        <p>Auto-Saved</p>
-        <span class="text-right place-self-end">{{ formatDate(props.updatedAt) }}</span>
-      </div>
-      <div class="grid grid-cols-2">
-        <p>Last Published</p>
-        <span class="text-right place-self-end">{{ publishedAtLabel }}</span>
-      </div>
-    </section>
-  </div>
+  <MetaBox :primary="primary" :secondary="[]" />
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { PageMeta } from '../../types';
 import { formatDate } from '../shared/helpers';
-
+import MetaBox from '../shared/meta-box.vue';
 const props = defineProps<
   Pick<PageMeta, 'createdAt' | 'updatedAt'> & {
     savedAt: string;
     publishedAt: string;
-    isFloating?: boolean;
   }
 >();
 
 const publishedAtLabel = computed(() => {
   if (props.publishedAt === 'unpublished') return 'UNPUBLISHED';
   return formatDate(props.publishedAt);
+});
+
+const primary = computed(() => {
+  return [
+    { label: 'Created', value: formatDate(props.createdAt) },
+    { label: 'Auto-Saved', value: formatDate(props.updatedAt) },
+    { label: 'Last Published', value: publishedAtLabel.value },
+  ];
 });
 </script>
