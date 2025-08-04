@@ -321,6 +321,19 @@ export interface UsersProps {
   users: UserMeta[];
 }
 
+export interface Audience {
+  id: number;
+  name: string;
+  initials: string;
+  email: string;
+  lastLogin: string;
+  createdAt: string;
+}
+
+export interface AudiencesProps {
+  audiences: Audience[];
+}
+
 export interface UiItem {
   key: string;
   source: string;
