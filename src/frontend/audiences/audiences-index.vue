@@ -32,11 +32,19 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr v-for="audience in audiences" :key="audience.uid">
+                  <tr v-for="audience in paginatedAudiences" :key="audience.uid">
                     <AudienceRow :audience="audience" />
                   </tr>
                 </tbody>
               </table>
+
+              <!-- Pagination -->
+              <Pagination
+                :current-page="currentPage"
+                :total-items="audiences.length"
+                :items-per-page="itemsPerPage"
+                @page-change="handlePageChange"
+              />
             </div>
           </div>
         </div>
@@ -46,8 +54,10 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from 'vue';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
+import Pagination from '../shared/pagination.vue';
 
 import AudienceRow from './components/audience-row.vue';
 import { SharedPageProps, AudiencesProps } from '../../types';
@@ -58,4 +68,20 @@ const props = defineProps<AudiencesProps & SharedPageProps>();
 const shared = useSharedStore();
 shared.setFromProps(props);
 shared.setCurrentStoryName('');
+
+// Pagination state
+const currentPage = ref(1);
+const itemsPerPage = 2;
+
+// Computed properties for pagination
+const paginatedAudiences = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  return props.audiences.slice(startIndex, endIndex);
+});
+
+// Handle page changes
+const handlePageChange = (page: number) => {
+  currentPage.value = page;
+};
 </script>
