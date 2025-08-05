@@ -322,12 +322,12 @@ export interface UsersProps {
 }
 
 export interface Audience {
-  id: number;
-  name: string;
-  initials: string;
-  email: string;
-  lastLogin: string;
-  createdAt: string;
+  uid: string;
+  name: string | undefined;
+  email: string | undefined;
+  photoURL: string | undefined;
+  signUpDate: string;
+  lastSignInTime: string | undefined;
 }
 
 export interface AudiencesProps {
