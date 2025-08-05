@@ -32,11 +32,11 @@
 <script setup lang="ts">
 import AudiencesIndex from './audiences-index.vue';
 import { sharedProps } from '../test/mocks';
-import type { Audience } from '../../types';
+import type { AudienceMeta } from '../../types';
 import { ResponseStatus } from '../../types';
 import { useSharedStore } from '../store';
 
-const audiences: Audience[] = [
+const audiences: AudienceMeta[] = [
   {
     uid: '1',
     name: 'Lindsay Walton',
@@ -45,7 +45,6 @@ const audiences: Audience[] = [
     signUpDate: '2025-06-18T12:10:38.405+00:00',
     lastSignInTime: '2025-06-18T12:10:38.405+00:00',
   },
-  // TODO: Add more users with different roles and names
   {
     uid: '2',
     name: 'John Doe',

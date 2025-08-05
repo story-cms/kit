@@ -321,7 +321,7 @@ export interface UsersProps {
   users: UserMeta[];
 }
 
-export interface Audience {
+export interface AudienceMeta {
   uid: string;
   name: string;
   email: string;
@@ -331,7 +331,7 @@ export interface Audience {
 }
 
 export interface AudiencesProps {
-  audiences: Audience[];
+  audiences: AudienceMeta[];
 }
 
 export interface UiItem {

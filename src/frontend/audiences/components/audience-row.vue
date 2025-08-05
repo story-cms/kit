@@ -27,10 +27,10 @@
 
 <script setup lang="ts">
 import { DateTime } from 'luxon';
-import type { Audience } from '../../../types';
+import type { AudienceMeta } from '../../../types';
 
 defineProps<{
-  audience: Audience;
+  audience: AudienceMeta;
 }>();
 
 const formatDate = (dateString: string) => {
