@@ -2,10 +2,12 @@
   <td class="px-3 py-4">
     <div class="flex items-center">
       <div class="size-11 shrink-0">
-        <div class="grid size-11 place-items-center rounded-full bg-red-300">
-          <p class="font-extrabold uppercase text-white">
-            {{ audience.initials }}
-          </p>
+        <div class="grid size-11 place-items-center">
+          <img
+            :src="audience.photoURL"
+            :alt="audience.name"
+            class="size-full rounded-full object-cover"
+          />
         </div>
       </div>
       <div class="ml-4">
@@ -15,11 +17,11 @@
     </div>
   </td>
   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-    {{ formatDate(audience.lastLogin) }}
+    {{ formatDate(audience.lastSignInTime) }}
   </td>
 
   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-    {{ formatDate(audience.createdAt) }}
+    {{ formatDate(audience.signUpDate) }}
   </td>
 </template>
 

@@ -323,11 +323,11 @@ export interface UsersProps {
 
 export interface Audience {
   uid: string;
-  name: string | undefined;
-  email: string | undefined;
-  photoURL: string | undefined;
+  name: string;
+  email: string;
+  photoURL: string;
   signUpDate: string;
-  lastSignInTime: string | undefined;
+  lastSignInTime: string;
 }
 
 export interface AudiencesProps {

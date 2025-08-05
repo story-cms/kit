@@ -32,7 +32,7 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr v-for="audience in audiences" :key="audience.id">
+                  <tr v-for="audience in audiences" :key="audience.uid">
                     <AudienceRow :audience="audience" />
                   </tr>
                 </tbody>
