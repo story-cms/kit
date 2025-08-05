@@ -71,7 +71,7 @@ shared.setCurrentStoryName('');
 
 // Pagination state
 const currentPage = ref(1);
-const itemsPerPage = 2;
+const itemsPerPage = 10;
 
 // Computed properties for pagination
 const paginatedAudiences = computed(() => {
