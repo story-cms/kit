@@ -68,9 +68,9 @@ export default class AudienceService {
       return admin.apps[0];
     }
 
-    const credentialsBase64 = env.get('FIREBASE_SERVICE_ACCOUNT_JSON', '');
+    const credentialsBase64 = env.get('FIREBASE_SERVICE_ACCOUNT_KEY_JSON', '');
     if (!credentialsBase64) {
-      throw new Error('FIREBASE_SERVICE_ACCOUNT_JSON environment variable is not set.');
+      throw new Error('FIREBASE_SERVICE_ACCOUNT_KEY_JSON environment variable is not set.');
     }
 
     const credentialsJson = Buffer.from(credentialsBase64, 'base64').toString('utf-8');

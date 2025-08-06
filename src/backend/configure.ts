@@ -187,6 +187,7 @@ export async function configure(command: Configure) {
   await codemods.defineEnvVariables({ BIBLE_API_KEY: 'redacted' });
   await codemods.defineEnvVariables({ OPENAI_API_KEY: 'redacted' });
   await codemods.defineEnvVariables({ GOOGLE_APPLICATION_CREDENTIALS_JSON: 'redacted' });
+  await codemods.defineEnvVariables({ FIREBASE_SERVICE_ACCOUNT_KEY_JSON: 'redacted' });
 
   /**
    * Define environment variables validations
@@ -226,6 +227,13 @@ export async function configure(command: Configure) {
       GOOGLE_APPLICATION_CREDENTIALS_JSON: `Env.schema.string(),`,
     },
     leadingComment: 'Configuration for the Google Analytics service',
+  });
+
+  await codemods.defineEnvValidations({
+    variables: {
+      FIREBASE_SERVICE_ACCOUNT_KEY_JSON: `Env.schema.string(),`,
+    },
+    leadingComment: 'Configuration for the Firebase service account key',
   });
 
   /**
