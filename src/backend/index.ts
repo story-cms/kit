@@ -10,4 +10,3 @@ export { default as Page } from './models/page.js';
 export { default as Ui } from './models/ui.js';
 export { default as UiAttribute } from './models/ui_attribute.js';
 export { default as Index } from './models/index.js';
-export { default as Audience } from './models/audience.js';
