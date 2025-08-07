@@ -350,6 +350,23 @@ export interface DashboardProps {
 }
 
 /// ----------------------------------------------------
+///  audiences
+/// ----------------------------------------------------
+
+export interface AudienceMeta {
+  uid: string;
+  name: string;
+  email: string;
+  photoURL: string;
+  signUpDate: string;
+  lastSignInTime: string;
+}
+
+export interface AudiencesProps {
+  audiences: AudienceMeta[];
+}
+
+/// ----------------------------------------------------
 ///  configuration
 /// ----------------------------------------------------
 
