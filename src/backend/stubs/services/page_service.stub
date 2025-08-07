@@ -3,7 +3,7 @@
 }}}
 
 import { Page, PageVersion, PageBundle, PageItem } from '@story-cms/kit';
-import storyConfig from '#config/story';
+import cmsConfig from '#config/cms';
 
 export default class PageService {
   protected version: PageVersion;
@@ -40,7 +40,7 @@ export default class PageService {
       .where('isPublished', true)
       .orderBy('order', 'asc');
 
-    const tracking = storyConfig.pages.tracking;
+    const tracking = cmsConfig.pages.tracking;
     return pages.map((page) => page.bundleWithTracking(tracking));
   }
 
@@ -50,7 +50,7 @@ export default class PageService {
     const collected: Page[] = [];
     let group = 1;
     let order = 0; // can't be i
-    
+
     for (const item of items) {
       if (item.isDivider) {
         group++;
@@ -72,3 +72,4 @@ export default class PageService {
     return collected;
   }
 }
+

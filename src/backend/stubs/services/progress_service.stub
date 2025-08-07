@@ -1,15 +1,22 @@
 {{{
   exports({ to: app.makePath('app/services/progress_service.ts') })
 }}}
-import {  FlagState, Index, type Progress, type TranslationProgress, Ui, } from '@story-cms/kit';
-import storyConfig from '#config/story';
+
+import {
+  FlagState,
+  Index,
+  type Progress,
+  type TranslationProgress,
+  Ui,
+} from '@story-cms/kit';
+import cmsConfig from '#config/cms';
 import User from '#models/user';
 
 export default class ProgressService {
   public async progress(user: User): Promise<TranslationProgress[]> {
     const translationProgress: TranslationProgress[] = [];
 
-    const languages = storyConfig.languages
+    const languages = cmsConfig.languages.languages
       .filter((lang) => lang.locale !== 'en')
       .sort((a, b) => a.language.localeCompare(b.language));
 

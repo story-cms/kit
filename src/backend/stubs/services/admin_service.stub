@@ -1,7 +1,7 @@
 {{{ 
   exports({ to: app.makePath('app/services/admin_service.ts') }) 
 }}}
-import storyConfig from '#config/story';
+import cmsConfig from '#config/cms';
 import IndexService from '#services/index_service';
 import db from '@adonisjs/lucid/services/db';
 
@@ -12,12 +12,12 @@ export default class AdminService {
    * Builds all the indexes freshly from the published chapters
    */
   public async rebuildIndexes() {
-    const defaultStory = storyConfig.stories[0];
+    const defaultStory = cmsConfig.stories.stories[0];
     const service = new IndexService(defaultStory);
     this._feedback = [];
 
-    for (const language of storyConfig.languages) {
-      for (const story of storyConfig.stories) {
+    for (const language of cmsConfig.languages.languages) {
+      for (const story of cmsConfig.stories.stories) {
         service.story = story;
         await service.buildIndex({
           apiVersion: 1,
@@ -33,7 +33,15 @@ export default class AdminService {
    * Synchronize the sequential increment number of an autoincrement field after a data import.
    */
   public async syncAutoIncrement() {
-    const tables = ['chapters', 'indices', 'drafts', 'users', 'pages', 'uis', 'ui_attributes'];
+    const tables = [
+      'chapters',
+      'indices',
+      'drafts',
+      'users',
+      'pages',
+      'uis',
+      'ui_attributes',
+    ];
 
     for (const table of tables) {
       await this.syncAutoIncrementFor(table);

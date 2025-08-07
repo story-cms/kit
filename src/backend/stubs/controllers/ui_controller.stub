@@ -3,7 +3,7 @@
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
 
-import storyConfig from '#config/story';
+import cmsConfig from '#config/cms';
 import { Activity } from '@story-cms/kit';
 import { apiContextFrom, storyContextFrom } from '#services/helpers';
 import { UiService } from '#services/ui_service';
@@ -149,6 +149,6 @@ export default class UisController {
   }
 
   protected get sourceLocale(): string {
-    return storyConfig.languages[0].locale;
+    return cmsConfig.languages.languages[0].locale;
   }
 }
