@@ -1,0 +1,18 @@
+{{{
+  exports({ to: app.makePath('app/controllers/audiences_controller.ts') })
+}}}
+import type { HttpContext } from '@adonisjs/core/http';
+import AudienceService from '#services/audience_service';
+
+export default class AudiencesController {
+  public async index(ctx: HttpContext) {
+    const service = new AudienceService({});
+    const audiences = await service.getAllUsers();
+
+    const props = {
+      audiences: audiences,
+    };
+
+    return ctx.inertia.render('AudiencesIndex', { ...props });
+  }
+}

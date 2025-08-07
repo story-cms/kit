@@ -120,6 +120,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'controllers/analytics_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/preview_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/indices_controller.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'controllers/audiences_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'factories/page_factory.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'factories/user_factory.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'factories/index_factory.stub', {});
@@ -135,6 +136,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'routes/stories.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/api.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/ui.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'routes/audience.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'inertia/app.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'inertia/css.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'resources/layout.stub', {});
@@ -152,6 +154,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'services/helpers.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/analytics_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/progress_service.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'services/audience_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/auth.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/bundle.stub', {});
@@ -184,6 +187,7 @@ export async function configure(command: Configure) {
   await codemods.defineEnvVariables({ BIBLE_API_KEY: 'redacted' });
   await codemods.defineEnvVariables({ OPENAI_API_KEY: 'redacted' });
   await codemods.defineEnvVariables({ GOOGLE_APPLICATION_CREDENTIALS_JSON: 'redacted' });
+  await codemods.defineEnvVariables({ FIREBASE_SERVICE_ACCOUNT_KEY_JSON: 'redacted' });
 
   /**
    * Define environment variables validations
@@ -223,6 +227,13 @@ export async function configure(command: Configure) {
       GOOGLE_APPLICATION_CREDENTIALS_JSON: `Env.schema.string(),`,
     },
     leadingComment: 'Configuration for the Google Analytics service',
+  });
+
+  await codemods.defineEnvValidations({
+    variables: {
+      FIREBASE_SERVICE_ACCOUNT_KEY_JSON: `Env.schema.string(),`,
+    },
+    leadingComment: 'Configuration for the Firebase service account key',
   });
 
   /**
