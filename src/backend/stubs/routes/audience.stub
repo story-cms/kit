@@ -1,0 +1,11 @@
+
+{{{
+  exports({ to: app.makePath('start/routes/audiences.ts') })
+}}}
+import router from '@adonisjs/core/services/router';
+
+const AudiencesController = () => import('#controllers/audiences_controller');
+
+export default () => {
+  router.get(':locale/audiences', [AudiencesController, 'index']);
+};
