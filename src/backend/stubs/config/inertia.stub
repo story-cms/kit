@@ -2,7 +2,7 @@
 {{{
   exports({ to: app.configPath('inertia.ts') })
 }}}
-import storyConfig from '#config/story';
+import cmsConfig from '#config/cms';
 import { getTodoCount } from '#services/helpers';
 import { defineConfig } from '@adonisjs/inertia';
 import type { InferSharedProps } from '@adonisjs/inertia/types';
@@ -10,8 +10,8 @@ import { LanguageSpecification } from '@story-cms/kit';
 
 const getLanguage = (locale: string | null): LanguageSpecification => {
   const found =
-    storyConfig.languages.find((language) => language.locale === locale) ||
-    storyConfig.languages[0];
+    cmsConfig.languages.languages.find((language) => language.locale === locale) ||
+    cmsConfig.languages.languages[0];
   return found as LanguageSpecification;
 };
 
@@ -25,11 +25,10 @@ const inertiaConfig = defineConfig({
    * Data that should be shared with all rendered pages
    */
   sharedData: {
-    stories: () => storyConfig.stories.map((item) => item.name),
-    meta: () => storyConfig.meta,
+    meta: () => cmsConfig.meta,
     user: (ctx) => ctx.auth?.use('web')?.user,
     language: (ctx) => getLanguage(ctx.params.locale ?? 'en'),
-    languages: () => storyConfig.languages,
+    languages: () => cmsConfig.languages.languages,
     errors: (ctx) => ctx.session?.flashMessages.get('errors') ?? {},
     uiTodoCount: (ctx) => getTodoCount(ctx),
   },

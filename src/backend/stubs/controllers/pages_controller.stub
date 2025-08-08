@@ -6,7 +6,7 @@ import { PageEditProps } from '@story-cms/kit';
 import vine from '@vinejs/vine';
 
 import providers from '#config/providers';
-import storyConfig from '#config/story';
+import cmsConfig from '#config/cms';
 import { Activity, Page } from '@story-cms/kit';
 import { pagesContextFrom, trimmedErrors } from '#services/helpers';
 import PageService from '#services/page_service';
@@ -50,7 +50,7 @@ export default class PagesController {
     const version = pagesContextFrom(ctx);
     const page = await Page.create({
       locale: version.locale,
-      apiVersion: storyConfig.pages.schemaVersion,
+      apiVersion: cmsConfig.pages.schemaVersion,
       order: 1,
       bundle: '{"group":1}',
       updatedBy: ctx.auth.user?.id,

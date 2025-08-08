@@ -5,11 +5,8 @@
         :draft="draft"
         :bundle="{}"
         :source="source"
-        :spec="{
-          name: 'John',
-          chapterLimit: 21,
-          fields: fields,
-        }"
+        :fields="fields"
+        :chapter-limit="21"
         :last-published="'2021-10-10T14:48:00.000000Z'"
         :providers="{}"
         :errors="sharedProps.errors"

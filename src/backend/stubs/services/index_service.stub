@@ -11,7 +11,7 @@ import {
   AddStatus,
 } from '@story-cms/kit';
 
-import storyConfig from '#config/story';
+import cmsConfig from '#config/cms';
 
 export default class IndexService {
   public story: Story;
@@ -110,7 +110,7 @@ export default class IndexService {
     if (index.length >= this.story.chapterLimit) return AddStatus.Full;
 
     // We have not reached the limit for the number of chapters and we're not a translation
-    if (version.locale === storyConfig.languages[0].locale) {
+    if (version.locale === cmsConfig.languages.languages[0].locale) {
       return AddStatus.Add;
     }
 
@@ -118,7 +118,7 @@ export default class IndexService {
 
     const specifier = {
       apiVersion: version.apiVersion,
-      locale: storyConfig.languages[0].locale,
+      locale: cmsConfig.languages.languages[0].locale,
       storyId: this.story.id,
       number: number,
     };

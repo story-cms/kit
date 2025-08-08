@@ -2,7 +2,7 @@
   exports({ to: app.makePath('app/services/draft_service.ts') }) 
 }}}
 import { FieldMap, FieldSpec, Story, Version, Chapter } from '@story-cms/kit';
-import storyConfig from '#config/story';
+import cmsConfig from '#config/cms';
 
 export default class DraftService {
   public story: Story;
@@ -17,14 +17,14 @@ export default class DraftService {
 
   public async getDraftBundle(version: Version, number: number): Promise<string | null> {
     // is this the source language?
-    if (version.locale === storyConfig.languages[0].locale) {
+    if (version.locale === cmsConfig.languages.languages[0].locale) {
       return this.getDefaultStoryBundle(this.story.fields);
     }
 
     // it's a translation, so we need to get the source bundle
     const specifier = {
       apiVersion: version.apiVersion,
-      locale: storyConfig.languages[0].locale,
+      locale: cmsConfig.languages.languages[0].locale,
       storyId: this.story.id,
       number: number,
     };

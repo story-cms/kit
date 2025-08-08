@@ -1,0 +1,132 @@
+{{{
+  exports({ to: app.configPath('cms.ts') })
+}}}
+import { defineConfig, FieldSpec, CmsConfig, StreamSpec, StorySpec } from '@story-cms/kit';
+
+const devotionStreamFields: FieldSpec[] = [
+  {
+    name: 'scripture',
+    label: 'Scripture',
+    widget: 'scripture',
+  },
+  {
+    name: 'commentary',
+    label: 'Commentary',
+    widget: 'markdown',
+    toolbar: ['bold', 'italic', 'heading', 'quote', '|', 'unordered-list'],
+  },
+  {
+    name: 'question',
+    label: 'Question',
+    widget: 'string',
+  },
+  {
+    name: 'prayer',
+    label: 'Prayer',
+    widget: 'markdown',
+    minimal: true,
+    toolbar: [],
+  },
+];
+
+const devotionStream: StreamSpec = {
+  id: 1,
+  title: 'The Morning Call',
+  coverImage:
+    'https://res.cloudinary.com/redeem/image/upload/v1752849347/story-cms-ui/placeholder_bafmfz.jpg',
+  streamType: 'Channel',
+  dropType: 'Post',
+  schemaVersion: 1,
+  fields: devotionStreamFields,
+};
+
+const devotionStory: StorySpec = {
+  id: 1,
+  name: 'Parenting',
+  coverImage:
+    'https://res.cloudinary.com/redeem/image/upload/v1752849347/story-cms-ui/placeholder_bafmfz.jpg',
+  chaterType: 'Lesson',
+  storyType: 'Course',
+  chapterLimit: 10,
+  schemaVersion: 1,
+  fields: [
+    {
+      name: 'title',
+      label: 'Title',
+      widget: 'string',
+    },
+    ...devotionStreamFields,
+  ],
+};
+
+const cmsConfig: CmsConfig = defineConfig({
+  meta: {
+    /**
+     * The name of the app
+     */
+    name: 'Journa CMS',
+
+    /**
+     * The logo of the app
+     */
+    logo: 'https://res.cloudinary.com/redeem/image/upload/v1715865512/story-cms-ui/generic-logo_d411m3.png',
+
+    /**
+     * Link to the help documentation
+     */
+    helpUrl: 'https://www.markdownguide.org',
+
+    /**
+     * Are we embedding a Flutter preview?
+     */
+    hasAppPreview: false,
+  },
+
+  languages: {
+    /**
+     * A link to the microcopy source language file
+     * example: 'https://raw.githubusercontent.com/partner/project/main/lib/shared/localization/app_en.arb'
+     */
+    microcopySource: '',
+
+    /**
+     * A list of languages to be used in the app
+     *
+     * https://en.wikipedia.org/wiki/IETF_language_tag
+     * https://r12a.github.io/app-subtags/
+     */
+    languages: [
+      {
+        locale: 'en',
+        language: 'English',
+        languageDirection: 'ltr',
+        bibleVersion: 'de4e12af7f28f599-01',
+      },
+      {
+        locale: 'de',
+        language: 'German | Deutsch',
+        languageDirection: 'ltr',
+        bibleVersion: '3e2eb613d45e131e-01',
+      },
+    ],
+  },
+
+  streams: {
+    streams: [devotionStream],
+  },
+
+  stories: {
+    /**
+     * Flag to enable the content audit feature where drafts are reviewed by a second user
+     */
+    hasEditReview: false,
+    stories: [devotionStory],
+  },
+
+  pages: {
+    schemaVersion: 1,
+    tracking: 'utm_source=storyapp&utm_medium=referral&utm_campaign=page_menu',
+  },
+});
+
+export default cmsConfig;

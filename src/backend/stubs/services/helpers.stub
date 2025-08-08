@@ -1,7 +1,7 @@
 {{{ 
   exports({ to: app.makePath('app/services/helpers.ts') }) 
 }}}
-import storyConfig from '#config/story';
+import cmsConfig from '#config/cms';
 import { UiService } from '#services/ui_service';
 import { errors } from '@adonisjs/core';
 import { HttpContext } from '@adonisjs/core/http';
@@ -35,7 +35,7 @@ export function trimmedErrors(e: any): Record<string, string[]> {
 
 export const storyFrom = (ctx: HttpContext): Story | undefined => {
   const storyId = Number.parseInt(ctx.params.storyId);
-  const story = storyConfig.stories.find((s) => s.id === storyId);
+  const story = cmsConfig.stories.stories.find((s) => s.id === storyId);
   return story;
 };
 
@@ -62,14 +62,14 @@ export const pagesContextFrom = (ctx: HttpContext): PageVersion => {
   }
 
   return {
-    apiVersion: storyConfig.pages.schemaVersion,
+    apiVersion: cmsConfig.pages.schemaVersion,
     locale: ctx.params.locale || 'en',
   };
 };
 
 export const apiContextFrom = (ctx: HttpContext) => {
   const story = getStoryFromQuery(ctx);
-  const locale = ctx.request.qs()['locale'] || storyConfig.languages[0].locale;
+  const locale = ctx.request.qs()['locale'] || cmsConfig.languages.languages[0].locale;
   const version = <Version>{
     apiVersion: 1,
     locale: locale,
@@ -80,7 +80,7 @@ export const apiContextFrom = (ctx: HttpContext) => {
 
 export const getTodoCount = async (ctx: HttpContext) => {
   // don't show todo count if there is only one language
-  if (storyConfig.languages.length < 2) return 0;
+  if (cmsConfig.languages.languages.length < 2) return 0;
 
   // don't show todo count if user is not logged in
   if (!ctx.auth?.use('web')?.user) return 0;
@@ -89,28 +89,28 @@ export const getTodoCount = async (ctx: HttpContext) => {
   if (!locale) return 0;
 
   // count not needed for source language
-  if (locale === storyConfig.languages[0].locale) {
+  if (locale === cmsConfig.languages.languages[0].locale) {
     return 0;
   }
 
-  const service = new UiService(storyConfig.languages[0].locale);
+  const service = new UiService(cmsConfig.languages.languages[0].locale);
   return await service.getTodoCount(locale);
 };
 
 const getStoryFromQuery = (ctx: HttpContext): Story => {
-  const defaultStory = storyConfig.stories[0];
+  const defaultStory = cmsConfig.stories.stories[0];
 
   // for api calls, try the query parameters
   let storyId = ctx.request.qs()['storyId'];
   if (storyId !== undefined) {
-    const story = storyConfig.stories.find((s) => s.id === Number(storyId));
+    const story = cmsConfig.stories.stories.find((s) => s.id === Number(storyId));
     if (story !== undefined) return story;
   }
 
   let storylabel = ctx.request.qs()['story'];
   if (storylabel !== undefined) {
     storylabel = storylabel.toLowerCase();
-    const story = storyConfig.stories.find(
+    const story = cmsConfig.stories.stories.find(
       (s) => s.name.toLocaleLowerCase() === storylabel,
     );
     if (story !== undefined) return story;

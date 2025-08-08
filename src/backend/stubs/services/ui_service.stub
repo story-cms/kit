@@ -5,14 +5,14 @@
 import axios from 'axios';
 import db from '@adonisjs/lucid/services/db';
 import { Ui, UiAttribute, UiItem, type UiItemPayload } from '@story-cms/kit';
-import storyConfig from '#config/story';
+import cmsConfig from '#config/cms';
 import {
   AiService,
   TranslationSource,
   type TranslationInput,
 } from '#services/ai_service';
 
-const sourcePath = storyConfig.meta.microCopySource as string;
+const sourcePath = cmsConfig.languages.microcopySource as string;
 
 export class UiService {
   protected sourceLocale = 'en';
@@ -242,3 +242,4 @@ export class UiService {
     return result;
   }
 }
+
