@@ -242,6 +242,7 @@ export interface SharedPageProps {
   stories: string[];
   user: User;
   uiTodoCount: number;
+  bookmarks?: string[];
 }
 
 export interface PageMeta {

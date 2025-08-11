@@ -21,6 +21,7 @@ export const useSharedStore = defineStore('shared', () => {
   const meta: Ref<Meta> = ref({} as Meta);
   const user: Ref<User> = ref({} as User);
   const languages: Ref<LanguageSpecification[]> = ref([] as LanguageSpecification[]);
+  const bookmarks: Ref<string[]> = ref([]);
 
   const setFromProps = (props: SharedPageProps) => {
     errors.value = { ...props.errors };
@@ -30,6 +31,7 @@ export const useSharedStore = defineStore('shared', () => {
     user.value = props.user;
     language.value = props.language;
     uiTodoCount.value = props.uiTodoCount;
+    bookmarks.value = props.bookmarks ?? [];
   };
 
   // errors
@@ -224,5 +226,7 @@ export const useSharedStore = defineStore('shared', () => {
 
     showAppPreview,
     setShowAppPreview,
+
+    bookmarks,
   };
 });
