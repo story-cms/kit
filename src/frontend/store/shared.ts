@@ -6,6 +6,7 @@ import {
   type Meta,
   type LanguageSpecification,
   type User,
+  type Bookmark,
   ResponseStatus,
 } from '../../types';
 import standardSidebar from '../shared/sidebar.vue';
@@ -21,7 +22,7 @@ export const useSharedStore = defineStore('shared', () => {
   const meta: Ref<Meta> = ref({} as Meta);
   const user: Ref<User> = ref({} as User);
   const languages: Ref<LanguageSpecification[]> = ref([] as LanguageSpecification[]);
-  const bookmarks: Ref<string[]> = ref([]);
+  const bookmarks: Ref<Bookmark[]> = ref([]);
 
   const setFromProps = (props: SharedPageProps) => {
     errors.value = { ...props.errors };
@@ -168,6 +169,11 @@ export const useSharedStore = defineStore('shared', () => {
     showSourceColumn.value = value;
   };
 
+  // bookmarks
+  const setBookmarks = (value: Bookmark[]) => {
+    bookmarks.value = value;
+  };
+
   return {
     stories,
     meta,
@@ -228,5 +234,6 @@ export const useSharedStore = defineStore('shared', () => {
     setShowAppPreview,
 
     bookmarks,
+    setBookmarks,
   };
 });

@@ -242,7 +242,7 @@ export interface SharedPageProps {
   stories: string[];
   user: User;
   uiTodoCount: number;
-  bookmarks?: string[];
+  bookmarks?: Bookmark[];
 }
 
 export interface PageMeta {
@@ -387,4 +387,9 @@ export interface PageBundle {
   icon: string;
   description: string;
   body: string;
+}
+
+export interface Bookmark {
+  label: string;
+  link: string;
 }
