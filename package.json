@@ -29,6 +29,8 @@
     },
     "./add_meta_noindex_middleware": "./dist/backend/middleware/add_meta_noindex.js",
     "./admin_middleware": "./dist/backend/middleware/admin.js",
+    "./cms_provider": "./dist/backend/providers/cms_provider.js",
+    "./cms": "./dist/backend/services/cms.js",
     "./ui": {
       "import": "./dist/frontend/main.js",
       "types": "./dist/frontend/main.d.ts"
@@ -95,7 +97,9 @@
     "entry": [
       "./src/backend/index.ts",
       "./src/backend/middleware/admin.ts",
-      "./src/backend/middleware/add_meta_noindex.ts"
+      "./src/backend/middleware/add_meta_noindex.ts",
+      "./src/backend/providers/cms_provider.ts",
+      "./src/backend/services/cms.ts"
     ],
     "outDir": "./dist/backend",
     "clean": true,

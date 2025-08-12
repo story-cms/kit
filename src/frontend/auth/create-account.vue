@@ -5,16 +5,16 @@
     </template>
 
     <div>
-      <h2 class="mt-6 mb-16 text-3xl font-bold leading-9 text-center text-black">
+      <h2 class="mb-16 mt-6 text-center text-3xl font-bold leading-9 text-black">
         Create your account
       </h2>
 
       <div v-if="errors">
-        <p v-if="errors.password" class="mt-2 text-sm text-center text-error">
+        <p v-if="errors.password" class="mt-2 text-center text-sm text-error">
           {{ errors.password }}
         </p>
 
-        <p v-if="errors.token" class="mt-2 text-sm text-center text-error">
+        <p v-if="errors.token" class="mt-2 text-center text-sm text-error">
           {{ errors.token }}
         </p>
       </div>
@@ -25,7 +25,7 @@
           <label for="email" class="auth-input-label">Email Address</label>
           <div class="mt-1">
             <span
-              class="relative block w-full px-3 py-2 text-sm font-normal leading-5 text-gray-300 placeholder-gray-300 border border-gray-300 rounded-md appearance-none"
+              class="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-sm font-normal leading-5 text-gray-300 placeholder-gray-300"
             >
               {{ form.email }}
             </span>
@@ -74,7 +74,7 @@
 import { PropType, onMounted } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import PublicLayout from '../shared/public-layout.vue';
-import { Meta } from '../../types';
+import { CmsMeta } from '../../types';
 
 const props = defineProps({
   email: {
@@ -86,7 +86,7 @@ const props = defineProps({
     default: () => ({}),
   },
   meta: {
-    type: Object as PropType<Meta>,
+    type: Object as PropType<CmsMeta>,
     required: true,
   },
 });

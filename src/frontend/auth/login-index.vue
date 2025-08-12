@@ -3,14 +3,14 @@
     <template #logo>
       <img :src="meta.logo" alt="Logo" class="h-auto w-[154px]" />
     </template>
-    <h2 class="mt-6 mb-16 text-3xl font-bold leading-9 text-center text-black">
+    <h2 class="mb-16 mt-6 text-center text-3xl font-bold leading-9 text-black">
       Sign in to your account
     </h2>
 
-    <p v-if="errors && errors.credentials" class="mt-2 text-sm text-center text-error">
+    <p v-if="errors && errors.credentials" class="mt-2 text-center text-sm text-error">
       {{ errors.credentials }}
     </p>
-    <p v-if="message" class="mt-2 text-sm text-center">
+    <p v-if="message" class="mt-2 text-center text-sm">
       {{ message }}
     </p>
     <form class="space-y-6" @submit.prevent="submit">
@@ -58,7 +58,7 @@
             type="checkbox"
             class="h-4 w-4 rounded border-gray-300 text-[--primary-color] focus:ring-[--secondary-color]"
           />
-          <label for="remember-me" class="block ml-2 text-sm text-gray-900">
+          <label for="remember-me" class="ml-2 block text-sm text-gray-900">
             Remember me
           </label>
         </div>
@@ -83,7 +83,7 @@
 <script setup lang="ts">
 import { PropType, computed } from 'vue';
 import { useForm } from '@inertiajs/vue3';
-import { Meta } from '../../types';
+import { CmsMeta } from '../../types';
 import PublicLayout from '../shared/public-layout.vue';
 
 defineProps({
@@ -93,7 +93,7 @@ defineProps({
   },
 
   meta: {
-    type: Object as PropType<Meta>,
+    type: Object as PropType<CmsMeta>,
     required: true,
   },
 });

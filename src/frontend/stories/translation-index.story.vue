@@ -1,23 +1,20 @@
 <template>
   <Story title="Translation Page" group="stories">
-    <Variant title="Index">
+    <Variant title="Index" :setup-app="miniSidebar">
       <TranslationIndex
-        :draft="draft"
-        :bundle="{}"
-        :source="source"
-        :fields="fields"
-        :chapter-limit="21"
-        :last-published="'2021-10-10T14:48:00.000000Z'"
-        :providers="{}"
-        :errors="sharedProps.errors"
         :meta="sharedProps.meta"
         :user="sharedProps.user"
         :language="spanish"
         :languages="sharedProps.languages"
-        :story-name="'John'"
+        :errors="sharedProps.errors"
         :stories="['John', 'Acts']"
-        :ui-todo-count="sharedProps.uiTodoCount"
-        :story-id="1"
+        :draft="draft"
+        :bundle="{}"
+        :source="source"
+        :providers="{}"
+        :last-published="'2021-10-10T14:48:00.000000Z'"
+        :story="{ ...story, fields, chapterLimit: 21 }"
+        :has-edit-review="false"
       />
     </Variant>
   </Story>
@@ -25,11 +22,21 @@
 
 <script setup lang="ts">
 import TranslationIndex from './translation-index.vue';
-import { listInListSpec, listInListModel, sharedProps, spanish } from '../test/mocks';
+import {
+  listInListSpec,
+  listInListModel,
+  sharedProps,
+  spanish,
+  story,
+  miniSidebar,
+} from '../test/mocks';
+import { FieldSpec } from '../../types';
 
-const fields = [
+const fields: FieldSpec[] = [
   { name: 'title', label: 'Title', widget: 'string' },
   {
+    name: 'cover',
+    label: 'Cover',
     widget: 'panel',
     isRow: false,
     fields: [

@@ -5,13 +5,13 @@
     </template>
 
     <div>
-      <h2 class="mt-6 text-3xl font-bold leading-9 text-center text-black">
+      <h2 class="mt-6 text-center text-3xl font-bold leading-9 text-black">
         Request Password Reset
       </h2>
-      <p v-if="errors && errors.email" class="mt-2 text-sm text-center text-error">
+      <p v-if="errors && errors.email" class="mt-2 text-center text-sm text-error">
         {{ errors.email }}
       </p>
-      <p v-if="success" class="mt-2 text-sm text-center text-green-500">
+      <p v-if="success" class="mt-2 text-center text-sm text-green-500">
         We have sent you an e-mail with instructions to reset your password. Please use
         the link within 24hrs to reset your password.
       </p>
@@ -51,7 +51,7 @@
 import PublicLayout from '../shared/public-layout.vue';
 import { useForm } from '@inertiajs/vue3';
 import { ref, PropType } from 'vue';
-import { Meta } from '../../types';
+import { CmsMeta } from '../../types';
 
 defineProps({
   errors: {
@@ -63,7 +63,7 @@ defineProps({
     default: () => ({}),
   },
   meta: {
-    type: Object as PropType<Meta>,
+    type: Object as PropType<CmsMeta>,
     required: true,
   },
 });

@@ -41,27 +41,31 @@
 import { computed } from 'vue';
 import { useWidgetsStore, useSharedStore, useDraftsStore } from '../../store';
 
+const props = defineProps<{
+  hasEditReview: boolean;
+}>();
+
+const emit = defineEmits(['publish', 'request-change', 'submit']);
+
 const widgets = useWidgetsStore();
 const shared = useSharedStore();
 const drafts = useDraftsStore();
 
-const emit = defineEmits(['publish', 'request-change', 'submit']);
-
 const showSubmitButton = computed(() => {
   if (shared.user.role === 'admin') return false;
-  if (!shared.meta.hasEditReview) return false;
+  if (!props.hasEditReview) return false;
 
   return drafts.draft.status === 'started';
 });
 
 const showRequestChangeButton = computed(() => {
-  if (!shared.meta.hasEditReview) return false;
+  if (!props.hasEditReview) return false;
   if (shared.user.role !== 'admin') return false;
   return drafts.draft.status === 'submitted';
 });
 
 const showPublishButton = computed(() => {
-  if (!shared.meta.hasEditReview) return true;
+  if (!props.hasEditReview) return true;
   if (shared.user.role !== 'admin') return false;
   return true;
 });

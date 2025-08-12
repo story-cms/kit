@@ -94,23 +94,16 @@ export interface StreamSpec {
 ///  stories
 /// ----------------------------------------------------
 
-export interface Story {
-  id: number;
-  name: string;
-  fields: FieldSpec[];
-  chapterLimit: number;
-  parts?: Array<object>;
-}
-
 export interface StorySpec {
   id: number;
   name: string;
   coverImage: string;
   chapterLimit: number;
-  chaterType: string;
+  chapterType: string;
   storyType: string;
   schemaVersion: number;
   fields: FieldSpec[];
+  parts?: Array<Part>;
 }
 
 export interface Part {
@@ -163,20 +156,17 @@ export interface DraftMeta {
 export interface StoryIndexProps {
   index: IndexReadyItem[];
   addStatus: AddStatus;
-  storyName: string;
-  storyId: number;
+  story: StorySpec;
 }
 
 export interface DraftEditProps {
   draft: DraftMeta; // drafts
   bundle: any; // model
   source?: any; // model
-  fields: FieldSpec[]; // drafts
-  lastPublished: string; // drafts
   providers: Providers; // widgets
-  storyName: string;
-  storyId: number;
-  chapterLimit: number;
+  lastPublished: string; // drafts
+  story: StorySpec;
+  hasEditReview: boolean;
 }
 
 export interface ChapterMeta {
@@ -189,10 +179,8 @@ export interface PreviewProps {
   chapter: ChapterMeta;
   bundle: any;
   bundleView: string;
-  storyName: string;
-  storyId: number;
+  story: StorySpec;
   title: string;
-  chapterLimit: number;
 }
 
 /// ----------------------------------------------------
@@ -225,13 +213,12 @@ export interface PageBundle {
 }
 
 export interface SharedPageProps {
-  errors?: any;
-  meta: Meta;
+  meta: CmsMeta;
+  user: User;
   language: LanguageSpecification;
   languages: LanguageSpecification[];
+  errors?: any;
   stories: string[];
-  user: User;
-  uiTodoCount: number;
 }
 
 export interface PageMeta {
@@ -306,6 +293,7 @@ export type UiItemPayload = {
   translation: string;
   isPrefilled: boolean;
 };
+
 export interface UiPageProps {
   items: UiItem[];
 }
@@ -434,40 +422,4 @@ export interface Providers {
     libraryId: string;
     host: string;
   };
-}
-
-/// ----------------------------------------------------
-///  TODO: to deprecate
-/// ----------------------------------------------------
-
-export type StoryConfig = {
-  meta: Meta;
-  languages: {
-    locale: string;
-    language: string;
-    languageDirection: string;
-    bibleVersion?: string;
-  }[];
-  schemaVersion: number;
-  stories: {
-    id: number;
-    name: string;
-    fields: FieldSpec[];
-    chapterLimit: number;
-  }[];
-  pages: {
-    schemaVersion: number;
-    tracking: string;
-  };
-};
-
-export interface Meta {
-  name: string;
-  logo: string;
-  storyType: string;
-  chapterType: string;
-  helpUrl?: string;
-  microCopySource?: string;
-  hasEditReview: boolean;
-  hasAppPreview: boolean;
 }
