@@ -5,13 +5,13 @@
 import { defineConfig } from '@adonisjs/inertia';
 import type { InferSharedProps } from '@adonisjs/inertia/types';
 import type { LanguageSpecification, StorySpec } from '@story-cms/kit';
-import cms from '@story-cms/kit/cms';
+import cmsConfig from '#config/cms';
 
 const getLanguage = (locale: string | null): LanguageSpecification => {
   const found =
-    cms.config.languages.languages.find(
+    cmsConfig.languages.languages.find(
       (language: LanguageSpecification) => language.locale === locale,
-    ) || cms.config.languages.languages[0];
+    ) || cmsConfig.languages.languages[0];
   return found as LanguageSpecification;
 };
 
@@ -25,14 +25,14 @@ const inertiaConfig = defineConfig({
    * Data that should be shared with all rendered pages
    */
   sharedData: {
-    meta: () => cms.config.meta,
+    meta: () => cmsConfig.meta,
     user: (ctx) => ctx.auth?.use('web')?.user,
     language: (ctx) => getLanguage(ctx.params.locale ?? 'en'),
-    languages: () => cms.config.languages.languages,
+    languages: () => cmsConfig.languages.languages,
     errors: (ctx) => ctx.session?.flashMessages.get('errors') ?? {},
-    stories: () => cms.config.stories.stories.map((item: StorySpec) => item.name),
+    stories: () => cmsConfig.stories.stories.map((item: StorySpec) => item.name),
   },
-  
+
   /**
    * Options for the server-side rendering
    */
