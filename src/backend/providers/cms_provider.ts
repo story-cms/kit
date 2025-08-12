@@ -6,8 +6,9 @@ export default class CmsProvider {
 
   register() {
     this.app.container.singleton(CmsService, async (resolver) => {
-      const configService = await resolver.make('config');
+      // currently reading from config file
       // NEXT: read from database
+      const configService = await resolver.make('config');
       const cmsConfig = configService.get<any>('cms');
 
       return new CmsService(cmsConfig);

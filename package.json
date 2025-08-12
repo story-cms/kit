@@ -30,6 +30,7 @@
     "./add_meta_noindex_middleware": "./dist/backend/middleware/add_meta_noindex.js",
     "./admin_middleware": "./dist/backend/middleware/admin.js",
     "./cms_provider": "./dist/backend/providers/cms_provider.js",
+    "./cms_service": "./dist/backend/services/cms_service.js",
     "./cms": "./dist/backend/services/cms.js",
     "./ui": {
       "import": "./dist/frontend/main.js",
