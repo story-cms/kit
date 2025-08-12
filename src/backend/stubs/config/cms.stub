@@ -45,7 +45,7 @@ const devotionStory: StorySpec = {
   name: 'Parenting',
   coverImage:
     'https://res.cloudinary.com/redeem/image/upload/v1752849347/story-cms-ui/placeholder_bafmfz.jpg',
-  chaterType: 'Lesson',
+  chapterType: 'Lesson',
   storyType: 'Course',
   chapterLimit: 10,
   schemaVersion: 1,
