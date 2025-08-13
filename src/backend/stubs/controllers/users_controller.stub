@@ -83,7 +83,7 @@ export default class UsersController {
       ctx.session.flash('errorsBag', { other: e.message });
     }
 
-    return ctx.response.redirect({{ '`/${version.locale}/user`' }}, false, 303);
+    return ctx.response.redirect({{ '`/${locale}/user`' }}, false, 303);
   }
 
   // create a new user
@@ -124,7 +124,7 @@ export default class UsersController {
       ctx.session.flash('errorsBag', { other: e.message });
     }
 
-    return ctx.response.redirect({{ '`/${version.locale}/user`' }}, false, 303);
+    return ctx.response.redirect({{ '`/${locale}/user`' }}, false, 303);
   }
 
   private generateRandomString(): string {

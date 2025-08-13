@@ -1,7 +1,7 @@
 {{{ 
   exports({ to: app.makePath('tests/unit/progress_service.spec.ts') }) 
 }}}
-mport { test } from '@japa/runner';
+import { test } from '@japa/runner';
 import testUtils from '@adonisjs/core/services/test_utils';
 import ProgressService from '@story-cms/kit/progress_service';
 import { Ui, Index, type UserInterface } from '@story-cms/kit';
