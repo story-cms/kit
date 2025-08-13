@@ -3,19 +3,16 @@
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
 
+import cms from '@story-cms/kit/cms';
 import { Chapter, Draft } from '@story-cms/kit';
-import { apiContextFrom } from '#services/helpers';
-import cmsConfig from '#config/cms';
 
 export default class PreviewController {
   public async get(ctx: HttpContext) {
-    const { story, version } = apiContextFrom(ctx);
-
-    const configuredStory = cmsConfig.stories.stories.find((s) => s.id === story.id);
+    const { story, version } = cms.apiContextFrom(ctx);
 
     const specifier = {
-      storyId: story.id,
-      apiVersion: configuredStory?.schemaVersion ?? 1,
+      storyId: story?.id,
+      apiVersion: story?.schemaVersion,
       locale: version.locale,
       number: Number(ctx.params.number),
     };

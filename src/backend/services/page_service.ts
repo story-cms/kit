@@ -1,6 +1,6 @@
 import type { PageVersion, PageBundle, PageItem } from '../../types';
-import Page from '../models/page';
-import cms from './cms';
+import Page from '../models/page.js';
+import cms from './cms.js';
 
 export default class PageService {
   protected version: PageVersion;

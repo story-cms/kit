@@ -1,13 +1,15 @@
 {{{
   exports({ to: app.makePath('app/controllers/indices_controller.ts') })
 }}}
-import { apiContextFrom } from '#services/helpers';
-import IndexService from '#services/index_service';
 import type { HttpContext } from '@adonisjs/core/http';
+import cms from '@story-cms/kit/cms';
+import IndexService from '#services/index_service';
 
 export default class IndicesController {
   public async index(ctx: HttpContext) {
-    const { story, version } = apiContextFrom(ctx);
+    const { story, version } = cms.apiContextFrom(ctx);
+
+    if (!story) return ctx.response.notFound();
 
     const service = new IndexService(story);
     const idx = await service.groupedIndex(version);

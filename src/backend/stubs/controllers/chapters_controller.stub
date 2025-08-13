@@ -1,16 +1,16 @@
 {{{
   exports({ to: app.makePath('app/controllers/chapters_controller.ts') })
 }}}
-import { apiContextFrom, storyContextFrom } from '#services/helpers';
-import IndexService from '#services/index_service';
 import type { HttpContext } from '@adonisjs/core/http';
-import { AddStatus, PreviewProps, StoryIndexProps, Chapter } from '@story-cms/kit';
 import edge from 'edge.js';
 import { marked } from 'marked';
+import { AddStatus, StoryIndexProps, Chapter, PreviewProps } from '@story-cms/kit';
+import cms from '@story-cms/kit/cms';
+import IndexService from '#services/index_service';
 
 export default class ChaptersController {
   public async index(ctx: HttpContext) {
-    const { story, version } = storyContextFrom(ctx);
+    const { story, version } = cms.storyContextFrom(ctx);
     if (story === undefined) return ctx.response.notFound();
 
     const service = new IndexService(story);
@@ -20,15 +20,14 @@ export default class ChaptersController {
     const props: StoryIndexProps = {
       index,
       addStatus,
-      storyName: story.name,
-      storyId: story.id,
+      story,
     };
 
-    return ctx.inertia.render('StoryIndex', { ...props });
+    return ctx.inertia.render('StoryIndex', { ...props, ...cms.sharedProps(ctx) });
   }
 
   public async preview(ctx: HttpContext) {
-    const { story, version } = storyContextFrom(ctx);
+    const { story, version } = cms.storyContextFrom(ctx);
     if (story === undefined) return ctx.response.notFound();
 
     const specifier = {
@@ -47,18 +46,16 @@ export default class ChaptersController {
     const props: PreviewProps = {
       chapter: chapter.meta,
       bundleView: bundleView,
-      storyName: story.name,
-      storyId: story.id,
-      chapterLimit: story.chapterLimit,
       title: chapter.index.title,
       bundle: chapter.bundle,
+      story,
     };
 
-    return ctx.inertia.render('ChapterPreview', { ...props });
+    return ctx.inertia.render('ChapterPreview', { ...props, ...cms.sharedProps(ctx) });
   }
 
   public async get(ctx: HttpContext) {
-    const { version } = apiContextFrom(ctx);
+    const { version } = cms.apiContextFrom(ctx);
 
     const specifier = {
       ...version,
@@ -71,7 +68,7 @@ export default class ChaptersController {
   }
 
   public async range(ctx: HttpContext) {
-    const { version } = apiContextFrom(ctx);
+    const { version } = cms.apiContextFrom(ctx);
 
     const page = ctx.request.qs()['page'] || 1;
 

@@ -1,10 +1,10 @@
 {{{ 
   exports({ to: app.makePath('tests/unit/progress_service.spec.ts') }) 
 }}}
-import { test } from '@japa/runner';
+mport { test } from '@japa/runner';
 import testUtils from '@adonisjs/core/services/test_utils';
-import ProgressService from '#services/progress_service';
-import { Ui, Index } from '@story-cms/kit';
+import ProgressService from '@story-cms/kit/progress_service';
+import { Ui, Index, type UserInterface } from '@story-cms/kit';
 import User from '#models/user';
 
 test.group('ProgressService', (group) => {
@@ -119,7 +119,7 @@ test.group('ProgressService', (group) => {
     ]);
 
     // 2. act
-    const result = await service.progress(user);
+    const result = await service.progress(user as UserInterface);
 
     // 3. assert
     assert.isArray(result);

@@ -214,7 +214,7 @@ export interface PageBundle {
 
 export interface SharedPageProps {
   meta: CmsMeta;
-  user: User;
+  user: UserInterface;
   language: LanguageSpecification;
   languages: LanguageSpecification[];
   errors?: any;
@@ -249,7 +249,7 @@ export interface PageEditProps {
 ///  team
 /// ----------------------------------------------------
 
-export interface User {
+export interface UserInterface {
   id: number;
   name: string;
   initials: string;
@@ -257,13 +257,14 @@ export interface User {
   isManager: boolean;
   isAdmin: boolean;
   role: string;
-  language: string;
+  language: string | null;
   hasPendingInvite: boolean;
+  isAllowed: (locale: string) => boolean;
 }
 
 export interface UserMeta
   extends Pick<
-    User,
+    UserInterface,
     'id' | 'name' | 'email' | 'role' | 'language' | 'initials' | 'hasPendingInvite'
   > {
   lastActivity: string | null;

@@ -5,7 +5,7 @@ import {
   SharedPageProps,
   CmsMeta,
   LanguageSpecification,
-  User,
+  UserInterface,
   ResponseStatus,
 } from '../../types';
 
@@ -18,7 +18,7 @@ const defaultLanguage: LanguageSpecification = {
 export const useSharedStore = defineStore('shared', () => {
   const stories: Ref<string[]> = ref([]);
   const meta: Ref<CmsMeta> = ref({} as CmsMeta);
-  const user: Ref<User> = ref({} as User);
+  const user: Ref<UserInterface> = ref({} as UserInterface);
   const languages: Ref<LanguageSpecification[]> = ref([] as LanguageSpecification[]);
 
   const setFromProps = (props: SharedPageProps) => {

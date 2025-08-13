@@ -441,6 +441,7 @@ export const user = {
   role: 'editor',
   language: 'en',
   hasPendingInvite: false,
+  isAllowed: (locale: string) => locale === 'en',
 };
 
 export const stories = ['John', 'Acts'];
