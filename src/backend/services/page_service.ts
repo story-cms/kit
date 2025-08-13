@@ -1,9 +1,6 @@
-{{{ 
-  exports({ to: app.makePath('app/services/page_service.ts') }) 
-}}}
-
-import { Page, PageVersion, PageBundle, PageItem } from '@story-cms/kit';
-import cmsConfig from '#config/cms';
+import type { PageVersion, PageBundle, PageItem } from '../../types';
+import Page from '../models/page';
+import cms from './cms';
 
 export default class PageService {
   protected version: PageVersion;
@@ -40,7 +37,7 @@ export default class PageService {
       .where('isPublished', true)
       .orderBy('order', 'asc');
 
-    const tracking = cmsConfig.pages.tracking;
+    const tracking = cms.config.pages.tracking;
     return pages.map((page) => page.bundleWithTracking(tracking));
   }
 
@@ -72,4 +69,3 @@ export default class PageService {
     return collected;
   }
 }
-

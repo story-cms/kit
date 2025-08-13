@@ -30,8 +30,9 @@
     "./add_meta_noindex_middleware": "./dist/backend/middleware/add_meta_noindex.js",
     "./admin_middleware": "./dist/backend/middleware/admin.js",
     "./cms_provider": "./dist/backend/providers/cms_provider.js",
-    "./cms_service": "./dist/backend/services/cms_service.js",
     "./cms": "./dist/backend/services/cms.js",
+    "./helpers": "./dist/backend/services/helpers.js",
+    "./page_service": "./dist/backend/services/page_service.js",
     "./ui": {
       "import": "./dist/frontend/main.js",
       "types": "./dist/frontend/main.d.ts"
@@ -100,7 +101,9 @@
       "./src/backend/middleware/admin.ts",
       "./src/backend/middleware/add_meta_noindex.ts",
       "./src/backend/providers/cms_provider.ts",
-      "./src/backend/services/cms.ts"
+      "./src/backend/services/cms.ts",
+      "./src/backend/services/helpers.ts",
+      "./src/backend/services/page_service.ts"
     ],
     "outDir": "./dist/backend",
     "clean": true,
