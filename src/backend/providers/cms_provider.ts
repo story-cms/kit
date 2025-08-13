@@ -1,4 +1,4 @@
-import CmsService from '../services/cms_service';
+import CmsService from '../services/cms_service.js';
 import type { ApplicationService } from '@adonisjs/core/types';
 
 export default class CmsProvider {

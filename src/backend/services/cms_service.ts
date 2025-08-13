@@ -1,20 +1,27 @@
 import { errors, HttpContext } from '@adonisjs/core/http';
-import type { StorySpec, CmsConfig, PageVersion, Version } from '../../types';
+import type {
+  StorySpec,
+  CmsConfig,
+  PageVersion,
+  Version,
+  SharedPageProps,
+  LanguageSpecification,
+} from '../../types';
 
 export default class CmsService {
-  protected cmsConfig: CmsConfig;
+  #config: CmsConfig;
 
   public constructor(config: CmsConfig) {
-    this.cmsConfig = config;
+    this.#config = config;
   }
 
   public get config(): CmsConfig {
-    return this.cmsConfig;
+    return this.#config;
   }
 
   public storyFrom(ctx: HttpContext): StorySpec | undefined {
     const storyId = Number.parseInt(ctx.params.storyId);
-    const story = this.cmsConfig.stories.stories.find((s) => s.id === storyId);
+    const story = this.#config.stories.stories.find((s) => s.id === storyId);
     return story;
   }
 
@@ -23,15 +30,15 @@ export default class CmsService {
       throw errors.E_ROUTE_NOT_FOUND;
     }
 
-    return ctx.params.locale || this.cmsConfig.languages.languages[0].locale;
+    return ctx.params.locale || this.#config.languages.languages[0].locale;
   }
 
   public get sourceLocale(): string {
-    return this.cmsConfig.languages.languages[0].locale;
+    return this.#config.languages.languages[0].locale;
   }
 
   public isTranslation(locale: string | undefined): boolean {
-    return locale !== this.cmsConfig.languages.languages[0].locale;
+    return locale !== this.#config.languages.languages[0].locale;
   }
 
   public storyContextFrom(ctx: HttpContext): {
@@ -53,24 +60,24 @@ export default class CmsService {
   }
 
   public localeFromApi(ctx: HttpContext): string {
-    return ctx.request.qs()['locale'] || this.cmsConfig.languages.languages[0].locale;
+    return ctx.request.qs()['locale'] || this.#config.languages.languages[0].locale;
   }
 
   public storyFromApi(ctx: HttpContext): StorySpec | undefined {
-    if (this.cmsConfig.stories.stories.length === 0) return undefined;
+    if (this.#config.stories.stories.length === 0) return undefined;
 
-    const defaultStory = this.cmsConfig.stories.stories[0];
+    const defaultStory = this.#config.stories.stories[0];
 
     const storyId = ctx.request.qs()['storyId'];
     if (storyId !== undefined) {
-      const story = this.cmsConfig.stories.stories.find((s) => s.id === Number(storyId));
+      const story = this.#config.stories.stories.find((s) => s.id === Number(storyId));
       if (story !== undefined) return story;
     }
 
     let storylabel = ctx.request.qs()['story'];
     if (storylabel !== undefined) {
       storylabel = storylabel.toLowerCase();
-      const story = this.cmsConfig.stories.stories.find(
+      const story = this.#config.stories.stories.find(
         (s) => s.name.toLocaleLowerCase() === storylabel,
       );
       if (story !== undefined) return story;
@@ -85,7 +92,7 @@ export default class CmsService {
   } {
     const story = this.storyFromApi(ctx);
     const locale =
-      ctx.request.qs()['locale'] || this.cmsConfig.languages.languages[0].locale;
+      ctx.request.qs()['locale'] || this.#config.languages.languages[0].locale;
     const version = <Version>{
       apiVersion: 1,
       locale: locale,
@@ -101,8 +108,26 @@ export default class CmsService {
     }
 
     return {
-      apiVersion: this.cmsConfig.pages.schemaVersion,
+      apiVersion: this.#config.pages.schemaVersion,
       locale: ctx.params.locale || 'en',
+    };
+  }
+
+  protected getLanguage(locale: string | null): LanguageSpecification {
+    const found =
+      this.#config.languages.languages.find(
+        (language: LanguageSpecification) => language.locale === locale,
+      ) || this.#config.languages.languages[0];
+    return found as LanguageSpecification;
+  }
+
+  public sharedProps(ctx: HttpContext): SharedPageProps {
+    return {
+      meta: this.#config.meta,
+      user: ctx.auth?.use('web')?.user,
+      language: this.getLanguage(ctx.params.locale ?? 'en'),
+      languages: this.#config.languages.languages,
+      stories: this.#config.stories.stories.map((s) => s.name),
     };
   }
 }
