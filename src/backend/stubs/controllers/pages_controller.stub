@@ -63,7 +63,7 @@ export default class PagesController {
       action: {{ '`created page ${page.id}`' }},
     });
 
-    return ctx.response.redirect(`/${version.locale}/page/${page.id}/edit`, false, 303);
+    return ctx.response.redirect({{ '`/${version.locale}/page/${page.id}/edit`' }}, false, 303);
   }
 
   public async destroy(ctx: HttpContext) {
@@ -81,7 +81,7 @@ export default class PagesController {
       ctx.session.flash('errorsBag', { other: e.message });
     }
 
-    return ctx.response.redirect(`/${version.locale}/page`, false, 303);
+    return ctx.response.redirect({{ '`/${version.locale}/page`' }}, false, 303);
   }
 
   public async update(ctx: HttpContext) {
