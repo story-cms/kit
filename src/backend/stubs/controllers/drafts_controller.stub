@@ -36,11 +36,11 @@ export default class DraftsController {
     await Activity.create({
       userId: ctx.auth.user?.id,
       locale: version.locale,
-      action: `created draft for ${story.name} # ${number}`,
+      action: {{ '`created draft for ${story.name} # ${number}`' }},
     });
 
     return ctx.response.redirect(
-      `/${version.locale}/story/${story.id}/draft/${number}/edit`,
+      {{ '`/${version.locale}/story/${story.id}/draft/${number}/edit`' }},
     );
   }
 
@@ -121,7 +121,7 @@ export default class DraftsController {
       await Activity.create({
         userId: ctx.auth.user?.id,
         locale: version.locale,
-        action: `updated draft for ${story.name} # ${draft.number}`,
+        action: {{ '`updated draft for ${story.name} # ${draft.number}`' }},
       });
       const service = new IndexService(story);
       await service.buildIndex(draft.version);
@@ -160,7 +160,7 @@ export default class DraftsController {
     await Activity.create({
       userId: ctx.auth.user?.id,
       locale: version.locale,
-      action: `submitted draft for ${story.name} # ${draft.number}`,
+      action: {{ '`submitted draft for ${story.name} # ${draft.number}`' }},
     });
     await service.buildIndex(draft.version);
     return ctx.response.redirect().back();
@@ -180,7 +180,7 @@ export default class DraftsController {
     await Activity.create({
       userId: ctx.auth.user?.id,
       locale: version.locale,
-      action: `rejected draft for ${story.name} # ${draft.number}`,
+      action: {{ '`rejected draft for ${story.name} # ${draft.number}`' }},
     });
 
     return ctx.response.redirect().back();
@@ -223,7 +223,7 @@ export default class DraftsController {
       await Activity.create({
         userId: ctx.auth.user?.id,
         locale: version.locale,
-        action: `published chapter for ${story.name} # ${chapter.number}`,
+        action: {{ '`published chapter for ${story.name} # ${chapter.number}`' }},
       });
       await draft.delete();
     });
@@ -232,7 +232,7 @@ export default class DraftsController {
     const service = new IndexService(story);
     await service.buildIndex(version);
 
-    return ctx.response.redirect(`/${version.locale}/story/${story.id}`);
+    return ctx.response.redirect({{ '`/${version.locale}/story/${story.id}`' }});
   }
 
   public async delete(ctx: HttpContext) {
@@ -248,12 +248,12 @@ export default class DraftsController {
     await Activity.create({
       userId: ctx.auth.user?.id,
       locale: version.locale,
-      action: `deleted draft for ${story.name} # ${draft.number}`,
+      action: {{ '`deleted draft for ${story.name} # ${draft.number}`' }},
     });
 
     const service = new IndexService(story);
     await service.buildIndex(version);
 
-    return ctx.response.redirect(`/${version.locale}/story/${story.id}`, false, 303);
+    return ctx.response.redirect({{ '`/${version.locale}/story/${story.id}`' }}, false, 303);
   }
 }
