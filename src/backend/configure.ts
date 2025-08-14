@@ -29,10 +29,10 @@ async function addMigrations(command: Configure, codemods: Codemods) {
   }
 }
 
-async function fileExists(folder: string, fileName: string) {
-  const files = await fsReadAll(folder);
-  return files.some((file) => file === fileName);
-}
+// async function fileExists(folder: string, fileName: string) {
+//   const files = await fsReadAll(folder);
+//   return files.some((file) => file === fileName);
+// }
 
 /**
  * Configures the package
@@ -40,13 +40,14 @@ async function fileExists(folder: string, fileName: string) {
 export async function configure(command: Configure) {
   const codemods = await command.createCodemods();
 
-  if ((await fileExists(command.app.configPath(), 'analytics.ts')) == false) {
-    codemods.overwriteExisting = false;
-    await codemods.makeUsingStub(stubsRoot, 'config/analytics.stub', {});
-  }
+  /**
+   * sensitive config files first
+   */
+  codemods.overwriteExisting = false;
+  await codemods.makeUsingStub(stubsRoot, 'config/analytics.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'config/cms.stub', {});
 
   codemods.overwriteExisting = true;
-  await codemods.makeUsingStub(stubsRoot, 'config/cms.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/cache.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/inertia.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/providers.stub', {});
@@ -97,13 +98,10 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'services/index_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/ui_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/draft_service.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'services/page_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/user_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/admin_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/ai_service.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'services/helpers.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/analytics_service.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'services/progress_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/audience_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/auth.stub', {});
@@ -184,6 +182,14 @@ export async function configure(command: Configure) {
       FIREBASE_SERVICE_ACCOUNT_KEY_JSON: `Env.schema.string(),`,
     },
     leadingComment: 'Configuration for the Firebase service account key',
+  });
+
+  /**
+   * Register providers
+   */
+
+  await codemods.updateRcFile((rcFile: any) => {
+    rcFile.addProvider('@story-cms/kit/cms_provider');
   });
 
   /**

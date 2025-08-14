@@ -1,6 +1,6 @@
 <template>
   <Story title="Users Page" group="team">
-    <Variant title="Index">
+    <Variant title="Index" :setup-app="miniSidebar">
       <UsersIndex
         :users="users"
         :errors="sharedProps.errors"
@@ -9,8 +9,6 @@
         :language="sharedProps.language"
         :languages="sharedProps.languages"
         :stories="['John', 'Acts']"
-        :ui-todo-count="sharedProps.uiTodoCount"
-        :story-name="'John'"
       />
     </Variant>
     <Variant title="With feedback" :setup-app="loadData">
@@ -22,8 +20,6 @@
         :language="sharedProps.language"
         :languages="sharedProps.languages"
         :stories="['John', 'Acts']"
-        :ui-todo-count="sharedProps.uiTodoCount"
-        :story-name="'John'"
       />
     </Variant>
   </Story>
@@ -31,7 +27,7 @@
 
 <script setup lang="ts">
 import UsersIndex from './users-index.vue';
-import { sharedProps } from '../test/mocks';
+import { sharedProps, miniSidebar } from '../test/mocks';
 import type { UserMeta } from '../../types';
 import { ResponseStatus } from '../../types';
 import { useSharedStore } from '../store';
@@ -112,6 +108,7 @@ const users: UserMeta[] = [
 
 const loadData = () => {
   const shared = useSharedStore();
+  shared.setSidebarOpen(false);
 
   shared.addMessage(ResponseStatus.Accomplishment, 'User updated successfully');
 };

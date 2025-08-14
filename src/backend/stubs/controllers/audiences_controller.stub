@@ -2,6 +2,7 @@
   exports({ to: app.makePath('app/controllers/audiences_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
+import cms from '@story-cms/kit/cms';
 import AudienceService from '#services/audience_service';
 
 export default class AudiencesController {
@@ -13,6 +14,6 @@ export default class AudiencesController {
       audiences: audiences,
     };
 
-    return ctx.inertia.render('AudiencesIndex', { ...props });
+    return ctx.inertia.render('AudiencesIndex', { ...props, ...cms.sharedProps(ctx) });
   }
 }

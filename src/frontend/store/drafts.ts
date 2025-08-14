@@ -9,7 +9,7 @@ export const useDraftsStore = defineStore('drafts', () => {
   const lastPublished = ref('');
 
   const setFromProps = (props: DraftEditProps) => {
-    fields.value = props.fields;
+    fields.value = props.story.fields;
     lastPublished.value = props.lastPublished;
     draft.value = props.draft;
   };

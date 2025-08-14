@@ -4,7 +4,12 @@
       <ContentHeader :title="chapterTitle">
         <template #actions>
           <DraftActions @delete="deleteDraft" />
-          <WorkflowActions @publish="publish" @request-change="reject" @submit="submit" />
+          <WorkflowActions
+            :has-edit-review="hasEditReview"
+            @publish="publish"
+            @request-change="reject"
+            @submit="submit"
+          />
         </template>
       </ContentHeader>
     </template>
@@ -27,8 +32,8 @@
         <template #meta-box>
           <MetaBox
             :primary="[
-              { label: meta.storyType, value: storyName },
-              { label: meta.chapterType, value: metaChapter },
+              { label: story.storyType, value: story.name },
+              { label: story.chapterType, value: metaChapter },
             ]"
             :secondary="[
               { label: 'Created', value: formatDate(draft.createdAt) },
@@ -92,7 +97,7 @@ const getPayload = (): postType => {
 };
 
 const defaultTitle = computed(() => {
-  return `New ${props.meta.chapterType}`;
+  return `New ${props.story.chapterType}`;
 });
 
 const title = ref(props.bundle.title);
@@ -100,7 +105,7 @@ const title = ref(props.bundle.title);
 const chapterTitle = computed(() => {
   if (title.value === defaultTitle.value) return defaultTitle.value;
   return (
-    safeChapterTitle(title.value, props.storyName, props.draft.number) ??
+    safeChapterTitle(title.value, props.story.name, props.draft.number) ??
     defaultTitle.value
   );
 });
@@ -122,7 +127,7 @@ const onError = (_errors: Errors, message: string) => {
 
 const save = debounce(2000, () => {
   router.post(
-    `/${shared.locale}/story/${props.storyId}/draft/${props.draft.id}/save`,
+    `/${shared.locale}/story/${props.story.id}/draft/${props.draft.id}/save`,
     getPayload(),
     {
       preserveScroll: true,
@@ -131,13 +136,13 @@ const save = debounce(2000, () => {
         if (props.user.role === 'admin') return;
         drafts.setStatus('started');
       },
-      onError: (e) => onError(e, `${props.meta.chapterType} not saved`),
+      onError: (e) => onError(e, `${props.story.chapterType} not saved`),
     },
   );
 });
 
 const deleteDraft = () => {
-  router.delete(`/${shared.locale}/story/${props.storyId}/draft/${props.draft.id}`, {
+  router.delete(`/${shared.locale}/story/${props.story.id}/draft/${props.draft.id}`, {
     onSuccess: () => onSuccess('Draft successfully deleted'),
     onError: (e) => onError(e, 'Error deleting draft'),
   });
@@ -145,10 +150,10 @@ const deleteDraft = () => {
 
 const submit = () => {
   router.post(
-    `/${shared.locale}/story/${props.storyId}/draft/${props.draft.id}/submit`,
+    `/${shared.locale}/story/${props.story.id}/draft/${props.draft.id}/submit`,
     getPayload(),
     {
-      onSuccess: () => onSuccess(`${props.meta.chapterType} submitted for review`),
+      onSuccess: () => onSuccess(`${props.story.chapterType} submitted for review`),
       onError: (e) =>
         onError(e, 'Draft not submitted. Please review and correct any errors.'),
     },
@@ -158,14 +163,14 @@ const submit = () => {
 const publish = () => {
   widgets.setIsDirty(true);
   router.post(
-    `/${shared.locale}/story/${props.storyId}/draft/${props.draft.id}/publish`,
+    `/${shared.locale}/story/${props.story.id}/draft/${props.draft.id}/publish`,
     getPayload(),
     {
-      onSuccess: () => onSuccess(`${props.meta.chapterType} published successfully`),
+      onSuccess: () => onSuccess(`${props.story.chapterType} published successfully`),
       onError: (e) =>
         onError(
           e,
-          `${props.meta.chapterType} not published. Please review and correct any errors.`,
+          `${props.story.chapterType} not published. Please review and correct any errors.`,
         ),
     },
   );
@@ -173,7 +178,7 @@ const publish = () => {
 
 const reject = () => {
   router.post(
-    `/${shared.locale}/story/${props.storyId}/draft/${props.draft.id}/reject`,
+    `/${shared.locale}/story/${props.story.id}/draft/${props.draft.id}/reject`,
     getPayload(),
     {
       onSuccess: () => onSuccess('Draft sent back for fixing'),
@@ -187,7 +192,7 @@ const publishedWhen = computed(() => {
 });
 
 const metaChapter = computed(
-  () => `${padZero(props.draft.number)} of ${padZero(props.chapterLimit)}`,
+  () => `${padZero(props.draft.number)} of ${padZero(props.story.chapterLimit)}`,
 );
 
 onMounted(() => {
@@ -203,7 +208,7 @@ onMounted(() => {
 });
 
 const widgetFor = (key: number) => {
-  const widget = (props.fields as FieldSpec[])[key].widget;
+  const widget = (props.story.fields as FieldSpec[])[key].widget;
   return widgets.picker(widget);
 };
 </script>

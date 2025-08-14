@@ -1,13 +1,14 @@
 {{{
   exports({ to: app.makePath('app/controllers/auth_controller.ts') })
 }}}
-import { Activity } from '@story-cms/kit';
-import User from '#models/user';
 import type { HttpContext } from '@adonisjs/core/http';
+import { Activity } from '@story-cms/kit';
+import cms from '@story-cms/kit/cms';
+import User from '#models/user';
 
 export default class AuthController {
   public async index(ctx: HttpContext) {
-    return ctx.inertia.render('Login');
+    return ctx.inertia.render('Login', { ...cms.sharedProps(ctx) });
   }
 
   public async store(ctx: HttpContext) {

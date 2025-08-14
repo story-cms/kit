@@ -1,9 +1,9 @@
 {{{ 
   exports({ to: app.makePath('app/services/admin_service.ts') }) 
 }}}
-import cmsConfig from '#config/cms';
-import IndexService from '#services/index_service';
 import db from '@adonisjs/lucid/services/db';
+import cms from '@story-cms/kit/cms';
+import IndexService from '#services/index_service';
 
 export default class AdminService {
   protected _feedback: string[] = [];
@@ -12,12 +12,12 @@ export default class AdminService {
    * Builds all the indexes freshly from the published chapters
    */
   public async rebuildIndexes() {
-    const defaultStory = cmsConfig.stories.stories[0];
+    const defaultStory = cms.config.stories.stories[0];
     const service = new IndexService(defaultStory);
     this._feedback = [];
 
-    for (const language of cmsConfig.languages.languages) {
-      for (const story of cmsConfig.stories.stories) {
+    for (const language of cms.config.languages.languages) {
+      for (const story of cms.config.stories.stories) {
         service.story = story;
         await service.buildIndex({
           apiVersion: 1,

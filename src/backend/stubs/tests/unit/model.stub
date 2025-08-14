@@ -4,8 +4,8 @@
 import { test } from '@japa/runner';
 import testUtils from '@adonisjs/core/services/test_utils';
 
-import User from '#models/user';
 import { Draft, Chapter, Index } from '@story-cms/kit';
+import User from '#models/user';
 import { UserFactory } from '#database/factories/user_factory';
 import { ChapterFactory } from '#database/factories/chapter_factory';
 import { IndexFactory } from '#database/factories/index_factory';

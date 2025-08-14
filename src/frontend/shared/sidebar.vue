@@ -94,7 +94,6 @@
                 ]"
                 :href="`/${locale}/ui`"
                 ><span>Interface</span>
-                <span class="text-yellow-500">{{ shared.uiTodoCount }}</span>
               </Link>
             </div>
           </section>

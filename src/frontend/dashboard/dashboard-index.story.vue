@@ -35,7 +35,6 @@
           hasPendingInvite: false,
         }"
         :stories="sharedProps.stories"
-        :ui-todo-count="sharedProps.uiTodoCount"
         :translation-progress="translationProgress"
         :is-read-only="false"
       />
@@ -75,7 +74,6 @@
           hasPendingInvite: false,
         }"
         :stories="sharedProps.stories"
-        :ui-todo-count="sharedProps.uiTodoCount"
         :translation-progress="translationProgress"
         :is-read-only="false"
       />

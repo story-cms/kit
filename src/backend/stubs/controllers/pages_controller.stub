@@ -2,15 +2,15 @@
   exports({ to: app.makePath('app/controllers/pages_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
-import { PageEditProps } from '@story-cms/kit';
 import vine from '@vinejs/vine';
 
-import providers from '#config/providers';
-import cmsConfig from '#config/cms';
 import { Activity, Page } from '@story-cms/kit';
-import { pagesContextFrom, trimmedErrors } from '#services/helpers';
-import PageService from '#services/page_service';
+import type { PageEditProps } from '@story-cms/kit';
+import cms from '@story-cms/kit/cms';
+import { trimmedErrors } from '@story-cms/kit/helpers';
+import PageService from '@story-cms/kit/page_service';
 import { PageValidator, errorMessages } from '#validators/page';
+import providers from '#config/providers';
 
 export default class PagesController {
   public async get({ request }: HttpContext) {
@@ -26,16 +26,17 @@ export default class PagesController {
   }
 
   public async index(ctx: HttpContext) {
-    const version = pagesContextFrom(ctx);
+    const version = cms.pagesContextFrom(ctx);
     const service = new PageService(version);
     const pages = await service.getPageItems();
     return ctx.inertia.render('PagesIndex', {
       pages: pages,
+      ...cms.sharedProps(ctx),
     });
   }
 
-  public async edit({ inertia, params }: HttpContext) {
-    const page = await Page.findOrFail(params.id);
+  public async edit(ctx: HttpContext) {
+    const page = await Page.findOrFail(ctx.params.id);
 
     const props: PageEditProps = {
       providers: providers,
@@ -43,14 +44,14 @@ export default class PagesController {
       bundle: page.model,
     };
 
-    return inertia.render('PagesEdit', { ...props });
+    return ctx.inertia.render('PagesEdit', { ...props, ...cms.sharedProps(ctx) });
   }
 
   public async create(ctx: HttpContext) {
-    const version = pagesContextFrom(ctx);
+    const version = cms.pagesContextFrom(ctx);
     const page = await Page.create({
       locale: version.locale,
-      apiVersion: cmsConfig.pages.schemaVersion,
+      apiVersion: cms.config.pages.schemaVersion,
       order: 1,
       bundle: '{"group":1}',
       updatedBy: ctx.auth.user?.id,
@@ -66,7 +67,7 @@ export default class PagesController {
   }
 
   public async destroy(ctx: HttpContext) {
-    const version = pagesContextFrom(ctx);
+    const version = cms.pagesContextFrom(ctx);
     const id = Number(ctx.params.id);
     const page = await Page.findOrFail(id);
     try {
@@ -84,7 +85,7 @@ export default class PagesController {
   }
 
   public async update(ctx: HttpContext) {
-    const version = pagesContextFrom(ctx);
+    const version = cms.pagesContextFrom(ctx);
     let payload;
     try {
       // constructing the validator first so we can have a
@@ -126,7 +127,7 @@ export default class PagesController {
   }
 
   public async sort(ctx: HttpContext) {
-    const version = pagesContextFrom(ctx);
+    const version = cms.pagesContextFrom(ctx);
 
     // use the service to sort the pages in memory
     const service = new PageService(version);

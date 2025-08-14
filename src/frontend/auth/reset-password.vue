@@ -1,14 +1,14 @@
 <template>
   <PublicLayout>
     <template #logo>
-      <img :src="meta.logo" alt="Logo" class="w-auto h-12" />
+      <img :src="meta.logo" alt="Logo" class="h-12 w-auto" />
     </template>
 
     <div>
-      <h2 class="mt-6 text-3xl font-extrabold text-center text-gray-900">
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
         Reset Password
       </h2>
-      <p v-if="success" class="mt-2 text-sm text-center text-green-500">
+      <p v-if="success" class="mt-2 text-center text-sm text-green-500">
         Password Reset Successful
       </p>
       <a href="/login"
@@ -16,11 +16,11 @@
       >
 
       <div v-if="errors">
-        <p v-if="errors.password" class="mt-2 text-sm text-center text-error">
+        <p v-if="errors.password" class="mt-2 text-center text-sm text-error">
           {{ errors.password }}
         </p>
 
-        <p v-if="errors.token" class="mt-2 text-sm text-center text-error">
+        <p v-if="errors.token" class="mt-2 text-center text-sm text-error">
           {{ errors.token }}
         </p>
       </div>
@@ -85,7 +85,7 @@
 import { PropType, ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import PublicLayout from '../shared/public-layout.vue';
-import { Meta } from '../../types';
+import { CmsMeta } from '../../types';
 
 defineProps({
   errors: {
@@ -94,7 +94,7 @@ defineProps({
   },
 
   meta: {
-    type: Object as PropType<Meta>,
+    type: Object as PropType<CmsMeta>,
     required: true,
   },
 });
