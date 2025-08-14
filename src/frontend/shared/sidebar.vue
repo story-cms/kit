@@ -16,12 +16,9 @@
             shared.hasOpenSidebar ? 'justify-between p-5' : 'flex-col gap-y-3 p-2',
           ]"
         >
-          <Link
-            :class="['nav-icon', { active: $page?.url.includes('/dashboard') }]"
-            :href="`/${locale}/dashboard`"
-          >
+          <a :class="['nav-icon']" :href="`/${locale}/dashboard`">
             <Icon name="home" />
-          </Link>
+          </a>
           <button class="nav-icon" @click="goBack">
             <Icon name="reply" />
           </button>
@@ -53,29 +50,30 @@
         </div>
         <div :class="[shared.hasOpenSidebar ? 'mt-4 flex flex-col px-4' : 'hidden']">
           <section class="grid grid-cols-1">
-            <Link
-              v-for="(story, index) in shared.stories"
-              :key="index"
-              :class="[
-                'nav-link',
-                {
-                  active: $page?.url.includes(`/story/${index + 1}`),
-                },
-              ]"
-              :href="`/${locale}/story/${index + 1}`"
-            >
-              {{ story }}
-            </Link>
-            <Link
-              :class="[
-                'nav-link',
-                {
-                  active: $page?.url.includes(`/${locale}/page`),
-                },
-              ]"
-              :href="`/${locale}/page`"
-              >Pages</Link
-            >
+            <div v-if="spreadStreams">
+              <a
+                v-for="stream in shared.streams"
+                :class="classList('stream')"
+                :href="`/${locale}/stream?find=${stream}`"
+                >{{ stream }}</a
+              >
+            </div>
+            <div v-else>
+              <a :class="classList('stream')" :href="`/${locale}/stream`">Streams</a>
+            </div>
+            <div v-if="spreadStories">
+              <a
+                v-for="story in shared.stories"
+                :class="classList('story')"
+                :href="`/${locale}/story?find=${story}`"
+                >{{ story }}</a
+              >
+            </div>
+            <div v-else>
+              <a :class="classList('story')" :href="`/${locale}/story`">Stories</a>
+            </div>
+            <a :class="classList('page')" :href="`/${locale}/page`">Pages</a>
+            <a :class="classList('audience')" :href="`/${locale}/dashboard`">Audience</a>
             <div v-if="isMultiLingual">
               <button
                 v-if="locale === 'en'"
@@ -84,41 +82,20 @@
               >
                 Interface
               </button>
-              <Link
-                v-else
-                :class="[
-                  'nav-link flex items-center justify-between',
-                  {
-                    active: $page?.url.includes('ui'),
-                  },
-                ]"
-                :href="`/${locale}/ui`"
+              <a v-else :class="classList('ui')" :href="`/${locale}/ui`"
                 ><span>Interface</span>
-              </Link>
+              </a>
             </div>
           </section>
           <div class="my-7 border-t border-gray-200"></div>
           <section class="grid grid-cols-1">
-            <!-- <Link class="flex items-center nav-link gap-x-3" href="/profile">
-              <Icon name="user" />
-              <span>Profile</span>
-            </Link> -->
-            <Link
-              v-if="isAdmin"
-              :class="[
-                'nav-link flex items-center gap-x-3',
-                {
-                  active: $page?.url === '/user',
-                },
-              ]"
-              :href="`/${locale}/user`"
-            >
+            <a v-if="isAdmin" :class="classList('user', true)" :href="`/${locale}/user`">
               <Icon name="users" />
-              <span>Users</span>
-            </Link>
+              <span>Team</span>
+            </a>
             <a
               v-if="shared.meta.helpUrl"
-              class="nav-link flex items-center gap-x-3"
+              :class="classList('support', true)"
               :href="shared.meta.helpUrl"
               target="_blank"
               rel="noopener noreferrer"
@@ -126,10 +103,10 @@
               <Icon name="help" />
               <span>Support</span>
             </a>
-            <Link class="nav-link flex items-center gap-x-3" href="/logout">
+            <a :class="classList('logout', true)" href="/logout">
               <Icon name="logout" />
               <span>Logout</span>
-            </Link>
+            </a>
           </section>
         </div>
       </div>
@@ -190,6 +167,14 @@ const isMultiLingual = computed(() => shared.languages.length > 1);
 
 const isAdmin = computed(() => shared.user.isAdmin);
 
+const spreadStreams = computed(() => {
+  return shared.streams.length < 3;
+});
+
+const spreadStories = computed(() => {
+  return shared.stories.length < 3;
+});
+
 const locale = computed(() => {
   return shared.locale ?? 'en';
 });
@@ -205,6 +190,16 @@ const toggleMenu = () => {
 const languageOptions = computed(() => {
   return shared.languages.map((l) => l.language) as string[];
 });
+
+const classList = (path: string, withGap: boolean = false) => {
+  let url = window.location.href.replace('/drop', '/stream');
+
+  return {
+    'nav-link': true,
+    active: url.includes(`/${locale}/${path}`),
+    'flex items-center gap-x-3': withGap,
+  };
+};
 </script>
 
 <style lang="postcss" scoped>

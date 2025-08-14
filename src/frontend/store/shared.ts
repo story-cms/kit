@@ -17,17 +17,19 @@ const defaultLanguage: LanguageSpecification = {
 
 export const useSharedStore = defineStore('shared', () => {
   const stories: Ref<string[]> = ref([]);
+  const streams: Ref<string[]> = ref([]);
   const meta: Ref<CmsMeta> = ref({} as CmsMeta);
   const user: Ref<UserInterface> = ref({} as UserInterface);
   const languages: Ref<LanguageSpecification[]> = ref([] as LanguageSpecification[]);
 
   const setFromProps = (props: SharedPageProps) => {
+    meta.value = props.meta;
+    user.value = props.user;
+    languages.value = props.languages;
+    language.value = props.language;
     errors.value = { ...props.errors };
     stories.value = props.stories;
-    meta.value = props.meta;
-    languages.value = props.languages;
-    user.value = props.user;
-    language.value = props.language;
+    streams.value = props.streams;
   };
 
   // errors
@@ -152,6 +154,7 @@ export const useSharedStore = defineStore('shared', () => {
 
   return {
     stories,
+    streams,
     meta,
     languages,
     errors,

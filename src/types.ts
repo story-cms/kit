@@ -219,6 +219,7 @@ export interface SharedPageProps {
   languages: LanguageSpecification[];
   errors?: any;
   stories: string[];
+  streams: string[];
 }
 
 export interface PageMeta {

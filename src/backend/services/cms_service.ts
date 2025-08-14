@@ -128,6 +128,7 @@ export default class CmsService {
       language: this.getLanguage(ctx.params.locale ?? 'en'),
       languages: this.#config.languages.languages,
       stories: this.#config.stories.stories.map((s) => s.name),
+      streams: this.#config.streams.streams.map((s) => s.title),
     };
   }
 }
