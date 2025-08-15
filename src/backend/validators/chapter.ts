@@ -1,0 +1,22 @@
+import { StorySpec } from '../../types';
+import BundleService from '../services/bundle_service.js';
+import vine, { SimpleMessagesProvider } from '@vinejs/vine';
+
+export class ChapterValidator {
+  constructor(protected story: StorySpec) {}
+
+  public get schema() {
+    const service = new BundleService(this.story.fields);
+    const schema = service.getValidationBuilder(false);
+
+    return vine.compile(
+      vine.object({
+        bundle: vine.object(schema),
+      }),
+    );
+  }
+}
+
+export const chapterErrorMessages = new SimpleMessagesProvider({
+  'bundle.title.required': 'We must have a title',
+});

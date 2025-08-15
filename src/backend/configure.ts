@@ -5,27 +5,24 @@ import { stubsRoot } from './stubs/main.js';
 import { fsReadAll } from '@poppinss/utils';
 
 async function addMigrations(command: Configure, codemods: Codemods) {
+  const allMigrations = ['base', 'audit', 'drops', 'preferences'];
+
   const path = command.app.migrationsPath();
   const migrations = await fsReadAll(path);
-  const baseMigrationExists = migrations.some((file) => file.endsWith('_base.ts'));
-  const auditMigrationExists = migrations.some((file) => file.endsWith('audit.ts'));
 
-  if (!baseMigrationExists) {
-    await codemods.makeUsingStub(stubsRoot, 'migrations/base.stub', {
-      migration: {
-        folder: 'database/migrations',
-        fileName: `${new Date().getTime()}_base.ts`,
-      },
-    });
-  }
+  let timestamp = new Date().getTime();
 
-  if (!auditMigrationExists) {
-    await codemods.makeUsingStub(stubsRoot, 'migrations/audit.stub', {
-      migration: {
-        folder: 'database/migrations',
-        fileName: `${new Date().getTime() + 100}_audit.ts`,
-      },
-    });
+  for (const stub of allMigrations) {
+    const migrationExists = migrations.some((file) => file.endsWith(`${stub}.ts`));
+    if (!migrationExists) {
+      timestamp += 100;
+      await codemods.makeUsingStub(stubsRoot, `migrations/${stub}.stub`, {
+        migration: {
+          folder: 'database/migrations',
+          fileName: `${timestamp}_${stub}.ts`,
+        },
+      });
+    }
   }
 }
 
@@ -73,11 +70,6 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'controllers/preview_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/indices_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/audiences_controller.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'factories/page_factory.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'factories/user_factory.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'factories/index_factory.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'factories/draft_factory.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'factories/chapter_factory.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'mail/forget_password.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'mail/create_account.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/users.stub', {});
@@ -94,19 +86,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'resources/layout.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'resources/views/preview.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'resources/views/scripture.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'models/user.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'services/index_service.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'services/ui_service.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'services/draft_service.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'services/user_service.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'services/admin_service.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'services/ai_service.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'services/analytics_service.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'services/audience_service.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'validators/user.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'validators/auth.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'validators/bundle.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'validators/page.stub', {});
+
   await codemods.makeUsingStub(stubsRoot, 'commands/make_user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/fix_database.stub', {});
   // NOTE: remove when this is resolved: https://github.com/adonisjs/inertia-starter-kit/issues/12

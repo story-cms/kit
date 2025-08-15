@@ -1,22 +1,15 @@
-{{{
-  exports({ to: app.makePath('app/models/user.ts') })
-}}}
 import { DateTime } from 'luxon';
 import { compose } from '@adonisjs/core/helpers';
 import { BaseModel, column, computed } from '@adonisjs/lucid/orm';
 import hash from '@adonisjs/core/services/hash';
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid';
-import type { UserInterface, UserMeta } from '@story-cms/kit';
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
   passwordColumnName: 'password',
 });
 
-export default class User
-  extends compose(BaseModel, AuthFinder)
-  implements UserInterface
-{
+export default class User extends compose(BaseModel, AuthFinder) {
   public static roles = ['admin', 'editor'] as const;
 
   @column({ isPrimary: true })
@@ -80,8 +73,8 @@ export default class User
       .map((part) => part.trim().charAt(0));
 
     if (parts.length === 1) return parts[0];
-    if (parts.length === 2) return {{ '`${parts[0]}${parts[1]}`' }};
-    return {{ '`${parts[0]}${parts[parts.length - 1]}`' }};
+    if (parts.length === 2) return `${parts[0]}${parts[1]}`;
+    return `${parts[0]}${parts[parts.length - 1]}`;
   }
 
   @computed()
@@ -90,7 +83,7 @@ export default class User
   }
 
   @computed()
-  public get meta(): UserMeta {
+  public get meta() {
     return {
       id: this.id,
       name: this.name,
@@ -103,4 +96,3 @@ export default class User
     };
   }
 }
-

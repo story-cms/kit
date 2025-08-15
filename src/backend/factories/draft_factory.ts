@@ -1,10 +1,5 @@
-{{{
-  exports({
-    to: app.makePath('database/factories', 'draft_factory.ts')
-  })
-}}}
 import factory from '@adonisjs/lucid/factories';
-import { Draft } from '@story-cms/kit';
+import Draft from '../models/draft.js';
 
 export const DraftFactory = factory
   .define(Draft, async ({ faker }) => {

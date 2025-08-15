@@ -90,6 +90,66 @@ export interface StreamSpec {
   fields: FieldSpec[];
 }
 
+export interface StreamIndexItem {
+  id: number;
+  title: string;
+  coverImage: string;
+  latestReleaseAt: string;
+  count: number;
+}
+
+export interface StreamGalleryProps {
+  streams: StreamIndexItem[];
+}
+
+export interface DropIndexItem {
+  id: number;
+  title: string;
+  coverImage: string;
+  releaseAt: string;
+  isPublished: boolean;
+}
+
+export interface StreamIndexProps {
+  stream: StreamIndexItem;
+  drops: DropIndexItem[];
+}
+
+export interface DropMeta {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+  updatedBy: string;
+}
+
+export interface StreamEditProps {
+  meta: DropMeta;
+  spec: StreamSpec;
+  model: any; // model
+  providers: Providers; // widgets
+}
+
+export const dropIndexItemFields: FieldSpec[] = [
+  {
+    name: 'title',
+    label: 'Title',
+    widget: 'string',
+  },
+  {
+    name: 'coverImage',
+    label: 'Cover Image',
+    widget: 'image',
+    description: 'JPG up to 200KB',
+    extensions: ['.jpeg', '.jpg'],
+    maxSize: 200000,
+  },
+  {
+    name: 'releaseAt',
+    label: 'Release At',
+    widget: 'datetime',
+  },
+];
+
 /// ----------------------------------------------------
 ///  stories
 /// ----------------------------------------------------
@@ -104,13 +164,6 @@ export interface StorySpec {
   schemaVersion: number;
   fields: FieldSpec[];
   parts?: Array<Part>;
-}
-
-export interface Part {
-  id: number;
-  title: string;
-  subtitle: string;
-  description: string;
 }
 
 export interface Version {
@@ -132,6 +185,21 @@ export interface IndexItem {
   title: string;
   reference?: string;
   part?: number;
+}
+
+export interface Part {
+  id: number;
+  title: string;
+  subtitle: string;
+  description: string;
+}
+
+export interface GroupedIndexItem {
+  id: number;
+  title: string;
+  subtitle: string;
+  description: string;
+  index: { id: number; title: string; imageUrl: string }[];
 }
 
 export interface IndexReadyItem {
@@ -218,8 +286,7 @@ export interface SharedPageProps {
   language: LanguageSpecification;
   languages: LanguageSpecification[];
   errors?: any;
-  stories: string[];
-  streams: string[];
+  exclude: string[];
 }
 
 export interface PageMeta {

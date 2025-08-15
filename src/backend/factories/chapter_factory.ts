@@ -1,10 +1,5 @@
-{{{
-  exports({
-    to: app.makePath('database/factories', 'chapter_factory.ts')
-  })
-}}}
 import factory from '@adonisjs/lucid/factories';
-import { Chapter } from '@story-cms/kit';
+import Chapter from '../models/chapter.js';
 
 export const ChapterFactory = factory
   .define(Chapter, async () => {

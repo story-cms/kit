@@ -1,8 +1,7 @@
-{{{ 
-  exports({ to: app.makePath('app/services/draft_service.ts') }) 
-}}}
-import { FieldMap, FieldSpec, StorySpec, Version, Chapter } from '@story-cms/kit';
-import cms from '@story-cms/kit/cms';
+import Chapter from '../models/chapter.js';
+import { FieldMap, FieldSpec, StorySpec, Version } from '../../types';
+import cms from './cms.js';
+import BundleService from './bundle_service.js';
 
 export default class DraftService {
   public story: StorySpec;
@@ -16,7 +15,8 @@ export default class DraftService {
   public async getDraftBundle(version: Version, number: number): Promise<string | null> {
     // is this the source language?
     if (version.locale === cms.config.languages.languages[0].locale) {
-      return this.getDefaultStoryBundle(this.story.fields);
+      const bundleService = new BundleService(this.story.fields);
+      return bundleService.defaultBundle;
     }
 
     // it's a translation, so we need to get the source bundle
@@ -91,8 +91,8 @@ export default class DraftService {
   public get prefilledFields(): string[] {
     if (this._prefilledFields) return this._prefilledFields;
     this._prefilledFields = [];
-    this.story.fields.forEach((field: FieldSpec) => {
-      this.appendPrefilled(field);
+    this.story.fields.forEach((field) => {
+      this.appendPrefilled(field as FieldSpec);
     });
 
     return this._prefilledFields;
@@ -107,73 +107,34 @@ export default class DraftService {
       case 'select':
       case 'number':
       case 'image':
-      case 'date':
       case 'animation':
         // check if subPath is already in the list
         if (this.prefilledFields.some((item) => item === field['name'])) break;
         this._prefilledFields.push(field['name']);
         break;
-      case 'panel':
+      case 'panel': {
         const frame = field['fields'] as FieldSpec[];
         frame.forEach((item) => {
           this.appendPrefilled(item);
         });
         break;
-      case 'object':
+      }
+      case 'object': {
         const map = field['fields'] as FieldMap;
         Object.keys(map).forEach((key) => {
           this.appendPrefilled(map[key]);
         });
         break;
-      case 'list':
+      }
+      case 'list': {
         const items = field['fields'] as FieldSpec[];
         items.forEach((item) => {
           this.appendPrefilled(item);
         });
         break;
+      }
       default:
         break;
     }
-  }
-
-  public getDefaultStoryBundle(spec: Object[]): string {
-    const shapes = this.getBundleShapes(spec);
-    return {{ '`{ ${shapes} }`' }};
-  }
-
-  private getBundleShapes(spec: Object[]): string {
-    return (
-      spec
-        // .filter((widget) => widget.hasOwnProperty('name'))
-        .map((node) => {
-          return this.renderBundleShape(node);
-        })
-        .join(',')
-    );
-  }
-
-  private renderBundleShape(node: any): string {
-    if (node['widget'] === 'panel' && node['fields'])
-      return this.getBundleShapes(node['fields']);
-
-    if (node['widget'] === 'list' && node['fields']) return {{{ '`"${node.name}":[]`' }}};
-    if (node['widget'] === 'string') return {{{ '`"${node.name}": ""`' }}};
-    if (node['widget'] === 'image') return {{{ '`"${node.name}": ""`' }}};
-    if (node['widget'] === 'object') {
-      const branch = this.renderObjectShape(node['fields']);
-      return {{{ '`"${node.name}": ${branch}`' }}};
-    }
-
-    return {{{ '`"${node.name}": ""`' }}};
-  }
-
-  private renderObjectShape(node: any): string {
-    const items = Object.entries(node)
-      .map(([_, value]) => {
-        return this.renderBundleShape(value);
-      })
-      .join(',');
-
-    return {{ '`{ ${items} }`' }} ;
   }
 }

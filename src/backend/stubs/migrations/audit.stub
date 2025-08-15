@@ -3,7 +3,6 @@
     to: app.makePath(migration.folder, migration.fileName)
   })
 }}}
-
 import { BaseSchema } from '@adonisjs/lucid/schema';
 
 export default class extends BaseSchema {

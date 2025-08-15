@@ -1,14 +1,9 @@
-{{{
-  exports({
-    to: app.makePath('database/factories', 'page_factory.ts')
-  })
-}}}
 import factory from '@adonisjs/lucid/factories';
-import { PageBundle, Page } from '@story-cms/kit';
+import Page from '../models/page.js';
 
 export const PageFactory = factory
   .define(Page, async ({ faker }) => {
-    const bundle = <PageBundle>{
+    const bundle = {
       title: faker.lorem.words(),
       description: faker.lorem.sentence(),
       body: faker.lorem.paragraph(),

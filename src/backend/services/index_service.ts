@@ -1,40 +1,29 @@
-{{{ 
-  exports({ to: app.makePath('app/services/index_service.ts') }) 
-}}}
-import {
-  Index,
-  Chapter,
-  Draft,
-  IndexItem,
-  Version,
-  IndexReadyItem,
-  StorySpec,
-  Part,
-  AddStatus,
-} from '@story-cms/kit';
-
-import cms from '@story-cms/kit/cms';
+import Index from '../models/index.js';
+import Chapter from '../models/chapter.js';
+import Draft from '../models/draft.js';
+import cms from './cms.js';
+import { IndexItem, GroupedIndexItem } from '../../types.js';
 
 export default class IndexService {
-  public story: StorySpec;
-  public config: Object = {};
+  public story: any;
+  public config: object = {};
 
-  constructor(story: StorySpec) {
+  constructor(story: any) {
     this.story = story;
   }
 
-  public async buildIndex(version: Version) {
+  public async buildIndex(version: any) {
     const index = await Index.firstOrCreate(version, {
-      items: { root: <IndexItem[]>[] },
+      items: { root: [] },
     });
 
     const drafts = await Draft.query().where(version);
     const published = await Chapter.query().where(version);
 
     // assemble the items
-    const items = { root: <IndexItem[]>[] };
-    published.forEach((chapter) => items.root.push(chapter.index));
-    drafts.forEach((draft) => {
+    const items: { root: IndexItem[] } = { root: [] };
+    published.forEach((chapter: Chapter) => items.root.push(chapter.index));
+    drafts.forEach((draft: Draft) => {
       if (items.root.some((item) => item.number === draft.number)) return;
       items.root.push(draft.index);
     });
@@ -51,12 +40,12 @@ export default class IndexService {
     await index.save();
   }
 
-  public async getItems(version: Version): Promise<Array<IndexReadyItem>> {
+  public async getItems(version: any): Promise<any[]> {
     const index = await Index.query().where(version).first();
     if (!index) return [];
 
     return index!.list.map((item) => {
-      let tags: string[] = [];
+      const tags: string[] = [];
       if (index.publishedList.some((i) => i === item.number)) tags.push('Live');
       if (index.draftsList.some((i) => i === item.number)) tags.push('Draft');
       if (index.issuesList.some((i) => i === item.number)) tags.push('Issues');
@@ -67,7 +56,7 @@ export default class IndexService {
     });
   }
 
-  public async groupedIndex(version: Version): Promise<any[]> {
+  public async groupedIndex(version: any): Promise<IndexItem[] | GroupedIndexItem[]> {
     const index = await Index.query().where(version).firstOrFail();
 
     if (!index) return [];
@@ -76,13 +65,16 @@ export default class IndexService {
       return index.publicList;
     }
 
-    const grouped = (this.story.parts as Part[]).map((part: Part) => ({
-      id: part.id,
-      title: part.title,
-      subtitle: part.subtitle,
-      description: part.description,
-      index: <any>[],
-    }));
+    const grouped = (this.story.parts as any[]).map(
+      (part: any) =>
+        ({
+          id: part.id,
+          title: part.title,
+          subtitle: part.subtitle,
+          description: part.description,
+          index: [],
+        }) as GroupedIndexItem,
+    );
 
     index!.publicList.forEach((item) => {
       const part = grouped.find((group) => group.id === item.part);
@@ -106,14 +98,14 @@ export default class IndexService {
     return rows[0].$extras.max || 1;
   }
 
-  public async getAddStatus(version: Version): Promise<AddStatus> {
+  public async getAddStatus(version: any): Promise<any> {
     const index = await this.getItems(version);
 
-    if (index.length >= this.story.chapterLimit) return AddStatus.Full;
+    if (index.length >= this.story.chapterLimit) return 'Full';
 
     // We have not reached the limit for the number of chapters and we're not a translation
     if (version.locale === cms.config.languages.languages[0].locale) {
-      return AddStatus.Add;
+      return 'Add';
     }
 
     const number = index.length + 1;
@@ -127,11 +119,11 @@ export default class IndexService {
 
     const source = await Chapter.query().where(specifier).first();
 
-    if (!source) return AddStatus.Wait;
-    return AddStatus.Add;
+    if (!source) return 'Wait';
+    return 'Add';
   }
 
-  public async getNewChapterNumber(version: Version): Promise<number> {
+  public async getNewChapterNumber(version: any): Promise<number> {
     await this.buildIndex(version);
 
     const index = await Index.query().where(version).first();

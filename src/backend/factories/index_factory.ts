@@ -1,10 +1,5 @@
-{{{
-  exports({
-    to: app.makePath('database/factories', 'index_factory.ts')
-  })
-}}}
 import factory from '@adonisjs/lucid/factories';
-import { Index, IndexItem } from '@story-cms/kit';
+import Index from '../models/index.js';
 
 export const IndexFactory = factory
   .define(Index, async () => {
@@ -14,7 +9,7 @@ export const IndexFactory = factory
       draftsList: [],
       publishedList: [],
       issuesList: [],
-      items: { root: <IndexItem[]>[] },
+      items: { root: [] },
       storyId: 1,
     };
   })

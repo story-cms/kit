@@ -1,12 +1,7 @@
-{{{
-  exports({ to: app.makePath('app/services/analytics_service.ts') })
-}}}
-import env from '#start/env';
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
 import vine from '@vinejs/vine';
-import { StatMetric } from '@story-cms/kit';
 
-export const emptyReport: StatMetric[] = [
+export const emptyReport: any[] = [
   {
     name: 'Total Installs',
     stat: 0,
@@ -24,7 +19,7 @@ export const emptyReport: StatMetric[] = [
   },
 ];
 
-export class Analytics {
+export default class Analytics {
   protected client!: BetaAnalyticsDataClient;
   protected config: AnalyticsConfig;
 
@@ -36,7 +31,7 @@ export class Analytics {
   /**
    * Generates an analytics report with key metrics
    */
-  async report(chapterCompleteEventName: string): Promise<StatMetric[]> {
+  async report(chapterCompleteEventName: string): Promise<any[]> {
     // Create chapter event filter for the chapter completion metrics
     const appsFilter = {
       fieldName: 'streamName',
@@ -98,7 +93,7 @@ export class Analytics {
    */
   private async initializeClient(): Promise<void> {
     // Check if credentials are provided as JSON in environment variable
-    const credentialsJson = env.get('GOOGLE_APPLICATION_CREDENTIALS_JSON', '');
+    const credentialsJson = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON || '';
 
     // base64 decode
     const decoded = Buffer.from(credentialsJson, 'base64').toString('utf-8');
@@ -147,7 +142,7 @@ export class Analytics {
     };
 
     return {
-      property: {{ '`properties/${this.config.propertyId}`' }},
+      property: `properties/${this.config.propertyId}`,
       dimensions: [
         {
           name: 'streamName',
@@ -226,4 +221,3 @@ export type GoogleServiceAccountCredentials = {
 export function defineConfig(config: AnalyticsConfig): AnalyticsConfig {
   return config;
 }
-

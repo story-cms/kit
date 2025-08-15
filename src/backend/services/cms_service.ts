@@ -122,13 +122,24 @@ export default class CmsService {
   }
 
   public sharedProps(ctx: HttpContext): SharedPageProps {
+    const exclude: string[] = [];
+    if (this.#config.stories.stories.length < 1) {
+      exclude.push('story');
+    }
+    if (this.#config.streams.streams.length < 1) {
+      exclude.push('stream');
+    }
+    if (this.#config.languages.languages.length < 1) {
+      exclude.push('language');
+    }
+    // page, audience
+
     return {
       meta: this.#config.meta,
       user: ctx.auth?.use('web')?.user,
       language: this.getLanguage(ctx.params.locale ?? 'en'),
       languages: this.#config.languages.languages,
-      stories: this.#config.stories.stories.map((s) => s.name),
-      streams: this.#config.streams.streams.map((s) => s.title),
+      exclude,
     };
   }
 }

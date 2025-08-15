@@ -1,13 +1,7 @@
-{{{ 
-  exports({ to: app.makePath('app/services/audience_service.ts') }) 
-}}}
-
 import admin from 'firebase-admin';
 import { type App, type ServiceAccount } from 'firebase-admin/app';
 import { type Auth, type UserRecord } from 'firebase-admin/auth';
-import env from '#start/env';
 import { DateTime } from 'luxon';
-import { AudienceMeta } from '@story-cms/kit';
 
 export default class AudienceService {
   protected config: any;
@@ -18,8 +12,8 @@ export default class AudienceService {
     this.app = this.initializeClient();
   }
 
-  public async getAllUsers(): Promise<AudienceMeta[]> {
-    const allUsers: AudienceMeta[] = [];
+  public async getAllUsers(): Promise<any[]> {
+    const allUsers: any[] = [];
     let nextPageToken: string | undefined;
 
     try {
@@ -44,7 +38,7 @@ export default class AudienceService {
             email: userRecord.email || '',
             photoURL:
               userRecord.photoURL ||
-              'https://res.cloudinary.com/onesheep/image/upload/v1669793982/cld-sample-2.jpg',
+              'https://res.cloudinary.com/journeys/image/upload/v1755260359/profile_qblxey.jpg',
             signUpDate: signUpDate || '',
             lastSignInTime: lastSignInTime || '',
           });
@@ -68,9 +62,11 @@ export default class AudienceService {
       return admin.apps[0];
     }
 
-    const credentialsBase64 = env.get('FIREBASE_SERVICE_ACCOUNT_KEY_JSON', '');
+    const credentialsBase64 = process.env.FIREBASE_SERVICE_ACCOUNT_KEY_JSON || '';
     if (!credentialsBase64) {
-      throw new Error('FIREBASE_SERVICE_ACCOUNT_KEY_JSON environment variable is not set.');
+      throw new Error(
+        'FIREBASE_SERVICE_ACCOUNT_KEY_JSON environment variable is not set.',
+      );
     }
 
     const credentialsJson = Buffer.from(credentialsBase64, 'base64').toString('utf-8');

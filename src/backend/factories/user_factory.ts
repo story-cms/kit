@@ -1,10 +1,5 @@
-{{{
-  exports({
-    to: app.makePath('database/factories', 'user_factory.ts')
-  })
-}}}
 import factory from '@adonisjs/lucid/factories';
-import User from '#models/user';
+import User from '../models/user.js';
 
 export const UserFactory = factory
   .define(User, async ({ faker }) => {

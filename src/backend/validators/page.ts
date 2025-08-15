@@ -1,6 +1,3 @@
-{{{
-  exports({ to: app.makePath('app/validators/page.ts') })
-}}}
 import vine, { SimpleMessagesProvider } from '@vinejs/vine';
 import type { HttpContext } from '@adonisjs/core/http';
 
@@ -22,7 +19,7 @@ const live = {
   isPublished: vine.boolean(),
 };
 
-export class PageValidator {
+export default class PageValidator {
   protected isLink: boolean;
   protected isPublished: boolean;
 
@@ -47,7 +44,7 @@ export class PageValidator {
   }
 }
 
-export const errorMessages = new SimpleMessagesProvider({
+export const pageErrorMessages = new SimpleMessagesProvider({
   title: 'Title must be a string',
   description: 'Description must be a string',
   'title.required': 'A title is required',

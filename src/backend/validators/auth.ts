@@ -1,10 +1,7 @@
-{{{
-  exports({ to: app.makePath('app/validators/auth.ts') })
-}}}
 import vine, { SimpleMessagesProvider } from '@vinejs/vine';
 
 vine.messagesProvider = new SimpleMessagesProvider({
-  'email.required': "This field is required.",
+  'email.required': 'This field is required.',
   'email.email': 'Enter a valid email address.',
   'password.confirmed': 'Those two passwords are not the same.',
 });

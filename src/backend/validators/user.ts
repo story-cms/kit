@@ -1,7 +1,4 @@
-{{{
-  exports({ to: app.makePath('app/validators/user.ts') })
-}}}
-import User from '#models/user';
+import User from '../models/user.js';
 import db from '@adonisjs/lucid/services/db';
 import vine, { SimpleMessagesProvider } from '@vinejs/vine';
 import { FieldContext } from '@vinejs/vine/types';
@@ -30,7 +27,7 @@ async function unique(value: unknown, options: Options, field: FieldContext) {
     .first();
 
   if (row) {
-    field.report('The \{\{ field \}\} field is not unique', 'unique', field);
+    field.report('The {{ field }} field is not unique', 'unique', field);
   }
 }
 

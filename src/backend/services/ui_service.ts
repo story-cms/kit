@@ -1,19 +1,13 @@
-{{{
-  exports({ to: app.makePath('app/services/ui_service.ts') })
-}}}
 import axios from 'axios';
 import db from '@adonisjs/lucid/services/db';
-import { Ui, UiAttribute, UiItem, type UiItemPayload } from '@story-cms/kit';
-import cms from '@story-cms/kit/cms';
-import {
-  AiService,
-  TranslationSource,
-  type TranslationInput,
-} from '#services/ai_service';
+import Ui from '../models/ui.js';
+import UiAttribute from '../models/ui_attribute.js';
+import cms from './cms.js';
+import AiService from './ai_service.js';
 
 const sourcePath = cms.config.languages.microcopySource as string;
 
-export class UiService {
+export default class UiService {
   protected sourceLocale = 'en';
 
   constructor(locale: string) {
@@ -27,7 +21,7 @@ export class UiService {
     if (missing.length === 0) return fillCount;
 
     const aiService = new AiService();
-    const input: TranslationInput = {
+    const input = {
       outputLocales: [locale],
       translationSources: missing,
     };
@@ -59,7 +53,7 @@ export class UiService {
   }
 
   public async translation(locale: string): Promise<Record<string, string>> {
-    let result: Record<string, string> = {
+    const result: Record<string, string> = {
       '@@locale': locale,
     };
 
@@ -84,11 +78,11 @@ export class UiService {
     return flaggedCount + (totalCount - translatedCount);
   }
 
-  public async items(locale: string): Promise<UiItem[]> {
+  public async items(locale: string): Promise<any[]> {
     const attributes = await UiAttribute.all();
     const source = await Ui.query().where('locale', this.sourceLocale);
     const translations = await Ui.query().where('locale', locale);
-    const items = source.map<UiItem>((item) => {
+    const items = source.map((item) => {
       const attribute = attributes.find((attr) => attr.key === item.key);
       const translation = translations.find((row) => row.key === item.key);
       return {
@@ -105,14 +99,14 @@ export class UiService {
     return items;
   }
 
-  public async missingItems(locale: string): Promise<TranslationSource[]> {
+  public async missingItems(locale: string): Promise<any[]> {
     const attributes = await UiAttribute.all();
     const source = await Ui.query().where('locale', this.sourceLocale);
     const translations = await Ui.query().where('locale', locale);
     const missing = source
       // TODO: missing or empty
       .filter((item) => !translations.find((row) => row.key === item.key))
-      .map<TranslationSource>((item) => {
+      .map((item) => {
         const attribute = attributes.find((attr) => attr.key === item.key);
         return {
           id: item.key,
@@ -135,7 +129,7 @@ export class UiService {
     const attribute = await UiAttribute.query().where('key', key).first();
 
     const aiService = new AiService();
-    const input: TranslationInput = {
+    const input = {
       outputLocales: [locale],
       translationSources: [
         {
@@ -156,7 +150,7 @@ export class UiService {
 
   public async store(locale: string, payload: Record<string, any>): Promise<void> {
     // validate the payload
-    const input = <UiItemPayload>{
+    const input = {
       key: payload['key'],
       translation: payload['translation'],
       isPrefilled: payload['isPrefilled'],
@@ -173,7 +167,7 @@ export class UiService {
     );
   }
 
-  private async validate(payload: UiItemPayload): Promise<UiItemPayload> {
+  private async validate(payload: any): Promise<any> {
     // validate not empty
     if (!payload.translation || payload.translation.trim() === '') {
       throw new Error('Translation is required');
@@ -189,7 +183,7 @@ export class UiService {
       );
 
       if (missing.length > 0) {
-        throw new Error({{ '`Missing placeholders: ${missing.join(\', \')}`' }});
+        throw new Error(`Missing placeholders: ${missing.join(', ')}`);
       }
     }
 
@@ -200,13 +194,13 @@ export class UiService {
     token: string,
   ): Promise<{ result: string; ingested?: number; attributes?: number }> {
     const headers = {
-      Authorization: {{ '`Bearer ${token}`' }},
+      Authorization: `Bearer ${token}`,
     };
     const req = await axios.get(sourcePath, { headers });
     const data = req.data as Record<string, any>;
 
     // clear the existing source data
-    var result: { result: string; ingested?: number; attributes?: number } = {
+    const result: { result: string; ingested?: number; attributes?: number } = {
       result: 'success',
     };
     const keys = Object.keys(data);

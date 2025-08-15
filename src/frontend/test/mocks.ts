@@ -564,7 +564,7 @@ export const sharedProps: SharedPageProps = {
   language: english,
   languages,
   errors: {},
-  stories,
+  exclude: [],
 };
 
 export const miniSidebar: StoryHandler = (): void => {

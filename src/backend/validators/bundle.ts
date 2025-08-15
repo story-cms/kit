@@ -1,6 +1,3 @@
-{{{
-  exports({ to: app.makePath('app/validators/bundle.ts') })
-}}}
 import vine, { SimpleMessagesProvider } from '@vinejs/vine';
 
 export const draftValidator = vine.compile(
@@ -11,7 +8,7 @@ export const draftValidator = vine.compile(
   }),
 );
 
-export const errorMessages = new SimpleMessagesProvider({
+export const bundleErrorMessages = new SimpleMessagesProvider({
   'bundle.title': 'Title must be a string',
   'bundle.title.required': 'A title is required',
 });

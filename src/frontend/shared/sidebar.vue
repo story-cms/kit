@@ -22,7 +22,7 @@
           <button class="nav-icon" @click="goBack">
             <Icon name="reply" />
           </button>
-          <div v-if="isMultiLingual">
+          <div v-if="include('language')">
             <button
               v-if="shared.hasOpenSidebar"
               class="relative flex size-14 items-center justify-center rounded-full transition-all duration-75"
@@ -48,33 +48,35 @@
             <Icon v-else name="chevron-double-left" />
           </button>
         </div>
+
         <div :class="[shared.hasOpenSidebar ? 'mt-4 flex flex-col px-4' : 'hidden']">
           <section class="grid grid-cols-1">
-            <div v-if="spreadStreams">
-              <a
-                v-for="stream in shared.streams"
-                :class="classList('stream')"
-                :href="`/${locale}/stream?find=${stream}`"
-                >{{ stream }}</a
-              >
-            </div>
-            <div v-else>
-              <a :class="classList('stream')" :href="`/${locale}/stream`">Streams</a>
-            </div>
-            <div v-if="spreadStories">
-              <a
-                v-for="story in shared.stories"
-                :class="classList('story')"
-                :href="`/${locale}/story?find=${story}`"
-                >{{ story }}</a
-              >
-            </div>
-            <div v-else>
-              <a :class="classList('story')" :href="`/${locale}/story`">Stories</a>
-            </div>
-            <a :class="classList('page')" :href="`/${locale}/page`">Pages</a>
-            <a :class="classList('audience')" :href="`/${locale}/dashboard`">Audience</a>
-            <div v-if="isMultiLingual">
+            <a
+              v-if="include('stream')"
+              :class="classList('stream')"
+              :href="`/${locale}/stream`"
+              >Streams</a
+            >
+
+            <a
+              v-if="include('story')"
+              :class="classList('story')"
+              :href="`/${locale}/story`"
+              >Stories</a
+            >
+
+            <a v-if="include('page')" :class="classList('page')" :href="`/${locale}/page`"
+              >Pages</a
+            >
+
+            <a
+              v-if="include('audience')"
+              :class="classList('audience')"
+              :href="`/${locale}/audience`"
+              >Audience</a
+            >
+
+            <div v-if="include('language')">
               <button
                 v-if="locale === 'en'"
                 class="nav-link opacity-50 disabled:cursor-not-allowed"
@@ -125,7 +127,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useSharedStore } from '../store';
-import { Link, router } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
 
 import Icon from '../shared/icon.vue';
 import LanguageSelector from './language-selector.vue';
@@ -163,17 +165,11 @@ const newPathFromLocale = (targetLocale: string) => {
   return `/${targetLocale}/dashboard`;
 };
 
-const isMultiLingual = computed(() => shared.languages.length > 1);
-
 const isAdmin = computed(() => shared.user.isAdmin);
 
-const spreadStreams = computed(() => {
-  return shared.streams.length < 3;
-});
-
-const spreadStories = computed(() => {
-  return shared.stories.length < 3;
-});
+const include = (element: string): boolean => {
+  return !shared.exclude.includes(element);
+};
 
 const locale = computed(() => {
   return shared.locale ?? 'en';
@@ -192,11 +188,11 @@ const languageOptions = computed(() => {
 });
 
 const classList = (path: string, withGap: boolean = false) => {
-  let url = window.location.href.replace('/drop', '/stream');
+  const url = window.location.href.replace('/drop', '/stream');
 
   return {
     'nav-link': true,
-    active: url.includes(`/${locale}/${path}`),
+    active: url.includes(`/${locale.value}/${path}`),
     'flex items-center gap-x-3': withGap,
   };
 };

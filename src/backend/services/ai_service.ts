@@ -1,15 +1,10 @@
-{{{
-  exports({ to: app.makePath('app/services/ai_service.ts') })
-}}}
-
 import OpenAI from 'openai';
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
-import env from '#start/env';
 import { encode } from 'node:punycode';
 
-export class AiService {
-  private client = new OpenAI({ apiKey: env.get('OPENAI_API_KEY') });
+export default class AiService {
+  private client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   private MAX_INPUT_TOKENS = 4096;
   private MAX_OUTPUT_TOKENS = 4096;
   private TOKEN_BUFFER = 500;
@@ -97,38 +92,37 @@ export class AiService {
     }
 
     const placeholderNote = 'Keep placeholders like {placeholderName} unchanged.';
-    const formattedSources = sources.map(this.formatSource).join(\'\\n\\n\');
+    const formattedSources = sources.map(this.formatSource).join('\n\n');
 
-    return {{ '`Translate to ${locales.join(\', \')}:\\n${placeholderNote}\\n\\n${formattedSources}`' }};
-
+    return `Translate to ${locales.join(', ')}:\n${placeholderNote}\n\n${formattedSources}`;
   }
 
   private formatSource(source: TranslationSource): string {
     const { id, text, description, placeholders } = source;
 
     return [
-      {{{ '`ID: ${id}`' }}},
-      {{{ '`Text: "${text}"`' }}},
-      description ? {{ '`Description: ${description}`' }} : '',
-      placeholders?.length ? {{ '`Placeholders: ${placeholders.join(\', \')}`' }} : '',
+      `ID: ${id}`,
+      `Text: "${text}"`,
+      description ? `Description: ${description}` : '',
+      placeholders?.length ? `Placeholders: ${placeholders.join(', ')}` : '',
     ]
       .filter(Boolean)
-      .join(\'\\n\');
+      .join('\n');
   }
 
   private validatePlaceholders(text: string, placeholders?: string[]): void {
     if (!placeholders) return;
 
     for (const placeholder of placeholders) {
-      if (!text.includes({{ '`{${placeholder}\}`' }})) {
-        throw new Error({{{ '`Missing placeholder {${placeholder}\} in: "${text}"`' }}});
+      if (!text.includes(`{${placeholder}}`)) {
+        throw new Error(`Missing placeholder {${placeholder}} in: "${text}"`);
       }
     }
 
-    const usedPlaceholders = text.match(/\\{([^}]+)\\}/g)?.map((p) => p.slice(1, -1)) || [];
+    const usedPlaceholders = text.match(/\{([^}]+)\}/g)?.map((p) => p.slice(1, -1)) || [];
     for (const used of usedPlaceholders) {
       if (!placeholders.includes(used)) {
-        throw new Error({{{ '`Undefined placeholder {${used}\} in: "${text}"`' }}});
+        throw new Error(`Undefined placeholder {${used}} in: "${text}"`);
       }
     }
   }
@@ -155,6 +149,7 @@ const TranslationSourceSchema = z.object({
   placeholders: z.array(z.string()).optional(),
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const TranslationInputSchema = z.object({
   outputLocales: z.array(z.string()),
   translationSources: z.array(TranslationSourceSchema),

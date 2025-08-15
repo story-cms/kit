@@ -1,9 +1,6 @@
-{{{ 
-  exports({ to: app.makePath('app/services/admin_service.ts') }) 
-}}}
 import db from '@adonisjs/lucid/services/db';
-import cms from '@story-cms/kit/cms';
-import IndexService from '#services/index_service';
+import cms from './cms.js';
+import IndexService from './index_service.js';
 
 export default class AdminService {
   protected _feedback: string[] = [];
@@ -24,7 +21,7 @@ export default class AdminService {
           locale: language.locale,
           storyId: story.id,
         });
-        this._feedback.push({{'`${language.language} - ${story.name}`'}});
+        this._feedback.push(`${language.language} - ${story.name}`);
       }
     }
   }
@@ -49,21 +46,21 @@ export default class AdminService {
   }
 
   protected async syncAutoIncrementFor(table: string) {
-    const maxIdResult = await db.rawQuery({{ '`SELECT (MAX(id) + 1) as nr FROM ${table}`' }});
+    const maxIdResult = await db.rawQuery(`SELECT (MAX(id) + 1) as nr FROM ${table}`);
     const maxId = maxIdResult.rows[0]['nr'];
 
     const nextLevelResult = await db.rawQuery(
-      {{"`SELECT nextval('public.${table}_id_seq') as nr`"}},
+      `SELECT nextval('public.${table}_id_seq') as nr`,
     );
     const nextLevel = Number.parseInt(nextLevelResult.rows[0]['nr'], 10);
     const targetLevel = maxId;
     if (targetLevel === nextLevel) {
-      this._feedback.push({{'`Autoincrement on ${table} table is already synchronized.`'}});
+      this._feedback.push(`Autoincrement on ${table} table is already synchronized.`);
       return;
     }
-    await db.rawQuery({{"`SELECT SETVAL('public.${table}_id_seq', ?, FALSE)`"}}, [targetLevel]);
+    await db.rawQuery(`SELECT SETVAL('public.${table}_id_seq', ?, FALSE)`, [targetLevel]);
     this._feedback.push(
-      {{'`Autoincrement on ${table} table synchronized to ${targetLevel}.`'}},
+      `Autoincrement on ${table} table synchronized to ${targetLevel}.`,
     );
   }
 
