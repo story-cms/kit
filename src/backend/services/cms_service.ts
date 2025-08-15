@@ -8,7 +8,7 @@ import type {
   LanguageSpecification,
 } from '../../types';
 
-export default class CmsService {
+export class CmsService {
   #config: CmsConfig;
 
   public constructor(config: CmsConfig) {

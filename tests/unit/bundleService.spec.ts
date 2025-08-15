@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import BundleService from '../../src/backend/services/bundle_service.js';
+import { BundleService } from '../../src/backend/services/bundle_service.js';
 import { complexFields, nestedFields, simpleFields } from '../mocks.js';
 import vine from '@vinejs/vine';
 

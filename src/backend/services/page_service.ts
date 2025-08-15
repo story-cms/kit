@@ -2,7 +2,7 @@ import type { PageVersion, PageBundle, PageItem } from '../../types';
 import Page from '../models/page.js';
 import cms from './cms.js';
 
-export default class PageService {
+export class PageService {
   protected version: PageVersion;
 
   constructor(version: PageVersion) {

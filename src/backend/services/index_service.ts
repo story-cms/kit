@@ -4,7 +4,7 @@ import Draft from '../models/draft.js';
 import cms from './cms.js';
 import { IndexItem, GroupedIndexItem } from '../../types.js';
 
-export default class IndexService {
+export class IndexService {
   public story: any;
   public config: object = {};
 

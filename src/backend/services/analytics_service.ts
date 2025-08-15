@@ -19,7 +19,7 @@ export const emptyReport: any[] = [
   },
 ];
 
-export default class Analytics {
+export class Analytics {
   protected client!: BetaAnalyticsDataClient;
   protected config: AnalyticsConfig;
 

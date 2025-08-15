@@ -1,8 +1,8 @@
 import db from '@adonisjs/lucid/services/db';
 import cms from './cms.js';
-import IndexService from './index_service.js';
+import { IndexService } from './index_service.js';
 
-export default class AdminService {
+export class AdminService {
   protected _feedback: string[] = [];
 
   /**

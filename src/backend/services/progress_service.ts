@@ -9,7 +9,7 @@ import Index from '../models/index.js';
 import Ui from '../models/ui.js';
 import cms from './cms.js';
 
-export default class ProgressService {
+export class ProgressService {
   public async progress(user: UserInterface): Promise<TranslationProgress[]> {
     const translationProgress: TranslationProgress[] = [];
 

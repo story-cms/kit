@@ -1,9 +1,9 @@
 import Chapter from '../models/chapter.js';
 import { FieldMap, FieldSpec, StorySpec, Version } from '../../types';
 import cms from './cms.js';
-import BundleService from './bundle_service.js';
+import { BundleService } from './bundle_service.js';
 
-export default class DraftService {
+export class DraftService {
   public story: StorySpec;
 
   protected _prefilledFields: string[] | null = null;

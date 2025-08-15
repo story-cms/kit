@@ -1,4 +1,4 @@
-import vine, { SimpleMessagesProvider } from '@vinejs/vine';
+import vine, { SimpleMessagesProvider, VineValidator } from '@vinejs/vine';
 import type { HttpContext } from '@adonisjs/core/http';
 
 const draft = {
@@ -19,7 +19,7 @@ const live = {
   isPublished: vine.boolean(),
 };
 
-export default class PageValidator {
+export class PageValidator {
   protected isLink: boolean;
   protected isPublished: boolean;
 
@@ -28,7 +28,7 @@ export default class PageValidator {
     this.isPublished = ctx.request.input('isPublished') === true;
   }
 
-  public get schema() {
+  public get schema(): VineValidator<any, Record<string, any> | undefined> {
     if (!this.isPublished) return vine.compile(vine.object(draft));
     if (this.isLink) {
       const liveLinkSchema = {

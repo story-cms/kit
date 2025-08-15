@@ -27,7 +27,7 @@ type SchemaType =
       >
     >;
 
-export default class BundleService {
+export class BundleService {
   constructor(
     protected spec: FieldSpec[],
     protected isDraft: boolean = false,

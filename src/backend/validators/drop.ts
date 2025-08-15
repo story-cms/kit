@@ -1,6 +1,6 @@
-import BundleService from '../services/bundle_service.js';
+import { BundleService } from '../services/bundle_service.js';
 import { FieldSpec } from '@story-cms/kit';
-import vine, { SimpleMessagesProvider } from '@vinejs/vine';
+import vine, { SimpleMessagesProvider, VineValidator } from '@vinejs/vine';
 
 const draft = {
   title: vine.string(),
@@ -28,7 +28,7 @@ export class DropValidator {
     protected bundleSpec: FieldSpec[],
   ) {}
 
-  public get schema() {
+  public get schema(): VineValidator<any, Record<string, any> | undefined> {
     const service = new BundleService(this.bundleSpec);
     const bundle = service.getValidationBuilder(!this.isPublished);
     const schema = {

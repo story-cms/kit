@@ -3,7 +3,7 @@ import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
 import { encode } from 'node:punycode';
 
-export default class AiService {
+export class AiService {
   private client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   private MAX_INPUT_TOKENS = 4096;
   private MAX_OUTPUT_TOKENS = 4096;

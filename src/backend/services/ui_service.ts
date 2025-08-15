@@ -3,9 +3,9 @@ import db from '@adonisjs/lucid/services/db';
 import Ui from '../models/ui.js';
 import UiAttribute from '../models/ui_attribute.js';
 import cms from './cms.js';
-import AiService from './ai_service.js';
+import { AiService } from './ai_service.js';
 
-export default class UiService {
+export class UiService {
   protected sourceLocale = 'en';
 
   constructor(locale: string) {

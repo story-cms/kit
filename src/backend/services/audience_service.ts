@@ -3,7 +3,7 @@ import { type App, type ServiceAccount } from 'firebase-admin/app';
 import { type Auth, type UserRecord } from 'firebase-admin/auth';
 import { DateTime } from 'luxon';
 
-export default class AudienceService {
+export class AudienceService {
   protected config: any;
   private app: App;
 

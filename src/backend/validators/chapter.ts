@@ -1,5 +1,5 @@
 import { StorySpec } from '../../types';
-import BundleService from '../services/bundle_service.js';
+import { BundleService } from '../services/bundle_service.js';
 import vine, { SimpleMessagesProvider, VineValidator } from '@vinejs/vine';
 
 export class ChapterValidator {

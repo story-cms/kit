@@ -2,7 +2,7 @@ import Activity from '../models/activity.js';
 import User from '../models/user.js';
 import db from '@adonisjs/lucid/services/db';
 
-export default class UserService {
+export class UserService {
   async latest() {
     const activities = await Activity.query()
       .select('userId')
