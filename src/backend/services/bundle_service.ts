@@ -58,9 +58,10 @@ export default class BundleService {
 
   private getValidationSchema = (spec: FieldSpec): Record<string, SchemaType>[] => {
     switch (spec.widget) {
-      case 'panel':
+      case 'panel': {
         const fields = spec.fields as FieldSpec[];
         return fields.map((field) => this.getSchemaPair(field));
+      }
 
       default:
         return [this.getSchemaPair(spec)];
@@ -69,21 +70,27 @@ export default class BundleService {
 
   private getSchemaPair = (spec: FieldSpec): Record<string, any> => {
     switch (spec.widget) {
-      case 'object':
-        const fields = Object.values(spec.fields as Object);
+      case 'object': {
+        const fields = Object.values(spec.fields as object);
         return {
           [spec.name]: vine.object({
             ...this.validationObject(fields as FieldSpec[]),
           }),
         };
+      }
 
-      case 'list':
+      case 'list': {
         const objectPair = this.getSchemaPair({ ...spec, name: 'key', widget: 'object' });
-        const objectSchema = objectPair['key'] as VineObject<{}, {}, {}, {}>;
+        const objectSchema = objectPair['key'] as VineObject<
+          Record<string, SchemaType>,
+          Record<string, SchemaType>,
+          Record<string, SchemaType>,
+          Record<string, SchemaType>
+        >;
         return {
           [spec.name]: vine.array(objectSchema),
         };
-
+      }
       case 'boolean':
         return {
           [spec.name]: this.isDraft ? vine.boolean().nullable() : vine.boolean(),
@@ -179,7 +186,7 @@ export default class BundleService {
     return `{ ${shapes} }`;
   }
 
-  private getBundleShapes(spec: Object[]): string {
+  private getBundleShapes(spec: object[]): string {
     return (
       spec
         // .filter((widget) => widget.hasOwnProperty('name'))
@@ -207,7 +214,7 @@ export default class BundleService {
 
   private renderObjectShape(node: any): string {
     const items = Object.entries(node)
-      .map(([_, value]) => {
+      .map(([, value]) => {
         return this.renderBundleShape(value);
       })
       .join(',');

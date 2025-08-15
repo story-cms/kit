@@ -5,8 +5,6 @@ import UiAttribute from '../models/ui_attribute.js';
 import cms from './cms.js';
 import AiService from './ai_service.js';
 
-const sourcePath = cms.config.languages.microcopySource as string;
-
 export default class UiService {
   protected sourceLocale = 'en';
 
@@ -196,6 +194,8 @@ export default class UiService {
     const headers = {
       Authorization: `Bearer ${token}`,
     };
+
+    const sourcePath = cms.config.languages.microcopySource;
     const req = await axios.get(sourcePath, { headers });
     const data = req.data as Record<string, any>;
 
