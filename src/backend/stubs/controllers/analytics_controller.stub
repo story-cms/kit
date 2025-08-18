@@ -1,15 +1,11 @@
 {{{
   exports({ to: app.makePath('app/controllers/analytics_controller.ts') })
 }}}
-import config from '#config/analytics';
-import cache from '@adonisjs/cache/services/main';
-import {
-  Analytics,
-  emptyReport,
-  analyticsConfigSchema,
-} from '#services/analytics_service';
 import type { HttpContext } from '@adonisjs/core/http';
+import cache from '@adonisjs/cache/services/main';
 import vine from '@vinejs/vine';
+import { Analytics, emptyAnalyticsReport, analyticsConfigSchema } from '@story-cms/kit';
+import config from '#config/analytics';
 
 export default class AnalyticsController {
   public async index({ logger, response }: HttpContext) {
@@ -39,7 +35,7 @@ export default class AnalyticsController {
       return report;
     } catch (error) {
       logger.error(error);
-      return emptyReport;
+      return emptyAnalyticsReport;
     }
   }
 }

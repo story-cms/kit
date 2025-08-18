@@ -7,12 +7,18 @@ import type {
   SharedPageProps,
   LanguageSpecification,
 } from '../../types';
+import { defineConfig } from '../define_config.js';
 
 export class CmsService {
   #config: CmsConfig;
 
   public constructor(config: CmsConfig) {
     this.#config = config;
+  }
+
+  public static default(): CmsService {
+    const config = defineConfig({});
+    return new CmsService(config);
   }
 
   public get config(): CmsConfig {

@@ -4,11 +4,13 @@
 import testUtils from '@adonisjs/core/services/test_utils';
 import { test } from '@japa/runner';
 
-import { Chapter, Draft } from '@story-cms/kit';
-
-import { ChapterFactory } from '#database/factories/chapter_factory';
-import { DraftFactory } from '#database/factories/draft_factory';
-import { UserFactory } from '#database/factories/user_factory';
+import {
+  Chapter,
+  Draft,
+  DraftFactory,
+  ChapterFactory,
+  UserFactory,
+} from '@story-cms/kit';
 import { draftOne } from '../mock.js';
 
 test.group('Draft GET', (group) => {

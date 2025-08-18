@@ -3,9 +3,8 @@
 }}}
 import { test } from '@japa/runner';
 import testUtils from '@adonisjs/core/services/test_utils';
-import PageService from '@story-cms/kit/page_service';
+import { PageService, PageFactory } from '@story-cms/kit';
 import cms from '@story-cms/kit/cms';
-import { PageFactory } from '#database/factories/page_factory';
 
 test.group('Page service', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction());

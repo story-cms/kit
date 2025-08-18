@@ -3,7 +3,7 @@
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
 import cms from '@story-cms/kit/cms';
-import IndexService from '#services/index_service';
+import { IndexService } from '@story-cms/kit';
 
 export default class IndicesController {
   public async index(ctx: HttpContext) {

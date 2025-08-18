@@ -2,8 +2,8 @@
   exports({ to: app.makePath('app/controllers/admin_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
+import { AdminService } from '@story-cms/kit';
 import env from '#start/env';
-import AdminService from '#services/admin_service';
 
 export default class AdminController {
   public async reIndex(ctx: HttpContext) {

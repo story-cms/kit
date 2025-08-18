@@ -2,9 +2,8 @@
   exports({ to: app.makePath('app/controllers/dashboard_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
-import ProgressService from '@story-cms/kit/progress_service';
 import cms from '@story-cms/kit/cms';
-import type { UserInterface, DashboardProps } from '@story-cms/kit';
+import { ProgressService, type UserInterface, type DashboardProps } from '@story-cms/kit';
 
 export default class DashboardController {
   public async index(ctx: HttpContext) {

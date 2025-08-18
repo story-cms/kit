@@ -1,7 +1,8 @@
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
 import vine from '@vinejs/vine';
+import { StatMetric } from '../../types';
 
-export const emptyReport: any[] = [
+export const emptyAnalyticsReport: StatMetric[] = [
   {
     name: 'Total Installs',
     stat: 0,
@@ -31,7 +32,7 @@ export class Analytics {
   /**
    * Generates an analytics report with key metrics
    */
-  async report(chapterCompleteEventName: string): Promise<any[]> {
+  async report(chapterCompleteEventName: string): Promise<StatMetric[]> {
     // Create chapter event filter for the chapter completion metrics
     const appsFilter = {
       fieldName: 'streamName',
@@ -205,7 +206,7 @@ export const analyticsConfigSchema = vine.object({
   cacheKey: vine.string().trim().minLength(1),
 });
 
-export type GoogleServiceAccountCredentials = {
+type GoogleServiceAccountCredentials = {
   type: string;
   project_id: string;
   private_key_id: string;
@@ -218,6 +219,6 @@ export type GoogleServiceAccountCredentials = {
   client_x509_cert_url: string;
 };
 
-export function defineConfig(config: AnalyticsConfig): AnalyticsConfig {
+export function defineAnalyticsConfig(config: AnalyticsConfig): AnalyticsConfig {
   return config;
 }

@@ -4,9 +4,8 @@
 import type { HttpContext } from '@adonisjs/core/http';
 import edge from 'edge.js';
 import { marked } from 'marked';
-import { AddStatus, StoryIndexProps, Chapter, PreviewProps } from '@story-cms/kit';
 import cms from '@story-cms/kit/cms';
-import IndexService from '#services/index_service';
+import { IndexService, AddStatus, StoryIndexProps, Chapter, PreviewProps } from '@story-cms/kit';
 
 export default class ChaptersController {
   public async index(ctx: HttpContext) {

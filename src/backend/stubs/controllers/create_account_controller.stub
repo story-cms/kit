@@ -3,8 +3,7 @@
 }}}
 import { HttpContext } from '@adonisjs/core/http';
 import cms from '@story-cms/kit/cms';
-import User from '#models/user';
-import { newPasswordValidator } from '#validators/auth';
+import { User, newPasswordValidator } from '@story-cms/kit';
 
 export default class CreateAccountController {
   public async index(ctx: HttpContext) {

@@ -2,10 +2,8 @@
   exports({ to: app.makePath('app/controllers/ui_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
-
-import { Activity, type UiPageProps } from '@story-cms/kit';
+import { UiService, Activity, type UiPageProps } from '@story-cms/kit';
 import cms from '@story-cms/kit/cms';
-import { UiService } from '#services/ui_service';
 
 export default class UisController {
   // render the UI page with the translation

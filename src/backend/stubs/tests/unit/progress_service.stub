@@ -3,9 +3,7 @@
 }}}
 import { test } from '@japa/runner';
 import testUtils from '@adonisjs/core/services/test_utils';
-import ProgressService from '@story-cms/kit/progress_service';
-import { Ui, Index, type UserInterface } from '@story-cms/kit';
-import User from '#models/user';
+import { User, ProgressService, Ui, Index, type UserInterface } from '@story-cms/kit';
 
 test.group('ProgressService', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction());
