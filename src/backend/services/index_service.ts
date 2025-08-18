@@ -1,14 +1,19 @@
 import Index from '../models/index.js';
 import Chapter from '../models/chapter.js';
 import Draft from '../models/draft.js';
-import cms from './cms.js';
 import { IndexItem, GroupedIndexItem } from '../../types.js';
+import { inject } from '@adonisjs/core';
+import { CmsService } from './cms_service.js';
 
+@inject()
 export class IndexService {
   public story: any;
   public config: object = {};
 
-  constructor(story: any) {
+  constructor(
+    story: any,
+    protected cms: CmsService,
+  ) {
     this.story = story;
   }
 
@@ -104,7 +109,7 @@ export class IndexService {
     if (index.length >= this.story.chapterLimit) return 'Full';
 
     // We have not reached the limit for the number of chapters and we're not a translation
-    if (version.locale === cms.config.languages.languages[0].locale) {
+    if (version.locale === this.cms.config.languages.languages[0].locale) {
       return 'Add';
     }
 
@@ -112,7 +117,7 @@ export class IndexService {
 
     const specifier = {
       apiVersion: version.apiVersion,
-      locale: cms.config.languages.languages[0].locale,
+      locale: this.cms.config.languages.languages[0].locale,
       storyId: this.story.id,
       number: number,
     };

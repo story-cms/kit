@@ -1,20 +1,25 @@
 import Chapter from '../models/chapter.js';
 import { FieldMap, FieldSpec, StorySpec, Version } from '../../types';
-import cms from './cms.js';
 import { BundleService } from './bundle_service.js';
+import { inject } from '@adonisjs/core';
+import { CmsService } from './cms_service.js';
 
+@inject()
 export class DraftService {
   public story: StorySpec;
 
   protected _prefilledFields: string[] | null = null;
 
-  constructor(story: StorySpec) {
+  constructor(
+    story: StorySpec,
+    protected cms: CmsService,
+  ) {
     this.story = story;
   }
 
   public async getDraftBundle(version: Version, number: number): Promise<string | null> {
     // is this the source language?
-    if (version.locale === cms.config.languages.languages[0].locale) {
+    if (version.locale === this.cms.config.languages.languages[0].locale) {
       const bundleService = new BundleService(this.story.fields);
       return bundleService.defaultBundle;
     }
@@ -22,7 +27,7 @@ export class DraftService {
     // it's a translation, so we need to get the source bundle
     const specifier = {
       apiVersion: version.apiVersion,
-      locale: cms.config.languages.languages[0].locale,
+      locale: this.cms.config.languages.languages[0].locale,
       storyId: this.story.id,
       number: number,
     };

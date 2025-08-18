@@ -2,13 +2,18 @@ import axios from 'axios';
 import db from '@adonisjs/lucid/services/db';
 import Ui from '../models/ui.js';
 import UiAttribute from '../models/ui_attribute.js';
-import cms from './cms.js';
 import { AiService } from './ai_service.js';
+import { inject } from '@adonisjs/core';
+import { CmsService } from './cms_service.js';
 
+@inject()
 export class UiService {
   protected sourceLocale = 'en';
 
-  constructor(locale: string) {
+  constructor(
+    locale: string,
+    protected cms: CmsService,
+  ) {
     this.sourceLocale = locale;
   }
 
@@ -195,7 +200,7 @@ export class UiService {
       Authorization: `Bearer ${token}`,
     };
 
-    const sourcePath = cms.config.languages.microcopySource;
+    const sourcePath = this.cms.config.languages.microcopySource;
     const req = await axios.get(sourcePath, { headers });
     const data = req.data as Record<string, any>;
 
