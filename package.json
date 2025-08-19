@@ -94,8 +94,10 @@
     "zod": "^3.25.76"
   },
   "peerDependencies": {
-    "@adonisjs/lucid": "^21.6.1",
     "@adonisjs/auth": "^9.4.0",
+    "@adonisjs/core": "^6.2.3",
+    "@adonisjs/lucid": "^21.6.1",
+    "@adonisjs/session": "^7.4.2",
     "@google-analytics/data": "^5.2.0",
     "@vinejs/vine": "^3.0.1",
     "firebase-admin": "^13.4.0",
