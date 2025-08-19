@@ -4,11 +4,9 @@ import { type Auth, type UserRecord } from 'firebase-admin/auth';
 import { DateTime } from 'luxon';
 
 export class AudienceService {
-  protected config: any;
   private app: App;
 
-  constructor(config: any) {
-    this.config = config;
+  constructor() {
     this.app = this.initializeClient();
   }
 

@@ -7,15 +7,15 @@ import type { HttpContext } from '@adonisjs/core/http';
 import string from '@adonisjs/core/helpers/string';
 import config from '@adonisjs/core/services/config';
 import mail from '@adonisjs/mail/services/main';
-import { 
+import {
   UserService,
   User,
   Activity,
-  createUserValidator, 
+  createUserValidator,
   updateUserValidator,
   type UsersProps,
 } from '@story-cms/kit';
-import cms from '@story-cms/kit/cms';
+import cms from '#services/cms';
 import env from '#start/env';
 
 export default class UsersController {

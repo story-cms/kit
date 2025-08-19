@@ -2,7 +2,7 @@
   exports({ to: app.makePath('app/controllers/indices_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
-import cms from '@story-cms/kit/cms';
+import cms from '#services/cms';
 import { IndexService } from '@story-cms/kit';
 
 export default class IndicesController {

@@ -4,7 +4,7 @@
 import { test } from '@japa/runner';
 import testUtils from '@adonisjs/core/services/test_utils';
 import { PageService, PageFactory } from '@story-cms/kit';
-import cms from '@story-cms/kit/cms';
+import cms from '#services/cms';
 
 test.group('Page service', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction());
@@ -25,10 +25,13 @@ test.group('Page service', (group) => {
     }).create();
 
     // act
-    const service = new PageService({
-      apiVersion: p3.apiVersion,
-      locale: p3.locale,
-    });
+    const service = new PageService(
+      {
+        apiVersion: p3.apiVersion,
+        locale: p3.locale,
+      },
+      cms,
+    );
     const items = await service.getPageItems();
 
     // assert
@@ -58,10 +61,13 @@ test.group('Page service', (group) => {
     }).create();
 
     // act
-    const service = new PageService({
-      apiVersion: p2.apiVersion,
-      locale: p2.locale,
-    });
+    const service = new PageService(
+      {
+        apiVersion: p2.apiVersion,
+        locale: p2.locale,
+      },
+      cms,
+    );
     const items = await service.getPageItems();
 
     // assert
@@ -95,10 +101,13 @@ test.group('Page service', (group) => {
       bundle: JSON.stringify({ title: 'Title for Page 4', group: 8 }),
     }).create();
 
-    const service = new PageService({
-      apiVersion: p2.apiVersion,
-      locale: p2.locale,
-    });
+    const service = new PageService(
+      {
+        apiVersion: p2.apiVersion,
+        locale: p2.locale,
+      },
+      cms,
+    );
 
     // act
     const sorted = await service.pagesFromItems(payloadItems);
@@ -142,10 +151,13 @@ test.group('Page service', (group) => {
       bundle: JSON.stringify({ title: 'Title for Page 4', group: 8 }),
     }).create();
 
-    const service = new PageService({
-      apiVersion: p2.apiVersion,
-      locale: p2.locale,
-    });
+    const service = new PageService(
+      {
+        apiVersion: p2.apiVersion,
+        locale: p2.locale,
+      },
+      cms,
+    );
 
     // act
     const clientPages = await service.getPageItemsForClient();
@@ -179,10 +191,13 @@ test.group('Page service', (group) => {
       bundle: JSON.stringify({ title: 'Title for Page 4', group: 8 }),
     }).create();
 
-    const service = new PageService({
-      apiVersion: p2.apiVersion,
-      locale: p2.locale,
-    });
+    const service = new PageService(
+      {
+        apiVersion: p2.apiVersion,
+        locale: p2.locale,
+      },
+      cms,
+    );
 
     // act
     const clientPages = await service.getPageItemsForClient();
@@ -225,10 +240,13 @@ test.group('Page service', (group) => {
       bundle: JSON.stringify({ title: 'Title for Page 4', group: 8 }),
     }).create();
 
-    const service = new PageService({
-      apiVersion: p2.apiVersion,
-      locale: p2.locale,
-    });
+    const service = new PageService(
+      {
+        apiVersion: p2.apiVersion,
+        locale: p2.locale,
+      },
+      cms,
+    );
 
     // act
     const clientPages = await service.getPageItemsForClient();
@@ -272,10 +290,13 @@ test.group('Page service', (group) => {
       isPublished: true,
     }).create();
 
-    const service = new PageService({
-      apiVersion: p1.apiVersion,
-      locale: p1.locale,
-    });
+    const service = new PageService(
+      {
+        apiVersion: p1.apiVersion,
+        locale: p1.locale,
+      },
+      cms,
+    );
 
     // act
     const clientPages = await service.getPageItemsForClient();

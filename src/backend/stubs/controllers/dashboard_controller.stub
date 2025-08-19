@@ -2,7 +2,7 @@
   exports({ to: app.makePath('app/controllers/dashboard_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
-import cms from '@story-cms/kit/cms';
+import cms from '#services/cms';
 import { ProgressService, type UserInterface, type DashboardProps } from '@story-cms/kit';
 
 export default class DashboardController {
@@ -19,7 +19,7 @@ export default class DashboardController {
       return ctx.response.redirect(defaultHome);
     }
 
-    const progressService = new ProgressService();
+    const progressService = new ProgressService(cms);
     const translationProgress = await progressService.progress(
       ctx.auth.user! as UserInterface,
     );

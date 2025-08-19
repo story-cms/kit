@@ -4,17 +4,17 @@
 import type { HttpContext } from '@adonisjs/core/http';
 import db from '@adonisjs/lucid/services/db';
 
-import { 
-  Activity, 
-  Chapter, 
-  Draft, 
-  trimmedErrors, 
+import {
+  Activity,
+  Chapter,
+  Draft,
+  trimmedErrors,
   DraftService,
   IndexService,
   draftValidator,
   type DraftEditProps,
 } from '@story-cms/kit';
-import cms from '@story-cms/kit/cms';
+import cms from '#services/cms';
 import providers from '#config/providers';
 
 export default class DraftsController {

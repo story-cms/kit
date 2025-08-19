@@ -2,9 +2,8 @@
   exports({ to: app.makePath('app/controllers/auth_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
-import { Activity } from '@story-cms/kit';
-import cms from '@story-cms/kit/cms';
-import User from '#models/user';
+import { User, Activity } from '@story-cms/kit';
+import cms from '#services/cms';
 
 export default class AuthController {
   public async index(ctx: HttpContext) {

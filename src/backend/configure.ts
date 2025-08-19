@@ -48,6 +48,8 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'config/cache.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/inertia.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/providers.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'config/auth.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'services/cms.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/users_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/auth_controller.stub', {});
   await codemods.makeUsingStub(

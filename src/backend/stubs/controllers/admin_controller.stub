@@ -3,6 +3,7 @@
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
 import { AdminService } from '@story-cms/kit';
+import cms from '#services/cms';
 import env from '#start/env';
 
 export default class AdminController {
@@ -11,7 +12,7 @@ export default class AdminController {
       return ctx.response.unauthorized();
     }
 
-    const service = new AdminService();
+    const service = new AdminService(cms);
     try {
       await service.rebuildIndexes();
     } catch (error) {
@@ -32,7 +33,7 @@ export default class AdminController {
       return ctx.response.unauthorized();
     }
 
-    const service = new AdminService();
+    const service = new AdminService(cms);
     try {
       await service.syncAutoIncrement();
     } catch (error) {
@@ -48,4 +49,3 @@ export default class AdminController {
     };
   }
 }
-

@@ -4,8 +4,8 @@
 import type { HttpContext } from '@adonisjs/core/http';
 import vine from '@vinejs/vine';
 
-import { 
-  Activity, 
+import {
+  Activity,
   Page,
   trimmedErrors,
   PageService,
@@ -13,17 +13,20 @@ import {
   PageValidator,
   pageErrorMessages,
 } from '@story-cms/kit';
-import cms from '@story-cms/kit/cms';
+import cms from '#services/cms';
 import providers from '#config/providers';
 
 export default class PagesController {
   public async get({ request }: HttpContext) {
     const locale = request.qs()['locale'] || 'en';
 
-    const service = new PageService({
-      apiVersion: 1,
-      locale: locale,
-    });
+    const service = new PageService(
+      {
+        apiVersion: 1,
+        locale: locale,
+      },
+      cms,
+    );
     const items = await service.getPageItemsForClient();
 
     return { pages: items };
@@ -31,7 +34,7 @@ export default class PagesController {
 
   public async index(ctx: HttpContext) {
     const version = cms.pagesContextFrom(ctx);
-    const service = new PageService(version);
+    const service = new PageService(version, cms);
     const pages = await service.getPageItems();
     return ctx.inertia.render('PagesIndex', {
       pages: pages,
@@ -134,7 +137,7 @@ export default class PagesController {
     const version = cms.pagesContextFrom(ctx);
 
     // use the service to sort the pages in memory
-    const service = new PageService(version);
+    const service = new PageService(version, cms);
     const pages = await service.pagesFromItems(ctx.request.input('items'));
 
     // save all the pages

@@ -3,7 +3,7 @@
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
 import { AudienceService } from '@story-cms/kit';
-import cms from '@story-cms/kit/cms';
+import cms from '#services/cms';
 
 export default class AudiencesController {
   public async index(ctx: HttpContext) {
