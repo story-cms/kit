@@ -22,13 +22,13 @@ export default class DraftsController {
     const { story, version } = cms.storyContextFrom(ctx);
     if (story === undefined) return ctx.response.notFound();
 
-    const indexService = new IndexService(story);
+    const indexService = new IndexService(story, cms);
     const number = await indexService.getNewChapterNumber(version);
     if (number > story.chapterLimit) return ctx.response.redirect('/');
 
-    const service = new DraftService(story);
-    // TODO: set your own prefill fields
-    service.setPrefilledFields(['imageUrl', 'type']);
+    const service = new DraftService(story, cms);
+    // TODO: overrride default prefill fields as needed
+    // service.setPrefilledFields(['imageUrl', 'type']);
     const bundle = await service.getDraftBundle(version, number);
     if (bundle === null) return ctx.response.redirect('/');
 
@@ -80,7 +80,7 @@ export default class DraftsController {
       });
     }
 
-    const indexService = new IndexService(story);
+    const indexService = new IndexService(story, cms);
     await indexService.buildIndex(version);
 
     const data: DraftEditProps = {
@@ -128,7 +128,7 @@ export default class DraftsController {
         locale: version.locale,
         action: {{ '`updated draft for ${story.name} # ${draft.number}`' }},
       });
-      const service = new IndexService(story);
+      const service = new IndexService(story, cms);
       await service.buildIndex(draft.version);
     } catch (e) {
       const errors = e.messages || e.message || 'Error while saving this draft. Sorry!';
@@ -156,7 +156,7 @@ export default class DraftsController {
       return ctx.response.redirect().back();
     }
 
-    const service = new IndexService(story);
+    const service = new IndexService(story, cms);
 
     draft.bundle = JSON.stringify(payload.bundle);
     draft.status = 'submitted';
@@ -234,7 +234,7 @@ export default class DraftsController {
     });
 
     // update the index after the transaction
-    const service = new IndexService(story);
+    const service = new IndexService(story, cms);
     await service.buildIndex(version);
 
     return ctx.response.redirect({{ '`/${version.locale}/story/${story.id}`' }});
@@ -256,7 +256,7 @@ export default class DraftsController {
       action: {{ '`deleted draft for ${story.name} # ${draft.number}`' }},
     });
 
-    const service = new IndexService(story);
+    const service = new IndexService(story, cms);
     await service.buildIndex(version);
 
     return ctx.response.redirect({{ '`/${version.locale}/story/${story.id}`' }}, false, 303);

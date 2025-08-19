@@ -1,0 +1,5 @@
+---
+description: AdonisJS framework conventions
+globs: src/backend/*
+alwaysApply: false
+---

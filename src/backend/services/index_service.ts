@@ -2,10 +2,8 @@ import Index from '../models/index.js';
 import Chapter from '../models/chapter.js';
 import Draft from '../models/draft.js';
 import { IndexItem, GroupedIndexItem } from '../../types.js';
-import { inject } from '@adonisjs/core';
 import { CmsService } from './cms_service.js';
 
-@inject()
 export class IndexService {
   public story: any;
   public config: object = {};

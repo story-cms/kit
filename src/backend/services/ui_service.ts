@@ -10,11 +10,8 @@ import { CmsService } from './cms_service.js';
 export class UiService {
   protected sourceLocale = 'en';
 
-  constructor(
-    locale: string,
-    protected cms: CmsService,
-  ) {
-    this.sourceLocale = locale;
+  constructor(protected cms: CmsService) {
+    this.sourceLocale = cms.config.languages.languages[0].locale;
   }
 
   public async fillMissing(locale: string): Promise<number> {

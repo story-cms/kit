@@ -1,14 +1,12 @@
 import Chapter from '../models/chapter.js';
 import { FieldMap, FieldSpec, StorySpec, Version } from '../../types';
 import { BundleService } from './bundle_service.js';
-import { inject } from '@adonisjs/core';
 import { CmsService } from './cms_service.js';
 
-@inject()
 export class DraftService {
   public story: StorySpec;
 
-  protected _prefilledFields: string[] | null = null;
+  #prefilledFields: string[] | null = null;
 
   constructor(
     story: StorySpec,
@@ -90,22 +88,22 @@ export class DraftService {
   }
 
   public setPrefilledFields(fields: string[]) {
-    this._prefilledFields = fields;
+    this.#prefilledFields = fields;
   }
 
   public get prefilledFields(): string[] {
-    if (this._prefilledFields) return this._prefilledFields;
-    this._prefilledFields = [];
+    if (this.#prefilledFields) return this.#prefilledFields;
+    this.#prefilledFields = [];
     this.story.fields.forEach((field) => {
       this.appendPrefilled(field as FieldSpec);
     });
 
-    return this._prefilledFields;
+    return this.#prefilledFields;
   }
 
   protected appendPrefilled(field: FieldSpec) {
-    if (!this._prefilledFields) {
-      this._prefilledFields = [];
+    if (!this.#prefilledFields) {
+      this.#prefilledFields = [];
     }
 
     switch (field['widget']) {
@@ -115,7 +113,7 @@ export class DraftService {
       case 'animation':
         // check if subPath is already in the list
         if (this.prefilledFields.some((item) => item === field['name'])) break;
-        this._prefilledFields.push(field['name']);
+        this.#prefilledFields.push(field['name']);
         break;
       case 'panel': {
         const frame = field['fields'] as FieldSpec[];

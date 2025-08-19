@@ -13,7 +13,7 @@ export class AdminService {
    */
   public async rebuildIndexes() {
     const defaultStory = this.cms.config.stories.stories[0];
-    const service = new IndexService(defaultStory);
+    const service = new IndexService(defaultStory, this.cms);
     this._feedback = [];
 
     for (const language of this.cms.config.languages.languages) {

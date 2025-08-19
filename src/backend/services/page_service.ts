@@ -1,9 +1,7 @@
 import type { PageVersion, PageBundle, PageItem } from '../../types';
 import Page from '../models/page.js';
-import { inject } from '@adonisjs/core';
 import { CmsService } from './cms_service.js';
 
-@inject()
 export class PageService {
   protected version: PageVersion;
 
