@@ -1,0 +1,23 @@
+{{{
+  exports({ to: app.makePath('start/routes/streams.ts') })
+}}}
+import router from '@adonisjs/core/services/router';
+const StreamController = () => import('#controllers/stream_controller');
+
+export default () => {
+  router.on('/stream').redirect('/:locale/stream', {
+    locale: 'en',
+  });
+  // gallery of configured streams
+  router.get(':locale/stream', [StreamController, 'gallery']);
+  // index of a stream's drops
+  router.get(':locale/stream/:id', [StreamController, 'index']);
+  // create a drop for a stream
+  router.get(':locale/stream/:id/drop/create', [StreamController, 'create']);
+  // edit a drop
+  router.get(':locale/drop/:id/edit', [StreamController, 'edit']);
+  // delete a drop
+  router.delete(':locale/drop/:id', [StreamController, 'destroy']);
+  // update a drop
+  router.post(':locale/drop/:id', [StreamController, 'update']);
+};

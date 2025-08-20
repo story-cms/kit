@@ -166,6 +166,17 @@ export interface StorySpec {
   parts?: Array<Part>;
 }
 
+export interface StoryIndexItem {
+  id: number;
+  name: string;
+  description: string;
+  coverImage: string;
+  chapterLimit: number;
+  createdAt: string;
+  updatedAt: string;
+  draftCount: number;
+}
+
 export interface Version {
   apiVersion: number;
   storyId: number;
