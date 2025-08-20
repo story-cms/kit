@@ -1,3 +1,4 @@
+import { debounce } from './shared/helpers';
 import ActionButton from './shared/action-button.vue';
 import AddItemButton from './shared/add-item-button.vue';
 import AnimationField from './fields/animation-field.vue';
@@ -6,10 +7,13 @@ import AudiencesIndex from './audiences/audiences-index.vue';
 import AudioField from './fields/audio-field.vue';
 import BooleanField from './fields/boolean-field.vue';
 import ChapterPreview from './stories/chapter-preview.vue';
+import ContentHeader from './shared/content-header.vue';
+import ContentSidebar from './shared/content-sidebar.vue';
 import ContextMenu from './shared/context-menu.vue';
 import CreateAccount from './auth/create-account.vue';
 import DashboardIndex from './dashboard/dashboard-index.vue';
 import DateField from './fields/date-field.vue';
+import DraftActions from './shared/draft-actions.vue';
 import DraftIndex from './stories/draft-index.vue';
 import DropDown from './shared/drop-down.vue';
 import ForgotPassword from './auth/forgot-password.vue';
@@ -38,6 +42,8 @@ import SelectField from './fields/select-field.vue';
 import StatusTag from './stories/components/status-tag.vue';
 import StoryIndex from './stories/story-index.vue';
 import StringField from './fields/string-field.vue';
+import TagField from './fields/tag-field.vue';
+import ToggleButton from './shared/toggle-button.vue';
 import TranslationIndex from './stories/translation-index.vue';
 import UiPage from './ui/ui-page.vue';
 import UsersIndex from './team/users-index.vue';
@@ -47,7 +53,10 @@ export { createInertiaApp, usePage, router } from '@inertiajs/vue3';
 
 export * from './store/index';
 
-export { commonProps } from './shared/helpers';
+export {
+  commonProps,
+  formatDate, // TODO: remove this
+} from './shared/helpers';
 
 export {
   ActionButton,
@@ -58,10 +67,14 @@ export {
   AudioField,
   BooleanField,
   ChapterPreview,
+  ContentHeader,
+  ContentSidebar, // TODO: remove this
   ContextMenu,
   CreateAccount,
   DashboardIndex,
   DateField,
+  debounce, // TODO: remove this
+  DraftActions, // TODO: remove this
   DraftIndex,
   DropDown,
   ForgotPassword,
@@ -90,6 +103,8 @@ export {
   StatusTag,
   StoryIndex,
   StringField,
+  TagField,
+  ToggleButton,
   TranslationIndex,
   UiPage,
   UsersIndex,

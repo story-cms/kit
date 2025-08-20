@@ -219,6 +219,7 @@ export interface SharedPageProps {
   languages: LanguageSpecification[];
   errors?: any;
   stories: string[];
+  bookmarks?: Bookmark[];
 }
 
 export interface PageMeta {
@@ -358,6 +359,11 @@ export interface AudiencesProps {
 /// ----------------------------------------------------
 ///  configuration
 /// ----------------------------------------------------
+
+export interface Bookmark {
+  label: string;
+  link: string;
+}
 
 export interface CmsMeta {
   name: string;

@@ -66,7 +66,7 @@
         :key="item.number"
         :item="item"
         :is-list="isList"
-        placeholder-image="https://res.cloudinary.com/onesheep/image/upload/v1684754051/Screenshot_2023-05-22_at_13.12.03_pnamdt.png"
+        placeholder-image="https://res.cloudinary.com/redeem/image/upload/v1752849347/story-cms-ui/placeholder_bafmfz.jpg"
         :scope="currentTab"
         :chapter-name="story.chapterType"
         @tap="onTap"
@@ -77,18 +77,16 @@
 
 <script setup lang="ts">
 import { router } from '@inertiajs/vue3';
-
-import AppLayout from '../shared/app-layout.vue';
-import ContentHeader from '../shared/content-header.vue';
 import { computed, ref } from 'vue';
 
-import Icon from '../shared/icon.vue';
+import { IndexReadyItem, SharedPageProps, StoryIndexProps, AddStatus } from '../../types';
 import AddItemButton from '../shared/add-item-button.vue';
+import AppLayout from '../shared/app-layout.vue';
+import ContentHeader from '../shared/content-header.vue';
+import Icon from '../shared/icon.vue';
 import IndexFilter from '../shared/index-filter.vue';
-import IndexCard from './components/index-card.vue';
-
-import { SharedPageProps, StoryIndexProps, AddStatus, IndexReadyItem } from '../../types';
 import { useSharedStore } from '../store';
+import IndexCard from './components/index-card.vue';
 
 const props = defineProps<StoryIndexProps & SharedPageProps>();
 

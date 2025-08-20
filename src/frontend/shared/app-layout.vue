@@ -4,7 +4,7 @@
       ref="container"
       :class="['relative mx-auto min-h-screen px-3 transition-all duration-75']"
     >
-      <Sidebar />
+      <component :is="shared.sidebar" />
       <div
         :class="[
           'relative',
@@ -44,8 +44,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, onBeforeMount } from 'vue';
 import { useSharedStore } from '../store';
-
-import Sidebar from './sidebar.vue';
 import MessageCentre from './message-centre.vue';
 
 const shared = useSharedStore();
