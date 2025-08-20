@@ -1,6 +1,6 @@
 <template>
   <Story title="Audiences Page" group="team">
-    <Variant title="Index">
+    <Variant title="Index" :setup-app="miniSidebar">
       <AudiencesIndex
         :audiences="audiences"
         :errors="sharedProps.errors"
@@ -9,21 +9,17 @@
         :language="sharedProps.language"
         :languages="sharedProps.languages"
         :stories="['John', 'Acts']"
-        :ui-todo-count="sharedProps.uiTodoCount"
-        :story-name="'John'"
       />
     </Variant>
     <Variant title="With feedback" :setup-app="loadData">
       <AudiencesIndex
-        :audiences="audiences"
-        :errors="sharedProps.errors"
         :meta="sharedProps.meta"
         :user="sharedProps.user"
-        :language="sharedProps.language"
         :languages="sharedProps.languages"
+        :language="sharedProps.language"
+        :errors="sharedProps.errors"
         :stories="['John', 'Acts']"
-        :ui-todo-count="sharedProps.uiTodoCount"
-        :story-name="'John'"
+        :audiences="audiences"
       />
     </Variant>
   </Story>
@@ -31,7 +27,7 @@
 
 <script setup lang="ts">
 import AudiencesIndex from './audiences-index.vue';
-import { sharedProps } from '../test/mocks';
+import { sharedProps, miniSidebar } from '../test/mocks';
 import type { AudienceMeta } from '../../types';
 import { ResponseStatus } from '../../types';
 import { useSharedStore } from '../store';
@@ -233,6 +229,7 @@ const audiences: AudienceMeta[] = [
 
 const loadData = () => {
   const shared = useSharedStore();
+  shared.setSidebarOpen(false);
 
   shared.addMessage(ResponseStatus.Accomplishment, 'User updated successfully');
 };

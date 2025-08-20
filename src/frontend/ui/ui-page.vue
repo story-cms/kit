@@ -6,6 +6,7 @@
           <UiToolbar
             v-model="searchTerm"
             :all-count="props.items.length"
+            :todo-count="todoCount"
             :active-filter="activeFilter"
             :sort-by="sortBy"
             @update:active-filter="activeFilter = $event"
@@ -198,10 +199,6 @@ shared.setFromProps(props);
 shared.setCurrentStoryName('');
 
 const headerHeight = computed(() => shared.headerHeight);
-
-watch(todoCount, (newCount) => {
-  shared.setUiTodoCount(newCount);
-});
 
 const listToMap = (list: UiItem[]): ModelType => {
   const map: ModelType = {};

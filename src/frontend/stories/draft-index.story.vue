@@ -1,14 +1,11 @@
 <template>
   <Story title="Draft Page" group="stories">
-    <Variant title="Index">
+    <Variant title="Index" :setup-app="miniSidebar">
       <DraftIndex
         :draft="draft"
         :bundle="bundle"
-        :spec="{
-          name: 'John',
-          chapterLimit: 21,
-          fields: fields,
-        }"
+        :story="{ ...story, fields }"
+        :has-edit-review="false"
         :last-published="'2021-10-10T14:48:00.000000Z'"
         :providers="{}"
         :errors="sharedProps.errors"
@@ -16,10 +13,7 @@
         :user="sharedProps.user"
         :language="sharedProps.language"
         :languages="sharedProps.languages"
-        :story-name="'John'"
         :stories="['John', 'Acts']"
-        :ui-todo-count="sharedProps.uiTodoCount"
-        :story-id="1"
       />
     </Variant>
   </Story>
@@ -27,12 +21,15 @@
 
 <script setup lang="ts">
 import DraftIndex from './draft-index.vue';
-import { sharedProps, listSpec, listModel } from '../test/mocks';
+import { sharedProps, listSpec, listModel, story, miniSidebar } from '../test/mocks';
+import { FieldSpec } from '../../types';
 
-const fields = [
+const fields: FieldSpec[] = [
   { name: 'title', label: 'Title', widget: 'string' },
   { name: 'date', label: 'Date', widget: 'date' },
   {
+    name: 'cover',
+    label: 'Cover',
     widget: 'panel',
     isRow: true,
     fields: [

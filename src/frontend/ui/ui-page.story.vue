@@ -1,16 +1,14 @@
 <template>
   <Story title="Ui Page" group="interface">
-    <Variant title="Index">
+    <Variant title="Index" :setup-app="miniSidebar">
       <UiPage
-        :items="items"
-        :errors="{ onBoardTitle: 'This is an error' }"
-        :language="sharedProps.language"
-        :languages="sharedProps.languages"
         :meta="sharedProps.meta"
         :user="sharedProps.user"
+        :languages="sharedProps.languages"
+        :language="sharedProps.language"
+        :errors="{ onBoardTitle: 'This is an error' }"
+        :items="items"
         :stories="['John', 'Acts']"
-        :ui-todo-count="sharedProps.uiTodoCount"
-        story-name="Ui Page"
       />
     </Variant>
   </Story>
@@ -18,9 +16,10 @@
 
 <script setup lang="ts">
 import UiPage from './ui-page.vue';
-import { sharedProps } from '../test/mocks';
+import { sharedProps, miniSidebar } from '../test/mocks';
+import { UiItem } from '../../types';
 
-const items = [
+const items: UiItem[] = [
   {
     key: 'welcomeTitle',
     source: 'Hello and Welcome!',

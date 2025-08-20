@@ -1,16 +1,14 @@
 <template>
   <Story title="Index Page" group="pages">
-    <Variant title="Index">
+    <Variant title="Index" :setup-app="miniSidebar">
       <PagesIndex
-        :pages="pages"
-        :errors="sharedProps.errors"
         :meta="sharedProps.meta"
         :user="sharedProps.user"
-        :language="sharedProps.language"
         :languages="sharedProps.languages"
+        :language="sharedProps.language"
+        :errors="sharedProps.errors"
         :stories="['John', 'Acts']"
-        :ui-todo-count="0"
-        :story-name="sharedProps.storyName"
+        :pages="pages"
       />
     </Variant>
   </Story>
@@ -18,7 +16,7 @@
 
 <script setup lang="ts">
 import PagesIndex from './pages-index.vue';
-import { sharedProps } from '../../frontend/test/mocks';
+import { sharedProps, miniSidebar } from '../../frontend/test/mocks';
 import type { PageItem } from '../../types';
 
 const pages: PageItem[] = [

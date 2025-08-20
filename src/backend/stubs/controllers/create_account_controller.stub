@@ -2,6 +2,7 @@
   exports({ to: app.makePath('app/controllers/create_account_controller.ts') })
 }}}
 import { HttpContext } from '@adonisjs/core/http';
+import cms from '@story-cms/kit/cms';
 import User from '#models/user';
 import { newPasswordValidator } from '#validators/auth';
 
@@ -16,6 +17,7 @@ export default class CreateAccountController {
     const email = user.email;
     return ctx.inertia.render('CreateAccount', {
       email,
+      ...cms.sharedProps(ctx),
     });
   }
 

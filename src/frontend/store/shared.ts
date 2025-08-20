@@ -3,10 +3,10 @@ import type { Ref } from 'vue';
 import { computed, ref, reactive, shallowRef } from 'vue';
 import {
   type SharedPageProps,
-  type Meta,
   type LanguageSpecification,
-  type User,
   type Bookmark,
+  type CmsMeta,
+  type UserInterface,
   ResponseStatus,
 } from '../../types';
 import standardSidebar from '../shared/sidebar.vue';
@@ -19,8 +19,8 @@ const defaultLanguage: LanguageSpecification = {
 
 export const useSharedStore = defineStore('shared', () => {
   const stories: Ref<string[]> = ref([]);
-  const meta: Ref<Meta> = ref({} as Meta);
-  const user: Ref<User> = ref({} as User);
+  const meta: Ref<CmsMeta> = ref({} as CmsMeta);
+  const user: Ref<UserInterface> = ref({} as UserInterface);
   const languages: Ref<LanguageSpecification[]> = ref([] as LanguageSpecification[]);
   const bookmarks: Ref<Bookmark[]> = ref([]);
 
@@ -31,7 +31,6 @@ export const useSharedStore = defineStore('shared', () => {
     languages.value = props.languages;
     user.value = props.user;
     language.value = props.language;
-    uiTodoCount.value = props.uiTodoCount;
     bookmarks.value = props.bookmarks ?? [];
   };
 
@@ -104,14 +103,6 @@ export const useSharedStore = defineStore('shared', () => {
 
   const setContainerWidth = (fresh: number) => {
     containerWidth.value = fresh;
-  };
-
-  // ui counter
-
-  const uiTodoCount: Ref<number> = ref(0);
-
-  const setUiTodoCount = (fresh: number) => {
-    uiTodoCount.value = fresh;
   };
 
   // message centre
@@ -203,9 +194,6 @@ export const useSharedStore = defineStore('shared', () => {
 
     currentStoryName,
     setCurrentStoryName,
-
-    uiTodoCount,
-    setUiTodoCount,
 
     language,
     languageDirection,

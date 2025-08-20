@@ -1,30 +1,28 @@
 {{{ 
   exports({ to: app.makePath('app/services/draft_service.ts') }) 
 }}}
-import { FieldMap, FieldSpec, Story, Version, Chapter } from '@story-cms/kit';
-import storyConfig from '#config/story';
+import { FieldMap, FieldSpec, StorySpec, Version, Chapter } from '@story-cms/kit';
+import cms from '@story-cms/kit/cms';
 
 export default class DraftService {
-  public story: Story;
+  public story: StorySpec;
 
   protected _prefilledFields: string[] | null = null;
 
-  constructor(story: Story) {
+  constructor(story: StorySpec) {
     this.story = story;
   }
 
-  //   public async nextNumberFor(version: Version) {}
-
   public async getDraftBundle(version: Version, number: number): Promise<string | null> {
     // is this the source language?
-    if (version.locale === storyConfig.languages[0].locale) {
+    if (version.locale === cms.config.languages.languages[0].locale) {
       return this.getDefaultStoryBundle(this.story.fields);
     }
 
     // it's a translation, so we need to get the source bundle
     const specifier = {
       apiVersion: version.apiVersion,
-      locale: storyConfig.languages[0].locale,
+      locale: cms.config.languages.languages[0].locale,
       storyId: this.story.id,
       number: number,
     };
@@ -93,8 +91,8 @@ export default class DraftService {
   public get prefilledFields(): string[] {
     if (this._prefilledFields) return this._prefilledFields;
     this._prefilledFields = [];
-    this.story.fields.forEach((field) => {
-      this.appendPrefilled(field as FieldSpec);
+    this.story.fields.forEach((field: FieldSpec) => {
+      this.appendPrefilled(field);
     });
 
     return this._prefilledFields;

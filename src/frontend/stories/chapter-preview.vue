@@ -6,7 +6,7 @@
           <DraftActions :can-delete="false" />
           <Link
             class="w-32 rounded-[38px] border border-blue-500 bg-blue-500 px-[15px] py-[9px] text-center text-sm/5 font-medium text-white shadow"
-            :href="`/${shared.locale}/story/${storyId}/draft/${chapter.number}/edit`"
+            :href="`/${shared.locale}/story/${story.id}/draft/${chapter.number}/edit`"
           >
             Edit
           </Link>
@@ -29,8 +29,8 @@
         <template #meta-box>
           <MetaBox
             :primary="[
-              { label: meta.storyType, value: storyName },
-              { label: meta.chapterType, value: metaChapter },
+              { label: story.storyType, value: story.name },
+              { label: story.chapterType, value: metaChapter },
             ]"
             :secondary="[
               { label: 'Created', value: formatDate(chapter.createdAt) },
@@ -74,8 +74,8 @@ const shared = useSharedStore();
 shared.setFromProps(props);
 
 const chapterTitle =
-  safeChapterTitle(props.title, props.storyName, props.chapter.number) ??
-  `New ${props.meta.chapterType}`;
+  safeChapterTitle(props.title, props.story.name, props.chapter.number) ??
+  `New ${props.story.chapterType}`;
 
 const publishedWhen = computed(() => {
   return props.chapter.updatedAt === ''
@@ -84,7 +84,7 @@ const publishedWhen = computed(() => {
 });
 
 const metaChapter = computed(
-  () => `${padZero(props.chapter.number)} of ${padZero(props.chapterLimit)}`,
+  () => `${padZero(props.chapter.number)} of ${padZero(props.story.chapterLimit)}`,
 );
 
 onMounted(() => {

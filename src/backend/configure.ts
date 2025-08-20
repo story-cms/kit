@@ -1,7 +1,7 @@
 import type Configure from '@adonisjs/core/commands/configure';
 import { Codemods } from '@adonisjs/core/ace/codemods';
 import { stubsRoot } from './stubs/main.js';
-import string from '@poppinss/utils/string';
+
 import { fsReadAll } from '@poppinss/utils';
 
 async function addMigrations(command: Configure, codemods: Codemods) {
@@ -29,55 +29,10 @@ async function addMigrations(command: Configure, codemods: Codemods) {
   }
 }
 
-async function getOptions(command: Configure): Promise<ConfigOptions> {
-  /**
-   * Prompt for the content types
-   */
-
-  const chapterType = await command.prompt.ask(
-    'What is your basic structured content type?',
-    {
-      hint: 'chapter, day, devotion, episode, lesson, step, part etc.',
-      validate(value) {
-        return !!value;
-      },
-    },
-  );
-
-  const chapters = string.plural(chapterType);
-
-  const storyTypePlural = await command.prompt.ask(
-    `How would you organize some ${chapters}?`,
-    {
-      hint: 'stories, editions, books, seasons, courses, journeys, guides, modules etc.',
-      validate(value) {
-        return !!value;
-      },
-    },
-  );
-
-  const storyType = string.singular(storyTypePlural);
-
-  const storyName = await command.prompt.ask(
-    `What is the name of your first ${storyType}?`,
-    {
-      validate(value) {
-        return !!value;
-      },
-    },
-  );
-
-  return {
-    chapterType: string.titleCase(chapterType),
-    storyType: string.titleCase(storyType),
-    storyName: string.camelCase(storyName),
-  };
-}
-
-async function fileExists(folder: string, fileName: string) {
-  const files = await fsReadAll(folder);
-  return files.some((file) => file === fileName);
-}
+// async function fileExists(folder: string, fileName: string) {
+//   const files = await fsReadAll(folder);
+//   return files.some((file) => file === fileName);
+// }
 
 /**
  * Configures the package
@@ -85,15 +40,12 @@ async function fileExists(folder: string, fileName: string) {
 export async function configure(command: Configure) {
   const codemods = await command.createCodemods();
 
-  if ((await fileExists(command.app.configPath(), 'story.ts')) == false) {
-    const options = await getOptions(command);
-    codemods.overwriteExisting = false;
-    await codemods.makeUsingStub(stubsRoot, 'config/story.stub', options);
-  }
-  if ((await fileExists(command.app.configPath(), 'analytics.ts')) == false) {
-    codemods.overwriteExisting = false;
-    await codemods.makeUsingStub(stubsRoot, 'config/analytics.stub', {});
-  }
+  /**
+   * sensitive config files first
+   */
+  codemods.overwriteExisting = false;
+  await codemods.makeUsingStub(stubsRoot, 'config/analytics.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'config/cms.stub', {});
 
   codemods.overwriteExisting = true;
   await codemods.makeUsingStub(stubsRoot, 'config/cache.stub', {});
@@ -143,17 +95,13 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'resources/views/preview.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'resources/views/scripture.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'models/user.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'services/story_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/index_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/ui_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/draft_service.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'services/page_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/user_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/admin_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/ai_service.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'services/helpers.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/analytics_service.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'services/progress_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/audience_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'validators/auth.stub', {});
@@ -237,6 +185,14 @@ export async function configure(command: Configure) {
   });
 
   /**
+   * Register providers
+   */
+
+  await codemods.updateRcFile((rcFile: any) => {
+    rcFile.addProvider('@story-cms/kit/cms_provider');
+  });
+
+  /**
    * Register middleware
    */
 
@@ -250,10 +206,4 @@ export async function configure(command: Configure) {
       path: '@story-cms/kit/add_meta_noindex_middleware',
     },
   ]);
-}
-
-interface ConfigOptions {
-  chapterType: string;
-  storyType: string;
-  storyName: string;
 }

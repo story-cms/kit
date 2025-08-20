@@ -1,15 +1,15 @@
 import { defineStore } from 'pinia';
-import { DraftEditProps, DraftMeta, StorySpec } from '../../types';
+import { DraftEditProps, DraftMeta, FieldSpec } from '../../types';
 import { ref } from 'vue';
 import type { Ref } from 'vue';
 
 export const useDraftsStore = defineStore('drafts', () => {
-  const story: Ref<StorySpec> = ref({} as StorySpec);
+  const fields: Ref<FieldSpec[]> = ref([]);
   const draft: Ref<DraftMeta> = ref({} as DraftMeta);
   const lastPublished = ref('');
 
   const setFromProps = (props: DraftEditProps) => {
-    story.value = props.spec;
+    fields.value = props.story.fields;
     lastPublished.value = props.lastPublished;
     draft.value = props.draft;
   };
@@ -19,7 +19,7 @@ export const useDraftsStore = defineStore('drafts', () => {
   };
 
   return {
-    story,
+    fields,
     lastPublished,
     draft,
 

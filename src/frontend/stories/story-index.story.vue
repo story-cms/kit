@@ -1,6 +1,6 @@
 <template>
   <Story title="Story Index" group="stories">
-    <Variant title="Index">
+    <Variant title="Index" :setup-app="miniSidebar">
       <StoryIndex
         :index="[
           {
@@ -18,32 +18,20 @@
             tags: ['Live'],
           },
         ]"
-        :add-status="AddStatus.Add"
-        story-name="John"
-        :story-id="1"
         :meta="sharedProps.meta"
-        :language="sharedProps.language"
+        :user="user"
         :languages="sharedProps.languages"
+        :language="sharedProps.language"
+        :add-status="AddStatus.Add"
+        :story="story"
         :stories="['John', 'Luke']"
-        :user="{
-          id: 1,
-          name: 'Test User',
-          initials: 'TU',
-          email: 'test@example.com',
-          isManager: false,
-          isAdmin: false,
-          role: 'user',
-          language: 'en',
-          hasPendingInvite: false,
-        }"
-        :ui-todo-count="0"
       />
     </Variant>
   </Story>
 </template>
 
 <script setup lang="ts">
-import { sharedProps } from '../test/mocks';
+import { sharedProps, story, user, miniSidebar } from '../test/mocks';
 import { AddStatus } from '../../types';
 import StoryIndex from './story-index.vue';
 </script>

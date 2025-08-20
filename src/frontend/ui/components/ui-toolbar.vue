@@ -1,8 +1,8 @@
 <template>
-  <div class="w-full mb-2">
+  <div class="mb-2 w-full">
     <div class="flex items-center justify-between py-4">
       <div class="flex items-center gap-x-4">
-        <span class="inline-flex rounded-md shadow-sm isolate">
+        <span class="isolate inline-flex rounded-md shadow-sm">
           <button
             type="button"
             :class="[
@@ -15,8 +15,8 @@
           >
             To do
             <span
-              class="inline-flex items-center px-2 py-1 ml-1 text-xs font-medium leading-4 text-indigo-700 bg-gray-100 rounded-full"
-              >{{ shared.uiTodoCount }}</span
+              class="ml-1 inline-flex items-center rounded-full bg-gray-100 px-2 py-1 text-xs font-medium leading-4 text-indigo-700"
+              >{{ todoCount }}</span
             >
           </button>
 
@@ -32,7 +32,7 @@
           >
             All
             <span
-              class="inline-flex items-center px-2 py-1 ml-4 text-xs font-medium leading-4 text-gray-700 bg-gray-100 rounded-full"
+              class="ml-4 inline-flex items-center rounded-full bg-gray-100 px-2 py-1 text-xs font-medium leading-4 text-gray-700"
               >{{ allCount }}</span
             >
           </button>
@@ -65,7 +65,7 @@
         </button>
       </div>
       <div>
-        <div class="grid grid-cols-1 mt-2">
+        <div class="mt-2 grid grid-cols-1">
           <input
             id="search"
             type="text"
@@ -76,7 +76,7 @@
             @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
           />
           <svg
-            class="self-center col-start-1 row-start-1 ml-4 text-gray-400 pointer-events-none size-4"
+            class="pointer-events-none col-start-1 row-start-1 ml-4 size-4 self-center text-gray-400"
             viewBox="0 0 16 16"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -97,13 +97,11 @@
 
 <script setup lang="ts">
 import Icon from '../../shared/icon.vue';
-import { useSharedStore } from '../../store';
-
-const shared = useSharedStore();
 
 defineProps<{
   modelValue: string;
   allCount: number;
+  todoCount: number;
   activeFilter: 'todo' | 'all';
   sortBy: {
     field: 'status' | 'lastEdited';

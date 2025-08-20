@@ -1,23 +1,25 @@
 {{{ 
   exports({ to: app.makePath('app/services/index_service.ts') }) 
 }}}
-import { Index, Chapter, Draft } from '@story-cms/kit';
 import {
+  Index,
+  Chapter,
+  Draft,
   IndexItem,
   Version,
   IndexReadyItem,
-  Story,
+  StorySpec,
   Part,
   AddStatus,
 } from '@story-cms/kit';
 
-import storyConfig from '#config/story';
+import cms from '@story-cms/kit/cms';
 
 export default class IndexService {
-  public story: Story;
+  public story: StorySpec;
   public config: Object = {};
 
-  constructor(story: Story) {
+  constructor(story: StorySpec) {
     this.story = story;
   }
 
@@ -110,7 +112,7 @@ export default class IndexService {
     if (index.length >= this.story.chapterLimit) return AddStatus.Full;
 
     // We have not reached the limit for the number of chapters and we're not a translation
-    if (version.locale === storyConfig.languages[0].locale) {
+    if (version.locale === cms.config.languages.languages[0].locale) {
       return AddStatus.Add;
     }
 
@@ -118,7 +120,7 @@ export default class IndexService {
 
     const specifier = {
       apiVersion: version.apiVersion,
-      locale: storyConfig.languages[0].locale,
+      locale: cms.config.languages.languages[0].locale,
       storyId: this.story.id,
       number: number,
     };

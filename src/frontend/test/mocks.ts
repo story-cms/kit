@@ -1,9 +1,12 @@
 import type {
   FieldSpec,
   LanguageSpecification,
-  Meta,
+  CmsMeta,
   SharedPageProps,
+  StorySpec,
 } from '../../types.ts';
+import { StoryHandler } from '../shared/helpers.js';
+import { useSharedStore } from '../store/shared.js';
 
 interface Address {
   street: string;
@@ -421,13 +424,10 @@ export const scriptureInListError = {
   'bundle.scriptures.0.scripture': ['required validation failed'],
 };
 
-export const meta: Meta = {
+export const meta: CmsMeta = {
   name: 'The Word One to One',
-  storyType: 'Book',
-  chapterType: 'Episode',
   logo: 'https://res.cloudinary.com/theword121/image/upload/v1687245360/episodes/viseg2hegowcrapio6pt.svg',
   helpUrl: 'https://www.theword121.com/',
-  hasEditReview: true,
   hasAppPreview: false,
 };
 
@@ -441,12 +441,20 @@ export const user = {
   role: 'editor',
   language: 'en',
   hasPendingInvite: false,
+  isAllowed: (locale: string) => locale === 'en',
 };
 
 export const stories = ['John', 'Acts'];
-export const story = {
+
+export const story: StorySpec = {
   id: 1,
   name: 'John',
+  coverImage:
+    'https://res.cloudinary.com/theword121/image/upload/v1687245360/episodes/viseg2hegowcrapio6pt.svg',
+  chapterLimit: 42,
+  chapterType: 'Episode',
+  storyType: 'Book',
+  schemaVersion: 1,
   fields: [
     {
       label: 'Title',
@@ -472,11 +480,10 @@ export const story = {
       widget: 'markdown',
     },
   ],
-  chapterLimit: 42,
+
   parts: [
     {
       id: 1,
-      number: 1,
       title: 'Part 1',
       subtitle: 'God among us',
       description:
@@ -484,7 +491,6 @@ export const story = {
     },
     {
       id: 2,
-      number: 2,
       title: 'Part 2',
       subtitle: 'God at work',
       description:
@@ -492,7 +498,6 @@ export const story = {
     },
     {
       id: 3,
-      number: 3,
       title: 'Part 3',
       subtitle: 'Matters of life and death',
       description:
@@ -500,7 +505,6 @@ export const story = {
     },
     {
       id: 4,
-      number: 4,
       title: 'Part 4',
       subtitle: 'Mission accomplished!',
       description:
@@ -508,11 +512,13 @@ export const story = {
     },
   ],
 };
+
 export const spanish: LanguageSpecification = {
   locale: 'es',
   language: 'Espanol',
   languageDirection: 'ltr',
 };
+
 export const english: LanguageSpecification = {
   locale: 'en',
   language: 'English',
@@ -524,11 +530,13 @@ export const burmese: LanguageSpecification = {
   language: 'Burmese - မြန်မာဘာသာ',
   languageDirection: 'ltr',
 };
+
 export const ganda: LanguageSpecification = {
   locale: 'lg',
   language: 'Ganda - Luganda',
   languageDirection: 'ltr',
 };
+
 export const german: LanguageSpecification = {
   locale: 'de',
   language: 'German - Deutsch',
@@ -540,6 +548,7 @@ export const ukrainian: LanguageSpecification = {
   language: 'Ukrainian - Українська',
   languageDirection: 'ltr',
 };
+
 const languages: LanguageSpecification[] = [
   english,
   spanish,
@@ -550,11 +559,15 @@ const languages: LanguageSpecification[] = [
 ];
 
 export const sharedProps: SharedPageProps = {
-  stories,
   meta,
   user,
   language: english,
   languages,
   errors: {},
-  uiTodoCount: 5,
+  stories,
+};
+
+export const miniSidebar: StoryHandler = (): void => {
+  const shared = useSharedStore();
+  shared.setSidebarOpen(false);
 };

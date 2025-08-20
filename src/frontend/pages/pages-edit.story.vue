@@ -1,18 +1,16 @@
 <template>
   <Story title="Pages Edit" group="pages">
-    <Variant title="With model">
+    <Variant title="With model" :setup-app="miniSidebar">
       <PagesEdit
+        :meta="sharedProps.meta"
+        :user="sharedProps.user"
+        :languages="sharedProps.languages"
+        :language="sharedProps.language"
+        :errors="sharedProps.errors"
+        :stories="['John', 'Acts']"
         :bundle="pageBundle"
         :page="page"
-        :errors="sharedProps.errors"
-        :language="sharedProps.language"
-        :languages="sharedProps.languages"
-        :meta="sharedProps.meta"
         :providers="{}"
-        :stories="['John', 'Acts']"
-        :user="sharedProps.user"
-        :story-name="'John'"
-        :ui-todo-count="0"
       />
     </Variant>
   </Story>
@@ -21,7 +19,7 @@
 <script setup lang="ts">
 import PagesEdit from './pages-edit.vue';
 import type { PageBundle, PageMeta } from '../../types';
-import { sharedProps } from '../../frontend/test/mocks';
+import { sharedProps, miniSidebar } from '../../frontend/test/mocks';
 
 const pageBundle: PageBundle = {
   group: 1,

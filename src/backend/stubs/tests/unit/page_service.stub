@@ -2,10 +2,10 @@
   exports({ to: app.makePath('tests/unit/page_service.spec.ts') }) 
 }}}
 import { test } from '@japa/runner';
-import { PageFactory } from '#database/factories/page_factory';
-import PageService from '#services/page_service';
-import storyConfig from '#config/story';
 import testUtils from '@adonisjs/core/services/test_utils';
+import PageService from '@story-cms/kit/page_service';
+import cms from '@story-cms/kit/cms';
+import { PageFactory } from '#database/factories/page_factory';
 
 test.group('Page service', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction());
@@ -282,7 +282,7 @@ test.group('Page service', (group) => {
     const clientPages = await service.getPageItemsForClient();
 
     // assert
-    const tracking = storyConfig['pages']['tracking'];
+    const tracking = cms.config.pages.tracking;
     assert.equal(clientPages.length, 3);
     // non links not affected
     const page2 = clientPages[1];

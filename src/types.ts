@@ -1,5 +1,5 @@
 /// ----------------------------------------------------
-//  these enums can not be imported into vue files
+///  these enums can not be imported into vue files
 /// ----------------------------------------------------
 export enum AddStatus {
   // eslint-disable-next-line
@@ -29,38 +29,8 @@ export enum FlagState {
 }
 
 /// ----------------------------------------------------
-
-export interface Version {
-  apiVersion: number;
-  storyId: number;
-  locale: string;
-}
-
-export interface Specifier {
-  apiVersion: number;
-  storyId: number;
-  locale: string;
-  number: number;
-}
-
-export interface IndexItem {
-  number: number;
-  imageUrl: string;
-  title: string;
-  reference?: string;
-  part?: number;
-}
-
-export interface IndexReadyItem {
-  number: number;
-  imageUrl: string;
-  title: string;
-  tags: string[];
-}
-
-export interface IndexItems {
-  root: Array<IndexItem>;
-}
+///  fields
+/// ----------------------------------------------------
 
 export interface FieldSpec {
   name: string;
@@ -95,22 +65,127 @@ export interface FieldMap {
   [key: string]: FieldSpec;
 }
 
-export interface LanguageSpecification {
-  language: string;
-  languageDirection: 'rtl' | 'ltr';
+export interface Audio {
+  url: string;
+  length: number;
+}
+
+export interface Video {
+  url: string;
+}
+
+export type WidgetPicker = (widget: string) => any; // eslint-disable-line
+
+/// ----------------------------------------------------
+///  streams
+/// ----------------------------------------------------
+
+export interface StreamSpec {
+  id: number;
+  title: string;
+  coverImage: string;
+  streamType: string;
+  dropType: string;
+  schemaVersion: number;
+  fields: FieldSpec[];
+}
+
+/// ----------------------------------------------------
+///  stories
+/// ----------------------------------------------------
+
+export interface StorySpec {
+  id: number;
+  name: string;
+  coverImage: string;
+  chapterLimit: number;
+  chapterType: string;
+  storyType: string;
+  schemaVersion: number;
+  fields: FieldSpec[];
+  parts?: Array<Part>;
+}
+
+export interface Part {
+  id: number;
+  title: string;
+  subtitle: string;
+  description: string;
+}
+
+export interface Version {
+  apiVersion: number;
+  storyId: number;
   locale: string;
-  bibleVersion?: string;
 }
 
-export interface SelectOption {
-  label: string;
-  value: string;
+export interface Specifier {
+  apiVersion: number;
+  storyId: number;
+  locale: string;
+  number: number;
 }
 
-export interface TabItem {
-  label: string;
-  count: number;
+export interface IndexItem {
+  number: number;
+  imageUrl: string;
+  title: string;
+  reference?: string;
+  part?: number;
 }
+
+export interface IndexReadyItem {
+  number: number;
+  imageUrl: string;
+  title: string;
+  tags: string[];
+}
+
+export interface IndexItems {
+  root: Array<IndexItem>;
+}
+
+export interface DraftMeta {
+  id: number;
+  number: number;
+  status: string;
+  updatedAt: string;
+  createdAt: string;
+}
+
+export interface StoryIndexProps {
+  index: IndexReadyItem[];
+  addStatus: AddStatus;
+  story: StorySpec;
+}
+
+export interface DraftEditProps {
+  draft: DraftMeta; // drafts
+  bundle: any; // model
+  source?: any; // model
+  providers: Providers; // widgets
+  lastPublished: string; // drafts
+  story: StorySpec;
+  hasEditReview: boolean;
+}
+
+export interface ChapterMeta {
+  number: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PreviewProps {
+  chapter: ChapterMeta;
+  bundle: any;
+  bundleView: string;
+  story: StorySpec;
+  title: string;
+}
+
+/// ----------------------------------------------------
+///  pages
+/// ----------------------------------------------------
 
 // used for editing the pages
 export interface PageItem {
@@ -124,39 +199,208 @@ export interface PageItem {
   isDivider?: boolean;
 }
 
-export interface Meta {
+export interface PageVersion {
+  apiVersion: number;
+  locale: string;
+}
+
+export interface PageBundle {
+  group: number;
+  title: string;
+  icon: string;
+  description: string;
+  body: string;
+}
+
+export interface SharedPageProps {
+  meta: CmsMeta;
+  user: UserInterface;
+  language: LanguageSpecification;
+  languages: LanguageSpecification[];
+  errors?: any;
+  stories: string[];
+  bookmarks?: Bookmark[];
+}
+
+export interface PageMeta {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PageBundle {
+  group: number;
+  title: string;
+  icon: string;
+  description: string;
+  body: string;
+}
+
+export interface PageIndexProps {
+  pages: PageItem[];
+}
+
+export interface PageEditProps {
+  page: PageMeta;
+  bundle: any; // model
+  providers: Providers; // widgets
+}
+
+/// ----------------------------------------------------
+///  team
+/// ----------------------------------------------------
+
+export interface UserInterface {
+  id: number;
+  name: string;
+  initials: string;
+  email: string;
+  isManager: boolean;
+  isAdmin: boolean;
+  role: string;
+  language: string | null;
+  hasPendingInvite: boolean;
+  isAllowed: (locale: string) => boolean;
+}
+
+export interface UserMeta
+  extends Pick<
+    UserInterface,
+    'id' | 'name' | 'email' | 'role' | 'language' | 'initials' | 'hasPendingInvite'
+  > {
+  lastActivity: string | null;
+}
+
+export interface UsersProps {
+  users: UserMeta[];
+}
+
+/// ----------------------------------------------------
+///  ui
+/// ----------------------------------------------------
+
+export interface UiItem {
+  key: string;
+  source: string;
+  translation?: string;
+  description?: string;
+  placeholders?: string[];
+  flag?: string;
+  updatedAt?: string;
+}
+
+export type UiItemPayload = {
+  key: string;
+  locale: string;
+  translation: string;
+  isPrefilled: boolean;
+};
+
+export interface UiPageProps {
+  items: UiItem[];
+}
+
+/// ----------------------------------------------------
+///  layouts
+/// ----------------------------------------------------
+
+export interface SelectOption {
+  label: string;
+  value: string;
+}
+
+export interface TabItem {
+  label: string;
+  count: number;
+}
+
+export interface StatMetric {
+  name: string;
+  stat: number;
+  previousStat: number;
+}
+
+export interface Progress {
+  name: string;
+  done: number;
+  draft: number;
+  total: number;
+  lastUpdated: string;
+}
+
+export interface TranslationProgress {
+  progress: Progress[];
+  language: string;
+  locale: string;
+  isReadOnly: boolean;
+}
+
+export interface DashboardProps {
+  translationProgress: TranslationProgress[];
+}
+
+/// ----------------------------------------------------
+///  audiences
+/// ----------------------------------------------------
+
+export interface AudienceMeta {
+  uid: string;
+  name: string;
+  email: string;
+  photoURL: string;
+  signUpDate: string;
+  lastSignInTime: string;
+}
+
+export interface AudiencesProps {
+  audiences: AudienceMeta[];
+}
+
+/// ----------------------------------------------------
+///  configuration
+/// ----------------------------------------------------
+
+export interface Bookmark {
+  label: string;
+  link: string;
+}
+
+export interface CmsMeta {
   name: string;
   logo: string;
-  storyType: string;
-  chapterType: string;
   helpUrl?: string;
-  microCopySource?: string;
-  hasEditReview: boolean;
   hasAppPreview: boolean;
 }
 
-export interface Story {
-  id: number;
-  name: string;
-  fields: FieldSpec[];
-  chapterLimit: number;
-  parts?: Array<object>;
-}
+export type CmsConfig = {
+  meta: CmsMeta;
 
-export interface StorySpec {
-  name: string;
-  fields: FieldSpec[];
-  chapterLimit: number;
-}
+  languages: {
+    languages: LanguageSpecification[];
+    microcopySource: string;
+  };
 
-export interface Part {
-  id: number;
-  title: string;
-  subtitle: string;
-  description: string;
-}
+  streams: {
+    streams: StreamSpec[];
+  };
 
-export type WidgetPicker = (widget: string) => any; // eslint-disable-line
+  stories: {
+    hasEditReview: boolean;
+    stories: StorySpec[];
+  };
+
+  pages: {
+    schemaVersion: number;
+    tracking: string;
+  };
+};
+
+export interface LanguageSpecification {
+  language: string;
+  languageDirection: 'rtl' | 'ltr';
+  locale: string;
+  bibleVersion?: string;
+}
 
 export interface Providers {
   s3?: {
@@ -185,211 +429,4 @@ export interface Providers {
     libraryId: string;
     host: string;
   };
-}
-
-export interface Audio {
-  url: string;
-  length: number;
-}
-
-export interface Video {
-  url: string;
-}
-
-export interface User {
-  id: number;
-  name: string;
-  initials: string;
-  email: string;
-  isManager: boolean;
-  isAdmin: boolean;
-  role: string;
-  language: string;
-  hasPendingInvite: boolean;
-}
-
-export interface DraftMeta {
-  id: number;
-  number: number;
-  status: string;
-  updatedAt: string;
-  createdAt: string;
-}
-
-export interface StoryIndexProps {
-  index: IndexReadyItem[];
-  addStatus: AddStatus;
-  storyName: string;
-  storyId: number;
-}
-
-export interface DraftEditProps {
-  draft: DraftMeta; // drafts
-  bundle: any; // model
-  source?: any; // model
-  spec: StorySpec; // drafts
-  lastPublished: string; // drafts
-  providers: Providers; // widgets
-  storyName: string;
-  storyId: number;
-}
-
-export interface SharedPageProps {
-  errors?: any;
-  meta: Meta;
-  language: LanguageSpecification;
-  languages: LanguageSpecification[];
-  stories: string[];
-  user: User;
-  uiTodoCount: number;
-  bookmarks?: Bookmark[];
-}
-
-export interface PageMeta {
-  id: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface PageBundle {
-  group: number;
-  title: string;
-  icon: string;
-  description: string;
-  body: string;
-}
-
-export interface PageIndexProps {
-  pages: PageItem[];
-}
-
-export interface PageEditProps {
-  page: PageMeta;
-  bundle: any; // model
-  providers: Providers; // widgets
-}
-
-export interface StatMetric {
-  name: string;
-  stat: number;
-  previousStat: number;
-}
-
-export interface Progress {
-  name: string;
-  done: number;
-  draft: number;
-  total: number;
-  lastUpdated: string;
-}
-
-export interface TranslationProgress {
-  progress: Progress[];
-  language: string;
-  locale: string;
-  isReadOnly: boolean;
-}
-
-export interface DashboardProps {
-  translationProgress: TranslationProgress[];
-}
-
-export interface ChapterMeta {
-  number: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface PreviewProps {
-  chapter: ChapterMeta;
-  bundle: any;
-  bundleView: string;
-  storyName: string;
-  storyId: number;
-  title: string;
-  chapterLimit: number;
-}
-
-export interface UserMeta
-  extends Pick<
-    User,
-    'id' | 'name' | 'email' | 'role' | 'language' | 'initials' | 'hasPendingInvite'
-  > {
-  lastActivity: string | null;
-}
-
-export interface UsersProps {
-  users: UserMeta[];
-}
-
-export interface AudienceMeta {
-  uid: string;
-  name: string;
-  email: string;
-  photoURL: string;
-  signUpDate: string;
-  lastSignInTime: string;
-}
-
-export interface AudiencesProps {
-  audiences: AudienceMeta[];
-}
-
-export interface UiItem {
-  key: string;
-  source: string;
-  translation?: string;
-  description?: string;
-  placeholders?: string[];
-  flag?: string;
-  updatedAt?: string;
-}
-
-export type UiItemPayload = {
-  key: string;
-  locale: string;
-  translation: string;
-  isPrefilled: boolean;
-};
-export interface UiPageProps {
-  items: UiItem[];
-}
-
-export type StoryConfig = {
-  meta: Meta;
-  languages: {
-    locale: string;
-    language: string;
-    languageDirection: string;
-    bibleVersion?: string;
-  }[];
-  schemaVersion: number;
-  stories: {
-    id: number;
-    name: string;
-    fields: FieldSpec[];
-    chapterLimit: number;
-  }[];
-  pages: {
-    schemaVersion: number;
-    tracking: string;
-  };
-};
-
-export interface PageVersion {
-  apiVersion: number;
-  locale: string;
-}
-
-export interface PageBundle {
-  group: number;
-  title: string;
-  icon: string;
-  description: string;
-  body: string;
-}
-
-export interface Bookmark {
-  label: string;
-  link: string;
 }

@@ -211,7 +211,7 @@ const focus = (user: UserMeta) => {
   focusId.value = user.id;
   form.name = user.name;
   form.email = user.email;
-  form.language = user.language;
+  form.language = user.language || '';
   form.role = user.role;
   formMode.value = 'update';
 };

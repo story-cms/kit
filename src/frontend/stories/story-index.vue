@@ -1,7 +1,7 @@
 <template>
   <AppLayout>
     <template #header>
-      <ContentHeader :title="`${meta.storyType}: ${shared.currentStoryName}`">
+      <ContentHeader :title="`${story.storyType}: ${shared.currentStoryName}`">
         <template #actions>
           <icon :name="iconName" class="h-8 w-8 text-black" @click.prevent="toggle" />
         </template>
@@ -14,7 +14,7 @@
 
               <AddItemButton
                 v-if="addStatus == AddStatus.Add"
-                :label="meta.chapterType"
+                :label="story.chapterType"
                 @add="addDraft"
               />
               <button
@@ -23,7 +23,7 @@
                 class="inline-flex items-center rounded-xl bg-indigo-50 px-3 py-[9px] text-sm font-medium leading-4 text-indigo-700 shadow-sm"
                 disabled
               >
-                {{ `No more ${meta.chapterType}s available to translate` }}
+                {{ `No more ${story.chapterType}s available to translate` }}
               </button>
             </div>
 
@@ -34,7 +34,7 @@
                 type="text"
                 name="search"
                 class="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pl-10 pr-3 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:pl-9 sm:text-sm/6"
-                :placeholder="meta.chapterType"
+                :placeholder="story.chapterType"
               />
               <Icon
                 name="search"
@@ -68,7 +68,7 @@
         :is-list="isList"
         placeholder-image="https://res.cloudinary.com/redeem/image/upload/v1752849347/story-cms-ui/placeholder_bafmfz.jpg"
         :scope="currentTab"
-        :chapter-name="meta.chapterType"
+        :chapter-name="story.chapterType"
         @tap="onTap"
       />
     </div>
@@ -93,7 +93,7 @@ const props = defineProps<StoryIndexProps & SharedPageProps>();
 const shared = useSharedStore();
 
 shared.setFromProps(props);
-shared.setCurrentStoryName(props.storyName);
+shared.setCurrentStoryName(props.story.name);
 
 const isList = ref(false);
 const toggle = () => {
@@ -104,7 +104,7 @@ const filterNumber = ref<string | null>(null);
 const currentTab = ref('Live');
 
 const addDraft = () =>
-  router.get(`/${shared.locale}/story/${props.storyId}/draft/create`);
+  router.get(`/${shared.locale}/story/${props.story.id}/draft/create`);
 
 const onFilter = (tab: string) => {
   currentTab.value = tab;
@@ -144,9 +144,9 @@ const tabs = computed(() => {
 
 const onTap = (item: IndexReadyItem) => {
   if (currentTab.value == 'Drafts') {
-    router.get(`/${shared.locale}/story/${props.storyId}/draft/${item.number}/edit`);
+    router.get(`/${shared.locale}/story/${props.story.id}/draft/${item.number}/edit`);
   } else {
-    router.get(`/${shared.locale}/story/${props.storyId}/chapter/${item.number}`);
+    router.get(`/${shared.locale}/story/${props.story.id}/chapter/${item.number}`);
   }
 };
 </script>
