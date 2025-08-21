@@ -270,6 +270,9 @@ Test components on different backgrounds:
 </Variant>
 ```
 
+###Interactive elements like buttons
+Ensure a visual component to test when an interactive element is used, not a console.log.
+
 ### Responsive Testing
 Test components at different screen sizes using Histoire's responsive controls.
 
