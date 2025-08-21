@@ -1,0 +1,246 @@
+---
+description: CSS styling patterns and conventions for StoryCMS Kit
+globs: src/frontend/**/*.css
+alwaysApply: false
+---
+# CSS Styling Development Rules
+
+## CSS Architecture
+
+### Layer Organization
+- Use `@tailwind base` for base styles
+- Use `@tailwind components` for component styles
+- Use `@tailwind utilities` for utility classes
+- Use `@layer` directives for custom styles
+
+### File Structure
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Base styles, CSS custom properties */
+}
+
+@layer components {
+  /* Component-specific styles */
+}
+
+@layer utilities {
+  /* Custom utility classes */
+}
+```
+
+## CSS Custom Properties
+
+### Variable Definition
+- Define CSS custom properties in `:root`
+- Use semantic names for variables
+- Use kebab-case for property names
+- Group related variables together
+
+### Variable Usage
+```css
+@layer base {
+  :root {
+    --primary-color: #39ccfb;
+    --secondary-color: #34d399;
+    --font-family-sans: 'Inter', sans-serif;
+    --font-family-serif: 'Amiri', serif;
+  }
+}
+```
+
+## Font Imports
+
+### Google Fonts
+- Import fonts in `@layer base`
+- Use `@import url()` for Google Fonts
+- Load fonts with specific weights
+- Consider font display optimization
+
+### Font Import Example
+```css
+@layer base {
+  @import url('https://fonts.googleapis.com/css2?family=Amiri&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+}
+```
+
+## Component Styles
+
+### Component Class Patterns
+- Use semantic class names
+- Follow BEM-like naming conventions
+- Use Tailwind's `@apply` directive
+- Keep components focused and reusable
+
+### Component Examples
+```css
+@layer components {
+  .input-label {
+    @apply mb-1 text-sm font-medium leading-5 text-gray-900;
+  }
+  
+  .input-field {
+    @apply block w-full rounded-md border border-gray-300 px-3 py-3 text-sm font-normal leading-5 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm;
+  }
+  
+  .btn {
+    @apply inline-flex cursor-pointer items-center justify-center rounded-md border border-transparent px-3 py-2 text-sm font-medium leading-5 shadow hover:opacity-80 hover:shadow-md active:opacity-80;
+  }
+  
+  .btn-blue {
+    @apply bg-blue-400 text-white;
+  }
+}
+```
+
+## Layout Utilities
+
+### Grid Utilities
+- Use CSS Grid for complex layouts
+- Create utility classes for common grid patterns
+- Use subgrid for nested layouts
+
+### Grid Examples
+```css
+@layer components {
+  .row-subgrid {
+    @apply row-[span_100] grid grid-rows-[subgrid];
+  }
+}
+```
+
+## State Management
+
+### Interactive States
+- Use Tailwind utilities for state styling
+- Create consistent state patterns
+- Use transitions for smooth state changes
+
+### State Examples
+```css
+@layer components {
+  .active {
+    @apply bg-blue-50 transition-all duration-200 ease-in-out;
+  }
+}
+```
+
+## Form Styling
+
+### Form Components
+- Create consistent form styling
+- Use semantic class names
+- Handle different form states
+
+### Form Examples
+```css
+@layer components {
+  .auth-input-field {
+    @apply relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-sm font-normal leading-5 text-gray-400 placeholder-gray-300 focus:z-10 focus:border-[--secondary-color] focus:outline-none focus:ring-[--secondary-color];
+  }
+  
+  .auth-input-label {
+    @apply block text-sm font-medium leading-5 text-gray-700;
+  }
+  
+  .auth-button {
+    @apply relative mx-auto flex justify-center rounded-full border border-transparent bg-[--primary-color] px-4 py-2 text-sm font-medium text-white hover:bg-[--secondary-color];
+  }
+}
+```
+
+## Third-Party Overrides
+
+### External Library Styling
+- Override third-party styles when necessary
+- Use specific selectors for overrides
+- Maintain consistency with design system
+
+### Override Examples
+```css
+/* Override CodeMirror styles */
+.cm-s-ar .CodeMirror-rtl {
+  font-family: 'Amiri', serif;
+  font-size: 20px;
+}
+
+.cm-s-fa .CodeMirror-rtl {
+  font-family: 'Amiri', serif;
+  font-size: 20px;
+}
+```
+
+## Debugging
+
+### Development Utilities
+- Create debug utilities for development
+- Use CSS custom properties for debugging
+- Remove debug styles for production
+
+### Debug Examples
+```css
+@layer components {
+  .debug {
+    @apply [&>*]:border-2 [&>*]:border-red-500;
+  }
+}
+```
+
+## Performance
+
+### CSS Optimization
+- Minimize custom CSS
+- Use Tailwind utilities when possible
+- Optimize font loading
+- Use efficient selectors
+
+### Best Practices
+- Keep styles modular and reusable
+- Use semantic class names
+- Follow existing patterns
+- Test across different browsers
+- Consider accessibility in styling
+- Use CSS custom properties for theming
+- Optimize for performance
+
+## Responsive Design
+
+### Mobile-First Approach
+- Start with mobile styles
+- Add responsive variants with Tailwind
+- Test on multiple screen sizes
+- Use flexible layouts
+
+### Responsive Patterns
+```css
+@layer components {
+  .responsive-container {
+    @apply px-4 md:px-6 lg:px-8;
+  }
+  
+  .responsive-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4;
+  }
+}
+```
+
+## Accessibility
+
+### Focus Management
+- Ensure proper focus indicators
+- Use high contrast colors
+- Maintain keyboard navigation
+- Test with screen readers
+
+### Accessibility Examples
+```css
+@layer components {
+  .focus-visible {
+    @apply focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2;
+  }
+}
+```
