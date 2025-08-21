@@ -90,6 +90,13 @@ export interface StreamSpec {
   fields: FieldSpec[];
 }
 
+export interface DropIndexItem {
+  id: number;
+  title: string;
+  coverImage: string;
+  releaseAt: string;
+  isPublished: boolean;
+}
 /// ----------------------------------------------------
 ///  stories
 /// ----------------------------------------------------
