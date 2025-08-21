@@ -13,6 +13,7 @@ alwaysApply: false
 - Always end with `.story.vue` extension
 - Place stories in the same directory as the component they document
 - Example: `string-field.story.vue` for `string-field.vue`
+- Ensure the group matches the folder they are in, example folder streams should be group="streams"
 
 ### Basic Story Template
 ```vue
