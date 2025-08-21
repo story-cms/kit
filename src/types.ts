@@ -166,6 +166,17 @@ export interface StoryIndexProps {
   story: StorySpec;
 }
 
+export interface StoryIndexItem {
+  id: number;
+  name: string;
+  description: string;
+  coverImage: string;
+  chapterLimit: number;
+  createdAt: string;
+  updatedAt: string;
+  draftCount: number;
+}
+
 export interface DraftEditProps {
   draft: DraftMeta; // drafts
   bundle: any; // model
