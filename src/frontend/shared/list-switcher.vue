@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import Icon from './icon.vue';
+import { Icon } from '@story-cms/kit/ui';
 import { computed } from 'vue';
 
 const props = defineProps<{
