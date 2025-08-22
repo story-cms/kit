@@ -1,5 +1,5 @@
 <template>
-  <Story title="Label Button" group="streams">
+  <Story title="Label Button" group="sttories">
     <Variant title="Short Label">
       <div>
         <LabelButton label="Save" @tap="() => handleTap('short')" />

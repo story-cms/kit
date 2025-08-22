@@ -1,5 +1,5 @@
 <template>
-  <Story title="Icon Button" group="streams">
+  <Story title="Icon Button" group="shared">
     <Variant title="Default">
       <div class="space-y-4">
         <IconButton icon="plus" @tap="() => handleTap('plus')" />
@@ -46,15 +46,6 @@
         </div>
         <div v-if="lastTappedIcon" class="text-sm pt-4 text-green-600">
           Last tapped: <span class="font-semibold">{{ lastTappedIcon }}</span> (Total taps: {{ tapCount }})
-        </div>
-      </div>
-    </Variant>
-
-    <Variant title="Dark Background">
-      <div class="bg-gray-800 p-4 rounded-lg space-y-4">
-        <IconButton icon="plus" @tap="() => handleTap('plus')" />
-        <div v-if="lastTappedIcon === 'plus'" class="text-sm text-green-400">
-          ✅ Plus button tapped! (Total taps: {{ tapCount }})
         </div>
       </div>
     </Variant>

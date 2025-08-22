@@ -1,5 +1,5 @@
 <template>
-  <Story title="Action Button" group="streams">
+  <Story title="Action Button" group="stories">
     <Variant title="Default">
       <ActionButton icon="star" @tap="handleTap" />
     </Variant>
