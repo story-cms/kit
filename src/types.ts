@@ -79,7 +79,13 @@ export type WidgetPicker = (widget: string) => any; // eslint-disable-line
 /// ----------------------------------------------------
 ///  streams
 /// ----------------------------------------------------
-
+export interface StreamIndexItem {
+  id: number;
+  title: string;
+  coverImage: string;
+  latestReleaseAt: string;
+  count: number;
+}
 export interface StreamSpec {
   id: number;
   title: string;
@@ -160,6 +166,19 @@ export interface DraftMeta {
   createdAt: string;
 }
 
+export type StoryMeta = {
+  id: number;
+  name: string;
+  storyType: string;
+  chapterType: string;
+  createdAt: string;
+  updatedAt: string;
+};
+export interface StoryEditProps {
+  story: StoryMeta;
+  isNew: boolean;
+  providers: Providers;
+}
 export interface StoryIndexProps {
   index: IndexReadyItem[];
   addStatus: AddStatus;
