@@ -86,6 +86,9 @@ export interface StreamIndexItem {
   latestReleaseAt: string;
   count: number;
 }
+export interface StreamGalleryProps {
+  streams: StreamIndexItem[];
+}
 export interface StreamSpec {
   id: number;
   title: string;
@@ -102,6 +105,20 @@ export interface DropIndexItem {
   coverImage: string;
   releaseAt: string;
   isPublished: boolean;
+}
+
+export interface DropMeta {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+  updatedBy: string;
+}
+
+export interface StreamEditProps {
+  meta: DropMeta;
+  spec: StreamSpec;
+  model: any; // model
+  providers: Providers; // widgets
 }
 /// ----------------------------------------------------
 ///  stories

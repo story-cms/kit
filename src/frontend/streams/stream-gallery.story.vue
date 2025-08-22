@@ -1,0 +1,117 @@
+<template>
+  <Story title="Stream Gallery" group="streams">
+    <Variant title="Default" :setup-app="miniSidebar">
+      <StreamGallery
+        :meta="sharedProps.meta"
+        :user="sharedProps.user"
+        :languages="sharedProps.languages"
+        :language="sharedProps.language"
+        :errors="sharedProps.errors"
+        :streams="streams"
+        :stories="['John', 'Acts']"
+      />
+    </Variant>
+
+    <Variant title="Empty" :setup-app="miniSidebar">
+      <StreamGallery
+        :meta="sharedProps.meta"
+        :user="sharedProps.user"
+        :languages="sharedProps.languages"
+        :language="sharedProps.language"
+        :errors="sharedProps.errors"
+        :streams="[]"
+        :stories="['John', 'Acts']"
+      />
+    </Variant>
+  </Story>
+</template>
+
+<script setup lang="ts">
+import { StreamIndexItem } from '../../types';
+import { sharedProps, miniSidebar } from '../test/mocks';
+import StreamGallery from './stream-gallery.vue';
+
+const streams: StreamIndexItem[] = [
+  {
+    id: 1,
+    title: 'The Gospel of John',
+    coverImage: 'https://res.cloudinary.com/onesheep/image/upload/v1669793982/cld-sample-2.jpg',
+    latestReleaseAt: '2024-01-15T10:30:00Z',
+    count: 24
+  },
+  {
+    id: 2,
+    title: 'Acts of the Apostles',
+    coverImage: 'https://images.squarespace-cdn.com/content/v1/58b7381929687f370cca699f/1610478690174-1LWISFW07OS4FNS50JJ9/Acts.jpg?format=1500w',
+    latestReleaseAt: '2024-01-10T14:20:00Z',
+    count: 18
+  },
+  {
+    id: 3,
+    title: 'Romans Study',
+    coverImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDtJ_K1JoXAlqyLGMVaS76p_ST6h44uFLwZzhogDajoi9gQv1PydXjzI0vXmEPpGxCZ58&usqp=CAU',
+    latestReleaseAt: '2024-01-05T09:15:00Z',
+    count: 12
+  },
+  {
+    id: 4,
+    title: 'Psalms Collection',
+    coverImage: 'https://store.christianitytoday.com/cdn/shop/articles/top5_psalms.jpg?v=1715353188',
+    latestReleaseAt: '2024-01-01T16:45:00Z',
+    count: 31
+  }
+];
+</script>
+
+<docs lang="md">
+# Stream Gallery
+
+A component that displays a collection of streams in either grid or list view format.
+
+## Features
+
+- **Toggle View**: Switch between grid and list layouts using the header icon
+- **Responsive Design**: Adapts to different screen sizes
+- **Stream Items**: Each stream displays cover image, title, latest release date, and count
+- **Interactive**: Click to toggle between view modes
+
+## Props
+
+- `streams` - Array of StreamIndexItem objects to display
+- `meta` - CMS metadata (from SharedPageProps)
+- `user` - User data (from SharedPageProps)
+- `languages` - Available languages (from SharedPageProps)
+- `language` - Current language (from SharedPageProps)
+- `errors` - Error state (from SharedPageProps)
+
+## Usage
+
+```vue
+<StreamGallery
+  :streams="streams"
+  :meta="meta"
+  :user="user"
+  :languages="languages"
+  :language="language"
+  :errors="errors"
+/>
+```
+
+## StreamIndexItem Interface
+
+```typescript
+interface StreamIndexItem {
+  id: number;
+  title: string;
+  coverImage: string;
+  latestReleaseAt: string;
+  count: number;
+}
+```
+
+## Layout Modes
+
+- **Grid View**: Displays streams in a responsive grid layout
+- **List View**: Displays streams in a vertical list format
+- **Toggle**: Use the icon in the header to switch between views
+</docs>
