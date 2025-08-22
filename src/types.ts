@@ -86,9 +86,11 @@ export interface StreamIndexItem {
   latestReleaseAt: string;
   count: number;
 }
+
 export interface StreamGalleryProps {
   streams: StreamIndexItem[];
 }
+
 export interface StreamSpec {
   id: number;
   title: string;
@@ -98,7 +100,10 @@ export interface StreamSpec {
   schemaVersion: number;
   fields: FieldSpec[];
 }
-
+export interface StreamIndexProps {
+  stream: StreamIndexItem;
+  drops: DropIndexItem[];
+}
 export interface DropIndexItem {
   id: number;
   title: string;
