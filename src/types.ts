@@ -196,6 +196,10 @@ export interface StoryIndexItem {
   draftCount: number;
 }
 
+export interface StoryGalleryProps {
+  stories: StoryIndexItem[];
+}
+
 export interface DraftEditProps {
   draft: DraftMeta; // drafts
   bundle: any; // model
