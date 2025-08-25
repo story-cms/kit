@@ -56,12 +56,14 @@
 import DropItem from './drop-item.vue';
 import type { DropIndexItem } from '../../../types';
 
-const placeholderImage = 'https://res.cloudinary.com/onesheep/image/upload/v1669793982/cld-sample-2.jpg';
+const placeholderImage =
+  'https://res.cloudinary.com/journeys/image/upload/v1756121793/mountain-placeholder_yuflkz.jpg';
 
 const dropData: DropIndexItem = {
   id: 1,
   title: 'Sample Drop',
-  coverImage: 'https://res.cloudinary.com/onesheep/image/upload/v1685084993/christ-chaos-header_yqrufy.jpg',
+  coverImage:
+    'https://res.cloudinary.com/onesheep/image/upload/v1685084993/christ-chaos-header_yqrufy.jpg',
   releaseAt: '2024-03-15T10:00:00Z',
   isPublished: true,
 };
@@ -69,7 +71,8 @@ const dropData: DropIndexItem = {
 const dropWithoutDate: DropIndexItem = {
   id: 2,
   title: 'Drop Without Date',
-  coverImage: 'https://res.cloudinary.com/onesheep/image/upload/v1685084993/christ-chaos-header_yqrufy.jpg',
+  coverImage:
+    'https://res.cloudinary.com/onesheep/image/upload/v1685084993/christ-chaos-header_yqrufy.jpg',
   releaseAt: '',
   isPublished: true,
 };
@@ -84,8 +87,10 @@ const dropWithoutImage: DropIndexItem = {
 
 const dropWithLongTitle: DropIndexItem = {
   id: 4,
-  title: 'This is a very long drop title that might wrap to multiple lines and test the component layout',
-  coverImage: 'https://res.cloudinary.com/onesheep/image/upload/v1685084993/christ-chaos-header_yqrufy.jpg',
+  title:
+    'This is a very long drop title that might wrap to multiple lines and test the component layout',
+  coverImage:
+    'https://res.cloudinary.com/onesheep/image/upload/v1685084993/christ-chaos-header_yqrufy.jpg',
   releaseAt: '2024-05-01T12:00:00Z',
   isPublished: true,
 };
@@ -99,11 +104,7 @@ A component for displaying drop items in either card or list layout format.
 ## Usage
 
 ```vue
-<DropItem
-  :drop="dropData"
-  :is-list="false"
-  :placeholder-image="placeholderImage"
-/>
+<DropItem :drop="dropData" :is-list="false" :placeholder-image="placeholderImage" />
 ```
 
 ## Props
@@ -123,11 +124,13 @@ A component for displaying drop items in either card or list layout format.
 ## Layouts
 
 ### Card Layout
+
 - Vertical arrangement with image on top
 - Title and date below the image
 - Fixed width suitable for grid layouts
 
 ### List Layout
+
 - Horizontal arrangement with image on the left
 - Title and date on the right
 - Flexible width for list containers

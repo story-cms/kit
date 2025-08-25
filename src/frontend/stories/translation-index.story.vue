@@ -79,7 +79,7 @@ const fields: FieldSpec[] = [
 const source = {
   title: 'The Word Became Flesh',
   imageUrl:
-    'https://res.cloudinary.com/onesheep/image/upload/v1669793982/cld-sample-2.jpg',
+    'https://res.cloudinary.com/journeys/image/upload/v1756121793/mountain-placeholder_yuflkz.jpg',
   animationUrl:
     'https://res.cloudinary.com/onesheep/raw/upload/v1685641667/cmsplayground/fnu2m4ogxi9wdhi91iqi.riv',
   ...listInListModel,

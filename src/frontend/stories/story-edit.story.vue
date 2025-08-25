@@ -42,7 +42,7 @@ const storyData = {
   storyType: 'gospel',
   chapterType: 'chapter',
   coverImage:
-    'https://res.cloudinary.com/onesheep/image/upload/v1669793982/cld-sample-2.jpg',
+    'https://res.cloudinary.com/journeys/image/upload/v1756121793/mountain-placeholder_yuflkz.jpg',
   chapterLimit: 21,
   tags: 'gospel,john,new-testament',
   description:

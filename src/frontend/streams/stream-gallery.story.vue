@@ -35,31 +35,35 @@ const streams: StreamIndexItem[] = [
   {
     id: 1,
     title: 'The Gospel of John',
-    coverImage: 'https://res.cloudinary.com/onesheep/image/upload/v1669793982/cld-sample-2.jpg',
+    coverImage:
+      'https://res.cloudinary.com/journeys/image/upload/v1756121793/mountain-placeholder_yuflkz.jpg',
     latestReleaseAt: '2024-01-15T10:30:00Z',
-    count: 24
+    count: 24,
   },
   {
     id: 2,
     title: 'Acts of the Apostles',
-    coverImage: 'https://images.squarespace-cdn.com/content/v1/58b7381929687f370cca699f/1610478690174-1LWISFW07OS4FNS50JJ9/Acts.jpg?format=1500w',
+    coverImage:
+      'https://images.squarespace-cdn.com/content/v1/58b7381929687f370cca699f/1610478690174-1LWISFW07OS4FNS50JJ9/Acts.jpg?format=1500w',
     latestReleaseAt: '2024-01-10T14:20:00Z',
-    count: 18
+    count: 18,
   },
   {
     id: 3,
     title: 'Romans Study',
-    coverImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDtJ_K1JoXAlqyLGMVaS76p_ST6h44uFLwZzhogDajoi9gQv1PydXjzI0vXmEPpGxCZ58&usqp=CAU',
+    coverImage:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDtJ_K1JoXAlqyLGMVaS76p_ST6h44uFLwZzhogDajoi9gQv1PydXjzI0vXmEPpGxCZ58&usqp=CAU',
     latestReleaseAt: '2024-01-05T09:15:00Z',
-    count: 12
+    count: 12,
   },
   {
     id: 4,
     title: 'Psalms Collection',
-    coverImage: 'https://store.christianitytoday.com/cdn/shop/articles/top5_psalms.jpg?v=1715353188',
+    coverImage:
+      'https://store.christianitytoday.com/cdn/shop/articles/top5_psalms.jpg?v=1715353188',
     latestReleaseAt: '2024-01-01T16:45:00Z',
-    count: 31
-  }
+    count: 31,
+  },
 ];
 </script>
 

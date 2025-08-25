@@ -1,5 +1,5 @@
 <template>
-  <Story title="Label Button" group="stories">
+  <Story title="Label Button" group="shared" :layout="{ type: 'grid', width: 200 }">
     <Variant title="Short Label">
       <div>
         <LabelButton label="Save" @tap="() => handleTap('short')" />

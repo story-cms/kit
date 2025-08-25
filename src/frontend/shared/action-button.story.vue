@@ -1,5 +1,5 @@
 <template>
-  <Story title="Action Button" group="stories">
+  <Story title="Action Button" group="shared">
     <Variant title="Default">
       <ActionButton icon="star" @tap="handleTap" />
     </Variant>
@@ -16,9 +16,7 @@
 
     <Variant title="With Click Handler">
       <ActionButton icon="plus" @tap="handleTap" />
-      <div class="mt-4 text-sm text-gray-600">
-        Click count: {{ clickCount }}
-      </div>
+      <div class="mt-4 text-sm text-gray-600">Click count: {{ clickCount }}</div>
     </Variant>
   </Story>
 </template>

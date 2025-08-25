@@ -63,54 +63,57 @@ import type { StreamIndexItem, DropIndexItem } from '../../types';
 const stream: StreamIndexItem = {
   id: 1,
   title: 'Daily Devotions',
-  coverImage: 'https://res.cloudinary.com/onesheep/image/upload/v1684754051/Screenshot_2023-05-22_at_13.12.03_pnamdt.png',
+  coverImage:
+    'https://res.cloudinary.com/onesheep/image/upload/v1684754051/Screenshot_2023-05-22_at_13.12.03_pnamdt.png',
   latestReleaseAt: '2024-01-15T10:00:00Z',
-  count: 5
+  count: 5,
 };
 
 const drops: DropIndexItem[] = [
   {
     id: 1,
     title: 'Morning Prayer',
-    coverImage: 'https://res.cloudinary.com/onesheep/image/upload/v1669793982/cld-sample-2.jpg',
+    coverImage:
+      'https://res.cloudinary.com/journeys/image/upload/v1756121793/mountain-placeholder_yuflkz.jpg',
     releaseAt: '2024-01-15T10:00:00Z',
-    isPublished: true
+    isPublished: true,
   },
   {
     id: 2,
     title: 'Evening Reflection',
-    coverImage: 'https://images.squarespace-cdn.com/content/v1/58b7381929687f370cca699f/1610478690174-1LWISFW07OS4FNS50JJ9/Acts.jpg?format=1500w',
+    coverImage:
+      'https://images.squarespace-cdn.com/content/v1/58b7381929687f370cca699f/1610478690174-1LWISFW07OS4FNS50JJ9/Acts.jpg?format=1500w',
     releaseAt: '2024-01-14T18:00:00Z',
-    isPublished: true
+    isPublished: true,
   },
   {
     id: 3,
     title: 'Midday Meditation',
-    coverImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDtJ_K1JoXAlqyLGMVaS76p_ST6h44uFLwZzhogDajoi9gQv1PydXjzI0vXmEPpGxCZ58&usqp=CAU',
+    coverImage:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDtJ_K1JoXAlqyLGMVaS76p_ST6h44uFLwZzhogDajoi9gQv1PydXjzI0vXmEPpGxCZ58&usqp=CAU',
     releaseAt: '2024-01-13T12:00:00Z',
-    isPublished: false
+    isPublished: false,
   },
   {
     id: 4,
     title: 'Weekly Review',
-    coverImage: 'https://store.christianitytoday.com/cdn/shop/articles/top5_psalms.jpg?v=1715353188',
+    coverImage:
+      'https://store.christianitytoday.com/cdn/shop/articles/top5_psalms.jpg?v=1715353188',
     releaseAt: '2024-01-12T09:00:00Z',
-    isPublished: true
+    isPublished: true,
   },
   {
     id: 5,
     title: 'Special Edition',
-    coverImage: 'https://res.cloudinary.com/onesheep/image/upload/v1669793982/cld-sample-2.jpg',
+    coverImage:
+      'https://res.cloudinary.com/journeys/image/upload/v1756121793/mountain-placeholder_yuflkz.jpg',
     releaseAt: '2024-01-11T15:00:00Z',
-    isPublished: false
-  }
+    isPublished: false,
+  },
 ];
 
-
-
-
-const liveDrops: DropIndexItem[] = drops.filter(drop => drop.isPublished);
-const draftDrops: DropIndexItem[] = drops.filter(drop => !drop.isPublished);
+const liveDrops: DropIndexItem[] = drops.filter((drop) => drop.isPublished);
+const draftDrops: DropIndexItem[] = drops.filter((drop) => !drop.isPublished);
 
 const loadData: StoryHandler = ({ app, story, variant }): void => {
   miniSidebar({ app, story, variant });
