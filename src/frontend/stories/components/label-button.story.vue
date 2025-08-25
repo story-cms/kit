@@ -1,37 +1,50 @@
 <template>
-  <Story title="Label Button" group="sttories">
+  <Story title="Label Button" group="stories">
     <Variant title="Short Label">
       <div>
         <LabelButton label="Save" @tap="() => handleTap('short')" />
-        <div v-if="tappedStates.short" class="mt-2 text-sm text-green-600">✓ Button tapped!</div>
+        <div v-if="tappedStates.short" class="mt-2 text-sm text-green-600">
+          ✓ Button tapped!
+        </div>
       </div>
     </Variant>
 
     <Variant title="Long Label">
       <div>
         <LabelButton label="Create New Document" @tap="() => handleTap('long')" />
-        <div v-if="tappedStates.long" class="mt-2 text-sm text-green-600">✓ Button tapped!</div>
+        <div v-if="tappedStates.long" class="mt-2 text-sm text-green-600">
+          ✓ Button tapped!
+        </div>
       </div>
     </Variant>
 
     <Variant title="Medium Label">
       <div>
         <LabelButton label="Submit Form" @tap="() => handleTap('medium')" />
-        <div v-if="tappedStates.medium" class="mt-2 text-sm text-green-600">✓ Button tapped!</div>
+        <div v-if="tappedStates.medium" class="mt-2 text-sm text-green-600">
+          ✓ Button tapped!
+        </div>
       </div>
     </Variant>
 
     <Variant title="Single Character">
       <div>
         <LabelButton label="X" @tap="() => handleTap('single')" />
-        <div v-if="tappedStates.single" class="mt-2 text-sm text-green-600">✓ Button tapped!</div>
+        <div v-if="tappedStates.single" class="mt-2 text-sm text-green-600">
+          ✓ Button tapped!
+        </div>
       </div>
     </Variant>
 
     <Variant title="Very Long Label">
       <div>
-        <LabelButton label="This is a very long label that exceeds the short threshold" @tap="() => handleTap('veryLong')" />
-        <div v-if="tappedStates.veryLong" class="mt-2 text-sm text-green-600">✓ Button tapped!</div>
+        <LabelButton
+          label="This is a very long label that exceeds the short threshold"
+          @tap="() => handleTap('veryLong')"
+        />
+        <div v-if="tappedStates.veryLong" class="mt-2 text-sm text-green-600">
+          ✓ Button tapped!
+        </div>
       </div>
     </Variant>
   </Story>
@@ -46,7 +59,7 @@ const tappedStates = ref({
   long: false,
   medium: false,
   single: false,
-  veryLong: false
+  veryLong: false,
 });
 
 const handleTap = (variant: keyof typeof tappedStates.value) => {

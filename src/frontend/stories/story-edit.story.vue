@@ -10,7 +10,7 @@
         :stories="['John', 'Acts']"
         :story="storyData"
         :is-new="false"
-        :providers={}
+        :providers="{}"
       />
     </Variant>
 
@@ -24,11 +24,9 @@
         :stories="['John', 'Acts']"
         :story="newStoryData"
         :is-new="true"
-        :providers={}
+        :providers="{}"
       />
     </Variant>
-
-    
   </Story>
 </template>
 
@@ -43,10 +41,12 @@ const storyData = {
   name: 'The Gospel of John',
   storyType: 'gospel',
   chapterType: 'chapter',
-  coverImage: 'https://res.cloudinary.com/onesheep/image/upload/v1669793982/cld-sample-2.jpg',
+  coverImage:
+    'https://res.cloudinary.com/onesheep/image/upload/v1669793982/cld-sample-2.jpg',
   chapterLimit: 21,
   tags: 'gospel,john,new-testament',
-  description: '# The Gospel of John\n\nThis is the fourth gospel in the New Testament...',
+  description:
+    '# The Gospel of John\n\nThis is the fourth gospel in the New Testament...',
   createdAt: '2024-01-15T10:30:00Z',
   updatedAt: '2024-01-20T14:45:00Z',
 };
@@ -64,25 +64,6 @@ const newStoryData = {
   updatedAt: '2024-01-25T09:00:00Z',
 };
 
-const storyErrors = {
-  'bundle.name': ['The title field is required'],
-  'bundle.description': ['The description field is required'],
-  'bundle.coverImage': ['Please select a valid image file'],
-};
-
-const loadRtlData: StoryHandler = ({ app, story, variant }): void => {
-  const shared = useSharedStore();
-  
-  shared.setLanguage({
-    locale: 'ar',
-    language: 'العربية',
-    languageDirection: 'rtl',
-  });
-  
-  // Also call miniSidebar to close sidebar
-  miniSidebar({ app, story, variant });
-};
-
 const loadNormalData: StoryHandler = ({ app, story, variant }): void => {
   const shared = useSharedStore();
   shared.setLanguage({
@@ -90,11 +71,10 @@ const loadNormalData: StoryHandler = ({ app, story, variant }): void => {
     language: 'English',
     languageDirection: 'ltr',
   });
-  
+
   // Also call miniSidebar to close sidebar
   miniSidebar({ app, story, variant });
 };
-
 </script>
 
 <docs lang="md">
