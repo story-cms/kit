@@ -9,6 +9,7 @@ alwaysApply: false
 ## Story File Structure
 
 ### File Naming Convention
+
 - Use kebab-case for story file names
 - Always end with `.story.vue` extension
 - Place stories in the same directory as the component they document
@@ -16,6 +17,7 @@ alwaysApply: false
 - Ensure the group matches the folder they are in, example folder streams should be group="streams"
 
 ### Basic Story Template
+
 ```vue
 <template>
   <Story title="Component Name" group="category">
@@ -37,18 +39,23 @@ import ComponentName from './component-name.vue';
 ## Story Organization
 
 ### Story Groups
+
 Use consistent group names for organizing stories:
+
 - `widgets` - Field components (string, boolean, markdown, etc.)
 - `shared` - Reusable UI components (buttons, layouts, etc.)
 - `pages` - Page-level components
 - `stories` - Story-related components
 - `dashboard` - Dashboard components
+- `streams` - Streams and drop management
 - `team` - User management components
 - `auth` - Authentication components
 - `audiences` - Audience management components
 
 ### Variant Naming
+
 Use descriptive variant titles that explain the state being demonstrated:
+
 - `Default` - Basic component state
 - `With data` - Component with populated data
 - `Empty` - Component with no data
@@ -61,6 +68,7 @@ Use descriptive variant titles that explain the state being demonstrated:
 ## Field Component Stories
 
 ### Standard Field Story Pattern
+
 ```vue
 <template>
   <Story title="Field Name" group="widgets">
@@ -123,13 +131,17 @@ const spec = {
 </script>
 ```
 
+------ checked up to here
+
 ### Required Variants for Field Components
+
 1. **With model** - Component with populated data and ModelControl
 2. **Error** - Component showing validation errors with ErrorControl
 3. **RTL** - Right-to-left language support with LanguageControl
 4. **Readonly** - Component in read-only mode
 
 ### Optional Variants for Field Components
+
 - **Empty** - Component with no initial data
 - **Loading** - Component in loading state
 - **Disabled** - Component in disabled state
@@ -138,6 +150,7 @@ const spec = {
 ## Page Component Stories
 
 ### Page Story Pattern
+
 ```vue
 <template>
   <Story title="Page Name" group="pages">
@@ -162,6 +175,7 @@ import { sharedProps, miniSidebar } from '../test/mocks';
 ```
 
 ### Required Props for Page Components
+
 - `meta` - CMS metadata from `sharedProps.meta`
 - `user` - User data from `sharedProps.user`
 - `languages` - Available languages from `sharedProps.languages`
@@ -172,13 +186,17 @@ import { sharedProps, miniSidebar } from '../test/mocks';
 ## Test Controls
 
 ### ModelControl
+
 Use `ModelControl` to display and inspect component data:
+
 ```vue
 <ModelControl :model="model" :is-inspect-only="true" />
 ```
 
 ### ErrorControl
+
 Use `ErrorControl` to simulate validation errors:
+
 ```vue
 <template #controls>
   <ErrorControl :errors="errors" />
@@ -186,7 +204,9 @@ Use `ErrorControl` to simulate validation errors:
 ```
 
 ### LanguageControl
+
 Use `LanguageControl` for RTL/LTR language testing:
+
 ```vue
 <LanguageControl />
 ```
@@ -194,52 +214,54 @@ Use `LanguageControl` for RTL/LTR language testing:
 ## Mock Data
 
 ### Importing Mocks
+
 Import mock data from `../test/mocks`:
+
 ```typescript
-import { 
-  sharedProps, 
-  miniSidebar, 
-  objectModel, 
-  objectErrors 
-} from '../test/mocks';
+import { sharedProps, miniSidebar, objectModel, objectErrors } from '../test/mocks';
 ```
 
 ### Common Mock Objects
+
 - `sharedProps` - Standard page props (meta, user, languages, etc.)
 - `objectModel` - Sample form data
 - `objectErrors` - Sample validation errors
 - `miniSidebar` - Story handler to close sidebar
 
 ### Creating Custom Mocks
+
 Define component-specific mock data in the story file:
+
 ```typescript
 const customModel = {
   fieldName: 'value',
   nestedField: {
-    subField: 'subValue'
-  }
+    subField: 'subValue',
+  },
 };
 
 const customErrors = {
-  'bundle.fieldName': ['required validation failed']
+  'bundle.fieldName': ['required validation failed'],
 };
 ```
 
 ## Story Handlers
 
 ### Setup App Pattern
+
 Use `setup-app` prop with StoryHandler for complex setup:
+
 ```typescript
 const loadData: StoryHandler = ({ variant }): void => {
   const store = useModelStore();
   const shared = useSharedStore();
 
   store.model = model;
-  
+
   if (variant?.title === 'Error') {
     shared.errors = errors;
   }
-  
+
   if (variant?.title === 'Readonly') {
     store.setSource(readonlyData);
   }
@@ -247,6 +269,7 @@ const loadData: StoryHandler = ({ variant }): void => {
 ```
 
 ### Common Setup Patterns
+
 - **Load data** - Set model store with component data
 - **Set errors** - Configure shared store with validation errors
 - **Set readonly** - Configure component for read-only mode
@@ -255,13 +278,17 @@ const loadData: StoryHandler = ({ variant }): void => {
 ## Layout and Styling
 
 ### Grid Layout
+
 Use grid layout for multiple component variations:
+
 ```vue
-<Story title="Component" group="category" :layout="{ type: 'grid', width: 500 }">
+<Story title="Component" group="category" :layout="{ type: 'grid', width: 500 }"></Story>
 ```
 
 ### Background Colors
+
 Test components on different backgrounds:
+
 ```vue
 <Variant title="Light mode">
   <div class="bg-white">
@@ -274,28 +301,24 @@ Test components on different backgrounds:
 Ensure a visual component to test when an interactive element is used, not a console.log.
 
 ### Responsive Testing
+
 Test components at different screen sizes using Histoire's responsive controls.
 
 ## Documentation
 
 ### Story Documentation
+
 Add documentation using the `<docs>` block:
-```vue
-<docs lang="md">
-# Component Name
 
-Brief description of the component and its purpose.
-
-## Usage
-
-```vue
-<ComponentName :prop="value" />
-```
+````vue
+<docs lang="md"></docs>
+````
 
 ## Props
 
 - `prop` - Description of the prop
-</docs>
+  </docs>
+
 ```
 
 ### Component Documentation
@@ -374,3 +397,4 @@ Document:
 - Remove obsolete variants
 - Update documentation regularly
 - Test stories after component updates
+```

@@ -5,6 +5,7 @@ This document outlines the directory structure and important files in the StoryC
 ## Project Overview
 
 StoryCMS Kit is a comprehensive CMS package for AdonisJS that provides:
+
 - Frontend Vue.js components and UI widgets
 - Backend AdonisJS services, models, and middleware
 - Storybook documentation with Histoire
@@ -45,6 +46,7 @@ storycmskit/
 ## Source Code Structure (`src/`)
 
 ### Main Source Files
+
 - `src/types.ts` - Global TypeScript type definitions
 - `src/frontend/index.ts` - Frontend entry point and exports
 - `src/frontend/index.css` - Global CSS styles
@@ -58,162 +60,22 @@ storycmskit/
 ```
 src/frontend/
 ├── audiences/              # Audience management components
-│   ├── audiences-index.story.vue
-│   ├── audiences-index.vue
-│   └── components/
-│       └── audience-row.vue
 ├── auth/                   # Authentication components
-│   ├── auth.story.vue
-│   ├── create-account.vue
-│   ├── forgot-password.vue
-│   ├── login-index.vue
-│   └── reset-password.vue
 ├── dashboard/              # Dashboard components
-│   ├── dashboard-index.story.vue
-│   ├── dashboard-index.vue
-│   ├── language-block.story.vue
-│   ├── language-block.vue
-│   ├── ring.story.vue
-│   ├── ring.vue
-│   ├── stat-tile.vue
-│   ├── stat-tiles.story.vue
-│   ├── stat-tiles.vue
-│   └── welcome-banner.vue
 ├── fields/                 # Form field components (core UI)
-│   ├── animation-field.story.vue
-│   ├── animation-field.vue
-│   ├── attachments/        # File upload and media components
-│   │   ├── attachment-field.vue
-│   │   ├── audio-player.vue
-│   │   ├── bunny-service.ts
-│   │   ├── cloudinary-service.ts
-│   │   ├── file-upload.vue
-│   │   ├── image-player.vue
-│   │   ├── rive-player.vue
-│   │   ├── s3-service.ts
-│   │   ├── types.ts
-│   │   ├── video-player.vue
-│   │   ├── video-progress.story.vue
-│   │   └── video-progress.vue
-│   ├── audio-field.story.vue
-│   ├── audio-field.vue
-│   ├── boolean-field.story.vue
-│   ├── boolean-field.vue
-│   ├── date-field.story.vue
-│   ├── date-field.vue
-│   ├── image-field.story.vue
-│   ├── image-field.vue
-│   ├── list/               # List field components
-│   │   ├── flat-list.vue
-│   │   └── foldable-list.vue
-│   ├── list-field.story.vue
-│   ├── list-field.vue
-│   ├── markdown/           # Markdown editor components
-│   │   ├── toolbar-buttons.ts
-│   │   └── types.ts
-│   ├── markdown-field.story.vue
-│   ├── markdown-field.vue
-│   ├── null-field.vue
-│   ├── number-field.story.vue
-│   ├── number-field.vue
-│   ├── object-field.story.vue
-│   ├── object-field.vue
-│   ├── panel-field.story.vue
-│   ├── panel-field.vue
-│   ├── scripture-field.story.vue
-│   ├── scripture-field.vue
-│   ├── select-field.story.vue
-│   ├── select-field.vue
-│   ├── string-field.story.vue
-│   ├── string-field.vue
-│   ├── tag-field.story.vue
-│   ├── tag-field.vue
-│   ├── video-field.story.vue
-│   ├── video-field.vue
-│   └── widget-fields.ts
 ├── pages/                  # Page management components
-│   ├── page-index-item.story.vue
-│   ├── page-index-item.vue
-│   ├── page-meta-box.vue
-│   ├── pages-edit.story.vue
-│   ├── pages-edit.vue
-│   ├── pages-index.story.vue
-│   └── pages-index.vue
 ├── shared/                 # Shared/reusable components
-│   ├── action-button.vue
-│   ├── add-item-button.story.vue
-│   ├── add-item-button.vue
-│   ├── app-layout-sticky.vue
-│   ├── app-layout.vue
-│   ├── bibleBooks.ts
-│   ├── content-header.vue
-│   ├── content-sidebar.vue
-│   ├── context-menu.story.vue
-│   ├── context-menu.vue
-│   ├── draft-actions.vue
-│   ├── drop-down.story.vue
-│   ├── drop-down.vue
-│   ├── drop-up.vue
-│   ├── helpers.ts
-│   ├── icon-button.vue
-│   ├── icon.vue
-│   ├── index-filter.story.vue
-│   ├── index-filter.vue
-│   ├── label-button.vue
-│   ├── language-selector.vue
-│   ├── list-switcher.vue
-│   ├── message-centre.story.vue
-│   ├── message-centre.vue
-│   ├── meta-box.story.vue
-│   ├── meta-box.vue
-│   ├── mobile-app-preview.vue
-│   ├── pagination.vue
-│   ├── public-layout.vue
-│   └── sidebar.vue
 ├── store/                  # Pinia state management
-│   ├── drafts.ts
-│   ├── index.ts
-│   ├── model.ts
-│   ├── pages.ts
-│   ├── shared.ts
-│   └── widgets.ts
+│   ├── index.ts            # export of all the stores in this folder
+│   ├── drafts.ts           # shared state for editing story drafts
+│   ├── model.ts            # shared state for bundle edits (stories, pages, drops)
+│   ├── pages.ts            # shared state for pages
+│   ├── shared.ts           # common shared state used by all modules and root layout template
+│   └── widgets.ts          # shared state for widgets (form controls)
 ├── stories/                # Story management components
-│   ├── chapter-preview.story.vue
-│   ├── chapter-preview.vue
-│   ├── components/
-│   │   ├── index-card.story.vue
-│   │   ├── index-card.vue
-│   │   ├── status-tag.story.vue
-│   │   ├── status-tag.vue
-│   │   ├── workflow-actions.story.vue
-│   │   └── workflow-actions.vue
-│   ├── draft-index.story.vue
-│   ├── draft-index.vue
-│   ├── story-index.story.vue
-│   ├── story-index.vue
-│   ├── translation-index.story.vue
-│   └── translation-index.vue
 ├── team/                   # Team management components
-│   ├── components/
-│   │   └── user-row.vue
-│   ├── users-index.story.vue
-│   └── users-index.vue
 ├── test/                   # Test utilities and mocks
-│   ├── bunny.rest
-│   ├── error-control.vue
-│   ├── language-control.vue
-│   ├── layout-control.vue
-│   ├── message-test.story.vue
-│   ├── message-test.vue
-│   ├── mocks.ts
-│   └── model-control.vue
 └── ui/                     # UI components
-    ├── components/
-    │   ├── ui-card.vue
-    │   ├── ui-string-item.vue
-    │   └── ui-toolbar.vue
-    ├── ui-page.story.vue
-    └── ui-page.vue
 ```
 
 ### Backend Structure (`src/backend/`)
@@ -221,147 +83,33 @@ src/frontend/
 ```
 src/backend/
 ├── middleware/             # AdonisJS middleware
-│   ├── add_meta_noindex.ts
-│   └── admin.ts
 ├── models/                 # Database models
-│   ├── activity.ts
-│   ├── chapter.ts
-│   ├── draft.ts
-│   ├── index.ts
-│   ├── page.ts
-│   ├── ui_attribute.ts
-│   └── ui.ts
 ├── providers/              # Service providers
-│   └── cms_provider.ts
 ├── services/               # Business logic services
-│   ├── cms_service.ts
-│   ├── cms.ts
-│   ├── helpers.ts
-│   ├── page_service.ts
-│   └── progress_service.ts
 ├── stubs/                  # Template files for scaffolding
 │   ├── commands/           # Artisan command stubs
-│   │   ├── fix_database.stub
-│   │   └── make_user.stub
 │   ├── config/             # Configuration stubs
-│   │   ├── analytics.stub
-│   │   ├── cache.stub
-│   │   ├── cms.stub
-│   │   ├── inertia.stub
-│   │   └── providers.stub
 │   ├── controllers/        # Controller stubs
-│   │   ├── admin_controller.stub
-│   │   ├── analytics_controller.stub
-│   │   ├── audiences_controller.stub
-│   │   ├── auth_controller.stub
-│   │   ├── chapters_controller.stub
-│   │   ├── create_account_controller.stub
-│   │   ├── dashboard_controller.stub
-│   │   ├── drafts_controller.stub
-│   │   ├── forgot_password_controller.stub
-│   │   ├── indices_controller.stub
-│   │   ├── pages_controller.stub
-│   │   ├── preview_controller.stub
-│   │   ├── ui_controller.stub
-│   │   └── users_controller.stub
 │   ├── exceptions/         # Exception handler stubs
-│   │   └── handler.stub
 │   ├── factories/          # Model factory stubs
-│   │   ├── chapter_factory.stub
-│   │   ├── draft_factory.stub
-│   │   ├── index_factory.stub
-│   │   ├── page_factory.stub
-│   │   └── user_factory.stub
 │   ├── inertia/            # Inertia.js stubs
-│   │   ├── app.stub
-│   │   └── css.stub
 │   ├── mail/               # Email template stubs
-│   │   ├── create_account.stub
-│   │   └── forget_password.stub
 │   ├── main.ts             # Main application stub
 │   ├── migrations/         # Database migration stubs
-│   │   ├── audit.stub
-│   │   └── base.stub
-│   ├── models/             # Model stubs
-│   │   └── user.stub
 │   ├── ops/                # Operations/Docker stubs
-│   │   ├── compose.stub
-│   │   └── Dockerfile.stub
 │   ├── resources/          # View and asset stubs
-│   │   ├── layout.stub
-│   │   └── views/
-│   │       ├── preview.stub
-│   │       └── scripture.stub
 │   ├── routes/             # Route stubs
-│   │   ├── api.stub
-│   │   ├── audience.stub
-│   │   ├── auth.stub
-│   │   ├── dashboard.stub
-│   │   ├── pages.stub
-│   │   ├── routes.stub
-│   │   ├── stories.stub
-│   │   ├── ui.stub
-│   │   └── users.stub
-│   ├── services/           # Service stubs
-│   │   ├── admin_service.stub
-│   │   ├── ai_service.stub
-│   │   ├── analytics_service.stub
-│   │   ├── audience_service.stub
-│   │   ├── draft_service.stub
-│   │   ├── index_service.stub
-│   │   ├── ui_service.stub
-│   │   └── user_service.stub
 │   ├── tailwind.stub       # Tailwind configuration stub
-│   ├── tests/              # Test stubs
-│   │   ├── bootstrap.stub
-│   │   ├── functional/
-│   │   │   └── draft.stub
-│   │   ├── mock.stub
-│   │   ├── rest.stub
-│   │   └── unit/
-│   │       ├── model.stub
-│   │       ├── page_service.stub
-│   │       ├── progress_service.stub
-│   │       └── user_service.stub
-│   └── validators/         # Validation stubs
-│       ├── auth.stub
-│       ├── bundle.stub
-│       ├── page.stub
-│       └── user.stub
+│   └── tests/              # Test stubs
 ├── configure.ts            # Backend configuration
 ├── define_config.ts        # Configuration definitions
 └── index.ts                # Backend entry point
 ```
 
-## Test Structure (`tests/`)
-
-```
-tests/
-├── assets/                 # Test assets (images, audio, etc.)
-│   ├── pic-medium.jpg
-│   ├── pic.jpg
-│   └── story-cms.mp3
-├── e2e/                    # End-to-end tests
-│   ├── audioField.spec.ts
-│   ├── booleanField.spec.ts
-│   ├── imageField.spec.ts
-│   ├── listField.spec.ts
-│   ├── markdownField.spec.ts
-│   ├── numberField.spec.ts
-│   ├── objectField.spec.ts
-│   ├── panelField.spec.ts
-│   ├── scriptureField.spec.ts
-│   ├── selectField.spec.ts
-│   └── stringField.spec.ts
-└── unit/                   # Unit tests
-    ├── model.spec.ts
-    ├── parseReference.spec.ts
-    └── s3Service.spec.ts
-```
-
 ## Important Configuration Files
 
 ### Build and Development
+
 - `package.json` - NPM scripts, dependencies, and exports
 - `vite.config.mts` - Vite build configuration
 - `tsconfig.json` - Base TypeScript configuration
@@ -369,16 +117,19 @@ tests/
 - `tsconfig.frontend.json` - Frontend-specific TypeScript config
 
 ### Styling and UI
+
 - `tailwind.config.js` - Tailwind CSS configuration
 - `postcss.config.js` - PostCSS processing configuration
 - `src/frontend/index.css` - Global CSS styles
 
 ### Testing and Documentation
+
 - `playwright.config.ts` - Playwright test configuration
 - `histoire.config.ts` - Histoire (Storybook) configuration
 - `histoire.setup.ts` - Histoire setup and configuration
 
 ### Code Quality
+
 - `eslint.config.js` - ESLint configuration
 - `.prettierrc` - Prettier code formatting configuration
 - `Makefile` - Build and development scripts

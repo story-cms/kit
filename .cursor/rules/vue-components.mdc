@@ -3,11 +3,13 @@ description: Vue 3 component development patterns and conventions for StoryCMS K
 globs: src/frontend/**/*.vue
 alwaysApply: false
 ---
+
 # Vue Components Development Rules
 
 ## Component Structure
 
 ### Template Structure
+
 - Use kebab-case for component names in template
 - Place template at the top of the file
 - Use semantic HTML elements
@@ -15,6 +17,7 @@ alwaysApply: false
 - Use `v-for` with `:key` for list rendering
 
 ### Script Setup Pattern
+
 - Use `<script setup lang="ts">` for all components
 - Import dependencies at the top
 - Use `defineProps` and `defineEmits` for component interface
@@ -22,6 +25,7 @@ alwaysApply: false
 - Use `ref` for reactive primitive values
 
 ### Component Naming
+
 - Use PascalCase for component file names
 - Use kebab-case for component usage in templates
 - Export components from `src/frontend/index.ts`
@@ -29,6 +33,7 @@ alwaysApply: false
 ## Props and Events
 
 ### Props Definition
+
 ```typescript
 // Use commonProps for field components
 const props = defineProps({
@@ -45,6 +50,7 @@ const props = defineProps<CustomProps>();
 ```
 
 ### Events Definition
+
 ```typescript
 const emit = defineEmits<{
   (e: 'tap'): void;
@@ -55,12 +61,14 @@ const emit = defineEmits<{
 ## State Management
 
 ### Store Usage
+
 - Use Pinia stores for global state
 - Import stores from `../store`
 - Use `useModelStore()` for form data
 - Use `useSharedStore()` for UI state
 
 ### Local State
+
 ```typescript
 const inputRef = ref<HTMLInputElement | null>(null);
 const isVisible = ref(false);
@@ -70,6 +78,7 @@ const selectedItems = ref<string[]>([]);
 ## Field Components
 
 ### Field Component Pattern
+
 - Use `commonProps` for field components
 - Implement `fieldPath` computed property
 - Handle `isReadOnly` and `isNested` states
@@ -77,6 +86,7 @@ const selectedItems = ref<string[]>([]);
 - Implement error handling with `hasError` computed
 
 ### Field Component Structure
+
 ```vue
 <template>
   <div :class="fieldWrapperClasses">
@@ -117,12 +127,14 @@ const hasError = computed(() => errors.value.length > 0 && !props.isReadOnly);
 ## Shared Components
 
 ### Button Components
+
 - Use `btn` and `btn-blue` classes for buttons
 - Implement proper accessibility attributes
 - Use `Icon` component for button icons
 - Handle click events with `@click.prevent`
 
 ### Layout Components
+
 - Use `AppLayout` for main application layout
 - Use `PublicLayout` for public pages
 - Implement responsive design with Tailwind classes
@@ -131,11 +143,13 @@ const hasError = computed(() => errors.value.length > 0 && !props.isReadOnly);
 ## Performance Patterns
 
 ### Reactive Updates
+
 - Use `model.$subscribe()` for store updates
 - Use `nextTick()` for DOM updates after state changes
 - Implement proper cleanup in `onUnmounted`
 
 ### Computed Properties
+
 - Use computed properties for derived state
 - Avoid complex computations in templates
 - Cache expensive operations
@@ -143,12 +157,14 @@ const hasError = computed(() => errors.value.length > 0 && !props.isReadOnly);
 ## Error Handling
 
 ### Field Validation
+
 - Use `shared.errorMessages()` for field errors
 - Display errors below input fields
 - Use `text-error` class for error styling
 - Check `hasError` computed before showing errors
 
 ### Component Errors
+
 - Use try-catch blocks for async operations
 - Implement proper error boundaries
 - Log errors for debugging
@@ -156,12 +172,14 @@ const hasError = computed(() => errors.value.length > 0 && !props.isReadOnly);
 ## Accessibility
 
 ### ARIA Attributes
+
 - Use proper `aria-` attributes
 - Implement keyboard navigation
 - Use semantic HTML elements
 - Provide proper focus management
 
 ### Screen Reader Support
+
 - Use descriptive labels
 - Implement proper heading hierarchy
 - Use `alt` attributes for images
@@ -170,12 +188,14 @@ const hasError = computed(() => errors.value.length > 0 && !props.isReadOnly);
 ## Testing Considerations
 
 ### Component Testing
+
 - Write unit tests for component logic
 - Test prop validation
 - Test event emissions
 - Test error states
 
 ### Integration Testing
+
 - Test component interactions
 - Test form submissions
 - Test navigation flows
