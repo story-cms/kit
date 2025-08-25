@@ -58,6 +58,9 @@ export * from './store/index';
 
 export { commonProps } from './shared/helpers';
 
+// Re-export types for easier access
+export * from '../types';
+
 export {
   ActionButton,
   AddItemButton,

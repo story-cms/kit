@@ -18,7 +18,6 @@
             tags: ['tag3', 'tag4'],
           },
         ]"
-        :add-status="AddStatus.Add"
         :story-name="sharedProps.meta.name"
         :meta="sharedProps.meta"
         :language="sharedProps.language"
@@ -34,7 +33,6 @@
           language: '*',
           hasPendingInvite: false,
         }"
-        :stories="sharedProps.stories"
         :translation-progress="translationProgress"
         :is-read-only="false"
       />
@@ -73,7 +71,6 @@
           language: '*',
           hasPendingInvite: false,
         }"
-        :stories="sharedProps.stories"
         :translation-progress="translationProgress"
         :is-read-only="false"
       />

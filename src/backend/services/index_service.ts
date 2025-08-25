@@ -1,7 +1,7 @@
 import Index from '../models/index.js';
 import Chapter from '../models/chapter.js';
 import Draft from '../models/draft.js';
-import { IndexItem, GroupedIndexItem } from '../../types.js';
+import { IndexItem, GroupedIndexItem, AddStatus } from '../../types.js';
 import { CmsService } from './cms_service.js';
 
 export class IndexService {
@@ -101,14 +101,14 @@ export class IndexService {
     return rows[0].$extras.max || 1;
   }
 
-  public async getAddStatus(version: any): Promise<any> {
+  public async getAddStatus(version: any): Promise<AddStatus> {
     const index = await this.getItems(version);
 
-    if (index.length >= this.story.chapterLimit) return 'Full';
+    if (index.length >= this.story.chapterLimit) return AddStatus.Full;
 
     // We have not reached the limit for the number of chapters and we're not a translation
     if (version.locale === this.cms.config.languages.languages[0].locale) {
-      return 'Add';
+      return AddStatus.Add;
     }
 
     const number = index.length + 1;
@@ -122,8 +122,9 @@ export class IndexService {
 
     const source = await Chapter.query().where(specifier).first();
 
-    if (!source) return 'Wait';
-    return 'Add';
+    if (!source) return AddStatus.Wait;
+
+    return AddStatus.Add;
   }
 
   public async getNewChapterNumber(version: any): Promise<number> {
