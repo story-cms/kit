@@ -6,14 +6,14 @@
           {
             number: 1,
             imageUrl:
-              'https://res.cloudinary.com/onesheep/image/upload/v1684754051/Screenshot_2023-05-22_at_13.12.03_pnamdt.png',
+              'https://res.cloudinary.com/redeem/image/upload/v1752849347/story-cms-ui/placeholder_bafmfz.jpg',
             title: 'Sample Item 1',
             tags: ['Live', 'Draft'],
           },
           {
             number: 2,
             imageUrl:
-              'https://res.cloudinary.com/onesheep/image/upload/v1684754051/Screenshot_2023-05-22_at_13.12.03_pnamdt.png',
+              'https://res.cloudinary.com/redeem/image/upload/v1752849347/story-cms-ui/placeholder_bafmfz.jpg',
             title: 'Sample Item 2',
             tags: ['Live'],
           },

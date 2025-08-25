@@ -79,6 +79,17 @@ export type WidgetPicker = (widget: string) => any; // eslint-disable-line
 /// ----------------------------------------------------
 ///  streams
 /// ----------------------------------------------------
+export interface StreamIndexItem {
+  id: number;
+  title: string;
+  coverImage: string;
+  latestReleaseAt: string;
+  count: number;
+}
+
+export interface StreamGalleryProps {
+  streams: StreamIndexItem[];
+}
 
 export interface StreamSpec {
   id: number;
@@ -88,6 +99,17 @@ export interface StreamSpec {
   dropType: string;
   schemaVersion: number;
   fields: FieldSpec[];
+}
+export interface StreamIndexProps {
+  stream: StreamIndexItem;
+  drops: DropIndexItem[];
+}
+export interface DropIndexItem {
+  id: number;
+  title: string;
+  coverImage: string;
+  releaseAt: string;
+  isPublished: boolean;
 }
 
 export interface StreamIndexItem {
@@ -232,10 +254,40 @@ export interface DraftMeta {
   createdAt: string;
 }
 
+export type StoryMeta = {
+  id: number;
+  name: string;
+  storyType: string;
+  chapterType: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export interface StoryEditProps {
+  story: StoryMeta;
+  isNew: boolean;
+  providers: Providers;
+}
+
 export interface StoryIndexProps {
   index: IndexReadyItem[];
   addStatus: AddStatus;
   story: StorySpec;
+}
+
+export interface StoryIndexItem {
+  id: number;
+  name: string;
+  description: string;
+  coverImage: string;
+  chapterLimit: number;
+  createdAt: string;
+  updatedAt: string;
+  draftCount: number;
+}
+
+export interface StoryGalleryProps {
+  stories: StoryIndexItem[];
 }
 
 export interface DraftEditProps {
@@ -298,6 +350,7 @@ export interface SharedPageProps {
   languages: LanguageSpecification[];
   errors?: any;
   exclude: string[];
+  bookmarks?: Bookmark[];
 }
 
 export interface PageMeta {
@@ -437,6 +490,11 @@ export interface AudiencesProps {
 /// ----------------------------------------------------
 ///  configuration
 /// ----------------------------------------------------
+
+export interface Bookmark {
+  label: string;
+  link: string;
+}
 
 export interface CmsMeta {
   name: string;

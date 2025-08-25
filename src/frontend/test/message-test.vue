@@ -46,8 +46,7 @@
 <script setup lang="ts">
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
-import type { SharedPageProps } from '../../types';
-import { ResponseStatus } from '../../types';
+import { type SharedPageProps, ResponseStatus } from '../../types';
 import { useSharedStore } from '../store';
 
 const props = defineProps<SharedPageProps>();

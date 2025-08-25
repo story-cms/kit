@@ -6,6 +6,7 @@ import AudiencesIndex from './audiences/audiences-index.vue';
 import AudioField from './fields/audio-field.vue';
 import BooleanField from './fields/boolean-field.vue';
 import ChapterPreview from './stories/chapter-preview.vue';
+import ContentHeader from './shared/content-header.vue';
 import ContextMenu from './shared/context-menu.vue';
 import CreateAccount from './auth/create-account.vue';
 import DashboardIndex from './dashboard/dashboard-index.vue';
@@ -30,14 +31,22 @@ import ObjectField from './fields/object-field.vue';
 import PageIndexItem from './pages/page-index-item.vue';
 import PagesEdit from './pages/pages-edit.vue';
 import PagesIndex from './pages/pages-index.vue';
+import Pagination from './shared/pagination.vue';
 import PanelField from './fields/panel-field.vue';
 import PublicLayout from './shared/public-layout.vue';
 import ResetPassword from './auth/reset-password.vue';
 import ScriptureField from './fields/scripture-field.vue';
 import SelectField from './fields/select-field.vue';
-import StatusTag from './stories/components/status-tag.vue';
+import StatusTag from './shared/status-tag.vue';
+import StoryEdit from './stories/story-edit.vue';
+import StoryGallery from './stories/story-gallery.vue';
 import StoryIndex from './stories/story-index.vue';
+import StreamEdit from './streams/stream-edit.vue';
+import StreamGallery from './streams/stream-gallery.vue';
+import StreamIndex from './streams/stream-index.vue';
 import StringField from './fields/string-field.vue';
+import TagField from './fields/tag-field.vue';
+import ToggleButton from './shared/toggle-button.vue';
 import TranslationIndex from './stories/translation-index.vue';
 import UiPage from './ui/ui-page.vue';
 import UsersIndex from './team/users-index.vue';
@@ -58,6 +67,7 @@ export {
   AudioField,
   BooleanField,
   ChapterPreview,
+  ContentHeader,
   ContextMenu,
   CreateAccount,
   DashboardIndex,
@@ -83,13 +93,21 @@ export {
   PagesEdit,
   PagesIndex,
   PanelField,
+  Pagination,
   PublicLayout,
   ResetPassword,
   ScriptureField,
   SelectField,
   StatusTag,
+  StoryEdit,
+  StoryGallery,
   StoryIndex,
+  StreamEdit,
+  StreamGallery,
+  StreamIndex,
   StringField,
+  TagField,
+  ToggleButton,
   TranslationIndex,
   UiPage,
   UsersIndex,

@@ -1,13 +1,15 @@
 import { defineStore } from 'pinia';
 import type { Ref } from 'vue';
-import { computed, ref, reactive } from 'vue';
+import { computed, ref, reactive, shallowRef } from 'vue';
 import {
-  SharedPageProps,
-  CmsMeta,
-  LanguageSpecification,
-  UserInterface,
+  type SharedPageProps,
+  type LanguageSpecification,
+  type Bookmark,
+  type CmsMeta,
+  type UserInterface,
   ResponseStatus,
 } from '../../types';
+import standardSidebar from '../shared/sidebar.vue';
 
 const defaultLanguage: LanguageSpecification = {
   locale: 'en',
@@ -20,6 +22,7 @@ export const useSharedStore = defineStore('shared', () => {
   const meta: Ref<CmsMeta> = ref({} as CmsMeta);
   const user: Ref<UserInterface> = ref({} as UserInterface);
   const languages: Ref<LanguageSpecification[]> = ref([] as LanguageSpecification[]);
+  const bookmarks: Ref<Bookmark[]> = ref([]);
 
   const setFromProps = (props: SharedPageProps) => {
     meta.value = props.meta;
@@ -28,6 +31,7 @@ export const useSharedStore = defineStore('shared', () => {
     language.value = props.language;
     errors.value = { ...props.errors };
     exclude.value = props.exclude;
+    bookmarks.value = props.bookmarks ?? [];
   };
 
   // errors
@@ -57,6 +61,12 @@ export const useSharedStore = defineStore('shared', () => {
   };
 
   // sidebar
+
+  const sidebar = shallowRef<typeof standardSidebar>(standardSidebar);
+
+  const setSidebar = (fresh: typeof standardSidebar) => {
+    sidebar.value = fresh;
+  };
 
   const hasOpenSidebar = ref(true);
 
@@ -150,6 +160,11 @@ export const useSharedStore = defineStore('shared', () => {
     showSourceColumn.value = value;
   };
 
+  // bookmarks
+  const setBookmarks = (value: Bookmark[]) => {
+    bookmarks.value = value;
+  };
+
   return {
     exclude,
     meta,
@@ -172,6 +187,8 @@ export const useSharedStore = defineStore('shared', () => {
     containerWidth,
     setContainerWidth,
 
+    sidebar,
+    setSidebar,
     hasOpenSidebar,
     setSidebarOpen,
 
@@ -203,5 +220,8 @@ export const useSharedStore = defineStore('shared', () => {
 
     showAppPreview,
     setShowAppPreview,
+
+    bookmarks,
+    setBookmarks,
   };
 });
