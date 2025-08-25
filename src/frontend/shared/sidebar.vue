@@ -146,7 +146,7 @@ const onLanguage = async (lang: string) => {
 
 const newPathFromLocale = (targetLocale: string) => {
   // const url = usePage().url;  not working
-  const url = window.location.href;
+  const url = window.location.href || '';
 
   if (url.includes('/ui')) {
     return `/${targetLocale}/ui`;
@@ -188,7 +188,7 @@ const languageOptions = computed(() => {
 });
 
 const classList = (path: string, withGap: boolean = false) => {
-  const url = window.location.href.replace('/drop', '/stream');
+  const url = window.location.href?.replace('/drop', '/stream') || '';
 
   return {
     'nav-link': true,

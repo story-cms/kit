@@ -146,6 +146,7 @@ export class CmsService {
       language: this.getLanguage(ctx.params.locale ?? 'en'),
       languages: this.#config.languages.languages,
       exclude,
+      bookmarks: [],
     };
   }
 }

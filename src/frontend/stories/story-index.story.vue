@@ -25,6 +25,7 @@
         :add-status="AddStatus.Add"
         :story="story"
         :stories="['John', 'Luke']"
+        :exclude="['streams']"
       />
     </Variant>
   </Story>
