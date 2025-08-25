@@ -151,27 +151,6 @@ export interface StreamEditProps {
   providers: Providers; // widgets
 }
 
-export const dropIndexItemFields: FieldSpec[] = [
-  {
-    name: 'title',
-    label: 'Title',
-    widget: 'string',
-  },
-  {
-    name: 'coverImage',
-    label: 'Cover Image',
-    widget: 'image',
-    description: 'JPG up to 200KB',
-    extensions: ['.jpeg', '.jpg'],
-    maxSize: 200000,
-  },
-  {
-    name: 'releaseAt',
-    label: 'Release At',
-    widget: 'datetime',
-  },
-];
-
 /// ----------------------------------------------------
 ///  stories
 /// ----------------------------------------------------
