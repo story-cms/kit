@@ -64,7 +64,7 @@ const stream: StreamIndexItem = {
   id: 1,
   title: 'Daily Devotions',
   coverImage:
-    'https://res.cloudinary.com/onesheep/image/upload/v1684754051/Screenshot_2023-05-22_at_13.12.03_pnamdt.png',
+    'https://res.cloudinary.com/journeys/image/upload/v1756122586/boats_uewaxo.jpg',
   latestReleaseAt: '2024-01-15T10:00:00Z',
   count: 5,
 };
@@ -82,7 +82,7 @@ const drops: DropIndexItem[] = [
     id: 2,
     title: 'Evening Reflection',
     coverImage:
-      'https://images.squarespace-cdn.com/content/v1/58b7381929687f370cca699f/1610478690174-1LWISFW07OS4FNS50JJ9/Acts.jpg?format=1500w',
+      'https://res.cloudinary.com/journeys/image/upload/v1756123316/Acts_ggpfgy.webp',
     releaseAt: '2024-01-14T18:00:00Z',
     isPublished: true,
   },
@@ -90,7 +90,7 @@ const drops: DropIndexItem[] = [
     id: 3,
     title: 'Midday Meditation',
     coverImage:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDtJ_K1JoXAlqyLGMVaS76p_ST6h44uFLwZzhogDajoi9gQv1PydXjzI0vXmEPpGxCZ58&usqp=CAU',
+      'https://res.cloudinary.com/journeys/image/upload/v1756123453/alabaster-co-rlb3upCBLck-unsplash_emiapj.jpg',
     releaseAt: '2024-01-13T12:00:00Z',
     isPublished: false,
   },
@@ -98,7 +98,7 @@ const drops: DropIndexItem[] = [
     id: 4,
     title: 'Weekly Review',
     coverImage:
-      'https://store.christianitytoday.com/cdn/shop/articles/top5_psalms.jpg?v=1715353188',
+      'https://res.cloudinary.com/journeys/image/upload/v1756123097/top5_psalms_ddl7c0.jpg',
     releaseAt: '2024-01-12T09:00:00Z',
     isPublished: true,
   },

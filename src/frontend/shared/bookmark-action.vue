@@ -5,9 +5,9 @@
 </template>
 <script setup lang="ts">
 import axios from 'axios';
-import { Icon } from '@story-cms/kit/ui';
-import { useSharedStore } from '@story-cms/kit/ui';
-import { type Bookmark } from '@story-cms/kit';
+import Icon from './icon.vue';
+import { useSharedStore } from '../store';
+import { type Bookmark } from '../../types';
 import { ResponseStatus } from '../../types';
 
 const shared = useSharedStore();

@@ -77,8 +77,8 @@
             <MetaMetaBox
               :story-type="story.storyType"
               :chapter-type="story.chapterType"
-              :name="props.story.name"
-              :created-at="story.createdAt as unknown as string"
+              :name="story.name"
+              :created-at="story.createdAt"
               :updated-at="savedAt"
             />
           </template>
@@ -89,27 +89,24 @@
 </template>
 
 <script setup lang="ts">
-import { SharedPageProps } from '@story-cms/kit';
-import {
-  AppLayout,
-  ContentHeader,
-  useSharedStore,
-  MarkdownField,
-  StringField,
-  ImageField,
-  NumberField,
-  ContentSidebar,
-  useModelStore,
-  useWidgetsStore,
-  router,
-  TagField,
-} from '@story-cms/kit/ui';
-import { ResponseStatus, StoryEditProps } from '../../types';
-import LabelButton from '../shared/label-button.vue';
 import { onMounted, ref } from 'vue';
 import { DateTime } from 'luxon';
+import { router } from '@inertiajs/vue3';
+
+import { SharedPageProps } from '../../types';
+import AppLayout from '../shared/app-layout.vue';
+import ContentHeader from '../shared/content-header.vue';
+import { useSharedStore, useWidgetsStore, useModelStore } from '../store';
+import MarkdownField from '../fields/markdown-field.vue';
+import { ResponseStatus, StoryEditProps } from '../../types';
+import LabelButton from '../shared/label-button.vue';
 import MetaMetaBox from './components/meta-meta-box.vue';
 import ActionButton from '../shared/action-button.vue';
+import StringField from '../fields/string-field.vue';
+import ImageField from '../fields/image-field.vue';
+import NumberField from '../fields/number-field.vue';
+import TagField from '../fields/tag-field.vue';
+import ContentSidebar from '../shared/content-sidebar.vue';
 
 const props = defineProps<StoryEditProps & SharedPageProps>();
 const shared = useSharedStore();

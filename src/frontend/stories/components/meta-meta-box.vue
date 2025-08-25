@@ -3,7 +3,8 @@
 </template>
 
 <script setup lang="ts">
-import { formatDate } from '@story-cms/kit/ui';
+import { formatDate } from '../../shared/helpers';
+
 import MetaBox from '../../shared/meta-box.vue';
 
 const props = defineProps<{

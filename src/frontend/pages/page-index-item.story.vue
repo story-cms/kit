@@ -14,7 +14,7 @@ const page = {
   id: 1,
   group: 1,
   title: 'Example 1',
-  icon: 'https://res.cloudinary.com/onesheep/image/upload/v1684417825/cmsplayground/aatrg9bikextwwun4vb2.svg',
+  icon: 'https://res.cloudinary.com/journeys/image/upload/v1756122183/aatrg9bikextwwun4vb2_kblpui.svg',
   description: 'This is the first',
   body: 'We have the first body',
   isPublished: true,

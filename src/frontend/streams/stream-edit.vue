@@ -78,26 +78,24 @@
 </template>
 
 <script setup lang="ts">
-import { FieldSpec, SharedPageProps } from '@story-cms/kit';
-import {
-  AppLayout,
-  ContentHeader,
-  ContentSidebar,
-  useSharedStore,
-  useModelStore,
-  useWidgetsStore,
-  BooleanField,
-  StringField,
-  ImageField,
-  DraftActions,
-  DateField,
-  router,
-  debounce,
-} from '@story-cms/kit/ui';
-import DropMetaBox from './components/drop-meta-box.vue';
-import { ResponseStatus, StreamEditProps } from '../../types';
 import { onMounted, ref, watch } from 'vue';
 import { DateTime } from 'luxon';
+import { router } from '@inertiajs/vue3';
+import type { StreamEditProps, FieldSpec, SharedPageProps } from '../../types';
+import { ResponseStatus } from '../../types';
+
+import { useSharedStore, useModelStore, useWidgetsStore } from '../store';
+import AppLayout from '../shared/app-layout.vue';
+import ContentHeader from '../shared/content-header.vue';
+import ContentSidebar from '../shared/content-sidebar.vue';
+import BooleanField from '../fields/boolean-field.vue';
+import StringField from '../fields/string-field.vue';
+import ImageField from '../fields/image-field.vue';
+import DateField from '../fields/date-field.vue';
+import DraftActions from '../shared/draft-actions.vue';
+import { debounce } from '../shared/helpers';
+
+import DropMetaBox from './components/drop-meta-box.vue';
 
 const props = defineProps<StreamEditProps & SharedPageProps>();
 const shared = useSharedStore();

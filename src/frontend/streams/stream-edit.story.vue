@@ -51,7 +51,7 @@ const streamSpec: StreamSpec = {
 const streamModel = {
   title: 'Morning Devotion',
   coverImage:
-    'https://res.cloudinary.com/theword121/image/upload/v1687245360/episodes/viseg2hegowcrapio6pt.svg',
+    'https://res.cloudinary.com/journeys/image/upload/v1756122407/christ-chaos-header_yqrufy_lzmfjt.jpg',
   releaseAt: '2024-01-16T08:00:00Z',
   isPublished: false,
   content:
@@ -62,12 +62,6 @@ const streamModel = {
     verse:
       'For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.',
   },
-};
-
-const streamErrors = {
-  'bundle.title': ['Title is required'],
-  'bundle.content': ['Content cannot be empty'],
-  'bundle.scripture': ['Scripture reference is required'],
 };
 
 const providers: Providers = {
@@ -114,6 +108,7 @@ const combinedProps = {
 
 const loadData: StoryHandler = (): void => {
   const shared = useSharedStore();
+  shared.setSidebarOpen(false);
 
   // Set up shared store with default props
   shared.setFromProps({

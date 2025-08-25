@@ -63,7 +63,7 @@ const dropData: DropIndexItem = {
   id: 1,
   title: 'Sample Drop',
   coverImage:
-    'https://res.cloudinary.com/onesheep/image/upload/v1685084993/christ-chaos-header_yqrufy.jpg',
+    'https://res.cloudinary.com/journeys/image/upload/v1756122407/christ-chaos-header_yqrufy_lzmfjt.jpg',
   releaseAt: '2024-03-15T10:00:00Z',
   isPublished: true,
 };
@@ -72,7 +72,7 @@ const dropWithoutDate: DropIndexItem = {
   id: 2,
   title: 'Drop Without Date',
   coverImage:
-    'https://res.cloudinary.com/onesheep/image/upload/v1685084993/christ-chaos-header_yqrufy.jpg',
+    'https://res.cloudinary.com/journeys/image/upload/v1756122407/christ-chaos-header_yqrufy_lzmfjt.jpg',
   releaseAt: '',
   isPublished: true,
 };
@@ -90,7 +90,7 @@ const dropWithLongTitle: DropIndexItem = {
   title:
     'This is a very long drop title that might wrap to multiple lines and test the component layout',
   coverImage:
-    'https://res.cloudinary.com/onesheep/image/upload/v1685084993/christ-chaos-header_yqrufy.jpg',
+    'https://res.cloudinary.com/journeys/image/upload/v1756122407/christ-chaos-header_yqrufy_lzmfjt.jpg',
   releaseAt: '2024-05-01T12:00:00Z',
   isPublished: true,
 };

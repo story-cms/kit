@@ -1,7 +1,7 @@
 <template>
   <Story title="Stream Item" group="streams">
     <Variant title="Grid View">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+      <div class="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3">
         <StreamItem :stream="streamData" :is-list="false" />
         <StreamItem :stream="streamDataBehind" :is-list="false" />
         <StreamItem :stream="streamDataAhead" :is-list="false" />
@@ -33,7 +33,8 @@ import type { StoryHandler } from '../../shared/helpers';
 const streamData: StreamIndexItem = {
   id: 1,
   title: 'Daily Devotional',
-  coverImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
+  coverImage:
+    'https://res.cloudinary.com/journeys/image/upload/v1756122407/christ-chaos-header_yqrufy_lzmfjt.jpg',
   latestReleaseAt: new Date().toISOString(),
   count: 42,
 };
@@ -41,7 +42,8 @@ const streamData: StreamIndexItem = {
 const streamDataBehind: StreamIndexItem = {
   id: 2,
   title: 'Weekly Bible Study',
-  coverImage: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=400&fit=crop',
+  coverImage:
+    'https://res.cloudinary.com/journeys/image/upload/v1756123316/Acts_ggpfgy.webp',
   latestReleaseAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
   count: 15,
 };
@@ -49,7 +51,8 @@ const streamDataBehind: StreamIndexItem = {
 const streamDataAhead: StreamIndexItem = {
   id: 3,
   title: 'Monthly Reflection',
-  coverImage: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop',
+  coverImage:
+    'https://res.cloudinary.com/journeys/image/upload/v1756123453/alabaster-co-rlb3upCBLck-unsplash_emiapj.jpg',
   latestReleaseAt: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
   count: 8,
 };

@@ -44,7 +44,7 @@ const streams: StreamIndexItem[] = [
     id: 2,
     title: 'Acts of the Apostles',
     coverImage:
-      'https://images.squarespace-cdn.com/content/v1/58b7381929687f370cca699f/1610478690174-1LWISFW07OS4FNS50JJ9/Acts.jpg?format=1500w',
+      'https://res.cloudinary.com/journeys/image/upload/v1756123316/Acts_ggpfgy.webp',
     latestReleaseAt: '2024-01-10T14:20:00Z',
     count: 18,
   },
@@ -52,7 +52,7 @@ const streams: StreamIndexItem[] = [
     id: 3,
     title: 'Romans Study',
     coverImage:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDtJ_K1JoXAlqyLGMVaS76p_ST6h44uFLwZzhogDajoi9gQv1PydXjzI0vXmEPpGxCZ58&usqp=CAU',
+      'https://res.cloudinary.com/journeys/image/upload/v1756123453/alabaster-co-rlb3upCBLck-unsplash_emiapj.jpg',
     latestReleaseAt: '2024-01-05T09:15:00Z',
     count: 12,
   },
@@ -60,7 +60,7 @@ const streams: StreamIndexItem[] = [
     id: 4,
     title: 'Psalms Collection',
     coverImage:
-      'https://store.christianitytoday.com/cdn/shop/articles/top5_psalms.jpg?v=1715353188',
+      'https://res.cloudinary.com/journeys/image/upload/v1756123097/top5_psalms_ddl7c0.jpg',
     latestReleaseAt: '2024-01-01T16:45:00Z',
     count: 31,
   },
