@@ -1,0 +1,192 @@
+# StoryCMS Kit Project Structure
+
+This document outlines the directory structure and important files in the StoryCMS Kit project, a Vue.js + AdonisJS CMS package.
+
+## Project Overview
+
+StoryCMS Kit is a comprehensive CMS package for AdonisJS that provides:
+
+- Frontend Vue.js components and UI widgets
+- Backend AdonisJS services, models, and middleware
+- Storybook documentation with Histoire
+- Testing infrastructure with Playwright
+- Build system with Vite and TypeScript
+
+## Root Directory Structure
+
+```
+storycmskit/
+├── .cursor/rules/           # Cursor IDE rules and documentation
+├── .github/                 # GitHub workflows and templates
+├── .git/                    # Git repository data
+├── _meta/                   # Meta configuration files
+├── dist/                    # Built distribution files
+├── node_modules/            # NPM dependencies
+├── src/                     # Source code (main directory)
+├── tests/                   # Test files and assets
+├── .gitignore              # Git ignore patterns
+├── .prettierrc             # Prettier configuration
+├── env.d.ts                # Environment type definitions
+├── eslint.config.js        # ESLint configuration
+├── histoire.config.ts      # Histoire (Storybook) configuration
+├── histoire.setup.ts       # Histoire setup and configuration
+├── Makefile                # Build and development scripts
+├── package.json            # NPM package configuration
+├── package-lock.json       # NPM lock file
+├── playwright.config.ts    # Playwright test configuration
+├── postcss.config.js       # PostCSS configuration
+├── README.md               # Project documentation
+├── tailwind.config.js      # Tailwind CSS configuration
+├── tsconfig.json           # TypeScript base configuration
+├── tsconfig.backend.json   # TypeScript backend configuration
+├── tsconfig.frontend.json  # TypeScript frontend configuration
+└── vite.config.mts         # Vite build configuration
+```
+
+## Source Code Structure (`src/`)
+
+### Main Source Files
+
+- `src/types.ts` - Global TypeScript type definitions
+- `src/frontend/index.ts` - Frontend entry point and exports
+- `src/frontend/index.css` - Global CSS styles
+- `src/frontend/index.story.md` - Storybook documentation
+- `src/backend/index.ts` - Backend entry point and exports
+- `src/backend/configure.ts` - Backend configuration setup
+- `src/backend/define_config.ts` - Configuration definitions
+
+### Frontend Structure (`src/frontend/`)
+
+```
+src/frontend/
+├── audiences/              # Audience management components
+├── auth/                   # Authentication components
+├── dashboard/              # Dashboard components
+├── fields/                 # Form field components (core UI)
+├── pages/                  # Page management components
+├── shared/                 # Shared/reusable components
+├── store/                  # Pinia state management
+│   ├── index.ts            # export of all the stores in this folder
+│   ├── drafts.ts           # shared state for editing story drafts
+│   ├── model.ts            # shared state for bundle edits (stories, pages, drops)
+│   ├── pages.ts            # shared state for pages
+│   ├── shared.ts           # common shared state used by all modules and root layout template
+│   └── widgets.ts          # shared state for widgets (form controls)
+├── stories/                # Story management components
+├── team/                   # Team management components
+├── test/                   # Test utilities and mocks
+└── ui/                     # UI components
+```
+
+### Backend Structure (`src/backend/`)
+
+```
+src/backend/
+├── middleware/             # AdonisJS middleware
+├── models/                 # Database models
+├── providers/              # Service providers
+├── services/               # Business logic services
+├── stubs/                  # Template files for scaffolding
+│   ├── commands/           # Artisan command stubs
+│   ├── config/             # Configuration stubs
+│   ├── controllers/        # Controller stubs
+│   ├── exceptions/         # Exception handler stubs
+│   ├── factories/          # Model factory stubs
+│   ├── inertia/            # Inertia.js stubs
+│   ├── mail/               # Email template stubs
+│   ├── main.ts             # Main application stub
+│   ├── migrations/         # Database migration stubs
+│   ├── ops/                # Operations/Docker stubs
+│   ├── resources/          # View and asset stubs
+│   ├── routes/             # Route stubs
+│   ├── tailwind.stub       # Tailwind configuration stub
+│   └── tests/              # Test stubs
+├── configure.ts            # Backend configuration
+├── define_config.ts        # Configuration definitions
+└── index.ts                # Backend entry point
+```
+
+## Important Configuration Files
+
+### Build and Development
+
+- `package.json` - NPM scripts, dependencies, and exports
+- `vite.config.mts` - Vite build configuration
+- `tsconfig.json` - Base TypeScript configuration
+- `tsconfig.backend.json` - Backend-specific TypeScript config
+- `tsconfig.frontend.json` - Frontend-specific TypeScript config
+
+### Styling and UI
+
+- `tailwind.config.js` - Tailwind CSS configuration
+- `postcss.config.js` - PostCSS processing configuration
+- `src/frontend/index.css` - Global CSS styles
+
+### Testing and Documentation
+
+- `playwright.config.ts` - Playwright test configuration
+- `histoire.config.ts` - Histoire (Storybook) configuration
+- `histoire.setup.ts` - Histoire setup and configuration
+
+### Code Quality
+
+- `eslint.config.js` - ESLint configuration
+- `.prettierrc` - Prettier code formatting configuration
+- `Makefile` - Build and development scripts
+
+## Key Development Scripts
+
+```bash
+# Development
+npm run dev              # Start Histoire development server
+npm run build            # Build both frontend and backend
+npm run ui:build         # Build frontend only
+npm run backend:build    # Build backend only
+
+# Testing
+npm run test             # Run unit tests
+npm run test:e2e         # Run end-to-end tests
+
+# Code Quality
+npm run lint             # Run ESLint
+npm run lint:fix         # Fix ESLint issues
+npm run todo-lint        # Alternative lint command
+
+# Documentation
+npm run story:build      # Build Storybook documentation
+npm run story:preview    # Preview built documentation
+```
+
+## Package Exports
+
+The package exports several modules for different use cases:
+
+- `.` - Main backend entry point
+- `./add_meta_noindex_middleware` - SEO middleware
+- `./admin_middleware` - Admin authentication middleware
+- `./cms_provider` - CMS service provider
+- `./cms` - CMS service
+- `./helpers` - Utility helpers
+- `./page_service` - Page management service
+- `./progress_service` - Progress tracking service
+- `./ui` - Frontend components
+- `./styles.css` - Compiled CSS
+- `./index.css` - Source CSS
+
+## Development Guidelines
+
+1. **Frontend Components**: Place in `src/frontend/` with corresponding `.story.vue` files for documentation
+2. **Backend Services**: Place in `src/backend/services/` with proper TypeScript types
+3. **Models**: Define in `src/backend/models/` with Lucid ORM
+4. **Tests**: Write unit tests in `tests/unit/` and e2e tests in `tests/e2e/`
+5. **Stubs**: Add new scaffolding templates in `src/backend/stubs/`
+6. **Documentation**: Use Histoire for component documentation and stories
+
+## File Naming Conventions
+
+- **Components**: Use kebab-case (e.g., `user-profile.vue`)
+- **Stories**: Append `.story.vue` to component files
+- **Services**: Use snake_case (e.g., `user_service.ts`)
+- **Models**: Use singular form (e.g., `user.ts`)
+- **Stubs**: Use snake_case with `.stub` extension
+- **Tests**: Use `.spec.ts` extension

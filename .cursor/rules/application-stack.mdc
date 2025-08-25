@@ -1,0 +1,161 @@
+---
+description: Application stack, major dependencies, and version information
+globs: **/*
+alwaysApply: true
+---
+
+# Application Stack & Dependencies
+
+## Overview
+
+This is a Vue 3 + AdonisJS CMS kit with TypeScript, featuring a component library built with Histoire for documentation and testing.
+
+## Core Framework Stack
+
+### Frontend Framework
+
+- **Vue.js**: `^3.4.21` - Progressive JavaScript framework
+- **Pinia**: `^2.1.7` - State management for Vue 3
+- **Inertia.js**: `^2.0.2` - Modern monoliths with SPA-like experience
+
+### Backend Framework
+
+- **AdonisJS Core**: `^6.2.3` - Node.js web framework
+- **AdonisJS Lucid**: `^21.6.1` - Database ORM
+- **AdonisJS Session**: `^7.4.2` - Session management
+
+### Development & Build Tools
+
+- **TypeScript**: Latest - Type-safe JavaScript
+- **Vite**: `^5.2.0` - Frontend build tool
+- **Histoire**: `^0.17.17` - Component storybook and testing
+- **Playwright**: `^1.49.0` - End-to-end testing
+- **ESLint**: `^8.57.1` - Code linting
+- **Prettier**: `3.5.3` - Code formatting
+
+## UI & Styling
+
+### CSS Framework
+
+- **Tailwind CSS**: `^3.4.17` - Utility-first CSS framework
+- **Tailwind Forms**: `^0.5.9` - Form styling plugin
+- **Autoprefixer**: `^10.4.19` - CSS vendor prefixing
+
+### UI Components
+
+- **Headless UI**: `^1.7.22` - Unstyled, accessible UI components
+- **Vue Datepicker**: `^11.0.2` - Date selection component
+
+## Content & Media
+
+### Rich Text & Markdown
+
+- **Marked**: `^15.0.3` - Markdown parser
+- **EasyMDE**: `^2.18.0` - Markdown editor
+
+### Media & Animations
+
+- **Rive Canvas**: `^2.29.0` - Interactive animations
+- **TUS JS Client**: `^4.3.1` - Resumable file uploads
+
+## Cloud Services
+
+### AWS Integration
+
+- **AWS SDK S3 Client**: `^3.697.0` - S3 file storage
+- **AWS SDK Storage**: `^3.697.0` - S3 upload utilities
+
+## Utilities & Helpers
+
+### Date/Time
+
+- **Luxon**: `^3.6.1` - Modern date/time library
+- **Luxon Types**: `^3.3.0` - TypeScript definitions
+
+### Utilities
+
+- **Poppinss Utils**: `^6.7.3` - AdonisJS utility functions
+
+## Development Dependencies
+
+### Build & Compilation
+
+- **SWC Core**: `^1.3.107` - Fast TypeScript/JavaScript compiler
+- **TSup**: `^8.0.1` - TypeScript bundler
+- **Vite Plugin DTS**: `^4.2.1` - TypeScript declaration generation
+
+### Testing & Quality
+
+- **Playwright Test**: `^1.49.0` - Browser testing
+- **ESLint Vue Plugin**: `^9.33.0` - Vue-specific linting
+- **TypeScript ESLint**: `^8.31.0` - TypeScript linting
+
+### File Management
+
+- **Copyfiles**: `^2.4.1` - File copying utility
+- **Del CLI**: `^5.1.0` - File deletion utility
+
+## Peer Dependencies
+
+These must be provided by the consuming application:
+
+- `@adonisjs/lucid`: `^21.6.1`
+- `luxon`: `^3.6.1`
+- `pinia`: `^2.1.7`
+- `vue`: `^3.4.21`
+
+## Architecture Patterns
+
+### Frontend Structure
+
+- Component-based architecture with Vue 3 Composition API
+- Pinia stores for state management
+- Histoire for component documentation and testing
+- Tailwind CSS for styling
+
+### Backend Structure
+
+- AdonisJS MVC pattern
+- Lucid ORM for database operations and models
+- Middleware for authentication and admin features
+- Service layer for business logic
+
+### Build System
+
+- Vite for frontend bundling
+- TypeScript compilation for backend
+- Separate configs for frontend and backend
+- Template copying for stub files
+
+## Version Compatibility Notes
+
+### Critical Dependencies
+
+- Vue 3.4+ required for latest features
+- AdonisJS 6.x for backend framework
+- TypeScript 5.x for type safety
+- Node.js 18+ recommended
+
+### Breaking Changes
+
+- Vue 3.x migration from Vue 2
+- AdonisJS 6.x from 5.x
+- TypeScript strict mode enabled
+
+## Development Workflow
+
+### Scripts
+
+- `npm run dev` - Start Histoire development server
+- `npm run build` - Build both frontend and backend
+- `npm run test` - Run unit tests
+- `npm run test:e2e` - Run end-to-end tests
+- `npm run lint` - Lint code
+- `npm run lint:fix` - Auto-fix linting issues
+
+### Testing Strategy
+
+- Unit tests with Playwright
+- E2E tests for field components
+- Component stories with Histoire
+- Manual testing with Histoire dev server

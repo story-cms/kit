@@ -24,6 +24,10 @@ export default defineConfig({
         title: 'Stories',
       },
       {
+        id: 'streams',
+        title: 'Streams',
+      },
+      {
         id: 'pages',
         title: 'Pages',
       },

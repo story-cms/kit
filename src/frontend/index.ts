@@ -31,13 +31,19 @@ import ObjectField from './fields/object-field.vue';
 import PageIndexItem from './pages/page-index-item.vue';
 import PagesEdit from './pages/pages-edit.vue';
 import PagesIndex from './pages/pages-index.vue';
+import Pagination from './shared/pagination.vue';
 import PanelField from './fields/panel-field.vue';
 import PublicLayout from './shared/public-layout.vue';
 import ResetPassword from './auth/reset-password.vue';
 import ScriptureField from './fields/scripture-field.vue';
 import SelectField from './fields/select-field.vue';
-import StatusTag from './stories/components/status-tag.vue';
+import StatusTag from './shared/status-tag.vue';
+import StoryEdit from './stories/story-edit.vue';
+import StoryGallery from './stories/story-gallery.vue';
 import StoryIndex from './stories/story-index.vue';
+import StreamEdit from './streams/stream-edit.vue';
+import StreamGallery from './streams/stream-gallery.vue';
+import StreamIndex from './streams/stream-index.vue';
 import StringField from './fields/string-field.vue';
 import TagField from './fields/tag-field.vue';
 import ToggleButton from './shared/toggle-button.vue';
@@ -87,12 +93,18 @@ export {
   PagesEdit,
   PagesIndex,
   PanelField,
+  Pagination,
   PublicLayout,
   ResetPassword,
   ScriptureField,
   SelectField,
   StatusTag,
+  StoryEdit,
+  StoryGallery,
   StoryIndex,
+  StreamEdit,
+  StreamGallery,
+  StreamIndex,
   StringField,
   TagField,
   ToggleButton,

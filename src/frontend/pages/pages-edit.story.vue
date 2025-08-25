@@ -26,7 +26,7 @@ const pageBundle: PageBundle = {
   title: 'About Us',
   description: 'About us page',
   body: '## Welcome!\nWe hope you enjoy this site.',
-  icon: 'https://res.cloudinary.com/onesheep/image/upload/v1684417825/cmsplayground/aatrg9bikextwwun4vb2.svg',
+  icon: 'https://res.cloudinary.com/journeys/image/upload/v1756122183/aatrg9bikextwwun4vb2_kblpui.svg',
 };
 
 const page: PageMeta = {

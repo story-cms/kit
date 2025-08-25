@@ -51,7 +51,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue';
 import { computed } from 'vue';
-import StatusTag from './status-tag.vue';
+import StatusTag from '../../shared/status-tag.vue';
 import type { IndexReadyItem } from '../../../types';
 import { padZero } from '../../shared/helpers';
 

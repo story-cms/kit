@@ -94,9 +94,11 @@ const fieldPath = computed(() => {
   return `${props.rootPath}.${field.value.name}`;
 });
 
-const modelValue = props.isReadOnly
-  ? ref(model.getSourceField(fieldPath.value, ''))
-  : ref(model.getField(fieldPath.value, ''));
+const modelValue = computed(() => {
+  return props.isReadOnly
+    ? model.getSourceField(fieldPath.value, '')
+    : model.getField(fieldPath.value, '');
+});
 
 const inputRef = ref<HTMLInputElement | null>(null);
 let cursor: number | null = null;
@@ -104,8 +106,8 @@ let cursor: number | null = null;
 const update = (value: string) => {
   if (value.length === 0) return;
   if (tags.value.includes(value)) return;
-  tags.value.push(value);
-  model.setField(fieldPath.value, tags.value.join(','));
+  const currentTags = [...tags.value, value];
+  model.setField(fieldPath.value, currentTags.join(','));
   newTag.value = '';
 };
 
@@ -114,11 +116,8 @@ const removeTag = (tag: string) => {
   model.setField(fieldPath.value, newTags.join(','));
 };
 
-model.$subscribe(() => {
-  if (props.isReadOnly) return;
-
-  modelValue.value = model.getField(fieldPath.value, '');
-  if (!cursor) return;
+watch(modelValue, () => {
+  if (props.isReadOnly || !cursor) return;
 
   nextTick().then(() => {
     inputRef.value?.setSelectionRange(cursor, cursor);
@@ -132,7 +131,7 @@ const hasError = computed(() => errors.value.length > 0 && !props.isReadOnly);
 
 const tags = computed(() => {
   const tagString = modelValue.value;
-  if (tagString.length === 0) return [];
+  if (!tagString || typeof tagString !== 'string' || tagString.length === 0) return [];
   return tagString.split(',').map((t: string) => t.trim());
 });
 </script>
