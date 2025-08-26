@@ -9,7 +9,7 @@ import type {
   Bookmark,
 } from '../../types';
 import { defineConfig } from '../define_config.js';
-import { PreferenceService } from './preference_service';
+import { PreferenceService } from './preference_service.js';
 
 export class CmsService {
   #config: CmsConfig;
