@@ -89,6 +89,20 @@
               </a>
             </div>
           </section>
+          <div v-if="shared.bookmarks.length > 0">
+            <div class="my-7 border-t border-gray-200"></div>
+            <div class="flex max-h-[600px] flex-col overflow-y-auto">
+              <a
+                v-for="bookmark in shared.bookmarks"
+                :key="bookmark.label"
+                class="flex items-center gap-2 rounded-full px-6 py-[18px] text-left text-sm font-semibold leading-5 transition-all duration-200 ease-in-out hover:bg-gray-100"
+                :href="bookmark.link"
+              >
+                <Icon name="star" class="size-6" />
+                <span>{{ bookmark.label }}</span>
+              </a>
+            </div>
+          </div>
           <div class="my-7 border-t border-gray-200"></div>
           <section class="grid grid-cols-1">
             <a v-if="isAdmin" :class="classList('user', true)" :href="`/${locale}/user`">

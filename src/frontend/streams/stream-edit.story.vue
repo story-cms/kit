@@ -103,7 +103,8 @@ const combinedProps = {
   language: sharedProps.language,
   languages: sharedProps.languages,
   errors: sharedProps.errors,
-  stories: sharedProps.stories,
+  bookmarks: sharedProps.bookmarks,
+  exclude: [],
 };
 
 const loadData: StoryHandler = (): void => {
@@ -159,7 +160,8 @@ A comprehensive page component for editing stream content with autosave function
   :languages="availableLanguages"
   :language="currentLanguage"
   :errors="validationErrors"
-  :stories="storyList"
+  :bookmarks="bookmarks"
+  :exclude="[]"
 />
 ```
 

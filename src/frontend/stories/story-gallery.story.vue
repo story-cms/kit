@@ -8,6 +8,8 @@
         :language="sharedProps.language"
         :errors="sharedProps.errors"
         :stories="sampleStories"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
       />
     </Variant>
 
@@ -19,6 +21,8 @@
         :language="sharedProps.language"
         :errors="sharedProps.errors"
         :stories="[]"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
       />
     </Variant>
 
@@ -30,6 +34,8 @@
         :language="sharedProps.language"
         :errors="sharedProps.errors"
         :stories="manyStories"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
       />
     </Variant>
   </Story>
@@ -159,7 +165,8 @@ The Story Gallery component displays a collection of stories in either grid or l
 
 ## Props
 
-- `stories` - Array of story data to display (StoryIndexItem[])
+- `bookmarks` - Available bookmarks array
+- `exclude` - Exclude nav bar elements
 - `meta` - CMS metadata
 - `user` - Current user information
 - `languages` - Available languages
@@ -170,7 +177,8 @@ The Story Gallery component displays a collection of stories in either grid or l
 
 ```vue
 <StoryGallery
-  :stories="stories"
+  :bookmarks="bookmarks"
+  :exclude="[]"
   :meta="meta"
   :user="user"
   :languages="languages"

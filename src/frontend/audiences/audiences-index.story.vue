@@ -8,7 +8,8 @@
         :user="sharedProps.user"
         :language="sharedProps.language"
         :languages="sharedProps.languages"
-        :stories="['John', 'Acts']"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
       />
     </Variant>
     <Variant title="With feedback" :setup-app="loadData">
@@ -18,8 +19,9 @@
         :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
-        :stories="['John', 'Acts']"
         :audiences="audiences"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
       />
     </Variant>
   </Story>
