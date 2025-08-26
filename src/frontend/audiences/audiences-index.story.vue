@@ -12,6 +12,18 @@
         :exclude="[]"
       />
     </Variant>
+    <Variant title="Empty" :setup-app="miniSidebar">
+      <AudiencesIndex
+        :audiences="[]"
+        :errors="sharedProps.errors"
+        :meta="sharedProps.meta"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :languages="sharedProps.languages"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
+      />
+    </Variant>
     <Variant title="With feedback" :setup-app="loadData">
       <AudiencesIndex
         :meta="sharedProps.meta"
