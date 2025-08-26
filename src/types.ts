@@ -145,7 +145,7 @@ export interface DropMeta {
 }
 
 export interface StreamEditProps {
-  meta: DropMeta;
+  dropMeta: DropMeta;
   spec: StreamSpec;
   model: any; // model
   providers: Providers; // widgets

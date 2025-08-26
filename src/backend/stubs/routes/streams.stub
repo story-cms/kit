@@ -2,7 +2,7 @@
   exports({ to: app.makePath('start/routes/streams.ts') })
 }}}
 import router from '@adonisjs/core/services/router';
-const StreamController = () => import('#controllers/stream_controller');
+const StreamController = () => import('#controllers/streams_controller');
 
 export default () => {
   router.on('/stream').redirect('/:locale/stream', {

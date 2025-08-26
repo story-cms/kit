@@ -67,9 +67,9 @@
       <ContentSidebar>
         <template #meta-box>
           <DropMetaBox
-            :created-at="props.meta.createdAt"
+            :created-at="props.dropMeta.createdAt"
             :updated-at="updatedAt"
-            :updated-by="props.meta.updatedBy"
+            :updated-by="props.dropMeta.updatedBy"
           />
         </template>
       </ContentSidebar>
@@ -118,10 +118,10 @@ const widgetFor = (key: number) => {
 
 const title = ref(model.getField('title', props.spec.dropType));
 const isPublished = ref(Boolean(model.getField('isPublished', false)));
-const updatedAt = ref(props.meta.updatedAt);
+const updatedAt = ref(props.dropMeta.updatedAt);
 
 const onDelete = () => {
-  router.delete(`/${shared.locale}/drop/${props.meta.id}`, {
+  router.delete(`/${shared.locale}/drop/${props.dropMeta.id}`, {
     onSuccess: () =>
       shared.addMessage(ResponseStatus.Confirmation, `${props.spec.dropType} deleted`),
     onError: () =>
@@ -136,7 +136,7 @@ let isRevertingPublished = false;
 const save = debounce(1000, () => {
   shared.clearErrors();
 
-  router.post(`/${shared.locale}/drop/${props.meta.id}`, getPayload(), {
+  router.post(`/${shared.locale}/drop/${props.dropMeta.id}`, getPayload(), {
     preserveScroll: true,
 
     onSuccess: () => {

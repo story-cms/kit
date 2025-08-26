@@ -1,13 +1,13 @@
 <template>
-  <Story title="Stream Edit" group="streams">
+  <Story title="Drop Edit" group="streams">
     <Variant title="Default" :setup-app="loadData">
-      <StreamEdit v-bind="combinedProps" />
+      <DropEdit v-bind="combinedProps" />
     </Variant>
   </Story>
 </template>
 
 <script setup lang="ts">
-import StreamEdit from './stream-edit.vue';
+import DropEdit from './drop-edit.vue';
 import { sharedProps } from '../test/mocks';
 import { useSharedStore } from '../store';
 import type { StoryHandler } from '../shared/helpers';
@@ -85,20 +85,15 @@ const providers: Providers = {
   },
 };
 
-// Combined meta that satisfies both DropMeta and CmsMeta
-const combinedMeta = {
-  ...streamMeta,
-  ...sharedProps.meta,
-};
-
 // Combined props that satisfy both StreamEditProps and SharedPageProps
 const combinedProps = {
   // StreamEditProps
-  meta: combinedMeta,
+  dropMeta: streamMeta,
   spec: streamSpec,
   model: streamModel,
   providers,
   // SharedPageProps
+  meta: sharedProps.meta,
   user: sharedProps.user,
   language: sharedProps.language,
   languages: sharedProps.languages,
@@ -114,7 +109,7 @@ const loadData: StoryHandler = (): void => {
   // Set up shared store with default props
   shared.setFromProps({
     ...sharedProps,
-    meta: combinedMeta,
+    meta: sharedProps.meta,
   });
 
   shared.clearErrors();

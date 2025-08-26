@@ -41,7 +41,7 @@ import StatusTag from './shared/status-tag.vue';
 import StoryEdit from './stories/story-edit.vue';
 import StoryGallery from './stories/story-gallery.vue';
 import StoryIndex from './stories/story-index.vue';
-import StreamEdit from './streams/stream-edit.vue';
+import DropEdit from './streams/drop-edit.vue';
 import StreamGallery from './streams/stream-gallery.vue';
 import StreamIndex from './streams/stream-index.vue';
 import StringField from './fields/string-field.vue';
@@ -105,7 +105,7 @@ export {
   StoryEdit,
   StoryGallery,
   StoryIndex,
-  StreamEdit,
+  DropEdit,
   StreamGallery,
   StreamIndex,
   StringField,

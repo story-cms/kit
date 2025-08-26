@@ -6,25 +6,5 @@ import router from '@adonisjs/core/services/router';
 const PreferencesController = () => import('#controllers/preferences_controller');
 
 export default () => {
-  router.group(() => {
-    // simple route to test if route is registered
-    router.get('/preferences', () => {
-      const test = {
-        id: 'preferences.id',
-        userId: 'user.id',
-        settings: '{"bookmarks":[]}',
-      };
-      return JSON.stringify(test);
-    });
-
-    // router.get('/preferences/:userId', );
-    router.post('/preferences', [PreferencesController, 'store']);
-    router.put('/preferences', [PreferencesController, 'update']);
-    router.delete('/preferences', [PreferencesController, 'destroy']);
-
-    // Bookmark-specific operations
-    router.get('/preferences/bookmarks', [PreferencesController, 'getBookmarks']);
-    router.post('/preferences/bookmarks', [PreferencesController, 'updateBookmark']);
-    router.delete('/preferences/bookmarks', [PreferencesController, 'removeBookmark']);
-  });
+  router.post('/preferences/bookmarks', [PreferencesController, 'toggleBookmark']);
 };
