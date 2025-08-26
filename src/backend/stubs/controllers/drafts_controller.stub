@@ -11,11 +11,13 @@ import {
   trimmedErrors,
   DraftService,
   IndexService,
-  draftValidator,
+  ChapterValidator,
+  chapterErrorMessages,
   type DraftEditProps,
 } from '@story-cms/kit';
 import cms from '#services/cms';
 import providers from '#config/providers';
+import vine from '@vinejs/vine';
 
 export default class DraftsController {
   public async create(ctx: HttpContext) {
@@ -83,6 +85,8 @@ export default class DraftsController {
     const indexService = new IndexService(story, cms);
     await indexService.buildIndex(version);
 
+    const shared = await cms.sharedProps(ctx);
+
     const data: DraftEditProps = {
       draft: draft.meta,
       bundle: draft!.bundle,
@@ -90,12 +94,13 @@ export default class DraftsController {
       providers,
       story,
       hasEditReview: cms.config.stories.hasEditReview,
+      ...shared,
     };
 
     const isTranslation = version.locale !== cms.config.languages.languages[0].locale;
 
     if (!isTranslation) {
-      return ctx.inertia.render('DraftIndex', { ...data, ...cms.sharedProps(ctx) });
+      return ctx.inertia.render('DraftIndex', data);
     }
 
     const source = await Chapter.query()
@@ -108,7 +113,7 @@ export default class DraftsController {
     return ctx.inertia.render('TranslationIndex', {
       ...data,
       source: source?.bundle,
-      ...cms.sharedProps(ctx),
+      ...shared,
     });
   }
 
@@ -149,7 +154,9 @@ export default class DraftsController {
 
     try {
       const data = ctx.request.all();
-      payload = await draftValidator.validate(data);
+      vine.messagesProvider = chapterErrorMessages;
+      const validator = new ChapterValidator(story);
+      payload = await validator.schema.validate(data);
     } catch (e) {
       const errors = trimmedErrors(e);
       ctx.session.flash('errorsBag', errors);
@@ -200,7 +207,9 @@ export default class DraftsController {
 
     try {
       const data = ctx.request.all();
-      const payload = await draftValidator.validate(data);
+      vine.messagesProvider = chapterErrorMessages;
+      const validator = new ChapterValidator(story);
+      const payload = await validator.schema.validate(data);
       draft.bundle = JSON.stringify(payload.bundle);
     } catch (e) {
       const errors = trimmedErrors(e);

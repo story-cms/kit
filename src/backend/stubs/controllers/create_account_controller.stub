@@ -14,9 +14,10 @@ export default class CreateAccountController {
     }
 
     const email = user.email;
+    const shared = await cms.sharedProps(ctx);
     return ctx.inertia.render('CreateAccount', {
       email,
-      ...cms.sharedProps(ctx),
+      ...shared,
     });
   }
 

@@ -1,0 +1,54 @@
+{{{
+  exports({ to: app.makePath('app/controllers/stories_controller.ts') })
+}}}
+import { HttpContext } from '@adonisjs/core/http';
+import { Index, StorySpec, StoryIndexItem } from '@story-cms/kit';
+import cms from '#services/cms';
+
+export default class StoriesController {
+  public async index(ctx: HttpContext) {
+    const stories = await this.galleryIndex(ctx.params.locale);
+
+    const shared = await cms.sharedProps(ctx);
+    return ctx.inertia.render('StoryGallery', { stories, ...shared });
+  }
+
+  public async create(ctx: HttpContext) {
+    return ctx.response.redirect().back();
+  }
+
+  public async edit(ctx: HttpContext) {
+    return ctx.response.redirect().back();
+  }
+
+  public async update(ctx: HttpContext) {
+    return ctx.response.redirect().back();
+  }
+
+  public async delete(ctx: HttpContext) {
+    return ctx.response.redirect().back();
+  }
+
+  // TODO: move to service
+  protected async galleryIndex(locale: string): Promise<StoryIndexItem[]> {
+    const stamp = new Date().toISOString();
+    const indices = await Index.query().where('locale', locale);
+    return cms.config.stories.stories.map((row: StorySpec) => {
+      const item: StoryIndexItem = {
+        id: row.id,
+        name: row.name,
+        description: '',
+        coverImage: row.coverImage,
+        chapterLimit: row.chapterLimit,
+        createdAt: stamp,
+        updatedAt: stamp,
+        draftCount: 0,
+      };
+      const index = indices.find((i) => i.storyId === row.id);
+      if (index === undefined) return item;
+      const draftCount = index.draftsList.length;
+      item.draftCount = draftCount;
+      return item;
+    });
+  }
+}

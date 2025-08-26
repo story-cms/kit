@@ -36,22 +36,26 @@ export default class PagesController {
     const version = cms.pagesContextFrom(ctx);
     const service = new PageService(version, cms);
     const pages = await service.getPageItems();
+
+    const shared = await cms.sharedProps(ctx);
     return ctx.inertia.render('PagesIndex', {
       pages: pages,
-      ...cms.sharedProps(ctx),
+      ...shared,
     });
   }
 
   public async edit(ctx: HttpContext) {
     const page = await Page.findOrFail(ctx.params.id);
 
+    const shared = await cms.sharedProps(ctx);
     const props: PageEditProps = {
       providers: providers,
       page: page.meta,
       bundle: page.model,
+      ...shared,
     };
 
-    return ctx.inertia.render('PagesEdit', { ...props, ...cms.sharedProps(ctx) });
+    return ctx.inertia.render('PagesEdit', props);
   }
 
   public async create(ctx: HttpContext) {

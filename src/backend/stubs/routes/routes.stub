@@ -9,6 +9,15 @@
 | The routes file is used for defining the HTTP routes.
 |
 */
+/*
+|--------------------------------------------------------------------------
+| Routes file
+|--------------------------------------------------------------------------
+|
+| The routes file is used for defining the HTTP routes.
+|
+*/
+
 import router from '@adonisjs/core/services/router';
 import { middleware } from '#start/kernel';
 import api from '#start/routes/api';
@@ -21,7 +30,6 @@ import stories from '#start/routes/stories';
 import streams from '#start/routes/streams';
 import { ui, uiTools } from '#start/routes/ui';
 import users from '#start/routes/users';
-import preferences from '#start/routes/preferences';
 
 // Public routes
 
@@ -38,7 +46,7 @@ router
     stories();
     pages();
     ui();
-    streams(),
+    streams();
     preferences();
   })
   .use(middleware.auth());

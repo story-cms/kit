@@ -4,7 +4,6 @@
 import type { HttpContext } from '@adonisjs/core/http';
 import edge from 'edge.js';
 import { marked } from 'marked';
-import cms from '#services/cms';
 import {
   IndexService,
   AddStatus,
@@ -12,6 +11,7 @@ import {
   Chapter,
   PreviewProps,
 } from '@story-cms/kit';
+import cms from '#services/cms';
 
 export default class ChaptersController {
   public async index(ctx: HttpContext) {
@@ -22,13 +22,15 @@ export default class ChaptersController {
 
     const addStatus: AddStatus = await service.getAddStatus(version);
     const index = await service.getItems(version);
+    const shared = await cms.sharedProps(ctx);
     const props: StoryIndexProps = {
       index,
       addStatus,
       story,
+      ...shared,
     };
 
-    return ctx.inertia.render('StoryIndex', { ...props, ...cms.sharedProps(ctx) });
+    return ctx.inertia.render('StoryIndex', props);
   }
 
   public async preview(ctx: HttpContext) {
@@ -48,15 +50,18 @@ export default class ChaptersController {
       marked: marked,
     });
 
+    const shared = await cms.sharedProps(ctx);
+
     const props: PreviewProps = {
       chapter: chapter.meta,
       bundleView: bundleView,
       title: chapter.index.title,
       bundle: chapter.bundle,
       story,
+      ...shared,
     };
 
-    return ctx.inertia.render('ChapterPreview', { ...props, ...cms.sharedProps(ctx) });
+    return ctx.inertia.render('ChapterPreview', props);
   }
 
   public async get(ctx: HttpContext) {

@@ -26,8 +26,9 @@ export default class DashboardController {
 
     const props: DashboardProps = {
       translationProgress: translationProgress ?? [],
+      ...(await cms.sharedProps(ctx)),
     };
 
-    return ctx.inertia.render('DashboardIndex', { ...props, ...cms.sharedProps(ctx) });
+    return ctx.inertia.render('DashboardIndex', props);
   }
 }

@@ -35,12 +35,14 @@ export default class UsersController {
 
     const userService = new UserService();
     const users = await userService.latest();
+    const shared = await cms.sharedProps(ctx);
 
     const props: UsersProps = {
       users,
+      ...shared,
     };
 
-    return ctx.inertia.render('UsersIndex', { ...props, ...cms.sharedProps(ctx) });
+    return ctx.inertia.render('UsersIndex', props);
   }
 
   // patch a user's information

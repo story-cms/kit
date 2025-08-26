@@ -7,7 +7,8 @@ import cms from '#services/cms';
 
 export default class AuthController {
   public async index(ctx: HttpContext) {
-    return ctx.inertia.render('Login', { ...cms.sharedProps(ctx) });
+    const shared = await cms.sharedProps(ctx);
+    return ctx.inertia.render('Login', shared);
   }
 
   public async store(ctx: HttpContext) {

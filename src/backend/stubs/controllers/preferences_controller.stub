@@ -1,0 +1,37 @@
+{{{
+  exports({ to: app.makePath('app/controllers/preferences_controller.ts') })
+}}}
+import { HttpContext } from '@adonisjs/core/http';
+import { Activity, PreferenceService } from '@story-cms/kit';
+import cms from '#services/cms';
+
+export default class PreferencesController {
+  public async toggleBookmark(ctx: HttpContext) {
+    const userId = Number(ctx.auth.user?.id);
+    if (!userId) {
+      return ctx.response.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const { label, link } = ctx.request.only(['label', 'link']);
+
+    if (!label || !link) {
+      return ctx.response.status(400).json({ error: 'Label and link are required' });
+    }
+
+    const service = new PreferenceService();
+
+    try {
+      await service.toggleBookmark(userId, { label, link });
+
+      const version = cms.pagesContextFrom(ctx);
+      await Activity.create({
+        userId: ctx.auth.user?.id,
+        action: {{'`updated bookmark "${label}" for user ${userId}`'}},
+        locale: version?.locale || 'en',
+      });
+      return ctx.response.status(204);
+    } catch (e) {
+      return ctx.response.status(400).json({ error: e.message });
+    }
+  }
+}
