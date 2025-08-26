@@ -28,6 +28,7 @@ export default () => {
   router.get(':locale/story/:storyId/draft/create', [DraftsController, 'create']);
   router.delete(':locale/story/:storyId/draft/:id', [DraftsController, 'delete']);
   router.post(':locale/story/:storyId/draft/:id/save', [DraftsController, 'save']);
+  router.post(':locale/story/:storyId/draft/:id/submit', [DraftsController, 'submit']);
   router.post(':locale/story/:storyId/draft/:id/publish', [DraftsController, 'publish']);
   router.post(':locale/story/:storyId/draft/:id/reject', [DraftsController, 'reject']);
 };

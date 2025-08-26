@@ -1,0 +1,153 @@
+{{{ 
+  exports({ to: app.makePath('tests/unit/cms_mock_example.spec.ts') }) 
+}}}
+import { test } from '@japa/runner';
+import testUtils from '@adonisjs/core/services/test_utils';
+import { PageService, PageFactory } from '@story-cms/kit';
+import cms from '#services/cms';
+import { setupMockCms, createCustomCmsConfig } from '../helpers/cms_mock.js';
+
+test.group('CMS Mock Example', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction());
+
+  test('can use default mock CMS config', async ({ assert }) => {
+    // Set up mock CMS with default test config
+    const mockCms = setupMockCms();
+
+    // Verify the mock is working
+    assert.equal(mockCms.config.meta.name, 'Test CMS');
+    assert.equal(
+      mockCms.config.pages.tracking,
+      'utm_source=test&utm_medium=test&utm_campaign=test',
+    );
+
+    // Your test logic here
+    const p1 = await PageFactory.merge({
+      id: 1,
+      order: 1,
+      bundle: JSON.stringify({
+        title: 'Test Page',
+        group: 1,
+        body: 'https://www.example.com',
+      }),
+      isPublished: true,
+    }).create();
+
+    const service = new PageService(
+      {
+        apiVersion: p1.apiVersion,
+        locale: p1.locale,
+      },
+      cms, // This will now use the mock CMS
+    );
+
+    const clientPages = await service.getPageItemsForClient();
+
+    // The tracking should use the mock config
+    assert.equal(
+      clientPages[0]['body'],
+      'https://www.example.com?utm_source=test&utm_medium=test&utm_campaign=test',
+    );
+  });
+
+  test('can use custom mock CMS config', async ({ assert }) => {
+    // Create custom config for this specific test
+    const customConfig = createCustomCmsConfig({
+      pages: {
+        schemaVersion: 2,
+        tracking: 'utm_source=custom&utm_medium=custom&utm_campaign=custom',
+      },
+      languages: {
+        microcopySource: '',
+        languages: [
+          {
+            locale: 'es',
+            language: 'Spanish',
+            languageDirection: 'ltr',
+            bibleVersion: 'spanish-bible-version',
+          },
+        ],
+      },
+    });
+
+    // Set up mock CMS with custom config
+    const mockCms = setupMockCms(customConfig);
+
+    // Verify the custom config is applied
+    assert.equal(
+      mockCms.config.pages.tracking,
+      'utm_source=custom&utm_medium=custom&utm_campaign=custom',
+    );
+    assert.equal(mockCms.config.languages.languages[0].locale, 'es');
+
+    // Your test logic here
+    const p1 = await PageFactory.merge({
+      id: 1,
+      order: 1,
+      bundle: JSON.stringify({
+        title: 'Test Page',
+        group: 1,
+        body: 'https://www.example.com',
+      }),
+      isPublished: true,
+    }).create();
+
+    const service = new PageService(
+      {
+        apiVersion: p1.apiVersion,
+        locale: p1.locale,
+      },
+      cms, // This will use the custom mock CMS
+    );
+
+    const clientPages = await service.getPageItemsForClient();
+
+    // The tracking should use the custom config
+    assert.equal(
+      clientPages[0]['body'],
+      'https://www.example.com?utm_source=custom&utm_medium=custom&utm_campaign=custom',
+    );
+  });
+
+  test('can test different story configurations', async ({ assert }) => {
+    // Create config with different story settings
+    const storyConfig = createCustomCmsConfig({
+      stories: {
+        hasEditReview: true, // Enable edit review for this test
+        stories: [
+          {
+            id: 999,
+            name: 'Test Story with Review',
+            coverImage: 'https://example.com/test-cover.jpg',
+            chapterType: 'Chapter',
+            storyType: 'Book',
+            chapterLimit: 20,
+            schemaVersion: 2,
+            fields: [
+              {
+                name: 'title',
+                label: 'Title',
+                widget: 'string',
+              },
+              {
+                name: 'content',
+                label: 'Content',
+                widget: 'markdown',
+              },
+            ],
+          },
+        ],
+      },
+    });
+
+    const mockCms = setupMockCms(storyConfig);
+
+    // Verify the story config is applied
+    assert.isTrue(mockCms.config.stories.hasEditReview);
+    assert.equal(mockCms.config.stories.stories[0].id, 999);
+    assert.equal(mockCms.config.stories.stories[0].name, 'Test Story with Review');
+
+    // Your test logic here that depends on the story configuration
+    // For example, testing edit review functionality
+  });
+});

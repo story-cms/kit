@@ -5,6 +5,7 @@ import { test } from '@japa/runner';
 import testUtils from '@adonisjs/core/services/test_utils';
 import { User, ProgressService, Ui, Index, type UserInterface } from '@story-cms/kit';
 import cms from '#services/cms';
+import { setupMockCms } from '#tests/helpers/cms_mock';
 
 test.group('ProgressService', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction());
@@ -13,6 +14,7 @@ test.group('ProgressService', (group) => {
     assert,
   }) => {
     // 1. arrange
+    setupMockCms();
     const service = new ProgressService(cms);
 
     // Create user
@@ -174,5 +176,5 @@ test.group('ProgressService', (group) => {
         assert.equal(interfaceProgress.total, 5); // total items
       }
     }
-  }).skip();
+  });
 });
