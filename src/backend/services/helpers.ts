@@ -26,7 +26,7 @@ export function trimmedErrors(e: any): Record<string, string[]> {
 
 // The model store on the client requires that the error messages
 // each have a "bundle" prefix
-export const bundledErrors = (plain: Record<string, string[]>): Object => {
+export const bundledErrors = (plain: Record<string, string[]>): object => {
   const result: Record<string, unknown> = {};
   for (const key in plain) {
     result[`bundle.${key}`] = plain[key];
