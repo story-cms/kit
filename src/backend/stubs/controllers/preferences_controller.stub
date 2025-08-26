@@ -26,7 +26,7 @@ export default class PreferencesController {
       const version = cms.pagesContextFrom(ctx);
       await Activity.create({
         userId: ctx.auth.user?.id,
-        action: {{'`updated bookmark "${label}" for user ${userId}`'}},
+        action: {{'`updated bookmark ${label} for user ${userId}`'}},
         locale: version?.locale || 'en',
       });
       return ctx.response.status(204);
