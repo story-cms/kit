@@ -7,7 +7,8 @@
         :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
-        :stories="['John', 'Acts']"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
         :pages="pages"
       />
     </Variant>

@@ -1,0 +1,46 @@
+{{{
+  exports({ to: app.makePath('app/services/cms.ts') })
+}}}
+import app from '@adonisjs/core/services/app';
+import { CmsService } from '@story-cms/kit';
+
+let cms: CmsService;
+let isMocked = false;
+
+try {
+  cms = await app.container.make(CmsService);
+} catch {
+  console.error('Error loading cms service, using default config');
+  cms = CmsService.default();
+}
+
+/**
+ * Set a mock CMS service for testing
+ */
+export function setMockCms(mockCms: CmsService) {
+  cms = mockCms;
+  isMocked = true;
+}
+
+/**
+ * Reset CMS service to the original instance
+ */
+export async function resetCms() {
+  if (!isMocked) return;
+
+  try {
+    cms = await app.container.make(CmsService);
+  } catch {
+    cms = CmsService.default();
+  }
+  isMocked = false;
+}
+
+/**
+ * Check if CMS is currently mocked
+ */
+export function isCmsMocked() {
+  return isMocked;
+}
+
+export { cms as default };

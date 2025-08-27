@@ -1,0 +1,120 @@
+{{{ 
+  exports({ to: app.makePath('tests/helpers/cms_mock.ts') }) 
+}}}
+import { CmsConfig, CmsService } from '@story-cms/kit';
+import { setMockCms, resetCms } from '#services/cms';
+
+/**
+ * Test CMS configuration for unit tests
+ */
+export const testCmsConfig: CmsConfig = {
+  meta: {
+    name: 'Test CMS',
+    logo: 'https://example.com/logo.png',
+    helpUrl: 'https://example.com/help',
+    hasAppPreview: false,
+  },
+  languages: {
+    microcopySource: '',
+    languages: [
+      {
+        locale: 'en',
+        language: 'English',
+        languageDirection: 'ltr',
+        bibleVersion: 'test-bible-version',
+      },
+      {
+        locale: 'es',
+        language: 'Spanish',
+        languageDirection: 'ltr',
+        bibleVersion: 'es-bible-version',
+      },
+      {
+        locale: 'my',
+        language: 'Burmese',
+        languageDirection: 'ltr',
+        bibleVersion: 'my-bible-version',
+      },
+    ],
+  },
+  streams: {
+    streams: [
+      {
+        id: 1,
+        title: 'Test Stream',
+        coverImage: 'https://example.com/cover.jpg',
+        streamType: 'Channel',
+        dropType: 'Post',
+        schemaVersion: 1,
+        fields: [
+          {
+            name: 'title',
+            label: 'Title',
+            widget: 'string',
+          },
+        ],
+      },
+    ],
+  },
+  stories: {
+    hasEditReview: false,
+    stories: [
+      {
+        id: 1,
+        name: 'Test Story',
+        coverImage: 'https://example.com/story-cover.jpg',
+        chapterType: 'Lesson',
+        storyType: 'Course',
+        chapterLimit: 5,
+        schemaVersion: 1,
+        fields: [
+          {
+            name: 'title',
+            label: 'Title',
+            widget: 'string',
+          },
+        ],
+      },
+    ],
+  },
+  pages: {
+    schemaVersion: 1,
+    tracking: 'utm_source=test&utm_medium=test&utm_campaign=test',
+  },
+};
+
+/**
+ * Create a mock CMS service with the test configuration
+ */
+export function createMockCms(config = testCmsConfig) {
+  const mockCms = CmsService.default();
+  // Override the config with our test config
+  Object.assign(mockCms.config, config);
+  return mockCms;
+}
+
+/**
+ * Set up a mock CMS for testing
+ */
+export function setupMockCms(config = testCmsConfig) {
+  const mockCms = createMockCms(config);
+  setMockCms(mockCms);
+  return mockCms;
+}
+
+/**
+ * Clean up mock CMS after tests
+ */
+export async function cleanupMockCms() {
+  await resetCms();
+}
+
+/**
+ * Helper to create a custom CMS config for specific test scenarios
+ */
+export function createCustomCmsConfig(overrides: Partial<typeof testCmsConfig>) {
+  return {
+    ...testCmsConfig,
+    ...overrides,
+  };
+}

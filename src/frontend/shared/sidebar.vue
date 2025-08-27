@@ -16,16 +16,13 @@
             shared.hasOpenSidebar ? 'justify-between p-5' : 'flex-col gap-y-3 p-2',
           ]"
         >
-          <Link
-            :class="['nav-icon', { active: $page?.url.includes('/dashboard') }]"
-            :href="`/${locale}/dashboard`"
-          >
+          <a :class="['nav-icon']" :href="`/${locale}/dashboard`">
             <Icon name="home" />
-          </Link>
+          </a>
           <button class="nav-icon" @click="goBack">
             <Icon name="reply" />
           </button>
-          <div v-if="isMultiLingual">
+          <div v-if="include('language')">
             <button
               v-if="shared.hasOpenSidebar"
               class="relative flex size-14 items-center justify-center rounded-full transition-all duration-75"
@@ -51,32 +48,35 @@
             <Icon v-else name="chevron-double-left" />
           </button>
         </div>
+
         <div :class="[shared.hasOpenSidebar ? 'mt-4 flex flex-col px-4' : 'hidden']">
           <section class="grid grid-cols-1">
-            <Link
-              v-for="(story, index) in shared.stories"
-              :key="index"
-              :class="[
-                'nav-link',
-                {
-                  active: $page?.url.includes(`/story/${index + 1}`),
-                },
-              ]"
-              :href="`/${locale}/story/${index + 1}`"
+            <a
+              v-if="include('stream')"
+              :class="classList('stream')"
+              :href="`/${locale}/stream`"
+              >Streams</a
             >
-              {{ story }}
-            </Link>
-            <Link
-              :class="[
-                'nav-link',
-                {
-                  active: $page?.url.includes(`/${locale}/page`),
-                },
-              ]"
-              :href="`/${locale}/page`"
-              >Pages</Link
+
+            <a
+              v-if="include('story')"
+              :class="classList('story')"
+              :href="`/${locale}/story`"
+              >Stories</a
             >
-            <div v-if="isMultiLingual">
+
+            <a v-if="include('page')" :class="classList('page')" :href="`/${locale}/page`"
+              >Pages</a
+            >
+
+            <a
+              v-if="include('audience')"
+              :class="classList('audience')"
+              :href="`/${locale}/audience`"
+              >Audience</a
+            >
+
+            <div v-if="include('language')">
               <button
                 v-if="locale === 'en'"
                 class="nav-link opacity-50 disabled:cursor-not-allowed"
@@ -84,41 +84,34 @@
               >
                 Interface
               </button>
-              <Link
-                v-else
-                :class="[
-                  'nav-link flex items-center justify-between',
-                  {
-                    active: $page?.url.includes('ui'),
-                  },
-                ]"
-                :href="`/${locale}/ui`"
+              <a v-else :class="classList('ui')" :href="`/${locale}/ui`"
                 ><span>Interface</span>
-              </Link>
+              </a>
             </div>
           </section>
+          <div v-if="shared.bookmarks.length > 0">
+            <div class="my-7 border-t border-gray-200"></div>
+            <div class="flex max-h-[600px] flex-col overflow-y-auto">
+              <a
+                v-for="bookmark in shared.bookmarks"
+                :key="bookmark.label"
+                class="flex items-center gap-2 rounded-full px-6 py-[18px] text-left text-sm font-semibold leading-5 transition-all duration-200 ease-in-out hover:bg-gray-100"
+                :href="bookmark.link"
+              >
+                <Icon name="star" class="size-6" />
+                <span>{{ bookmark.label }}</span>
+              </a>
+            </div>
+          </div>
           <div class="my-7 border-t border-gray-200"></div>
           <section class="grid grid-cols-1">
-            <!-- <Link class="flex items-center nav-link gap-x-3" href="/profile">
-              <Icon name="user" />
-              <span>Profile</span>
-            </Link> -->
-            <Link
-              v-if="isAdmin"
-              :class="[
-                'nav-link flex items-center gap-x-3',
-                {
-                  active: $page?.url === '/user',
-                },
-              ]"
-              :href="`/${locale}/user`"
-            >
+            <a v-if="isAdmin" :class="classList('user', true)" :href="`/${locale}/user`">
               <Icon name="users" />
-              <span>Users</span>
-            </Link>
+              <span>Team</span>
+            </a>
             <a
               v-if="shared.meta.helpUrl"
-              class="nav-link flex items-center gap-x-3"
+              :class="classList('support', true)"
               :href="shared.meta.helpUrl"
               target="_blank"
               rel="noopener noreferrer"
@@ -126,10 +119,10 @@
               <Icon name="help" />
               <span>Support</span>
             </a>
-            <Link class="nav-link flex items-center gap-x-3" href="/logout">
+            <a :class="classList('logout', true)" href="/logout">
               <Icon name="logout" />
               <span>Logout</span>
-            </Link>
+            </a>
           </section>
         </div>
       </div>
@@ -148,7 +141,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useSharedStore } from '../store';
-import { Link, router } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
 
 import Icon from '../shared/icon.vue';
 import LanguageSelector from './language-selector.vue';
@@ -167,7 +160,7 @@ const onLanguage = async (lang: string) => {
 
 const newPathFromLocale = (targetLocale: string) => {
   // const url = usePage().url;  not working
-  const url = window.location.href;
+  const url = window.location.href || '';
 
   if (url.includes('/ui')) {
     return `/${targetLocale}/ui`;
@@ -186,9 +179,11 @@ const newPathFromLocale = (targetLocale: string) => {
   return `/${targetLocale}/dashboard`;
 };
 
-const isMultiLingual = computed(() => shared.languages.length > 1);
-
 const isAdmin = computed(() => shared.user.isAdmin);
+
+const include = (element: string): boolean => {
+  return !shared.exclude.includes(element);
+};
 
 const locale = computed(() => {
   return shared.locale ?? 'en';
@@ -205,6 +200,16 @@ const toggleMenu = () => {
 const languageOptions = computed(() => {
   return shared.languages.map((l) => l.language) as string[];
 });
+
+const classList = (path: string, withGap: boolean = false) => {
+  const url = window.location.href?.replace('/drop', '/stream') || '';
+
+  return {
+    'nav-link': true,
+    active: url.includes(`/${locale.value}/${path}`),
+    'flex items-center gap-x-3': withGap,
+  };
+};
 </script>
 
 <style lang="postcss" scoped>

@@ -69,7 +69,7 @@ const cmsConfig: CmsConfig = defineConfig({
     /**
      * The logo of the app
      */
-    logo: 'https://res.cloudinary.com/redeem/image/upload/v1715865512/story-cms-ui/generic-logo_d411m3.png',
+    logo: 'https://res.cloudinary.com/journeys/image/upload/v1756295658/logo_g8k7tf.png',
 
     /**
      * Link to the help documentation

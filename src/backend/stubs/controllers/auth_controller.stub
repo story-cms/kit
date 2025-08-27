@@ -2,17 +2,22 @@
   exports({ to: app.makePath('app/controllers/auth_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
-import { Activity } from '@story-cms/kit';
-import cms from '@story-cms/kit/cms';
-import User from '#models/user';
+import { User, Activity } from '@story-cms/kit';
+import cms from '#services/cms';
 
 export default class AuthController {
   public async index(ctx: HttpContext) {
-    return ctx.inertia.render('Login', { ...cms.sharedProps(ctx) });
+    const shared = await cms.sharedProps(ctx);
+    return ctx.inertia.render('Login', shared);
   }
 
   public async store(ctx: HttpContext) {
     const { email, password } = ctx.request.only(['email', 'password']);
+
+    if (await this.isFreshInstall()) {
+      const user = await this.createFirstUser(ctx);
+      return ctx.response.redirect({{ '`/${user.defaultLanguage()}/dashboard`' }});
+    }
 
     if (email.startsWith('redacted+')) {
       ctx.session.flash('errorsBag', { credentials: 'Invalid username or password' });
@@ -43,5 +48,25 @@ export default class AuthController {
     });
     await ctx.auth.use('web').logout();
     ctx.response.redirect('/login');
+  }
+
+  protected async createFirstUser(ctx: HttpContext): Promise<User> {
+    const { email, password } = ctx.request.only(['email', 'password']);
+
+    const user = await User.create({
+      email,
+      password,
+      name: 'Admin',
+      language: '*',
+      role: 'admin',
+    });
+
+    await ctx.auth.use('web').login(user);
+    return user;
+  }
+
+  protected async isFreshInstall(): Promise<boolean> {
+    const user = await User.first();
+    return user === null;
   }
 }

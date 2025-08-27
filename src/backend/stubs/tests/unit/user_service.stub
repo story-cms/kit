@@ -2,10 +2,8 @@
   exports({ to: app.makePath('tests/unit/user_service.spec.ts') }) 
 }}}
 import { test } from '@japa/runner';
-import { UserService } from '#services/user_service';
-import User from '#models/user';
-import { Activity } from '@story-cms/kit';
 import { DateTime } from 'luxon';
+import { User, Activity, UserService } from '@story-cms/kit';
 
 test.group('UserService', (group) => {
   group.each.teardown(async () => {

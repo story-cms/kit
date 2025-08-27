@@ -9,7 +9,7 @@ export function defineConfig(config: Partial<CmsConfig>): CmsConfig {
       name: 'Journey CMS',
       hasAppPreview: false,
       helpUrl: 'https://www.markdownguide.org',
-      logo: '',
+      logo: 'https://res.cloudinary.com/journeys/image/upload/v1756295658/logo_g8k7tf.png',
       ...config.meta,
     },
     languages: {

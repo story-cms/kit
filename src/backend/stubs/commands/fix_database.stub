@@ -1,10 +1,10 @@
 {{{
   exports({ to: app.commandsPath('fix_database.ts') })
 }}}
-
 import { BaseCommand } from '@adonisjs/core/ace';
-import AdminService from '#services/admin_service';
+import { AdminService } from '@story-cms/kit';
 import { CommandOptions } from '@adonisjs/core/types/ace';
+import cms from '#services/cms';
 
 export default class FixDatabase extends BaseCommand {
   /**
@@ -28,7 +28,7 @@ export default class FixDatabase extends BaseCommand {
 
   public async run() {
     this.logger.info(FixDatabase.description);
-    const service = new AdminService();
+    const service = new AdminService(cms);
     await service.rebuildIndexes();
     {{'this.logger.info(service.feedback.join(\'\\n\'));'}}
     await service.syncAutoIncrement();

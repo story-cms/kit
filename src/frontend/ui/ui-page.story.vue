@@ -8,7 +8,8 @@
         :language="sharedProps.language"
         :errors="{ onBoardTitle: 'This is an error' }"
         :items="items"
-        :stories="['John', 'Acts']"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
       />
     </Variant>
   </Story>

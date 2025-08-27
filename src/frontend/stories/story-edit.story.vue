@@ -7,7 +7,8 @@
         :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="{}"
-        :stories="['John', 'Acts']"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
         :story="storyData"
         :is-new="false"
         :providers="{}"
@@ -21,7 +22,8 @@
         :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="{}"
-        :stories="['John', 'Acts']"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
         :story="newStoryData"
         :is-new="true"
         :providers="{}"
@@ -91,7 +93,8 @@ A comprehensive page component for creating and editing stories in the CMS.
   :languages="languages"
   :language="language"
   :errors="errors"
-  :stories="stories"
+  :bookmarks="bookmarks"
+  :exclude="[]"
   :story="story"
   :providers="providers"
 />
@@ -104,7 +107,8 @@ A comprehensive page component for creating and editing stories in the CMS.
 - `languages` - Available languages from sharedProps
 - `language` - Current language from sharedProps
 - `errors` - Error state from sharedProps
-- `stories` - Available stories array
+- `bookmarks` - Available bookmarks array
+- `exclude` - Exclude nav bar elements
 - `story` - Story data object with fields like name, coverImage, chapterLimit, tags, description
 - `providers` - Media providers for file uploads
 

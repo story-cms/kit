@@ -8,7 +8,8 @@
         :language="sharedProps.language"
         :errors="sharedProps.errors"
         :streams="streams"
-        :stories="['John', 'Acts']"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="['story']"
       />
     </Variant>
 
@@ -20,7 +21,8 @@
         :language="sharedProps.language"
         :errors="sharedProps.errors"
         :streams="[]"
-        :stories="['John', 'Acts']"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
       />
     </Variant>
   </Story>

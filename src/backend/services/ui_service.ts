@@ -1,0 +1,239 @@
+import axios from 'axios';
+import db from '@adonisjs/lucid/services/db';
+import Ui from '../models/ui.js';
+import UiAttribute from '../models/ui_attribute.js';
+import { AiService } from './ai_service.js';
+import { inject } from '@adonisjs/core';
+import { CmsService } from './cms_service.js';
+
+@inject()
+export class UiService {
+  protected sourceLocale = 'en';
+
+  constructor(protected cms: CmsService) {
+    this.sourceLocale = cms.config.languages.languages[0].locale;
+  }
+
+  public async fillMissing(locale: string): Promise<number> {
+    let fillCount = 0;
+
+    const missing = await this.missingItems(locale);
+    if (missing.length === 0) return fillCount;
+
+    const aiService = new AiService();
+    const input = {
+      outputLocales: [locale],
+      translationSources: missing,
+    };
+
+    const result = await aiService.translate(input);
+    if (!result[locale] || result[locale].length === 0) return fillCount;
+
+    // persist the result
+    const fresh = result[locale].map((item) => ({
+      locale,
+      key: item.id,
+      microCopy: item.text,
+      flag: 'prefilled',
+    }));
+
+    const freshKeys = fresh.map((item) => item.key);
+
+    await db.transaction(async (trx) => {
+      // clear the existing locale data
+      await Ui.query({ client: trx })
+        .where('locale', locale)
+        .whereIn('key', freshKeys)
+        .delete();
+      const ui = await Ui.createMany(fresh);
+      fillCount = ui.length;
+    });
+
+    return fillCount;
+  }
+
+  public async translation(locale: string): Promise<Record<string, string>> {
+    const result: Record<string, string> = {
+      '@@locale': locale,
+    };
+
+    const rows = await Ui.query().where('locale', locale);
+    rows.forEach((row) => {
+      if (row.microCopy && row.microCopy.trim() !== '') {
+        result[row.key] = row.microCopy;
+      }
+    });
+
+    return result;
+  }
+
+  public async getTodoCount(locale: string): Promise<number> {
+    const rows = await Ui.query().whereIn('locale', [locale, this.sourceLocale]);
+    const totalCount = rows.filter((row) => row.locale === this.sourceLocale).length;
+    const translatedCount = rows.filter(
+      (row) => row.locale === locale && row.microCopy,
+    ).length;
+
+    const flaggedCount = rows.filter((row) => row.locale === locale && row.flag).length;
+    return flaggedCount + (totalCount - translatedCount);
+  }
+
+  public async items(locale: string): Promise<any[]> {
+    const attributes = await UiAttribute.all();
+    const source = await Ui.query().where('locale', this.sourceLocale);
+    const translations = await Ui.query().where('locale', locale);
+    const items = source.map((item) => {
+      const attribute = attributes.find((attr) => attr.key === item.key);
+      const translation = translations.find((row) => row.key === item.key);
+      return {
+        key: item.key,
+        source: item.microCopy,
+        translation: translation?.microCopy,
+        description: attribute?.description ?? item.key,
+        placeholders: attribute?.placeholdersArray || [],
+        flag: translation?.flag ?? undefined,
+        updatedAt: (translation?.updatedAt ?? item.updatedAt).toISO() ?? '',
+      };
+    });
+
+    return items;
+  }
+
+  public async missingItems(locale: string): Promise<any[]> {
+    const attributes = await UiAttribute.all();
+    const source = await Ui.query().where('locale', this.sourceLocale);
+    const translations = await Ui.query().where('locale', locale);
+    const missing = source
+      // TODO: missing or empty
+      .filter((item) => !translations.find((row) => row.key === item.key))
+      .map((item) => {
+        const attribute = attributes.find((attr) => attr.key === item.key);
+        return {
+          id: item.key,
+          text: item.microCopy,
+          description: attribute?.description,
+          placeholders: attribute?.placeholdersArray,
+        };
+      });
+
+    return missing;
+  }
+
+  public async suggest(locale: string, key: string): Promise<string> {
+    const source = await Ui.query()
+      .where('locale', this.sourceLocale)
+      .where('key', key)
+      .first();
+    if (!source) return '';
+
+    const attribute = await UiAttribute.query().where('key', key).first();
+
+    const aiService = new AiService();
+    const input = {
+      outputLocales: [locale],
+      translationSources: [
+        {
+          id: source.key,
+          text: source.microCopy,
+          description: attribute?.description,
+          placeholders: attribute?.placeholdersArray,
+        },
+      ],
+    };
+    const result = await aiService.translate(input);
+    return result[locale][0].text;
+  }
+
+  public async flag(locale: string, key: string, state: string): Promise<void> {
+    await Ui.updateOrCreate({ locale, key }, { flag: state });
+  }
+
+  public async store(locale: string, payload: Record<string, any>): Promise<void> {
+    // validate the payload
+    const input = {
+      key: payload['key'],
+      translation: payload['translation'],
+      isPrefilled: payload['isPrefilled'],
+      locale: locale,
+    };
+
+    const validated = await this.validate(input);
+    await Ui.updateOrCreate(
+      { locale, key: validated.key },
+      {
+        microCopy: validated.translation,
+        flag: validated.isPrefilled ? 'prefilled' : null,
+      },
+    );
+  }
+
+  private async validate(payload: any): Promise<any> {
+    // validate not empty
+    if (!payload.translation || payload.translation.trim() === '') {
+      throw new Error('Translation is required');
+    }
+
+    // validate placeholders
+    const attribute = await UiAttribute.query().where('key', payload.key).first();
+    if (attribute?.placeholders) {
+      const haystack = payload.translation;
+
+      const missing = attribute.placeholdersArray.filter(
+        (ph) => !haystack.includes('{' + ph + '}'),
+      );
+
+      if (missing.length > 0) {
+        throw new Error(`Missing placeholders: ${missing.join(', ')}`);
+      }
+    }
+
+    return payload;
+  }
+
+  public async pull(
+    token: string,
+  ): Promise<{ result: string; ingested?: number; attributes?: number }> {
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    const sourcePath = this.cms.config.languages.microcopySource;
+    const req = await axios.get(sourcePath, { headers });
+    const data = req.data as Record<string, any>;
+
+    // clear the existing source data
+    const result: { result: string; ingested?: number; attributes?: number } = {
+      result: 'success',
+    };
+    const keys = Object.keys(data);
+    const fresh = keys
+      .filter((key) => !key.startsWith('@'))
+      .map((key) => ({ locale: this.sourceLocale, key, micro_copy: data[key] }));
+
+    const attributes = keys
+      .filter((key) => key.startsWith('@') && key !== '@@locale')
+      .map((key) => ({
+        key: key.substring(1),
+        description: data[key]['description'],
+        placeholders: data[key]['placeholders'],
+      }));
+
+    await db.transaction(async (trx) => {
+      // replace the source data
+      await Ui.query({ client: trx }).where('locale', this.sourceLocale).delete();
+      const ui = await Ui.createMany(fresh);
+      result['ingested'] = ui.length;
+
+      // replace the attributes
+      await UiAttribute.query({ client: trx }).delete();
+      const rows = await UiAttribute.createMany(attributes);
+      result['attributes'] = rows.length;
+
+      // delete stale items
+      const keep = keys.filter((key) => !key.startsWith('@'));
+      await Ui.query({ client: trx }).whereNotIn('key', keep).delete();
+    });
+
+    return result;
+  }
+}

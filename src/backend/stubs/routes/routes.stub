@@ -10,16 +10,18 @@
 |
 */
 
+import router from '@adonisjs/core/services/router';
 import { middleware } from '#start/kernel';
 import api from '#start/routes/api';
 import audiences from '#start/routes/audiences';
 import auth from '#start/routes/auth';
 import dashboard from '#start/routes/dashboard';
 import pages from '#start/routes/pages';
+import preferences from '#start/routes/preferences';
 import stories from '#start/routes/stories';
+import streams from '#start/routes/streams';
 import { ui, uiTools } from '#start/routes/ui';
 import users from '#start/routes/users';
-import router from '@adonisjs/core/services/router';
 
 // Public routes
 
@@ -36,6 +38,8 @@ router
     stories();
     pages();
     ui();
+    streams();
+    preferences();
   })
   .use(middleware.auth());
 

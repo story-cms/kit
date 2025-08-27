@@ -564,7 +564,11 @@ export const sharedProps: SharedPageProps = {
   language: english,
   languages,
   errors: {},
-  stories,
+  exclude: [],
+  bookmarks: [
+    { label: 'John', link: '/en/story/1' },
+    { label: 'Acts', link: '/en/story/2' },
+  ],
 };
 
 export const miniSidebar: StoryHandler = (): void => {

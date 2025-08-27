@@ -1,0 +1,10 @@
+{{{
+  exports({ to: app.makePath('start/routes/preferences.ts') })
+}}}
+import router from '@adonisjs/core/services/router';
+
+const PreferencesController = () => import('#controllers/preferences_controller');
+
+export default () => {
+  router.post('/preferences/bookmarks', [PreferencesController, 'toggleBookmark']);
+};

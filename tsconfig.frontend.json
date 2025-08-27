@@ -5,5 +5,5 @@
     "lib": ["ESNext", "DOM"],
     "outDir": "./dist/frontend"
   },
-  "include": ["src/frontend/**/*"]
+  "include": ["src/frontend/**/*", "src/types.ts"]
 }

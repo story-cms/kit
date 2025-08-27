@@ -1,0 +1,16 @@
+import factory from '@adonisjs/lucid/factories';
+import Draft from '../models/draft.js';
+
+export const DraftFactory = factory
+  .define(Draft, async ({ faker }) => {
+    return {
+      apiVersion: 1,
+      locale: 'en',
+      bundle: '[]',
+      number: 1,
+      storyId: 1,
+      feedback: faker.lorem.sentence(),
+      status: 'submitted',
+    };
+  })
+  .build();

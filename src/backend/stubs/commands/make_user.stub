@@ -18,7 +18,7 @@ export default class MakeUser extends BaseCommand {
   static options: CommandOptions = { startApp: true };
 
   public async run() {
-    const { default: User } = await import('#models/user');
+    const { default: User } = await import('@story-cms/kit/user');
 
     const name = await this.prompt.ask('Enter name');
     const email = await this.prompt.ask('Enter email');

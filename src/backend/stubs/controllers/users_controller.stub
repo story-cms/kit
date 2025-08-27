@@ -7,12 +7,16 @@ import type { HttpContext } from '@adonisjs/core/http';
 import string from '@adonisjs/core/helpers/string';
 import config from '@adonisjs/core/services/config';
 import mail from '@adonisjs/mail/services/main';
-import { Activity, type UsersProps } from '@story-cms/kit';
-import cms from '@story-cms/kit/cms';
-import User from '#models/user';
-import { UserService } from '#services/user_service';
+import {
+  UserService,
+  User,
+  Activity,
+  createUserValidator,
+  updateUserValidator,
+  type UsersProps,
+} from '@story-cms/kit';
+import cms from '#services/cms';
 import env from '#start/env';
-import { createUserValidator, updateUserValidator } from '#validators/user';
 
 export default class UsersController {
   // show a list of all users
@@ -31,12 +35,14 @@ export default class UsersController {
 
     const userService = new UserService();
     const users = await userService.latest();
+    const shared = await cms.sharedProps(ctx);
 
     const props: UsersProps = {
       users,
+      ...shared,
     };
 
-    return ctx.inertia.render('UsersIndex', { ...props, ...cms.sharedProps(ctx) });
+    return ctx.inertia.render('UsersIndex', props);
   }
 
   // patch a user's information

@@ -4,26 +4,33 @@
 import type { HttpContext } from '@adonisjs/core/http';
 import db from '@adonisjs/lucid/services/db';
 
-import { Activity, Chapter, Draft, type DraftEditProps } from '@story-cms/kit';
-import cms from '@story-cms/kit/cms';
-import { trimmedErrors } from '@story-cms/kit/helpers';
+import {
+  Activity,
+  Chapter,
+  Draft,
+  trimmedErrors,
+  DraftService,
+  IndexService,
+  ChapterValidator,
+  chapterErrorMessages,
+  type DraftEditProps,
+} from '@story-cms/kit';
+import cms from '#services/cms';
 import providers from '#config/providers';
-import DraftService from '#services/draft_service';
-import IndexService from '#services/index_service';
-import { draftValidator } from '#validators/bundle';
+import vine from '@vinejs/vine';
 
 export default class DraftsController {
   public async create(ctx: HttpContext) {
     const { story, version } = cms.storyContextFrom(ctx);
     if (story === undefined) return ctx.response.notFound();
 
-    const indexService = new IndexService(story);
+    const indexService = new IndexService(story, cms);
     const number = await indexService.getNewChapterNumber(version);
     if (number > story.chapterLimit) return ctx.response.redirect('/');
 
-    const service = new DraftService(story);
-    // TODO: set your own prefill fields
-    service.setPrefilledFields(['imageUrl', 'type']);
+    const service = new DraftService(story, cms);
+    // TODO: overrride default prefill fields as needed
+    // service.setPrefilledFields(['imageUrl', 'type']);
     const bundle = await service.getDraftBundle(version, number);
     if (bundle === null) return ctx.response.redirect('/');
 
@@ -75,8 +82,10 @@ export default class DraftsController {
       });
     }
 
-    const indexService = new IndexService(story);
+    const indexService = new IndexService(story, cms);
     await indexService.buildIndex(version);
+
+    const shared = await cms.sharedProps(ctx);
 
     const data: DraftEditProps = {
       draft: draft.meta,
@@ -85,12 +94,13 @@ export default class DraftsController {
       providers,
       story,
       hasEditReview: cms.config.stories.hasEditReview,
+      ...shared,
     };
 
     const isTranslation = version.locale !== cms.config.languages.languages[0].locale;
 
     if (!isTranslation) {
-      return ctx.inertia.render('DraftIndex', { ...data, ...cms.sharedProps(ctx) });
+      return ctx.inertia.render('DraftIndex', data);
     }
 
     const source = await Chapter.query()
@@ -103,7 +113,7 @@ export default class DraftsController {
     return ctx.inertia.render('TranslationIndex', {
       ...data,
       source: source?.bundle,
-      ...cms.sharedProps(ctx),
+      ...shared,
     });
   }
 
@@ -123,7 +133,7 @@ export default class DraftsController {
         locale: version.locale,
         action: {{ '`updated draft for ${story.name} # ${draft.number}`' }},
       });
-      const service = new IndexService(story);
+      const service = new IndexService(story, cms);
       await service.buildIndex(draft.version);
     } catch (e) {
       const errors = e.messages || e.message || 'Error while saving this draft. Sorry!';
@@ -144,14 +154,16 @@ export default class DraftsController {
 
     try {
       const data = ctx.request.all();
-      payload = await draftValidator.validate(data);
+      vine.messagesProvider = chapterErrorMessages;
+      const validator = new ChapterValidator(story);
+      payload = await validator.schema.validate(data);
     } catch (e) {
       const errors = trimmedErrors(e);
       ctx.session.flash('errorsBag', errors);
       return ctx.response.redirect().back();
     }
 
-    const service = new IndexService(story);
+    const service = new IndexService(story, cms);
 
     draft.bundle = JSON.stringify(payload.bundle);
     draft.status = 'submitted';
@@ -195,7 +207,9 @@ export default class DraftsController {
 
     try {
       const data = ctx.request.all();
-      const payload = await draftValidator.validate(data);
+      vine.messagesProvider = chapterErrorMessages;
+      const validator = new ChapterValidator(story);
+      const payload = await validator.schema.validate(data);
       draft.bundle = JSON.stringify(payload.bundle);
     } catch (e) {
       const errors = trimmedErrors(e);
@@ -229,7 +243,7 @@ export default class DraftsController {
     });
 
     // update the index after the transaction
-    const service = new IndexService(story);
+    const service = new IndexService(story, cms);
     await service.buildIndex(version);
 
     return ctx.response.redirect({{ '`/${version.locale}/story/${story.id}`' }});
@@ -251,7 +265,7 @@ export default class DraftsController {
       action: {{ '`deleted draft for ${story.name} # ${draft.number}`' }},
     });
 
-    const service = new IndexService(story);
+    const service = new IndexService(story, cms);
     await service.buildIndex(version);
 
     return ctx.response.redirect({{ '`/${version.locale}/story/${story.id}`' }}, false, 303);

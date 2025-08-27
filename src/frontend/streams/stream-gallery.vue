@@ -1,7 +1,7 @@
 <template>
   <AppLayout>
     <template #header>
-      <ContentHeader title="Stream Gallery">
+      <ContentHeader title="Streams">
         <template #actions>
           <div class="flex items-center justify-center gap-x-6">
             <Icon

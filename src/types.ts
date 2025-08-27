@@ -112,6 +112,31 @@ export interface DropIndexItem {
   isPublished: boolean;
 }
 
+export interface StreamIndexItem {
+  id: number;
+  title: string;
+  coverImage: string;
+  latestReleaseAt: string;
+  count: number;
+}
+
+export interface StreamGalleryProps {
+  streams: StreamIndexItem[];
+}
+
+export interface DropIndexItem {
+  id: number;
+  title: string;
+  coverImage: string;
+  releaseAt: string;
+  isPublished: boolean;
+}
+
+export interface StreamIndexProps {
+  stream: StreamIndexItem;
+  drops: DropIndexItem[];
+}
+
 export interface DropMeta {
   id: number;
   createdAt: string;
@@ -120,11 +145,12 @@ export interface DropMeta {
 }
 
 export interface StreamEditProps {
-  meta: DropMeta;
+  dropMeta: DropMeta;
   spec: StreamSpec;
   model: any; // model
   providers: Providers; // widgets
 }
+
 /// ----------------------------------------------------
 ///  stories
 /// ----------------------------------------------------
@@ -141,11 +167,15 @@ export interface StorySpec {
   parts?: Array<Part>;
 }
 
-export interface Part {
+export interface StoryIndexItem {
   id: number;
-  title: string;
-  subtitle: string;
+  name: string;
   description: string;
+  coverImage: string;
+  chapterLimit: number;
+  createdAt: string;
+  updatedAt: string;
+  draftCount: number;
 }
 
 export interface Version {
@@ -167,6 +197,21 @@ export interface IndexItem {
   title: string;
   reference?: string;
   part?: number;
+}
+
+export interface Part {
+  id: number;
+  title: string;
+  subtitle: string;
+  description: string;
+}
+
+export interface GroupedIndexItem {
+  id: number;
+  title: string;
+  subtitle: string;
+  description: string;
+  index: { id: number; title: string; imageUrl: string }[];
 }
 
 export interface IndexReadyItem {
@@ -196,11 +241,13 @@ export type StoryMeta = {
   createdAt: string;
   updatedAt: string;
 };
+
 export interface StoryEditProps {
   story: StoryMeta;
   isNew: boolean;
   providers: Providers;
 }
+
 export interface StoryIndexProps {
   index: IndexReadyItem[];
   addStatus: AddStatus;
@@ -281,7 +328,7 @@ export interface SharedPageProps {
   language: LanguageSpecification;
   languages: LanguageSpecification[];
   errors?: any;
-  stories: string[];
+  exclude: string[];
   bookmarks?: Bookmark[];
 }
 

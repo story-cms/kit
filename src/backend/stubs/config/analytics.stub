@@ -1,9 +1,9 @@
 {{{
   exports({ to: app.configPath('analytics.ts') })
 }}}
-import { defineConfig } from '#services/analytics_service';
+import { defineAnalyticsConfig } from '@story-cms/kit';
 
-const analyticsConfig = defineConfig({
+const analyticsConfig = defineAnalyticsConfig({
 
   /**
    * Google Analytics property id

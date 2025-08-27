@@ -2,18 +2,26 @@
   exports({ to: app.makePath('app/controllers/audiences_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
-import cms from '@story-cms/kit/cms';
-import AudienceService from '#services/audience_service';
+import { AudienceService } from '@story-cms/kit';
+import cms from '#services/cms';
 
 export default class AudiencesController {
   public async index(ctx: HttpContext) {
-    const service = new AudienceService({});
-    const audiences = await service.getAllUsers();
+    let audiences;
+    try {
+      // for apps that are not configured yet, we will return an empty array
+      const service = new AudienceService();
+      audiences = await service.getAllUsers();
+    } catch (error) {
+      audiences = [];
+    }
 
+    const shared = await cms.sharedProps(ctx);
     const props = {
       audiences: audiences,
+      ...shared,
     };
 
-    return ctx.inertia.render('AudiencesIndex', { ...props, ...cms.sharedProps(ctx) });
+    return ctx.inertia.render('AudiencesIndex', { ...props });
   }
 }

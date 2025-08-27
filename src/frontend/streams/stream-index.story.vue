@@ -9,7 +9,8 @@
         :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
-        :stories="['John', 'Acts']"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
       />
     </Variant>
 
@@ -22,7 +23,8 @@
         :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
-        :stories="['John', 'Acts']"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
       />
     </Variant>
 
@@ -35,7 +37,8 @@
         :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
-        :stories="['John', 'Acts']"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
       />
     </Variant>
 
@@ -48,7 +51,8 @@
         :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
-        :stories="['John', 'Acts']"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
       />
     </Variant>
   </Story>
@@ -155,6 +159,8 @@ A page component that displays a collection of drops (content items) for a speci
 - `languages` - Available languages
 - `language` - Current language
 - `errors` - Error state
+- `bookmarks` - Available bookmarks array
+- `exclude` - Exclude nav bar elements
 
 ## Variants
 
@@ -175,6 +181,8 @@ A page component that displays a collection of drops (content items) for a speci
   :languages="languages"
   :language="currentLanguage"
   :errors="errors"
+  :bookmarks="bookmarks"
+  :exclude="[]"
 />
 ```
 </docs>

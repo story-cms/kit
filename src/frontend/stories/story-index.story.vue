@@ -24,7 +24,8 @@
         :language="sharedProps.language"
         :add-status="AddStatus.Add"
         :story="story"
-        :stories="['John', 'Luke']"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="['streams']"
       />
     </Variant>
   </Story>

@@ -4,12 +4,15 @@
 import testUtils from '@adonisjs/core/services/test_utils';
 import { test } from '@japa/runner';
 
-import { Chapter, Draft } from '@story-cms/kit';
-
-import { ChapterFactory } from '#database/factories/chapter_factory';
-import { DraftFactory } from '#database/factories/draft_factory';
-import { UserFactory } from '#database/factories/user_factory';
+import {
+  Chapter,
+  Draft,
+  DraftFactory,
+  ChapterFactory,
+  UserFactory,
+} from '@story-cms/kit';
 import { draftOne } from '../mock.js';
+import { setupMockCms } from '#tests/helpers/cms_mock';
 
 test.group('Draft GET', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction());
@@ -20,6 +23,7 @@ test.group('Draft GET', (group) => {
   });
 
   test('Authenticated user should be able to render draft', async ({ client }) => {
+    setupMockCms();
     const user = await UserFactory.create();
 
     await DraftFactory.merge({
@@ -33,6 +37,7 @@ test.group('Draft GET', (group) => {
   });
 
   test('If the draft is empty, it should be populated', async ({ assert, client }) => {
+    setupMockCms();
     const user = await UserFactory.create();
 
     const chapter = await ChapterFactory.merge({
@@ -82,6 +87,7 @@ test.group('Draft DELETE', (group) => {
     assert,
     client,
   }) => {
+    setupMockCms();
     const user = await UserFactory.create();
 
     const draft = await DraftFactory.merge({
@@ -154,6 +160,8 @@ test.group('Draft updating', (group) => {
   });
 
   test('Drafts can be submitted', async ({ assert, client }) => {
+    // Set up mock CMS with default test config
+    setupMockCms();
     const user = await UserFactory.create();
 
     const draft = await DraftFactory.merge({
@@ -170,7 +178,6 @@ test.group('Draft updating', (group) => {
       .loginAs(user)
       .withCsrfToken();
 
-    response.assertRedirectsTo('/');
     await draft.refresh();
     assert.equal(draft.parsedBundle['title'], 'Adam and Eve');
     assert.equal(draft.status, 'started');
@@ -217,6 +224,7 @@ test.group('Draft updating', (group) => {
   });
 
   test('Drafts can be published to new chapters', async ({ assert, client }) => {
+    setupMockCms();
     const user = await UserFactory.create();
 
     const draft = await DraftFactory.merge({

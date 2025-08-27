@@ -4,22 +4,29 @@
 import type { HttpContext } from '@adonisjs/core/http';
 import vine from '@vinejs/vine';
 
-import { Activity, Page } from '@story-cms/kit';
-import type { PageEditProps } from '@story-cms/kit';
-import cms from '@story-cms/kit/cms';
-import { trimmedErrors } from '@story-cms/kit/helpers';
-import PageService from '@story-cms/kit/page_service';
-import { PageValidator, errorMessages } from '#validators/page';
+import {
+  Activity,
+  Page,
+  trimmedErrors,
+  PageService,
+  type PageEditProps,
+  PageValidator,
+  pageErrorMessages,
+} from '@story-cms/kit';
+import cms from '#services/cms';
 import providers from '#config/providers';
 
 export default class PagesController {
   public async get({ request }: HttpContext) {
     const locale = request.qs()['locale'] || 'en';
 
-    const service = new PageService({
-      apiVersion: 1,
-      locale: locale,
-    });
+    const service = new PageService(
+      {
+        apiVersion: 1,
+        locale: locale,
+      },
+      cms,
+    );
     const items = await service.getPageItemsForClient();
 
     return { pages: items };
@@ -27,24 +34,28 @@ export default class PagesController {
 
   public async index(ctx: HttpContext) {
     const version = cms.pagesContextFrom(ctx);
-    const service = new PageService(version);
+    const service = new PageService(version, cms);
     const pages = await service.getPageItems();
+
+    const shared = await cms.sharedProps(ctx);
     return ctx.inertia.render('PagesIndex', {
       pages: pages,
-      ...cms.sharedProps(ctx),
+      ...shared,
     });
   }
 
   public async edit(ctx: HttpContext) {
     const page = await Page.findOrFail(ctx.params.id);
 
+    const shared = await cms.sharedProps(ctx);
     const props: PageEditProps = {
       providers: providers,
       page: page.meta,
       bundle: page.model,
+      ...shared,
     };
 
-    return ctx.inertia.render('PagesEdit', { ...props, ...cms.sharedProps(ctx) });
+    return ctx.inertia.render('PagesEdit', props);
   }
 
   public async create(ctx: HttpContext) {
@@ -91,7 +102,7 @@ export default class PagesController {
       // constructing the validator first so we can have a
       // dynamic getter for the schema property
       const data = ctx.request.all();
-      vine.messagesProvider = errorMessages;
+      vine.messagesProvider = pageErrorMessages;
 
       const pageValidator = new PageValidator(ctx);
       payload = await pageValidator.schema.validate(data);
@@ -130,7 +141,7 @@ export default class PagesController {
     const version = cms.pagesContextFrom(ctx);
 
     // use the service to sort the pages in memory
-    const service = new PageService(version);
+    const service = new PageService(version, cms);
     const pages = await service.pagesFromItems(ctx.request.input('items'));
 
     // save all the pages

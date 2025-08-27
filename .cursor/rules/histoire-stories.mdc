@@ -161,7 +161,8 @@ const spec = {
         :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
-        :stories="['John', 'Acts']"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
         :data="pageData"
       />
     </Variant>
@@ -310,9 +311,9 @@ Test components at different screen sizes using Histoire's responsive controls.
 
 Add documentation using the `<docs>` block:
 
-````vue
+```vue
 <docs lang="md"></docs>
-````
+```
 
 ## Props
 

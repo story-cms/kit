@@ -7,7 +7,6 @@
         :language="spanish"
         :languages="sharedProps.languages"
         :errors="sharedProps.errors"
-        :stories="['John', 'Acts']"
         :draft="draft"
         :bundle="{}"
         :source="source"
@@ -15,6 +14,8 @@
         :last-published="'2021-10-10T14:48:00.000000Z'"
         :story="{ ...story, fields, chapterLimit: 21 }"
         :has-edit-review="false"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
       />
     </Variant>
   </Story>

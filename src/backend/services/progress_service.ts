@@ -7,13 +7,17 @@ import {
 } from '../../types.js';
 import Index from '../models/index.js';
 import Ui from '../models/ui.js';
-import cms from './cms.js';
+import { inject } from '@adonisjs/core';
+import { CmsService } from './cms_service.js';
 
-export default class ProgressService {
+@inject()
+export class ProgressService {
+  constructor(protected cms: CmsService) {}
+
   public async progress(user: UserInterface): Promise<TranslationProgress[]> {
     const translationProgress: TranslationProgress[] = [];
 
-    const languages = cms.config.languages.languages
+    const languages = this.cms.config.languages.languages
       .filter((lang: LanguageSpecification) => lang.locale !== 'en')
       .sort((a: LanguageSpecification, b: LanguageSpecification) =>
         a.language.localeCompare(b.language),

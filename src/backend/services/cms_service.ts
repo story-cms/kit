@@ -6,13 +6,21 @@ import type {
   Version,
   SharedPageProps,
   LanguageSpecification,
+  Bookmark,
 } from '../../types';
+import { defineConfig } from '../define_config.js';
+import { PreferenceService } from './preference_service.js';
 
-export default class CmsService {
+export class CmsService {
   #config: CmsConfig;
 
   public constructor(config: CmsConfig) {
     this.#config = config;
+  }
+
+  public static default(): CmsService {
+    const config = defineConfig({});
+    return new CmsService(config);
   }
 
   public get config(): CmsConfig {
@@ -121,13 +129,40 @@ export default class CmsService {
     return found as LanguageSpecification;
   }
 
-  public sharedProps(ctx: HttpContext): SharedPageProps {
+  protected async getBookmarks(ctx: HttpContext): Promise<Bookmark[]> {
+    const userId = Number(ctx.auth?.use('web')?.user?.id);
+    if (!userId) return [];
+
+    try {
+      const service = new PreferenceService();
+      return await service.getUserBookmarks(userId);
+    } catch {
+      return [];
+    }
+  }
+
+  public async sharedProps(ctx: HttpContext): Promise<SharedPageProps> {
+    const exclude: string[] = [];
+    if (this.#config.stories.stories.length < 1) {
+      exclude.push('story');
+    }
+    if (this.#config.streams.streams.length < 1) {
+      exclude.push('stream');
+    }
+    if (this.#config.languages.languages.length < 1) {
+      exclude.push('language');
+    }
+    // page, audience
+
+    const bookmarks = await this.getBookmarks(ctx);
+
     return {
       meta: this.#config.meta,
       user: ctx.auth?.use('web')?.user,
       language: this.getLanguage(ctx.params.locale ?? 'en'),
       languages: this.#config.languages.languages,
-      stories: this.#config.stories.stories.map((s) => s.name),
+      exclude,
+      bookmarks,
     };
   }
 }

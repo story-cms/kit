@@ -26,7 +26,21 @@ export default defineConfig({
       // fileName: 'index',
     },
     rollupOptions: {
-      external: ['axios', 'luxon', 'pinia', 'vue'],
+      external: [
+        'axios',
+        'luxon',
+        'pinia',
+        'vue',
+        '@adonisjs/auth',
+        '@adonisjs/core',
+        '@adonisjs/lucid',
+        '@adonisjs/session',
+        '@google-analytics/data',
+        '@vinejs/vine',
+        'firebase-admin',
+        'openai',
+        'zod',
+      ],
       output: {
         globals: {
           vue: 'Vue',

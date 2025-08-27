@@ -3,9 +3,9 @@
 }}}
 import { test } from '@japa/runner';
 import testUtils from '@adonisjs/core/services/test_utils';
-import ProgressService from '@story-cms/kit/progress_service';
-import { Ui, Index, type UserInterface } from '@story-cms/kit';
-import User from '#models/user';
+import { User, ProgressService, Ui, Index, type UserInterface } from '@story-cms/kit';
+import cms from '#services/cms';
+import { setupMockCms } from '#tests/helpers/cms_mock';
 
 test.group('ProgressService', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction());
@@ -14,7 +14,8 @@ test.group('ProgressService', (group) => {
     assert,
   }) => {
     // 1. arrange
-    const service = new ProgressService();
+    setupMockCms();
+    const service = new ProgressService(cms);
 
     // Create user
     const user = await User.create({

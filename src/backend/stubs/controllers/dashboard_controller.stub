@@ -2,9 +2,8 @@
   exports({ to: app.makePath('app/controllers/dashboard_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
-import ProgressService from '@story-cms/kit/progress_service';
-import cms from '@story-cms/kit/cms';
-import type { UserInterface, DashboardProps } from '@story-cms/kit';
+import cms from '#services/cms';
+import { ProgressService, type UserInterface, type DashboardProps } from '@story-cms/kit';
 
 export default class DashboardController {
   public async index(ctx: HttpContext) {
@@ -20,15 +19,16 @@ export default class DashboardController {
       return ctx.response.redirect(defaultHome);
     }
 
-    const progressService = new ProgressService();
+    const progressService = new ProgressService(cms);
     const translationProgress = await progressService.progress(
       ctx.auth.user! as UserInterface,
     );
 
     const props: DashboardProps = {
       translationProgress: translationProgress ?? [],
+      ...(await cms.sharedProps(ctx)),
     };
 
-    return ctx.inertia.render('DashboardIndex', { ...props, ...cms.sharedProps(ctx) });
+    return ctx.inertia.render('DashboardIndex', props);
   }
 }

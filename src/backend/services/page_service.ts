@@ -1,11 +1,14 @@
 import type { PageVersion, PageBundle, PageItem } from '../../types';
 import Page from '../models/page.js';
-import cms from './cms.js';
+import { CmsService } from './cms_service.js';
 
-export default class PageService {
+export class PageService {
   protected version: PageVersion;
 
-  constructor(version: PageVersion) {
+  constructor(
+    version: PageVersion,
+    protected cms: CmsService,
+  ) {
     this.version = version;
   }
 
@@ -37,7 +40,7 @@ export default class PageService {
       .where('isPublished', true)
       .orderBy('order', 'asc');
 
-    const tracking = cms.config.pages.tracking;
+    const tracking = this.cms.config.pages.tracking;
     return pages.map((page) => page.bundleWithTracking(tracking));
   }
 

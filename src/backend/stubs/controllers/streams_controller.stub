@@ -1,0 +1,227 @@
+{{{
+  exports({ to: app.makePath('app/controllers/streams_controller.ts') })
+}}}
+import { HttpContext } from '@adonisjs/core/http';
+import db from '@adonisjs/lucid/services/db';
+import { DateTime } from 'luxon';
+import type {
+  StreamEditProps,
+  StreamGalleryProps,
+  StreamIndexProps,
+  StreamSpec,
+} from '@story-cms/kit';
+import {
+  User,
+  Drop,
+  Activity,
+  BundleService,
+  DropValidator,
+  trimmedErrors,
+  bundledErrors,
+} from '@story-cms/kit';
+import providers from '#config/providers';
+import cms from '#services/cms';
+
+export default class StreamController {
+  public async gallery(ctx: HttpContext) {
+    const streamsFromSpec = cms.config.streams.streams.map((stream: StreamSpec) => ({
+      id: stream.id,
+      title: stream.title,
+      coverImage: stream.coverImage,
+    }));
+
+    const latestDrops = await db.rawQuery({{'`'}}
+        SELECT stream_id, MAX(release_at) as release_at, COUNT(*) as count
+        FROM drops
+        WHERE is_published = true
+        GROUP BY stream_id
+        {{'`'}});
+
+    const result = latestDrops.rows.map(
+      (row: { stream_id: number; release_at: string; count: number }) => ({
+        id: row.stream_id,
+        releaseAt: row.release_at,
+        count: Number(row.count),
+      }),
+    );
+
+    const streams = streamsFromSpec.map(
+      (stream: { id: number; title: string; coverImage: string }) => {
+        const latestDrop = result.find((drop: { id: number }) => drop.id === stream.id);
+        return {
+          ...stream,
+          latestReleaseAt: latestDrop?.releaseAt,
+          count: latestDrop?.count,
+        };
+      },
+    );
+
+    const shared = await cms.sharedProps(ctx);
+    const data = {
+      streams,
+      ...shared,
+    } as StreamGalleryProps;
+
+    return ctx.inertia.render('StreamGallery', data);
+  }
+
+  public async index(ctx: HttpContext) {
+    const stream = this.getStream(ctx);
+
+    const rows = await Drop.query()
+      .where('streamId', stream.id)
+      .orderBy('releaseAt', 'desc');
+
+    const drops = rows.map((drop) => drop.indexItem);
+    const shared = await cms.sharedProps(ctx);
+    const data = {
+      stream: {
+        id: stream.id,
+        title: stream.title,
+        coverImage: stream.coverImage,
+      },
+      drops,
+      ...shared,
+    } as StreamIndexProps;
+
+    return ctx.inertia.render('StreamIndex', data);
+  }
+
+  public async create(ctx: HttpContext) {
+    const version = cms.pagesContextFrom(ctx);
+    const stream = this.getStream(ctx);
+
+    const service = new BundleService(stream.fields);
+
+    const drop = await Drop.create({
+      apiVersion: stream.schemaVersion,
+      bundle: service.defaultBundle,
+      streamId: stream.id,
+      updatedBy: ctx.auth.user?.id,
+      title: {{'`New ${stream.dropType}`'}},
+      coverImage: stream.coverImage,
+    });
+
+    await Activity.create({
+      userId: ctx.auth.user?.id,
+      locale: version.locale,
+      action: {{'`created drop ${drop.id}`'}},
+    });
+
+    return ctx.response.redirect({{'`/${version.locale}/drop/${drop.id}/edit`'}}, false, 303);
+  }
+
+  public async edit(ctx: HttpContext) {
+    const drop = await Drop.findOrFail(ctx.params.id);
+    const stream = cms.config.streams.streams.find(
+      (s: StreamSpec) => s.id === drop.streamId,
+    );
+    if (!stream) {
+      return ctx.response.redirect().back();
+    }
+
+    const updatedBy = await User.find(drop.updatedBy);
+    const dropMeta = {
+      ...drop.meta,
+      updatedBy: updatedBy?.name ?? 'Unknown',
+    };
+
+    const shared = await cms.sharedProps(ctx);
+    const props: StreamEditProps = {
+      spec: stream,
+      providers,
+      dropMeta,
+      model: drop.model,
+      ...shared,
+    };
+
+    return ctx.inertia.render('DropEdit', { ...props });
+  }
+
+  public async destroy(ctx: HttpContext) {
+    const version = cms.pagesContextFrom(ctx);
+    const id = Number(ctx.params.id);
+    const drop = await Drop.findOrFail(id);
+    try {
+      await drop.delete();
+      await Activity.create({
+        userId: ctx.auth.user?.id,
+        locale: version.locale,
+        action: {{'`deleted drop ${drop.id}`'}},
+      });
+    } catch (e) {
+      ctx.session.flash('errorsBag', { other: e.message });
+    }
+
+    return ctx.response.redirect({{'`/${version.locale}/stream`'}}, false, 303);
+  }
+
+  public async update(ctx: HttpContext) {
+    const version = cms.pagesContextFrom(ctx);
+
+    const id = Number(ctx.params.id);
+    const drop = await Drop.findOrFail(id);
+    const stream = cms.config.streams.streams.find(
+      (s: StreamSpec) => s.id === drop.streamId,
+    );
+    if (!stream) {
+      return ctx.response.redirect().back();
+    }
+
+    let payload;
+    try {
+      const data = ctx.request.all();
+      //   vine.messagesProvider = errorMessages;
+      const isPublished = ctx.request.input('isPublished') === true;
+
+      const validator = new DropValidator(isPublished, stream.fields);
+      payload = await validator.schema.validate(data);
+    } catch (e) {
+      const errors = trimmedErrors(e);
+
+      ctx.session.flash('errorsBag', bundledErrors(errors));
+      return ctx.response.redirect().back();
+    }
+
+    const service = new BundleService(stream.fields);
+    drop.bundle = service.updatedBundle(drop.parsedBundle, payload);
+    drop.isPublished = payload.isPublished;
+    drop.title = payload.title;
+    drop.coverImage = payload.coverImage ?? '';
+    drop.releaseAt = payload.releaseAt ? DateTime.fromJSDate(payload.releaseAt) : null;
+    drop.updatedBy = ctx.auth.user?.id ?? 0;
+
+    await drop.save();
+    const action = payload.isPublished ? 'published' : 'updated';
+    await Activity.create({
+      userId: ctx.auth.user?.id,
+      locale: version.locale,
+      action: {{'`${action} drop ${drop.id}`'}},
+    });
+
+    return ctx.response.redirect().back();
+  }
+
+  public async get(ctx: HttpContext) {
+    const stream = this.getStream(ctx);
+
+    const drops = await Drop.query()
+      .where('streamId', stream!.id)
+      .where('isPublished', true)
+      .orderBy('releaseAt', 'desc');
+
+    return {
+      stream,
+      drops,
+    };
+  }
+
+  protected getStream(ctx: HttpContext): StreamSpec {
+    const streamId = Number(ctx.params.id);
+    const stream = cms.config.streams.streams.find((s: StreamSpec) => s.id === streamId);
+    if (!stream) {
+      ctx.response.internalServerError('Stream not found');
+    }
+    return stream!;
+  }
+}
