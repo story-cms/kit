@@ -5,7 +5,6 @@
         <template #actions>
           <div class="flex items-center justify-center gap-x-6">
             <ListSwitcher :is-list="isList" @toggle="isList = !isList" />
-            <IconButton icon="plus" @tap="addStory" />
           </div>
         </template>
         <template #extra-actions>
@@ -50,14 +49,12 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { router } from '@inertiajs/vue3';
 import type { SharedPageProps, StoryGalleryProps } from '../../types';
 import { useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
 import ToggleButton from '../shared/toggle-button.vue';
 import ListSwitcher from '../shared/list-switcher.vue';
-import IconButton from '../shared/icon-button.vue';
 import StoryItem from './components/story-item.vue';
 
 const props = defineProps<StoryGalleryProps & SharedPageProps>();
@@ -91,7 +88,9 @@ const sortedStories = computed(() => {
   });
 });
 
-const addStory = () => {
-  router.get(`/${shared.locale}/story/create`);
-};
+// hidden for now
+// <IconButton icon="plus" @tap="addStory" />
+// const addStory = () => {
+//   router.get(`/${shared.locale}/story/create`);
+// };
 </script>
