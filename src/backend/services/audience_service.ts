@@ -2,6 +2,7 @@ import admin from 'firebase-admin';
 import { type App, type ServiceAccount } from 'firebase-admin/app';
 import { type Auth, type UserRecord } from 'firebase-admin/auth';
 import { DateTime } from 'luxon';
+import type { AudienceMeta } from '../../types';
 
 export class AudienceService {
   private app: App;
@@ -10,8 +11,8 @@ export class AudienceService {
     this.app = this.initializeClient();
   }
 
-  public async getAllUsers(): Promise<any[]> {
-    const allUsers: any[] = [];
+  public async getAllUsers(): Promise<AudienceMeta[]> {
+    const allUsers: AudienceMeta[] = [];
     let nextPageToken: string | undefined;
 
     try {

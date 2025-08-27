@@ -3,6 +3,7 @@ import { compose } from '@adonisjs/core/helpers';
 import { BaseModel, column, computed } from '@adonisjs/lucid/orm';
 import hash from '@adonisjs/core/services/hash';
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid';
+import type { UserMeta } from '../../types';
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -83,7 +84,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
   }
 
   @computed()
-  public get meta() {
+  public get meta(): UserMeta {
     return {
       id: this.id,
       name: this.name,

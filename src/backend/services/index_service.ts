@@ -1,21 +1,28 @@
 import Index from '../models/index.js';
 import Chapter from '../models/chapter.js';
 import Draft from '../models/draft.js';
-import { IndexItem, GroupedIndexItem, AddStatus } from '../../types.js';
+import { AddStatus } from '../../types.js';
+import type {
+  IndexItem,
+  GroupedIndexItem,
+  StorySpec,
+  Version,
+  IndexReadyItem,
+} from '../../types.js';
 import { CmsService } from './cms_service.js';
 
 export class IndexService {
-  public story: any;
+  public story: StorySpec;
   public config: object = {};
 
   constructor(
-    story: any,
+    story: StorySpec,
     protected cms: CmsService,
   ) {
     this.story = story;
   }
 
-  public async buildIndex(version: any) {
+  public async buildIndex(version: Version) {
     const index = await Index.firstOrCreate(version, {
       items: { root: [] },
     });
@@ -43,7 +50,7 @@ export class IndexService {
     await index.save();
   }
 
-  public async getItems(version: any): Promise<any[]> {
+  public async getItems(version: Version): Promise<IndexReadyItem[]> {
     const index = await Index.query().where(version).first();
     if (!index) return [];
 
@@ -59,7 +66,7 @@ export class IndexService {
     });
   }
 
-  public async groupedIndex(version: any): Promise<IndexItem[] | GroupedIndexItem[]> {
+  public async groupedIndex(version: Version): Promise<IndexItem[] | GroupedIndexItem[]> {
     const index = await Index.query().where(version).firstOrFail();
 
     if (!index) return [];
@@ -101,7 +108,7 @@ export class IndexService {
     return rows[0].$extras.max || 1;
   }
 
-  public async getAddStatus(version: any): Promise<AddStatus> {
+  public async getAddStatus(version: Version): Promise<AddStatus> {
     const index = await this.getItems(version);
 
     if (index.length >= this.story.chapterLimit) return AddStatus.Full;
@@ -127,7 +134,7 @@ export class IndexService {
     return AddStatus.Add;
   }
 
-  public async getNewChapterNumber(version: any): Promise<number> {
+  public async getNewChapterNumber(version: Version): Promise<number> {
     await this.buildIndex(version);
 
     const index = await Index.query().where(version).first();
