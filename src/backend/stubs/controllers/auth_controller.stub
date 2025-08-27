@@ -14,6 +14,11 @@ export default class AuthController {
   public async store(ctx: HttpContext) {
     const { email, password } = ctx.request.only(['email', 'password']);
 
+    if (await this.isFreshInstall()) {
+      const user = await this.createFirstUser(ctx);
+      return ctx.response.redirect({{ '`/${user.defaultLanguage()}/dashboard`' }});
+    }
+
     if (email.startsWith('redacted+')) {
       ctx.session.flash('errorsBag', { credentials: 'Invalid username or password' });
       ctx.response.redirect().back();
@@ -43,5 +48,25 @@ export default class AuthController {
     });
     await ctx.auth.use('web').logout();
     ctx.response.redirect('/login');
+  }
+
+  protected async createFirstUser(ctx: HttpContext): Promise<User> {
+    const { email, password } = ctx.request.only(['email', 'password']);
+
+    const user = await User.create({
+      email,
+      password,
+      name: 'Admin',
+      language: '*',
+      role: 'admin',
+    });
+
+    await ctx.auth.use('web').login(user);
+    return user;
+  }
+
+  protected async isFreshInstall(): Promise<boolean> {
+    const user = await User.first();
+    return user === null;
   }
 }
