@@ -84,7 +84,7 @@
               >
                 Interface
               </button>
-              <a v-else :class="classList('ui')" :href="`/${locale}/ui`"
+              <a v-else :class="classList('ui', true)" :href="`/${locale}/ui`"
                 ><span>Interface</span>
               </a>
             </div>
