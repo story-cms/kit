@@ -79,12 +79,18 @@ export type WidgetPicker = (widget: string) => any; // eslint-disable-line
 /// ----------------------------------------------------
 ///  streams
 /// ----------------------------------------------------
+
 export interface StreamIndexItem {
   id: number;
   title: string;
   coverImage: string;
   latestReleaseAt: string;
   count: number;
+}
+
+export interface StreamIndexProps {
+  stream: StreamIndexItem;
+  drops: DropIndexItem[];
 }
 
 export interface StreamGalleryProps {
@@ -100,29 +106,6 @@ export interface StreamSpec {
   schemaVersion: number;
   fields: FieldSpec[];
 }
-export interface StreamIndexProps {
-  stream: StreamIndexItem;
-  drops: DropIndexItem[];
-}
-export interface DropIndexItem {
-  id: number;
-  title: string;
-  coverImage: string;
-  releaseAt: string;
-  isPublished: boolean;
-}
-
-export interface StreamIndexItem {
-  id: number;
-  title: string;
-  coverImage: string;
-  latestReleaseAt: string;
-  count: number;
-}
-
-export interface StreamGalleryProps {
-  streams: StreamIndexItem[];
-}
 
 export interface DropIndexItem {
   id: number;
@@ -130,11 +113,6 @@ export interface DropIndexItem {
   coverImage: string;
   releaseAt: string;
   isPublished: boolean;
-}
-
-export interface StreamIndexProps {
-  stream: StreamIndexItem;
-  drops: DropIndexItem[];
 }
 
 export interface DropMeta {
@@ -254,17 +232,6 @@ export interface StoryIndexProps {
   story: StorySpec;
 }
 
-export interface StoryIndexItem {
-  id: number;
-  name: string;
-  description: string;
-  coverImage: string;
-  chapterLimit: number;
-  createdAt: string;
-  updatedAt: string;
-  draftCount: number;
-}
-
 export interface StoryGalleryProps {
   stories: StoryIndexItem[];
 }
@@ -336,14 +303,6 @@ export interface PageMeta {
   id: number;
   createdAt: string;
   updatedAt: string;
-}
-
-export interface PageBundle {
-  group: number;
-  title: string;
-  icon: string;
-  description: string;
-  body: string;
 }
 
 export interface PageIndexProps {
