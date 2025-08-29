@@ -793,19 +793,49 @@ test.describe('Bundle validator', () => {
     expect(nullValueOutput).toEqual(dataWithNullValue);
   });
 
-  // test('handles unknown widget types', async ({ assert }) => {
-  //   // arrange
-  //   const unknownFields: FieldSpec[] = [
-  //     {
-  //       name: 'unknownField',
-  //       label: 'Unknown Field',
-  //       widget: 'unknown' as any,
-  //     },
-  //   ];
-  //   const service = new BundleService(unknownFields);
-  //   // act
-  //   const validationBuilder = service.getValidationBuilder(false);
-  //   const defaultBundle = service.defaultBundle;
-  //   // TODO: assert
-  // });
+  test('video fields', async () => {
+    // arrange
+    const videoSpec = [
+      {
+        name: 'video',
+        label: 'Video',
+        widget: 'video',
+        description: 'MP4 file up to 500MB',
+        extensions: ['.mp4'],
+        maxSize: 500000000,
+        collectionId: '9cdfb958-613e-492a-8a88-f51daae3802b',
+      },
+    ];
+
+    const service = new BundleService(videoSpec);
+
+    // act
+    const draftSchema = service.getValidationBuilder(true);
+
+    // should pass with complete data
+    const completeData = {
+      video: {
+        url: 'https://example.com/video.mp4',
+      },
+    };
+
+    const completeOutput = await vine.validate({
+      schema: vine.object(draftSchema),
+      data: completeData,
+    });
+    expect(completeOutput).toEqual(completeData);
+
+    // should pass with null value
+    const dataWithNullValue = {
+      video: {
+        url: null,
+      },
+    };
+
+    const nullValueOutput = await vine.validate({
+      schema: vine.object(draftSchema),
+      data: dataWithNullValue,
+    });
+    expect(nullValueOutput).toEqual(dataWithNullValue);
+  });
 });

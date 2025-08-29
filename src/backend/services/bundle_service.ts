@@ -1,4 +1,5 @@
 import audioRule from '../validators/audio_rule.js';
+import videoRule from '../validators/video_rule.js';
 import { FieldSpec } from '@story-cms/kit';
 import vine, {
   VineArray,
@@ -107,6 +108,10 @@ export class BundleService {
         return {
           [spec.name]: this.isDraft ? this.audioDraftSchema : this.audioSchema,
         };
+      case 'video':
+        return {
+          [spec.name]: this.isDraft ? this.videoDraftSchema : this.videoSchema,
+        };
       case 'image':
       case 'animation':
         return {
@@ -147,6 +152,16 @@ export class BundleService {
       length: vine.number(),
     })
     .use(audioRule(null));
+
+  private videoDraftSchema = vine.object({
+    url: vine.string().nullable(),
+  });
+
+  private videoSchema = vine
+    .object({
+      url: vine.string(),
+    })
+    .use(videoRule(null));
 
   // ------------------------------------------------------------
   //  bundle updater
