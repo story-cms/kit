@@ -21,7 +21,10 @@ const isValidVideo = (value: unknown) => {
 
   if (typeof subject['url'] !== 'string') return false;
 
-  return subject.url.endsWith('.mp4');
+  const validExtensions = ['mp4', 'm3u8'];
+  const extension = subject.url.split('.').pop();
+
+  return validExtensions.includes(extension ?? '');
 };
 
 /**
