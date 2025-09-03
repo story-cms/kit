@@ -67,6 +67,7 @@ const spec = {
   name: 'intro',
   label: 'Intro video',
   widget: 'video',
+  collectionId: 'adae5810-c13d-4f9a-b1f1-8780a57f6655', // kit collection
 };
 
 const fileAttributesSpec = {
@@ -76,7 +77,7 @@ const fileAttributesSpec = {
   description: 'MP4, AV1 up to 250MB',
   extensions: ['.mp4', '.av1'],
   maxSize: 250000000,
-  collectionId: '3b08a34e-1f2d-4e80-8c36-7c315e7eb507',
+  collectionId: 'adae5810-c13d-4f9a-b1f1-8780a57f6655', // kit collection
 };
 
 const videoModel = {
@@ -98,3 +99,45 @@ const validationErrors = {
   'bundle.intro': ['We could not publish the file. Please try again.'],
 };
 </script>
+
+<docs lang="md">
+# Video Field
+
+Holds a url to a hosted video file. Suitable for allowing content editors to upload video
+files and renders a [VideoField](#). The video field uses bunny.net as a hosting and
+streaming provider. The provider needs to be configured in the .env file with these keys:
+`BUNNY_ACCESS_KEY`, `BUNNY_LIBRARY_ID`, `BUNNY_HOST` A video field has three special keys:
+
+- `description` an optional message that will be displayed on the upload widget. Defaults
+  to 'MP4 and MOV files up to 500MB'
+- `extensions` an optional list of accepted file extensions. Defaults to '['.mp4',
+  '.mov']'
+- `maxSize` an optional number in bytes that a file should not exceed. Defaults to
+  500662310
+- `collectionId` an optional string that holds the id of the target collection in the
+  video library
+
+example:
+
+```ts
+{
+  label: 'Feature',
+  name: 'feature',
+  widget: 'video'
+},
+```
+
+VideoField with file attributes and a collection
+
+```ts
+{
+  label: 'Video file',
+  name: 'feature',
+  widget: 'video',
+  description: 'MP4, AV1',
+  extensions: ['.mp4', '.av1'],
+  maxSize: 150000000,
+  collectionId: '3b08a34e-1f2d-4e80-8c36-7c315e7eb507'
+},
+```
+</docs>
