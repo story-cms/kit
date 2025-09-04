@@ -95,6 +95,11 @@ export class Analytics {
   private async initializeClient(): Promise<void> {
     // Check if credentials are provided as JSON in environment variable
     const credentialsJson = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON || '';
+    if (!credentialsJson) {
+      throw new Error(
+        'GOOGLE_APPLICATION_CREDENTIALS_JSON environment variable is not set.',
+      );
+    }
 
     // base64 decode
     const decoded = Buffer.from(credentialsJson, 'base64').toString('utf-8');
