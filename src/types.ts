@@ -234,6 +234,7 @@ export interface StoryIndexProps {
 
 export interface StoryGalleryProps {
   stories: StoryIndexItem[];
+  canAddStories?: boolean;
 }
 
 export interface DraftEditProps {
