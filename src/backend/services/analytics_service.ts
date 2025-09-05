@@ -1,6 +1,7 @@
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
 import vine from '@vinejs/vine';
 import { StatMetric } from '../../types';
+import { getCredentialsFrom } from './helpers';
 
 export const emptyAnalyticsReport: StatMetric[] = [
   {
@@ -93,23 +94,14 @@ export class Analytics {
    * @returns A promise that resolves when initialization is complete
    */
   private async initializeClient(): Promise<void> {
-    // Check if credentials are provided as JSON in environment variable
-    const credentialsJson = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON || '';
-    if (!credentialsJson) {
-      throw new Error(
-        'GOOGLE_APPLICATION_CREDENTIALS_JSON environment variable is not set.',
-      );
-    }
-
-    // base64 decode
-    const decoded = Buffer.from(credentialsJson, 'base64').toString('utf-8');
-
     // Parse credentials from environment variable
-    const credentials: GoogleServiceAccountCredentials = JSON.parse(decoded);
+    const credentials: GoogleServiceAccountCredentials = getCredentialsFrom(
+      'GOOGLE_APPLICATION_CREDENTIALS_JSON',
+    );
 
     // Create a new BetaAnalyticsDataClient with the parsed credentials
     this.client = new BetaAnalyticsDataClient({
-      credentials: credentials,
+      credentials,
       scopes: ['https://www.googleapis.com/auth/analytics.readonly'],
     });
   }
