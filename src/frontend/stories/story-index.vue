@@ -6,7 +6,7 @@
           <div class="flex items-center justify-center gap-x-6">
             <ListSwitcher :is-list="isList" @toggle="isList = !isList" />
 
-            <IconButton icon="pencil" @tap="editMeta" />
+            <IconButton v-if="canEditStory" icon="pencil" @tap="editMeta" />
           </div>
         </template>
         <template #extra-actions>
