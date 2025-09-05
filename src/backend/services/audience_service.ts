@@ -3,7 +3,7 @@ import { type App, type ServiceAccount } from 'firebase-admin/app';
 import { type Auth, type UserRecord } from 'firebase-admin/auth';
 import { DateTime } from 'luxon';
 import type { AudienceMeta } from '../../types';
-import { getCredentialsFrom } from './helpers';
+import { getCredentialsFrom } from './helpers.js';
 
 export class AudienceService {
   private app: App;

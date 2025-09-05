@@ -1,7 +1,7 @@
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
 import vine from '@vinejs/vine';
 import { StatMetric } from '../../types';
-import { getCredentialsFrom } from './helpers';
+import { getCredentialsFrom } from './helpers.js';
 
 export const emptyAnalyticsReport: StatMetric[] = [
   {
