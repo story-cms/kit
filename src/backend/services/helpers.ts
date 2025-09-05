@@ -42,7 +42,8 @@ export const getCredentialsFrom = (key: string): any => {
 
   try {
     const credentialsJson = Buffer.from(credentialsBase64, 'base64').toString('utf-8');
-    return JSON.parse(credentialsJson);
+    const parsed = JSON.parse(credentialsJson);
+    return parsed;
   } catch {
     throw new Error(`${key} environment variable is not a valid encoded JSON string.`);
   }

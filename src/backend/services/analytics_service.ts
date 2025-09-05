@@ -91,9 +91,8 @@ export class Analytics {
   /**
    * Initializes the Analytics client with credentials from the
    * GOOGLE_APPLICATION_CREDENTIALS_JSON environment variable (Base64 encoded JSON string)
-   * @returns A promise that resolves when initialization is complete
    */
-  private async initializeClient(): Promise<void> {
+  private initializeClient() {
     // Parse credentials from environment variable
     const credentials: GoogleServiceAccountCredentials = getCredentialsFrom(
       'GOOGLE_APPLICATION_CREDENTIALS_JSON',
