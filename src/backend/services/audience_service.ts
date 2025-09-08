@@ -3,6 +3,7 @@ import { type App, type ServiceAccount } from 'firebase-admin/app';
 import { type Auth, type UserRecord } from 'firebase-admin/auth';
 import { DateTime } from 'luxon';
 import type { AudienceMeta } from '../../types';
+import { getCredentialsFrom } from './helpers.js';
 
 export class AudienceService {
   private app: App;
@@ -61,18 +62,12 @@ export class AudienceService {
       return admin.apps[0];
     }
 
-    const credentialsBase64 = process.env.FIREBASE_SERVICE_ACCOUNT_KEY_JSON || '';
-    if (!credentialsBase64) {
-      throw new Error(
-        'FIREBASE_SERVICE_ACCOUNT_KEY_JSON environment variable is not set.',
-      );
-    }
-
-    const credentialsJson = Buffer.from(credentialsBase64, 'base64').toString('utf-8');
-    const serviceAccount: ServiceAccount = JSON.parse(credentialsJson);
+    const credentials: ServiceAccount = getCredentialsFrom(
+      'FIREBASE_SERVICE_ACCOUNT_KEY_JSON',
+    );
 
     return admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
+      credential: admin.credential.cert(credentials),
     });
   }
 

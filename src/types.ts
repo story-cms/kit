@@ -230,10 +230,12 @@ export interface StoryIndexProps {
   index: IndexReadyItem[];
   addStatus: AddStatus;
   story: StorySpec;
+  canEditStory?: boolean;
 }
 
 export interface StoryGalleryProps {
   stories: StoryIndexItem[];
+  canAddStories?: boolean;
 }
 
 export interface DraftEditProps {

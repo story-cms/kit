@@ -7,35 +7,10 @@
         :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
         :stories="sampleStories"
-        :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
-      />
-    </Variant>
-
-    <Variant title="Empty" :setup-app="miniSidebar">
-      <StoryGallery
-        :meta="sharedProps.meta"
-        :user="sharedProps.user"
-        :languages="sharedProps.languages"
-        :language="sharedProps.language"
-        :errors="sharedProps.errors"
-        :stories="[]"
-        :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
-      />
-    </Variant>
-
-    <Variant title="Many Stories" :setup-app="miniSidebar">
-      <StoryGallery
-        :meta="sharedProps.meta"
-        :user="sharedProps.user"
-        :languages="sharedProps.languages"
-        :language="sharedProps.language"
-        :errors="sharedProps.errors"
-        :stories="manyStories"
-        :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
+        :can-add-stories="true"
       />
     </Variant>
   </Story>
@@ -82,70 +57,6 @@ const sampleStories: StoryIndexItem[] = [
     createdAt: '2024-01-25T11:00:00Z',
     updatedAt: '2024-03-15T13:30:00Z',
     draftCount: 2,
-  },
-];
-
-const manyStories: StoryIndexItem[] = [
-  ...sampleStories,
-  {
-    id: 4,
-    name: 'Matthew',
-    description:
-      'The Gospel of Matthew presents Jesus as the promised Messiah and King of the Jews.',
-    coverImage:
-      'https://vhx.imgix.net/testymctester/assets/7d5ac750-ce3f-441c-b7ec-232fdf08c0f4-fe1e1849.jpg?auto=format%2Ccompress&fit=crop&h=360&q=70&w=640',
-    chapterLimit: 28,
-    createdAt: '2024-01-05T08:45:00Z',
-    updatedAt: '2024-03-10T12:15:00Z',
-    draftCount: 4,
-  },
-  {
-    id: 5,
-    name: 'Mark',
-    description:
-      'The Gospel of Mark portrays Jesus as a man of action, moving quickly from one event to the next.',
-    coverImage:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ9SUjvKQHEi0YxampzrvJRrEatDXNpMfoDSb-jvaozDECxaeqFth7-pbiiptK-CL5dvw&usqp=CAU',
-    chapterLimit: 16,
-    createdAt: '2024-01-20T10:20:00Z',
-    updatedAt: '2024-03-12T15:45:00Z',
-    draftCount: 1,
-  },
-  {
-    id: 6,
-    name: 'Luke',
-    description:
-      "The Gospel of Luke provides a detailed account of Jesus' life and ministry, emphasizing His compassion.",
-    coverImage:
-      'https://media.versebyverseministry.org/images/bible_study_images/Luke_cover_centered.jpg',
-    chapterLimit: 24,
-    createdAt: '2024-02-05T14:30:00Z',
-    updatedAt: '2024-03-14T11:20:00Z',
-    draftCount: 6,
-  },
-  {
-    id: 7,
-    name: '1 Corinthians',
-    description:
-      'Paul addresses various issues in the Corinthian church, emphasizing unity and love.',
-    coverImage:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScT9sh-ERus5isz8b9Y6hkVPPSmG8bUZmbCmGTlAgEQoE37X9Ty8_m-KsxkbszOev6hwU&usqp=CAU',
-    chapterLimit: 16,
-    createdAt: '2024-02-15T09:00:00Z',
-    updatedAt: '2024-03-16T16:30:00Z',
-    draftCount: 2,
-  },
-  {
-    id: 8,
-    name: 'Galatians',
-    description:
-      'Paul defends the gospel of grace and freedom in Christ against legalistic teaching.',
-    coverImage:
-      'https://ministry-to-youth.com/cdn/shop/products/Galatians-TitleSlide_720x.jpg?v=1601513454',
-    chapterLimit: 6,
-    createdAt: '2024-01-30T13:15:00Z',
-    updatedAt: '2024-03-08T10:45:00Z',
-    draftCount: 1,
   },
 ];
 </script>

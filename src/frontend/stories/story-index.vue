@@ -3,7 +3,11 @@
     <template #header>
       <ContentHeader :title="`${story.storyType}: ${shared.currentStoryName}`">
         <template #actions>
-          <icon :name="iconName" class="h-8 w-8 text-black" @click.prevent="toggle" />
+          <div class="flex items-center justify-center gap-x-6">
+            <ListSwitcher :is-list="isList" @toggle="isList = !isList" />
+
+            <IconButton v-if="canEditStory" icon="pencil" @tap="editMeta" />
+          </div>
         </template>
         <template #extra-actions>
           <div
@@ -81,9 +85,11 @@ import { computed, ref } from 'vue';
 
 import { IndexReadyItem, SharedPageProps, StoryIndexProps, AddStatus } from '../../types';
 import AddItemButton from '../shared/add-item-button.vue';
+import ListSwitcher from '../shared/list-switcher.vue';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
 import Icon from '../shared/icon.vue';
+import IconButton from '../shared/icon-button.vue';
 import IndexFilter from '../shared/index-filter.vue';
 import { useSharedStore } from '../store';
 import IndexCard from './components/index-card.vue';
@@ -96,9 +102,6 @@ shared.setFromProps(props);
 shared.setCurrentStoryName(props.story.name);
 
 const isList = ref(false);
-const toggle = () => {
-  isList.value = !isList.value;
-};
 
 const filterNumber = ref<string | null>(null);
 const currentTab = ref('Live');
@@ -109,10 +112,6 @@ const addDraft = () =>
 const onFilter = (tab: string) => {
   currentTab.value = tab;
 };
-
-const iconName = computed(() => {
-  return isList.value ? 'grid' : 'list';
-});
 
 const filteredIndex = computed(() => {
   const needle = currentTab.value === 'Live' ? 'Live' : 'Draft';
@@ -149,4 +148,6 @@ const onTap = (item: IndexReadyItem) => {
     router.get(`/${shared.locale}/story/${props.story.id}/chapter/${item.number}`);
   }
 };
+
+const editMeta = () => router.get(`/${shared.locale}/story/${props.story.id}/edit`);
 </script>

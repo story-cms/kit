@@ -26,6 +26,7 @@
         :story="story"
         :bookmarks="sharedProps.bookmarks"
         :exclude="['streams']"
+        :can-edit-story="true"
       />
     </Variant>
   </Story>
