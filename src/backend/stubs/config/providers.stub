@@ -11,6 +11,12 @@ export default {
     bucket: env.get('S3_BUCKET', ''),
     region: env.get('S3_REGION', ''),
     endpoint: env.get('S3_ENDPOINT', ''),
+
+   /**
+    * custom domain mapping without protocol schema
+    * example: 'audio.bioy.app'
+    */
+    customDomain: env.get('S3_DOMAIN', ''),
   },
   cloudinary: {
     apiKey: env.get('CLOUDINARY_API_KEY', ''),
