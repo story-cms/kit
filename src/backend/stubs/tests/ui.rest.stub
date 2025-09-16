@@ -1,0 +1,16 @@
+{{{ 
+  exports({ to: app.makePath('tests/ui.rest') }) 
+}}}
+@github = https://raw.githubusercontent.com/org-name/repo-name/main/lib/shared/localization/app_en.arb 
+
+###
+GET \{\{github\}\} HTTP/1.1
+Authorization: Bearer \{\{githubPAT\}\}
+
+
+###
+GET \{\{ authority \}\}/ui/v1/pull?token=\{\{githubPAT\}\} HTTP/1.1
+
+
+###
+GET \{\{ authority \}\}/ui/v1/translation?locale=es HTTP/1.1
