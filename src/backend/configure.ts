@@ -116,6 +116,8 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/cms_mock_example.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'ops/Dockerfile.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'ops/compose.stub', { appName: 'todo' });
+  await codemods.makeUsingStub(stubsRoot, 'ops/dockerignore.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'ops/gcloudignore.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tailwind.stub', {});
   await addMigrations(command, codemods);
 

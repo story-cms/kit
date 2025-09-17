@@ -81,6 +81,9 @@ export const testCmsConfig: CmsConfig = {
     schemaVersion: 1,
     tracking: 'utm_source=test&utm_medium=test&utm_campaign=test',
   },
+  audience: {
+    hasAudience: false,
+  },
 };
 
 /**
