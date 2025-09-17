@@ -143,16 +143,21 @@ export class CmsService {
 
   public async sharedProps(ctx: HttpContext): Promise<SharedPageProps> {
     const exclude: string[] = [];
-    if (this.#config.stories.stories.length < 1) {
+    if (!this.#config.stories.hasStories) {
       exclude.push('story');
     }
-    if (this.#config.streams.streams.length < 1) {
+    if (!this.#config.streams.hasStreams) {
       exclude.push('stream');
     }
     if (this.#config.languages.languages.length < 1) {
       exclude.push('language');
     }
-    // page, audience
+    if (!this.#config.audience.hasAudience) {
+      exclude.push('audience');
+    }
+    if (!this.#config.pages.hasPages) {
+      exclude.push('page');
+    }
 
     const bookmarks = await this.getBookmarks(ctx);
 

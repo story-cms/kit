@@ -452,17 +452,24 @@ export type CmsConfig = {
   };
 
   streams: {
+    hasStreams: boolean;
     streams: StreamSpec[];
   };
 
   stories: {
+    hasStories: boolean;
     hasEditReview: boolean;
     stories: StorySpec[];
   };
 
   pages: {
+    hasPages: boolean;
     schemaVersion: number;
     tracking: string;
+  };
+
+  audience: {
+    hasAudience: boolean;
   };
 };
 

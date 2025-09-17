@@ -24,18 +24,25 @@ export function defineConfig(config: Partial<CmsConfig>): CmsConfig {
       ],
     },
     stories: {
+      hasStories: true,
       hasEditReview: false,
       stories: [],
       ...config.stories,
     },
     streams: {
+      hasStreams: true,
       streams: [],
       ...config.streams,
     },
     pages: {
+      hasPages: true,
       schemaVersion: 1,
       tracking: 'utm_source=storyapp&utm_medium=referral&utm_campaign=page_menu',
       ...config.pages,
+    },
+    audience: {
+      hasAudience: false,
+      ...config.audience,
     },
   } satisfies CmsConfig;
 }
