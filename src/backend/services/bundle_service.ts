@@ -151,7 +151,7 @@ export class BundleService {
       url: vine.string(),
       length: vine.number(),
     })
-    .use(audioRule(null));
+    .use(audioRule());
 
   private videoDraftSchema = vine.object({
     url: vine.string().nullable(),

@@ -48,6 +48,7 @@ export default class ChaptersController {
     const bundleView = await edge.render('preview', {
       bundle: chapter.bundle,
       marked: marked,
+      number: chapter.number,
     });
 
     const shared = await cms.sharedProps(ctx);
