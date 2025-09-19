@@ -39,3 +39,5 @@ export * from './validators/chapter.js';
 export * from './validators/drop.js';
 export * from './validators/page.js';
 export * from './validators/user.js';
+export { default as audioRule } from './validators/audio_rule.js';
+export { default as videoRule } from './validators/video_rule.js';

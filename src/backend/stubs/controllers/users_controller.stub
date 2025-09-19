@@ -5,7 +5,6 @@ import { DateTime } from 'luxon';
 import { randomBytes } from 'node:crypto';
 import type { HttpContext } from '@adonisjs/core/http';
 import string from '@adonisjs/core/helpers/string';
-import config from '@adonisjs/core/services/config';
 import mail from '@adonisjs/mail/services/main';
 import {
   UserService,
@@ -112,7 +111,7 @@ export default class UsersController {
         action: {{ '`created user with id ${user.id}`' }},
       });
       const appUrl = new URL(ctx.request.completeUrl()).origin;
-      const appName = config.get('story.meta.name');
+      const appName = cms.config.meta.name;
       // send email to the user
       await mail.send((message) => {
         message

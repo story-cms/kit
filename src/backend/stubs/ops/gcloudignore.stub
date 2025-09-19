@@ -1,0 +1,7 @@
+{{{
+  exports({ to: app.makePath('.gcloudignore') })
+}}}
+.gcloudignore
+.git
+.gitignore
+#!include:.gitignore

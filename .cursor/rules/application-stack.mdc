@@ -29,7 +29,7 @@ This is a Vue 3 + AdonisJS CMS kit with TypeScript, featuring a component librar
 - **TypeScript**: Latest - Type-safe JavaScript
 - **Vite**: `^5.2.0` - Frontend build tool
 - **Histoire**: `^0.17.17` - Component storybook and testing
-- **Playwright**: `^1.49.0` - End-to-end testing
+- **Playwright**: `^1.49.0` - End-to-end and unit testing
 - **ESLint**: `^8.57.1` - Code linting
 - **Prettier**: `3.5.3` - Code formatting
 

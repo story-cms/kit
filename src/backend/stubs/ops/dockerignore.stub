@@ -1,0 +1,26 @@
+{{{
+  exports({ to: app.makePath('.dockerignore') })
+}}}
+# Adonis default .gitignore ignores
+node_modules
+build
+coverage
+.vscode
+.DS_STORE
+.env
+tmp
+
+# Additional .gitignore ignores (any custom file you wish)
+.idea
+_meta
+
+# Additional good to have ignores for dockerignore
+Dockerfile*
+docker-compose*
+.dockerignore
+*.md
+.git
+.gitignore
+
+# VITA specific
+compose.yaml

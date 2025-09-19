@@ -2,12 +2,12 @@
   exports({ to: app.makePath('app/controllers/audiences_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
-import { AudienceService } from '@story-cms/kit';
+import { AudienceMeta, AudienceService } from '@story-cms/kit';
 import cms from '#services/cms';
 
 export default class AudiencesController {
   public async index(ctx: HttpContext) {
-    let audiences;
+    let audiences: AudienceMeta[];
     try {
       // for apps that are not configured yet, we will return an empty array
       const service = new AudienceService();

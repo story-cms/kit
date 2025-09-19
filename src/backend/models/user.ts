@@ -80,7 +80,10 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @computed()
   public get hasPendingInvite(): boolean {
-    return this.resetToken !== '';
+    // not null or empty
+    if (!this.resetToken) return false;
+
+    return this.resetToken?.trim().length > 3;
   }
 
   @computed()
