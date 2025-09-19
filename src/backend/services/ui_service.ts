@@ -214,7 +214,7 @@ export class UiService {
       .filter((key) => key.startsWith('@') && key !== '@@locale')
       .map((key) => ({
         key: key.substring(1),
-        description: data[key]['description'],
+        description: data[key]['description'].substring(0, 254),
         placeholders: data[key]['placeholders'],
       }));
 
