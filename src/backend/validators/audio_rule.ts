@@ -2,6 +2,9 @@ import vine from '@vinejs/vine';
 import { FieldContext } from '@vinejs/vine/types';
 import { Audio } from '@story-cms/kit';
 
+const DEFAULT_OPTIONS: Options = { canBeEmpty: false };
+const DEFAULT_MESSAGE = 'Please upload a valid mp3 file';
+
 type Options = {
   canBeEmpty: boolean;
 };
@@ -9,13 +12,9 @@ type Options = {
 /**
  * Implementation
  */
-function audio(
-  value: unknown,
-  options: Options = { canBeEmpty: false },
-  field: FieldContext,
-) {
+function audio(value: unknown, options: Options = DEFAULT_OPTIONS, field: FieldContext) {
   if (!hasCorrectShape(value)) {
-    field.report('Please upload a valid file', 'audio', field);
+    field.report(DEFAULT_MESSAGE, 'audio', field);
     return;
   }
 
@@ -24,7 +23,7 @@ function audio(
   if (options.canBeEmpty && isEmptyShape(subject)) return;
 
   if (!isValidAudio(subject)) {
-    field.report('Please upload a valid file', 'audio', field);
+    field.report(DEFAULT_MESSAGE, 'audio', field);
   }
 }
 
