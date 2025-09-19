@@ -13,6 +13,7 @@ type Options = {
  * Implementation
  */
 function audio(value: unknown, options: Options = DEFAULT_OPTIONS, field: FieldContext) {
+  if (options?.canBeEmpty && (value === null || value === undefined)) return;
   if (!hasCorrectShape(value)) {
     field.report(DEFAULT_MESSAGE, 'audio', field);
     return;
