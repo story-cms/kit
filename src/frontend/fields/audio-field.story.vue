@@ -15,6 +15,10 @@
       <ModelControl :model="audioModelBlankAudio" />
     </Variant>
 
+    <Variant title="RTL" :setup-app="loadData">
+      <AudioField dir="rtl" :field="spec" />
+    </Variant>
+
     <Variant title="Error with audio" :setup-app="loadData">
       <AudioField :field="spec" />
       <template #controls>
@@ -54,6 +58,7 @@ const loadData: StoryHandler = ({ variant }): void => {
   switch (variant?.title) {
     case 'Model without audio':
     case 'Special target file path':
+    case 'RTL':
       store.model = audioModelBlankAudio;
       return;
 

@@ -1,6 +1,7 @@
 <template>
   <div
-    class="relative w-full h-48 p-9"
+    dir="ltr"
+    class="relative h-48 w-full p-9"
     :class="dropStyle"
     @dragover.prevent="onDragOver"
     @dragenter="onDragEnter"
@@ -8,7 +9,7 @@
     @drop.prevent="onDrop"
   >
     <div v-if="feedback" class="absolute inset-0">
-      <p class="py-1 text-sm text-center text-white rounded-t-md bg-error">
+      <p class="rounded-t-md bg-error py-1 text-center text-sm text-white">
         {{ feedback }}
       </p>
     </div>
@@ -31,7 +32,7 @@
       </svg>
       <div class="flex text-sm font-medium leading-5 text-gray-600">
         <label
-          class="relative font-medium text-indigo-700 bg-white rounded-md cursor-pointer focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
+          class="relative cursor-pointer rounded-md bg-white font-medium text-indigo-700 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
         >
           <span>Upload a file</span>
           <input

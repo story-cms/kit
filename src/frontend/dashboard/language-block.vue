@@ -58,7 +58,7 @@ const goTo = (item: Progress) => {
     return;
   }
 
-  router.visit(`/${props.progress.locale}/story/1`);
+  router.visit(`/${props.progress.locale}/story`);
 };
 
 const lastUpdate = computed(() => {

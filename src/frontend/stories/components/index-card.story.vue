@@ -16,7 +16,7 @@
         :item="itemNoImage"
         :is-list="notList"
         scope="Draft"
-        placeholder-image="https://res.cloudinary.com/journeys/image/upload/v1756122407/christ-chaos-header_yqrufy_lzmfjt.jpg"
+        placeholder-image="https://res.cloudinary.com/journeys/image/upload/v1756403499/alabaster-co-rlb3upCBLck-unsplash_nfp13e.jpg"
         chapter-name="Story"
       />
     </Variant>

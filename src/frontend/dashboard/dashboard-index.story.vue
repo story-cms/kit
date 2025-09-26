@@ -1,6 +1,6 @@
 <template>
   <Story title="Dashboard Index" group="dashboard">
-    <Variant title="Index">
+    <Variant title="Index" :setup-app="loadData">
       <DashboardIndex
         :index="[
           {
@@ -22,22 +22,14 @@
         :meta="sharedProps.meta"
         :language="sharedProps.language"
         :languages="sharedProps.languages"
-        :user="{
-          id: 1,
-          name: 'Site Admin',
-          initials: 'TU',
-          email: 'test@example.com',
-          isManager: true,
-          isAdmin: true,
-          role: 'admin',
-          language: '*',
-          hasPendingInvite: false,
-        }"
+        :user="sharedProps.user"
         :translation-progress="translationProgress"
         :is-read-only="false"
+        :exclude="[]"
       />
     </Variant>
-    <Variant title="Editor">
+
+    <Variant title="Editor" :setup-app="loadData">
       <DashboardIndex
         :index="[
           {
@@ -61,27 +53,29 @@
         :language="sharedProps.language"
         :languages="sharedProps.languages"
         :user="{
-          id: 1,
-          name: 'English Editor User',
-          initials: 'TU',
-          email: 'test@example.com',
+          ...sharedProps.user,
           isManager: true,
           isAdmin: false,
           role: 'editor',
           language: '*',
-          hasPendingInvite: false,
         }"
         :translation-progress="translationProgress"
         :is-read-only="false"
+        :exclude="[]"
       />
     </Variant>
   </Story>
 </template>
 
 <script setup lang="ts">
-import { sharedProps } from '../test/mocks';
+import { sharedProps, miniSidebar } from '../test/mocks';
 import { AddStatus } from '../../types';
 import DashboardIndex from './dashboard-index.vue';
+import type { StoryHandler } from '../shared/helpers';
+
+const loadData: StoryHandler = ({ app, story, variant }): void => {
+  miniSidebar({ app, story, variant });
+};
 
 const translationProgress = [
   {

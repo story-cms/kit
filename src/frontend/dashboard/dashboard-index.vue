@@ -39,11 +39,11 @@
         <div class="flex gap-x-6">
           <div class="flex items-center justify-center gap-x-2">
             <Icon name="pie-chart" class="size-5 text-green-500" />
-            <span class="text-sm font-medium leading-4">Human</span>
+            <span class="text-sm font-medium leading-4">Done</span>
           </div>
           <div class="flex items-center justify-center gap-x-2">
             <Icon name="pie-chart" class="size-5 text-blue-500" />
-            <span class="text-sm font-medium leading-4">AI</span>
+            <span class="text-sm font-medium leading-4">Pending</span>
           </div>
         </div>
       </div>

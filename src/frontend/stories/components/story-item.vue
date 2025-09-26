@@ -16,7 +16,7 @@
       :src="story.coverImage"
       :alt="story.name"
       class="object-cover"
-      :class="isList ? 'size-[116px]' : 'size-64'"
+      :class="{ 'size-[116px]': isList, 'size-64': !isList }"
     />
     <div
       class="flex grow"

@@ -53,7 +53,7 @@ const storyData: StoryIndexItem = {
   description:
     'A powerful narrative of Jesus Christ as the Word made flesh, emphasizing his divine nature and the importance of belief.',
   coverImage:
-    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
+    'https://res.cloudinary.com/journeys/image/upload/v1756403499/alabaster-co-rlb3upCBLck-unsplash_nfp13e.jpg',
   chapterLimit: 21,
   draftCount: 0,
   createdAt: '2024-01-01T00:00:00Z',
@@ -66,7 +66,7 @@ const storyWithDrafts = {
   description:
     'The story of the early church and the spread of the gospel from Jerusalem to Rome.',
   coverImage:
-    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
+    'https://res.cloudinary.com/journeys/image/upload/v1756403499/alabaster-co-rlb3upCBLck-unsplash_nfp13e.jpg',
   chapterLimit: 28,
   draftCount: 5,
   createdAt: '2024-01-01T00:00:00Z',
@@ -79,7 +79,7 @@ const storyWithLongDescription = {
   description:
     "A prophetic vision of the end times, filled with symbolic imagery and messages to the seven churches. This book contains some of the most vivid and complex imagery in all of scripture, depicting the ultimate victory of good over evil and the establishment of God's eternal kingdom.",
   coverImage:
-    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
+    'https://res.cloudinary.com/journeys/image/upload/v1756403499/alabaster-co-rlb3upCBLck-unsplash_nfp13e.jpg',
   chapterLimit: 22,
   draftCount: 3,
   createdAt: '2024-01-01T00:00:00Z',
