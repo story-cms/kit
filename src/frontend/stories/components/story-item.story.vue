@@ -32,7 +32,7 @@
         <div class="border-t p-4">
           <p class="mb-2 text-sm text-gray-600">Toggle bookmark to see hover effect:</p>
           <button class="btn btn-blue" @click="toggleBookmark">
-            {{ isBookmarked ? 'Remove Bookmark' : 'Add Bookmark' }}
+            {{ shared.isBookmarked(bookmark) ? 'Remove Bookmark' : 'Add Bookmark' }}
           </button>
         </div>
       </template>
@@ -41,7 +41,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
 import StoryItem from './story-item.vue';
 import { useSharedStore } from '../../store';
 import type { StoryIndexItem } from '../../../types';
@@ -91,14 +90,8 @@ const bookmark = {
   link: `/en/story/${storyData.id}`,
 };
 
-const isBookmarked = computed(() => {
-  return shared.bookmarks.some(
-    (b) => b.label === bookmark.label && b.link === bookmark.link,
-  );
-});
-
 const toggleBookmark = () => {
-  if (isBookmarked.value) {
+  if (shared.isBookmarked(bookmark)) {
     shared.setBookmarks(
       shared.bookmarks.filter(
         (b) => b.label !== bookmark.label || b.link !== bookmark.link,
