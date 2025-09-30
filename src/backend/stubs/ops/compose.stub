@@ -1,21 +1,20 @@
 {{{
   exports({ to: app.makePath('compose.yaml') })
 }}}
+# this compose file is useful for locally validating changes to the Dockerfile
+# it is not used in production or in CI/CD flows
 services:
   cms:
-    container_name: {{appName}}
+    container_name: tmp
     build:
       context: .
-      target: dependencies
     ports:
-      - {{{ '${PORT}:${PORT}' }}}
+      - 3333:3333
       - 9229:9229
       - 8080:8080
     env_file:
       - .env
     environment:
       - DB_HOST=host.docker.internal
-    volumes:
-      - ./:/home/node/app
-      - /home/node/app/node_modules
-    command: dumb-init npm run dev
+      - NODE_ENV=production
+      - HOST=0.0.0.0
