@@ -165,6 +165,12 @@ export const useSharedStore = defineStore('shared', () => {
     bookmarks.value = value;
   };
 
+  const isBookmarked = (bookmark: Bookmark): boolean => {
+    return bookmarks.value.some(
+      (b) => b.label === bookmark.label && b.link === bookmark.link,
+    );
+  };
+
   return {
     exclude,
     meta,
@@ -223,5 +229,6 @@ export const useSharedStore = defineStore('shared', () => {
 
     bookmarks,
     setBookmarks,
+    isBookmarked,
   };
 });

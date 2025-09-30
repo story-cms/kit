@@ -7,7 +7,9 @@
       class="absolute z-10 transition-opacity duration-300"
       :class="[
         isList ? 'right-2 top-2' : 'right-2 top-2',
-        isBookmarked ? 'opacity-100' : 'opacity-0 group-hover:opacity-100',
+        shared.isBookmarked(bookmark)
+          ? 'opacity-100'
+          : 'opacity-0 group-hover:opacity-100',
       ]"
     >
       <BookmarkAction :bookmark="bookmark" />
@@ -61,7 +63,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
 import { StoryIndexItem } from '../../../types';
 import { useSharedStore } from '../../store';
 import BookmarkAction from '../../shared/bookmark-action.vue';
@@ -90,10 +91,4 @@ const bookmark = {
   label: props.story.name,
   link: `/${shared.locale}/story/${props.story.id}`,
 };
-
-const isBookmarked = computed(() => {
-  return shared.bookmarks.some(
-    (b) => b.label === bookmark.label && b.link === bookmark.link,
-  );
-});
 </script>
