@@ -1,6 +1,9 @@
 <template>
   <button @click="toggleBookmark">
-    <Icon name="star" class="text-yellow-500" />
+    <Icon
+      :name="shared.isBookmarked(props.bookmark) ? 'star-filled' : 'star'"
+      :class="shared.isBookmarked(props.bookmark) ? 'text-yellow-500' : 'text-black'"
+    />
   </button>
 </template>
 <script setup lang="ts">
@@ -21,11 +24,7 @@ const toggleBookmark = async () => {
     await axios.post(`/preferences/bookmarks`, props.bookmark);
     shared.addMessage(ResponseStatus.Accomplishment, 'Bookmark updated successfully');
 
-    const isBookmarked = shared.bookmarks.some(
-      (b) => b.label === props.bookmark.label && b.link === props.bookmark.link,
-    );
-
-    if (isBookmarked) {
+    if (shared.isBookmarked(props.bookmark)) {
       const updatedBookmarks = shared.bookmarks.filter(
         (b) => !(b.label === props.bookmark.label && b.link === props.bookmark.link),
       );

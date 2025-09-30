@@ -7,7 +7,9 @@
       class="absolute z-10 transition-opacity duration-300"
       :class="[
         isList ? 'right-2 top-2' : 'right-2 top-2',
-        isBookmarked ? 'opacity-100' : 'opacity-0 group-hover:opacity-100',
+        shared.isBookmarked(bookmark)
+          ? 'opacity-100'
+          : 'opacity-0 group-hover:opacity-100',
       ]"
     >
       <BookmarkAction :bookmark="bookmark" />
@@ -104,10 +106,4 @@ const bookmark = {
   label: props.stream.title,
   link: `/${shared.locale}/stream/${props.stream.id}`,
 };
-
-const isBookmarked = computed(() => {
-  return shared.bookmarks.some(
-    (b) => b.label === bookmark.label && b.link === bookmark.link,
-  );
-});
 </script>
