@@ -1,10 +1,14 @@
 <template>
   <button @click="toggleBookmark">
-    <Icon name="star" class="text-yellow-500" />
+    <Icon
+      :name="isBookmarked ? 'star-filled' : 'star'"
+      :class="isBookmarked ? 'text-yellow-500' : 'text-black'"
+    />
   </button>
 </template>
 <script setup lang="ts">
 import axios from 'axios';
+import { computed } from 'vue';
 import Icon from './icon.vue';
 import { useSharedStore } from '../store';
 import { type Bookmark } from '../../types';
@@ -15,6 +19,13 @@ const shared = useSharedStore();
 const props = defineProps<{
   bookmark: Bookmark;
 }>();
+
+// if isBookmarked, then show star-filled, otherwise show star
+const isBookmarked = computed(() => {
+  return shared.bookmarks.some(
+    (b) => b.label === props.bookmark.label && b.link === props.bookmark.link,
+  );
+});
 
 const toggleBookmark = async () => {
   try {
