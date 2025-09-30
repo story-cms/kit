@@ -8,7 +8,7 @@ export function defineConfig(config: Partial<CmsConfig>): CmsConfig {
     meta: {
       name: 'Journey CMS',
       hasAppPreview: false,
-      helpUrl: 'https://www.markdownguide.org',
+      helpUrl: 'https://journeys.helpscoutdocs.com/',
       logo: 'https://res.cloudinary.com/journeys/image/upload/v1756295658/logo_g8k7tf.png',
       ...config.meta,
     },

@@ -74,8 +74,8 @@ const cmsConfig: CmsConfig = defineConfig({
     /**
      * Link to the help documentation
      */
-    helpUrl: 'https://www.markdownguide.org',
-
+    helpUrl: 'https://journeys.helpscoutdocs.com/',
+    
     /**
      * Are we embedding a Flutter preview?
      */
