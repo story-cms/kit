@@ -216,7 +216,7 @@ const classList = (path: string, withGap: boolean = false) => {
 
 const extractLocaleFromLink = (link: string): string => {
   const match = link.match(/^\/([a-z]{2})\//);
-  return match ? match[1] : 'en';
+  return match ? match[1] : '';
 };
 </script>
 
