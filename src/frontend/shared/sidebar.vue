@@ -1,10 +1,10 @@
 <template>
   <aside
     :class="[
-      'fixed inset-y-0 z-20 max-w-[320px] bg-white shadow-md transition-all duration-75',
+      'fixed inset-y-0 z-20 bg-white shadow-md transition-all duration-75',
 
       shared.hasOpenSidebar
-        ? 'left-0 top-0 max-h-screen rounded-r-[20px]'
+        ? 'left-0 top-0 max-h-screen w-[320px] rounded-r-[20px]'
         : 'left-3 top-3 mx-auto max-h-min rounded-full',
     ]"
   >
@@ -95,11 +95,14 @@
               <a
                 v-for="bookmark in shared.bookmarks"
                 :key="bookmark.label"
-                class="flex items-center gap-2 rounded-full px-6 py-[18px] text-left text-sm font-semibold leading-5 transition-all duration-200 ease-in-out hover:bg-gray-100"
+                class="flex items-center justify-between gap-3 rounded-full px-6 py-[18px] text-left text-sm font-semibold leading-5 transition-all duration-200 ease-in-out hover:bg-gray-100"
                 :href="bookmark.link"
               >
-                <Icon name="star" class="size-6" />
-                <span>{{ bookmark.label }}</span>
+                <div class="flex items-center gap-3">
+                  <Icon name="star" class="size-6" />
+                  <span class="line-clamp-2">{{ bookmark.label }}</span>
+                </div>
+                <span class="uppercase">{{ extractLocaleFromLink(bookmark.link) }}</span>
               </a>
             </div>
           </div>
@@ -209,6 +212,11 @@ const classList = (path: string, withGap: boolean = false) => {
     active: url.includes(`/${locale.value}/${path}`),
     'flex items-center gap-x-3': withGap,
   };
+};
+
+const extractLocaleFromLink = (link: string): string => {
+  const match = link.match(/^\/([a-z]{2})\//);
+  return match ? match[1] : '';
 };
 </script>
 
