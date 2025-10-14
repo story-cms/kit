@@ -174,7 +174,7 @@ test.group('Draft updating', (group) => {
     // with incomplete bundle nothing is updated
     let response = await client
       .post({{ '`/en/story/1/draft/${draft.id}/submit`' }})
-      .form({ bundle: JSON.parse('{"title": ""}') })
+      .json({ bundle: JSON.parse('{"title": ""}') })
       .loginAs(user)
       .withCsrfToken();
 
@@ -184,7 +184,7 @@ test.group('Draft updating', (group) => {
 
     response = await client
       .post({{ '`/en/story/1/draft/${draft.id}/submit`' }})
-      .form({ bundle: JSON.parse(draftOne) })
+      .json({ bundle: JSON.parse(draftOne) })
       .loginAs(user)
       .withCsrfToken();
 
@@ -237,7 +237,7 @@ test.group('Draft updating', (group) => {
     // with incomplete bundle nothing is published or changed
     let response = await client
       .post({{ '`/en/story/1/draft/${draft.id}/publish`' }})
-      .form({ bundle: JSON.parse('{"title": ""}') })
+      .json({ bundle: JSON.parse('{"title": ""}') })
       .loginAs(user)
       .withCsrfToken();
 
@@ -250,7 +250,7 @@ test.group('Draft updating', (group) => {
     // publishing where there are no corresponding chapters
     response = await client
       .post({{ '`/en/story/1/draft/${draft.id}/publish`' }})
-      .form({ bundle: JSON.parse(draftOne) })
+      .json({ bundle: JSON.parse(draftOne) })
       .loginAs(user)
       .withCsrfToken();
 
