@@ -8,6 +8,7 @@ import PanelField from './panel-field.vue';
 import ListField from './list-field.vue';
 import ObjectField from './object-field.vue';
 import ScriptureField from './scripture-field.vue';
+import ScriptureReferenceField from './scripture-reference-field.vue';
 import BooleanField from './boolean-field.vue';
 import SelectField from './select-field.vue';
 import NumberField from './number-field.vue';
@@ -39,6 +40,8 @@ export const widgetField = (widget: string) => {
       return ObjectField;
     case 'ScriptureField':
       return ScriptureField;
+    case 'ScriptureReferenceField':
+      return ScriptureReferenceField;
     case 'BooleanField':
       return BooleanField;
     case 'SelectField':

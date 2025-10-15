@@ -20,10 +20,8 @@
         :name="field.label"
         :readonly="props.isReadOnly"
         placeholder="John 1 or John 1:3-4"
-        autocomplete="given-name"
         class="input-field text-black"
         :class="{ 'border-error': referenceHasError, 'text-gray-600': props.isReadOnly }"
-        @input="updateReference"
         @blur="parseReference"
       />
       <p v-if="referenceHasError" class="text-sm text-error">
@@ -31,9 +29,9 @@
       </p>
 
       <!-- Parsed reference display -->
-      <div v-if="parsedLabel && !isReadOnly" class="mt-3 flex items-center gap-2">
+      <div v-if="referenceLabel && !isReadOnly" class="mt-3 flex items-center gap-2">
         <span class="rounded border bg-gray-50 px-2 py-1 text-sm text-gray-600">
-          {{ parsedLabel }}
+          {{ referenceLabel }}
         </span>
         <button
           type="button"
@@ -50,7 +48,7 @@
 
 <script setup lang="ts">
 import { computed, ref, nextTick, onMounted } from 'vue';
-import type { FieldSpec } from '../../types';
+import type { FieldSpec, ScriptureReference } from '../../types';
 import { useModelStore, useSharedStore } from '../store';
 import { commonProps } from '../shared/helpers';
 import { parseReference as parseRef } from '../shared/helpers';
@@ -79,11 +77,11 @@ const startValue = props.isReadOnly
     }) as ScriptureReference);
 
 const reference = ref(startValue.label);
-const parsedLabel = ref(startValue.label);
+const referenceLabel = ref(startValue.label);
 
 const parseReference = () => {
   if (!reference.value?.trim()) {
-    parsedLabel.value = '';
+    referenceLabel.value = '';
     model.setField(fieldPath.value, {
       label: '',
       reference: '',
@@ -93,29 +91,20 @@ const parseReference = () => {
 
   const parsed = parseRef(reference.value);
   if (parsed) {
-    // Store the user's input as the label and the parsed reference as the reference
-    parsedLabel.value = reference.value;
+    referenceLabel.value = reference.value;
     model.setField(fieldPath.value, {
       label: reference.value,
       reference: parsed,
     });
-  } else {
-    // If parsing fails, keep the current parsed label if it exists
-    // This allows users to edit the label without losing it
   }
 };
 
 const clearParsedLabel = () => {
-  parsedLabel.value = '';
+  referenceLabel.value = '';
   model.setField(fieldPath.value, {
     label: '',
     reference: '',
   });
-};
-
-const updateReference = () => {
-  // Don't auto-parse on input, only on blur
-  // The field will be updated when parseReference is called on blur
 };
 
 model.$subscribe(() => {
@@ -123,8 +112,8 @@ model.$subscribe(() => {
 
   nextTick().then(() => {
     const fresh = model.getField(fieldPath.value) as ScriptureReference;
-    reference.value = fresh.label; // User's input goes in the input field
-    parsedLabel.value = fresh.label; // Display the user's input as the label
+    reference.value = fresh.label;
+    referenceLabel.value = fresh.label;
   });
 });
 
@@ -145,10 +134,4 @@ onMounted(async () => {
     });
   }
 });
-
-// Type definition for the scripture reference data structure
-interface ScriptureReference {
-  label: string;
-  reference: string;
-}
 </script>
