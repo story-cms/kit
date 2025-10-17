@@ -77,7 +77,7 @@ const startValue = props.isReadOnly
     }) as ScriptureReference);
 
 const reference = ref(startValue.label);
-const referenceLabel = ref(startValue.label);
+const referenceLabel = ref(startValue.reference);
 
 const parseReference = () => {
   if (!reference.value?.trim()) {
@@ -92,7 +92,7 @@ const parseReference = () => {
   if (!referenceLabel.value) {
     const parsed = parseRef(reference.value);
     if (parsed) {
-      referenceLabel.value = reference.value;
+      referenceLabel.value = parsed;
       model.setField(fieldPath.value, {
         label: reference.value,
         reference: parsed,
@@ -121,7 +121,7 @@ model.$subscribe(() => {
     const fresh = model.getField(fieldPath.value) as ScriptureReference;
     reference.value = fresh.label;
     if (!referenceLabel.value) {
-      referenceLabel.value = fresh.label;
+      referenceLabel.value = fresh.reference;
     }
   });
 });
