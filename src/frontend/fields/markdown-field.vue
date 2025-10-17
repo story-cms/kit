@@ -16,6 +16,7 @@
       :class="{ '[&_.CodeMirror-lines]:text-gray-600': props.isReadOnly }"
     >
       <div
+        class="cm-s-easymde"
         :class="{
           'rounded border border-error': hasError,
         }"
