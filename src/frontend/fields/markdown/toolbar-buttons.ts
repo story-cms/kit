@@ -20,31 +20,34 @@ export const customToolbarButtons: EditorButton[] = [
       return instance.codemirror.replaceSelection(newValue);
     },
   },
+
   {
     name: 'scripture-reference',
     className: 'fa fa-book',
     title: 'Insert Scripture Reference',
     action: (instance: EasyMDE) => {
-      const selection = instance.codemirror.getSelection();
-
-      if (selection.trim()) {
-        const scriptureLink = `[${selection.trim()}](journeys://JHN.1.1)`;
+      const selection = instance.codemirror.getSelection().trim();
+      let parsedRef = parseReference(selection);
+      if (parsedRef !== '') {
+        const scriptureLink = `[${selection}](journeys://${parsedRef})`;
         instance.codemirror.replaceSelection(scriptureLink);
-      } else {
-        const reference = prompt('Enter scripture reference (e.g., John 10:10):');
-        if (reference && reference.trim()) {
-          const parsedRef = parseReference(reference);
-          if (parsedRef) {
-            const scriptureLink = `[see ${reference}](journeys://${parsedRef})`;
-            instance.codemirror.replaceSelection(scriptureLink);
-          } else {
-            const scriptureLink = `[see ${reference}](journeys://${reference})`;
-            instance.codemirror.replaceSelection(scriptureLink);
-          }
-        }
+        return;
       }
+
+      const reference = prompt('Enter scripture reference (e.g., John 10:10):');
+      if (reference === null || reference.trim() === '') return;
+
+      parsedRef = parseReference(reference);
+      if (!parsedRef) {
+        parsedRef = 'LUK.4.46';
+      }
+
+      const anchor = selection !== '' ? selection : reference;
+      const scriptureLink = `[${anchor}](journeys://${parsedRef})`;
+      instance.codemirror.replaceSelection(scriptureLink);
     },
   },
+
   {
     name: 'transparent',
     className: 'fa fa-transparent pointer-events-none',
