@@ -36,6 +36,8 @@
             'unordered-list',
             'ordered-list',
             'link',
+            'superscript',
+            'scripture-reference',
           ],
         }"
       />
