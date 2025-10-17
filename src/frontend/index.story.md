@@ -19,7 +19,7 @@ Following are the widgets that are currently implemented:
 
 [string](#string), [number](#number), [markdown](#markdown), [image](#image),
 [audio](#audio), [boolean](#boolean), [select](#select), [object](#object),
-[panel](#panel), [list](#list), [scripture](#scripture), [date](#date)
+[panel](#panel), [list](#list), [scripture](#scripture), [scriptureReference](#scripturereference), [date](#date)
 
 ---
 
@@ -495,6 +495,35 @@ The default translation is the KJV. To use a different translation:
    ID][https://scripture.api.bible/livedocs#/Bibles/getBibles] for the translation you
    want to use
 5. Put the Bible Id in the `config/story.ts` file
+
+## scriptureReference
+
+A simplified scripture widget that renders a [ScriptureReferenceField](#). It only handles scripture reference input and parsing, without the verse textarea. This widget is ideal for cases where you only need to capture and store scripture references without the full text content.
+
+The widget automatically parses user input (like "John 12:10-14") into the API format ("JHN.12.10-JHN.12.14") and stores both the human-readable label and the parsed reference.
+
+The widget stores data in this format:
+
+```typescript
+{
+  label: 'John 12:10-14', 
+  reference: 'JHN.12.10-JHN.12.14'  
+}
+```
+
+- **Reference Input**: Users can type scripture references like "John 1" or "John 1:3-4"
+- **Auto-Parsing**: On blur, the input is parsed and displayed as a readonly label
+- **Re-parse**: Clicking the "×" button clears the parsed label to force re-parsing
+
+### Usage
+
+```ts
+{
+  label: 'Today\'s Passage',
+  name: 'passage',
+  widget: 'scriptureReference',
+}
+```
 
 # Index Configuration
 

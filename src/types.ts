@@ -61,6 +61,11 @@ export interface Scripture {
   verse: string;
 }
 
+export interface ScriptureReference {
+  label: string;
+  reference: string;
+}
+
 export interface FieldMap {
   [key: string]: FieldSpec;
 }
