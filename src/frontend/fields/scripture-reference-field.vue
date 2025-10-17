@@ -89,12 +89,19 @@ const parseReference = () => {
     return;
   }
 
-  const parsed = parseRef(reference.value);
-  if (parsed) {
-    referenceLabel.value = reference.value;
+  if (!referenceLabel.value) {
+    const parsed = parseRef(reference.value);
+    if (parsed) {
+      referenceLabel.value = reference.value;
+      model.setField(fieldPath.value, {
+        label: reference.value,
+        reference: parsed,
+      });
+    }
+  } else {
     model.setField(fieldPath.value, {
       label: reference.value,
-      reference: parsed,
+      reference: model.getField(fieldPath.value)?.reference || '',
     });
   }
 };
@@ -113,7 +120,9 @@ model.$subscribe(() => {
   nextTick().then(() => {
     const fresh = model.getField(fieldPath.value) as ScriptureReference;
     reference.value = fresh.label;
-    referenceLabel.value = fresh.label;
+    if (!referenceLabel.value) {
+      referenceLabel.value = fresh.label;
+    }
   });
 });
 
