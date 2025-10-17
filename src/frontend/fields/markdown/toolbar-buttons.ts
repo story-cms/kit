@@ -25,15 +25,22 @@ export const customToolbarButtons: EditorButton[] = [
     className: 'fa fa-book',
     title: 'Insert Scripture Reference',
     action: (instance: EasyMDE) => {
-      const reference = prompt('Enter scripture reference (e.g., John 10:10):');
-      if (reference && reference.trim()) {
-        const parsedRef = parseReference(reference);
-        if (parsedRef) {
-          const scriptureLink = `[see ${reference}](journeys://${parsedRef})`;
-          instance.codemirror.replaceSelection(scriptureLink);
-        } else {
-          const scriptureLink = `[see ${reference}](journeys://${reference})`;
-          instance.codemirror.replaceSelection(scriptureLink);
+      const selection = instance.codemirror.getSelection();
+
+      if (selection.trim()) {
+        const scriptureLink = `[${selection.trim()}](journeys://JHN.1.1)`;
+        instance.codemirror.replaceSelection(scriptureLink);
+      } else {
+        const reference = prompt('Enter scripture reference (e.g., John 10:10):');
+        if (reference && reference.trim()) {
+          const parsedRef = parseReference(reference);
+          if (parsedRef) {
+            const scriptureLink = `[see ${reference}](journeys://${parsedRef})`;
+            instance.codemirror.replaceSelection(scriptureLink);
+          } else {
+            const scriptureLink = `[see ${reference}](journeys://${reference})`;
+            instance.codemirror.replaceSelection(scriptureLink);
+          }
         }
       }
     },
