@@ -16,11 +16,11 @@
 
     <transition
       enter-active-class="transition duration-100 ease-out"
-      enter-from-class="transform scale-95 opacity-0"
-      enter-to-class="transform scale-100 opacity-100"
+      enter-from-class="opacity-0 transform scale-95"
+      enter-to-class="opacity-100 transform scale-100"
       leave-active-class="transition duration-75 ease-in"
-      leave-from-class="transform scale-100 opacity-100"
-      leave-to-class="transform scale-95 opacity-0"
+      leave-from-class="opacity-100 transform scale-100"
+      leave-to-class="opacity-0 transform scale-95"
     >
       <MenuItems
         class="absolute left-0 z-10 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
