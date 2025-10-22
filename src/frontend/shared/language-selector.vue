@@ -23,7 +23,7 @@
       leave-to-class="opacity-0 transform scale-95"
     >
       <MenuItems
-        class="absolute left-0 z-10 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
+        class="absolute left-0 z-10 max-h-[calc(100vh-240px)] w-56 origin-top-right overflow-y-auto rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
       >
         <div v-for="language in languages" :key="language.language" class="py-1">
           <MenuItem v-slot="{ active }">
