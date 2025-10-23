@@ -281,6 +281,7 @@ export interface PageItem {
   body?: string;
   isPublished?: boolean;
   isDivider?: boolean;
+  category?: string;
 }
 
 export interface PageVersion {

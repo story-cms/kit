@@ -52,6 +52,7 @@ export default class Page extends BaseModel {
       icon: this.freshValue(changes, old, 'icon', ''),
       description: this.freshValue(changes, old, 'description', ''),
       body: this.freshValue(changes, old, 'body', ''),
+      category: this.freshValue(changes, old, 'category', ''),
     };
 
     this.bundle = JSON.stringify(fresh);
