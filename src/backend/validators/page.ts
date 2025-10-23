@@ -6,6 +6,7 @@ const draft = {
   icon: vine.string().optional(),
   description: vine.string().optional(),
   body: vine.string().optional(),
+  category: vine.string().optional(),
   type: vine.string().optional(),
   isPublished: vine.boolean(),
 };
@@ -16,6 +17,7 @@ const live = {
   description: vine.string(),
   body: vine.string(),
   type: vine.string(),
+  category: vine.string().optional(),
   isPublished: vine.boolean(),
 };
 
