@@ -1,5 +1,5 @@
 <template>
-  <Story title="Language block" group="dashboard">
+  <Story title="Language block" group="dashboard" :layout="{ type: 'grid', width: 250 }">
     <Variant title="Uncompleted">
       <LanguageBlock
         :progress="{
@@ -19,8 +19,8 @@
               lastUpdated: '2025-05-19T15:05:30.732+00:00',
             },
           ],
-          language: 'German',
-          locale: 'de',
+          language: 'Hausa',
+          locale: 'ha',
           isReadOnly: false,
         }"
       />
@@ -44,7 +44,7 @@
               lastUpdated: '2025-05-19T15:05:30.732+00:00',
             },
           ],
-          language: 'German',
+          language: 'German - Deutsch',
           locale: 'de',
           isReadOnly: true,
         }"
@@ -69,8 +69,8 @@
               lastUpdated: '2025-05-19T15:05:30.732+00:00',
             },
           ],
-          language: 'German',
-          locale: 'de',
+          language: 'Fulah Adamawa – Fulfulde Adamawa',
+          locale: 'ff',
           isReadOnly: false,
         }"
       />
