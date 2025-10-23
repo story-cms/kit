@@ -24,13 +24,21 @@
         @click="goTo(item)"
       />
     </div>
-    <div :class="['flex flex-col gap-y-1', hasCompleteRings ? 'mt-3' : 'mt-10']">
-      <p class="text-base font-bold leading-6 text-gray-800">
-        {{ progress.language }}
-
+    <div
+      :class="[
+        'flex flex-col gap-y-1 text-sm font-medium leading-4 text-gray-500',
+        hasCompleteRings ? 'mt-3' : 'mt-10',
+      ]"
+    >
+      <p
+        class="text-base font-bold leading-6 text-gray-800"
+        v-text="hasNativeName ? nativeName : englishName"
+      ></p>
+      <p>
+        <span v-if="hasNativeName">{{ englishName }} </span>
         <span class="uppercase"> ({{ progress.locale }}) </span>
       </p>
-      <p class="text-xs font-medium leading-4 text-gray-500">
+      <p class="text-xs">
         Last update: <span>{{ lastUpdate }}</span>
       </p>
     </div>
@@ -49,6 +57,17 @@ const props = defineProps<{ progress: TranslationProgress }>();
 const hasCompleteRings = computed(() => {
   return props.progress.progress.every((stat) => stat.done === stat.total);
 });
+
+const nameParts = computed(() => {
+  const separators = ['–', '-'];
+  return props.progress.language.split(new RegExp(separators.join('|')));
+});
+
+const hasNativeName = computed(() => nameParts.value.length > 1);
+
+const englishName = computed(() => nameParts.value[0]?.trim() || '');
+
+const nativeName = computed(() => nameParts.value[1]?.trim() || '');
 
 const goTo = (item: Progress) => {
   if (props.progress.isReadOnly) return;
