@@ -745,8 +745,8 @@ export const alMassira = {
       customDomain: '',
     },
     cloudinary: {
-      apiKey: '659173697664331',
-      secret: '5FZPq5OdejYLZycHRhwzGpkR5J0',
+      apiKey: 'redacted',
+      secret: 'redacted',
       cloudName: 'almassira',
       defaultPreset: 'session_thumbnail',
     },
@@ -860,7 +860,7 @@ export const alMassira = {
   },
   user: {
     id: 2,
-    email: 'service@almassira.org',
+    email: 'service@example.com',
     name: 'Admin',
     language: '*',
     createdAt: '2021-08-16T07:12:35.394+00:00',
@@ -873,7 +873,7 @@ export const alMassira = {
     meta: {
       id: 2,
       name: 'Admin',
-      email: 'service@almassira.org',
+      email: 'service@example.com',
       role: 'admin',
       language: '*',
       initials: 'A',
