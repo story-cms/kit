@@ -14,12 +14,14 @@
     >
       <BookmarkAction :bookmark="bookmark" />
     </div>
-    <img
-      :src="story.coverImage"
-      :alt="story.name"
-      class="object-cover"
-      :class="{ 'size-[116px]': isList, 'size-64': !isList }"
-    />
+    <a :href="`/${shared.locale}/story/${story.id}`">
+      <img
+        :src="story.coverImage"
+        :alt="story.name"
+        class="object-cover"
+        :class="{ 'size-[116px]': isList, 'size-64': !isList }"
+      />
+    </a>
     <div
       class="flex grow"
       :class="isList ? 'flex-row px-6' : 'flex-col justify-end space-y-2 px-3 py-4'"
