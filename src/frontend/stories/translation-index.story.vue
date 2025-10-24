@@ -18,6 +18,28 @@
         :exclude="[]"
       />
     </Variant>
+    <Variant title="Al Massira" :setup-app="miniSidebar">
+      <TranslationIndex
+        :meta="sharedProps.meta"
+        :user="sharedProps.user"
+        :language="spanish"
+        :languages="sharedProps.languages"
+        :errors="sharedProps.errors"
+        :draft="draft"
+        :bundle="alMassira.bundle"
+        :source="alMassira.source"
+        :providers="{}"
+        :last-published="'2021-10-10T14:48:00.000000Z'"
+        :story="{
+          ...alMassira.story,
+          fields: alMassira.story.fields as FieldSpec[],
+          chapterLimit: 21,
+        }"
+        :has-edit-review="false"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
+      />
+    </Variant>
   </Story>
 </template>
 
@@ -30,6 +52,7 @@ import {
   spanish,
   story,
   miniSidebar,
+  alMassira,
 } from '../test/mocks';
 import { FieldSpec } from '../../types';
 
