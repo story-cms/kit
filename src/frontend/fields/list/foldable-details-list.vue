@@ -4,7 +4,6 @@
     :key="index"
     class="my-2 p-2"
     :open="isExpanded(index)"
-    @click.prevent="toggle(index)"
   >
     <summary>
       <div
@@ -13,6 +12,7 @@
       >
         <span
           class="inline-flex cursor-pointer items-center rounded-full border border-gray-300 bg-white px-4 py-1.5"
+          @click.prevent="toggle(index)"
         >
           <icon
             name="chevron-down"
@@ -24,9 +24,11 @@
           </span>
         </span>
         <button
+          v-if="canMutate"
           type="button"
-          :disabled="props.isReadOnly"
           class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
+          :disabled="props.isReadOnly"
+          @click="emit('removeSet', index)"
         >
           <span class="flex h-10 w-10 items-center justify-center">
             <Icon name="trash" class="h-auto w-auto" />
@@ -53,13 +55,22 @@
       </li>
     </ul>
   </details>
+
+  <div v-if="canMutate" class="flex items-center gap-4">
+    <AddItemButton :label="field.label" @add="emit('addSet')" />
+    <div v-if="showEmptyListWarning()">
+      <div class="flex flex-row items-center rounded-full border bg-white p-2 text-error">
+        <Icon name="exclamation" class="pr-2" />
+        <p class="text-sm">At least one item is required</p>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { PropType } from 'vue';
 import type { FieldSpec } from '../../../types';
-import Details from './details.vue';
 import Icon from '../../shared/icon.vue';
 import { useModelStore, useWidgetsStore, useSharedStore } from '../../store';
 import AddItemButton from '../../shared/add-item-button.vue';
