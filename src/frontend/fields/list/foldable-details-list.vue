@@ -15,7 +15,7 @@
           @click.prevent="toggle(index)"
         >
           <icon
-            name="chevron-down"
+            name="chevron-right"
             class="icon mr-1 transition-transform duration-200"
             aria-hidden="true"
           />
@@ -23,6 +23,11 @@
             {{ String(sectionTitle(index)) }}
           </span>
         </span>
+        <div v-if="itemHasError(index)" class="text-accent-one">
+          <div class="rounded-full border bg-white p-2">
+            <Icon name="exclamation" class="h-10 w-10 text-red-500" />
+          </div>
+        </div>
         <button
           v-if="canMutate"
           type="button"
@@ -36,24 +41,36 @@
         </button>
       </div>
     </summary>
-    <ul>
-      <li v-for="(item, i) in fields" :key="item.name + `${i.toString()}`" class="grid">
-        <component
-          :is="widgets.picker(item.widget)"
-          :class="{
-            'rounded border border-gray-200 bg-white drop-shadow-sm':
-              item.widget != 'list',
-            'mt-8 rounded border border-gray-200 bg-white p-8 shadow': isIsland(
-              item.widget,
-            ),
-          }"
-          :field="item"
-          :is-read-only="props.isReadOnly"
-          :root-path="`${fieldPath}.${index.toString()}`"
-          :is-nested="true"
-        />
-      </li>
-    </ul>
+    <div class="grid grid-cols-[max-content_auto] gap-4">
+      <div class="flex flex-col justify-end">
+        <button
+          v-if="isExpanded(index) && !isReadOnly"
+          type="button"
+          class="cursor-pointer rounded bg-white px-1.5 py-2 shadow-sm"
+          @click="toggle(index)"
+        >
+          <Icon name="chevron-up-down" class="h-3.5 w-3.5 text-gray-700" />
+        </button>
+      </div>
+      <ul class="mr-2">
+        <li v-for="(item, i) in fields" :key="item.name + `${i.toString()}`" class="grid">
+          <component
+            :is="widgets.picker(item.widget)"
+            :class="{
+              'rounded border border-gray-200 bg-white drop-shadow-sm':
+                item.widget != 'list',
+              'mt-8 rounded border border-gray-200 bg-white p-8 shadow': isIsland(
+                item.widget,
+              ),
+            }"
+            :field="item"
+            :is-read-only="props.isReadOnly"
+            :root-path="`${fieldPath}.${index.toString()}`"
+            :is-nested="true"
+          />
+        </li>
+      </ul>
+    </div>
   </details>
 
   <div v-if="canMutate" class="flex items-center gap-4">
@@ -178,6 +195,6 @@ summary::marker,
 
 /* Rotate chevron when details is open */
 details:open .icon {
-  transform: rotate(270deg);
+  transform: rotate(90deg);
 }
 </style>
