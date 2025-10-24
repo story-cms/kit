@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, onBeforeMount } from 'vue';
+import { ref, onMounted, onUnmounted, onBeforeMount, watch } from 'vue';
 import { useSharedStore } from '../store';
 import MessageCentre from './message-centre.vue';
 
@@ -72,6 +72,16 @@ const setDimensions = () => {
   }
 };
 
+watch(
+  () => shared.hasOpenSidebar,
+  (newVal: boolean) => {
+    localStorage.setItem(
+      `${shared.meta.name.replaceAll(' ', '-')}-sidebar-state`,
+      newVal.toString(),
+    );
+  },
+);
+
 const resizeHook = () => {
   const fresh = document.documentElement.clientWidth;
   shared.setLargeScreen(fresh >= 1280);
@@ -99,6 +109,13 @@ onMounted(() => {
       },
     );
     observer.observe(sentinel.value);
+  }
+
+  const sidebarState = localStorage.getItem(
+    `${shared.meta.name.replaceAll(' ', '-')}-sidebar-state`,
+  );
+  if (sidebarState !== null) {
+    shared.setSidebarOpen(sidebarState === 'true' ? true : false);
   }
 });
 
