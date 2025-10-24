@@ -4,7 +4,7 @@
       ref="container"
       :class="['relative mx-auto min-h-screen px-3 transition-all duration-75']"
     >
-      <component :is="shared.sidebar" />
+      <component :is="shared.sidebar" v-if="!isInitializing" />
       <div
         :class="[
           'relative',
@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, onBeforeMount, watch } from 'vue';
+import { ref, onMounted, onUnmounted, onBeforeMount, watch, nextTick } from 'vue';
 import { useSharedStore } from '../store';
 import MessageCentre from './message-centre.vue';
 
@@ -54,6 +54,8 @@ const layout = ref<HTMLElement | null>(null);
 const container = ref<HTMLElement | null>(null);
 const sentinel = ref<HTMLElement | null>(null);
 let observer: IntersectionObserver | null = null;
+
+const isInitializing = ref(true);
 
 const setDimensions = () => {
   if (header.value) {
@@ -114,9 +116,15 @@ onMounted(() => {
   const sidebarState = localStorage.getItem(
     `${shared.meta.name.replaceAll(' ', '-')}-sidebar-state`,
   );
+
   if (sidebarState !== null) {
     shared.setSidebarOpen(sidebarState === 'true' ? true : false);
   }
+
+  // Allow sidebar to render after state is set to prevent layout shift
+  nextTick(() => {
+    isInitializing.value = false;
+  });
 });
 
 onUnmounted(() => {
