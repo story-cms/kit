@@ -33,18 +33,14 @@
           isList ? 'w-full flex-row justify-between space-x-4' : 'flex-col space-y-2'
         "
       >
-        <a
-          :href="`/${shared.locale}/story/${story.id}`"
-          class="flex flex-col"
-          :class="!isList ? 'space-y-2' : ''"
-        >
+        <div class="flex flex-col" :class="!isList ? 'space-y-2' : ''">
           <p class="text-base font-bold leading-6 text-gray-800">
             <span>{{ story.name }}</span>
           </p>
           <p class="text-sm font-medium leading-5 text-gray-500">
             {{ truncateText(story.description) }}
           </p>
-        </a>
+        </div>
         <div class="flex gap-2" :class="isList ? 'items-center' : ''">
           <div class="flex gap-x-2 text-xs font-medium leading-4">
             <span
