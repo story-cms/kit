@@ -1,5 +1,6 @@
 <template>
-  <div
+  <a
+    :href="`/${shared.locale}/stream/${stream.id}`"
     class="group relative flex h-full overflow-hidden rounded-lg bg-white shadow"
     :class="isList ? 'flex-row items-center' : 'flex-col'"
   >
@@ -14,12 +15,14 @@
     >
       <BookmarkAction :bookmark="bookmark" />
     </div>
+
     <img
       :src="stream.coverImage"
       :alt="stream.title"
       class="object-cover"
       :class="isList ? 'size-[60px]' : 'size-64'"
     />
+
     <div
       class="flex grow"
       :class="isList ? 'flex-row px-6' : 'flex-col justify-end space-y-2 px-3 py-4'"
@@ -30,12 +33,9 @@
           isList ? 'w-full flex-row justify-between space-x-4' : 'flex-col space-y-2'
         "
       >
-        <a
-          :href="`/${shared.locale}/stream/${stream.id}`"
-          class="text-base font-bold leading-6 text-gray-800 hover:cursor-pointer"
-        >
+        <p class="text-base font-bold leading-6 text-gray-800 hover:cursor-pointer">
           <span>{{ stream.title }}</span>
-        </a>
+        </p>
 
         <div class="flex gap-x-2" :class="isList ? 'flex-row-reverse' : ''">
           <span
@@ -50,7 +50,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </a>
 </template>
 
 <script setup lang="ts">
