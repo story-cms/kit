@@ -1,5 +1,6 @@
 <template>
-  <div
+  <a
+    :href="`/${shared.locale}/story/${story.id}`"
     class="group relative flex h-full overflow-hidden rounded-lg bg-white shadow"
     :class="isList ? 'flex-row items-center' : 'flex-col'"
   >
@@ -14,14 +15,14 @@
     >
       <BookmarkAction :bookmark="bookmark" />
     </div>
-    <a :href="`/${shared.locale}/story/${story.id}`">
-      <img
-        :src="story.coverImage"
-        :alt="story.name"
-        class="object-cover"
-        :class="{ 'size-[116px]': isList, 'size-64': !isList }"
-      />
-    </a>
+
+    <img
+      :src="story.coverImage"
+      :alt="story.name"
+      class="object-cover"
+      :class="{ 'size-[116px]': isList, 'size-64': !isList }"
+    />
+
     <div
       class="flex grow"
       :class="isList ? 'flex-row px-6' : 'flex-col justify-end space-y-2 px-3 py-4'"
@@ -61,7 +62,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </a>
 </template>
 
 <script setup lang="ts">
