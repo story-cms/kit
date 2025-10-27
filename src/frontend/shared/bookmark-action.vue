@@ -1,5 +1,5 @@
 <template>
-  <button @click="toggleBookmark">
+  <button @click.prevent.stop="toggleBookmark">
     <Icon
       :name="shared.isBookmarked(props.bookmark) ? 'star-filled' : 'star'"
       :class="shared.isBookmarked(props.bookmark) ? 'text-yellow-500' : 'text-black'"
