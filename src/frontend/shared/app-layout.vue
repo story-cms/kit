@@ -77,10 +77,7 @@ const setDimensions = () => {
 watch(
   () => shared.hasOpenSidebar,
   (newVal: boolean) => {
-    localStorage.setItem(
-      `${shared.meta.name.replaceAll(' ', '-')}-sidebar-state`,
-      newVal.toString(),
-    );
+    localStorage.setItem('sidebar-state', newVal.toString());
   },
 );
 
@@ -113,9 +110,7 @@ onMounted(() => {
     observer.observe(sentinel.value);
   }
 
-  const sidebarState = localStorage.getItem(
-    `${shared.meta.name.replaceAll(' ', '-')}-sidebar-state`,
-  );
+  const sidebarState = localStorage.getItem('sidebar-state');
 
   if (sidebarState !== null) {
     shared.setSidebarOpen(sidebarState === 'true' ? true : false);
