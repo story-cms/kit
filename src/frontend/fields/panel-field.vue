@@ -1,8 +1,11 @@
 <template>
   <div
-    :class="{
-      'rounded border border-gray-200 bg-white p-8 pt-2 shadow': !field.isRow,
-    }"
+    :class="[
+      'bg-white',
+      {
+        'p-8 pt-2': !field.isRow,
+      },
+    ]"
   >
     <div class="relative flex justify-center">
       <button
