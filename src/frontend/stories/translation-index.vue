@@ -17,7 +17,7 @@
           >
             <p class="text-left">{{ shared.language.language }}</p>
             <p class="inline-flex items-center justify-end">
-              English ({{ sourceLength }})
+              English
               <button
                 class="ml-2"
                 @click="shared.setSourceColumnAsHidden(!shared.showSourceColumn)"
@@ -43,57 +43,39 @@
         :class="[
           'grid h-full grid-flow-col-dense',
           {
-            'grid-cols-[repeat(2,_minmax(440px,_1fr))] gap-x-2 overflow-x-auto':
+            'grid-cols-[repeat(2,_minmax(440px,_1fr))] overflow-x-auto':
               shared.showSourceColumn && !shared.isLargeScreen,
-            'grid-cols-2 gap-x-2 overflow-x-auto':
+            'grid-cols-2 overflow-x-auto':
               shared.showSourceColumn && shared.isLargeScreen,
             'grid-cols-1': !shared.showSourceColumn,
           },
         ]"
       >
-        <section
-          class="grid grid-rows-subgrid"
-          :style="{ gridRow: `span ${Object.keys(model.source).length}` }"
-        >
+        <section class="row-[span_1000] grid grid-rows-subgrid">
           <form
             :dir="shared.isRtl ? 'rtl' : 'ltr'"
-            class="grid grid-rows-subgrid"
-            :style="{ gridRow: `span ${Object.keys(model.source).length}` }"
+            class="row-[span_1000] grid grid-rows-subgrid gap-y-4"
           >
-            <div
-              v-for="(item, index) in story.fields"
-              :key="index"
-              :data-index="index"
-              :data-can-fold="item.canFold ? 'true' : 'false'"
-              :data-in-item="item.label"
-            >
+            <template v-for="(item, index) in story.fields" :key="index">
               <component :is="widgetFor(index)" :field="item" :is-nested="false" />
-            </div>
+            </template>
           </form>
         </section>
         <section
-          :class="['grid grid-rows-subgrid', { hidden: !shared.showSourceColumn }]"
-          :style="{ gridRow: `span ${Object.keys(model.source).length}` }"
+          :class="[
+            'row-[span_1000] grid grid-rows-subgrid',
+            { hidden: !shared.showSourceColumn },
+          ]"
         >
-          <div
-            dir="ltr"
-            class="grid grid-rows-subgrid"
-            :style="{ gridRow: `span ${Object.keys(model.source).length}` }"
-          >
-            <div
-              v-for="(item, index) in story.fields"
-              :key="index"
-              :data-index="index"
-              :data-can-fold="item.canFold ? 'true' : 'false'"
-              :data-in-item="item.widget"
-            >
+          <div dir="ltr" class="row-[span_1000] grid grid-rows-subgrid gap-y-4">
+            <template v-for="(item, index) in story.fields" :key="index">
               <component
                 :is="widgetFor(index)"
                 :field="item"
                 :is-nested="false"
                 :is-read-only="true"
               />
-            </div>
+            </template>
           </div>
         </section>
       </div>
