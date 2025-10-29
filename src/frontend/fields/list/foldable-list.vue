@@ -2,9 +2,9 @@
   <ul
     v-for="(_listItem, index) in listItems"
     :key="index"
-    class="row-[span_100] mb-8 grid grid-rows-subgrid bg-white"
+    class="row-[span_100] mb-8 grid grid-rows-subgrid"
   >
-    <li class="relative row-[span_100] grid grid-rows-subgrid bg-white">
+    <li class="relative row-[span_100] grid grid-rows-subgrid">
       <div
         :class="[
           'absolute bottom-0 left-4 top-4 h-[calc(100%-20px)] border-l border-gray-300',
@@ -57,11 +57,17 @@
           </span>
         </button>
       </div>
-      <ul v-if="isExpanded(index)" class="row-[span_100] grid grid-rows-subgrid">
+      <ul
+        v-if="isExpanded(index)"
+        :class="[
+          'row-[span_100] grid grid-rows-subgrid bg-white',
+          { 'ml-8': !isReadOnly },
+        ]"
+      >
         <li
           v-for="(item, i) in fields"
           :key="item.name + `${i.toString()}`"
-          class="ml-8 grid grid-rows-subgrid"
+          class="grid grid-rows-subgrid"
           :style="{ gridRow: `span ${listItems.length}` }"
         >
           <component
@@ -135,7 +141,7 @@ const isIsland = (type: string): boolean => {
   return singleWidgets.includes(type);
 };
 
-widgets.setListToggles(props.fieldPath, [false, false, false, false, false]);
+widgets.setListToggles(props.fieldPath, [true, true, true, true, true]);
 const toggleState = computed(() => widgets.getListToggles(props.fieldPath));
 
 const isExpanded = (index: number): boolean => {
@@ -185,9 +191,4 @@ const showEmptyListWarning = (): boolean => {
   }
   return false;
 };
-
-const borderWidth = computed(() => {
-  if (shared.showSourceColumn) return `${shared.headerWidth - 30}px`;
-  return '100%';
-});
 </script>

@@ -1,43 +1,39 @@
 <template>
-  <div>
+  <ul
+    v-for="(_listItem, index) in listItems"
+    :key="index"
+    role="listitem"
+    class="my-2 grid gap-y-8 bg-gray-100 p-8"
+  >
     <div
-      v-for="(_listItem, index) in listItems"
-      :key="index"
-      role="listitem"
-      class="my-8 grid space-y-8 bg-transparent"
+      v-if="canMutate"
+      class="absolute right-0 mr-3 cursor-pointer text-gray-500"
+      @click="emit('removeSet', index)"
     >
-      <div class="ml-8 space-y-6 bg-gray-100 px-8 pb-8 pt-3 drop-shadow">
-        <div
-          v-if="canMutate"
-          class="absolute right-0 mr-3 cursor-pointer text-gray-500"
-          @click="emit('removeSet', index)"
-        >
-          <Icon name="trash" class="h-10 w-10" />
-        </div>
-        <div v-for="(item, i) in fields" :key="item.name + `${i.toString()}`">
-          <component
-            :is="store.picker(item.widget)"
-            :field="item"
-            :is-read-only="props.isReadOnly"
-            :root-path="`${fieldPath}.${index.toString()}`"
-            :is-nested="true"
-          />
-        </div>
-      </div>
+      <Icon name="trash" class="h-10 w-10" />
     </div>
-    <div v-if="canMutate" class="ml-8 mt-8 flex flex-row items-center gap-4">
-      <AddItemButton :label="field.label" @add="emit('addSet')" />
-      <div v-if="showEmptyListWarning()">
-        <div
-          class="flex flex-row items-center rounded-full border bg-white p-2 text-error"
-        >
-          <Icon name="exclamation" class="pr-2" />
-          <p class="text-sm">At least one item is required</p>
-        </div>
+
+    <li v-for="(item, i) in fields" :key="item.name + `${i.toString()}`">
+      <component
+        :is="store.picker(item.widget)"
+        :field="item"
+        :is-read-only="props.isReadOnly"
+        :root-path="`${fieldPath}.${index.toString()}`"
+        :is-nested="true"
+      />
+    </li>
+  </ul>
+  <div v-if="canMutate" class="ml-8 mt-8 flex flex-row items-center gap-4">
+    <AddItemButton :label="field.label" @add="emit('addSet')" />
+    <div v-if="showEmptyListWarning()">
+      <div class="flex flex-row items-center rounded-full border bg-white p-2 text-error">
+        <Icon name="exclamation" class="pr-2" />
+        <p class="text-sm">At least one item is required</p>
       </div>
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { PropType } from 'vue';

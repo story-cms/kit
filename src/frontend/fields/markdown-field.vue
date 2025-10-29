@@ -1,7 +1,7 @@
 <template>
   <div
     :class="{
-      'rounded border border-gray-100 bg-white p-8 drop-shadow-sm': !isNested,
+      'rounded bg-white p-8': !isNested,
       'mt-4': isNested,
     }"
   >
