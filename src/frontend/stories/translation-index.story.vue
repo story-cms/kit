@@ -8,7 +8,7 @@
         :languages="sharedProps.languages"
         :errors="sharedProps.errors"
         :draft="draft"
-        :bundle="{}"
+        :bundle="bundle"
         :source="source"
         :providers="{}"
         :last-published="'2021-10-10T14:48:00.000000Z'"
@@ -115,6 +115,45 @@ const source = {
     description: 'The first three verses',
     image: 'https://source.unsplash.com/random/800x600',
     body: 'A *lot* less things ...',
+  },
+};
+
+const bundle = {
+  title: 'Die Woord het vlees geword',
+  imageUrl:
+    'https://res.cloudinary.com/journeys/image/upload/v1756121793/mountain-placeholder_yuflkz.jpg',
+  animationUrl:
+    'https://res.cloudinary.com/onesheep/raw/upload/v1685641667/cmsplayground/fnu2m4ogxi9wdhi91iqi.riv',
+  spreads: [
+    {
+      title: '',
+      notes: [
+        { type: 'definition', content: '' },
+        {
+          type: 'comment',
+          content: '',
+        },
+      ],
+    },
+    {
+      title: '',
+      notes: [
+        { type: 'definition', content: '' },
+        {
+          type: 'comment',
+          content: '',
+        },
+      ],
+    },
+  ],
+  description: '',
+  image: '',
+  body: '',
+  nested: {
+    title: '',
+    description: 'T',
+    image: '',
+    body: '',
   },
 };
 
