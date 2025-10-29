@@ -9,7 +9,7 @@
         <span class="absolute left-0 right-0 top-[19px] border-t border-gray-300"></span>
         <button
           type="button"
-          class="z-[1] inline-flex items-center rounded-full border border-gray-300 bg-white px-4 py-1.5 text-sm font-medium leading-5 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          class="z-[1] inline-flex items-center rounded-full border border-gray-300 bg-white px-4 py-1.5 text-sm font-medium leading-5 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           :disabled="isReadOnly"
           :class="{ 'opacity-0': isReadOnly }"
           @click.prevent="toggle(index)"
@@ -41,7 +41,7 @@
           </span>
         </button>
       </div>
-      <ul v-if="isExpanded(index)" class="row-[span_100] grid grid-rows-subgrid">
+      <ul v-if="isExpanded(index)" class="row-[span_100] ml-2 grid grid-rows-subgrid">
         <li
           v-for="(item, i) in fields"
           :key="item.name + `${i.toString()}`"
