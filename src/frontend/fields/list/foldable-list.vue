@@ -1,68 +1,74 @@
 <template>
-  <ul v-for="(_listItem, index) in listItems" :key="index">
-    <li
-      class="relative pt-10 pl-3 mb-8 ml-3 bg-transparent border-gray-300"
-      :class="{
-        'border-l': isExpanded(index) && !isReadOnly,
-        'border-t': !isReadOnly && !shared.isTranslation,
-      }"
-    >
+  <ul
+    v-for="(_listItem, index) in listItems"
+    :key="index"
+    class="row-[span_100] mb-8 grid grid-rows-subgrid bg-white"
+  >
+    <li class="relative row-[span_100] grid grid-rows-subgrid bg-white">
       <div
-        v-if="!isReadOnly && shared.isTranslation"
-        class="absolute top-0 left-0 right-0 border-t border-gray-300"
-        :style="{ width: borderWidth }"
+        :class="[
+          'absolute bottom-0 left-4 top-4 h-[calc(100%-20px)] border-l border-gray-300',
+          {
+            hidden: !isExpanded(index) || isReadOnly,
+          },
+        ]"
       ></div>
-
-      <div
-        v-if="!isReadOnly"
-        class="absolute right-0 flex items-center justify-between ml-2 -left-5"
-        :class="{
-          '-top-[17.6px]': shared.isTranslation,
-          '-top-5': !shared.isTranslation,
-        }"
+      <button
+        v-if="isExpanded(index) && !isReadOnly"
+        type="button"
+        class="absolute bottom-0 left-2 cursor-pointer rounded bg-white px-1.5 py-2 shadow-sm"
+        @click="toggle(index)"
       >
+        <Icon name="chevron-up-down" class="h-3.5 w-3.5 text-gray-700" />
+      </button>
+      <div class="relative flex items-center justify-between">
+        <span class="absolute left-0 right-0 top-[19px] border-t border-gray-300"></span>
         <button
           type="button"
-          class="inline-flex items-center rounded-full border border-gray-300 bg-white px-4 py-1.5 text-sm font-medium leading-5 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          class="z-[1] inline-flex items-center rounded-full border border-gray-300 bg-white px-4 py-1.5 text-sm font-medium leading-5 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          :disabled="isReadOnly"
+          :class="{ 'opacity-0': isReadOnly }"
           @click.prevent="toggle(index)"
         >
           <icon
             v-if="isExpanded(index)"
             name="chevron-down"
-            class="mr-1 icon"
+            class="icon mr-1"
             aria-hidden="true"
           />
-          <icon v-else name="chevron-right" class="mr-1 icon" aria-hidden="true" />
+          <icon v-else name="chevron-right" class="icon mr-1" aria-hidden="true" />
           <span>
             {{ String(sectionTitle(index)) }}
           </span>
         </button>
-        <div v-if="itemHasError(index)" class="text-accent-one">
-          <div class="p-2 bg-white border rounded-full">
-            <Icon name="exclamation" class="w-10 h-10 text-red-500" />
+        <div v-if="itemHasError(index)" class="z-[1] text-accent-one">
+          <div class="rounded-full border bg-white p-2">
+            <Icon name="exclamation" class="h-10 w-10 text-red-500" />
           </div>
         </div>
         <button
           v-if="canMutate"
           type="button"
-          class="flex items-center justify-center w-10 h-10 text-gray-500 bg-white border rounded-full cursor-pointer"
+          class="z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
           @click="emit('removeSet', index)"
         >
-          <span v-if="!isReadOnly" class="flex items-center justify-center w-10 h-10">
-            <Icon name="trash" class="w-auto h-auto" />
+          <span v-if="!isReadOnly" class="flex h-10 w-10 items-center justify-center">
+            <Icon name="trash" class="h-auto w-auto" />
           </span>
         </button>
       </div>
-      <ul v-if="isExpanded(index)">
-        <li v-for="(item, i) in fields" :key="item.name + `${i.toString()}`" class="grid">
+      <ul v-if="isExpanded(index)" class="row-[span_100] grid grid-rows-subgrid">
+        <li
+          v-for="(item, i) in fields"
+          :key="item.name + `${i.toString()}`"
+          class="ml-8 grid grid-rows-subgrid"
+          :style="{ gridRow: `span ${listItems.length}` }"
+        >
           <component
             :is="widgets.picker(item.widget)"
             :class="{
-              'rounded border border-gray-200 bg-white drop-shadow-sm':
-                item.widget != 'list',
-              'mt-8 rounded border border-gray-200 bg-white p-8 shadow': isIsland(
-                item.widget,
-              ),
+              'rounded bg-white': item.widget != 'list',
+              'rounded bg-white p-8': isIsland(item.widget),
             }"
             :field="item"
             :is-read-only="props.isReadOnly"
@@ -71,27 +77,18 @@
           />
         </li>
       </ul>
-      <button
-        v-if="isExpanded(index) && !isReadOnly"
-        type="button"
-        class="absolute -bottom-0 -left-3 cursor-pointer rounded bg-white px-1.5 py-2 shadow-sm"
-        @click="toggle(index)"
-      >
-        <Icon name="chevron-up-down" class="h-3.5 w-3.5 text-gray-700" />
-      </button>
     </li>
   </ul>
   <div v-if="canMutate" class="flex items-center gap-4">
     <AddItemButton :label="field.label" @add="emit('addSet')" />
     <div v-if="showEmptyListWarning()">
-      <div class="flex flex-row items-center p-2 bg-white border rounded-full text-error">
+      <div class="flex flex-row items-center rounded-full border bg-white p-2 text-error">
         <Icon name="exclamation" class="pr-2" />
         <p class="text-sm">At least one item is required</p>
       </div>
     </div>
   </div>
 </template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { PropType } from 'vue';
@@ -138,7 +135,7 @@ const isIsland = (type: string): boolean => {
   return singleWidgets.includes(type);
 };
 
-widgets.setListToggles(props.fieldPath, [true, true, true, true, true]);
+widgets.setListToggles(props.fieldPath, [false, false, false, false, false]);
 const toggleState = computed(() => widgets.getListToggles(props.fieldPath));
 
 const isExpanded = (index: number): boolean => {
