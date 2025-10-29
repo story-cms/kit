@@ -17,7 +17,7 @@
           >
             <p class="text-left">{{ shared.language.language }}</p>
             <p class="inline-flex items-center justify-end">
-              English
+              English ({{ sourceLength }})
               <button
                 class="ml-2"
                 @click="shared.setSourceColumnAsHidden(!shared.showSourceColumn)"
@@ -51,37 +51,31 @@
           },
         ]"
       >
-        <section class="row-subgrid">
-          <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="row-subgrid gap-y-8">
+        <section class="row-[span_10000] grid grid-rows-subgrid">
+          <form
+            :dir="shared.isRtl ? 'rtl' : 'ltr'"
+            class="row-[span_1000] grid grid-rows-subgrid"
+          >
             <div
               v-for="(item, index) in story.fields"
               :key="index"
-              class="grid grid-rows-[subgrid]"
-              :style="{
-                gridRow: `span ${
-                  sourceItemsLength.find(
-                    (obj: SourceItem) => obj.key === `${(item as FieldSpec).name}`,
-                  )?.length
-                }`,
-              }"
+              class="row-[span_500] grid grid-rows-subgrid"
             >
               <component :is="widgetFor(index)" :field="item" :is-nested="false" />
             </div>
           </form>
         </section>
-        <section :class="['row-subgrid', { hidden: !shared.showSourceColumn }]">
-          <div dir="ltr" class="row-subgrid gap-y-8">
+        <section
+          :class="[
+            'row-[span_10000] grid grid-rows-subgrid',
+            { hidden: !shared.showSourceColumn },
+          ]"
+        >
+          <div dir="ltr" class="row-[span_1000] grid grid-rows-subgrid">
             <div
               v-for="(item, index) in story.fields"
               :key="index"
-              class="grid grid-rows-[subgrid]"
-              :style="{
-                gridRow: `span ${
-                  sourceItemsLength.find(
-                    (obj: SourceItem) => obj.key === `${(item as FieldSpec).name}`,
-                  )?.length
-                }`,
-              }"
+              class="row-[span_500] grid grid-rows-subgrid"
             >
               <component
                 :is="widgetFor(index)"
@@ -312,6 +306,8 @@ const marginRight = computed(() => {
   return 0;
 });
 
+const sourceLength = ref(0);
+
 onMounted(() => {
   model.$subscribe(() => {
     if (isSettingErrors) {
@@ -328,6 +324,8 @@ onMounted(() => {
   if (shared.meta.hasAppPreview) {
     shared.setShowAppPreview(false);
   }
+
+  sourceLength.value = Object.keys(model.source).length;
 });
 onUnmounted(() => {
   shared.setSingleColumn(false);
