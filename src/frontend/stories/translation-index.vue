@@ -51,31 +51,41 @@
           },
         ]"
       >
-        <section class="row-[span_10000] grid grid-rows-subgrid">
+        <section
+          class="grid grid-rows-subgrid"
+          :style="{ gridRow: `span ${Object.keys(model.source).length}` }"
+        >
           <form
             :dir="shared.isRtl ? 'rtl' : 'ltr'"
-            class="row-[span_1000] grid grid-rows-subgrid"
+            class="grid grid-rows-subgrid"
+            :style="{ gridRow: `span ${Object.keys(model.source).length}` }"
           >
             <div
               v-for="(item, index) in story.fields"
               :key="index"
-              class="row-[span_500] grid grid-rows-subgrid"
+              :data-index="index"
+              :data-can-fold="item.canFold ? 'true' : 'false'"
+              :data-in-item="item.label"
             >
               <component :is="widgetFor(index)" :field="item" :is-nested="false" />
             </div>
           </form>
         </section>
         <section
-          :class="[
-            'row-[span_10000] grid grid-rows-subgrid',
-            { hidden: !shared.showSourceColumn },
-          ]"
+          :class="['grid grid-rows-subgrid', { hidden: !shared.showSourceColumn }]"
+          :style="{ gridRow: `span ${Object.keys(model.source).length}` }"
         >
-          <div dir="ltr" class="row-[span_1000] grid grid-rows-subgrid">
+          <div
+            dir="ltr"
+            class="grid grid-rows-subgrid"
+            :style="{ gridRow: `span ${Object.keys(model.source).length}` }"
+          >
             <div
               v-for="(item, index) in story.fields"
               :key="index"
-              class="row-[span_500] grid grid-rows-subgrid"
+              :data-index="index"
+              :data-can-fold="item.canFold ? 'true' : 'false'"
+              :data-in-item="item.widget"
             >
               <component
                 :is="widgetFor(index)"
@@ -262,39 +272,6 @@ const reject = () => {
     },
   );
 };
-
-interface SourceItem {
-  key: string;
-  length: number;
-}
-
-let sourceItemsLength: SourceItem[] = [];
-
-interface NestedObject {
-  [key: string]: string | string[] | NestedObject;
-}
-
-const getSourceItemsLength = (obj: NestedObject): SourceItem[] => {
-  const result: SourceItem[] = [];
-
-  function calculateLength(value: string | string[] | NestedObject): number {
-    if (Array.isArray(value)) {
-      return value.length;
-    } else if (typeof value === 'object' && value !== null) {
-      return Object.keys(value).length;
-    } else {
-      return 1;
-    }
-  }
-  for (const key in obj) {
-    const value = obj[key];
-    const length = calculateLength(value);
-    result.push({ key, length });
-  }
-  return result;
-};
-
-sourceItemsLength = getSourceItemsLength(model.source);
 
 const marginRight = computed(() => {
   if (shared.isLargeScreen && shared.hasOpenSidebar) {
