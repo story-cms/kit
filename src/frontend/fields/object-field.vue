@@ -1,7 +1,7 @@
 <template>
-  <div class="my-[32px] rounded border border-gray-100 bg-white p-[32px] shadow-sm">
+  <div class="my-[32px] rounded bg-white p-[32px]">
     <div v-if="field.label">
-      <label class="mb-3 input-label">
+      <label class="input-label mb-3">
         {{ field.label }}
       </label>
     </div>
