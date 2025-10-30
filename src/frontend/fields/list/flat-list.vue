@@ -4,7 +4,7 @@
       v-for="(_listItem, index) in listItems"
       :key="index"
       role="listitem"
-      class="my-2 grid gap-y-8 bg-gray-100 p-8"
+      class="relative my-2 grid gap-y-8 bg-gray-100 p-8"
     >
       <div
         v-if="canMutate"
