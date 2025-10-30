@@ -9,7 +9,7 @@
     ]"
   >
     <nav :class="{ 'flex h-full flex-col': shared.hasOpenSidebar }">
-      <div class="flex-1 overflow-y-auto">
+      <div :class="['flex-1', shared.hasOpenSidebar ? 'overflow-y-auto' : '']">
         <div
           :class="[
             'flex',
