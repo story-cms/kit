@@ -1,0 +1,513 @@
+{{{ 
+  exports({ to: app.makePath('tests/unit/ui_service.spec.ts') }) 
+}}}
+import { test } from '@japa/runner';
+import testUtils from '@adonisjs/core/services/test_utils';
+import nock from 'nock';
+import { Ui, UiAttribute, UiService } from '@story-cms/kit';
+import { setupMockCms, createCustomCmsConfig } from '../helpers/cms_mock.js';
+import cms from '#services/cms';
+
+test.group('UiService.pull()', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction());
+
+  group.each.teardown(() => {
+    nock.cleanAll();
+  });
+
+  test('should successfully pull and ingest microcopy data', async ({ assert }) => {
+    // Set up mock CMS with microcopy source URL
+    setupMockCms(
+      createCustomCmsConfig({
+        languages: {
+          microcopySource: 'https://example.com/api/microcopy.json',
+          languages: [
+            {
+              locale: 'en',
+              language: 'English',
+              languageDirection: 'ltr',
+              bibleVersion: 'test-bible-version',
+            },
+          ],
+        },
+      }),
+    );
+
+    // Mock axios response
+    const mockMicrocopyData = {
+      '@@locale': 'en',
+      'button.save': 'Save',
+      'button.cancel': 'Cancel',
+      'message.hello': 'Hello {name}',
+      '@button.save': {
+        description: 'Save button text',
+      },
+      '@message.hello': {
+        description: 'Hello message with name placeholder',
+        placeholders: {
+          url: {
+            type: 'String',
+            example: 'https://onelink.to/bnap_share',
+          },
+        },
+      },
+    };
+
+    // Mock HTTP request with nock
+    const scope = nock('https://example.com')
+      .get('/api/microcopy.json')
+      .matchHeader('authorization', 'Bearer test-token')
+      .reply(200, mockMicrocopyData);
+
+    // Create some existing data to test replacement
+    await Ui.createMany([
+      {
+        locale: 'en',
+        key: 'button.old',
+        microCopy: 'Old Button',
+      },
+      {
+        locale: 'en',
+        key: 'button.save',
+        microCopy: 'Old Save',
+      },
+    ]);
+
+    await UiAttribute.create({
+      key: 'button.old',
+      description: 'Old description',
+    });
+
+    const service = new UiService(cms);
+    const result = await service.pull('test-token');
+
+    // Verify HTTP request was made
+    assert.isTrue(scope.isDone());
+
+    // Verify result
+    assert.equal(result.result, 'success');
+    assert.equal(result.ingested, 3); // button.save, button.cancel, message.hello
+    assert.equal(result.attributes, 2); // @button.save, @message.hello
+
+    // Verify Ui records were created correctly
+    const uiRecords = await Ui.query().where('locale', 'en').orderBy('key');
+    assert.lengthOf(uiRecords, 3);
+    assert.equal(uiRecords[0].key, 'button.cancel');
+    assert.equal(uiRecords[0].microCopy, 'Cancel');
+    assert.equal(uiRecords[1].key, 'button.save');
+    assert.equal(uiRecords[1].microCopy, 'Save');
+    assert.equal(uiRecords[2].key, 'message.hello');
+    assert.equal(uiRecords[2].microCopy, 'Hello {name}');
+
+    // Verify old records were deleted
+    const oldRecord = await Ui.query().where('key', 'button.old').first();
+    assert.isNull(oldRecord);
+
+    // Verify UiAttribute records were created correctly
+    const attributes = await UiAttribute.query().orderBy('key');
+    assert.lengthOf(attributes, 2);
+    assert.equal(attributes[0].key, 'button.save');
+    assert.equal(attributes[0].description, 'Save button text');
+    assert.deepEqual(attributes[0].placeholders, null);
+    assert.equal(attributes[1].key, 'message.hello');
+    assert.equal(attributes[1].description, 'Hello message with name placeholder');
+    assert.deepEqual(attributes[1].placeholders, {
+      url: {
+        type: 'String',
+        example: 'https://onelink.to/bnap_share',
+      },
+    });
+
+    // Verify old attributes were deleted
+    const oldAttribute = await UiAttribute.query().where('key', 'button.old').first();
+    assert.isNull(oldAttribute);
+  });
+
+  test('should filter out @@locale from attributes', async ({ assert }) => {
+    setupMockCms(
+      createCustomCmsConfig({
+        languages: {
+          microcopySource: 'https://example.com/api/microcopy.json',
+          languages: [
+            {
+              locale: 'en',
+              language: 'English',
+              languageDirection: 'ltr',
+              bibleVersion: 'test-bible-version',
+            },
+          ],
+        },
+      }),
+    );
+
+    const mockMicrocopyData = {
+      '@@locale': 'en',
+      'test.key': 'Test Value',
+      '@test.key': {
+        description: 'Test description',
+        placeholders: {
+          url: {
+            type: 'String',
+            example: 'https://onelink.to/bnap_share',
+          },
+        },
+      },
+    };
+
+    const scope = nock('https://example.com')
+      .get('/api/microcopy.json')
+      .matchHeader('authorization', 'Bearer test-token')
+      .reply(200, mockMicrocopyData);
+
+    const service = new UiService(cms);
+    const result = await service.pull('test-token');
+
+    // Verify @@locale is not included in attributes
+    const attributes = await UiAttribute.query();
+    assert.lengthOf(attributes, 1);
+    assert.equal(attributes[0].key, 'test.key');
+    assert.equal(result.attributes, 1);
+    assert.isTrue(scope.isDone());
+  });
+
+  test('should handle empty microcopy data', async ({ assert }) => {
+    setupMockCms(
+      createCustomCmsConfig({
+        languages: {
+          microcopySource: 'https://example.com/api/microcopy.json',
+          languages: [
+            {
+              locale: 'en',
+              language: 'English',
+              languageDirection: 'ltr',
+              bibleVersion: 'test-bible-version',
+            },
+          ],
+        },
+      }),
+    );
+
+    // Create some existing data
+    await Ui.createMany([
+      {
+        locale: 'en',
+        key: 'button.old',
+        microCopy: 'Old Button',
+      },
+    ]);
+
+    const scope = nock('https://example.com')
+      .get('/api/microcopy.json')
+      .matchHeader('authorization', 'Bearer test-token')
+      .reply(200, {
+        '@@locale': 'en',
+      });
+
+    const service = new UiService(cms);
+    const result = await service.pull('test-token');
+
+    assert.equal(result.result, 'success');
+    assert.equal(result.ingested, 0);
+    assert.equal(result.attributes, 0);
+
+    // Verify all existing records were deleted
+    const uiRecords = await Ui.query();
+    assert.lengthOf(uiRecords, 0);
+
+    const attributes = await UiAttribute.query();
+    assert.lengthOf(attributes, 0);
+    assert.isTrue(scope.isDone());
+  });
+
+  test('should handle attributes with veruy long descriptions', async ({ assert }) => {
+    setupMockCms(
+      createCustomCmsConfig({
+        languages: {
+          microcopySource: 'https://example.com/api/microcopy.json',
+          languages: [
+            {
+              locale: 'en',
+              language: 'English',
+              languageDirection: 'ltr',
+              bibleVersion: 'test-bible-version',
+            },
+          ],
+        },
+      }),
+    );
+
+    const mockMicrocopyData = {
+      'test.key': 'Test Value',
+      '@test.key': {
+        description: 'A'.repeat(300),
+      },
+    };
+
+    const scope = nock('https://example.com')
+      .get('/api/microcopy.json')
+      .matchHeader('authorization', 'Bearer test-token')
+      .reply(200, mockMicrocopyData);
+
+    const service = new UiService(cms);
+    const result = await service.pull('test-token');
+
+    assert.equal(result.result, 'success');
+    assert.equal(result.attributes, 1);
+
+    const attribute = await UiAttribute.query().where('key', 'test.key').first();
+    assert.isNotNull(attribute);
+    assert.equal(attribute?.description, 'A'.repeat(255));
+    assert.equal(attribute?.placeholders, null);
+    assert.isTrue(scope.isDone());
+  });
+
+  test('should delete stale items not in the new data', async ({ assert }) => {
+    setupMockCms(
+      createCustomCmsConfig({
+        languages: {
+          microcopySource: 'https://example.com/api/microcopy.json',
+          languages: [
+            {
+              locale: 'en',
+              language: 'English',
+              languageDirection: 'ltr',
+              bibleVersion: 'test-bible-version',
+            },
+            {
+              locale: 'es',
+              language: 'Spanish',
+              languageDirection: 'ltr',
+              bibleVersion: 'es-bible-version',
+            },
+          ],
+        },
+      }),
+    );
+
+    // Create existing data in both locales
+    await Ui.createMany([
+      {
+        locale: 'en',
+        key: 'button.stale',
+        microCopy: 'Stale Button',
+      },
+      {
+        locale: 'en',
+        key: 'button.keep',
+        microCopy: 'Keep Button',
+      },
+      {
+        locale: 'es',
+        key: 'button.stale',
+        microCopy: 'Botón Antiguo',
+      },
+    ]);
+
+    const mockMicrocopyData = {
+      'button.keep': 'Keep Button',
+      'button.new': 'New Button',
+    };
+
+    const scope = nock('https://example.com')
+      .get('/api/microcopy.json')
+      .matchHeader('authorization', 'Bearer test-token')
+      .reply(200, mockMicrocopyData);
+
+    const service = new UiService(cms);
+    await service.pull('test-token');
+
+    // Verify stale en locale record was deleted
+    const staleEn = await Ui.query()
+      .where('locale', 'en')
+      .where('key', 'button.stale')
+      .first();
+    assert.isNull(staleEn);
+
+    // Verify kept record still exists
+    const kept = await Ui.query()
+      .where('locale', 'en')
+      .where('key', 'button.keep')
+      .first();
+    assert.isNotNull(kept);
+
+    // Verify new record exists
+    const newRecord = await Ui.query()
+      .where('locale', 'en')
+      .where('key', 'button.new')
+      .first();
+    assert.isNotNull(newRecord);
+
+    // Verify that the es record was also deleted
+    const staleEs = await Ui.query()
+      .where('locale', 'es')
+      .where('key', 'button.stale')
+      .first();
+    assert.isNull(staleEs);
+    assert.isTrue(scope.isDone());
+  });
+
+  test('should overwrite existing data', async ({ assert }) => {
+    setupMockCms(
+      createCustomCmsConfig({
+        languages: {
+          microcopySource: 'https://example.com/api/microcopy.json',
+          languages: [
+            {
+              locale: 'en',
+              language: 'English',
+              languageDirection: 'ltr',
+              bibleVersion: 'test-bible-version',
+            },
+          ],
+        },
+      }),
+    );
+
+    // Create existing data with same keys that will be in fresh data
+    await Ui.createMany([
+      {
+        locale: 'en',
+        key: 'button.save',
+        microCopy: 'Old Save Text',
+      },
+      {
+        locale: 'en',
+        key: 'button.cancel',
+        microCopy: 'Old Cancel Text',
+      },
+      {
+        locale: 'en',
+        key: 'message.hello',
+        microCopy: 'Old Hello {name}',
+      },
+    ]);
+
+    await UiAttribute.createMany([
+      {
+        key: 'button.save',
+        description: 'Old save button description',
+      },
+      {
+        key: 'message.hello',
+        description: 'Old hello message description',
+        placeholders: {
+          name: {
+            type: 'String',
+            example: 'John',
+          },
+        } as any,
+      },
+    ]);
+
+    // Verify existing records
+    const beforeUiCount = await Ui.query().where('locale', 'en').count('* as total');
+    assert.equal(Number(beforeUiCount[0].$extras.total), 3);
+
+    const beforeAttributeCount = await UiAttribute.query().count('* as total');
+    assert.equal(Number(beforeAttributeCount[0].$extras.total), 2);
+
+    // Fresh data with updated values
+    const mockMicrocopyData = {
+      '@@locale': 'en',
+      'button.save': 'New Save Text',
+      'button.cancel': 'New Cancel Text',
+      'message.hello': 'New Hello {name}',
+      '@button.save': {
+        description: 'New save button description',
+      },
+      '@message.hello': {
+        description: 'New hello message description',
+        placeholders: {
+          name: {
+            type: 'String',
+            example: 'Jane',
+          },
+          url: {
+            type: 'String',
+            example: 'https://example.com',
+          },
+        },
+      },
+    };
+
+    const scope = nock('https://example.com')
+      .get('/api/microcopy.json')
+      .matchHeader('authorization', 'Bearer test-token')
+      .reply(200, mockMicrocopyData);
+
+    const service = new UiService(cms);
+    const result = await service.pull('test-token');
+
+    assert.isTrue(scope.isDone());
+    assert.equal(result.result, 'success');
+    assert.equal(result.ingested, 3); // button.save, button.cancel, message.hello
+    assert.equal(result.attributes, 2); // @button.save, @message.hello
+
+    // Verify records were overwritten (not duplicated)
+    const afterUiCount = await Ui.query().where('locale', 'en').count('* as total');
+    assert.equal(
+      Number(afterUiCount[0].$extras.total),
+      3,
+      'Should have same count, not duplicated',
+    );
+
+    const afterAttributeCount = await UiAttribute.query().count('* as total');
+    assert.equal(
+      Number(afterAttributeCount[0].$extras.total),
+      2,
+      'Should have same count, not duplicated',
+    );
+
+    // Verify values were updated to fresh copy
+    const uiRecords = await Ui.query().where('locale', 'en').orderBy('key');
+    assert.lengthOf(uiRecords, 3);
+    assert.equal(uiRecords[0].key, 'button.cancel');
+    assert.equal(uiRecords[0].microCopy, 'New Cancel Text', 'Should have fresh value');
+    assert.equal(uiRecords[1].key, 'button.save');
+    assert.equal(uiRecords[1].microCopy, 'New Save Text', 'Should have fresh value');
+    assert.equal(uiRecords[2].key, 'message.hello');
+    assert.equal(uiRecords[2].microCopy, 'New Hello {name}', 'Should have fresh value');
+
+    // Verify attributes were overwritten with fresh copy
+    const attributes = await UiAttribute.query().orderBy('key');
+    assert.lengthOf(attributes, 2);
+    assert.equal(attributes[0].key, 'button.save');
+    assert.equal(
+      attributes[0].description,
+      'New save button description',
+      'Should have fresh description',
+    );
+    assert.deepEqual(attributes[0].placeholders, null);
+
+    assert.equal(attributes[1].key, 'message.hello');
+    assert.equal(
+      attributes[1].description,
+      'New hello message description',
+      'Should have fresh description',
+    );
+    assert.deepEqual(
+      attributes[1].placeholders,
+      {
+        name: {
+          type: 'String',
+          example: 'Jane',
+        },
+        url: {
+          type: 'String',
+          example: 'https://example.com',
+        },
+      },
+      'Should have fresh placeholders',
+    );
+
+    // Verify no duplicates exist for same key
+    const saveButtons = await Ui.query()
+      .where('locale', 'en')
+      .where('key', 'button.save');
+    assert.lengthOf(
+      saveButtons,
+      1,
+      'Should have exactly one record for button.save, no duplicates',
+    );
+  });
+});
