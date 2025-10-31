@@ -1,8 +1,6 @@
 {{{ 
   exports({ to: app.makePath('tests/api.rest') }) 
 }}}
-@authority = http://localhost:3333
-
 ###
 GET \{\{ authority \}\}/api/v1/chapter/1 HTTP/1.1
 Accept: application/json

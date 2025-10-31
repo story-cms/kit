@@ -140,19 +140,19 @@ test.group('UiService.pull()', (group) => {
       }),
     );
 
-    const mockMicrocopyData = JSON.parse({{ '`{
-      "@@locale": "en",
-      "test.key": "Test Value",
-      "@test.key": {
-        "description": "Test description",
-        "placeholders": {
-            "url": {
-                "type": "String",
-                "example": "https://onelink.to/bnap_share"
-            }
-        }
-      }
-    }`' }});
+    const mockMicrocopyData = {
+      '@@locale': 'en',
+      'test.key': 'Test Value',
+      '@test.key': {
+        description: 'Test description',
+        placeholders: {
+          url: {
+            type: 'String',
+            example: 'https://onelink.to/bnap_share',
+          },
+        },
+      },
+    };
 
     const scope = nock('https://example.com')
       .get('/api/microcopy.json')
