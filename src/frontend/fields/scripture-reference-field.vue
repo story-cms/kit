@@ -14,7 +14,7 @@
     </label>
 
     <div
-      class="mt-[2px] grid gap-x-2 rounded-md border border-gray-300 bg-white pb-1 pt-1"
+      class="mt-[2px] grid rounded-md border border-gray-300 bg-white pb-1 pt-1"
       :class="
         modelValue.length > 0 && !props.isReadOnly
           ? 'grid-cols-[auto_minmax(32%,_1fr)]'
@@ -59,7 +59,7 @@
         v-model="newTag"
         type="text"
         :name="field.label"
-        class="mr-1 block rounded-r-md border-0 bg-white py-1 pl-0 text-sm font-normal leading-5 text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
+        class="ml-1 mr-1 block rounded-r-md border-0 bg-white py-1 pl-1 text-sm font-normal leading-5 text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
         @keydown.enter.stop="addTag(newTag)"
       />
     </div>

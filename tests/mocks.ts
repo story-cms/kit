@@ -50,6 +50,11 @@ export const complexFields: FieldSpec[] = [
     label: 'Animation',
     widget: 'animation',
   },
+  {
+    name: 'passage',
+    label: 'Passage',
+    widget: 'scriptureReference',
+  },
 ];
 
 export const nestedFields: FieldSpec[] = [
@@ -84,6 +89,11 @@ export const nestedFields: FieldSpec[] = [
             widget: 'number',
           },
         ],
+      },
+      {
+        name: 'passage',
+        label: 'Passage',
+        widget: 'scriptureReference',
       },
     ],
   },

@@ -40,6 +40,7 @@ test.describe('Bundle builder', () => {
     expect(parsed.title).toBe('');
     expect(parsed.image).toBe('');
     expect(parsed.animation).toBe('');
+    expect(parsed.passage).toStrictEqual([]);
   });
 
   test('generates default bundle for nested fields', async () => {
@@ -53,11 +54,12 @@ test.describe('Bundle builder', () => {
     const parsed = JSON.parse(defaultBundle);
     expect(parsed.title).toBeDefined();
     expect(parsed.metadata).toBeDefined();
+    expect(parsed.metadata.passage).toBeDefined();
     // panel fields are not nested
     expect(parsed.body).toBeDefined();
     expect(parsed.summary).toBeDefined();
     expect(parsed.title).toBe('');
-    expect(parsed.metadata).toEqual({ author: '', tags: [] });
+    expect(parsed.metadata).toEqual({ author: '', tags: [], passage: [] });
   });
 });
 
@@ -167,6 +169,7 @@ test.describe('Bundle updater', () => {
             color: 0,
           },
         ],
+        passage: ['JHN.1.14'],
       },
       body: 'Old Body',
       summary: 'Old Summary',
@@ -181,6 +184,7 @@ test.describe('Bundle updater', () => {
             color: 1,
           },
         ],
+        passage: ['JHN.10.10'],
       },
     };
 
@@ -198,6 +202,7 @@ test.describe('Bundle updater', () => {
           color: 1,
         },
       ],
+      passage: ['JHN.10.10'],
     });
     expect(parsed.body).toBe('Old Body');
     expect(parsed.summary).toBe('Old Summary');
@@ -235,6 +240,11 @@ test.describe('Bundle validator', () => {
         name: 'notes',
         label: 'Notes',
         widget: 'markdown',
+      },
+      {
+        name: 'passage',
+        label: 'Passage',
+        widget: 'scriptureReference',
       },
       {
         name: 'profile',
@@ -279,6 +289,7 @@ test.describe('Bundle validator', () => {
       name: 'John',
       age: 30,
       notes: '# The Outing\nWe went to the park at *09h00* on a **sunny** day.',
+      passage: ['JHN.1.14'],
       profile: '',
       address: {
         street: '123 Main St',
@@ -315,6 +326,19 @@ test.describe('Bundle validator', () => {
       await vine.validate({
         schema: vine.object(schema),
         data: dataWithMissingVerse,
+      });
+    }).rejects.toThrow();
+
+    const dataWithEmptyPassage = {
+      ...validData,
+      passage: [],
+    };
+
+    // Test that validation fails when required field is missing
+    await expect(async () => {
+      await vine.validate({
+        schema: vine.object(schema),
+        data: dataWithEmptyPassage,
       });
     }).rejects.toThrow();
   });
