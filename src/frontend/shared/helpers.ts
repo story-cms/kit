@@ -83,6 +83,11 @@ export const safeChapterTitle = (
 };
 
 export const parseReference = (reference: string): string => {
+  const standardReference = fromStandardReference(reference);
+  if (standardReference !== '') {
+    return reference;
+  }
+
   const match = reference
     .trim()
     .toLocaleLowerCase()
@@ -120,6 +125,32 @@ export const parseReference = (reference: string): string => {
 
   return referenceString;
 };
+
+// if the passed reference is not in the standard format, return an empty string,
+// otherwise, return a parseable reference
+function fromStandardReference(reference: string): string {
+  // starts with three letters followed by a dot and a number
+  if (!/^[A-Z]{3}\.\d+\.\d+$/.test(reference)) {
+    return '';
+  }
+
+  const [book, chapter, verse] = reference.split('.');
+  const bookName = bookNameFromAbbreviation(book);
+  if (!bookName) {
+    return '';
+  }
+  return `${bookName} ${chapter}:${verse}`;
+}
+
+function bookNameFromAbbreviation(abbreviation: string): string {
+  for (const book in BibleBooksMap) {
+    if (BibleBooksMap[book][0].toUpperCase() === abbreviation) {
+      return book;
+    }
+  }
+
+  return '';
+}
 
 function getAbbreviation(inputBook: string): string {
   for (const book in BibleBooksMap) {
