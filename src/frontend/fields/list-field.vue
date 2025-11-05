@@ -27,7 +27,6 @@ import { ref, computed } from 'vue';
 import { commonProps } from '../shared/helpers';
 import type { FieldSpec } from '../../types';
 import FlatList from './list/flat-list.vue';
-import FoldableList from './list/foldable-list.vue';
 import FoldableDetailsList from './list/foldable-details-list.vue';
 import { useModelStore } from '../store';
 

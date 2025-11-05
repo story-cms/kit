@@ -180,11 +180,6 @@ const showEmptyListWarning = (): boolean => {
   }
   return false;
 };
-
-const borderWidth = computed(() => {
-  if (shared.showSourceColumn) return `${shared.headerWidth - 30}px`;
-  return '100%';
-});
 </script>
 
 <style scoped>
