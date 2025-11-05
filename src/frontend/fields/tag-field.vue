@@ -59,7 +59,7 @@
         v-model="newTag"
         type="text"
         :name="field.label"
-        class="ml-[2px] mr-1 block rounded-r-md border-0 bg-white py-1 text-sm font-normal leading-5 text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
+        class="mr-1 block rounded-r-md border-0 bg-white py-1 pl-0 text-sm font-normal leading-5 text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
       />
     </div>
     <p v-if="hasError" class="text-sm text-error">{{ errors[0] }}</p>

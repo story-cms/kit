@@ -63,4 +63,10 @@ test.describe('Parse exactly spelled and punctuated references', () => {
     expect(parseReference(' 1 Sam 1 . 4 - 5  ')).toBe('1SA.1.4-1SA.1.5');
     expect(parseReference(' 1SA 1 .  4   -    5  ')).toBe('1SA.1.4-1SA.1.5');
   });
+
+  test('Using the standard code', () => {
+    expect(parseReference('MAT.2.3')).toBe('MAT.2.3');
+    expect(parseReference('MAZ.2.3')).toBe('');
+    expect(parseReference('PSA.119.100')).toBe('PSA.119.100');
+  });
 });

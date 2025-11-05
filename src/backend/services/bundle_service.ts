@@ -100,6 +100,12 @@ export class BundleService {
         return {
           [spec.name]: this.isDraft ? this.scriptureDraftSchema : this.scriptureSchema,
         };
+      case 'scriptureReference':
+        return {
+          [spec.name]: this.isDraft
+            ? vine.array(vine.string())
+            : vine.array(vine.string()).minLength(1),
+        };
       case 'number':
         return {
           [spec.name]: this.isDraft ? vine.number().nullable() : vine.number(),
@@ -216,6 +222,7 @@ export class BundleService {
     if (node['widget'] === 'panel' && node['fields'])
       return this.getBundleShapes(node['fields']);
 
+    if (node['widget'] === 'scriptureReference') return `"${node.name}":[]`;
     if (node['widget'] === 'list' && node['fields']) return `"${node.name}":[]`;
     if (node['widget'] === 'string') return `"${node.name}": ""`;
     if (node['widget'] === 'image') return `"${node.name}": ""`;

@@ -54,16 +54,12 @@ export interface FieldSpec {
   folder?: string;
   collectionId?: string;
   hasTimePicker?: boolean;
+  allowMany?: boolean;
 }
 
 export interface Scripture {
   reference: string;
   verse: string;
-}
-
-export interface ScriptureReference {
-  label: string;
-  reference: string;
 }
 
 export interface FieldMap {

@@ -214,19 +214,20 @@ export class UiService {
       .filter((key) => key.startsWith('@') && key !== '@@locale')
       .map((key) => ({
         key: key.substring(1),
-        description: data[key]['description'],
+        // trim to the first 255 characters to avoid column size limit
+        description: data[key]['description'].substring(0, 255),
         placeholders: data[key]['placeholders'],
       }));
 
     await db.transaction(async (trx) => {
       // replace the source data
       await Ui.query({ client: trx }).where('locale', this.sourceLocale).delete();
-      const ui = await Ui.createMany(fresh);
+      const ui = await Ui.createMany(fresh, { client: trx });
       result['ingested'] = ui.length;
 
       // replace the attributes
       await UiAttribute.query({ client: trx }).delete();
-      const rows = await UiAttribute.createMany(attributes);
+      const rows = await UiAttribute.createMany(attributes, { client: trx });
       result['attributes'] = rows.length;
 
       // delete stale items

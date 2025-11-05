@@ -43,53 +43,39 @@
         :class="[
           'grid h-full grid-flow-col-dense',
           {
-            'grid-cols-[repeat(2,_minmax(440px,_1fr))] gap-x-2 overflow-x-auto':
+            'grid-cols-[repeat(2,_minmax(440px,_1fr))] overflow-x-auto':
               shared.showSourceColumn && !shared.isLargeScreen,
-            'grid-cols-2 gap-x-2 overflow-x-auto':
+            'grid-cols-2 overflow-x-auto':
               shared.showSourceColumn && shared.isLargeScreen,
             'grid-cols-1': !shared.showSourceColumn,
           },
         ]"
       >
-        <section class="row-subgrid">
-          <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="row-subgrid gap-y-8">
-            <div
-              v-for="(item, index) in story.fields"
-              :key="index"
-              class="grid grid-rows-[subgrid]"
-              :style="{
-                gridRow: `span ${
-                  sourceItemsLength.find(
-                    (obj: SourceItem) => obj.key === `${(item as FieldSpec).name}`,
-                  )?.length
-                }`,
-              }"
-            >
+        <section class="row-[span_1000] grid grid-rows-subgrid">
+          <form
+            :dir="shared.isRtl ? 'rtl' : 'ltr'"
+            class="row-[span_1000] grid grid-rows-subgrid gap-y-4"
+          >
+            <template v-for="(item, index) in story.fields" :key="index">
               <component :is="widgetFor(index)" :field="item" :is-nested="false" />
-            </div>
+            </template>
           </form>
         </section>
-        <section :class="['row-subgrid', { hidden: !shared.showSourceColumn }]">
-          <div dir="ltr" class="row-subgrid gap-y-8">
-            <div
-              v-for="(item, index) in story.fields"
-              :key="index"
-              class="grid grid-rows-[subgrid]"
-              :style="{
-                gridRow: `span ${
-                  sourceItemsLength.find(
-                    (obj: SourceItem) => obj.key === `${(item as FieldSpec).name}`,
-                  )?.length
-                }`,
-              }"
-            >
+        <section
+          :class="[
+            'row-[span_1000] grid grid-rows-subgrid',
+            { hidden: !shared.showSourceColumn },
+          ]"
+        >
+          <div dir="ltr" class="row-[span_1000] grid grid-rows-subgrid gap-y-4">
+            <template v-for="(item, index) in story.fields" :key="index">
               <component
                 :is="widgetFor(index)"
                 :field="item"
                 :is-nested="false"
                 :is-read-only="true"
               />
-            </div>
+            </template>
           </div>
         </section>
       </div>
@@ -269,39 +255,6 @@ const reject = () => {
   );
 };
 
-interface SourceItem {
-  key: string;
-  length: number;
-}
-
-let sourceItemsLength: SourceItem[] = [];
-
-interface NestedObject {
-  [key: string]: string | string[] | NestedObject;
-}
-
-const getSourceItemsLength = (obj: NestedObject): SourceItem[] => {
-  const result: SourceItem[] = [];
-
-  function calculateLength(value: string | string[] | NestedObject): number {
-    if (Array.isArray(value)) {
-      return value.length;
-    } else if (typeof value === 'object' && value !== null) {
-      return Object.keys(value).length;
-    } else {
-      return 1;
-    }
-  }
-  for (const key in obj) {
-    const value = obj[key];
-    const length = calculateLength(value);
-    result.push({ key, length });
-  }
-  return result;
-};
-
-sourceItemsLength = getSourceItemsLength(model.source);
-
 const marginRight = computed(() => {
   if (shared.isLargeScreen && shared.hasOpenSidebar) {
     return (shared.layoutWidth - shared.headerWidth - 264) / 2 - 12;
@@ -311,6 +264,8 @@ const marginRight = computed(() => {
   }
   return 0;
 });
+
+const sourceLength = ref(0);
 
 onMounted(() => {
   model.$subscribe(() => {
@@ -328,6 +283,8 @@ onMounted(() => {
   if (shared.meta.hasAppPreview) {
     shared.setShowAppPreview(false);
   }
+
+  sourceLength.value = Object.keys(model.source).length;
 });
 onUnmounted(() => {
   shared.setSingleColumn(false);

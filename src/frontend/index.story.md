@@ -19,7 +19,8 @@ Following are the widgets that are currently implemented:
 
 [string](#string), [number](#number), [markdown](#markdown), [image](#image),
 [audio](#audio), [boolean](#boolean), [select](#select), [object](#object),
-[panel](#panel), [list](#list), [scripture](#scripture), [scriptureReference](#scripturereference), [date](#date)
+[panel](#panel), [list](#list), [scripture](#scripture),
+[scriptureReference](#scripturereference), [date](#date)
 
 ---
 
@@ -498,30 +499,22 @@ The default translation is the KJV. To use a different translation:
 
 ## scriptureReference
 
-A simplified scripture widget that renders a [ScriptureReferenceField](#). It only handles scripture reference input and parsing, without the verse textarea. This widget is ideal for cases where you only need to capture and store scripture references without the full text content.
+A scripture reference picker that renders a [ScriptureReferenceField](#). It has one
+optional special property:
 
-The widget automatically parses user input (like "John 12:10-14") into the API format ("JHN.12.10-JHN.12.14") and stores both the human-readable label and the parsed reference.
+- `allowMany` accepts a boolean value; defaults to `true`
 
-The widget stores data in this format:
+The widget automatically parses user input (like "John 12:10-14") into the API format
+("JHN.12.10-JHN.12.14") and stores both the human-readable label and the parsed reference.
+
+example:
 
 ```typescript
 {
-  label: 'John 12:10-14', 
-  reference: 'JHN.12.10-JHN.12.14'  
-}
-```
-
-- **Reference Input**: Users can type scripture references like "John 1" or "John 1:3-4"
-- **Auto-Parsing**: On blur, the input is parsed and displayed as a readonly label
-- **Re-parse**: Clicking the "×" button clears the parsed label to force re-parsing
-
-### Usage
-
-```ts
-{
-  label: 'Today\'s Passage',
-  name: 'passage',
-  widget: 'scriptureReference',
+    label: "Further reading",
+    name: "passage",
+    widget: "scriptureReference",
+    allowMany: false
 }
 ```
 

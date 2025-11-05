@@ -8,8 +8,8 @@
         : 'left-3 top-3 mx-auto max-h-min rounded-full',
     ]"
   >
-    <nav :class="{ 'flex h-full flex-col justify-between': shared.hasOpenSidebar }">
-      <div>
+    <nav :class="{ 'flex h-full flex-col': shared.hasOpenSidebar }">
+      <div :class="['flex-1', shared.hasOpenSidebar ? 'overflow-y-auto' : '']">
         <div
           :class="[
             'flex',
@@ -91,7 +91,7 @@
           </section>
           <div v-if="shared.bookmarks.length > 0">
             <div class="my-7 border-t border-gray-200"></div>
-            <div class="flex max-h-[600px] flex-col overflow-y-auto">
+            <div class="flex flex-col">
               <a
                 v-for="bookmark in shared.bookmarks"
                 :key="bookmark.label"

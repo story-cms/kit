@@ -10,8 +10,12 @@
       <ModelControl :model="scriptureReferenceModel" :is-inspect-only="true" />
     </Variant>
 
-    <Variant title="ReadOnly" :setup-app="loadData">
+    <Variant title="Read Only" :setup-app="loadData">
       <ScriptureReferenceField :field="scriptureReferenceSpec" :is-read-only="true" />
+    </Variant>
+
+    <Variant title="Single Reference" :setup-app="loadData">
+      <ScriptureReferenceField :field="{ ...scriptureReferenceSpec, allowMany: false }" />
     </Variant>
 
     <Variant title="Error" :setup-app="loadData">
@@ -32,20 +36,16 @@ import type { StoryHandler } from '../shared/helpers';
 
 const scriptureReferenceSpec = {
   name: 'passage',
-  label: "Today's Passage",
   widget: 'scriptureReference',
+  label: "Today's Passage",
 };
 
 const scriptureReferenceModel = {
-  passage: {
-    label: 'John 12:10-14',
-    reference: 'JHN.12.10-JHN.12.14',
-  },
+  passage: ['JHN.12.10-JHN.12.14', 'MAT.3.16'],
 };
 
 const scriptureReferenceError = {
-  'bundle.passage.reference': ['required validation failed'],
-  'bundle.passage.label': ['that does not look quite right'],
+  'bundle.passage': ['required validation failed'],
 };
 
 const loadData: StoryHandler = ({ variant }): void => {
@@ -55,15 +55,20 @@ const loadData: StoryHandler = ({ variant }): void => {
   if (variant?.title === 'Error') {
     shared.errors = scriptureReferenceError;
   }
-  if (variant?.title === 'ReadOnly') {
-    store.setSource({
-      passage: {
-        label: 'Matthew 3:16',
-        reference: 'MAT.3.16',
-      },
-    });
+
+  if (variant?.title === 'Single Reference') {
+    store.model = {
+      passage: ['MAT.3.16'],
+    };
     return;
   }
+
+  if (variant?.title === 'Read Only') {
+    store.setSource({
+      passage: ['JHN.12.10-JHN.12.14', 'MAT.3.16'],
+    });
+  }
+
   store.model = scriptureReferenceModel;
 };
 </script>
@@ -71,34 +76,21 @@ const loadData: StoryHandler = ({ variant }): void => {
 <docs lang="md">
 # Scripture Reference Field
 
-A simplified scripture field that only handles reference input and parsing. Similar to the ScriptureField but without the verse textarea.
+A scripture reference picker that renders a ScriptureReferenceField. It has one optional
+special property:
 
-## Features
+- `allowMany` accepts a boolean value; defaults to `true`
 
-- **Reference Input**: Users can type scripture references like "John 1" or "John 1:3-4"
-- **Auto-Parsing**: On blur, the input is parsed and displayed as a readonly label
-- **Editable Label**: Users can modify the parsed label without losing the reference
-- **Re-parse**: Clicking the "×" button clears the parsed label to force re-parsing
-- **Error Handling**: Shows validation errors if parsing fails
+The widget automatically parses user input (like "John 12:10-14") into the API format ("JHN.12.10-JHN.12.14") and stores both the human-readable label and the parsed reference.
 
-## Usage
-
-```javascript
-{
-  label: 'Today\'s Passage',
-  name: 'passage',
-  widget: 'scriptureReference',
-}
-```
-
-## Data Structure
-
-The field stores data in this format:
+example:
 
 ```typescript
 {
-  label: 'John 12:10-14',        // Human-readable label
-  reference: 'JHN.12.10-JHN.12.14'  // Parsed reference for API calls
+    label: "Further reading",
+    name: "passage",
+    widget: "scriptureReference",
+    allowMany: false
 }
 ```
 </docs>

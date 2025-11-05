@@ -1,31 +1,30 @@
 <template>
-  <div>
-    <div
+  <div class="ml-8">
+    <ul
       v-for="(_listItem, index) in listItems"
       :key="index"
       role="listitem"
-      class="my-8 grid space-y-8 bg-transparent"
+      class="relative my-2 grid gap-y-8 bg-gray-100 p-8"
     >
-      <div class="ml-8 space-y-6 bg-gray-100 px-8 pb-8 pt-3 drop-shadow">
-        <div
-          v-if="canMutate"
-          class="absolute right-0 mr-3 cursor-pointer text-gray-500"
-          @click="emit('removeSet', index)"
-        >
-          <Icon name="trash" class="h-10 w-10" />
-        </div>
-        <div v-for="(item, i) in fields" :key="item.name + `${i.toString()}`">
-          <component
-            :is="store.picker(item.widget)"
-            :field="item"
-            :is-read-only="props.isReadOnly"
-            :root-path="`${fieldPath}.${index.toString()}`"
-            :is-nested="true"
-          />
-        </div>
+      <div
+        v-if="canMutate"
+        class="absolute right-0 mr-3 cursor-pointer text-gray-500"
+        @click="emit('removeSet', index)"
+      >
+        <Icon name="trash" class="h-10 w-10" />
       </div>
-    </div>
-    <div v-if="canMutate" class="ml-8 mt-8 flex flex-row items-center gap-4">
+
+      <li v-for="(item, i) in fields" :key="item.name + `${i.toString()}`">
+        <component
+          :is="store.picker(item.widget)"
+          :field="item"
+          :is-read-only="props.isReadOnly"
+          :root-path="`${fieldPath}.${index.toString()}`"
+          :is-nested="true"
+        />
+      </li>
+    </ul>
+    <div v-if="canMutate" class="mt-8 flex flex-row items-center gap-4">
       <AddItemButton :label="field.label" @add="emit('addSet')" />
       <div v-if="showEmptyListWarning()">
         <div
@@ -38,6 +37,7 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { PropType } from 'vue';

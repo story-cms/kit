@@ -6,6 +6,10 @@ import { CmsService } from './cms_service.js';
 export class DraftService {
   public story: StorySpec;
 
+  // when creating a draft for a target language, it is handy for certain fields
+  // to be prefilled to match the source language. For example, a translated
+  // chapter seldom needs a different cover image or scripture reference
+  // so we can prefill it for the translator to give them a running start
   #prefilledFields: string[] | null = null;
 
   constructor(
@@ -47,6 +51,13 @@ export class DraftService {
       }
 
       if (Array.isArray(value)) {
+        // is it a scripture reference?
+        const isString = value.every((item) => typeof item === 'string');
+        if (isString) {
+          draftBundle[key] = value;
+          return;
+        }
+
         draftBundle[key] = value.map((item) => {
           if (item === null) return null;
           if (typeof item === 'object' || Array.isArray(item)) {
@@ -69,18 +80,17 @@ export class DraftService {
   }
 
   protected leafValue(key: string, value: any): any {
-    // numbers, booleans
-    if (typeof value !== 'string') {
+    // in prefilled list
+    if (this.prefilledFields.some((item) => item === key)) {
       return value;
+    }
+
+    if (typeof value === 'string') {
+      return '';
     }
 
     // numbers
     if (!Number.isNaN(Number(value))) {
-      return value;
-    }
-
-    // in prefilled list
-    if (this.prefilledFields.some((item) => item === key)) {
       return value;
     }
 
@@ -107,8 +117,11 @@ export class DraftService {
     }
 
     switch (field['widget']) {
+      case 'tag':
+      case 'scriptureReference':
       case 'select':
       case 'number':
+      case 'boolean':
       case 'image':
       case 'animation':
         // check if subPath is already in the list
