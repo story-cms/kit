@@ -55,6 +55,7 @@ export interface FieldSpec {
   collectionId?: string;
   hasTimePicker?: boolean;
   allowMany?: boolean;
+  isFlexible?: boolean;
 }
 
 export interface Scripture {
