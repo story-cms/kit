@@ -56,6 +56,16 @@
             <Icon name="trash" class="h-auto w-auto" />
           </span>
         </button>
+        <button
+          v-if="field.isFlexible && !isReadOnly"
+          type="button"
+          class="z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
+          @click="toggle(index)"
+        >
+          <span class="flex h-10 w-10 items-center justify-center">
+            <Icon name="minus" class="size-5 text-gray-500" />
+          </span>
+        </button>
       </div>
       <ul
         v-if="isExpanded(index)"
