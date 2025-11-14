@@ -53,17 +53,10 @@
           @click="emit('removeSet', index)"
         >
           <span v-if="!isReadOnly" class="flex h-10 w-10 items-center justify-center">
-            <Icon name="trash" class="h-auto w-auto" />
-          </span>
-        </button>
-        <button
-          v-if="field.isFlexible && !isReadOnly"
-          type="button"
-          class="z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
-          @click="toggle(index)"
-        >
-          <span class="flex h-10 w-10 items-center justify-center">
-            <Icon name="minus" class="size-5 text-gray-500" />
+            <Icon
+              :name="field.isFlexible ? 'minus' : 'trash'"
+              :class="field.isFlexible ? 'size-5' : 'h-auto w-auto'"
+            />
           </span>
         </button>
       </div>
@@ -146,7 +139,8 @@ const shared = useSharedStore();
 const canMutate = computed(() => {
   if (props.isReadOnly) return false;
 
-  return !shared.isTranslation;
+  // Allow mutations if not in translation mode OR if field is flexible
+  return !shared.isTranslation || field.value.isFlexible === true;
 });
 
 const isIsland = (type: string): boolean => {

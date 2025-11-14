@@ -11,7 +11,10 @@
         class="absolute right-0 mr-3 cursor-pointer text-gray-500"
         @click="emit('removeSet', index)"
       >
-        <Icon name="trash" class="h-10 w-10" />
+        <Icon
+          :name="field.isFlexible ? 'minus' : 'trash'"
+          :class="field.isFlexible ? 'size-5' : 'h-auto w-auto'"
+        />
       </div>
 
       <li v-for="(item, i) in fields" :key="item.name + `${i.toString()}`">
@@ -75,7 +78,8 @@ const shared = useSharedStore();
 const canMutate = computed(() => {
   if (props.isReadOnly) return false;
 
-  return !shared.isTranslation;
+  // Allow mutations if not in translation mode OR if field is flexible
+  return !shared.isTranslation || field.value.isFlexible === true;
 });
 
 const showEmptyListWarning = (): boolean => {
