@@ -40,6 +40,28 @@
         :exclude="[]"
       />
     </Variant>
+    <Variant title="Flexible List" :setup-app="miniSidebar">
+      <TranslationIndex
+        :meta="sharedProps.meta"
+        :user="sharedProps.user"
+        :language="spanish"
+        :languages="sharedProps.languages"
+        :errors="sharedProps.errors"
+        :draft="flexibleListStory.draft"
+        :bundle="flexibleListStory.bundle"
+        :source="flexibleListStory.source"
+        :providers="{}"
+        :last-published="'2021-10-10T14:48:00.000000Z'"
+        :story="{
+          ...flexibleListStory.story,
+          fields: flexibleListStory.story.fields as FieldSpec[],
+          chapterLimit: 21,
+        }"
+        :has-edit-review="false"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
+      />
+    </Variant>
   </Story>
 </template>
 
@@ -53,6 +75,7 @@ import {
   story,
   miniSidebar,
   alMassira,
+  flexibleListStory,
 } from '../test/mocks';
 import { FieldSpec } from '../../types';
 
