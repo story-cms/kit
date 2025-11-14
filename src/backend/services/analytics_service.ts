@@ -5,7 +5,7 @@ import { getCredentialsFrom } from './helpers.js';
 
 export const emptyAnalyticsReport: StatMetric[] = [
   {
-    name: 'Total Installs',
+    name: 'Current Installs',
     stat: 0,
     previousStat: 0,
   },
@@ -63,7 +63,7 @@ export class Analytics {
     };
 
     // Run all three metric queries in parallel for better performance
-    const [totalInstalls, monthlyActiveUsers, chaptersComplete] = await Promise.all([
+    const [currentInstalls, monthlyActiveUsers, chaptersComplete] = await Promise.all([
       this.fetchMetricsForBothPeriods('totalUsers'),
       this.fetchMetricsForBothPeriods('activeUsers'),
       this.fetchMetricsForBothPeriods('eventCount', eventDimensionFilter),
@@ -71,9 +71,9 @@ export class Analytics {
 
     return [
       {
-        name: 'Total Installs',
-        stat: totalInstalls.current,
-        previousStat: totalInstalls.previous,
+        name: 'Current Installs',
+        stat: currentInstalls.current,
+        previousStat: currentInstalls.previous,
       },
       {
         name: 'Monthly Active Users',
