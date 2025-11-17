@@ -4,7 +4,12 @@
     :key="index"
     class="row-[span_100] mb-8 grid grid-rows-subgrid"
   >
-    <li class="relative row-[span_100] grid grid-rows-subgrid">
+    <li
+      :class="[
+        'relative row-[span_100] grid grid-rows-subgrid',
+        { 'mr-2': shared.showSourceColumn && field.isFlexible },
+      ]"
+    >
       <div
         :class="[
           'absolute bottom-0 left-4 top-4 h-[calc(100%-20px)] border-l border-gray-300',
@@ -46,6 +51,7 @@
             <Icon name="exclamation" class="h-10 w-10 text-red-500" />
           </div>
         </div>
+
         <button
           v-if="canMutate"
           type="button"
@@ -54,8 +60,8 @@
         >
           <span v-if="!isReadOnly" class="flex h-10 w-10 items-center justify-center">
             <Icon
-              :name="field.isFlexible ? 'minus' : 'trash'"
-              :class="field.isFlexible ? 'size-5' : 'h-auto w-auto'"
+              :name="field.isFlexible && canMutate ? 'minus' : 'trash'"
+              :class="field.isFlexible && canMutate ? 'size-5' : 'h-auto w-auto'"
             />
           </span>
         </button>
@@ -71,7 +77,6 @@
           v-for="(item, i) in fields"
           :key="item.name + `${i.toString()}`"
           class="grid grid-rows-subgrid"
-          :style="{ gridRow: `span ${listItems.length}` }"
         >
           <component
             :is="widgets.picker(item.widget)"
