@@ -1,10 +1,10 @@
 <template>
-  <div class="ml-8">
+  <div class="row-[span_100] ml-8 grid grid-rows-subgrid">
     <ul
       v-for="(_listItem, index) in listItems"
       :key="index"
       role="listitem"
-      class="relative my-2 grid gap-y-8 bg-gray-100 p-8"
+      class="relative row-[span_100] my-2 grid grid-rows-subgrid gap-y-8 bg-gray-100 p-8"
     >
       <div
         v-if="canMutate"
@@ -17,7 +17,11 @@
         />
       </div>
 
-      <li v-for="(item, i) in fields" :key="item.name + `${i.toString()}`">
+      <li
+        v-for="(item, i) in fields"
+        :key="item.name + `${i.toString()}`"
+        class="grid grid-rows-subgrid"
+      >
         <component
           :is="store.picker(item.widget)"
           :field="item"

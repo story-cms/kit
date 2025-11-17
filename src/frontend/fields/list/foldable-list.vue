@@ -93,10 +93,7 @@
       </ul>
     </li>
   </ul>
-  <div
-    v-if="canMutate || (field.isFlexible && !isReadOnly)"
-    class="flex items-center gap-4"
-  >
+  <div v-if="canMutate" class="flex items-center gap-4">
     <AddItemButton :label="field.label" @add="emit('addSet')" />
     <div v-if="showEmptyListWarning()">
       <div class="flex flex-row items-center rounded-full border bg-white p-2 text-error">
@@ -105,6 +102,7 @@
       </div>
     </div>
   </div>
+  <div v-else></div>
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
