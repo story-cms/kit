@@ -94,7 +94,7 @@ function buildReadOnlyListItems(): Record<string, unknown>[] {
 const syncFlexibleListLength = () => {
   if (props.isReadOnly) return;
   if (!shared.isTranslation) return;
-  if (!field.value.isFlexible) return;
+  if (field.value.isFlexible) return;
   if (isRemovingFlexibleItem) {
     isRemovingFlexibleItem = false;
     return;

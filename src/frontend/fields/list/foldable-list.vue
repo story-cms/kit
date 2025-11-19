@@ -105,7 +105,7 @@
   <div v-else></div>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import type { PropType } from 'vue';
 import type { FieldSpec } from '../../../types';
 import Icon from '../../shared/icon.vue';
@@ -151,8 +151,18 @@ const isIsland = (type: string): boolean => {
   return singleWidgets.includes(type);
 };
 
-widgets.setListToggles(props.fieldPath, [true, true, true, true, true]);
 const toggleState = computed(() => widgets.getListToggles(props.fieldPath));
+
+const ensureToggles = () => {
+  const current = toggleState.value;
+  if (current.length < props.listItems.length) {
+    const needed = props.listItems.length - current.length;
+    const fresh = [...current, ...new Array(needed).fill(true)];
+    widgets.setListToggles(props.fieldPath, fresh);
+  }
+};
+
+watch(() => props.listItems.length, ensureToggles, { immediate: true });
 
 const isExpanded = (index: number): boolean => {
   return toggleState.value[index];
