@@ -52,7 +52,7 @@ import UiPage from './ui/ui-page.vue';
 import UsersIndex from './team/users-index.vue';
 import VideoField from './fields/video-field.vue';
 
-export { createInertiaApp, usePage, router } from '@inertiajs/vue3';
+export { createInertiaApp, usePage, useForm, router } from '@inertiajs/vue3';
 
 export * from './store/index';
 
