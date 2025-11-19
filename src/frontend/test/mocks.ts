@@ -1413,6 +1413,7 @@ export const flexibleListStory = {
         label: 'Footnotes',
         name: 'footnotes',
         widget: 'list',
+        isFlexible: true,
         fields: [
           { label: 'Key', name: 'key', widget: 'string' },
           {
