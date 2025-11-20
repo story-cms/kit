@@ -3,6 +3,7 @@
 }}}
 import router from '@adonisjs/core/services/router';
 import { middleware } from '#start/kernel';
+const StreamController = () => import('#controllers/streams_controller');
 const ChaptersController = () => import('#controllers/chapters_controller');
 const PreviewController = () => import('#controllers/preview_controller');
 const PagesController = () => import('#controllers/pages_controller');
@@ -16,6 +17,11 @@ export default () => {
       router
         .get('/preview/:number', [PreviewController, 'get'])
         .where('number', { match: number });
+
+      router.get('/stream/:id', [StreamController, 'get']).where('id', { match: number });
+      router
+        .get('/drop/:id', [StreamController, 'getDrop'])
+        .where('id', { match: number });   
 
       router
         .get('/chapter/:number', [ChaptersController, 'get'])
