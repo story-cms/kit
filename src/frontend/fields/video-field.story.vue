@@ -84,7 +84,7 @@ const videoModel = {
   name: 'John',
   age: 30,
   intro: {
-    url: 'https://vz-831b1d74-446.b-cdn.net/9c2b5fcb-df7e-411a-95f0-d5820393c87f/playlist.m3u8',
+    url: 'https://vz-2ef0214d-b18.b-cdn.net/9593d102-6230-4c9d-a0f8-d5c4a81f26c7/playlist.m3u8',
   },
 };
 
