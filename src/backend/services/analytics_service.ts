@@ -3,6 +3,9 @@ import vine from '@vinejs/vine';
 import { StatMetric } from '../../types';
 import { getCredentialsFrom } from './helpers.js';
 
+/**
+ * See: https://support.google.com/analytics/answer/12253918?hl=en
+ */
 export const emptyAnalyticsReport: StatMetric[] = [
   {
     name: 'New Users',
