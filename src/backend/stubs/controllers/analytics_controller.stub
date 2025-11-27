@@ -8,7 +8,7 @@ import { Analytics, emptyAnalyticsReport, analyticsConfigSchema } from '@story-c
 import config from '#config/analytics';
 
 export default class AnalyticsController {
-  public async index({ logger, response }: HttpContext) {
+  public async index({ logger }: HttpContext) {
     const cachedReport = await cache.get({ key: config.cacheKey });
     if (cachedReport) {
       return cachedReport;
@@ -22,10 +22,8 @@ export default class AnalyticsController {
       });
 
       if (result[0] instanceof Error) {
-        logger.error(result[0]);
-        return response.status(500).json({
-          message: 'Analytics config is invalid. Check config/analytics.ts',
-        });
+        logger.error(result[0].message);
+        return emptyAnalyticsReport;
       }
 
       const ga = new Analytics(config);
