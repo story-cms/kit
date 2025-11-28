@@ -1,12 +1,6 @@
 <template>
-  <div class="h-64 w-full">
-    <iframe
-      :src="`${source}?autoplay=false&loop=false&muted=false&preload=false&responsive=false`"
-      style="height: 100%; width: 100%"
-      loading="lazy"
-      allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
-      allowfullscreen="true"
-    >
+  <div class="w-auto h-48">
+    <iframe :src="`${source}?autoplay=false&loop=false&muted=false&preload=false&responsive=true`" style="height: 100%; width: 100%" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" allowfullscreen="true">
     </iframe>
   </div>
 </template>
@@ -26,8 +20,7 @@ const source = computed(() => {
     return '';
   }
   const videoId = pieces[3];
-  console.log(props.library, videoId);
   // https://iframe.mediadelivery.net/play/408259/555db8c9-c6d5-4025-963b-952b4f0cc236
-  return `https://iframe.mediadelivery.net/play/${props.library}/${videoId}`;
+  return `https://iframe.mediadelivery.net/embed/${props.library}/${videoId}`;
 });
 </script>
