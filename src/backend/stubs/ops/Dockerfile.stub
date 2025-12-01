@@ -1,8 +1,8 @@
 {{{
   exports({ to: app.makePath('Dockerfile') })
 }}}
-ARG BUILD_IMAGE=node:22
-ARG PRODUCTION_IMAGE=gcr.io/distroless/nodejs22-debian12
+ARG BUILD_IMAGE=node:24
+ARG PRODUCTION_IMAGE=gcr.io/distroless/nodejs24-debian13
 
 # All dependencies stage
 FROM $BUILD_IMAGE AS dependencies

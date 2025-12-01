@@ -15,6 +15,7 @@ import {
   Drop,
   Activity,
   BundleService,
+  StreamService,
   DropValidator,
   trimmedErrors,
   bundledErrors,
@@ -206,18 +207,11 @@ export default class StreamController {
   }
 
   public async get(ctx: HttpContext) {
-    const stream = this.getStreamMetadata(ctx);
-    const page = ctx.request.qs()['page'] || 1;
-    const perPage = ctx.request.qs()['page'] ? 20 : 365;
-
-    const drops = await Drop.query()
-      .where('streamId', stream!.id)
-      .where('isPublished', true)
-      .orderBy('releaseAt', 'desc')
-      .paginate(page, perPage);
+    const service = new StreamService(ctx.params.id, cms);
+    const drops = await service.getDrops(ctx.request.qs()['page']);
 
     return {
-      stream,
+      stream: service.metaData,
       drops: drops.all(),
       pagination: drops.getMeta(),
     };
