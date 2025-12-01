@@ -1,0 +1,331 @@
+{{{ 
+  exports({ to: app.makePath('tests/unit/stream_service.spec.ts') }) 
+}}}
+import { test } from '@japa/runner';
+import testUtils from '@adonisjs/core/services/test_utils';
+import { DateTime } from 'luxon';
+import { StreamService, DropFactory } from '@story-cms/kit';
+import { setupMockCms, createCustomCmsConfig } from '#tests/helpers/cms_mock';
+import cms from '#services/cms';
+
+test.group('StreamService', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction());
+
+  test('constructor finds stream from CMS config', async ({ assert }) => {
+    // arrange
+    setupMockCms();
+
+    // act
+    const service = new StreamService(1, cms);
+
+    // assert
+    assert.equal(service.stream.id, 1);
+    assert.equal(service.stream.title, 'Test Stream');
+    assert.equal(service.stream.coverImage, 'https://example.com/cover.jpg');
+  });
+
+  test('metaData getter returns correct stream metadata', async ({ assert }) => {
+    // arrange
+    setupMockCms();
+    const service = new StreamService(1, cms);
+
+    // act
+    const metaData = service.metaData;
+
+    // assert
+    assert.equal(metaData.id, 1);
+    assert.equal(metaData.title, 'Test Stream');
+    assert.equal(metaData.coverImage, 'https://example.com/cover.jpg');
+  });
+
+  test('getDrops returns all published drops when no page specified', async ({
+    assert,
+  }) => {
+    // arrange
+    setupMockCms();
+    const service = new StreamService(1, cms);
+
+    // Create test drops
+    await DropFactory.merge({
+      streamId: 1,
+      isPublished: true,
+      releaseAt: DateTime.now().minus({ days: 1 }),
+    }).createMany(5);
+
+    await DropFactory.merge({
+      streamId: 1,
+      isPublished: false,
+      releaseAt: DateTime.now().minus({ days: 1 }),
+    }).createMany(2);
+
+    // act
+    const drops = await service.getDrops(undefined);
+
+    // assert
+    assert.lengthOf(drops, 5);
+    drops.forEach((drop) => {
+      assert.equal(drop.streamId, 1);
+      assert.isTrue(drop.isPublished);
+    });
+  });
+
+  test('getDrops uses perPage 365 when no page specified', async ({ assert }) => {
+    // arrange
+    setupMockCms();
+    const service = new StreamService(1, cms);
+
+    // Create 400 published drops to test pagination limit
+    await DropFactory.merge({
+      streamId: 1,
+      isPublished: true,
+      releaseAt: DateTime.now(),
+    }).createMany(400);
+
+    // act
+    const drops = await service.getDrops(undefined);
+
+    // assert - should return 365 items (perPage limit)
+    assert.lengthOf(drops, 365);
+  });
+
+  test('getDrops uses perPage 20 when page is specified', async ({ assert }) => {
+    // arrange
+    setupMockCms();
+    const service = new StreamService(1, cms);
+
+    // Create 50 published drops
+    await DropFactory.merge({
+      streamId: 1,
+      isPublished: true,
+      releaseAt: DateTime.now(),
+    }).createMany(50);
+
+    // act
+    const drops = await service.getDrops(1);
+
+    // assert - should return 20 items (perPage when page is specified)
+    assert.lengthOf(drops, 20);
+  });
+
+  test('getDrops filters by streamId correctly', async ({ assert }) => {
+    // arrange
+    const testStory = await StoryFactory.create();
+    const customConfig = createCustomCmsConfig({
+      streams: {
+        streams: [
+          {
+            id: 1,
+            title: 'Test Stream 1',
+            coverImage: 'https://example.com/cover1.jpg',
+            streamType: 'Channel',
+            dropType: 'Post',
+            schemaVersion: 1,
+            fields: [],
+          },
+          {
+            id: 2,
+            title: 'Test Stream 2',
+            coverImage: 'https://example.com/cover2.jpg',
+            streamType: 'Channel',
+            dropType: 'Post',
+            schemaVersion: 1,
+            fields: [],
+          },
+        ],
+      },
+    });
+    setupMockCms(customConfig);
+    const service = new StreamService(1, cms);
+
+    // Create drops for different streams
+    await DropFactory.merge({
+      streamId: 1,
+      isPublished: true,
+      releaseAt: DateTime.now().minus({ days: 1 }),
+    }).createMany(3);
+
+    await DropFactory.merge({
+      streamId: 2,
+      isPublished: true,
+      releaseAt: DateTime.now().minus({ days: 1 }),
+    }).createMany(2);
+
+    // act
+    const drops = await service.getDrops(undefined);
+
+    // assert - should only return drops for streamId 1
+    assert.lengthOf(drops, 3);
+    drops.forEach((drop) => {
+      assert.equal(drop.streamId, 1);
+    });
+  });
+
+  test('getDrops filters by isPublished correctly', async ({ assert }) => {
+    // arrange
+    setupMockCms();
+    const service = new StreamService(1, cms);
+
+    // Create published and unpublished drops
+    await DropFactory.merge({
+      streamId: 1,
+      isPublished: true,
+      releaseAt: DateTime.now().minus({ days: 1 }),
+    }).createMany(5);
+
+    await DropFactory.merge({
+      streamId: 1,
+      isPublished: false,
+      releaseAt: DateTime.now().minus({ days: 1 }),
+    }).createMany(3);
+
+    // act
+    const drops = await service.getDrops(undefined);
+
+    // assert - should only return published drops
+    assert.lengthOf(drops, 5);
+    drops.forEach((drop) => {
+      assert.isTrue(drop.isPublished);
+    });
+  });
+
+  test('getDrops orders by releaseAt descending', async ({ assert }) => {
+    // arrange
+    setupMockCms();
+    const service = new StreamService(1, cms);
+
+    // Create drops with different release dates
+    const now = DateTime.now();
+    await DropFactory.merge({
+      streamId: 1,
+      isPublished: true,
+      releaseAt: now.minus({ days: 3 }),
+    }).create();
+
+    const latestDrop = await DropFactory.merge({
+      streamId: 1,
+      isPublished: true,
+      releaseAt: now.minus({ days: 1 }),
+    }).create();
+
+    await DropFactory.merge({
+      streamId: 1,
+      isPublished: true,
+      releaseAt: now.minus({ days: 2 }),
+    }).create();
+
+    // act
+    const drops = await service.getDrops(undefined);
+
+    // assert - should be ordered by releaseAt desc (newest first)
+    assert.lengthOf(drops, 3);
+    assert.equal(drops[0].title, latestDrop.title);
+  });
+
+  test('getDrops handles pagination correctly', async ({ assert }) => {
+    // arrange
+    setupMockCms();
+    const service = new StreamService(1, cms);
+
+    // Create 50 published drops
+    await DropFactory.merge({
+      streamId: 1,
+      isPublished: true,
+      releaseAt: DateTime.now(),
+    }).createMany(50);
+
+    // act
+    const page1 = await service.getDrops(1);
+    const page2 = await service.getDrops(2);
+    const page3 = await service.getDrops(3);
+
+    // assert
+    assert.lengthOf(page1, 20);
+    assert.lengthOf(page2, 20);
+    assert.lengthOf(page3, 10); // remaining items
+  });
+
+  test('getDrops returns empty array when no drops exist', async ({ assert }) => {
+    // arrange
+    setupMockCms();
+    const service = new StreamService(1, cms);
+
+    // act
+    const drops = await service.getDrops(undefined);
+
+    // assert
+    assert.lengthOf(drops, 0);
+    assert.isArray(drops);
+  });
+
+  test('getDrops excludes drops more than one day in the future', async ({ assert }) => {
+    // arrange
+    setupMockCms();
+    const service = new StreamService(1, cms);
+
+    // Create drops with past, present, and future release dates
+    await DropFactory.merge({
+      streamId: 1,
+      isPublished: true,
+      releaseAt: DateTime.now().minus({ days: 1 }),
+    }).createMany(3);
+
+    await DropFactory.merge({
+      streamId: 1,
+      isPublished: true,
+      releaseAt: DateTime.now(),
+    }).createMany(2);
+
+    await DropFactory.merge({
+      streamId: 1,
+      isPublished: true,
+      releaseAt: DateTime.now().plus({ days: 1 }),
+    }).createMany(4);
+
+    await DropFactory.merge({
+      streamId: 1,
+      isPublished: true,
+      releaseAt: DateTime.now().plus({ days: 2 }),
+    }).createMany(2);
+
+    await DropFactory.merge({
+      streamId: 1,
+      isPublished: true,
+      releaseAt: DateTime.now().plus({ days: 7 }),
+    }).createMany(2);
+
+    // act
+    const drops = await service.getDrops(undefined);
+
+    // assert - should return drops with releaseAt <= now + 1 day (9 total: 3 past + 2 present + 4 one day future)
+    assert.lengthOf(drops, 9);
+  });
+
+  test('getDrops excludes drops with null releaseAt', async ({ assert }) => {
+    // arrange
+    setupMockCms();
+    const service = new StreamService(1, cms);
+
+    // Create drops with valid release dates
+    await DropFactory.merge({
+      streamId: 1,
+      isPublished: true,
+      releaseAt: DateTime.now().minus({ days: 1 }),
+    }).createMany(3);
+
+    // Create drops with null releaseAt
+    await DropFactory.merge({
+      streamId: 1,
+      isPublished: true,
+      releaseAt: null,
+    }).createMany(2);
+
+    // act
+    const drops = await service.getDrops(undefined);
+
+    // assert - should only return drops with non-null releaseAt
+    assert.lengthOf(drops, 3);
+    drops.forEach((drop) => {
+      assert.isNotNull(drop.releaseAt);
+    });
+  });
+});
