@@ -208,7 +208,6 @@ export default class StreamController {
 
   public async get(ctx: HttpContext) {
     const service = new StreamService(ctx.params.id, cms);
-    console.log('service.stream', service.stream);
     const drops = await service.getDrops(ctx.request.qs()['page']);
 
     return {
