@@ -32,6 +32,7 @@ export * from './services/page_service.js';
 export * from './services/progress_service.js';
 export * from './services/ui_service.js';
 export * from './services/user_service.js';
+export * from './services/stream_service.js';
 export * from './services/preference_service.js';
 export * from './validators/auth.js';
 export * from './validators/bundle.js';
