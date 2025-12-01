@@ -1,7 +1,7 @@
 import { ModelPaginatorContract } from '@adonisjs/lucid/types/model';
 import { DateTime } from 'luxon';
 import type { StreamSpec } from '../../types';
-import Drop from '../models/page.js';
+import Drop from '../models/drop.js';
 import { CmsService } from './cms_service.js';
 
 export class StreamService {
