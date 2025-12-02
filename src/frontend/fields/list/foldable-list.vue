@@ -209,6 +209,12 @@ const toggleRemove = (index: number) => {
     removedIndices.value.delete(index);
   } else {
     removedIndices.value.add(index);
+
+    const fresh = toggleState.value;
+    if (fresh[index]) {
+      fresh[index] = false;
+      widgets.setListToggles(props.fieldPath, fresh);
+    }
   }
 };
 
