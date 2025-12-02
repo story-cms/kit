@@ -109,7 +109,6 @@ test.group('StreamService', (group) => {
 
   test('getDrops filters by streamId correctly', async ({ assert }) => {
     // arrange
-    const testStory = await StoryFactory.create();
     const customConfig = createCustomCmsConfig({
       streams: {
         streams: [
