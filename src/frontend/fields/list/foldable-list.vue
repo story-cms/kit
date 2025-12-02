@@ -4,12 +4,7 @@
     :key="index"
     class="row-[span_100] mb-8 grid grid-rows-subgrid"
   >
-    <li
-      :class="[
-        'relative row-[span_100] grid grid-rows-subgrid',
-        { 'mr-2': shared.showSourceColumn && field.isFlexible },
-      ]"
-    >
+    <li :class="['relative row-[span_100] grid grid-rows-subgrid']">
       <template v-if="!isEmpty(index)">
         <div
           :class="[
