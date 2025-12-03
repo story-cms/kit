@@ -4,18 +4,22 @@
     :key="index"
     class="row-[span_100] mb-8 grid grid-rows-subgrid"
   >
-    <li :class="['relative row-[span_100] grid grid-rows-subgrid']">
+    <li
+      :class="[
+        'relative row-[span_100] grid grid-rows-subgrid',
+      ]"
+    >
       <template v-if="!isEmpty(index)">
         <div
           :class="[
             'absolute bottom-0 left-4 top-4 h-[calc(100%-20px)] border-l border-gray-300',
             {
-              hidden: !isExpanded(index) || isReadOnly || isRemoved(index),
+              hidden: !isExpanded(index) || isReadOnly,
             },
           ]"
         ></div>
         <button
-          v-if="isExpanded(index) && !isReadOnly && !isRemoved(index)"
+          v-if="isExpanded(index) && !isReadOnly"
           type="button"
           class="absolute bottom-0 left-2 px-1.5 py-2 bg-white rounded shadow-sm cursor-pointer"
           @click="toggle(index)"
@@ -24,80 +28,48 @@
         </button>
         <div class="flex relative justify-between items-center">
           <span
-            :class="[
-              'absolute left-0 right-0 top-[19px]',
-              {
-                'border-t border-red-500': isReadOnly,
-                'border-t border-gray-300': !isReadOnly,
-              },
-            ]"
+            class="absolute left-0 right-0 top-[19px] border-t border-gray-300"
           ></span>
-
-          <template v-if="isRemoved(index)">
-            <div
-              class="z-[1] inline-flex items-center rounded-full border border-gray-300 bg-gray-200 px-4 py-1.5 text-sm font-medium leading-5 text-gray-500 shadow-sm"
-            >
-              <icon name="chevron-right" class="mr-1 icon" aria-hidden="true" />
-              <span> Removed: {{ String(title(index)) }} </span>
+          <button
+            type="button"
+            class="z-[1] inline-flex items-center rounded-full border border-gray-300 bg-white px-4 py-1.5 text-sm font-medium leading-5 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            :disabled="isReadOnly"
+            :class="{ 'opacity-0': isReadOnly }"
+            @click.prevent="toggle(index)"
+          >
+            <icon
+              v-if="isExpanded(index)"
+              name="chevron-down"
+              class="mr-1 icon"
+              aria-hidden="true"
+            />
+            <icon v-else name="chevron-right" class="mr-1 icon" aria-hidden="true" />
+            <span>
+              {{ String(sectionTitle(index)) }}
+            </span>
+          </button>
+          <div v-if="itemHasError(index)" class="z-[1] text-accent-one">
+            <div class="p-2 bg-white rounded-full border">
+              <Icon name="exclamation" class="w-10 h-10 text-red-500" />
             </div>
+          </div>
 
-            <button
-              v-if="canMutate"
-              type="button"
-              class="z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
-              @click="toggleRemove(index)"
-            >
-              <span class="flex justify-center items-center w-10 h-10">
-                <Icon name="plus-mini" class="size-5" />
-              </span>
-            </button>
-          </template>
-
-          <template v-else>
-            <button
-              type="button"
-              class="z-[1] inline-flex items-center rounded-full border border-gray-300 bg-white px-4 py-1.5 text-sm font-medium leading-5 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              :disabled="isReadOnly"
-              :class="{ 'opacity-0': isReadOnly }"
-              @click.prevent="toggle(index)"
-            >
-              <icon
-                v-if="isExpanded(index)"
-                name="chevron-down"
-                class="mr-1 icon"
-                aria-hidden="true"
+          <button
+            v-if="canMutate"
+            type="button"
+            class="z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
+            @click="emit('removeSet', index)"
+          >
+            <span v-if="!isReadOnly" class="flex justify-center items-center w-10 h-10">
+              <Icon
+                :name="field.isFlexible && canMutate ? 'minus' : 'trash'"
+                :class="field.isFlexible && canMutate ? 'size-5' : 'h-auto w-auto'"
               />
-              <icon v-else name="chevron-right" class="mr-1 icon" aria-hidden="true" />
-              <span>
-                {{ String(sectionTitle(index)) }}
-              </span>
-            </button>
-            <div v-if="itemHasError(index)" class="z-[1] text-accent-one">
-              <div class="p-2 bg-white rounded-full border">
-                <Icon name="exclamation" class="w-10 h-10 text-red-500" />
-              </div>
-            </div>
-
-            <button
-              v-if="canMutate"
-              type="button"
-              :class="[
-                'z-[2] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500',
-                { 'absolute right-[-200px]': field.isFlexible && canMutate },
-              ]"
-              @click="toggleRemove(index)"
-            >
-              <span v-if="!isReadOnly" class="flex justify-center items-center w-10 h-10">
-                <Icon
-                  :name="field.isFlexible && canMutate ? 'minus' : 'trash'"
-                  :class="field.isFlexible && canMutate ? 'size-5' : 'h-auto w-auto'"
-                />
-              </span>
-            </button>
-          </template>
+            </span>
+          </button>
         </div>
         <ul
-          v-if="isExpanded(index) && !isRemoved(index)"
+          v-if="isExpanded(index)"
           :class="[
             'row-[span_100] grid grid-rows-subgrid bg-white',
             { 'ml-8': !isReadOnly },
@@ -136,7 +108,7 @@
   <div v-else></div>
 </template>
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import type { PropType } from 'vue';
 import type { FieldSpec } from '../../../types';
 import Icon from '../../shared/icon.vue';
@@ -169,8 +141,6 @@ const fields = field.value.fields as FieldSpec[];
 const model = useModelStore();
 const widgets = useWidgetsStore();
 const shared = useSharedStore();
-
-const removedIndices = ref(new Set<number>());
 
 const canMutate = computed(() => {
   if (props.isReadOnly) return false;
@@ -206,24 +176,6 @@ const toggle = (index: number) => {
   fresh[index] = !fresh[index];
 
   widgets.setListToggles(props.fieldPath, fresh);
-};
-
-const toggleRemove = (index: number) => {
-  if (removedIndices.value.has(index)) {
-    removedIndices.value.delete(index);
-  } else {
-    removedIndices.value.add(index);
-
-    const fresh = toggleState.value;
-    if (fresh[index]) {
-      fresh[index] = false;
-      widgets.setListToggles(props.fieldPath, fresh);
-    }
-  }
-};
-
-const isRemoved = (index: number): boolean => {
-  return removedIndices.value.has(index);
 };
 
 const sectionTitle = (index: number): string => {
