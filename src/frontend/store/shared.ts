@@ -171,6 +171,18 @@ export const useSharedStore = defineStore('shared', () => {
     );
   };
 
+  // check if is translation-index page
+  const isTranslationIndex = ref(false);
+  const setIsTranslationIndex = (value: boolean) => {
+    isTranslationIndex.value = value;
+  };
+
+  // source section width in translation-index page
+  const sourceSectionWidth = ref(0);
+  const setSourceSectionWidth = (value: number) => {
+    sourceSectionWidth.value = value;
+  };
+
   return {
     exclude,
     meta,
@@ -230,5 +242,11 @@ export const useSharedStore = defineStore('shared', () => {
     bookmarks,
     setBookmarks,
     isBookmarked,
+
+    isTranslationIndex,
+    setIsTranslationIndex,
+
+    sourceSectionWidth,
+    setSourceSectionWidth,
   };
 });

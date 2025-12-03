@@ -13,16 +13,16 @@
         </template>
         <template #extra-actions>
           <div
-            class="flex items-center justify-between py-4 text-sm font-medium leading-4"
+            class="flex justify-between items-center py-4 text-sm font-medium leading-4"
           >
             <p class="text-left">{{ shared.language.language }}</p>
-            <p class="inline-flex items-center justify-end">
+            <p class="inline-flex justify-end items-center">
               English
               <button
                 class="ml-2"
                 @click="shared.setSourceColumnAsHidden(!shared.showSourceColumn)"
               >
-                <Icon name="eyeoff" class="block size-6 cursor-pointer text-black" />
+                <Icon name="eyeoff" class="block text-black cursor-pointer size-6" />
               </button>
             </p>
           </div>
@@ -62,6 +62,7 @@
           </form>
         </section>
         <section
+          ref="sourceSection"
           :class="[
             'row-[span_1000] grid grid-rows-subgrid',
             { hidden: !shared.showSourceColumn },
@@ -112,12 +113,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, onUnmounted } from 'vue';
+import { ref, onMounted, computed, onUnmounted, nextTick, watch } from 'vue';
 import { router } from '@inertiajs/vue3';
 import type { Errors } from '@inertiajs/core';
 import type { FieldSpec, DraftEditProps, SharedPageProps } from '../../types';
 import { ResponseStatus } from '../../types';
 import { useSharedStore, useModelStore, useWidgetsStore, useDraftsStore } from '../store';
+import { storeToRefs } from 'pinia';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
 import DraftActions from '../shared/draft-actions.vue';
@@ -267,7 +269,27 @@ const marginRight = computed(() => {
 
 const sourceLength = ref(0);
 
-onMounted(() => {
+const sourceSection = ref<HTMLElement | null>(null);
+let resizeObserver: ResizeObserver | null = null;
+
+const setDimensions = () => {
+  if (sourceSection.value) {
+    const sourceSectionRect = sourceSection.value.getBoundingClientRect();
+    console.log(sourceSectionRect.width);
+    shared.setSourceSectionWidth(sourceSectionRect.width);
+  }
+};
+
+const { showSourceColumn } = storeToRefs(shared);
+
+watch(showSourceColumn, async (isVisible) => {
+  if (isVisible) {
+    await nextTick();
+    setDimensions();
+  }
+});
+
+onMounted(async () => {
   model.$subscribe(() => {
     if (isSettingErrors) {
       isSettingErrors = false;
@@ -285,12 +307,32 @@ onMounted(() => {
   }
 
   sourceLength.value = Object.keys(model.source).length;
+  shared.setIsTranslationIndex(true);
+
+  await nextTick();
+  setDimensions();
+
+  if (sourceSection.value) {
+    resizeObserver = new ResizeObserver(() => {
+      setDimensions();
+    });
+    resizeObserver.observe(sourceSection.value);
+  }
+  window.addEventListener('resize', setDimensions);
 });
+
 onUnmounted(() => {
   shared.setSingleColumn(false);
   shared.setShowMetaBox(true);
   if (shared.meta.hasAppPreview) {
     shared.setShowAppPreview(true);
   }
+  shared.setIsTranslationIndex(false);
+
+  if (resizeObserver) {
+    resizeObserver.disconnect();
+    resizeObserver = null;
+  }
+  window.removeEventListener('resize', setDimensions);
 });
 </script>
