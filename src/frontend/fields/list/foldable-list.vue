@@ -126,6 +126,11 @@ const props = defineProps({
     required: false,
     default: false,
   },
+  isFlexible: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
 
 const emit = defineEmits(['addSet', 'removeSet']);
@@ -137,9 +142,7 @@ const shared = useSharedStore();
 
 const canMutate = computed(() => {
   if (props.isReadOnly) return false;
-
-  // Allow mutations if not in translation mode OR if field is flexible
-  return !shared.isTranslation || field.value.isFlexible === true;
+  return !shared.isTranslation || props.isFlexible;
 });
 
 const isIsland = (type: string): boolean => {
