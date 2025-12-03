@@ -24,7 +24,10 @@
         </button>
         <div class="flex relative justify-between items-center">
           <span
-            class="absolute left-0 right-0 top-[19px] border-t border-gray-300"
+            :class="[
+              'absolute left-0 right-0 top-[19px]',
+              { hidden: isReadOnly, 'border-t border-gray-300': !isReadOnly },
+            ]"
           ></span>
 
           <template v-if="isRemoved(index)">
