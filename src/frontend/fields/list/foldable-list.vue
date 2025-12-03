@@ -82,7 +82,7 @@
               v-if="canMutate"
               type="button"
               :class="[
-                'z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500',
+                'z-[2] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500',
                 { 'absolute right-[-200px]': field.isFlexible && canMutate },
               ]"
               @click="toggleRemove(index)"
