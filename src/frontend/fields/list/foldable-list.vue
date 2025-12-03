@@ -26,7 +26,10 @@
           <span
             :class="[
               'absolute left-0 right-0 top-[19px]',
-              { hidden: isReadOnly, 'border-t border-gray-300': !isReadOnly },
+              {
+                'border-t border-red-500': isReadOnly,
+                'border-t border-gray-300': !isReadOnly,
+              },
             ]"
           ></span>
 
@@ -78,7 +81,10 @@
             <button
               v-if="canMutate"
               type="button"
-              class="z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
+              :class="[
+                'z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500',
+                { 'absolute right-[-200px]': field.isFlexible && canMutate },
+              ]"
               @click="toggleRemove(index)"
             >
               <span v-if="!isReadOnly" class="flex justify-center items-center w-10 h-10">
