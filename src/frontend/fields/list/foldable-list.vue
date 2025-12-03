@@ -4,11 +4,7 @@
     :key="index"
     class="row-[span_100] mb-8 grid grid-rows-subgrid"
   >
-    <li
-      :class="[
-        'relative row-[span_100] grid grid-rows-subgrid',
-      ]"
-    >
+    <li :class="['relative row-[span_100] grid grid-rows-subgrid']">
       <template v-if="!isEmpty(index)">
         <div
           :class="[
@@ -61,10 +57,7 @@
             @click="emit('removeSet', index)"
           >
             <span v-if="!isReadOnly" class="flex justify-center items-center w-10 h-10">
-              <Icon
-                :name="field.isFlexible && canMutate ? 'minus' : 'trash'"
-                :class="field.isFlexible && canMutate ? 'size-5' : 'h-auto w-auto'"
-              />
+              <Icon name="trash" class="w-auto h-auto" />
             </span>
           </button>
         </div>
