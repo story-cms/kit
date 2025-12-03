@@ -17,12 +17,12 @@
         <button
           v-if="isExpanded(index) && !isReadOnly && !isRemoved(index)"
           type="button"
-          class="absolute bottom-0 left-2 cursor-pointer rounded bg-white px-1.5 py-2 shadow-sm"
+          class="absolute bottom-0 left-2 px-1.5 py-2 bg-white rounded shadow-sm cursor-pointer"
           @click="toggle(index)"
         >
-          <Icon name="chevron-up-down" class="h-3.5 w-3.5 text-gray-700" />
+          <Icon name="chevron-up-down" class="w-3.5 h-3.5 text-gray-700" />
         </button>
-        <div class="relative flex items-center justify-between">
+        <div class="flex relative justify-between items-center">
           <span
             class="absolute left-0 right-0 top-[19px] border-t border-gray-300"
           ></span>
@@ -31,7 +31,7 @@
             <div
               class="z-[1] inline-flex items-center rounded-full border border-gray-300 bg-gray-200 px-4 py-1.5 text-sm font-medium leading-5 text-gray-500 shadow-sm"
             >
-              <icon name="chevron-right" class="icon mr-1" aria-hidden="true" />
+              <icon name="chevron-right" class="mr-1 icon" aria-hidden="true" />
               <span> Removed: {{ String(title(index)) }} </span>
             </div>
 
@@ -41,7 +41,7 @@
               class="z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
               @click="toggleRemove(index)"
             >
-              <span class="flex h-10 w-10 items-center justify-center">
+              <span class="flex justify-center items-center w-10 h-10">
                 <Icon name="plus-mini" class="size-5" />
               </span>
             </button>
@@ -58,17 +58,17 @@
               <icon
                 v-if="isExpanded(index)"
                 name="chevron-down"
-                class="icon mr-1"
+                class="mr-1 icon"
                 aria-hidden="true"
               />
-              <icon v-else name="chevron-right" class="icon mr-1" aria-hidden="true" />
+              <icon v-else name="chevron-right" class="mr-1 icon" aria-hidden="true" />
               <span>
                 {{ String(sectionTitle(index)) }}
               </span>
             </button>
             <div v-if="itemHasError(index)" class="z-[1] text-accent-one">
-              <div class="rounded-full border bg-white p-2">
-                <Icon name="exclamation" class="h-10 w-10 text-red-500" />
+              <div class="p-2 bg-white rounded-full border">
+                <Icon name="exclamation" class="w-10 h-10 text-red-500" />
               </div>
             </div>
 
@@ -78,7 +78,7 @@
               class="z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
               @click="toggleRemove(index)"
             >
-              <span v-if="!isReadOnly" class="flex h-10 w-10 items-center justify-center">
+              <span v-if="!isReadOnly" class="flex justify-center items-center w-10 h-10">
                 <Icon
                   :name="field.isFlexible && canMutate ? 'minus' : 'trash'"
                   :class="field.isFlexible && canMutate ? 'size-5' : 'h-auto w-auto'"
@@ -115,10 +115,10 @@
       </template>
     </li>
   </ul>
-  <div v-if="canMutate" class="flex items-center gap-4">
+  <div v-if="canMutate" class="flex gap-4 items-center">
     <AddItemButton :label="field.label" @add="emit('addSet')" />
     <div v-if="showEmptyListWarning()">
-      <div class="flex flex-row items-center rounded-full border bg-white p-2 text-error">
+      <div class="flex flex-row items-center p-2 bg-white rounded-full border text-error">
         <Icon name="exclamation" class="pr-2" />
         <p class="text-sm">At least one item is required</p>
       </div>
