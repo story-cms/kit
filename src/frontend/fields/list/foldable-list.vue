@@ -26,24 +26,35 @@
           <span
             class="absolute left-0 right-0 top-[19px] border-t border-gray-300"
           ></span>
-          <button
-            type="button"
-            class="z-[1] inline-flex items-center rounded-full border border-gray-300 bg-white px-4 py-1.5 text-sm font-medium leading-5 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            :disabled="isReadOnly"
-            :class="{ 'opacity-0': isReadOnly }"
-            @click.prevent="toggle(index)"
-          >
-            <icon
-              v-if="isExpanded(index)"
-              name="chevron-down"
-              class="icon mr-1"
-              aria-hidden="true"
-            />
-            <icon v-else name="chevron-right" class="icon mr-1" aria-hidden="true" />
-            <span>
-              {{ String(sectionTitle(index)) }}
-            </span>
-          </button>
+          <template v-if="isRemoved(index)">
+            <div
+              class="z-[1] inline-flex items-center rounded-full border border-gray-300 bg-gray-200 px-4 py-1.5 text-sm font-medium leading-5 text-gray-500 shadow-sm"
+            >
+              <icon name="chevron-right" class="icon mr-1" aria-hidden="true" />
+              <span> Removed: {{ String(title(index)) }} </span>
+            </div>
+          </template>
+          <template v-else>
+            <button
+              type="button"
+              class="z-[1] inline-flex items-center rounded-full border border-gray-300 bg-white px-4 py-1.5 text-sm font-medium leading-5 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              :disabled="isReadOnly"
+              :class="{ 'opacity-0': isReadOnly }"
+              @click.prevent="toggle(index)"
+            >
+              <icon
+                v-if="isExpanded(index)"
+                name="chevron-down"
+                class="icon mr-1"
+                aria-hidden="true"
+              />
+              <icon v-else name="chevron-right" class="icon mr-1" aria-hidden="true" />
+              <span>
+                {{ String(sectionTitle(index)) }}
+              </span>
+            </button>
+          </template>
+
           <div v-if="itemHasError(index)" class="z-[1] text-accent-one">
             <div class="rounded-full border bg-white p-2">
               <Icon name="exclamation" class="h-10 w-10 text-red-500" />
@@ -63,11 +74,12 @@
           <button
             v-if="canMutate || isFlexible"
             type="button"
-            class="absolute right-[-400px] z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
-            @click="emit('removeSet', index)"
+            class="absolute z-[10] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
+            :style="{ right: `-${shared.sourceSectionWidth}px` }"
+            @click="toggleRemove(index)"
           >
             <span v-if="!isReadOnly" class="flex h-10 w-10 items-center justify-center">
-              <Icon name="minus" class="size-5" />
+              <Icon :name="isRemoved(index) ? 'plus-mini' : 'minus'" class="size-5" />
             </span>
           </button>
         </div>
@@ -111,7 +123,7 @@
   <div v-else></div>
 </template>
 <script setup lang="ts">
-import { computed, watch } from 'vue';
+import { computed, watch, ref } from 'vue';
 import type { PropType } from 'vue';
 import type { FieldSpec } from '../../../types';
 import Icon from '../../shared/icon.vue';
@@ -182,6 +194,26 @@ const toggle = (index: number) => {
   fresh[index] = !fresh[index];
 
   widgets.setListToggles(props.fieldPath, fresh);
+};
+
+const removedIndices = ref(new Set<number>());
+
+const toggleRemove = (index: number) => {
+  if (removedIndices.value.has(index)) {
+    removedIndices.value.delete(index);
+  } else {
+    removedIndices.value.add(index);
+
+    const fresh = toggleState.value;
+    if (fresh[index]) {
+      fresh[index] = false;
+      widgets.setListToggles(props.fieldPath, fresh);
+    }
+  }
+};
+
+const isRemoved = (index: number): boolean => {
+  return removedIndices.value.has(index);
 };
 
 const sectionTitle = (index: number): string => {
