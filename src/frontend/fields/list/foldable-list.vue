@@ -61,27 +61,29 @@
             </div>
           </div>
 
-          <button
-            v-if="canMutate"
-            type="button"
-            class="z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
-            @click="emit('removeSet', index)"
-          >
-            <span v-if="!isReadOnly" class="flex h-10 w-10 items-center justify-center">
-              <Icon name="trash" class="h-auto w-auto" />
-            </span>
-          </button>
-          <button
-            v-if="canMutate || isFlexible"
-            type="button"
-            class="absolute z-[10] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
-            :style="{ right: `-${shared.sourceSectionWidth}px` }"
-            @click="toggleRemove(index)"
-          >
-            <span v-if="!isReadOnly" class="flex h-10 w-10 items-center justify-center">
-              <Icon :name="isRemoved(index) ? 'plus-mini' : 'minus'" class="size-5" />
-            </span>
-          </button>
+          <template v-if="canMutate">
+            <button
+              v-if="isFlexible"
+              type="button"
+              class="absolute z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
+              :style="{ right: `-${shared.sourceSectionWidth}px` }"
+              @click="toggleRemove(index)"
+            >
+              <span v-if="!isReadOnly" class="flex h-10 w-10 items-center justify-center">
+                <Icon :name="isRemoved(index) ? 'plus-mini' : 'minus'" class="size-5" />
+              </span>
+            </button>
+            <button
+              v-else
+              type="button"
+              class="z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
+              @click="emit('removeSet', index)"
+            >
+              <span v-if="!isReadOnly" class="flex h-10 w-10 items-center justify-center">
+                <Icon name="trash" class="h-auto w-auto" />
+              </span>
+            </button>
+          </template>
         </div>
         <ul
           v-if="isExpanded(index)"
@@ -111,7 +113,7 @@
       </template>
     </li>
   </ul>
-  <div v-if="canMutate || isFlexible" class="flex items-center gap-4">
+  <div v-if="canMutate" class="flex items-center gap-4">
     <AddItemButton :label="field.label" @add="emit('addSet')" />
     <div v-if="showEmptyListWarning()">
       <div class="flex flex-row items-center rounded-full border bg-white p-2 text-error">
@@ -164,6 +166,11 @@ const shared = useSharedStore();
 
 const canMutate = computed(() => {
   if (props.isReadOnly) return false;
+
+  // Allow mutations if not in translation mode OR if props.isFlexible is true
+
+  if (props.isFlexible) return true;
+
   return !shared.isTranslation;
 });
 
