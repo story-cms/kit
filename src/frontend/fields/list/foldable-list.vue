@@ -17,12 +17,12 @@
         <button
           v-if="isExpanded(index) && !isReadOnly"
           type="button"
-          class="absolute bottom-0 left-2 px-1.5 py-2 bg-white rounded shadow-sm cursor-pointer"
+          class="absolute bottom-0 left-2 cursor-pointer rounded bg-white px-1.5 py-2 shadow-sm"
           @click="toggle(index)"
         >
-          <Icon name="chevron-up-down" class="w-3.5 h-3.5 text-gray-700" />
+          <Icon name="chevron-up-down" class="h-3.5 w-3.5 text-gray-700" />
         </button>
-        <div class="flex relative justify-between items-center">
+        <div class="relative flex items-center justify-between">
           <span
             class="absolute left-0 right-0 top-[19px] border-t border-gray-300"
           ></span>
@@ -36,17 +36,17 @@
             <icon
               v-if="isExpanded(index)"
               name="chevron-down"
-              class="mr-1 icon"
+              class="icon mr-1"
               aria-hidden="true"
             />
-            <icon v-else name="chevron-right" class="mr-1 icon" aria-hidden="true" />
+            <icon v-else name="chevron-right" class="icon mr-1" aria-hidden="true" />
             <span>
               {{ String(sectionTitle(index)) }}
             </span>
           </button>
           <div v-if="itemHasError(index)" class="z-[1] text-accent-one">
-            <div class="p-2 bg-white rounded-full border">
-              <Icon name="exclamation" class="w-10 h-10 text-red-500" />
+            <div class="rounded-full border bg-white p-2">
+              <Icon name="exclamation" class="h-10 w-10 text-red-500" />
             </div>
           </div>
 
@@ -56,8 +56,18 @@
             class="z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
             @click="emit('removeSet', index)"
           >
-            <span v-if="!isReadOnly" class="flex justify-center items-center w-10 h-10">
-              <Icon name="trash" class="w-auto h-auto" />
+            <span v-if="!isReadOnly" class="flex h-10 w-10 items-center justify-center">
+              <Icon name="trash" class="h-auto w-auto" />
+            </span>
+          </button>
+          <button
+            v-if="canMutate || isFlexible"
+            type="button"
+            class="absolute right-[-400px] z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
+            @click="emit('removeSet', index)"
+          >
+            <span v-if="!isReadOnly" class="flex h-10 w-10 items-center justify-center">
+              <Icon name="minus" class="size-5" />
             </span>
           </button>
         </div>
@@ -89,10 +99,10 @@
       </template>
     </li>
   </ul>
-  <div v-if="canMutate" class="flex gap-4 items-center">
+  <div v-if="canMutate || isFlexible" class="flex items-center gap-4">
     <AddItemButton :label="field.label" @add="emit('addSet')" />
     <div v-if="showEmptyListWarning()">
-      <div class="flex flex-row items-center p-2 bg-white rounded-full border text-error">
+      <div class="flex flex-row items-center rounded-full border bg-white p-2 text-error">
         <Icon name="exclamation" class="pr-2" />
         <p class="text-sm">At least one item is required</p>
       </div>
@@ -142,7 +152,7 @@ const shared = useSharedStore();
 
 const canMutate = computed(() => {
   if (props.isReadOnly) return false;
-  return !shared.isTranslation || props.isFlexible;
+  return !shared.isTranslation;
 });
 
 const isIsland = (type: string): boolean => {
