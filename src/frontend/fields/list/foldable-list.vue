@@ -166,11 +166,7 @@ const shared = useSharedStore();
 
 const canMutate = computed(() => {
   if (props.isReadOnly) return false;
-
-  // Allow mutations if not in translation mode OR if props.isFlexible is true
-
   if (props.isFlexible) return true;
-
   return !shared.isTranslation;
 });
 
