@@ -20,7 +20,7 @@ export default class CmsProvider {
       } else {
         // save the default config to the database
         const configService = await resolver.make('config');
-        const cmsConfig = configService.get<any>('cms') as CmsConfig;
+        cmsConfig = configService.get<any>('cms') as CmsConfig;
         await Config.create({
           key: 'cms',
           version: 1,
