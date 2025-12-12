@@ -27,6 +27,10 @@ export class CmsService {
     return this.#config;
   }
 
+  public set config(config: CmsConfig) {
+    this.#config = config;
+  }
+
   public storyFrom(ctx: HttpContext): StorySpec | undefined {
     const storyId = Number.parseInt(ctx.params.storyId);
     const story = this.#config.stories.stories.find((s) => s.id === storyId);
