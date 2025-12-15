@@ -139,8 +139,9 @@ const filteredRegions = computed(() => {
   const searchTerm = newTag.value.toLowerCase().trim();
   return regions.value.filter(
     (region) =>
-      region.name?.toLowerCase().includes(searchTerm) ||
-      region.code.toLowerCase().includes(searchTerm),
+      !tags.value.includes(region.code) &&
+      (region.name?.toLowerCase().includes(searchTerm) ||
+        region.code.toLowerCase().includes(searchTerm)),
   );
 });
 
