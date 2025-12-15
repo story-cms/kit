@@ -79,14 +79,14 @@
           :key="region.code"
           type="button"
           :class="[
-            'w-full px-3 py-2 text-left text-sm text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none',
+            'w-full px-3 py-2 text-sm text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none ltr:text-left rtl:text-right',
             selectedIndex === index ? 'bg-gray-100' : '',
           ]"
           @click="selectRegion(region.code)"
           @mouseenter="selectedIndex = index"
         >
           <span class="font-medium">{{ region.code }}</span>
-          <span class="ml-2 text-gray-600">{{ region.name }}</span>
+          <span class="text-gray-600 ltr:ml-2 rtl:mr-2">{{ region.name }}</span>
         </button>
       </div>
     </div>
