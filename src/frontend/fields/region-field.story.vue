@@ -47,22 +47,22 @@ const loadData: StoryHandler = ({ variant }): void => {
 
   store.model = {
     name: 'John Kiptum',
-    tags: 'althetics, athlete, olympic, marathon',
+    regions: 'CX, KE, UG, ZM',
   };
   if (variant?.title === 'Error') {
     shared.errors = objectErrors;
   }
   if (variant?.title === 'Readonly') {
     store.setSource({
-      tags: 'simul,justus,et,peccator,In principio erat Verbum, et Verbum erat apud Deum, et Deus erat Verbum.',
+      regions: 'KE,CX,ZM,US,ZA',
     });
   }
 };
 
 const spec = {
-  name: 'tags',
-  label: 'Tags',
-  widget: 'tags',
+  name: 'regions',
+  label: 'Regions',
+  widget: 'regions',
 };
 </script>
 
