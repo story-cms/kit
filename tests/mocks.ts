@@ -74,6 +74,11 @@ export const nestedFields: FieldSpec[] = [
         widget: 'string',
       },
       {
+        name: 'window',
+        label: 'Window',
+        widget: 'dateRange',
+      },
+      {
         name: 'tags',
         label: 'Tags',
         widget: 'list',
