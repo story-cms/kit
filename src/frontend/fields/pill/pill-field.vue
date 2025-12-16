@@ -62,7 +62,12 @@
             :value="inputValue"
             type="text"
             :name="field.label"
-            class="block py-1 pl-0 mr-1 text-sm font-normal leading-5 text-gray-900 bg-white rounded-r-md border-0 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
+            class="block py-1 pl-0 text-sm font-normal leading-5 text-gray-900 bg-white rounded-r-md border-0 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
+            :class="
+              pills.length > 0
+                ? 'ltr:ml-1 ltr:pr-0'
+                : 'ltr:ml-1 ltr:pr-0 rtl:mr-1 rtl:pl-0'
+            "
             @input="handleInput"
             @keydown.enter.stop="handleEnter"
           />
@@ -152,9 +157,8 @@ defineExpose({
   inputRef,
 });
 </script>
-
 <style>
-* {
-  outline: 1px solid red;
-}
+/* * {
+  outline: 1px solid transparent;
+} */
 </style>
