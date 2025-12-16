@@ -55,6 +55,11 @@ export const complexFields: FieldSpec[] = [
     label: 'Passage',
     widget: 'scriptureReference',
   },
+  {
+    name: 'window',
+    label: 'Window',
+    widget: 'dateRange',
+  },
 ];
 
 export const nestedFields: FieldSpec[] = [

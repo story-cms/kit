@@ -41,6 +41,8 @@ test.describe('Bundle builder', () => {
     expect(parsed.image).toBe('');
     expect(parsed.animation).toBe('');
     expect(parsed.passage).toStrictEqual([]);
+    expect(parsed.window).toBeDefined();
+    expect(parsed.window).toBe('');
   });
 
   test('generates default bundle for nested fields', async () => {
@@ -308,7 +310,7 @@ test.describe('Bundle validator', () => {
           verse:
             '`16` For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.',
         },
-        dates: 'blah',
+        dates: '2025-01-01T00:00:00.000Z|2025-01-02T00:00:00.000Z',
       },
     };
 
@@ -824,6 +826,32 @@ test.describe('Bundle validator', () => {
       data: dataWithNullValue,
     });
     expect(nullValueOutput).toEqual(dataWithNullValue);
+  });
+
+  test('date range fields', async () => {
+    const dateRangeSpec = [
+      {
+        name: 'window',
+        label: 'Window',
+        widget: 'dateRange',
+      },
+    ];
+
+    const service = new BundleService(dateRangeSpec);
+
+    // act
+    const draftSchema = service.getValidationBuilder(true);
+
+    // should pass with complete data
+    const completeData = {
+      window: '2025-01-01T00:00:00.000Z|2025-01-02T00:00:00.000Z',
+    };
+
+    const completeOutput = await vine.validate({
+      schema: vine.object(draftSchema),
+      data: completeData,
+    });
+    expect(completeOutput).toEqual(completeData);
   });
 
   test('video fields', async () => {
