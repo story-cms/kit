@@ -15,8 +15,10 @@
         v-model="newTag"
         type="text"
         :name="field.label"
-        class="block py-1 pl-0 text-sm font-normal leading-5 text-gray-900 bg-white rounded-r-md border-0 focus:mr-1 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
-        :class="tags.length > 0 ? 'ml-0' : 'ml-1'"
+        class="block py-1 pl-0 text-sm font-normal leading-5 text-gray-900 bg-white rounded-r-md border-0 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
+        :class="
+          tags.length > 0 ? 'ltr:ml-1 ltr:pr-0' : 'ltr:ml-1 ltr:pr-0 rtl:mr-1 rtl:pl-0'
+        "
         @keydown.enter.stop="handleEnter"
         @keydown.arrow-down.prevent="navigateDown"
         @keydown.arrow-up.prevent="navigateUp"
