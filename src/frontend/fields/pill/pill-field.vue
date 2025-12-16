@@ -57,7 +57,7 @@
         </div>
         <slot name="input">
           <input
-            v-if="!isReadOnly"
+            v-if="!isReadOnly && showInput"
             ref="inputRef"
             :value="inputValue"
             type="text"
@@ -68,8 +68,13 @@
                 ? 'ltr:ml-1 ltr:pr-0'
                 : 'ltr:ml-1 ltr:pr-0 rtl:mr-1 rtl:pl-0'
             "
-            @input="handleInput"
-            @keydown.enter.stop="handleEnter"
+            @input="handleInputEvent"
+            @keydown.enter.stop="handleEnterKey"
+            @keydown.arrow-down.prevent="handleArrowDown"
+            @keydown.arrow-up.prevent="handleArrowUp"
+            @keydown.escape="handleEscape"
+            @focus="handleFocus"
+            @blur="handleBlur"
           />
         </slot>
       </div>
@@ -117,12 +122,24 @@ const props = defineProps({
     type: String,
     default: '',
   },
+
+  showInput: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 const emit = defineEmits<{
   add: [value: string];
   remove: [value: string];
   'update:inputValue': [value: string];
+  'keydown:enter': [event: KeyboardEvent];
+  'keydown:arrow-down': [event: KeyboardEvent];
+  'keydown:arrow-up': [event: KeyboardEvent];
+  'keydown:escape': [event: KeyboardEvent];
+  input: [event: Event];
+  focus: [event: FocusEvent];
+  blur: [event: FocusEvent];
 }>();
 
 const field = computed(() => props.field as FieldSpec);
@@ -140,16 +157,38 @@ const handleRemove = (pill: string) => {
   }
 };
 
-const handleEnter = () => {
+const handleEnterKey = (event: KeyboardEvent) => {
   if (props.inputValue.trim()) {
     emit('add', props.inputValue.trim());
     emit('update:inputValue', '');
   }
+  emit('keydown:enter', event);
 };
 
-const handleInput = (event: Event) => {
+const handleInputEvent = (event: Event) => {
   const value = (event.target as HTMLInputElement).value;
   emit('update:inputValue', value);
+  emit('input', event);
+};
+
+const handleArrowDown = (event: KeyboardEvent) => {
+  emit('keydown:arrow-down', event);
+};
+
+const handleArrowUp = (event: KeyboardEvent) => {
+  emit('keydown:arrow-up', event);
+};
+
+const handleEscape = (event: KeyboardEvent) => {
+  emit('keydown:escape', event);
+};
+
+const handleFocus = (event: FocusEvent) => {
+  emit('focus', event);
+};
+
+const handleBlur = (event: FocusEvent) => {
+  emit('blur', event);
 };
 
 // Expose inputRef for parent components
@@ -157,8 +196,3 @@ defineExpose({
   inputRef,
 });
 </script>
-<style>
-/* * {
-  outline: 1px solid transparent;
-} */
-</style>

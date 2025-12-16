@@ -5,29 +5,16 @@
     :errors="errors"
     :input-value="newTag"
     :display-text="getRegionName"
-    @add="handleAdd"
     @remove="removeTag"
     @update:input-value="newTag = $event"
+    @keydown:enter="handleEnter"
+    @keydown:arrow-down="navigateDown"
+    @keydown:arrow-up="navigateUp"
+    @keydown:escape="hideSuggestions"
+    @input="showSuggestions"
+    @focus="showSuggestions"
+    @blur="handleBlur"
   >
-    <template #input>
-      <input
-        v-if="!props.isReadOnly"
-        v-model="newTag"
-        type="text"
-        :name="field.label"
-        class="block py-1 pl-0 text-sm font-normal leading-5 text-gray-900 bg-white rounded-r-md border-0 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
-        :class="
-          tags.length > 0 ? 'ltr:ml-1 ltr:pr-0' : 'ltr:ml-1 ltr:pr-0 rtl:mr-1 rtl:pl-0'
-        "
-        @keydown.enter.stop="handleEnter"
-        @keydown.arrow-down.prevent="navigateDown"
-        @keydown.arrow-up.prevent="navigateUp"
-        @keydown.escape="hideSuggestions"
-        @input="showSuggestions"
-        @focus="showSuggestions"
-        @blur="handleBlur"
-      />
-    </template>
     <template #dropdown>
       <div
         v-if="showDropdown && filteredRegions.length > 0 && !props.isReadOnly"
@@ -170,15 +157,19 @@ const handleBlur = () => {
   hideSuggestions();
 };
 
-const handleEnter = () => {
+const handleEnter = (event: KeyboardEvent) => {
   if (
     showDropdown.value &&
     selectedIndex.value >= 0 &&
     filteredRegions.value[selectedIndex.value]
   ) {
     selectRegion(filteredRegions.value[selectedIndex.value].code);
+    event.preventDefault();
+    event.stopPropagation();
   } else if (newTag.value.trim()) {
     handleAdd(newTag.value);
+    event.preventDefault();
+    event.stopPropagation();
   }
 };
 
