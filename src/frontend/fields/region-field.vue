@@ -115,9 +115,6 @@ const getRegionName = (code: string): string => {
 
 const handleAdd = (value: string) => {
   if (value.length === 0) return;
-
-  // If dropdown is open with a selected item, handleEnter will handle it via keyboard navigation
-  // Otherwise, process the text input normally
   const regionCode = findRegionCode(value);
   if (regionCode) {
     addTag(regionCode);
@@ -162,7 +159,6 @@ const handleBlur = () => {
 };
 
 const handleEnter = (event: KeyboardEvent) => {
-  // Handle dropdown selection first
   if (
     showDropdown.value &&
     selectedIndex.value >= 0 &&
@@ -173,9 +169,6 @@ const handleEnter = (event: KeyboardEvent) => {
     event.stopPropagation();
     return;
   }
-
-  // For normal text input, @add event will handle it
-  // This handler is mainly for dropdown navigation
 };
 
 const navigateDown = () => {
