@@ -213,6 +213,11 @@ test.describe('DraftService.getDraftBundle', () => {
         label: 'Image',
         widget: 'image', // prefilled field type
       },
+      {
+        name: 'window',
+        label: 'Window',
+        widget: 'dateRange', // prefilled field type
+      },
     ]);
 
     const draftService = new DraftService(storyWithPrefilledFields, mockCms);
@@ -220,6 +225,7 @@ test.describe('DraftService.getDraftBundle', () => {
       title: 'Source Title',
       scripture: ['JHN.1.14'],
       image: 'https://example.com/image.jpg',
+      window: '2025-01-01T00:00:00.000Z|2025-01-02T00:00:00.000Z',
     };
     // source.bundle is cast as 'any' in the implementation
     // getFreshBundleFrom expects an object, so we pass the object directly
@@ -245,6 +251,8 @@ test.describe('DraftService.getDraftBundle', () => {
     // Prefilled fields should be preserved
     expect(parsed.scripture).toEqual(['JHN.1.14']);
     expect(parsed.image).toBe('https://example.com/image.jpg');
+    expect(parsed.window).toBe('2025-01-01T00:00:00.000Z|2025-01-02T00:00:00.000Z');
+
     // Non-prefilled string fields should be cleared
     expect(parsed.title).toBe('');
   });
