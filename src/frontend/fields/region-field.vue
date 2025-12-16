@@ -74,12 +74,21 @@ const filteredRegions = computed(() => {
   if (!newTag.value.trim()) return [];
 
   const searchTerm = newTag.value.toLowerCase().trim();
+
+  if (searchTerm.length < 3) {
+    return regions
+      .filter(
+        (region) =>
+          !tags.value.includes(region.code) &&
+          region.code.toLowerCase().includes(searchTerm),
+      )
+      .slice(0, 6);
+  }
   return regions
     .filter(
       (region) =>
         !tags.value.includes(region.code) &&
-        (region.name?.toLowerCase().includes(searchTerm) ||
-          region.code.toLowerCase().includes(searchTerm)),
+        region.name.toLowerCase().includes(searchTerm),
     )
     .slice(0, 6);
 });
