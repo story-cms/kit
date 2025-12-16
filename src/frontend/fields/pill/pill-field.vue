@@ -15,7 +15,7 @@
 
     <div class="relative">
       <div
-        class="mt-[2px] grid gap-x-2 rounded-md border border-gray-300 bg-white pb-1 pt-1"
+        class="mt-[2px] grid gap-x-1 rounded-md border border-gray-300 bg-white pb-1 pt-1"
         :class="
           pills.length > 0 && !isReadOnly
             ? 'grid-cols-[auto_minmax(32%,_1fr)]'
@@ -23,14 +23,14 @@
         "
       >
         <div
-          class="flex flex-wrap items-center gap-2 text-base text-gray-500 sm:text-sm/6"
-          :class="pills.length > 0 ? 'pl-3' : 'px-0'"
+          class="flex flex-wrap gap-2 items-center text-base text-gray-500 sm:text-sm/6"
+          :class="pills.length > 0 ? 'pl-1' : 'px-0'"
           @click="inputRef?.focus()"
         >
           <span
             v-for="pill in pills"
             :key="pill"
-            class="inline-flex flex-wrap items-center gap-1 rounded-full px-2 py-1 text-xs font-medium leading-4"
+            class="inline-flex flex-wrap gap-1 items-center px-2 py-1 text-xs font-medium leading-4 rounded-full"
             :class="[pillBgColor, pillTextColor]"
           >
             {{ getDisplayText(pill) }}
@@ -62,7 +62,7 @@
             :value="inputValue"
             type="text"
             :name="field.label"
-            class="mr-1 block rounded-r-md border-0 bg-white py-1 pl-0 text-sm font-normal leading-5 text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
+            class="block py-1 pl-0 mr-1 text-sm font-normal leading-5 text-gray-900 bg-white rounded-r-md border-0 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
             @input="handleInput"
             @keydown.enter.stop="handleEnter"
           />
@@ -152,3 +152,9 @@ defineExpose({
   inputRef,
 });
 </script>
+
+<style>
+* {
+  outline: 1px solid red;
+}
+</style>
