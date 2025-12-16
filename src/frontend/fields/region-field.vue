@@ -69,7 +69,7 @@ const modelValue = computed(() => {
 });
 
 const regions = computed(() => {
-  return data.map((item) => {
+  return regionsData.map((item) => {
     const code = Object.keys(item)[0];
     const name = item[code as keyof typeof item] as string;
     return { code, name };
@@ -217,7 +217,7 @@ const tags = computed(() => {
   return tagString.split(',').map((t: string) => t.trim());
 });
 
-const data = [
+const regionsData = [
   { AD: 'Andorra' },
   { AE: 'United Arab Emirates' },
   { AF: 'Afghanistan' },
