@@ -24,7 +24,7 @@
       >
         <div
           class="flex flex-wrap gap-2 items-center text-base text-gray-500 sm:text-sm/6"
-          :class="pills.length > 0 ? 'pl-1' : 'px-0'"
+          :class="pills.length > 0 ? 'ltr:pl-1 rtl:pr-1' : 'px-0'"
           @click="inputRef?.focus()"
         >
           <span
