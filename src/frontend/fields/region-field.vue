@@ -7,6 +7,7 @@
     :display-text="getRegionName"
     @remove="removeTag"
     @update:input-value="newTag = $event"
+    @add="handleAdd"
     @keydown:enter="handleEnter"
     @keydown:arrow-down="navigateDown"
     @keydown:arrow-up="navigateUp"
@@ -114,6 +115,9 @@ const getRegionName = (code: string): string => {
 
 const handleAdd = (value: string) => {
   if (value.length === 0) return;
+
+  // If dropdown is open with a selected item, handleEnter will handle it via keyboard navigation
+  // Otherwise, process the text input normally
   const regionCode = findRegionCode(value);
   if (regionCode) {
     addTag(regionCode);
@@ -158,6 +162,7 @@ const handleBlur = () => {
 };
 
 const handleEnter = (event: KeyboardEvent) => {
+  // Handle dropdown selection first
   if (
     showDropdown.value &&
     selectedIndex.value >= 0 &&
@@ -166,11 +171,11 @@ const handleEnter = (event: KeyboardEvent) => {
     selectRegion(filteredRegions.value[selectedIndex.value].code);
     event.preventDefault();
     event.stopPropagation();
-  } else if (newTag.value.trim()) {
-    handleAdd(newTag.value);
-    event.preventDefault();
-    event.stopPropagation();
+    return;
   }
+
+  // For normal text input, @add event will handle it
+  // This handler is mainly for dropdown navigation
 };
 
 const navigateDown = () => {
