@@ -20,7 +20,7 @@ Following are the widgets that are currently implemented:
 [string](#string), [number](#number), [markdown](#markdown), [image](#image),
 [audio](#audio), [boolean](#boolean), [select](#select), [object](#object),
 [panel](#panel), [list](#list), [scripture](#scripture),
-[scriptureReference](#scripturereference), [date](#date)
+[scriptureReference](#scripturereference), [date](#date), [region](#region)
 
 ---
 
@@ -515,6 +515,29 @@ example:
     name: "passage",
     widget: "scriptureReference",
     allowMany: false
+}
+```
+
+## region
+
+A region picker that renders a [RegionField](#). The widget allows users to select multiple world regions/countries from a comprehensive list. Selected regions are stored as comma-separated ISO country codes (e.g., "US, GB, KE"). The widget has the following features:
+- Autocomplete dropdown with suggestions filtered by region code or name
+- Keyboard navigation (arrow keys to navigate, Enter to select, Escape to close)
+- Displays region codes with full country names
+- Prevents duplicate selections
+- Supports RTL (right-to-left) languages
+- Supports readonly mode
+- Shows up to 6 suggestions at a time
+
+The widget automatically matches user input to region codes or names, and can be triggered by typing or by pressing Enter after a comma.
+
+example:
+
+```ts
+{
+  label: 'Regions',
+  name: 'regions',
+  widget: 'region',
 }
 ```
 
