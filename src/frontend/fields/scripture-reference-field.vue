@@ -49,7 +49,6 @@ const modelValue = computed(() => {
 
 model.$subscribe(() => {
   if (props.isReadOnly) return;
-  // modelValue is computed, so it will update automatically
 });
 
 const errors = computed(() => shared.errorMessages(fieldPath.value));
