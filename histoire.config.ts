@@ -32,6 +32,10 @@ export default defineConfig({
         title: 'Pages',
       },
       {
+        id: 'campaign',
+        title: 'Campaign',
+      },
+      {
         id: 'interface',
         title: 'UI',
       },
