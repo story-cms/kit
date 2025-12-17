@@ -9,7 +9,7 @@
     :show-input="!isFull"
     @add="addTag"
     @remove="removeTag"
-    @update:input-value="newTag = $event"
+    @update="newTag = $event"
   />
 </template>
 

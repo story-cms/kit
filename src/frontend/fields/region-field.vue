@@ -6,7 +6,7 @@
     :input-value="newTag"
     :display-text="getRegionName"
     @remove="removeTag"
-    @update:input-value="newTag = $event"
+    @update="newTag = $event"
     @add="handleAdd"
     @keydown:enter="handleEnter"
     @keydown:arrow-down="navigateDown"

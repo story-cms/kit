@@ -132,7 +132,7 @@ const props = defineProps({
 const emit = defineEmits<{
   add: [value: string];
   remove: [value: string];
-  'update:inputValue': [value: string];
+  update: [value: string];
   'keydown:enter': [event: KeyboardEvent];
   'keydown:arrow-down': [event: KeyboardEvent];
   'keydown:arrow-up': [event: KeyboardEvent];
@@ -161,13 +161,13 @@ const handleEnterKey = (event: KeyboardEvent) => {
   emit('keydown:enter', event);
   if (props.inputValue.trim()) {
     emit('add', props.inputValue.trim());
-    emit('update:inputValue', '');
+    emit('update', '');
   }
 };
 
 const handleInputEvent = (event: Event) => {
   const value = (event.target as HTMLInputElement).value;
-  emit('update:inputValue', value);
+  emit('update', value);
   emit('input', event);
 };
 
