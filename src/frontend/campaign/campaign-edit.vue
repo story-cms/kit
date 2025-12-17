@@ -164,11 +164,15 @@ import DateRangeField from '../fields/date-range-field.vue';
 const props = defineProps<CampaignEditProps & SharedPageProps>();
 
 type RequestPayload = {
+  name: string;
+  regions: string;
+  window: string;
+  promoImage: string;
   title: string;
-  description: string;
-  icon: string;
+  message: string;
+  actionLabel: string;
   type: string;
-  body: string;
+  actionUrl: string;
   isPublished: boolean;
 };
 
@@ -191,7 +195,7 @@ const getPayload = (): RequestPayload => {
   return payload as RequestPayload;
 };
 
-const defaultType = ref(model.getField('body', '').startsWith('http') ? 'link' : 'text');
+const defaultType = ref(model.getField('type', 'donate'));
 
 const selection = ref(model.getField('type', defaultType));
 const title = ref(model.getField('name', 'New Campaign'));
