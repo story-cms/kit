@@ -31,6 +31,7 @@
           ]"
           @click="selectRegion(region.code)"
           @mouseenter="selectedIndex = index"
+          @keydown.enter.prevent="selectRegion(region.code)"
         >
           <span class="font-medium">{{ region.code }}</span>
           <span class="text-gray-600 ltr:ml-2 rtl:mr-2">{{ region.name }}</span>
@@ -57,6 +58,7 @@ const shared = useSharedStore();
 const newTag = ref('');
 const showDropdown = ref(false);
 const selectedIndex = ref(-1);
+const isSelectingFromDropdown = ref(false);
 
 const field = computed(() => props.field as FieldSpec);
 const fieldPath = computed(() => {
@@ -116,6 +118,12 @@ const getRegionName = (code: string): string => {
 };
 
 const handleAdd = (value: string) => {
+  // Prevent add if we're selecting from dropdown
+  if (isSelectingFromDropdown.value) {
+    isSelectingFromDropdown.value = false;
+    return;
+  }
+
   if (value.length === 0) return;
   const regionCode = findRegionCode(value);
   if (regionCode) {
@@ -166,6 +174,9 @@ const handleEnter = (event: KeyboardEvent) => {
     selectedIndex.value >= 0 &&
     filteredRegions.value[selectedIndex.value]
   ) {
+    // Set flag to prevent handleAdd from processing
+    isSelectingFromDropdown.value = true;
+    // Select the region
     selectRegion(filteredRegions.value[selectedIndex.value].code);
     event.preventDefault();
     event.stopPropagation();

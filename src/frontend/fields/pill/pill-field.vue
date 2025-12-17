@@ -23,14 +23,14 @@
         "
       >
         <div
-          class="flex flex-wrap gap-2 items-center text-base text-gray-500 sm:text-sm/6"
+          class="flex flex-wrap items-center gap-2 text-base text-gray-500 sm:text-sm/6"
           :class="pills.length > 0 ? 'ltr:pl-1 rtl:pr-1' : 'px-0'"
           @click="inputRef?.focus()"
         >
           <span
             v-for="pill in pills"
             :key="pill"
-            class="inline-flex flex-wrap gap-1 items-center px-2 py-1 text-xs font-medium leading-4 rounded-full"
+            class="inline-flex flex-wrap items-center gap-1 rounded-full px-2 py-1 text-xs font-medium leading-4"
             :class="[pillBgColor, pillTextColor]"
           >
             {{ getDisplayText(pill) }}
@@ -62,7 +62,7 @@
             :value="inputValue"
             type="text"
             :name="field.label"
-            class="block py-1 pl-0 text-sm font-normal leading-5 text-gray-900 bg-white rounded-r-md border-0 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
+            class="block rounded-r-md border-0 bg-white py-1 pl-0 text-sm font-normal leading-5 text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
             :class="
               pills.length > 0
                 ? 'ltr:ml-1 ltr:pr-0'
@@ -158,11 +158,11 @@ const handleRemove = (pill: string) => {
 };
 
 const handleEnterKey = (event: KeyboardEvent) => {
+  emit('keydown:enter', event);
   if (props.inputValue.trim()) {
     emit('add', props.inputValue.trim());
     emit('update:inputValue', '');
   }
-  emit('keydown:enter', event);
 };
 
 const handleInputEvent = (event: Event) => {
