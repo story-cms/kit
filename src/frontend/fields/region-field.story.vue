@@ -4,6 +4,7 @@
       <RegionField :field="spec" />
       <ModelControl :model="objectModel" :is-inspect-only="true" />
     </Variant>
+
     <Variant title="With model" :setup-app="loadData">
       <RegionField :field="spec" />
       <ModelControl :model="objectModel" :is-inspect-only="true" />
@@ -49,9 +50,11 @@ const loadData: StoryHandler = ({ variant }): void => {
     name: 'John Kiptum',
     regions: 'CX, KE, UG, ZM',
   };
+
   if (variant?.title === 'Error') {
     shared.errors = objectErrors;
   }
+
   if (variant?.title === 'Readonly') {
     store.setSource({
       regions: 'KE,CX,ZM,US,ZA',

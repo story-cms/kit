@@ -20,7 +20,8 @@ Following are the widgets that are currently implemented:
 [string](#string), [number](#number), [markdown](#markdown), [image](#image),
 [audio](#audio), [boolean](#boolean), [select](#select), [object](#object),
 [panel](#panel), [list](#list), [scripture](#scripture),
-[scriptureReference](#scripturereference), [date](#date), [dateRange](#daterange), [region](#region)
+[scriptureReference](#scripturereference), [date](#date), [dateRange](#daterange),
+[region](#region)
 
 ---
 
@@ -535,9 +536,11 @@ example:
 
 ## region
 
-A region picker that renders a [RegionField](#). The widget allows users to select multiple world regions/countries from a comprehensive list. Selected regions are stored as comma-separated ISO country codes (e.g., "US, GB, KE").
+A region picker that renders a [RegionField](#). The widget allows users to select
+multiple world regions/countries from a comprehensive list. Selected regions are stored as
+comma-separated ISO country codes (e.g., "US,GB,KE").
 
-The widget automatically matches user input to region codes or names, and can be triggered by typing or by pressing Enter after a comma.
+This field has no special keys.
 
 example:
 
