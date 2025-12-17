@@ -21,6 +21,7 @@ Following are the widgets that are currently implemented:
 [audio](#audio), [boolean](#boolean), [select](#select), [object](#object),
 [panel](#panel), [list](#list), [scripture](#scripture),
 [scriptureReference](#scripturereference), [date](#date), [region](#region)
+[scriptureReference](#scripturereference), [date](#date), [dateRange](#daterange)
 
 ---
 
@@ -195,6 +196,21 @@ DateField with time picker
   name: 'releasedAt',
   widget: 'date',
   hasTimePicker: true,
+},
+```
+
+## dateRange
+
+A date range picker that renders a [DateRangeField](#). This field has no special keys.
+The two dates are stored in the model with the current time as UTC time.
+
+example:
+
+```ts
+{
+  label: 'Campaign window',
+  name: 'window',
+  widget: 'dateRange',
 },
 ```
 

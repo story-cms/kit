@@ -1,5 +1,6 @@
 import audioRule from '../validators/audio_rule.js';
 import videoRule from '../validators/video_rule.js';
+import dateRangeRule from '../validators/date_range_rule.js';
 import { FieldSpec } from '@story-cms/kit';
 import vine, {
   VineArray,
@@ -125,6 +126,10 @@ export class BundleService {
             ? vine.string().nullable()
             : vine.string().trim().url(),
         };
+      case 'dateRange':
+        return {
+          [spec.name]: this.isDraft ? this.dateRangeDraftSchema : this.dateRangeSchema,
+        };
       default:
         // case 'select':
         // case 'markdown':
@@ -158,6 +163,9 @@ export class BundleService {
       length: vine.number(),
     })
     .use(audioRule());
+
+  private dateRangeSchema = vine.string().use(dateRangeRule());
+  private dateRangeDraftSchema = vine.string().nullable();
 
   private videoDraftSchema = vine.object({
     url: vine.string().nullable(),
