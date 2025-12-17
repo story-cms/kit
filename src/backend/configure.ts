@@ -5,7 +5,7 @@ import { stubsRoot } from './stubs/main.js';
 import { fsReadAll } from '@poppinss/utils';
 
 async function addMigrations(command: Configure, codemods: Codemods) {
-  const allMigrations = ['base', 'audit', 'drops', 'preferences'];
+  const allMigrations = ['base', 'audit', 'drops', 'preferences', 'campaigns'];
 
   const path = command.app.migrationsPath();
   const migrations = await fsReadAll(path);

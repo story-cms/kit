@@ -1,7 +1,6 @@
 {{{
   exports({ to: app.makePath('start/routes/campaigns.ts') })
 }}}
-
 import router from '@adonisjs/core/services/router';
 
 const CampaignsController = () => import('#controllers/campaigns_controller');
