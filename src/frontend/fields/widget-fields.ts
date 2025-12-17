@@ -14,6 +14,7 @@ import SelectField from './select-field.vue';
 import NumberField from './number-field.vue';
 import VideoField from './video-field.vue';
 import DateField from './date-field.vue';
+import DateRangeField from './date-range-field.vue';
 import TagField from './tag-field.vue';
 import RegionField from './region-field.vue';
 
@@ -55,6 +56,8 @@ export const widgetField = (widget: string) => {
       return VideoField;
     case 'DateField':
       return DateField;
+    case 'DateRangeField':
+      return DateRangeField;
     case 'TagField':
       return TagField;
     case 'RegionField':

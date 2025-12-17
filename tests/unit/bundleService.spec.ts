@@ -41,6 +41,8 @@ test.describe('Bundle builder', () => {
     expect(parsed.image).toBe('');
     expect(parsed.animation).toBe('');
     expect(parsed.passage).toStrictEqual([]);
+    expect(parsed.window).toBeDefined();
+    expect(parsed.window).toBe('');
   });
 
   test('generates default bundle for nested fields', async () => {
@@ -59,7 +61,7 @@ test.describe('Bundle builder', () => {
     expect(parsed.body).toBeDefined();
     expect(parsed.summary).toBeDefined();
     expect(parsed.title).toBe('');
-    expect(parsed.metadata).toEqual({ author: '', tags: [], passage: [] });
+    expect(parsed.metadata).toEqual({ author: '', window: '', tags: [], passage: [] });
   });
 });
 
@@ -163,6 +165,7 @@ test.describe('Bundle updater', () => {
       title: 'Old Title',
       metadata: {
         author: 'Old Author',
+        window: '2025-01-01T00:00:00.000Z|2025-01-02T00:00:00.000Z',
         tags: [
           {
             icon: 'old',
@@ -178,6 +181,7 @@ test.describe('Bundle updater', () => {
       title: 'New Title',
       metadata: {
         author: 'New Author',
+        window: '2025-01-03T00:00:00.000Z|2025-01-04T00:00:00.000Z',
         tags: [
           {
             icon: 'new',
@@ -196,6 +200,7 @@ test.describe('Bundle updater', () => {
     expect(parsed.title).toBe('New Title');
     expect(parsed.metadata).toEqual({
       author: 'New Author',
+      window: '2025-01-03T00:00:00.000Z|2025-01-04T00:00:00.000Z',
       tags: [
         {
           icon: 'new',
@@ -276,6 +281,11 @@ test.describe('Bundle validator', () => {
             label: 'Favorite Scripture',
             widget: 'scripture',
           },
+          window: {
+            name: 'dates',
+            label: 'Campaign dates',
+            widget: 'dateRange',
+          },
         },
       },
     ];
@@ -300,6 +310,7 @@ test.describe('Bundle validator', () => {
           verse:
             '`16` For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.',
         },
+        dates: '2025-01-01T00:00:00.000Z|2025-01-02T00:00:00.000Z',
       },
     };
 
@@ -815,6 +826,32 @@ test.describe('Bundle validator', () => {
       data: dataWithNullValue,
     });
     expect(nullValueOutput).toEqual(dataWithNullValue);
+  });
+
+  test('date range fields', async () => {
+    const dateRangeSpec = [
+      {
+        name: 'window',
+        label: 'Window',
+        widget: 'dateRange',
+      },
+    ];
+
+    const service = new BundleService(dateRangeSpec);
+
+    // act
+    const draftSchema = service.getValidationBuilder(true);
+
+    // should pass with complete data
+    const completeData = {
+      window: '2025-01-01T00:00:00.000Z|2025-01-02T00:00:00.000Z',
+    };
+
+    const completeOutput = await vine.validate({
+      schema: vine.object(draftSchema),
+      data: completeData,
+    });
+    expect(completeOutput).toEqual(completeData);
   });
 
   test('video fields', async () => {
