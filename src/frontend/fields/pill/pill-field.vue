@@ -61,6 +61,7 @@
             ref="inputRef"
             :value="inputValue"
             type="text"
+            autocomplete="off"
             :name="field.label"
             :placeholder="showPlaceholder ? placeholder : ''"
             class="block rounded-r-md border-0 bg-white py-1 pl-0 text-sm font-normal leading-5 text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
