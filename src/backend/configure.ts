@@ -63,6 +63,7 @@ export async function configure(command: Configure) {
     {},
   );
   await codemods.makeUsingStub(stubsRoot, 'controllers/dashboard_controller.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'controllers/campaigns_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/chapters_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/drafts_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/pages_controller.stub', {});
@@ -80,6 +81,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'routes/users.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/auth.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/routes.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'routes/campaigns.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/dashboard.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/pages.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/stories.stub', {});

@@ -15,6 +15,7 @@ import { middleware } from '#start/kernel';
 import api from '#start/routes/api';
 import audiences from '#start/routes/audiences';
 import auth from '#start/routes/auth';
+import campaigns from '#start/routes/campaigns';
 import dashboard from '#start/routes/dashboard';
 import pages from '#start/routes/pages';
 import preferences from '#start/routes/preferences';
@@ -34,6 +35,7 @@ uiTools();
 router
   .group(() => {
     audiences();
+    campaigns();
     dashboard();
     stories();
     pages();
