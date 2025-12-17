@@ -4,10 +4,13 @@
 
 import { HttpContext } from '@adonisjs/core/http';
 import vine from '@vinejs/vine';
-import Campaign from '#models/campaign';
 import cms from '#services/cms';
-import type { CampaignEditProps } from '../models/campaign_types.js';
-import { Activity, trimmedErrors } from '@story-cms/kit';
+import {
+  Activity,
+  trimmedErrors,
+  Campaign,
+  type CampaignEditProps,
+} from '@story-cms/kit';
 import { CampaignValidator, campaignErrorMessages } from '#validators/campaign';
 
 export default class CampaignsController {
@@ -25,7 +28,6 @@ export default class CampaignsController {
 
   public async create(ctx: HttpContext) {
     const version = cms.pagesContextFrom(ctx);
-    console.log('version', version);
     const campaign = await Campaign.create({
       locale: version.locale,
       apiVersion: 1,
@@ -46,11 +48,11 @@ export default class CampaignsController {
     await Activity.create({
       userId: ctx.auth.user?.id,
       locale: version.locale,
-      action: `created campaign ${campaign.id}`,
+      action: {{ '`created campaign ${campaign.id}`' }},
     });
 
     return ctx.response.redirect(
-      `/${version.locale}/campaign/${campaign.id}/edit`,
+      {{ '`/${version.locale}/campaign/${campaign.id}/edit`' }},
       false,
       303,
     );
@@ -65,13 +67,13 @@ export default class CampaignsController {
       await Activity.create({
         userId: ctx.auth.user?.id,
         locale: version.locale,
-        action: `deleted campaign ${campaign.id}`,
+        action: {{ '`deleted campaign ${campaign.id}`' }},
       });
     } catch (e) {
       ctx.session.flash('errorsBag', { other: e.message });
     }
 
-    return ctx.response.redirect(`/${version.locale}/page`, false, 303);
+    return ctx.response.redirect({{ '`/${version.locale}/page`' }}, false, 303);
   }
 
   public async update(ctx: HttpContext) {
@@ -103,13 +105,13 @@ export default class CampaignsController {
       await Activity.create({
         userId: ctx.auth.user?.id,
         locale: version.locale,
-        action: `published campaign ${campaign.id}`,
+        action: {{ '`published campaign ${campaign.id}`' }},
       });
     } else {
       await Activity.create({
         userId: ctx.auth.user?.id,
         locale: version.locale,
-        action: `updated campaign ${campaign.id}`,
+        action: {{ '`updated campaign ${campaign.id}`' }},
       });
     }
 
@@ -122,7 +124,7 @@ export default class CampaignsController {
 const prepend = (plain: Record<string, string[]>): Object => {
   const result: Record<string, unknown> = {};
   for (const key in plain) {
-    result[`bundle.${key}`] = plain[key];
+    result[{{ '`bundle.${key}`' }}] = plain[key];
   }
   return result;
 };

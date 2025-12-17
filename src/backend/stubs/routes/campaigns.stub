@@ -1,5 +1,5 @@
 {{{
-  exports({ to: app.makePath('start/routes/campaign.ts') })
+  exports({ to: app.makePath('start/routes/campaigns.ts') })
 }}}
 
 import router from '@adonisjs/core/services/router';
