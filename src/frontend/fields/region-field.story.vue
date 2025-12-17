@@ -65,7 +65,3 @@ const spec = {
   widget: 'regions',
 };
 </script>
-
-<docs lang="md">
-# String Field
-</docs>

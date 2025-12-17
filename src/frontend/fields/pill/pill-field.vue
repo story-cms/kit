@@ -23,14 +23,14 @@
         "
       >
         <div
-          class="flex flex-wrap gap-2 items-center text-base text-gray-500 sm:text-sm/6"
+          class="flex flex-wrap items-center gap-2 text-base text-gray-500 sm:text-sm/6"
           :class="pills.length > 0 ? 'ltr:pl-1 rtl:pr-1' : 'px-0'"
           @click="inputRef?.focus()"
         >
           <span
             v-for="pill in pills"
             :key="pill"
-            class="inline-flex flex-wrap gap-1 items-center px-2 py-1 text-xs font-medium leading-4 rounded-full"
+            class="inline-flex flex-wrap items-center gap-1 rounded-full px-2 py-1 text-xs font-medium leading-4"
             :class="[pillBgColor, pillTextColor]"
           >
             {{ getDisplayText(pill) }}
@@ -62,7 +62,8 @@
             :value="inputValue"
             type="text"
             :name="field.label"
-            class="block py-1 pl-0 text-sm font-normal leading-5 text-gray-900 bg-white rounded-r-md border-0 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
+            :placeholder="showPlaceholder ? placeholder : ''"
+            class="block rounded-r-md border-0 bg-white py-1 pl-0 text-sm font-normal leading-5 text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
             :class="
               pills.length > 0
                 ? 'ltr:ml-1 ltr:pr-0'
@@ -127,12 +128,17 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+
+  placeholder: {
+    type: String,
+    default: '',
+  },
 });
 
 const emit = defineEmits<{
   add: [value: string];
   remove: [value: string];
-  'update:inputValue': [value: string];
+  update: [value: string];
   'keydown:enter': [event: KeyboardEvent];
   'keydown:arrow-down': [event: KeyboardEvent];
   'keydown:arrow-up': [event: KeyboardEvent];
@@ -144,8 +150,13 @@ const emit = defineEmits<{
 
 const field = computed(() => props.field as FieldSpec);
 const inputRef = ref<HTMLInputElement | null>(null);
+const isFocused = ref(false);
 
 const hasError = computed(() => props.errors.length > 0 && !props.isReadOnly);
+
+const showPlaceholder = computed(() => {
+  return props.pills.length === 0 && !isFocused.value && props.placeholder !== '';
+});
 
 const getDisplayText = (pill: string) => {
   return props.displayText(pill);
@@ -158,16 +169,16 @@ const handleRemove = (pill: string) => {
 };
 
 const handleEnterKey = (event: KeyboardEvent) => {
+  emit('keydown:enter', event);
   if (props.inputValue.trim()) {
     emit('add', props.inputValue.trim());
-    emit('update:inputValue', '');
+    emit('update', '');
   }
-  emit('keydown:enter', event);
 };
 
 const handleInputEvent = (event: Event) => {
   const value = (event.target as HTMLInputElement).value;
-  emit('update:inputValue', value);
+  emit('update', value);
   emit('input', event);
 };
 
@@ -184,10 +195,12 @@ const handleEscape = (event: KeyboardEvent) => {
 };
 
 const handleFocus = (event: FocusEvent) => {
+  isFocused.value = true;
   emit('focus', event);
 };
 
 const handleBlur = (event: FocusEvent) => {
+  isFocused.value = false;
   emit('blur', event);
 };
 
