@@ -1,5 +1,6 @@
 <template>
   <PillField
+    placeholder="Sending to all regions. Type a region  name to filter."
     v-bind="props"
     :pills="tags"
     :errors="errors"

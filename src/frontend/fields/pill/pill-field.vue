@@ -62,6 +62,7 @@
             :value="inputValue"
             type="text"
             :name="field.label"
+            :placeholder="showPlaceholder ? placeholder : ''"
             class="block rounded-r-md border-0 bg-white py-1 pl-0 text-sm font-normal leading-5 text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
             :class="
               pills.length > 0
@@ -127,6 +128,11 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+
+  placeholder: {
+    type: String,
+    default: '',
+  },
 });
 
 const emit = defineEmits<{
@@ -144,8 +150,13 @@ const emit = defineEmits<{
 
 const field = computed(() => props.field as FieldSpec);
 const inputRef = ref<HTMLInputElement | null>(null);
+const isFocused = ref(false);
 
 const hasError = computed(() => props.errors.length > 0 && !props.isReadOnly);
+
+const showPlaceholder = computed(() => {
+  return props.pills.length === 0 && !isFocused.value && props.placeholder !== '';
+});
 
 const getDisplayText = (pill: string) => {
   return props.displayText(pill);
@@ -184,10 +195,12 @@ const handleEscape = (event: KeyboardEvent) => {
 };
 
 const handleFocus = (event: FocusEvent) => {
+  isFocused.value = true;
   emit('focus', event);
 };
 
 const handleBlur = (event: FocusEvent) => {
+  isFocused.value = false;
   emit('blur', event);
 };
 
