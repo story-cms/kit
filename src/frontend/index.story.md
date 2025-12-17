@@ -20,7 +20,8 @@ Following are the widgets that are currently implemented:
 [string](#string), [number](#number), [markdown](#markdown), [image](#image),
 [audio](#audio), [boolean](#boolean), [select](#select), [object](#object),
 [panel](#panel), [list](#list), [scripture](#scripture),
-[scriptureReference](#scripturereference), [date](#date), [dateRange](#daterange)
+[scriptureReference](#scripturereference), [date](#date), [dateRange](#daterange),
+[region](#region)
 
 ---
 
@@ -530,6 +531,24 @@ example:
     name: "passage",
     widget: "scriptureReference",
     allowMany: false
+}
+```
+
+## region
+
+A region picker that renders a [RegionField](#). The widget allows users to select
+multiple world regions/countries from a comprehensive list. Selected regions are stored as
+comma-separated ISO country codes (e.g., "US,GB,KE").
+
+This field has no special keys.
+
+example:
+
+```ts
+{
+  label: 'Regions',
+  name: 'regions',
+  widget: 'region',
 }
 ```
 

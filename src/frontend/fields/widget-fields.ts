@@ -16,6 +16,7 @@ import VideoField from './video-field.vue';
 import DateField from './date-field.vue';
 import DateRangeField from './date-range-field.vue';
 import TagField from './tag-field.vue';
+import RegionField from './region-field.vue';
 
 export const widgetField = (widget: string) => {
   const up = widget[0].toUpperCase() + widget.substring(1);
@@ -59,6 +60,8 @@ export const widgetField = (widget: string) => {
       return DateRangeField;
     case 'TagField':
       return TagField;
+    case 'RegionField':
+      return RegionField;
     default:
       return NullField;
   }

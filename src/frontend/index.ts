@@ -11,6 +11,7 @@ import ContextMenu from './shared/context-menu.vue';
 import CreateAccount from './auth/create-account.vue';
 import DashboardIndex from './dashboard/dashboard-index.vue';
 import DateField from './fields/date-field.vue';
+import DateRangeField from './fields/date-range-field.vue';
 import DraftIndex from './stories/draft-index.vue';
 import DropDown from './shared/drop-down.vue';
 import ForgotPassword from './auth/forgot-password.vue';
@@ -34,6 +35,7 @@ import PagesIndex from './pages/pages-index.vue';
 import Pagination from './shared/pagination.vue';
 import PanelField from './fields/panel-field.vue';
 import PublicLayout from './shared/public-layout.vue';
+import RegionField from './fields/region-field.vue';
 import ResetPassword from './auth/reset-password.vue';
 import ScriptureField from './fields/scripture-field.vue';
 import SelectField from './fields/select-field.vue';
@@ -75,6 +77,7 @@ export {
   CreateAccount,
   DashboardIndex,
   DateField,
+  DateRangeField,
   DraftIndex,
   DropDown,
   ForgotPassword,
@@ -98,6 +101,7 @@ export {
   PanelField,
   Pagination,
   PublicLayout,
+  RegionField,
   ResetPassword,
   ScriptureField,
   SelectField,
