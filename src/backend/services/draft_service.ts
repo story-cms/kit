@@ -119,13 +119,14 @@ export class DraftService {
     switch (field['widget']) {
       case 'tag':
       case 'scriptureReference':
+      case 'dateRange':
       case 'select':
       case 'number':
       case 'boolean':
       case 'image':
       case 'animation':
         // check if subPath is already in the list
-        if (this.prefilledFields.some((item) => item === field['name'])) break;
+        if (this.#prefilledFields.some((item) => item === field['name'])) break;
         this.#prefilledFields.push(field['name']);
         break;
       case 'panel': {
