@@ -99,7 +99,7 @@
         <SelectField
           :field="{
             label: 'Action Type',
-            name: 'type',
+            name: 'actionType',
             widget: 'select',
             options: [
               { label: 'Close', value: 'close' },
