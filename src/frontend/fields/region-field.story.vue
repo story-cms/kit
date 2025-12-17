@@ -67,5 +67,15 @@ const spec = {
 </script>
 
 <docs lang="md">
-# String Field
+# Region Field
+
+Features:
+
+- Autocomplete dropdown with suggestions filtered by region code or name
+- Keyboard navigation (arrow keys to navigate, Enter to select, Escape to close)
+- Displays region codes with full country names
+- Prevents duplicate selections
+- Supports RTL (right-to-left) languages
+- Supports readonly mode
+- Shows up to 6 suggestions at a time
 </docs>
