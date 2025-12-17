@@ -19,9 +19,8 @@ Following are the widgets that are currently implemented:
 
 [string](#string), [number](#number), [markdown](#markdown), [image](#image),
 [audio](#audio), [boolean](#boolean), [select](#select), [object](#object),
-[panel](#panel), [list](#list), [scripture](#scripture),
-[scriptureReference](#scripturereference), [date](#date), [region](#region)
-[scriptureReference](#scripturereference), [date](#date), [dateRange](#daterange)
+[panel](#panel), [list](#list), [scripture](#scripture), [scriptureReference](#scripturereference), 
+[date](#date), [dateRange](#daterange), [region](#region)
 
 ---
 
