@@ -24,13 +24,13 @@ import { sharedProps, miniSidebar } from '../../frontend/test/mocks';
 
 const campaignBundle: CampaignBundle = {
   name: 'Giving Tuesday',
-  startDate: '2025-12-16',
+  window: '2025-12-16|2025-12-17',
   promoImage:
     'https://res.cloudinary.com/journeys/image/upload/v1756122407/christ-chaos-header_yqrufy_lzmfjt.jpg',
   title: 'Giving Tuesday - Giving to the Poor',
   message:
     '## Support us further the development of this app\nAll giving should be done freely, not compelled or forced, but offered willingly from the heart.',
-  actionButton: 'Donate',
+  actionLabel: 'Donate',
   actionType: 'donate',
   actionUrl: 'https://www.google.com',
   regions: 'CX, KE, UG, ZM',

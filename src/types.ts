@@ -447,14 +447,14 @@ export interface CampaignEditProps {
 
 export interface CampaignBundle {
   name: string;
-  startDate: string;
-  promoImage: string;
+  regions: string;
+  window: string;
+  promoImage?: string;
   title: string;
   message: string;
-  actionButton: string;
+  actionLabel: string;
   actionType: string;
-  actionUrl: string;
-  regions: string;
+  actionUrl?: string;
 }
 
 /// ----------------------------------------------------

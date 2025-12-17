@@ -28,7 +28,7 @@
         },
       ]"
     >
-      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="py-4 space-y-8 bg-white">
+      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8 bg-white py-4">
         <StringField
           :field="{
             name: 'name',
@@ -47,11 +47,11 @@
           :is-nested="true"
           class="px-8"
         />
-        <DateField
+        <DateRangeField
           :field="{
-            name: 'startDate',
-            label: 'Start Date',
-            widget: 'date',
+            name: 'window',
+            label: 'Campaign window',
+            widget: 'dateRange',
           }"
           :is-nested="true"
           class="px-8"
@@ -85,8 +85,8 @@
         />
         <StringField
           :field="{
-            name: 'actionButton',
-            label: 'Action Button',
+            name: 'actionLabel',
+            label: 'Action Label',
             widget: 'string',
           }"
           :is-nested="true"
@@ -155,7 +155,8 @@ import CampaignMetaBox from './campaign-meta-box.vue';
 import DraftActions from '../shared/draft-actions.vue';
 import ContentSidebar from '../shared/content-sidebar.vue';
 import RegionField from '../fields/region-field.vue';
-import DateField from '../fields/date-field.vue';
+import DateRangeField from '../fields/date-range-field.vue';
+
 const props = defineProps<CampaignEditProps & SharedPageProps>();
 
 type RequestPayload = {
