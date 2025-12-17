@@ -61,6 +61,10 @@
             label: 'Promo image',
             name: 'promoImage',
             widget: 'image',
+            uploadPreset: 'pilot-feeds',
+            description: 'JPG   file up to 300K',
+            extensions: ['.jpg', '.jpeg'],
+            maxSize: 300000,
           }"
           :is-nested="true"
           class="px-8"
