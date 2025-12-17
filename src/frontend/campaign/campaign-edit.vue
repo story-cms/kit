@@ -171,7 +171,7 @@ type RequestPayload = {
   title: string;
   message: string;
   actionLabel: string;
-  type: string;
+  actionType: string;
   actionUrl: string;
   isPublished: boolean;
 };
