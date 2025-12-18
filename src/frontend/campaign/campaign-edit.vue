@@ -38,6 +38,7 @@
           :is-nested="true"
           class="px-8"
         />
+
         <RegionField
           :field="{
             name: 'regions',
@@ -47,6 +48,7 @@
           :is-nested="true"
           class="px-8"
         />
+
         <DateRangeField
           :field="{
             name: 'window',
@@ -56,19 +58,21 @@
           :is-nested="true"
           class="px-8"
         />
+
         <ImageField
           :field="{
             label: 'Promo image',
             name: 'promoImage',
             widget: 'image',
             uploadPreset: 'pilot-feeds',
-            description: 'JPG   file up to 300K',
+            description: 'JPG file up to 300K',
             extensions: ['.jpg', '.jpeg'],
             maxSize: 300000,
           }"
           :is-nested="true"
           class="px-8"
         />
+
         <StringField
           :field="{
             name: 'title',
@@ -78,6 +82,7 @@
           :is-nested="true"
           class="px-8"
         />
+
         <MarkdownField
           :field="{
             name: 'message',
@@ -87,6 +92,7 @@
           :is-nested="true"
           class="px-8"
         />
+
         <StringField
           :field="{
             name: 'actionLabel',
@@ -96,6 +102,7 @@
           :is-nested="true"
           class="px-8"
         />
+
         <SelectField
           :field="{
             label: 'Action Type',
@@ -112,16 +119,19 @@
           :is-nested="true"
           class="px-8"
         />
+
         <StringField
           :field="{
             name: 'actionUrl',
             label: 'Action URL',
             widget: 'string',
           }"
+          :is-read-only="selection !== 'externalUrl'"
           :is-nested="true"
           class="px-8"
         />
       </form>
+
       <ContentSidebar>
         <template #meta-box>
           <CampaignMetaBox
@@ -138,7 +148,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, toRefs, watch, onUnmounted } from 'vue';
+import { ref, computed, onMounted, toRefs, watch, nextTick } from 'vue';
 import { DateTime } from 'luxon';
 import { router } from '@inertiajs/vue3';
 import {
@@ -176,7 +186,7 @@ type RequestPayload = {
   isPublished: boolean;
 };
 
-let isRevertingPublished = false;
+let ignoreTheNextChange = false;
 
 const { bundle, campaign } = toRefs(props);
 const model = useModelStore();
@@ -195,9 +205,9 @@ const getPayload = (): RequestPayload => {
   return payload as RequestPayload;
 };
 
-const defaultType = ref(model.getField('type', 'donate'));
+const defaultType = 'donate';
 
-const selection = ref(model.getField('type', defaultType));
+const selection = ref(model.getField('actionType', defaultType));
 const title = ref(model.getField('name', 'New Campaign'));
 const isPublished = ref(Boolean(model.getField('isPublished', false)));
 
@@ -237,7 +247,7 @@ watch(
   () => shared.errors,
   (newErrors) => {
     if (newErrors && Object.keys(newErrors).length > 0) {
-      isRevertingPublished = true;
+      ignoreTheNextChange = true;
       isPublished.value = false;
       model.setField('isPublished', false);
     }
@@ -245,25 +255,39 @@ watch(
   { deep: true },
 );
 
+const handleActionTypeChange = () => {
+  // when not switching from external, move on
+  const previousSelection = selection.value;
+  if (previousSelection !== 'externalUrl') return;
+
+  // when not a type switch, move on
+  selection.value = model.getField('actionType', defaultType);
+  if (previousSelection === selection.value) return;
+
+  // when the URL field is already empty, move on
+  const actionUrl = model.getField('actionUrl', '');
+  if (!actionUrl) return;
+
+  // we have switched away from external type, so we need to clear the url field
+  nextTick().then(() => {
+    ignoreTheNextChange = true;
+    model.setField('actionUrl', '');
+    save();
+  });
+};
+
 onMounted(() => {
   model.$subscribe(() => {
-    if (isRevertingPublished) {
-      isRevertingPublished = false;
+    handleActionTypeChange();
+
+    if (ignoreTheNextChange) {
+      ignoreTheNextChange = false;
       return;
     }
 
     save();
-    selection.value = model.getField('type', defaultType);
     title.value = model.getField('name', 'Campaign');
     isPublished.value = Boolean(model.getField('isPublished', false));
   });
-  if (shared.meta.hasAppPreview) {
-    shared.setShowAppPreview(false);
-  }
-});
-onUnmounted(() => {
-  if (shared.meta.hasAppPreview) {
-    shared.setShowAppPreview(true);
-  }
 });
 </script>
