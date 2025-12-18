@@ -439,8 +439,14 @@ export interface CampaignMeta {
   updatedAt: string;
 }
 
+export interface CampaignStats {
+  impressions: number;
+  clicks: number;
+}
+
 export interface CampaignEditProps {
   campaign: CampaignMeta;
+  stats: CampaignStats;
   bundle: any; // model
   providers: Providers; // widgets
 }

@@ -12,6 +12,7 @@
         :bundle="campaignBundle"
         :campaign="campaign"
         :providers="{}"
+        :stats="stats"
       />
     </Variant>
   </Story>
@@ -19,7 +20,7 @@
 
 <script setup lang="ts">
 import CampaignEdit from './campaigns-edit.vue';
-import type { CampaignBundle, CampaignMeta } from '../../types';
+import type { CampaignBundle, CampaignMeta, CampaignStats } from '../../types';
 import { sharedProps, miniSidebar } from '../test/mocks';
 
 const campaignBundle: CampaignBundle = {
@@ -40,6 +41,10 @@ const campaign: CampaignMeta = {
   id: 1,
   createdAt: '2021-10-10T14:48:00.000000Z',
   updatedAt: '2021-10-10T14:48:00.000000Z',
+};
 
+const stats: CampaignStats = {
+  impressions: 100,
+  clicks: 10,
 };
 </script>

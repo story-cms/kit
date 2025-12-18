@@ -23,6 +23,7 @@ export default class CampaignsController {
       providers,
       campaign: campaign.meta,
       bundle: campaign.model,
+      stats: { impressions: 0, clicks: 0 }, // TODO: get stats from database
       ...shared,
     };
 

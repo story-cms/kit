@@ -142,6 +142,8 @@
             :published-at="publishedAt"
             :status="status"
           />
+          <div class="mt-4"></div>
+          <CampaignStats :impressions="stats.impressions" :clicks="stats.clicks" />
         </template>
       </ContentSidebar>
     </div>
@@ -167,6 +169,7 @@ import SelectField from '../fields/select-field.vue';
 import MarkdownField from '../fields/markdown-field.vue';
 import BooleanField from '../fields/boolean-field.vue';
 import CampaignMetaBox from './campaign-meta-box.vue';
+import CampaignStats from './campaign-stats.vue';
 import DraftActions from '../shared/draft-actions.vue';
 import ContentSidebar from '../shared/content-sidebar.vue';
 import RegionField from '../fields/region-field.vue';
