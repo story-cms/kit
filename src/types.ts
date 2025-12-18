@@ -463,6 +463,18 @@ export interface CampaignBundle {
   actionUrl?: string;
 }
 
+export interface CampaignItem {
+  id: number;
+  title?: string;
+  regions?: string;
+  window?: string;
+  isPublished: boolean;
+}
+
+export interface CampaignIndexProps {
+  campaigns: CampaignItem[];
+}
+
 /// ----------------------------------------------------
 ///  configuration
 /// ----------------------------------------------------
