@@ -24,7 +24,7 @@ import { sharedProps, miniSidebar } from '../test/mocks';
 
 const campaignBundle: CampaignBundle = {
   name: 'Giving Tuesday',
-  window: '2025-12-16|2025-12-17',
+  window: '2026-01-08T02:58:00.000Z|2026-01-24T02:58:00.000Z',
   promoImage:
     'https://res.cloudinary.com/journeys/image/upload/v1756122407/christ-chaos-header_yqrufy_lzmfjt.jpg',
   title: 'Giving Tuesday - Giving to the Poor',
@@ -40,5 +40,6 @@ const campaign: CampaignMeta = {
   id: 1,
   createdAt: '2021-10-10T14:48:00.000000Z',
   updatedAt: '2021-10-10T14:48:00.000000Z',
+
 };
 </script>

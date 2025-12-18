@@ -140,6 +140,7 @@
             :saved-at="savedAt"
             :updated-at="campaign.updatedAt"
             :published-at="publishedAt"
+            :status="status"
           />
         </template>
       </ContentSidebar>
@@ -215,6 +216,22 @@ const savedAt = ref(campaign.value['updatedAt']);
 const publishedAt = computed(() =>
   isPublished.value ? (campaign.value['updatedAt'] as string) : 'unpublished',
 );
+
+const status = computed(() => {
+  if (!isPublished.value) return 'Draft';
+  const now = DateTime.now();
+  const windowValue = model.getField('window', '') as string;
+  if (!windowValue) return 'Published';
+
+  const parts = windowValue.split('|');
+  const windowStart = DateTime.fromISO(parts[0]?.trim() || '');
+  const windowEnd = DateTime.fromISO(parts[1]?.trim() || '');
+
+  if (!windowStart.isValid || !windowEnd.isValid) return 'Published';
+  if (now < windowStart) return 'Scheduled';
+  if (now > windowEnd) return 'Completed';
+  return 'Published';
+});
 
 const save = debounce(1000, () => {
   shared.clearErrors();
