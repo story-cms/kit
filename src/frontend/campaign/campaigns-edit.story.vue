@@ -18,9 +18,9 @@
 </template>
 
 <script setup lang="ts">
-import CampaignEdit from './campaign-edit.vue';
+import CampaignEdit from './campaigns-edit.vue';
 import type { CampaignBundle, CampaignMeta } from '../../types';
-import { sharedProps, miniSidebar } from '../../frontend/test/mocks';
+import { sharedProps, miniSidebar } from '../test/mocks';
 
 const campaignBundle: CampaignBundle = {
   name: 'Giving Tuesday',

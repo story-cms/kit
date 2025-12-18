@@ -1,9 +1,9 @@
 {{{
   exports({ to: app.makePath('app/controllers/campaigns_controller.ts') })
 }}}
+
 import { HttpContext } from '@adonisjs/core/http';
 import vine from '@vinejs/vine';
-import cms from '#services/cms';
 import {
   Activity,
   trimmedErrors,
@@ -11,12 +11,15 @@ import {
   type CampaignEditProps,
 } from '@story-cms/kit';
 import { CampaignValidator, campaignErrorMessages } from '#validators/campaign';
+import cms from '#services/cms';
+import providers from '#config/providers';
 
 export default class CampaignsController {
   public async edit(ctx: HttpContext) {
     const campaign = await Campaign.findOrFail(ctx.params.id);
     const shared = await cms.sharedProps(ctx);
     const props: CampaignEditProps = {
+      providers,
       campaign: campaign.meta,
       bundle: campaign.model,
       ...shared,
@@ -81,10 +84,11 @@ export default class CampaignsController {
     try {
       // constructing the validator first so we can have a
       // dynamic getter for the schema property
+      const isPublished = ctx.request.input('isPublished') === true;
       const data = ctx.request.all();
       vine.messagesProvider = campaignErrorMessages;
 
-      const campaignValidator = new CampaignValidator(ctx);
+      const campaignValidator = new CampaignValidator(isPublished);
       payload = await campaignValidator.schema.validate(data);
     } catch (e) {
       const errors = trimmedErrors(e);
