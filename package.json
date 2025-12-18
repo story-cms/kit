@@ -99,7 +99,7 @@
     "@adonisjs/lucid": "^21.6.1",
     "@adonisjs/session": "^7.4.2",
     "@google-analytics/data": "^5.2.0",
-    "@vinejs/vine": "^4.2.0",
+    "@vinejs/vine": "^3.0.1",
     "firebase-admin": "^13.4.0",
     "luxon": "^3.6.1",
     "openai": "^5.10.3",
