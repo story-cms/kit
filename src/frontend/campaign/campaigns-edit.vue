@@ -142,7 +142,7 @@
             :published-at="publishedAt"
             :status="status"
           />
-          <div class="mt-4"></div>
+          <div class="mt-6"></div>
           <CampaignStats :impressions="stats.impressions" :clicks="stats.clicks" />
         </template>
       </ContentSidebar>
