@@ -8,9 +8,10 @@ import {
   Activity,
   trimmedErrors,
   Campaign,
+  CampaignValidator,
+  campaignErrorMessages,
   type CampaignEditProps,
 } from '@story-cms/kit';
-import { CampaignValidator, campaignErrorMessages } from '#validators/campaign';
 import cms from '#services/cms';
 import providers from '#config/providers';
 
@@ -84,11 +85,10 @@ export default class CampaignsController {
     try {
       // constructing the validator first so we can have a
       // dynamic getter for the schema property
-      const isPublished = ctx.request.input('isPublished') === true;
       const data = ctx.request.all();
       vine.messagesProvider = campaignErrorMessages;
 
-      const campaignValidator = new CampaignValidator(isPublished);
+      const campaignValidator = new CampaignValidator(ctx);
       payload = await campaignValidator.schema.validate(data);
     } catch (e) {
       const errors = trimmedErrors(e);

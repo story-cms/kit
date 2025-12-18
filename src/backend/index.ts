@@ -36,6 +36,7 @@ export * from './services/user_service.js';
 export * from './services/stream_service.js';
 export * from './services/preference_service.js';
 export * from './validators/auth.js';
+export * from './validators/campaign.js';
 export * from './validators/bundle.js';
 export * from './validators/chapter.js';
 export * from './validators/drop.js';
