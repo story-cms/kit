@@ -14,6 +14,7 @@ export { default as Index } from './models/index.js';
 export { default as Drop } from './models/drop.js';
 export { default as User } from './models/user.js';
 export { default as Preference } from './models/preference.js';
+export * from './factories/campaign_factory.js';
 export * from './factories/drop_factory.js';
 export * from './factories/draft_factory.js';
 export * from './factories/index_factory.js';

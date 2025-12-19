@@ -1,0 +1,844 @@
+{{{ 
+  exports({ to: app.makePath('tests/unit/campaign_service.spec.ts') }) 
+}}}
+
+import { test } from '@japa/runner';
+import testUtils from '@adonisjs/core/services/test_utils';
+import { DateTime } from 'luxon';
+import { CampaignService } from '@story-cms/kit';
+import { CampaignFactory } from '#database/factories/campaign_factory';
+import cms from '#services/cms';
+
+const testWindow = '2025-12-15T05:54:00.000Z|2025-12-18T05:53:00.000Z';
+
+test.group('Campaign service', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction());
+
+  test("unpublished campaigns don't appear in client results", async ({ assert }) => {
+    // arrange
+    await CampaignFactory.merge({
+      id: 1,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Campaign 1',
+        window: testWindow,
+        title: 'Title 1',
+        message: 'Message 1',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: false,
+    }).create();
+
+    await CampaignFactory.merge({
+      id: 2,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Campaign 2',
+        window: testWindow,
+        title: 'Title 2',
+        message: 'Message 2',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    // act
+    const service = new CampaignService(
+      {
+        apiVersion: 1,
+        locale: 'en',
+      },
+      cms,
+    );
+    const items = await service.getCampaignItemsForClient();
+
+    // assert
+    assert.equal(items.length, 1);
+    assert.equal(items[0].name, 'Campaign 2');
+  });
+
+  test('can filter campaigns by locale', async ({ assert }) => {
+    // arrange
+    await CampaignFactory.merge({
+      id: 1,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'English Campaign',
+        window: testWindow,
+        title: 'Title',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    await CampaignFactory.merge({
+      id: 2,
+      locale: 'es',
+      apiVersion: 1,
+      bundle: {
+        name: 'Spanish Campaign',
+        window: testWindow,
+        title: 'Título',
+        message: 'Mensaje',
+        actionLabel: 'Clic',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    // act
+    const service = new CampaignService(
+      {
+        apiVersion: 1,
+        locale: 'en',
+      },
+      cms,
+    );
+    const items = await service.getCampaignItemsForClient();
+
+    // assert
+    assert.equal(items.length, 1);
+    assert.equal(items[0].name, 'English Campaign');
+  });
+
+  test('can filter campaigns by api version', async ({ assert }) => {
+    // arrange
+    await CampaignFactory.merge({
+      id: 1,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Version 1 Campaign',
+        window: testWindow,
+        title: 'Title',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    await CampaignFactory.merge({
+      id: 2,
+      locale: 'en',
+      apiVersion: 2,
+      bundle: {
+        name: 'Version 2 Campaign',
+        window: testWindow,
+        title: 'Title',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    // act
+    const service = new CampaignService(
+      {
+        apiVersion: 1,
+        locale: 'en',
+      },
+      cms,
+    );
+    const items = await service.getCampaignItemsForClient();
+
+    // assert
+    assert.equal(items.length, 1);
+    assert.equal(items[0].name, 'Version 1 Campaign');
+  });
+
+  test('returns all campaigns including unpublished for admin', async ({ assert }) => {
+    // arrange
+    await CampaignFactory.merge({
+      id: 1,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Published Campaign',
+        window: testWindow,
+        title: 'Title',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    await CampaignFactory.merge({
+      id: 2,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Unpublished Campaign',
+        window: testWindow,
+        title: 'Title',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: false,
+    }).create();
+
+    // act
+    const service = new CampaignService(
+      {
+        apiVersion: 1,
+        locale: 'en',
+      },
+      cms,
+    );
+    const items = await service.getCampaignItems();
+
+    // assert
+    assert.equal(items.length, 2);
+  });
+
+  test('can handle campaigns with external URL action type', async ({ assert }) => {
+    // arrange
+    await CampaignFactory.merge({
+      id: 1,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'External URL Campaign',
+        window: testWindow,
+        title: 'Title',
+        message: 'Message',
+        actionLabel: 'Visit',
+        actionType: 'externalUrl',
+        actionUrl: 'https://example.com',
+      },
+      isPublished: true,
+    }).create();
+
+    // act
+    const service = new CampaignService(
+      {
+        apiVersion: 1,
+        locale: 'en',
+      },
+      cms,
+    );
+    const items = await service.getCampaignItemsForClient();
+
+    // assert
+    assert.equal(items.length, 1);
+    assert.equal(items[0].actionType, 'externalUrl');
+    assert.equal(items[0].actionUrl, 'https://example.com');
+  });
+
+  test('can handle campaigns with donate action type', async ({ assert }) => {
+    // arrange
+    await CampaignFactory.merge({
+      id: 1,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Donate Campaign',
+        window: testWindow,
+        title: 'Title',
+        message: 'Message',
+        actionLabel: 'Donate',
+        actionType: 'donate',
+      },
+      isPublished: true,
+    }).create();
+
+    // act
+    const service = new CampaignService(
+      {
+        apiVersion: 1,
+        locale: 'en',
+      },
+      cms,
+    );
+    const items = await service.getCampaignItemsForClient();
+
+    // assert
+    assert.equal(items.length, 1);
+    assert.equal(items[0].actionType, 'donate');
+  });
+
+  test('can handle campaigns with close action type', async ({ assert }) => {
+    // arrange
+    await CampaignFactory.merge({
+      id: 1,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Close Campaign',
+        window: testWindow,
+        title: 'Title',
+        message: 'Message',
+        actionLabel: 'Close',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    // act
+    const service = new CampaignService(
+      {
+        apiVersion: 1,
+        locale: 'en',
+      },
+      cms,
+    );
+    const items = await service.getCampaignItemsForClient();
+
+    // assert
+    assert.equal(items.length, 1);
+    assert.equal(items[0].actionType, 'close');
+  });
+
+  test('returns campaigns with all bundle properties for client', async ({ assert }) => {
+    // arrange
+    await CampaignFactory.merge({
+      id: 1,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Full Campaign',
+        window: testWindow,
+        promoImage: 'https://example.com/image.jpg',
+        title: 'Campaign Title',
+        message: 'Campaign message',
+        actionLabel: 'Action Button',
+        actionType: 'externalUrl',
+        actionUrl: 'https://example.com',
+        regions: 'US,CA',
+      },
+      isPublished: true,
+    }).create();
+
+    // act
+    const service = new CampaignService(
+      {
+        apiVersion: 1,
+        locale: 'en',
+      },
+      cms,
+    );
+    const items = await service.getCampaignItemsForClient();
+
+    // assert
+    assert.equal(items.length, 1);
+    const item = items[0];
+    assert.equal(item.name, 'Full Campaign');
+    assert.equal(item.window, testWindow);
+    assert.equal(item.promoImage, 'https://example.com/image.jpg');
+    assert.equal(item.title, 'Campaign Title');
+    assert.equal(item.message, 'Campaign message');
+    assert.equal(item.actionLabel, 'Action Button');
+    assert.equal(item.actionType, 'externalUrl');
+    assert.equal(item.actionUrl, 'https://example.com');
+    assert.equal(item.regions, 'US,CA');
+  });
+
+  test('sorts campaigns by window: current first, then upcoming, then past', async ({
+    assert,
+  }) => {
+    // arrange
+    const now = DateTime.now();
+    const pastStart = now.minus({ days: 5 });
+    const pastEnd = now.minus({ days: 2 });
+    const currentStart = now.minus({ days: 1 });
+    const currentEnd = now.plus({ days: 1 });
+    const upcomingStart = now.plus({ days: 3 });
+    const upcomingEnd = now.plus({ days: 5 });
+
+    // Past campaign (ends before now)
+    await CampaignFactory.merge({
+      id: 1,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Past Campaign',
+        window: {{ '`${pastStart.toISO()}|${pastEnd.toISO()}`' }},
+        title: 'Past',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    // Current campaign (now is within window)
+    await CampaignFactory.merge({
+      id: 2,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Current Campaign',
+        window: {{ '`${currentStart.toISO()}|${currentEnd.toISO()}`' }},
+        title: 'Current',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    // Upcoming campaign (starts after now)
+    await CampaignFactory.merge({
+      id: 3,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Upcoming Campaign',
+        window: {{ '`${upcomingStart.toISO()}|${upcomingEnd.toISO()}`' }},
+        title: 'Upcoming',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    // act
+    const service = new CampaignService(
+      {
+        apiVersion: 1,
+        locale: 'en',
+      },
+      cms,
+    );
+    const items = await service.getCampaignItemsForClient();
+
+    // assert
+    assert.equal(items.length, 3);
+    // Current should be first
+    assert.equal(items[0].name, 'Current Campaign');
+    // Upcoming should be second
+    assert.equal(items[1].name, 'Upcoming Campaign');
+    // Past should be third
+    assert.equal(items[2].name, 'Past Campaign');
+  });
+
+  test('sorts current campaigns by window start time ascending', async ({ assert }) => {
+    // arrange
+    const now = DateTime.now();
+    const start1 = now.minus({ days: 2 });
+    const end1 = now.plus({ days: 1 });
+    const start2 = now.minus({ days: 1 });
+    const end2 = now.plus({ days: 2 });
+    const start3 = now.minus({ hours: 12 });
+    const end3 = now.plus({ days: 3 });
+
+    // Create campaigns with different start times, all currently active
+    await CampaignFactory.merge({
+      id: 1,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Current Campaign 1',
+        window: {{ '`${start1.toISO()}|${end1.toISO()}`' }},
+        title: 'Current 1',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    await CampaignFactory.merge({
+      id: 2,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Current Campaign 2',
+        window: {{ '`${start2.toISO()}|${end2.toISO()}`' }},
+        title: 'Current 2',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    await CampaignFactory.merge({
+      id: 3,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Current Campaign 3',
+        window: {{ '`${start3.toISO()}|${end3.toISO()}`' }},
+        title: 'Current 3',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    // act
+    const service = new CampaignService(
+      {
+        apiVersion: 1,
+        locale: 'en',
+      },
+      cms,
+    );
+    const items = await service.getCampaignItemsForClient();
+
+    // assert
+    assert.equal(items.length, 3);
+    // Should be sorted by start time ascending (earliest start first)
+    assert.equal(items[0].name, 'Current Campaign 1'); // start1 (2 days ago)
+    assert.equal(items[1].name, 'Current Campaign 2'); // start2 (1 day ago)
+    assert.equal(items[2].name, 'Current Campaign 3'); // start3 (12 hours ago)
+  });
+
+  test('sorts upcoming campaigns by window start time ascending', async ({ assert }) => {
+    // arrange
+    const now = DateTime.now();
+    const start1 = now.plus({ days: 1 });
+    const end1 = now.plus({ days: 3 });
+    const start2 = now.plus({ days: 2 });
+    const end2 = now.plus({ days: 4 });
+    const start3 = now.plus({ days: 5 });
+    const end3 = now.plus({ days: 7 });
+
+    // Create upcoming campaigns
+    await CampaignFactory.merge({
+      id: 1,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Upcoming Campaign 1',
+        window: {{ '`${start1.toISO()}|${end1.toISO()}`' }},
+        title: 'Upcoming 1',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    await CampaignFactory.merge({
+      id: 2,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Upcoming Campaign 2',
+        window: {{ '`${start2.toISO()}|${end2.toISO()}`' }},
+        title: 'Upcoming 2',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    await CampaignFactory.merge({
+      id: 3,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Upcoming Campaign 3',
+        window: {{ '`${start3.toISO()}|${end3.toISO()}`' }},
+        title: 'Upcoming 3',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    // act
+    const service = new CampaignService(
+      {
+        apiVersion: 1,
+        locale: 'en',
+      },
+      cms,
+    );
+    const items = await service.getCampaignItemsForClient();
+
+    // assert
+    assert.equal(items.length, 3);
+    // Should be sorted by start time ascending (earliest start first)
+    assert.equal(items[0].name, 'Upcoming Campaign 1'); // starts in 1 day
+    assert.equal(items[1].name, 'Upcoming Campaign 2'); // starts in 2 days
+    assert.equal(items[2].name, 'Upcoming Campaign 3'); // starts in 5 days
+  });
+
+  test('sorts past campaigns by window start time descending', async ({ assert }) => {
+    // arrange
+    const now = DateTime.now();
+    const start1 = now.minus({ days: 10 });
+    const end1 = now.minus({ days: 8 });
+    const start2 = now.minus({ days: 5 });
+    const end2 = now.minus({ days: 3 });
+    const start3 = now.minus({ days: 2 });
+    const end3 = now.minus({ days: 1 });
+
+    // Create past campaigns
+    await CampaignFactory.merge({
+      id: 1,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Past Campaign 1',
+        window: {{ '`${start1.toISO()}|${end1.toISO()}`' }},
+        title: 'Past 1',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    await CampaignFactory.merge({
+      id: 2,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Past Campaign 2',
+        window: {{ '`${start2.toISO()}|${end2.toISO()}`' }},
+        title: 'Past 2',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    await CampaignFactory.merge({
+      id: 3,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Past Campaign 3',
+        window: {{ '`${start3.toISO()}|${end3.toISO()}`' }},
+        title: 'Past 3',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    // act
+    const service = new CampaignService(
+      {
+        apiVersion: 1,
+        locale: 'en',
+      },
+      cms,
+    );
+    const items = await service.getCampaignItemsForClient();
+
+    // assert
+    assert.equal(items.length, 3);
+    // Should be sorted by start time descending (most recent first)
+    assert.equal(items[0].name, 'Past Campaign 3'); // ended 1 day ago (most recent)
+    assert.equal(items[1].name, 'Past Campaign 2'); // ended 3 days ago
+    assert.equal(items[2].name, 'Past Campaign 1'); // ended 8 days ago (oldest)
+  });
+
+  test('sorts all campaign types together: current, upcoming, past', async ({
+    assert,
+  }) => {
+    // arrange
+    const now = DateTime.now();
+
+    // Past campaigns (ended before now) - should be sorted descending by start
+    const pastStart1 = now.minus({ days: 10 });
+    const pastEnd1 = now.minus({ days: 8 });
+    const pastStart2 = now.minus({ days: 5 });
+    const pastEnd2 = now.minus({ days: 3 });
+    const pastStart3 = now.minus({ days: 2 });
+    const pastEnd3 = now.minus({ days: 1 });
+
+    // Current campaigns (now is within window) - should be sorted ascending by start
+    const currentStart1 = now.minus({ days: 3 });
+    const currentEnd1 = now.plus({ days: 2 });
+    const currentStart2 = now.minus({ days: 1 });
+    const currentEnd2 = now.plus({ days: 3 });
+    const currentStart3 = now.minus({ hours: 6 });
+    const currentEnd3 = now.plus({ days: 4 });
+
+    // Upcoming campaigns (starts after now) - should be sorted ascending by start
+    const upcomingStart1 = now.plus({ days: 1 });
+    const upcomingEnd1 = now.plus({ days: 3 });
+    const upcomingStart2 = now.plus({ days: 5 });
+    const upcomingEnd2 = now.plus({ days: 7 });
+    const upcomingStart3 = now.plus({ days: 10 });
+    const upcomingEnd3 = now.plus({ days: 12 });
+
+    // Create past campaigns
+    await CampaignFactory.merge({
+      id: 1,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Past Campaign 1',
+        window: {{ '`${pastStart1.toISO()}|${pastEnd1.toISO()}`' }},
+        title: 'Past 1',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    await CampaignFactory.merge({
+      id: 2,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Past Campaign 2',
+        window: {{ '`${pastStart2.toISO()}|${pastEnd2.toISO()}`' }},
+        title: 'Past 2',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    await CampaignFactory.merge({
+      id: 3,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Past Campaign 3',
+        window: {{ '`${pastStart3.toISO()}|${pastEnd3.toISO()}`' }},
+        title: 'Past 3',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    // Create current campaigns
+    await CampaignFactory.merge({
+      id: 4,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Current Campaign 1',
+        window: {{ '`${currentStart1.toISO()}|${currentEnd1.toISO()}`' }},
+        title: 'Current 1',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    await CampaignFactory.merge({
+      id: 5,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Current Campaign 2',
+        window: {{ '`${currentStart2.toISO()}|${currentEnd2.toISO()}`' }},
+        title: 'Current 2',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    await CampaignFactory.merge({
+      id: 6,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Current Campaign 3',
+        window: {{ '`${currentStart3.toISO()}|${currentEnd3.toISO()}`' }},
+        title: 'Current 3',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    // Create upcoming campaigns
+    await CampaignFactory.merge({
+      id: 7,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Upcoming Campaign 1',
+        window: {{ '`${upcomingStart1.toISO()}|${upcomingEnd1.toISO()}`' }},
+        title: 'Upcoming 1',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    await CampaignFactory.merge({
+      id: 8,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Upcoming Campaign 2',
+        window: {{ '`${upcomingStart2.toISO()}|${upcomingEnd2.toISO()}`' }},
+        title: 'Upcoming 2',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    await CampaignFactory.merge({
+      id: 9,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Upcoming Campaign 3',
+        window: {{ '`${upcomingStart3.toISO()}|${upcomingEnd3.toISO()}`' }},
+        title: 'Upcoming 3',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    // act
+    const service = new CampaignService(
+      {
+        apiVersion: 1,
+        locale: 'en',
+      },
+      cms,
+    );
+    const items = await service.getCampaignItemsForClient();
+
+    // assert
+    assert.equal(items.length, 9);
+
+    // Current campaigns should be first (sorted ascending by start)
+    assert.equal(items[0].name, 'Current Campaign 1'); // started 3 days ago
+    assert.equal(items[1].name, 'Current Campaign 2'); // started 1 day ago
+    assert.equal(items[2].name, 'Current Campaign 3'); // started 6 hours ago
+
+    // Upcoming campaigns should be second (sorted ascending by start)
+    assert.equal(items[3].name, 'Upcoming Campaign 1'); // starts in 1 day
+    assert.equal(items[4].name, 'Upcoming Campaign 2'); // starts in 5 days
+    assert.equal(items[5].name, 'Upcoming Campaign 3'); // starts in 10 days
+
+    // Past campaigns should be third (sorted descending by start)
+    assert.equal(items[6].name, 'Past Campaign 3'); // ended 1 day ago (most recent)
+    assert.equal(items[7].name, 'Past Campaign 2'); // ended 3 days ago
+    assert.equal(items[8].name, 'Past Campaign 1'); // ended 8 days ago (oldest)
+  });
+});

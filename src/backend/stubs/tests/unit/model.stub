@@ -6,10 +6,12 @@ import testUtils from '@adonisjs/core/services/test_utils';
 
 import {
   User,
+  Campaign,
   Draft,
   Chapter,
   Index,
   UserFactory,
+  CampaignFactory,
   ChapterFactory,
   IndexFactory,
   DraftFactory,
@@ -312,5 +314,122 @@ test.group('Page', (group) => {
     assert.equal(page.parsedBundle.body, 'the original body');
     // deletes attributes that are empty
     assert.equal(page.parsedBundle.icon, '');
+  });
+});
+
+test.group('Campaign', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction());
+
+  test('campaigns are persisted', async ({ assert }) => {
+    const campaign = await CampaignFactory.create();
+    assert.isTrue(campaign.$isPersisted);
+
+    const campaigns = await CampaignFactory.createMany(3);
+    assert.lengthOf(campaigns, 3);
+  });
+
+  test('campaign bundle is accessible as object', async ({ assert }) => {
+    const window = '2025-12-15T05:54:00.000Z|2025-12-18T05:53:00.000Z';
+    const campaign = await CampaignFactory.merge({
+      bundle: {
+        name: 'Test Campaign',
+        window: window,
+        title: 'Campaign Title',
+        message: 'Campaign message',
+        actionLabel: 'Click Here',
+        actionType: 'close',
+      },
+    }).create();
+
+    assert.isTrue(campaign.$isPersisted);
+
+    const fresh = await Campaign.findOrFail(campaign.id);
+    // refresh to ensure bundle is parsed
+    await fresh.refresh();
+
+    assert.equal((fresh.model as any).name, 'Test Campaign');
+    assert.equal((fresh.model as any).window, window);
+    assert.equal((fresh.model as any).title, 'Campaign Title');
+    assert.equal((fresh.model as any).message, 'Campaign message');
+    assert.equal((fresh.model as any).actionLabel, 'Click Here');
+    assert.equal((fresh.model as any).actionType, 'close');
+  });
+
+  test('it can update the bundle', async ({ assert }) => {
+    const window = '2025-12-15T05:54:00.000Z|2025-12-18T05:53:00.000Z';
+    const campaign = await CampaignFactory.merge({
+      bundle: {
+        junk: 'Should not be in the bundle',
+        name: 'Original Name',
+        window: window,
+        title: 'Original Title',
+        message: 'Original message',
+        actionLabel: 'Original Label',
+        actionType: 'close',
+      },
+    }).create();
+
+    campaign.updateBundle({
+      name: 'Updated Name',
+      title: 'Updated Title',
+      message: 'Updated message',
+      actionLabel: 'Updated Label',
+      actionType: 'externalUrl',
+      actionUrl: 'https://example.com',
+      isPublished: true,
+    });
+
+    // removes junk
+    assert.isUndefined((campaign.model as any).junk);
+    // updates fresh attributes
+    assert.equal((campaign.model as any).name, 'Updated Name');
+    assert.equal((campaign.model as any).title, 'Updated Title');
+    assert.equal((campaign.model as any).message, 'Updated message');
+    assert.equal((campaign.model as any).actionLabel, 'Updated Label');
+    assert.equal((campaign.model as any).actionType, 'externalUrl');
+    assert.equal((campaign.model as any).actionUrl, 'https://example.com');
+    // isPublished is updated separately
+    assert.equal(campaign.isPublished, true);
+  });
+
+  test('campaign has default stats', async ({ assert }) => {
+    const campaign = await CampaignFactory.merge({
+      stats: {},
+    }).create();
+
+    assert.deepEqual(campaign.stats, {});
+    assert.isObject(campaign.stats);
+  });
+
+  test('campaign can have custom stats', async ({ assert }) => {
+    const campaign = await CampaignFactory.merge({
+      stats: {
+        impressions: 100,
+        clicks: 25,
+      },
+    }).create();
+
+    assert.equal(campaign.stats.impressions, 100);
+    assert.equal(campaign.stats.clicks, 25);
+  });
+
+  test('campaign has meta and model properties', async ({ assert }) => {
+    const window = '2025-12-15T05:54:00.000Z|2025-12-18T05:53:00.000Z';
+    const campaign = await CampaignFactory.merge({
+      bundle: {
+        name: 'Test Campaign',
+        window: window,
+        title: 'Test Title',
+        message: 'Test message',
+        actionLabel: 'Test Action',
+        actionType: 'donate',
+      },
+      isPublished: true,
+    }).create();
+
+    assert.isObject(campaign.meta);
+    assert.isObject(campaign.model);
+    assert.equal((campaign.model as any).name, 'Test Campaign');
+    assert.isTrue(campaign.isPublished);
   });
 });
