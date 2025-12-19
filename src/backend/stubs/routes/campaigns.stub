@@ -10,4 +10,5 @@ export default () => {
   router.get(':locale/campaign/create', [CampaignsController, 'create']);
   router.post(':locale/campaign/:id', [CampaignsController, 'update']);
   router.delete(':locale/campaign/:id', [CampaignsController, 'destroy']);
+  router.get(':locale/campaign', [CampaignsController, 'index']);
 };

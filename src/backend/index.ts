@@ -26,6 +26,7 @@ export * from './services/ai_service.js';
 export * from './services/analytics_service.js';
 export * from './services/audience_service.js';
 export * from './services/bundle_service.js';
+export * from './services/campaign_service.js';
 export * from './services/cms_service.js';
 export * from './services/draft_service.js';
 export * from './services/index_service.js';

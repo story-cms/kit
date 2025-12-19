@@ -10,12 +10,27 @@ import {
   Campaign,
   CampaignValidator,
   campaignErrorMessages,
+  CampaignService,
   type CampaignEditProps,
+  type CampaignIndexProps,
 } from '@story-cms/kit';
 import cms from '#services/cms';
 import providers from '#config/providers';
 
 export default class CampaignsController {
+  public async index(ctx: HttpContext) {
+    const version = cms.pagesContextFrom(ctx);
+    const service = new CampaignService(version, cms);
+    const campaigns = await service.getCampaignItems();
+
+    const shared = await cms.sharedProps(ctx);
+    const props: CampaignIndexProps = {
+      campaigns,
+      ...shared,
+    };
+    return ctx.inertia.render('CampaignsIndex', props);
+  }
+
   public async edit(ctx: HttpContext) {
     const campaign = await Campaign.findOrFail(ctx.params.id);
     const shared = await cms.sharedProps(ctx);
@@ -77,7 +92,7 @@ export default class CampaignsController {
       ctx.session.flash('errorsBag', { other: e.message });
     }
 
-    return ctx.response.redirect({{ '`/${version.locale}/page`' }}, false, 303);
+    return ctx.response.redirect({{ '`/${version.locale}/campaign`' }}, false, 303);
   }
 
   public async update(ctx: HttpContext) {
