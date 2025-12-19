@@ -430,6 +430,40 @@ export interface AudiencesProps {
 }
 
 /// ----------------------------------------------------
+///  campaigns
+/// ----------------------------------------------------
+
+export interface CampaignMeta {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CampaignStats {
+  impressions: number;
+  clicks: number;
+}
+
+export interface CampaignEditProps {
+  campaign: CampaignMeta;
+  stats: CampaignStats;
+  bundle: any; // model
+  providers: Providers; // widgets
+}
+
+export interface CampaignBundle {
+  name: string;
+  regions: string;
+  window: string;
+  promoImage?: string;
+  title: string;
+  message: string;
+  actionLabel: string;
+  actionType: string;
+  actionUrl?: string;
+}
+
+/// ----------------------------------------------------
 ///  configuration
 /// ----------------------------------------------------
 

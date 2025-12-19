@@ -1,0 +1,134 @@
+{{{
+  exports({ to: app.makePath('app/controllers/campaigns_controller.ts') })
+}}}
+
+import { HttpContext } from '@adonisjs/core/http';
+import vine from '@vinejs/vine';
+import {
+  Activity,
+  trimmedErrors,
+  Campaign,
+  CampaignValidator,
+  campaignErrorMessages,
+  type CampaignEditProps,
+} from '@story-cms/kit';
+import cms from '#services/cms';
+import providers from '#config/providers';
+
+export default class CampaignsController {
+  public async edit(ctx: HttpContext) {
+    const campaign = await Campaign.findOrFail(ctx.params.id);
+    const shared = await cms.sharedProps(ctx);
+    const props: CampaignEditProps = {
+      providers,
+      campaign: campaign.meta,
+      bundle: campaign.model,
+      stats: { impressions: 0, clicks: 0 }, // TODO: get stats from database
+      ...shared,
+    };
+
+    return ctx.inertia.render('CampaignsEdit', props);
+  }
+
+  public async create(ctx: HttpContext) {
+    const version = cms.pagesContextFrom(ctx);
+    const campaign = await Campaign.create({
+      locale: version.locale,
+      apiVersion: 1,
+      bundle: {
+        name: '',
+        window: '',
+        promoImage: '',
+        title: '',
+        message: '',
+        actionButton: '',
+        actionType: '',
+        actionUrl: '',
+        regions: '',
+      },
+      updatedBy: ctx.auth.user?.id,
+    });
+
+    await Activity.create({
+      userId: ctx.auth.user?.id,
+      locale: version.locale,
+      action: {{ '`created campaign ${campaign.id}`' }},
+    });
+
+    return ctx.response.redirect(
+      {{ '`/${version.locale}/campaign/${campaign.id}/edit`' }},
+      false,
+      303,
+    );
+  }
+
+  public async destroy(ctx: HttpContext) {
+    const version = cms.pagesContextFrom(ctx);
+    const id = Number(ctx.params.id);
+    const campaign = await Campaign.findOrFail(id);
+    try {
+      await campaign.delete();
+      await Activity.create({
+        userId: ctx.auth.user?.id,
+        locale: version.locale,
+        action: {{ '`deleted campaign ${campaign.id}`' }},
+      });
+    } catch (e) {
+      ctx.session.flash('errorsBag', { other: e.message });
+    }
+
+    return ctx.response.redirect({{ '`/${version.locale}/page`' }}, false, 303);
+  }
+
+  public async update(ctx: HttpContext) {
+    const version = cms.pagesContextFrom(ctx);
+    let payload;
+    try {
+      // constructing the validator first so we can have a
+      // dynamic getter for the schema property
+      const data = ctx.request.all();
+      vine.messagesProvider = campaignErrorMessages;
+
+      const campaignValidator = new CampaignValidator(ctx);
+      payload = await campaignValidator.schema.validate(data);
+    } catch (e) {
+      const errors = trimmedErrors(e);
+
+      ctx.session.flash('errorsBag', prepend(errors));
+      return ctx.response.redirect().back();
+    }
+
+    const id = Number(ctx.params.id);
+    const campaign = await Campaign.findOrFail(id);
+
+    campaign.updateBundle(payload);
+
+    campaign.isPublished = payload.isPublished;
+    await campaign.save();
+    if (payload.isPublished) {
+      await Activity.create({
+        userId: ctx.auth.user?.id,
+        locale: version.locale,
+        action: {{ '`published campaign ${campaign.id}`' }},
+      });
+    } else {
+      await Activity.create({
+        userId: ctx.auth.user?.id,
+        locale: version.locale,
+        action: {{ '`updated campaign ${campaign.id}`' }},
+      });
+    }
+
+    return ctx.response.redirect().back();
+  }
+}
+
+// The model store on the client requires that the error messages
+// each have a "bundle" prefix
+const prepend = (plain: Record<string, string[]>): Object => {
+  const result: Record<string, unknown> = {};
+  for (const key in plain) {
+    result[{{ '`bundle.${key}`' }}] = plain[key];
+  }
+  return result;
+};

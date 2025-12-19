@@ -1,0 +1,13 @@
+{{{
+  exports({ to: app.makePath('start/routes/campaigns.ts') })
+}}}
+import router from '@adonisjs/core/services/router';
+
+const CampaignsController = () => import('#controllers/campaigns_controller');
+
+export default () => {
+  router.get(':locale/campaign/:id/edit', [CampaignsController, 'edit']);
+  router.get(':locale/campaign/create', [CampaignsController, 'create']);
+  router.post(':locale/campaign/:id', [CampaignsController, 'update']);
+  router.delete(':locale/campaign/:id', [CampaignsController, 'destroy']);
+};

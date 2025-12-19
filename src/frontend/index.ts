@@ -5,6 +5,7 @@ import AppLayout from './shared/app-layout.vue';
 import AudiencesIndex from './audiences/audiences-index.vue';
 import AudioField from './fields/audio-field.vue';
 import BooleanField from './fields/boolean-field.vue';
+import CampaignsEdit from './campaign/campaigns-edit.vue';
 import ChapterPreview from './stories/chapter-preview.vue';
 import ContentHeader from './shared/content-header.vue';
 import ContextMenu from './shared/context-menu.vue';
@@ -71,6 +72,7 @@ export {
   AudiencesIndex,
   AudioField,
   BooleanField,
+  CampaignsEdit,
   ChapterPreview,
   ContentHeader,
   ContextMenu,
