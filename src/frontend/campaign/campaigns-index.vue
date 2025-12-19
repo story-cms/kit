@@ -23,7 +23,9 @@
     </template>
     <div class="my-8 grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
       <div v-for="item in filteredItems" :key="item.id">
-        <CampaignIndexItem :campaign="item" />
+        <a :href="`/${shared.locale}/campaign/${item.id}/edit`">
+          <CampaignIndexItem :campaign="item" />
+        </a>
       </div>
     </div>
   </AppLayout>
@@ -32,6 +34,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
+import { DateTime } from 'luxon';
 import type {
   TabItem,
   CampaignItem,
@@ -71,10 +74,71 @@ const onFilter = (tab: string) => {
 };
 
 const filteredItems = computed(() => {
+  let filtered: CampaignItem[];
   if (isShowingPublished.value) {
-    return items.value.filter((item) => item.isPublished);
+    filtered = items.value.filter((item) => item.isPublished);
+  } else {
+    filtered = items.value.filter((item) => !item.isPublished);
   }
-  return items.value.filter((item) => !item.isPublished);
+
+  const now = DateTime.now();
+
+  const categorized = filtered.reduce(
+    (acc, item) => {
+      if (!item.window) {
+        acc.noWindow.push(item);
+        return acc;
+      }
+
+      const [startStr, endStr] = item.window.split('|');
+      const windowStart = DateTime.fromISO(startStr);
+      const windowEnd = DateTime.fromISO(endStr);
+
+      if (now >= windowStart && now <= windowEnd) {
+        acc.current.push(item);
+      } else if (windowStart > now) {
+        acc.upcoming.push(item);
+      } else {
+        acc.past.push(item);
+      }
+
+      return acc;
+    },
+    {
+      current: [] as CampaignItem[],
+      upcoming: [] as CampaignItem[],
+      past: [] as CampaignItem[],
+      noWindow: [] as CampaignItem[],
+    },
+  );
+
+  categorized.current.sort((a, b) => {
+    if (!a.window || !b.window) return 0;
+    const aStart = DateTime.fromISO(a.window.split('|')[0]);
+    const bStart = DateTime.fromISO(b.window.split('|')[0]);
+    return aStart.toMillis() - bStart.toMillis();
+  });
+
+  categorized.upcoming.sort((a, b) => {
+    if (!a.window || !b.window) return 0;
+    const aStart = DateTime.fromISO(a.window.split('|')[0]);
+    const bStart = DateTime.fromISO(b.window.split('|')[0]);
+    return aStart.toMillis() - bStart.toMillis();
+  });
+
+  categorized.past.sort((a, b) => {
+    if (!a.window || !b.window) return 0;
+    const aStart = DateTime.fromISO(a.window.split('|')[0]);
+    const bStart = DateTime.fromISO(b.window.split('|')[0]);
+    return bStart.toMillis() - aStart.toMillis();
+  });
+
+  return [
+    ...categorized.current,
+    ...categorized.upcoming,
+    ...categorized.past,
+    ...categorized.noWindow,
+  ];
 });
 
 const isShowingPublished = computed(() => currentTab.value === 'Published');

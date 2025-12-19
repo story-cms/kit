@@ -475,6 +475,11 @@ export interface CampaignIndexProps {
   campaigns: CampaignItem[];
 }
 
+export interface CampaignVersion {
+  apiVersion: number;
+  locale: string;
+}
+
 /// ----------------------------------------------------
 ///  configuration
 /// ----------------------------------------------------

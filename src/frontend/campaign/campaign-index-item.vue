@@ -12,7 +12,7 @@
     <div class="row-span-1 row-start-2 text-sm font-medium leading-5 text-gray-500">
       <div
         v-if="startDate"
-        class="grid grow grid-cols-2 bg-gray-50 p-2 text-sm font-medium leading-5 text-gray-500"
+        class="grid grow grid-cols-2 p-2 text-sm font-medium leading-5 text-gray-500"
       >
         <p>Start</p>
         <p class="place-self-end">{{ startDate }}</p>

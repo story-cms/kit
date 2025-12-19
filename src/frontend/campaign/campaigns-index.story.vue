@@ -1,5 +1,5 @@
 <template>
-  <Story title="Index Page" group="campaign">
+  <Story title="Campaigns Index Page" group="campaign">
     <Variant title="Index" :setup-app="miniSidebar">
       <CampaignsIndex
         :meta="sharedProps.meta"
