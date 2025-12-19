@@ -1,6 +1,6 @@
 <template>
   <div
-    class="grid h-full grid-rows-[min-content_min-content_min-content] space-y-2 rounded-md bg-white px-1 py-4"
+    class="grid h-full grid-rows-[min-content_min-content_min-content] space-y-2 rounded-md bg-white px-1 py-4 shadow"
   >
     <h3 class="text-base/leading-6 row-start-1 p-2 font-bold text-gray-800">
       <span
@@ -12,16 +12,16 @@
     <div class="row-span-1 row-start-2 text-sm font-medium leading-5 text-gray-500">
       <div
         v-if="startDate"
-        class="grid grow grid-cols-2 p-2 text-sm font-medium leading-5 text-gray-500"
+        class="grid grow grid-cols-2 px-2 text-sm font-medium leading-5 text-gray-500"
       >
-        <p>Start</p>
+        <p>Start:</p>
         <p class="place-self-end">{{ startDate }}</p>
       </div>
       <div
         v-if="endDate"
-        class="grid grow grid-cols-2 p-2 text-sm font-medium leading-5 text-gray-500"
+        class="grid grow grid-cols-2 px-2 text-sm font-medium leading-5 text-gray-500"
       >
-        <p>End</p>
+        <p>End:</p>
         <p class="place-self-end">{{ endDate }}</p>
       </div>
     </div>

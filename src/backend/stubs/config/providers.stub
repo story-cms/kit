@@ -18,13 +18,21 @@ export default {
     */
     customDomain: env.get('S3_DOMAIN', ''),
   },
+  
   cloudinary: {
     apiKey: env.get('CLOUDINARY_API_KEY', ''),
     secret: env.get('CLOUDINARY_SECRET', ''),
     cloudName: env.get('CLOUDINARY_CLOUD_NAME', ''),
     defaultPreset: env.get('CLOUDINARY_PRESET', ''),
   },
+
   scripture: {
     bibleApiKey: env.get('BIBLE_API_KEY', ''),
+  },
+
+  bunny: {
+    accessKey: env.get('BUNNY_ACCESS_KEY', ''),
+    libraryId: env.get('BUNNY_LIBRARY_ID', ''),
+    host: env.get('BUNNY_CDN_HOSTNAME', ''),
   },
 } as Providers;
