@@ -1172,7 +1172,7 @@ export const mockCampaigns: CampaignItem[] = [
     id: 1,
     title: 'Giving Tuesday',
     regions: '',
-    window: '2025-12-16T02:58:00.000Z|2025-12-19T02:58:00.000Z',
+    window: '2025-12-19T02:58:00.000Z|2025-12-25T02:58:00.000Z',
     isPublished: true,
   },
   {
