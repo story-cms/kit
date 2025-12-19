@@ -24,6 +24,24 @@ export const simpleFields: FieldSpec[] = [
   },
 ];
 
+export const dropBundleFields: FieldSpec[] = [
+  {
+    name: 'description',
+    label: 'Description',
+    widget: 'markdown',
+  },
+  {
+    name: 'isActive',
+    label: 'Active',
+    widget: 'boolean',
+  },
+  {
+    name: 'score',
+    label: 'Score',
+    widget: 'number',
+  },
+];
+
 export const complexFields: FieldSpec[] = [
   {
     name: 'title',
