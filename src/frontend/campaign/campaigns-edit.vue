@@ -121,15 +121,16 @@
         />
 
         <StringField
+          v-if="!urlFieldIsDisabled"
           :field="{
             name: 'actionUrl',
             label: 'Action URL',
             widget: 'string',
           }"
-          :is-read-only="selection !== 'externalUrl'"
           :is-nested="true"
           class="px-8"
         />
+        <div v-else><p class="my-16"></p></div>
       </form>
 
       <ContentSidebar>
@@ -151,7 +152,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, toRefs, watch, nextTick } from 'vue';
+import { ref, computed, onMounted, toRefs, watch } from 'vue';
 import { DateTime } from 'luxon';
 import { router } from '@inertiajs/vue3';
 import {
@@ -275,13 +276,16 @@ watch(
   { deep: true },
 );
 
+const urlFieldIsDisabled = computed(() => selection.value !== 'externalUrl');
+
 const handleActionTypeChange = () => {
-  // when not switching from external, move on
   const previousSelection = selection.value;
+  selection.value = model.getField('actionType', defaultType);
+
+  // when not switching from external, move on
   if (previousSelection !== 'externalUrl') return;
 
   // when not a type switch, move on
-  selection.value = model.getField('actionType', defaultType);
   if (previousSelection === selection.value) return;
 
   // when the URL field is already empty, move on
@@ -289,11 +293,7 @@ const handleActionTypeChange = () => {
   if (!actionUrl) return;
 
   // we have switched away from external type, so we need to clear the url field
-  nextTick().then(() => {
-    ignoreTheNextChange = true;
-    model.setField('actionUrl', '');
-    save();
-  });
+  model.setField('actionUrl', '');
 };
 
 onMounted(() => {
