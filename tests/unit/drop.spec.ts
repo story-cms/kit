@@ -206,10 +206,10 @@ test.describe('Drop Validator', () => {
         score: 100,
       };
 
-        const result = await schema.validate(validData);
+      const result = await schema.validate(validData);
 
-        // expect(result.releaseAt).toBeInstanceOf(Date);
-        expect(result.releaseAt.toISOString()).toBe('2025-12-31T23:59:59.999Z');
+      // expect(result.releaseAt).toBeInstanceOf(Date);
+      expect(result.releaseAt.toISOString()).toBe('2025-12-31T23:59:59.999Z');
     });
   });
 });
