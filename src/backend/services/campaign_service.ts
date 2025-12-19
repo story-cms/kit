@@ -1,0 +1,21 @@
+import { type CampaignItem, type CampaignVersion } from '../../types';
+import Campaign from '../models/campaign.js';
+import { CmsService } from './cms_service.js';
+
+export class CampaignService {
+  protected version: CampaignVersion;
+
+  constructor(
+    version: CampaignVersion,
+    protected cms: CmsService,
+  ) {
+    this.version = version;
+  }
+
+  public async getCampaignItems(): Promise<CampaignItem[]> {
+    const campaigns = await Campaign.query()
+      .where(this.version)
+      .orderBy('created_at', 'desc');
+    return campaigns.map((campaign) => campaign.model);
+  }
+}
