@@ -8,6 +8,7 @@ const ChaptersController = () => import('#controllers/chapters_controller');
 const PreviewController = () => import('#controllers/preview_controller');
 const PagesController = () => import('#controllers/pages_controller');
 const IndicesController = () => import('#controllers/indices_controller');
+const CampaignsController = () => import('#controllers/campaigns_controller');
 
 const number = /^[0-9]+$/;
 
@@ -35,6 +36,8 @@ export default () => {
       router.get('/index', [IndicesController, 'index']);
 
       router.get('/page', [PagesController, 'get']);
+
+      router.get('/campaigns', [CampaignsController, 'get']);
     })
     .use(middleware.noIndex())
     .prefix('/api/v1');
