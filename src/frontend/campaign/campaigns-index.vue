@@ -1,7 +1,7 @@
 <template>
   <AppLayout>
     <template #header>
-      <ContentHeader title="Pages">
+      <ContentHeader title="Campaigns">
         <template #actions>
           <div class="flex items-center gap-x-6">
             <button
@@ -60,7 +60,7 @@ const items = ref<CampaignItem[]>([...props.campaigns]);
 const currentTab = ref('Published');
 const tabs = computed(() => {
   const publishedCount = items.value.reduce(
-    (carry, item) => (item.title ? carry + 1 : carry),
+    (carry, item: CampaignItem) => (item.isPublished ? carry + 1 : carry),
     0,
   );
   return [
