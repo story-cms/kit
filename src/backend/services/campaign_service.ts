@@ -18,4 +18,12 @@ export class CampaignService {
       .orderBy('created_at', 'desc');
     return campaigns.map((campaign) => campaign.model);
   }
+
+  public async getCampaignItemsForClient(): Promise<CampaignItem[]> {
+    const campaigns = await Campaign.query()
+      .where(this.version)
+      .where('isPublished', true);
+
+    return campaigns.map((campaign) => campaign.model);
+  }
 }
