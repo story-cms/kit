@@ -65,7 +65,7 @@ export const campaignErrorMessages = new SimpleMessagesProvider({
   actionUrl: 'Action URL must be a valid URL',
   regions: 'Regions must be a string',
   'name.required': 'Give the campaign a short, descriptive name',
-  'window.required': 'Specify the start and end dates for the campaign',
+  'window.required': 'Specify the start and end dates',
   'title.required': 'A campaign title is required',
   'message.required': 'A campaign message is required',
   'actionLabel.required': 'A label for the action button is required',
