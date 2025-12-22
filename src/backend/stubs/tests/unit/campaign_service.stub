@@ -1,8 +1,19 @@
 {{{ 
   exports({ to: app.makePath('tests/unit/campaign_service.spec.ts') }) 
 }}}
+import { test } from '@japa/runner';
+import testUtils from '@adonisjs/core/services/test_utils';
+import { DateTime } from 'luxon';
+
+import { CampaignFactory, CampaignService } from '@story-cms/kit';
+
 test.group('Campaign Items for the API', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction());
+
+  const englishVersion = {
+    apiVersion: 1,
+    locale: 'en',
+  };
 
   test('spec: returns list of all active and future scheduled campaigns in date order', async ({
     assert,
@@ -68,7 +79,7 @@ test.group('Campaign Items for the API', (group) => {
       apiVersion: 1,
       bundle: {
         name: 'Active Campaign 2',
-        window: {{ '`${active2Start.toISO()}|${active2End.toISO()}`'}},
+        window: {{ '`${active2Start.toISO()}|${active2End.toISO()}`' }},
         title: 'Active 2',
         message: 'Message',
         actionLabel: 'Click',
@@ -83,7 +94,7 @@ test.group('Campaign Items for the API', (group) => {
       apiVersion: 1,
       bundle: {
         name: 'Active Campaign 3',
-        window: {{ '`${active3Start.toISO()}|${active3End.toISO()}`'}},
+        window: {{ '`${active3Start.toISO()}|${active3End.toISO()}`' }},
         title: 'Active 3',
         message: 'Message',
         actionLabel: 'Click',
@@ -99,7 +110,7 @@ test.group('Campaign Items for the API', (group) => {
       apiVersion: 1,
       bundle: {
         name: 'Future Campaign 1',
-        window: {{ '`${future1Start.toISO()}|${future1End.toISO()}`'}},
+        window: {{ '`${future1Start.toISO()}|${future1End.toISO()}`' }},
         title: 'Future 1',
         message: 'Message',
         actionLabel: 'Click',
@@ -114,7 +125,7 @@ test.group('Campaign Items for the API', (group) => {
       apiVersion: 1,
       bundle: {
         name: 'Future Campaign 2',
-        window: {{ '`${future2Start.toISO()}|${future2End.toISO()}`'}},
+        window: {{ '`${future2Start.toISO()}|${future2End.toISO()}`' }},
         title: 'Future 2',
         message: 'Message',
         actionLabel: 'Click',
@@ -129,7 +140,7 @@ test.group('Campaign Items for the API', (group) => {
       apiVersion: 1,
       bundle: {
         name: 'Future Campaign 3',
-        window: {{ '`${future3Start.toISO()}|${future3End.toISO()}`'}},
+        window: {{ '`${future3Start.toISO()}|${future3End.toISO()}`' }},
         title: 'Future 3',
         message: 'Message',
         actionLabel: 'Click',
@@ -139,13 +150,7 @@ test.group('Campaign Items for the API', (group) => {
     }).create();
 
     // act
-    const service = new CampaignService(
-      {
-        apiVersion: 1,
-        locale: 'en',
-      },
-      cms,
-    );
+    const service = new CampaignService(englishVersion);
     const items = await service.getCampaignItemsForClient();
 
     // assert - Should return only active and future campaigns
@@ -159,35 +164,19 @@ test.group('Campaign Items for the API', (group) => {
 
     // Verify all returned campaigns are active or future
     const allActiveOrFuture = items.every(
-      (item) => item.name.startsWith('Active') || item.name.startsWith('Future'),
+      (item) => item.title.startsWith('Active') || item.title.startsWith('Future'),
     );
     assert.isTrue(allActiveOrFuture, 'All campaigns should be active or future');
 
     // Verify date order: active campaigns first, sorted by start time ascending
-    assert.equal(
-      items[0].name,
-      'Active Campaign 1',
-      'First active campaign (earliest start)',
-    );
-    assert.equal(items[1].name, 'Active Campaign 2', 'Second active campaign');
-    assert.equal(
-      items[2].name,
-      'Active Campaign 3',
-      'Third active campaign (latest start)',
-    );
+    assert.equal(items[0].title, 'Active 1', 'First active campaign (earliest start)');
+    assert.equal(items[1].title, 'Active 2', 'Second active campaign');
+    assert.equal(items[2].title, 'Active 3', 'Third active campaign (latest start)');
 
     // Verify date order: future campaigns follow, sorted by start time ascending
-    assert.equal(
-      items[3].name,
-      'Future Campaign 1',
-      'First future campaign (earliest start)',
-    );
-    assert.equal(items[4].name, 'Future Campaign 2', 'Second future campaign');
-    assert.equal(
-      items[5].name,
-      'Future Campaign 3',
-      'Third future campaign (latest start)',
-    );
+    assert.equal(items[3].title, 'Future 1', 'First future campaign (earliest start)');
+    assert.equal(items[4].title, 'Future 2', 'Second future campaign');
+    assert.equal(items[5].title, 'Future 3', 'Third future campaign (latest start)');
   });
 
   test('spec: excludes unpublished campaigns from active and future list', async ({
@@ -207,8 +196,8 @@ test.group('Campaign Items for the API', (group) => {
       apiVersion: 1,
       bundle: {
         name: 'Published Active',
-        window: {{ '`${activeStart.toISO()}|${activeEnd.toISO()}`'}},
-        title: 'Title',
+        window: {{ '`${activeStart.toISO()}|${activeEnd.toISO()}`' }},
+        title: 'Published Active',
         message: 'Message',
         actionLabel: 'Click',
         actionType: 'close',
@@ -223,8 +212,8 @@ test.group('Campaign Items for the API', (group) => {
       apiVersion: 1,
       bundle: {
         name: 'Unpublished Active',
-        window: {{ '`${activeStart.toISO()}|${activeEnd.toISO()}`'}},
-        title: 'Title',
+        window: {{ '`${activeStart.toISO()}|${activeEnd.toISO()}`' }},
+        title: 'Unpublished Active',
         message: 'Message',
         actionLabel: 'Click',
         actionType: 'close',
@@ -239,8 +228,8 @@ test.group('Campaign Items for the API', (group) => {
       apiVersion: 1,
       bundle: {
         name: 'Published Future',
-        window: {{ '`${futureStart.toISO()}|${futureEnd.toISO()}`'}},
-        title: 'Title',
+        window: {{ '`${futureStart.toISO()}|${futureEnd.toISO()}`' }},
+        title: 'Published Future',
         message: 'Message',
         actionLabel: 'Click',
         actionType: 'close',
@@ -255,8 +244,8 @@ test.group('Campaign Items for the API', (group) => {
       apiVersion: 1,
       bundle: {
         name: 'Unpublished Future',
-        window: {{ '`${futureStart.toISO()}|${futureEnd.toISO()}`'}},
-        title: 'Title',
+        window: {{ '`${futureStart.toISO()}|${futureEnd.toISO()}`' }},
+        title: 'Unpublished Future',
         message: 'Message',
         actionLabel: 'Click',
         actionType: 'close',
@@ -265,21 +254,15 @@ test.group('Campaign Items for the API', (group) => {
     }).create();
 
     // act
-    const service = new CampaignService(
-      {
-        apiVersion: 1,
-        locale: 'en',
-      },
-      cms,
-    );
+    const service = new CampaignService(englishVersion);
     const items = await service.getCampaignItemsForClient();
 
     // assert
     assert.equal(items.length, 2, 'Only published campaigns should be included');
-    assert.equal(items[0].name, 'Published Active');
-    assert.equal(items[1].name, 'Published Future');
+    assert.equal(items[0].title, 'Published Active');
+    assert.equal(items[1].title, 'Published Future');
     assert.isFalse(
-      items.some((item) => item.name.includes('Unpublished')),
+      items.some((item) => item.title.includes('Unpublished')),
       'Unpublished campaigns should be excluded',
     );
   });
@@ -298,8 +281,8 @@ test.group('Campaign Items for the API', (group) => {
       apiVersion: 1,
       bundle: {
         name: 'Campaign Starting Now',
-        window: {{ '`${start.toISO()}|${end.toISO()}`'}},
-        title: 'Title',
+        window: {{ '`${start.toISO()}|${end.toISO()}`' }},
+        title: 'Campaign Starting Now',
         message: 'Message',
         actionLabel: 'Click',
         actionType: 'close',
@@ -308,18 +291,12 @@ test.group('Campaign Items for the API', (group) => {
     }).create();
 
     // act
-    const service = new CampaignService(
-      {
-        apiVersion: 1,
-        locale: 'en',
-      },
-      cms,
-    );
+    const service = new CampaignService(englishVersion);
     const items = await service.getCampaignItemsForClient();
 
     // assert
     assert.equal(items.length, 1);
-    assert.equal(items[0].name, 'Campaign Starting Now');
+    assert.equal(items[0].title, 'Campaign Starting Now');
   });
 
   test('spec: excludes campaign that ended before now as past', async ({ assert }) => {
@@ -334,8 +311,8 @@ test.group('Campaign Items for the API', (group) => {
       apiVersion: 1,
       bundle: {
         name: 'Just Ended Campaign',
-        window: {{ '`${start.toISO()}|${end.toISO()}`'}},
-        title: 'Title',
+        window: {{ '`${start.toISO()}|${end.toISO()}`' }},
+        title: 'Just Ended Campaign',
         message: 'Message',
         actionLabel: 'Click',
         actionType: 'close',
@@ -344,18 +321,12 @@ test.group('Campaign Items for the API', (group) => {
     }).create();
 
     // act
-    const service = new CampaignService(
-      {
-        apiVersion: 1,
-        locale: 'en',
-      },
-      cms,
-    );
+    const service = new CampaignService(englishVersion);
     const items = await service.getCampaignItemsForClient();
 
     // assert
     assert.equal(items.length, 0);
-    assert.isFalse(items.some((item) => item.name === 'Just Ended Campaign'));
+    assert.isFalse(items.some((item) => item.title === 'Just Ended Campaign'));
   });
 
   test('spec: includes campaign that starts just after now as future', async ({
@@ -372,8 +343,8 @@ test.group('Campaign Items for the API', (group) => {
       apiVersion: 1,
       bundle: {
         name: 'Starting Soon Campaign',
-        window: {{ '`${start.toISO()}|${end.toISO()}`'}},
-        title: 'Title',
+        window: {{ '`${start.toISO()}|${end.toISO()}`' }},
+        title: 'Starting Soon Campaign',
         message: 'Message',
         actionLabel: 'Click',
         actionType: 'close',
@@ -382,18 +353,12 @@ test.group('Campaign Items for the API', (group) => {
     }).create();
 
     // act
-    const service = new CampaignService(
-      {
-        apiVersion: 1,
-        locale: 'en',
-      },
-      cms,
-    );
+    const service = new CampaignService(englishVersion);
     const items = await service.getCampaignItemsForClient();
 
     // assert
     assert.equal(items.length, 1);
-    assert.equal(items[0].name, 'Starting Soon Campaign');
+    assert.equal(items[0].title, 'Starting Soon Campaign');
   });
 
   test('spec: maintains date order with multiple active and future campaigns', async ({
@@ -420,12 +385,12 @@ test.group('Campaign Items for the API', (group) => {
 
     // Create campaigns in random order
     const campaigns = [
-      { id: 1, name: 'Active Campaign 1', start: active1Start, end: active1End },
-      { id: 2, name: 'Future Campaign 1', start: future1Start, end: future1End },
-      { id: 3, name: 'Active Campaign 2', start: active2Start, end: active2End },
-      { id: 4, name: 'Future Campaign 2', start: future2Start, end: future2End },
-      { id: 5, name: 'Active Campaign 3', start: active3Start, end: active3End },
-      { id: 6, name: 'Future Campaign 3', start: future3Start, end: future3End },
+      { id: 1, title: 'Active Campaign 1', start: active1Start, end: active1End },
+      { id: 2, title: 'Future Campaign 1', start: future1Start, end: future1End },
+      { id: 3, title: 'Active Campaign 2', start: active2Start, end: active2End },
+      { id: 4, title: 'Future Campaign 2', start: future2Start, end: future2End },
+      { id: 5, title: 'Active Campaign 3', start: active3Start, end: active3End },
+      { id: 6, title: 'Future Campaign 3', start: future3Start, end: future3End },
     ];
 
     // Shuffle to test sorting
@@ -436,9 +401,9 @@ test.group('Campaign Items for the API', (group) => {
         locale: 'en',
         apiVersion: 1,
         bundle: {
-          name: campaign.name,
-          window: {{ '`${campaign.start.toISO()}|${campaign.end.toISO()}`'}},
-          title: 'Title',
+          name: campaign.title,
+          window: {{ '`${campaign.start.toISO()}|${campaign.end.toISO()}`' }},
+          title: campaign.title,
           message: 'Message',
           actionLabel: 'Click',
           actionType: 'close',
@@ -448,27 +413,21 @@ test.group('Campaign Items for the API', (group) => {
     }
 
     // act
-    const service = new CampaignService(
-      {
-        apiVersion: 1,
-        locale: 'en',
-      },
-      cms,
-    );
+    const service = new CampaignService(englishVersion);
     const items = await service.getCampaignItemsForClient();
 
     // assert
     assert.equal(items.length, 6, 'All 6 campaigns should be returned');
 
     // Verify active campaigns come first, sorted by start time ascending
-    assert.equal(items[0].name, 'Active Campaign 1', 'Active 1 (started 5 days ago)');
-    assert.equal(items[1].name, 'Active Campaign 2', 'Active 2 (started 2 days ago)');
-    assert.equal(items[2].name, 'Active Campaign 3', 'Active 3 (started 12 hours ago)');
+    assert.equal(items[0].title, 'Active Campaign 1', 'Active 1 (started 5 days ago)');
+    assert.equal(items[1].title, 'Active Campaign 2', 'Active 2 (started 2 days ago)');
+    assert.equal(items[2].title, 'Active Campaign 3', 'Active 3 (started 12 hours ago)');
 
     // Verify future campaigns follow, sorted by start time ascending
-    assert.equal(items[3].name, 'Future Campaign 1', 'Future 1 (starts in 1 day)');
-    assert.equal(items[4].name, 'Future Campaign 2', 'Future 2 (starts in 5 days)');
-    assert.equal(items[5].name, 'Future Campaign 3', 'Future 3 (starts in 10 days)');
+    assert.equal(items[3].title, 'Future Campaign 1', 'Future 1 (starts in 1 day)');
+    assert.equal(items[4].title, 'Future Campaign 2', 'Future 2 (starts in 5 days)');
+    assert.equal(items[5].title, 'Future Campaign 3', 'Future 3 (starts in 10 days)');
   });
 
   test('spec: returns empty array when no active or future campaigns exist', async ({
@@ -486,8 +445,8 @@ test.group('Campaign Items for the API', (group) => {
       apiVersion: 1,
       bundle: {
         name: 'Past Campaign',
-        window: {{ '`${pastStart.toISO()}|${pastEnd.toISO()}`'}},
-        title: 'Title',
+        window: {{ '`${pastStart.toISO()}|${pastEnd.toISO()}`' }},
+        title: 'Past Campaign',
         message: 'Message',
         actionLabel: 'Click',
         actionType: 'close',
@@ -496,13 +455,7 @@ test.group('Campaign Items for the API', (group) => {
     }).create();
 
     // act
-    const service = new CampaignService(
-      {
-        apiVersion: 1,
-        locale: 'en',
-      },
-      cms,
-    );
+    const service = new CampaignService(englishVersion);
     const items = await service.getCampaignItemsForClient();
 
     // assert
@@ -526,8 +479,8 @@ test.group('Campaign Items for the API', (group) => {
       apiVersion: 1,
       bundle: {
         name: 'Matching Campaign',
-        window: {{ '`${activeStart.toISO()}|${activeEnd.toISO()}`'}},
-        title: 'Title',
+        window: {{ '`${activeStart.toISO()}|${activeEnd.toISO()}`' }},
+        title: 'Matching Campaign',
         message: 'Message',
         actionLabel: 'Click',
         actionType: 'close',
@@ -542,8 +495,8 @@ test.group('Campaign Items for the API', (group) => {
       apiVersion: 1,
       bundle: {
         name: 'Spanish Campaign',
-        window: {{ '`${activeStart.toISO()}|${activeEnd.toISO()}`'}},
-        title: 'Title',
+        window: {{ '`${activeStart.toISO()}|${activeEnd.toISO()}`' }},
+        title: 'Spanish Campaign',
         message: 'Message',
         actionLabel: 'Click',
         actionType: 'close',
@@ -558,8 +511,8 @@ test.group('Campaign Items for the API', (group) => {
       apiVersion: 2,
       bundle: {
         name: 'Version 2 Campaign',
-        window: {{ '`${activeStart.toISO()}|${activeEnd.toISO()}`'}},
-        title: 'Title',
+        window: {{ '`${activeStart.toISO()}|${activeEnd.toISO()}`' }},
+        title: 'Version 2 Campaign',
         message: 'Message',
         actionLabel: 'Click',
         actionType: 'close',
@@ -568,20 +521,14 @@ test.group('Campaign Items for the API', (group) => {
     }).create();
 
     // act
-    const service = new CampaignService(
-      {
-        apiVersion: 1,
-        locale: 'en',
-      },
-      cms,
-    );
+    const service = new CampaignService(englishVersion);
     const items = await service.getCampaignItemsForClient();
 
     // assert
     assert.equal(items.length, 1);
-    assert.equal(items[0].name, 'Matching Campaign');
-    assert.isFalse(items.some((item) => item.name === 'Spanish Campaign'));
-    assert.isFalse(items.some((item) => item.name === 'Version 2 Campaign'));
+    assert.equal(items[0].title, 'Matching Campaign');
+    assert.isFalse(items.some((item) => item.title === 'Spanish Campaign'));
+    assert.isFalse(items.some((item) => item.title === 'Version 2 Campaign'));
   });
 
   test('timothy: random test', async ({ assert }) => {
@@ -593,7 +540,7 @@ test.group('Campaign Items for the API', (group) => {
       bundle: {
         name: 'First Campaign',
         window: '2025-12-18T01:38:00.000Z|2025-12-28T01:38:00.000Z',
-        title: 'Title',
+        title: 'First Campaign',
         message: 'Message',
         actionLabel: 'Click',
         actionType: 'close',
@@ -608,7 +555,7 @@ test.group('Campaign Items for the API', (group) => {
       bundle: {
         name: 'Second Campaign',
         window: '2025-12-23T03:19:00.000Z|2025-12-31T03:19:00.000Z',
-        title: 'Title',
+        title: 'Second Campaign',
         message: 'Message',
         actionLabel: 'Click',
         actionType: 'close',
@@ -623,7 +570,7 @@ test.group('Campaign Items for the API', (group) => {
       bundle: {
         name: 'Third Campaign',
         window: '2025-12-15T05:54:00.000Z|2025-12-18T05:53:00.000Z',
-        title: 'Title',
+        title: 'Third Campaign',
         message: 'Message',
         actionLabel: 'Click',
         actionType: 'close',
@@ -632,13 +579,7 @@ test.group('Campaign Items for the API', (group) => {
     }).create();
 
     // act
-    const service = new CampaignService(
-      {
-        apiVersion: 1,
-        locale: 'en',
-      },
-      cms,
-    );
+    const service = new CampaignService(englishVersion);
     const items = await service.getCampaignItemsForClient();
 
     // assert

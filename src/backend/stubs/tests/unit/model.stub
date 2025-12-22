@@ -263,7 +263,7 @@ test.group('Page', (group) => {
         body: 'https://test.com',
       }),
     }).make();
-    assert.equal(page.bundleWithTracking(tracking).body, {{ '`https://test.com?${tracking}`' }});
+    assert.equal(page.bundleWithTracking(tracking).body, {{{ '`https://test.com?${tracking}`' }}});
 
     const withQuery = await PageFactory.merge({
       bundle: JSON.stringify({
@@ -435,7 +435,7 @@ test.group('Campaign', (group) => {
   }) => {
     const startDate = '2025-12-15T05:54:00.000Z';
     const endDate = '2025-12-18T05:53:00.000Z';
-    const window = {{ '`${startDate}|${endDate}` }};
+    const window = {{ '`${startDate}|${endDate}`' }};
     const campaign = await CampaignFactory.merge({
       bundle: {
         name: 'Test Campaign',

@@ -17,7 +17,14 @@ export class CampaignService {
 
         return true;
       })
-      .map((campaign) => campaign.forApi);
+      .map((campaign) => campaign.forApi)
+      .sort((a, b) => {
+        // Sort by startDate ascending, nulls at the end
+        if (a.startDate === null && b.startDate === null) return 0;
+        if (a.startDate === null) return 1;
+        if (b.startDate === null) return -1;
+        return a.startDate.localeCompare(b.startDate);
+      });
   }
 
   async getCampaignsForVersion(): Promise<Campaign[]> {

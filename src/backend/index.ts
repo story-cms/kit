@@ -19,6 +19,7 @@ export * from './factories/draft_factory.js';
 export * from './factories/index_factory.js';
 export * from './factories/page_factory.js';
 export * from './factories/chapter_factory.js';
+export * from './factories/campaign_factory.js';
 export * from './factories/user_factory.js';
 export * from './services/helpers.js';
 export * from './services/admin_service.js';
