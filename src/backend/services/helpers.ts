@@ -52,16 +52,16 @@ export const getCredentialsFrom = (key: string): any => {
   }
 };
 
-function getWindowStart(item: CampaignItem): DateTime | null {
-  if (!item.window) return null;
-  const [startStr] = item.window.split('|');
-  return DateTime.fromISO(startStr);
-}
-
 export function categorizeAndSortCampaigns(
   items: CampaignItem[],
   now: DateTime = DateTime.now(),
 ): CampaignItem[] {
+  function getWindowStart(item: CampaignItem): DateTime | null {
+    if (!item.window) return null;
+    const [startStr] = item.window.split('|');
+    return DateTime.fromISO(startStr);
+  }
+
   const categorized = items.reduce(
     (acc, item) => {
       if (!item.window) {
