@@ -1,9 +1,37 @@
-import { type CampaignForApi, type CampaignVersion } from '../../types';
-import Campaign from '../models/campaign.js';
 import { DateTime } from 'luxon';
+
+import {
+  type CampaignItem,
+  type CampaignForApi,
+  type CampaignVersion,
+} from '../../types';
+import Campaign from '../models/campaign.js';
 
 export class CampaignService {
   constructor(private version: CampaignVersion) {}
+
+  public async getCampaignItems(): Promise<CampaignItem[]> {
+    const campaigns = await this.getCampaignsForVersion();
+    return campaigns
+      .map((campaign) => {
+        const startDate = campaign.splitWindow[0]?.toISO() ?? null;
+        return {
+          id: campaign.id,
+          title: campaign.bundle.title,
+          regions: campaign.bundle.regions,
+          window: campaign.bundle.window,
+          isPublished: campaign.isPublished,
+          startDate,
+        };
+      })
+      .sort((a, b) => {
+        // Sort by startDate descending, nulls at the end
+        if (a.startDate === null && b.startDate === null) return 0;
+        if (a.startDate === null) return 1;
+        if (b.startDate === null) return -1;
+        return b.startDate.localeCompare(a.startDate);
+      });
+  }
 
   public async getCampaignItemsForClient(): Promise<CampaignForApi[]> {
     const campaigns = await this.getCampaignsForVersion();
