@@ -3,6 +3,7 @@
 }}}
 import { test } from '@japa/runner';
 import testUtils from '@adonisjs/core/services/test_utils';
+import { DateTime } from 'luxon';
 
 import {
   User,
@@ -14,6 +15,8 @@ import {
   IndexFactory,
   DraftFactory,
   PageFactory,
+  CampaignFactory,
+  Campaign,
 } from '@story-cms/kit';
 import cmsConfig from '#config/cms';
 
@@ -314,6 +317,7 @@ test.group('Page', (group) => {
     assert.equal(page.parsedBundle.icon, '');
   });
 });
+
 test.group('Campaign', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction());
 
