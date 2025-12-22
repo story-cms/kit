@@ -1,6 +1,3 @@
-import { DateTime } from 'luxon';
-import type { CampaignItem } from '../../types';
-
 export function trimmedErrors(e: any): Record<string, string[]> {
   let trimmed = e.messages.reduce((acc: Record<string, string[]>, error: any) => {
     const field = error.field;
@@ -51,71 +48,3 @@ export const getCredentialsFrom = (key: string): any => {
     throw new Error(`${key} environment variable is not a valid encoded JSON string.`);
   }
 };
-
-export function categorizeAndSortCampaigns(
-  items: CampaignItem[],
-  now: DateTime = DateTime.now(),
-): CampaignItem[] {
-  function getWindowStart(item: CampaignItem): DateTime | null {
-    if (!item.window) return null;
-    const [startStr] = item.window.split('|');
-    return DateTime.fromISO(startStr);
-  }
-
-  const categorized = items.reduce(
-    (acc, item) => {
-      if (!item.window) {
-        acc.noWindow.push(item);
-        return acc;
-      }
-
-      const [startStr, endStr] = item.window.split('|');
-      const windowStart = DateTime.fromISO(startStr);
-      const windowEnd = DateTime.fromISO(endStr);
-
-      if (now >= windowStart && now <= windowEnd) {
-        acc.current.push(item);
-      } else if (windowStart > now) {
-        acc.upcoming.push(item);
-      } else {
-        acc.past.push(item);
-      }
-
-      return acc;
-    },
-    {
-      current: [] as CampaignItem[],
-      upcoming: [] as CampaignItem[],
-      past: [] as CampaignItem[],
-      noWindow: [] as CampaignItem[],
-    },
-  );
-
-  categorized.current.sort((a, b) => {
-    const aStart = getWindowStart(a);
-    const bStart = getWindowStart(b);
-    if (!aStart || !bStart) return 0;
-    return aStart.toMillis() - bStart.toMillis();
-  });
-
-  categorized.upcoming.sort((a, b) => {
-    const aStart = getWindowStart(a);
-    const bStart = getWindowStart(b);
-    if (!aStart || !bStart) return 0;
-    return aStart.toMillis() - bStart.toMillis();
-  });
-
-  categorized.past.sort((a, b) => {
-    const aStart = getWindowStart(a);
-    const bStart = getWindowStart(b);
-    if (!aStart || !bStart) return 0;
-    return bStart.toMillis() - aStart.toMillis();
-  });
-
-  return [
-    ...categorized.current,
-    ...categorized.upcoming,
-    ...categorized.past,
-    ...categorized.noWindow,
-  ];
-}

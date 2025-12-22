@@ -1,17 +1,9 @@
 import { type CampaignForApi, type CampaignVersion } from '../../types';
 import Campaign from '../models/campaign.js';
-import { CmsService } from './cms_service.js';
 import { DateTime } from 'luxon';
 
 export class CampaignService {
-  protected version: CampaignVersion;
-
-  constructor(
-    version: CampaignVersion,
-    protected cms: CmsService,
-  ) {
-    this.version = version;
-  }
+  constructor(private version: CampaignVersion) {}
 
   public async getCampaignItemsForClient(): Promise<CampaignForApi[]> {
     const campaigns = await this.getCampaignsForVersion();
