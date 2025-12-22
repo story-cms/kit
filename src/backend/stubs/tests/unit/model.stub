@@ -7,16 +7,16 @@ import { DateTime } from 'luxon';
 
 import {
   User,
+  Campaign,
   Draft,
   Chapter,
   Index,
   UserFactory,
+  CampaignFactory,
   ChapterFactory,
   IndexFactory,
   DraftFactory,
   PageFactory,
-  CampaignFactory,
-  Campaign,
 } from '@story-cms/kit';
 import cmsConfig from '#config/cms';
 
