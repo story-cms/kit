@@ -45,6 +45,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'config/cms.stub', {});
 
   codemods.overwriteExisting = true;
+  await codemods.makeUsingStub(stubsRoot, 'config/bodyparser.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/cache.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/inertia.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/providers.stub', {});
@@ -115,6 +116,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/stream_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/user_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/progress_service.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'tests/unit/campaign_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/model.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/helpers/cms_mock.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/cms_mock_example.stub', {});

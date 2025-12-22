@@ -34,7 +34,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
-import { DateTime } from 'luxon';
 import type {
   TabItem,
   CampaignItem,
@@ -74,71 +73,11 @@ const onFilter = (tab: string) => {
 };
 
 const filteredItems = computed(() => {
-  let filtered: CampaignItem[];
   if (isShowingPublished.value) {
-    filtered = items.value.filter((item) => item.isPublished);
-  } else {
-    filtered = items.value.filter((item) => !item.isPublished);
+    return items.value.filter((item) => item.isPublished);
   }
 
-  const now = DateTime.now();
-
-  const categorized = filtered.reduce(
-    (acc, item) => {
-      if (!item.window) {
-        acc.noWindow.push(item);
-        return acc;
-      }
-
-      const [startStr, endStr] = item.window.split('|');
-      const windowStart = DateTime.fromISO(startStr);
-      const windowEnd = DateTime.fromISO(endStr);
-
-      if (now >= windowStart && now <= windowEnd) {
-        acc.current.push(item);
-      } else if (windowStart > now) {
-        acc.upcoming.push(item);
-      } else {
-        acc.past.push(item);
-      }
-
-      return acc;
-    },
-    {
-      current: [] as CampaignItem[],
-      upcoming: [] as CampaignItem[],
-      past: [] as CampaignItem[],
-      noWindow: [] as CampaignItem[],
-    },
-  );
-
-  categorized.current.sort((a, b) => {
-    if (!a.window || !b.window) return 0;
-    const aStart = DateTime.fromISO(a.window.split('|')[0]);
-    const bStart = DateTime.fromISO(b.window.split('|')[0]);
-    return aStart.toMillis() - bStart.toMillis();
-  });
-
-  categorized.upcoming.sort((a, b) => {
-    if (!a.window || !b.window) return 0;
-    const aStart = DateTime.fromISO(a.window.split('|')[0]);
-    const bStart = DateTime.fromISO(b.window.split('|')[0]);
-    return aStart.toMillis() - bStart.toMillis();
-  });
-
-  categorized.past.sort((a, b) => {
-    if (!a.window || !b.window) return 0;
-    const aStart = DateTime.fromISO(a.window.split('|')[0]);
-    const bStart = DateTime.fromISO(b.window.split('|')[0]);
-    return bStart.toMillis() - aStart.toMillis();
-  });
-
-  return [
-    ...categorized.current,
-    ...categorized.upcoming,
-    ...categorized.past,
-    ...categorized.noWindow,
-  ];
+  return items.value.filter((item) => !item.isPublished);
 });
 
 const isShowingPublished = computed(() => currentTab.value === 'Published');
