@@ -30,7 +30,7 @@ export default class CampaignsController {
 
   public async index(ctx: HttpContext) {
     const version = cms.pagesContextFrom(ctx);
-    const service = new CampaignService(version, cms);
+    const service = new CampaignService(version);
     const campaigns = await service.getCampaignItems();
 
     const shared = await cms.sharedProps(ctx);
