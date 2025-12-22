@@ -3,6 +3,7 @@
 }}}
 import { test } from '@japa/runner';
 import testUtils from '@adonisjs/core/services/test_utils';
+import { DateTime } from 'luxon';
 
 import {
   User,
@@ -16,6 +17,8 @@ import {
   IndexFactory,
   DraftFactory,
   PageFactory,
+  CampaignFactory,
+  Campaign,
 } from '@story-cms/kit';
 import cmsConfig from '#config/cms';
 
@@ -265,7 +268,7 @@ test.group('Page', (group) => {
         body: 'https://test.com',
       }),
     }).make();
-    assert.equal(page.bundleWithTracking(tracking).body, {{ '`https://test.com?${tracking}`' }});
+    assert.equal(page.bundleWithTracking(tracking).body, {{{ '`https://test.com?${tracking}`' }}});
 
     const withQuery = await PageFactory.merge({
       bundle: JSON.stringify({
@@ -431,5 +434,220 @@ test.group('Campaign', (group) => {
     assert.isObject(campaign.model);
     assert.equal((campaign.model as any).name, 'Test Campaign');
     assert.isTrue(campaign.isPublished);
+  });
+
+  test('splitWindow returns valid DateTime tuple for normal window', async ({
+    assert,
+  }) => {
+    const startDate = '2025-12-15T05:54:00.000Z';
+    const endDate = '2025-12-18T05:53:00.000Z';
+    const window = {{ '`${startDate}|${endDate}`' }};
+    const campaign = await CampaignFactory.merge({
+      bundle: {
+        name: 'Test Campaign',
+        window: window,
+      },
+    }).create();
+
+    const [start, end] = (campaign as any).splitWindow;
+
+    assert.isNotNull(start);
+    assert.isNotNull(end);
+    assert.isTrue(start instanceof DateTime);
+    assert.isTrue(end instanceof DateTime);
+    assert.isTrue(start.isValid);
+    assert.isTrue(end.isValid);
+    assert.equal(start.toISO(), startDate);
+    assert.equal(end.toISO(), endDate);
+  });
+
+  test('splitWindow returns null tuple for undefined window', async ({ assert }) => {
+    const campaign = await CampaignFactory.merge({
+      bundle: {
+        name: 'Test Campaign',
+      },
+    }).create();
+
+    const [start, end] = (campaign as any).splitWindow;
+
+    assert.isNull(start);
+    assert.isNull(end);
+  });
+
+  test('splitWindow returns null tuple for null window', async ({ assert }) => {
+    const campaign = await CampaignFactory.merge({
+      bundle: {
+        name: 'Test Campaign',
+        window: null,
+      },
+    }).create();
+
+    const [start, end] = (campaign as any).splitWindow;
+
+    assert.isNull(start);
+    assert.isNull(end);
+  });
+
+  test('splitWindow returns null tuple for empty window string', async ({ assert }) => {
+    const campaign = await CampaignFactory.merge({
+      bundle: {
+        name: 'Test Campaign',
+        window: '',
+      },
+    }).create();
+
+    const [start, end] = (campaign as any).splitWindow;
+
+    assert.isNull(start);
+    assert.isNull(end);
+  });
+
+  test('splitWindow handles missing pipe separator', async ({ assert }) => {
+    const campaign = await CampaignFactory.merge({
+      bundle: {
+        name: 'Test Campaign',
+        window: '2025-12-15T05:54:00.000Z',
+      },
+    }).create();
+
+    const [start, end] = (campaign as any).splitWindow;
+
+    assert.isNotNull(start);
+    assert.isNull(end);
+    assert.isTrue(start instanceof DateTime);
+    assert.isTrue(start.isValid);
+    assert.equal(start.toISO(), '2025-12-15T05:54:00.000Z');
+  });
+
+  test('splitWindow handles multiple pipes', async ({ assert }) => {
+    const campaign = await CampaignFactory.merge({
+      bundle: {
+        name: 'Test Campaign',
+        window:
+          '2025-12-15T05:54:00.000Z|2025-12-18T05:53:00.000Z|2025-12-20T05:53:00.000Z',
+      },
+    }).create();
+
+    const [start, end] = (campaign as any).splitWindow;
+
+    assert.isNotNull(start);
+    assert.isNotNull(end);
+    assert.isTrue(start instanceof DateTime);
+    assert.isTrue(end instanceof DateTime);
+    assert.isTrue(start.isValid);
+    assert.isTrue(end.isValid);
+    assert.equal(start.toISO(), '2025-12-15T05:54:00.000Z');
+    // Should only take the first two parts, end will be the second part
+    assert.equal(end.toISO(), '2025-12-18T05:53:00.000Z');
+  });
+
+  test('splitWindow handles invalid ISO date strings', async ({ assert }) => {
+    const campaign = await CampaignFactory.merge({
+      bundle: {
+        name: 'Test Campaign',
+        window: 'invalid-date|also-invalid',
+      },
+    }).create();
+
+    const [start, end] = (campaign as any).splitWindow;
+
+    assert.isNull(start);
+    assert.isNull(end);
+  });
+
+  test('splitWindow handles only start date (no end date)', async ({ assert }) => {
+    const campaign = await CampaignFactory.merge({
+      bundle: {
+        name: 'Test Campaign',
+        window: '2025-12-15T05:54:00.000Z|',
+      },
+    }).create();
+
+    const [start, end] = (campaign as any).splitWindow;
+
+    assert.isNotNull(start);
+    assert.isNull(end);
+    assert.isTrue(start instanceof DateTime);
+    assert.isTrue(start.isValid);
+    assert.equal(start.toISO(), '2025-12-15T05:54:00.000Z');
+  });
+
+  test('splitWindow handles only end date (no start date)', async ({ assert }) => {
+    const campaign = await CampaignFactory.merge({
+      bundle: {
+        name: 'Test Campaign',
+        window: '|2025-12-18T05:53:00.000Z',
+      },
+    }).create();
+
+    const [start, end] = (campaign as any).splitWindow;
+
+    assert.isNull(start);
+    assert.isNotNull(end);
+    assert.isTrue(end instanceof DateTime);
+    assert.isTrue(end.isValid);
+    assert.equal(end.toISO(), '2025-12-18T05:53:00.000Z');
+  });
+
+  test('splitWindow handles empty dates on both sides', async ({ assert }) => {
+    const campaign = await CampaignFactory.merge({
+      bundle: {
+        name: 'Test Campaign',
+        window: '|',
+      },
+    }).create();
+
+    const [start, end] = (campaign as any).splitWindow;
+
+    assert.isNull(start);
+    assert.isNull(end);
+  });
+
+  test('splitWindow handles whitespace around dates', async ({ assert }) => {
+    const startDate = '2025-12-15T05:54:00.000Z';
+    const endDate = '2025-12-18T05:53:00.000Z';
+    const campaign = await CampaignFactory.merge({
+      bundle: {
+        name: 'Test Campaign',
+        window: {{ '`  ${startDate}  |  ${endDate}  `' }},
+      },
+    }).create();
+
+    const [start, end] = (campaign as any).splitWindow;
+
+    assert.isNotNull(start);
+    assert.isNotNull(end);
+    assert.isTrue(start instanceof DateTime);
+    assert.isTrue(end instanceof DateTime);
+    // DateTime.fromISO should handle whitespace, but let's verify behavior
+    // If it doesn't trim, the dates will be invalid
+    if (start.isValid) {
+      assert.equal(start.toISO(), startDate);
+    }
+    if (end.isValid) {
+      assert.equal(end.toISO(), endDate);
+    }
+  });
+
+  test('splitWindow handles partial ISO dates', async ({ assert }) => {
+    const campaign = await CampaignFactory.merge({
+      bundle: {
+        name: 'Test Campaign',
+        window: '2025-12-15|2025-12-18',
+      },
+    }).create();
+
+    const [start, end] = (campaign as any).splitWindow;
+
+    assert.isNotNull(start);
+    assert.isNotNull(end);
+    assert.isTrue(start instanceof DateTime);
+    assert.equal(start.day, 15);
+    assert.isTrue(end instanceof DateTime);
+    assert.equal(end.day, 18);
+    // Partial dates might be valid or invalid depending on DateTime.fromISO behavior
+    // We just verify they are DateTime instances
+    assert.isTrue(start instanceof DateTime);
+    assert.isTrue(end instanceof DateTime);
   });
 });

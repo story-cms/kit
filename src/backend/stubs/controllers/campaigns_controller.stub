@@ -18,24 +18,19 @@ import cms from '#services/cms';
 import providers from '#config/providers';
 
 export default class CampaignsController {
-  public async get({ request }: HttpContext) {
-    const locale = request.qs()['locale'] || 'en';
+  
+  public async get(ctx: HttpContext) {
+    const { version } = cms.apiContextFrom(ctx);
 
-    const service = new CampaignService(
-      {
-        apiVersion: 1,
-        locale: locale,
-      },
-      cms,
-    );
-    const items = await service.getCampaignItemsForClient();
+    const service = new CampaignService(version);
+    const campaigns = await service.getCampaignItemsForClient();
 
-    return { campaigns: items };
+    return { campaigns };
   }
 
   public async index(ctx: HttpContext) {
     const version = cms.pagesContextFrom(ctx);
-    const service = new CampaignService(version, cms);
+    const service = new CampaignService(version);
     const campaigns = await service.getCampaignItems();
 
     const shared = await cms.sharedProps(ctx);

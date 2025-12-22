@@ -480,6 +480,19 @@ export interface CampaignVersion {
   locale: string;
 }
 
+export interface CampaignForApi {
+  id: number;
+  startDate: string | null;
+  endDate: string | null;
+  promoImage: string;
+  title: string;
+  message: string;
+  actionLabel: string;
+  actionType: string;
+  actionUrl: string;
+  regions: string;
+}
+
 /// ----------------------------------------------------
 ///  configuration
 /// ----------------------------------------------------

@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import { BaseModel, column } from '@adonisjs/lucid/orm';
-import type { CampaignBundle, CampaignMeta } from '../../types';
+import type { CampaignBundle, CampaignMeta, CampaignForApi } from '../../types';
 
 export default class Campaign extends BaseModel {
   @column({ isPrimary: true })
@@ -36,6 +36,38 @@ export default class Campaign extends BaseModel {
       id: this.id,
       isPublished: this.isPublished,
     };
+  }
+
+  public get forApi(): CampaignForApi {
+    const [start, end] = this.splitWindow;
+    return {
+      id: this.id,
+      startDate: start?.toISO() ?? null,
+      endDate: end?.toISO() ?? null,
+      promoImage: this.bundle.promoImage,
+      title: this.bundle.title,
+      message: this.bundle.message,
+      actionLabel: this.bundle.actionLabel,
+      actionType: this.bundle.actionType,
+      actionUrl: this.bundle.actionUrl,
+      regions: this.bundle.regions,
+    };
+  }
+
+  public get splitWindow(): [DateTime | null, DateTime | null] {
+    const parseDate = (dateStr: string | undefined): DateTime | null => {
+      if (!dateStr) return null;
+      const dt = DateTime.fromISO(dateStr, { zone: 'utc' });
+      return dt.isValid ? dt.toUTC() : null;
+    };
+
+    if (!this.bundle || !this.bundle.window) return [null, null];
+    const [start, end] = this.bundle.window.split('|');
+
+    const startDate = start?.trim();
+    const endDate = end?.trim();
+
+    return [parseDate(startDate), parseDate(endDate)];
   }
 
   public updateBundle(changes: any) {
