@@ -6,6 +6,7 @@ export class ChapterValidator {
   constructor(protected story: StorySpec) {}
 
   public get schema(): VineValidator<any, Record<string, any> | undefined> {
+    vine.convertEmptyStringsToNull = true;
     const service = new BundleService(this.story.fields);
     const schema = service.getValidationBuilder(false);
 
