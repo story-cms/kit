@@ -64,7 +64,7 @@
             label: 'Promo image',
             name: 'promoImage',
             widget: 'image',
-            uploadPreset: 'pilot-feeds',
+            uploadPreset: 'campaigns',
             description: 'JPG file up to 300K',
             extensions: ['.jpg', '.jpeg'],
             maxSize: 300000,
