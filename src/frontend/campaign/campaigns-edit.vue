@@ -28,7 +28,7 @@
         },
       ]"
     >
-      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8 bg-white py-4">
+      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="py-4 space-y-8 bg-white">
         <StringField
           :field="{
             name: 'name',
@@ -52,7 +52,7 @@
         <DateRangeField
           :field="{
             name: 'window',
-            label: 'Campaign window',
+            label: 'Campaign Window',
             widget: 'dateRange',
           }"
           :is-nested="true"
@@ -61,7 +61,7 @@
 
         <ImageField
           :field="{
-            label: 'Promo image',
+            label: 'Promo Image',
             name: 'promoImage',
             widget: 'image',
             uploadPreset: 'campaigns',
