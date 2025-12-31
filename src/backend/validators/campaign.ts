@@ -2,7 +2,7 @@ import vine, { SimpleMessagesProvider, VineValidator } from '@vinejs/vine';
 import type { HttpContext } from '@adonisjs/core/http';
 
 const draft = {
-  name: vine.string().optional(),
+  name: vine.string(),
   window: vine.string().optional(),
   promoImage: vine.string().optional(),
   title: vine.string().optional(),
