@@ -55,7 +55,6 @@
 import { computed } from 'vue';
 import { formatDate, getCampaignStatus } from '../shared/helpers';
 import type { CampaignItem } from '../../types';
-import { DateTime } from 'luxon';
 
 const props = defineProps<{
   campaign: CampaignItem;
