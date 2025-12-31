@@ -28,7 +28,7 @@
         },
       ]"
     >
-      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="py-4 space-y-8 bg-white">
+      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8 bg-white py-4">
         <StringField
           :field="{
             name: 'name',
@@ -163,7 +163,7 @@ import {
 import { useModelStore, useSharedStore, useWidgetsStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
-import { debounce } from '../shared/helpers';
+import { debounce, getCampaignStatus } from '../shared/helpers';
 import StringField from '../fields/string-field.vue';
 import ImageField from '../fields/image-field.vue';
 import SelectField from '../fields/select-field.vue';
@@ -222,19 +222,8 @@ const publishedAt = computed(() =>
 );
 
 const status = computed(() => {
-  if (!isPublished.value) return 'Draft';
-  const now = DateTime.now();
   const windowValue = model.getField('window', '') as string;
-  if (!windowValue) return 'Published';
-
-  const parts = windowValue.split('|');
-  const windowStart = DateTime.fromISO(parts[0]?.trim() || '');
-  const windowEnd = DateTime.fromISO(parts[1]?.trim() || '');
-
-  if (!windowStart.isValid || !windowEnd.isValid) return 'Published';
-  if (now < windowStart) return 'Scheduled';
-  if (now > windowEnd) return 'Completed';
-  return 'Published';
+  return getCampaignStatus(isPublished.value, windowValue);
 });
 
 const save = debounce(1000, () => {

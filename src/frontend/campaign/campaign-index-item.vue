@@ -53,7 +53,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { formatDate } from '../shared/helpers';
+import { formatDate, getCampaignStatus } from '../shared/helpers';
 import type { CampaignItem } from '../../types';
 import { DateTime } from 'luxon';
 
@@ -88,11 +88,10 @@ const endDate = computed(() => {
 
 // check if the campaign is live
 const isLive = computed(() => {
-  if (!props.campaign.isPublished) return false;
-  if (!props.campaign.window) return false;
-  const windowStart = DateTime.fromISO(props.campaign.window?.split('|')[0]);
-  const windowEnd = DateTime.fromISO(props.campaign.window?.split('|')[1]);
-  const now = DateTime.now();
-  return now >= windowStart && now <= windowEnd;
+  const status = getCampaignStatus(
+    props.campaign.isPublished,
+    props.campaign.window ?? '',
+  );
+  return status === 'Live';
 });
 </script>
