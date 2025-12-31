@@ -1,6 +1,8 @@
 import { test, expect } from '@playwright/test';
 import { CampaignValidator } from '../../src/backend/validators/campaign.js';
 import type { HttpContext } from '@adonisjs/core/http';
+import { getCampaignStatus } from '../../src/frontend/shared/helpers.js';
+import { DateTime } from 'luxon';
 
 // Helper to create a mock HttpContext
 function createMockHttpContext(inputs: Record<string, any>): HttpContext {
@@ -408,5 +410,110 @@ test.describe('Campaign Validator', () => {
       const result = await schema.validate(data);
       expect(result).toEqual(data);
     });
+  });
+});
+test.describe('Campaign Status', () => {
+  test('returns Draft when isPublished is false', () => {
+    const status = getCampaignStatus(false, '');
+    expect(status).toBe('Draft');
+  });
+
+  test('returns Draft when isPublished is false even with window', () => {
+    const window = '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z';
+    const status = getCampaignStatus(false, window);
+    expect(status).toBe('Draft');
+  });
+
+  test('returns Scheduled when published and current time is before window start', () => {
+    const windowStart = DateTime.now().plus({ days: 1 });
+    const windowEnd = DateTime.now().plus({ days: 2 });
+    const window = `${windowStart.toISO()}|${windowEnd.toISO()}`;
+    const now = DateTime.now();
+
+    const status = getCampaignStatus(true, window, now);
+    expect(status).toBe('Scheduled');
+  });
+
+  test('returns Completed when published and current time is after window end', () => {
+    const windowStart = DateTime.now().minus({ days: 2 });
+    const windowEnd = DateTime.now().minus({ days: 1 });
+    const window = `${windowStart.toISO()}|${windowEnd.toISO()}`;
+    const now = DateTime.now();
+
+    const status = getCampaignStatus(true, window, now);
+    expect(status).toBe('Completed');
+  });
+
+  test('returns Live when published and current time is within window', () => {
+    const windowStart = DateTime.now().minus({ hours: 1 });
+    const windowEnd = DateTime.now().plus({ hours: 1 });
+    const window = `${windowStart.toISO()}|${windowEnd.toISO()}`;
+    const now = DateTime.now();
+
+    const status = getCampaignStatus(true, window, now);
+    expect(status).toBe('Live');
+  });
+
+  test('returns Live when published and current time equals window start', () => {
+    const now = DateTime.now();
+    const windowEnd = now.plus({ hours: 1 });
+    const window = `${now.toISO()}|${windowEnd.toISO()}`;
+
+    const status = getCampaignStatus(true, window, now);
+    expect(status).toBe('Live');
+  });
+
+  test('returns Live when published and current time equals window end', () => {
+    const windowStart = DateTime.now().minus({ hours: 1 });
+    const now = DateTime.now();
+    const window = `${windowStart.toISO()}|${now.toISO()}`;
+
+    const status = getCampaignStatus(true, window, now);
+    expect(status).toBe('Live');
+  });
+
+  test('returns Draft when published with empty window value', () => {
+    const status = getCampaignStatus(true, '');
+    expect(status).toBe('Draft');
+  });
+
+  test('returns Draft when published with invalid window start', () => {
+    const windowEnd = DateTime.now().plus({ days: 1 });
+    const window = `invalid-date|${windowEnd.toISO()}`;
+
+    const status = getCampaignStatus(true, window);
+    expect(status).toBe('Draft');
+  });
+
+  test('returns Draft when published with invalid window end', () => {
+    const windowStart = DateTime.now().minus({ days: 1 });
+    const window = `${windowStart.toISO()}|invalid-date`;
+
+    const status = getCampaignStatus(true, window);
+    expect(status).toBe('Draft');
+  });
+
+  test('returns Draft when published with both invalid window dates', () => {
+    const window = 'invalid-start|invalid-end';
+
+    const status = getCampaignStatus(true, window);
+    expect(status).toBe('Draft');
+  });
+
+  test('returns Draft when published with malformed window format', () => {
+    const window = '2025-01-01T00:00:00.000Z'; // missing separator
+
+    const status = getCampaignStatus(true, window);
+    expect(status).toBe('Draft');
+  });
+
+  test('handles window with extra whitespace', () => {
+    const windowStart = DateTime.now().minus({ hours: 1 });
+    const windowEnd = DateTime.now().plus({ hours: 1 });
+    const window = `  ${windowStart.toISO()}  |  ${windowEnd.toISO()}  `;
+    const now = DateTime.now();
+
+    const status = getCampaignStatus(true, window, now);
+    expect(status).toBe('Live');
   });
 });
