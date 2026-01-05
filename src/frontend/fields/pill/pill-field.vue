@@ -15,15 +15,10 @@
 
     <div class="relative">
       <div
-        class="mt-[2px] grid gap-x-2 rounded-md border border-gray-300 bg-white px-1 pb-1 pt-1"
-        :class="
-          (pills.length > 0 || showDefaultPill) && !isReadOnly
-            ? 'grid-cols-[auto_minmax(32%,_1fr)]'
-            : 'grid-cols-[1fr]'
-        "
+        class="mt-[2px] flex flex-wrap gap-x-2 rounded-md border border-gray-300 bg-white px-1 pb-1 pt-1"
       >
-        <div
-          class="flex flex-wrap items-center gap-2 text-base text-gray-500 sm:text-sm/6"
+        <span
+          class="flex w-full flex-wrap items-center gap-2 text-base text-gray-500 sm:text-sm/6"
           @click="inputRef?.focus()"
         >
           <span v-if="showDefaultPill">
@@ -61,26 +56,27 @@
               </svg>
             </button>
           </span>
-        </div>
-        <slot name="input">
-          <input
-            v-if="!isReadOnly && showInput"
-            ref="inputRef"
-            :value="inputValue"
-            type="text"
-            autocomplete="off"
-            :name="field.label"
-            :placeholder="showPlaceholder ? placeholder : ''"
-            class="block rounded-r-md border-0 bg-white py-1 pl-0 text-sm font-normal leading-5 text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
-            @input="handleInputEvent"
-            @keydown.enter.stop="handleEnterKey"
-            @keydown.arrow-down.prevent="handleArrowDown"
-            @keydown.arrow-up.prevent="handleArrowUp"
-            @keydown.escape="handleEscape"
-            @focus="handleFocus"
-            @blur="handleBlur"
-          />
-        </slot>
+          <slot name="input">
+            <input
+              v-if="!isReadOnly && showInput"
+              ref="inputRef"
+              :value="inputValue"
+              type="text"
+              autocomplete="off"
+              :name="field.label"
+              :placeholder="showPlaceholder ? placeholder : ''"
+              class="inline-block rounded-r-md border-0 bg-white py-1 pl-0 text-sm font-normal leading-5 text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
+              :class="[pills.length > 0 ? 'w-auto' : 'w-1/2']"
+              @input="handleInputEvent"
+              @keydown.enter.stop="handleEnterKey"
+              @keydown.arrow-down.prevent="handleArrowDown"
+              @keydown.arrow-up.prevent="handleArrowUp"
+              @keydown.escape="handleEscape"
+              @focus="handleFocus"
+              @blur="handleBlur"
+            />
+          </slot>
+        </span>
       </div>
       <slot name="dropdown"></slot>
     </div>
