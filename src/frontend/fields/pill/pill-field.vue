@@ -17,7 +17,7 @@
       <div
         class="mt-[2px] grid gap-x-1 rounded-md border border-gray-300 bg-white pb-1 pt-1"
         :class="
-          pills.length > 0 && !isReadOnly
+          (pills.length > 0 || showDefaultPill) && !isReadOnly
             ? 'grid-cols-[auto_minmax(32%,_1fr)]'
             : 'grid-cols-[1fr]'
         "
@@ -27,6 +27,14 @@
           :class="pills.length > 0 ? 'ltr:pl-1 rtl:pr-1' : 'px-0'"
           @click="inputRef?.focus()"
         >
+          <span v-if="showDefaultPill">
+            <span
+              class="ml-1 inline-flex flex-wrap items-center gap-1 rounded-full px-2 py-1 text-xs font-medium leading-4"
+              :class="[pillBgColor, pillTextColor]"
+            >
+              {{ getDisplayText(defaultPill) }}
+            </span>
+          </span>
           <span
             v-for="pill in pills"
             :key="pill"
@@ -134,6 +142,11 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  defaultPill: {
+    type: String,
+    default: '',
+    required: false,
+  },
 });
 
 const emit = defineEmits<{
@@ -208,5 +221,9 @@ const handleBlur = (event: FocusEvent) => {
 // Expose inputRef for parent components
 defineExpose({
   inputRef,
+});
+
+const showDefaultPill = computed(() => {
+  return props.pills.length === 0 && props.defaultPill !== '' && !isFocused.value;
 });
 </script>

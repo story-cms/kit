@@ -1,8 +1,9 @@
 <template>
   <PillField
-    placeholder="Sending to all regions. Type a region  name to filter."
+    placeholder="Type a region name to filter"
     v-bind="props"
     :pills="tags"
+    default-pill="All Regions"
     :errors="errors"
     :input-value="newTag"
     :display-text="getRegionName"

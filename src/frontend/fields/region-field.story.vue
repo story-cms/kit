@@ -21,8 +21,14 @@
       <RegionField :dir="isRtl ? 'rtl' : 'ltr'" :field="spec" />
       <LanguageControl />
     </Variant>
-
+    <Variant title="RTL with default pill">
+      <RegionField :dir="isRtl ? 'rtl' : 'ltr'" :field="spec" />
+      <LanguageControl />
+    </Variant>
     <Variant title="Readonly" :setup-app="loadData">
+      <RegionField :field="spec" :is-read-only="true" />
+    </Variant>
+    <Variant title="Readonly with default pill" :setup-app="loadData">
       <RegionField :field="spec" :is-read-only="true" />
     </Variant>
   </Story>
@@ -58,6 +64,11 @@ const loadData: StoryHandler = ({ variant }): void => {
   if (variant?.title === 'Readonly') {
     store.setSource({
       regions: 'KE,CX,ZM,US,ZA',
+    });
+  }
+  if (variant?.title === 'Readonly with default pill') {
+    store.setSource({
+      regions: '',
     });
   }
 };
