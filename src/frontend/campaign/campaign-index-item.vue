@@ -9,14 +9,16 @@
         >Live</span
       >{{ campaign.title }}
     </h3>
-    <div class="row-span-1 row-start-2 text-sm font-medium leading-5 text-gray-500">
-      <div class="grid grow grid-cols-2 px-2 text-sm font-medium leading-5 text-gray-500">
-        <p>Start:</p>
-        <p class="place-self-end">{{ startDate }}</p>
+    <div
+      class="row-span-1 row-start-2 w-full text-sm font-medium leading-5 text-gray-500"
+    >
+      <div class="flex w-full items-center gap-2 px-2">
+        <p class="w-1/6">Start:</p>
+        <p>{{ startDate }}</p>
       </div>
-      <div class="grid grow grid-cols-2 px-2 text-sm font-medium leading-5 text-gray-500">
-        <p>End:</p>
-        <p class="place-self-end">{{ endDate }}</p>
+      <div class="flex w-full items-center gap-2 px-2">
+        <p class="w-1/6">End:</p>
+        <p>{{ endDate }}</p>
       </div>
     </div>
 
