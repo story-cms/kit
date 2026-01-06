@@ -34,6 +34,157 @@ export class Analytics {
   }
 
   /**
+   * Fetches campaign statistics for promotion_impression and promotion_cta_tap events
+   * @param campaignId - The campaign ID to filter by
+   * @param language - The language code to filter by (e.g., 'en', 'fr')
+   * @returns Object with impressions and clicks counts for the current period
+   */
+  async getCampaignStats(
+    campaignId: number,
+    language: string,
+  ): Promise<{ impressions: number; clicks: number }> {
+    // Create base filter with stream names
+    const appsFilter = {
+      fieldName: 'streamName',
+      inListFilter: {
+        values: this.config.streams,
+      },
+    };
+
+    // Create campaign ID filter (Custom Event Scope)
+    const campaignIdFilter = {
+      fieldName: 'customEvent:campaign_id',
+      stringFilter: {
+        value: String(campaignId),
+      },
+    };
+
+    // Create language filter (Standard Device Scope)
+    // We use the built-in 'language' dimension instead of a custom event parameter
+
+    const languageFilter = {
+      fieldName: 'languageCode', // TODO: Currently using device language code to filter. We should use the language code instead in the event.params
+      stringFilter: {
+        value: language,
+        caseSensitive: false,
+      },
+    };
+
+    // Create language filter (Custom Event Scope)
+    // const languageFilter = {
+    //   fieldName: 'customEvent:language',
+    //   stringFilter: {
+    //     value: language,
+    //     caseSensitive: false,
+    //   },
+    // };
+
+    // Create promotion_impression event filter
+    const impressionEventFilter = {
+      fieldName: 'eventName',
+      stringFilter: {
+        value: 'promotion_impression',
+      },
+    };
+
+    // Create promotion_cta_tap event filter
+    const ctaTapEventFilter = {
+      fieldName: 'eventName',
+      stringFilter: {
+        value: 'promotion_cta_tap',
+      },
+    };
+
+    // Combined filter for impressions: stream + event + campaign_id + language
+    const impressionDimensionFilter = {
+      andGroup: {
+        expressions: [
+          { filter: appsFilter },
+          { filter: impressionEventFilter },
+          { filter: campaignIdFilter },
+          { filter: languageFilter },
+        ],
+      },
+    };
+
+    // Combined filter for CTA taps: stream + event + campaign_id + language
+    const ctaTapDimensionFilter = {
+      andGroup: {
+        expressions: [
+          { filter: appsFilter },
+          { filter: ctaTapEventFilter },
+          { filter: campaignIdFilter },
+          { filter: languageFilter },
+        ],
+      },
+    };
+
+    // We must request the dimensions we are filtering by to ensure accurate event counts
+    const eventParameterDimensions = [
+      'customEvent:campaign_id',
+      'languageCode', // Standard dimension
+      // 'customEvent:language', // Custom Event Scope
+    ];
+
+    try {
+      const [impressions, clicks] = await Promise.all([
+        this.fetchMetricsForBothPeriods(
+          'eventCount',
+          impressionDimensionFilter,
+          eventParameterDimensions,
+        ),
+        this.fetchMetricsForBothPeriods(
+          'eventCount',
+          ctaTapDimensionFilter,
+          eventParameterDimensions,
+        ),
+      ]);
+
+      return {
+        impressions: impressions.current,
+        clicks: clicks.current,
+      };
+    } catch (error: any) {
+      const errorMessage = error?.message || String(error);
+      console.error('Error fetching campaign stats:', errorMessage);
+
+      // Fallback: Try without specific filters if the main query fails
+      try {
+        const impressionFilterWithoutParams = {
+          andGroup: {
+            expressions: [{ filter: appsFilter }, { filter: impressionEventFilter }],
+          },
+        };
+
+        const ctaTapFilterWithoutParams = {
+          andGroup: {
+            expressions: [{ filter: appsFilter }, { filter: ctaTapEventFilter }],
+          },
+        };
+
+        const [impressions, clicks] = await Promise.all([
+          this.fetchMetricsForBothPeriods('eventCount', impressionFilterWithoutParams),
+          this.fetchMetricsForBothPeriods('eventCount', ctaTapFilterWithoutParams),
+        ]);
+
+        console.warn(
+          `Campaign stats queried without filters. Falling back to global counts. ` +
+            `Ensure 'campaign_id' is registered as a Custom Dimension (Event Scope) and data exists.`,
+        );
+
+        return {
+          impressions: impressions.current,
+          clicks: clicks.current,
+        };
+      } catch (fallbackError: any) {
+        throw new Error(
+          `Failed to fetch stats: ${errorMessage}. Fallback failed: ${fallbackError?.message}`,
+        );
+      }
+    }
+  }
+
+  /**
    * Generates an analytics report with key metrics
    */
   async report(chapterCompleteEventName: string): Promise<StatMetric[]> {
@@ -133,7 +284,7 @@ export class Analytics {
   /**
    * Creates the base specification for GA reports
    */
-  private createBaseSpec() {
+  private createBaseSpec(additionalDimensions: string[] = []) {
     const appsFilter = {
       fieldName: 'streamName',
       inListFilter: {
@@ -141,13 +292,16 @@ export class Analytics {
       },
     };
 
+    const dimensions = [
+      {
+        name: 'streamName',
+      },
+      ...additionalDimensions.map((name) => ({ name })),
+    ];
+
     return {
       property: `properties/${this.config.propertyId}`,
-      dimensions: [
-        {
-          name: 'streamName',
-        },
-      ],
+      dimensions,
       dimensionFilter: {
         filter: appsFilter,
       },
@@ -160,8 +314,9 @@ export class Analytics {
   private async fetchMetricsForBothPeriods(
     metricName: string,
     customDimensionFilter?: any,
+    additionalDimensions: string[] = [],
   ): Promise<{ current: number; previous: number }> {
-    const baseSpec = this.createBaseSpec();
+    const baseSpec = this.createBaseSpec(additionalDimensions);
     const reportConfig = {
       ...baseSpec,
       metrics: [{ name: metricName }],
