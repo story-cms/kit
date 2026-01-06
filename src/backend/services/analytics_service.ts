@@ -62,22 +62,22 @@ export class Analytics {
     // Create language filter (Standard Device Scope)
     // We use the built-in 'language' dimension instead of a custom event parameter
 
-    const languageFilter = {
-      fieldName: 'languageCode', // TODO: Currently using device language code to filter. We should use the language code instead in the event.params
-      stringFilter: {
-        value: language,
-        caseSensitive: false,
-      },
-    };
-
-    // Create language filter (Custom Event Scope)
     // const languageFilter = {
-    //   fieldName: 'customEvent:language',
+    //   fieldName: 'languageCode', // Currently using device language code to filter. We should use the language code instead in the event.params
     //   stringFilter: {
     //     value: language,
     //     caseSensitive: false,
     //   },
     // };
+
+    // Create language filter (Custom Event Scope)
+    const languageFilter = {
+      fieldName: 'customEvent:language',
+      stringFilter: {
+        value: language,
+        caseSensitive: false,
+      },
+    };
 
     // Create promotion_impression event filter
     const impressionEventFilter = {
@@ -122,8 +122,8 @@ export class Analytics {
     // We must request the dimensions we are filtering by to ensure accurate event counts
     const eventParameterDimensions = [
       'customEvent:campaign_id',
-      'languageCode', // Standard dimension
-      // 'customEvent:language', // Custom Event Scope
+      // 'languageCode', // Standard dimension
+      'customEvent:language', // Custom Event Scope
     ];
 
     try {
