@@ -60,15 +60,8 @@ export default class CampaignsController {
       locale: version.locale,
       apiVersion: 1,
       bundle: {
-        name: '',
-        window: '',
-        promoImage: '',
-        title: '',
-        message: '',
-        actionButton: '',
-        actionType: '',
-        actionUrl: '',
-        regions: '',
+        name: 'New Campaign',
+        title: 'Campaign Title',
       },
       updatedBy: ctx.auth.user?.id,
     });
