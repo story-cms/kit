@@ -5,7 +5,7 @@ const draft = {
   name: vine.string(),
   window: vine.string().optional(),
   promoImage: vine.string().optional(),
-  title: vine.string().optional(),
+  title: vine.string(),
   message: vine.string().optional(),
   actionLabel: vine.string().optional(),
   actionType: vine.enum(['close', 'donate', 'externalUrl']).optional(),
