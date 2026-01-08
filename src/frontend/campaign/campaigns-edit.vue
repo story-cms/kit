@@ -42,7 +42,7 @@
         <RegionField
           :field="{
             name: 'regions',
-            label: 'Regions',
+            label: 'Filter Regions',
             widget: 'region',
           }"
           :is-nested="true"
