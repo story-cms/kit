@@ -537,6 +537,10 @@ export type CmsConfig = {
   audience: {
     hasAudience?: boolean;
   };
+
+  campaigns: {
+    hasCampaigns?: boolean;
+  };
 };
 
 export interface LanguageSpecification {
