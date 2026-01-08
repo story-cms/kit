@@ -57,7 +57,7 @@
               autocomplete="off"
               :name="field.label"
               :placeholder="showPlaceholder ? placeholder : ''"
-              class="inline-block rounded-r-md border-0 bg-white py-1 pl-0 pr-0 text-sm font-normal leading-5 text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
+              class="inline-block border-0 bg-white px-0 py-1 text-sm font-normal leading-5 text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white"
               :class="[pills.length > 0 ? 'w-auto' : 'w-1/2']"
               @input="handleInputEvent"
               @keydown.enter.stop="handleEnterKey"
