@@ -212,6 +212,11 @@ const getPayload = (): RequestPayload => {
 
 const defaultType = 'donate';
 
+const currentActionType = model.getField('actionType', '');
+if (!currentActionType) {
+  model.setField('actionType', defaultType);
+}
+
 const selection = ref(model.getField('actionType', defaultType));
 const title = ref(model.getField('name', 'New Campaign'));
 const isPublished = ref(Boolean(model.getField('isPublished', false)));
