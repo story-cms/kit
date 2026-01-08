@@ -3,6 +3,9 @@
     <Variant title="With model">
       <CampaignIndexItem :campaign="campaign" />
     </Variant>
+    <Variant title="Without title">
+      <CampaignIndexItem :campaign="campaignWithoutTitle" />
+    </Variant>
   </Story>
 </template>
 
@@ -15,5 +18,11 @@ const campaign = {
   title: 'Giving Tuesday',
   regions: 'CX, KE, UG, ZM',
   window: '2026-01-08T02:58:00.000Z|2026-01-24T02:58:00.000Z',
+} as CampaignItem;
+
+const campaignWithoutTitle = {
+  id: 2,
+  regions: 'CX, KE, UG, ZM',
+  isPublished: false,
 } as CampaignItem;
 </script>
