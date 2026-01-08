@@ -1411,7 +1411,7 @@ export const mockCampaigns: CampaignItem[] = [
   },
   {
     id: 35,
-    title: 'Q2 Launch Teaser',
+    title: '',
     regions: '',
     window: '',
     isPublished: false,

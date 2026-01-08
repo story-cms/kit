@@ -1,39 +1,37 @@
 <template>
-  <div
-    class="grid h-full grid-rows-[min-content_min-content_min-content] space-y-2 rounded-md bg-white px-1 py-4 shadow"
-  >
-    <h3 class="text-base/leading-6 row-start-1 p-2 font-bold text-gray-800">
+  <div class="flex flex-col px-1 py-4 space-y-2 h-full bg-white rounded-md shadow">
+    <h3 class="p-2 font-bold text-gray-800 text-base/leading-6">
       <span
         v-if="isLive"
-        class="mr-2 inline-flex flex-wrap items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs font-medium leading-4 text-green-800"
+        class="inline-flex flex-wrap gap-1 items-center px-2 py-1 mr-2 text-xs font-medium leading-4 text-green-800 bg-green-100 rounded-full"
         >Live</span
-      >{{ campaign.title }}
+      ><span>
+        {{ campaignTitle }}
+      </span>
     </h3>
-    <div
-      class="row-span-1 row-start-2 w-full text-sm font-medium leading-5 text-gray-500"
-    >
-      <div class="flex w-full items-center gap-2 px-2">
+    <div class="w-full text-sm font-medium leading-5 text-gray-500 grow">
+      <div class="flex gap-2 items-center px-2 w-full">
         <p class="w-1/6">Start:</p>
         <p>{{ startDate }}</p>
       </div>
-      <div class="flex w-full items-center gap-2 px-2">
+      <div class="flex gap-2 items-center px-2 w-full">
         <p class="w-1/6">End:</p>
         <p>{{ endDate }}</p>
       </div>
     </div>
 
-    <div class="row-span-1 row-start-3 flex flex-wrap items-center gap-2 p-2">
-      <div class="flex flex-wrap items-center gap-2">
+    <div class="flex flex-wrap gap-2 items-center p-2">
+      <div class="flex flex-wrap gap-2 items-center">
         <span
           v-if="isForAllRegions"
-          class="inline-flex flex-wrap items-center gap-1 rounded-full bg-blue-100 px-2 py-1 text-xs font-medium leading-4 text-blue-800"
+          class="inline-flex flex-wrap gap-1 items-center px-2 py-1 text-xs font-medium leading-4 text-blue-800 bg-blue-100 rounded-full"
           >All Regions</span
         >
         <span
           v-for="region in parsedRegions?.slice(0, 5)"
           v-else
           :key="region"
-          class="inline-flex flex-wrap items-center gap-1 rounded-full bg-blue-100 px-2 py-1 text-xs font-medium leading-4 text-blue-800"
+          class="inline-flex flex-wrap gap-1 items-center px-2 py-1 text-xs font-medium leading-4 text-blue-800 bg-blue-100 rounded-full"
           >{{ region }}</span
         >
       </div>
@@ -51,6 +49,7 @@
 import { computed } from 'vue';
 import { formatDate, getCampaignStatus } from '../shared/helpers';
 import type { CampaignItem } from '../../types';
+import { padZero } from '../shared/helpers';
 
 const props = defineProps<{
   campaign: CampaignItem;
@@ -66,7 +65,7 @@ const parsedRegions = computed(() => {
 });
 
 const startDate = computed(() => {
-  if (!props.campaign.window) return '';
+  if (!props.campaign.window) return '—';
   return formatDate(props.campaign.window?.split('|')[0])
     .split(' ')[0]
     .replace('-', '/')
@@ -74,7 +73,7 @@ const startDate = computed(() => {
 });
 
 const endDate = computed(() => {
-  if (!props.campaign.window) return '';
+  if (!props.campaign.window) return '—';
   return formatDate(props.campaign.window?.split('|')[1])
     .split(' ')[0]
     .replace('-', '/')
@@ -89,4 +88,12 @@ const isLive = computed(() => {
   );
   return status === 'Live';
 });
+
+const campaignTitle = computed(() =>
+  props.campaign.title === null ||
+  props.campaign.title === undefined ||
+  props.campaign.title === ''
+    ? `Campaign ${padZero(props.campaign.id)}`
+    : props.campaign.title,
+);
 </script>
