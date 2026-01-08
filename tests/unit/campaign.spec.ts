@@ -15,7 +15,7 @@ function createMockHttpContext(inputs: Record<string, any>): HttpContext {
 
 test.describe('Campaign Validator', () => {
   test.describe('Draft Schema', () => {
-    test('allows all fields to be optional', async () => {
+    test('requires name and title', async () => {
       const ctx = createMockHttpContext({ isPublished: false });
       const validator = new CampaignValidator(ctx);
       const schema = validator.schema;
@@ -23,8 +23,47 @@ test.describe('Campaign Validator', () => {
       const data = {
         isPublished: false,
       };
+      await expect(schema.validate(data)).rejects.toThrow();
+    });
+
+    test('accepts minimal required fields', async () => {
+      const ctx = createMockHttpContext({ isPublished: false });
+      const validator = new CampaignValidator(ctx);
+      const schema = validator.schema;
+
+      const data = {
+        name: 'Test Campaign',
+        title: 'Test Title',
+        isPublished: false,
+      };
       const result = await schema.validate(data);
-      expect(result).toEqual({ isPublished: false });
+      expect(result.name).toBe('Test Campaign');
+      expect(result.title).toBe('Test Title');
+      expect(result.isPublished).toBe(false);
+    });
+
+    test('requires name', async () => {
+      const ctx = createMockHttpContext({ isPublished: false });
+      const validator = new CampaignValidator(ctx);
+      const schema = validator.schema;
+
+      const data = {
+        title: 'Test Title',
+        isPublished: false,
+      };
+      await expect(schema.validate(data)).rejects.toThrow();
+    });
+
+    test('requires title', async () => {
+      const ctx = createMockHttpContext({ isPublished: false });
+      const validator = new CampaignValidator(ctx);
+      const schema = validator.schema;
+
+      const data = {
+        name: 'Test Campaign',
+        isPublished: false,
+      };
+      await expect(schema.validate(data)).rejects.toThrow();
     });
 
     test('accepts partial data', async () => {

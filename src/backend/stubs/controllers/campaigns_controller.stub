@@ -3,8 +3,10 @@
 }}}
 import { HttpContext } from '@adonisjs/core/http';
 import vine from '@vinejs/vine';
+import analyticsConfig from '#config/analytics';
 import {
   Activity,
+  Analytics,
   trimmedErrors,
   Campaign,
   CampaignValidator,
@@ -43,11 +45,31 @@ export default class CampaignsController {
   public async edit(ctx: HttpContext) {
     const campaign = await Campaign.findOrFail(ctx.params.id);
     const shared = await cms.sharedProps(ctx);
+    let stats = { impressions: 0, clicks: 0 };
+    
+    try {
+      const analytics = new Analytics(analyticsConfig);
+      stats = await analytics.getCampaignStats(campaign.id, campaign.locale);
+
+      // Check if the stats are not 0, if they are not 0, then use the stats
+      if (stats.impressions !== 0 && stats.clicks !== 0) {
+        campaign.stats = stats;
+        await campaign.save();
+      }
+    } catch (error) {
+      ctx.logger.error('Failed to fetch campaign stats', {
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+        campaignId: campaign.id,
+        locale: campaign.locale,
+      });
+    }
+
     const props: CampaignEditProps = {
       providers,
       campaign: campaign.meta,
       bundle: campaign.model,
-      stats: { impressions: 0, clicks: 0 }, // TODO: get stats from database
+      stats,
       ...shared,
     };
 
@@ -60,15 +82,8 @@ export default class CampaignsController {
       locale: version.locale,
       apiVersion: 1,
       bundle: {
-        name: '',
-        window: '',
-        promoImage: '',
-        title: '',
-        message: '',
-        actionButton: '',
-        actionType: '',
-        actionUrl: '',
-        regions: '',
+        name: 'New Campaign',
+        title: 'Campaign Title',
       },
       updatedBy: ctx.auth.user?.id,
     });
