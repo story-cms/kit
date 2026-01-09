@@ -41,6 +41,7 @@ import { useModelStore, useSharedStore } from '../store';
 import { commonProps, expandShortcuts } from '../shared/helpers';
 import type { Editor, EditorChange, Position } from 'codemirror';
 import { customToolbarButtons, defaultButtons } from './markdown/toolbar-buttons';
+import type EasyMDE from './markdown/types';
 
 const props = defineProps({
   ...commonProps,

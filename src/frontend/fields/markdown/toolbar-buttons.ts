@@ -5,7 +5,6 @@ export interface EditorButton {
   name: string;
   className?: string;
   title?: string;
-  // eslint-disable-next-line no-unused-vars
   action?: (instance: EasyMDE) => void;
 }
 

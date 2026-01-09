@@ -41,7 +41,7 @@ export const formatDate = (value: string): string => {
   )}, ${padZero(d.getHours())}:${padZero(d.getMinutes())}`;
 };
 
-export const debounce = <T extends (...args: any[]) => void>( // eslint-disable-line
+export const debounce = <T extends (...args: any[]) => void>(
   wait: number,
   callback: T,
   immediate = false,
