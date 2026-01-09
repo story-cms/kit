@@ -146,15 +146,23 @@ export class CmsService {
     if (!this.#config.stories.hasStories) {
       exclude.push('story');
     }
+
     if (!this.#config.streams.hasStreams) {
       exclude.push('stream');
     }
+
     if (this.#config.languages.languages.length < 1) {
       exclude.push('language');
     }
+
     if (!this.#config.audience.hasAudience) {
       exclude.push('audience');
     }
+
+    if (!this.#config.campaigns.hasCampaigns) {
+      exclude.push('campaign');
+    }
+
     if (!this.#config.pages.hasPages) {
       exclude.push('page');
     }

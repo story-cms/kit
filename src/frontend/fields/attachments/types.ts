@@ -3,8 +3,8 @@ export interface AttachmentModel {
 }
 
 export type UploadFile = (
-  file: File, // eslint-disable-line
-  onProgress: (percentage: number | undefined) => void, // eslint-disable-line
+  file: File,
+  onProgress: (percentage: number | undefined) => void,
 ) => Promise<AttachmentModel>;
 
 export interface HostService {

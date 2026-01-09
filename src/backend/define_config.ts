@@ -12,6 +12,7 @@ export function defineConfig(config: Partial<CmsConfig>): CmsConfig {
       logo: 'https://res.cloudinary.com/journeys/image/upload/v1756295658/logo_g8k7tf.png',
       ...config.meta,
     },
+
     languages: {
       microcopySource: config.languages?.microcopySource || '',
       languages: config.languages?.languages || [
@@ -23,26 +24,35 @@ export function defineConfig(config: Partial<CmsConfig>): CmsConfig {
         },
       ],
     },
+
     stories: {
       hasStories: true,
       hasEditReview: false,
       stories: [],
       ...config.stories,
     },
+
     streams: {
       hasStreams: true,
       streams: [],
       ...config.streams,
     },
+
     pages: {
       hasPages: true,
       schemaVersion: 1,
       tracking: 'utm_source=storyapp&utm_medium=referral&utm_campaign=page_menu',
       ...config.pages,
     },
+
     audience: {
       hasAudience: false,
       ...config.audience,
+    },
+
+    campaigns: {
+      hasCampaigns: false,
+      ...config.campaigns,
     },
   } satisfies CmsConfig;
 }

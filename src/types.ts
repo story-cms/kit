@@ -2,24 +2,16 @@
 ///  these enums can not be imported into vue files
 /// ----------------------------------------------------
 export enum AddStatus {
-  // eslint-disable-next-line
   Full,
-  // eslint-disable-next-line
   Add,
-  // eslint-disable-next-line
   Wait,
 }
 
 export enum ResponseStatus {
-  // eslint-disable-next-line
   Failure,
-  // eslint-disable-next-line
   Confirmation,
-  // eslint-disable-next-line
   Accomplishment,
-  // eslint-disable-next-line
   Neutral,
-  // eslint-disable-next-line
   None,
 }
 
@@ -75,7 +67,7 @@ export interface Video {
   url: string;
 }
 
-export type WidgetPicker = (widget: string) => any; // eslint-disable-line
+export type WidgetPicker = (widget: string) => any;
 
 /// ----------------------------------------------------
 ///  streams
@@ -536,6 +528,10 @@ export type CmsConfig = {
 
   audience: {
     hasAudience?: boolean;
+  };
+
+  campaigns: {
+    hasCampaigns?: boolean;
   };
 };
 

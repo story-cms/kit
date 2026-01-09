@@ -84,6 +84,9 @@ export const testCmsConfig: CmsConfig = {
   audience: {
     hasAudience: false,
   },
+  campaigns: {
+    hasCampaigns: true,
+  },
 };
 
 /**
