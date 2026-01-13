@@ -88,6 +88,7 @@
             name: 'message',
             label: 'Message',
             widget: 'markdown',
+            minimal: true,
           }"
           :is-nested="true"
           class="px-8"

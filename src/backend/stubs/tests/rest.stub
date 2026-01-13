@@ -31,5 +31,6 @@ Content-Type: application/json
 Accept: application/json
 
 ###
-GET {{ authority }}/api/v1/campaigns?locale=en HTTP/1.1
+GET \{\{ authority \}\}/api/v1/campaigns?locale=en HTTP/1.1
+Content-Type: application/json
 Accept: application/json
