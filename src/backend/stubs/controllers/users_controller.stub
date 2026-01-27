@@ -6,6 +6,7 @@ import { randomBytes } from 'node:crypto';
 import type { HttpContext } from '@adonisjs/core/http';
 import string from '@adonisjs/core/helpers/string';
 import mail from '@adonisjs/mail/services/main';
+import app from '@adonisjs/core/services/app';
 import {
   UserService,
   User,
@@ -105,13 +106,20 @@ export default class UsersController {
         resetToken: token,
         resetTokenCreatedAt: DateTime.now(),
       });
+
       await Activity.create({
         userId: ctx.auth.user?.id,
         locale: locale,
         action: {{ '`created user with id ${user.id}`' }},
       });
-      const appUrl = new URL(ctx.request.completeUrl()).origin;
+
+      const requestUrl = new URL(ctx.request.completeUrl()).origin;
+      const appUrl = app.inProduction
+        ? requestUrl.replace('http://', 'https://')
+        : requestUrl;
+
       const appName = cms.config.meta.name;
+      
       // send email to the user
       await mail.send((message) => {
         message

@@ -5,7 +5,7 @@ import { stubsRoot } from './stubs/main.js';
 import { fsReadAll } from '@poppinss/utils';
 
 async function addMigrations(command: Configure, codemods: Codemods) {
-  const allMigrations = ['base', 'audit', 'drops', 'preferences'];
+  const allMigrations = ['base', 'audit', 'drops', 'preferences', 'campaigns'];
 
   const path = command.app.migrationsPath();
   const migrations = await fsReadAll(path);
@@ -45,6 +45,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'config/cms.stub', {});
 
   codemods.overwriteExisting = true;
+  await codemods.makeUsingStub(stubsRoot, 'config/bodyparser.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/cache.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/inertia.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/providers.stub', {});
@@ -63,6 +64,7 @@ export async function configure(command: Configure) {
     {},
   );
   await codemods.makeUsingStub(stubsRoot, 'controllers/dashboard_controller.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'controllers/campaigns_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/chapters_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/drafts_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/pages_controller.stub', {});
@@ -80,6 +82,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'routes/users.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/auth.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/routes.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'routes/campaigns.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/dashboard.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/pages.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/stories.stub', {});
@@ -109,7 +112,9 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'tests/ui.rest.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/functional/draft.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/ui_service.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'tests/unit/campaign_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/page_service.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'tests/unit/stream_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/user_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/progress_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/model.stub', {});

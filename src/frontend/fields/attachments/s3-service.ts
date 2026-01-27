@@ -47,7 +47,6 @@ export default class S3Service implements HostService {
 
   upload = async (
     file: File,
-    // eslint-disable-next-line no-unused-vars
     onProgress: (progress: number | undefined) => void,
   ): Promise<AttachmentModel> => {
     const provider = useWidgetsStore().providers.s3;

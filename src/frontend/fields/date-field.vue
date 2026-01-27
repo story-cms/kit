@@ -21,12 +21,13 @@
           :model-value="modelValue"
           inline
           auto-apply
-          :enable-time-picker="field.hasTimePicker ?? false"
-          time-picker-inline
-          :is-24="true"
-          position="center"
+          :time-config="{
+            enableTimePicker: field.hasTimePicker ?? false,
+            timePickerInline: true,
+            is24: true,
+          }"
           :six-weeks="true"
-          :state="!(errors.length > 0)"
+          :input-attrs="{ state: !(errors.length > 0) }"
           :readonly="props.isReadOnly"
           @update:model-value="onUpdate"
         />
@@ -40,7 +41,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import VueDatePicker from '@vuepic/vue-datepicker';
+import { VueDatePicker } from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 
 import type { FieldSpec } from '../../types';

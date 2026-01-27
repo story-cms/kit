@@ -15,6 +15,7 @@ import {
   Drop,
   Activity,
   BundleService,
+  StreamService,
   DropValidator,
   trimmedErrors,
   bundledErrors,
@@ -66,7 +67,7 @@ export default class StreamController {
   }
 
   public async index(ctx: HttpContext) {
-    const stream = this.getStream(ctx);
+    const stream = this.getStreamMetadata(ctx);
 
     const rows = await Drop.query()
       .where('streamId', stream.id)
@@ -75,11 +76,7 @@ export default class StreamController {
     const drops = rows.map((drop) => drop.indexItem);
     const shared = await cms.sharedProps(ctx);
     const data = {
-      stream: {
-        id: stream.id,
-        title: stream.title,
-        coverImage: stream.coverImage,
-      },
+      stream,
       drops,
       ...shared,
     } as StreamIndexProps;
@@ -202,17 +199,21 @@ export default class StreamController {
     return ctx.response.redirect().back();
   }
 
-  public async get(ctx: HttpContext) {
-    const stream = this.getStream(ctx);
+  public async getDrop(ctx: HttpContext) {
+    const drop = await Drop.findOrFail(ctx.params.id);
+    return {
+      drop,
+    };
+  }
 
-    const drops = await Drop.query()
-      .where('streamId', stream!.id)
-      .where('isPublished', true)
-      .orderBy('releaseAt', 'desc');
+  public async get(ctx: HttpContext) {
+    const service = new StreamService(ctx.params.id, cms);
+    const drops = await service.getDrops(ctx.request.qs()['page']);
 
     return {
-      stream,
-      drops,
+      stream: service.metaData,
+      drops: drops.all(),
+      pagination: drops.getMeta(),
     };
   }
 
@@ -224,4 +225,19 @@ export default class StreamController {
     }
     return stream!;
   }
+
+  protected getStreamMetadata(ctx: HttpContext): StreamMeta {
+    const stream = this.getStream(ctx);
+    return {
+      id: stream.id,
+      title: stream.title,
+      coverImage: stream.coverImage,
+    };
+  }
 }
+
+type StreamMeta = {
+  id: number;
+  title: string;
+  coverImage: string;
+};

@@ -24,6 +24,24 @@ export const simpleFields: FieldSpec[] = [
   },
 ];
 
+export const dropBundleFields: FieldSpec[] = [
+  {
+    name: 'description',
+    label: 'Description',
+    widget: 'markdown',
+  },
+  {
+    name: 'isActive',
+    label: 'Active',
+    widget: 'boolean',
+  },
+  {
+    name: 'score',
+    label: 'Score',
+    widget: 'number',
+  },
+];
+
 export const complexFields: FieldSpec[] = [
   {
     name: 'title',
@@ -55,6 +73,11 @@ export const complexFields: FieldSpec[] = [
     label: 'Passage',
     widget: 'scriptureReference',
   },
+  {
+    name: 'window',
+    label: 'Window',
+    widget: 'dateRange',
+  },
 ];
 
 export const nestedFields: FieldSpec[] = [
@@ -72,6 +95,11 @@ export const nestedFields: FieldSpec[] = [
         name: 'author',
         label: 'Author',
         widget: 'string',
+      },
+      {
+        name: 'window',
+        label: 'Window',
+        widget: 'dateRange',
       },
       {
         name: 'tags',

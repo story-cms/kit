@@ -14,7 +14,7 @@ const draft = {
 };
 
 const live = {
-  title: vine.string(),
+  title: vine.string().trim().minLength(1),
   coverImage: vine.string(),
   releaseAt: vine.date({
     formats: ['iso8601'],

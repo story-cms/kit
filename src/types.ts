@@ -2,24 +2,16 @@
 ///  these enums can not be imported into vue files
 /// ----------------------------------------------------
 export enum AddStatus {
-  // eslint-disable-next-line
   Full,
-  // eslint-disable-next-line
   Add,
-  // eslint-disable-next-line
   Wait,
 }
 
 export enum ResponseStatus {
-  // eslint-disable-next-line
   Failure,
-  // eslint-disable-next-line
   Confirmation,
-  // eslint-disable-next-line
   Accomplishment,
-  // eslint-disable-next-line
   Neutral,
-  // eslint-disable-next-line
   None,
 }
 
@@ -76,7 +68,7 @@ export interface Video {
   url: string;
 }
 
-export type WidgetPicker = (widget: string) => any; // eslint-disable-line
+export type WidgetPicker = (widget: string) => any;
 
 /// ----------------------------------------------------
 ///  streams
@@ -431,6 +423,70 @@ export interface AudiencesProps {
 }
 
 /// ----------------------------------------------------
+///  campaigns
+/// ----------------------------------------------------
+
+export interface CampaignMeta {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CampaignStats {
+  impressions: number;
+  clicks: number;
+}
+
+export interface CampaignEditProps {
+  campaign: CampaignMeta;
+  stats: CampaignStats;
+  bundle: any; // model
+  providers: Providers; // widgets
+}
+
+export interface CampaignBundle {
+  name: string;
+  regions: string;
+  window: string;
+  promoImage?: string;
+  title: string;
+  message: string;
+  actionLabel: string;
+  actionType: string;
+  actionUrl?: string;
+}
+
+export interface CampaignItem {
+  id: number;
+  title?: string;
+  regions?: string;
+  window?: string;
+  isPublished: boolean;
+}
+
+export interface CampaignIndexProps {
+  campaigns: CampaignItem[];
+}
+
+export interface CampaignVersion {
+  apiVersion: number;
+  locale: string;
+}
+
+export interface CampaignForApi {
+  id: number;
+  startDate: string | null;
+  endDate: string | null;
+  promoImage: string;
+  title: string;
+  message: string;
+  actionLabel: string;
+  actionType: string;
+  actionUrl: string;
+  regions: string;
+}
+
+/// ----------------------------------------------------
 ///  configuration
 /// ----------------------------------------------------
 
@@ -473,6 +529,10 @@ export type CmsConfig = {
 
   audience: {
     hasAudience?: boolean;
+  };
+
+  campaigns: {
+    hasCampaigns?: boolean;
   };
 };
 

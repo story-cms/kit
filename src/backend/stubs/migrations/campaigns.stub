@@ -1,0 +1,49 @@
+{{{
+  exports({
+    to: app.makePath(migration.folder, migration.fileName)
+  })
+}}}
+import { BaseSchema } from '@adonisjs/lucid/schema';
+
+export default class extends BaseSchema {
+  protected tableName = 'campaigns';
+
+  async up() {
+    this.schema.createTable(this.tableName, (table) => {
+      table.increments('id');
+      
+      table
+        .integer('api_version')
+        .notNullable()
+        .comment('the api version of this campaign');
+
+      table
+        .string('locale', 15)
+        .notNullable()
+        .comment('IETF BCP 47 language tag like en-US or zh-Hans');
+
+      table.jsonb('stats').notNullable().defaultTo('{}').comment('campaign analytics');
+
+      table
+        .jsonb('bundle')
+        .notNullable()
+        .defaultTo('{}')
+        .comment('serialised, localised campaign content');
+
+      table
+        .boolean('is_published')
+        .notNullable()
+        .defaultTo(false)
+        .comment('is this campaign published?');
+
+      table.integer('updated_by').unsigned().references('users.id');
+
+      table.timestamp('created_at', { useTz: true });
+      table.timestamp('updated_at', { useTz: true });
+    });
+  }
+
+  async down() {
+    this.schema.dropTable(this.tableName);
+  }
+}

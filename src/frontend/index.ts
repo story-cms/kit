@@ -5,12 +5,15 @@ import AppLayout from './shared/app-layout.vue';
 import AudiencesIndex from './audiences/audiences-index.vue';
 import AudioField from './fields/audio-field.vue';
 import BooleanField from './fields/boolean-field.vue';
+import CampaignsEdit from './campaign/campaigns-edit.vue';
+import CampaignsIndex from './campaign/campaigns-index.vue';
 import ChapterPreview from './stories/chapter-preview.vue';
 import ContentHeader from './shared/content-header.vue';
 import ContextMenu from './shared/context-menu.vue';
 import CreateAccount from './auth/create-account.vue';
 import DashboardIndex from './dashboard/dashboard-index.vue';
 import DateField from './fields/date-field.vue';
+import DateRangeField from './fields/date-range-field.vue';
 import DraftIndex from './stories/draft-index.vue';
 import DropDown from './shared/drop-down.vue';
 import ForgotPassword from './auth/forgot-password.vue';
@@ -34,6 +37,7 @@ import PagesIndex from './pages/pages-index.vue';
 import Pagination from './shared/pagination.vue';
 import PanelField from './fields/panel-field.vue';
 import PublicLayout from './shared/public-layout.vue';
+import RegionField from './fields/region-field.vue';
 import ResetPassword from './auth/reset-password.vue';
 import ScriptureField from './fields/scripture-field.vue';
 import SelectField from './fields/select-field.vue';
@@ -52,7 +56,7 @@ import UiPage from './ui/ui-page.vue';
 import UsersIndex from './team/users-index.vue';
 import VideoField from './fields/video-field.vue';
 
-export { createInertiaApp, usePage, router } from '@inertiajs/vue3';
+export { createInertiaApp, usePage, useForm, router } from '@inertiajs/vue3';
 
 export * from './store/index';
 
@@ -69,12 +73,15 @@ export {
   AudiencesIndex,
   AudioField,
   BooleanField,
+  CampaignsEdit,
+  CampaignsIndex,
   ChapterPreview,
   ContentHeader,
   ContextMenu,
   CreateAccount,
   DashboardIndex,
   DateField,
+  DateRangeField,
   DraftIndex,
   DropDown,
   ForgotPassword,
@@ -98,6 +105,7 @@ export {
   PanelField,
   Pagination,
   PublicLayout,
+  RegionField,
   ResetPassword,
   ScriptureField,
   SelectField,

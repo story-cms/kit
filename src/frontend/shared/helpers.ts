@@ -2,6 +2,7 @@ import type { App, PropType } from 'vue';
 import type { FieldSpec } from '../../types';
 import { BibleBooksMap } from './bibleBooks';
 import type { Variant, Story } from 'histoire';
+import { DateTime } from 'luxon';
 
 export const commonProps = {
   field: {
@@ -40,7 +41,7 @@ export const formatDate = (value: string): string => {
   )}, ${padZero(d.getHours())}:${padZero(d.getMinutes())}`;
 };
 
-export const debounce = <T extends (...args: any[]) => void>( // eslint-disable-line
+export const debounce = <T extends (...args: any[]) => void>(
   wait: number,
   callback: T,
   immediate = false,
@@ -167,3 +168,20 @@ export type StoryHandler = (payload: {
   story: Story;
   variant: Variant;
 }) => void | Promise<void>;
+
+export const getCampaignStatus = (
+  isPublished: boolean,
+  windowValue: string,
+  now?: DateTime,
+): 'Draft' | 'Scheduled' | 'Completed' | 'Live' => {
+  const parts = windowValue.split('|');
+  const windowStart = DateTime.fromISO(parts[0]?.trim() || '');
+  const windowEnd = DateTime.fromISO(parts[1]?.trim() || '');
+  const currentTime = now ?? DateTime.now();
+
+  if (!isPublished) return 'Draft';
+  if (!windowStart.isValid || !windowEnd.isValid) return 'Draft';
+  if (currentTime < windowStart) return 'Scheduled';
+  if (currentTime > windowEnd) return 'Completed';
+  return 'Live';
+};
