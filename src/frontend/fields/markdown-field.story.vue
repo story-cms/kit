@@ -69,6 +69,15 @@
         :is-read-only="true"
       />
     </Variant>
+    <Variant title="No markup" :setup-app="loadData">
+      <MarkdownField :field="{ ...spec, noMarkup: true }" />
+      <ModelControl :model="objectModel" />
+    </Variant>
+    <Variant title="No markup with RTL" :setup-app="loadData">
+      <MarkdownField :field="{ ...spec, noMarkup: true }" :dir="isRtl ? 'rtl' : 'ltr'" />
+      <ModelControl :model="objectModel" />
+      <LanguageControl />
+    </Variant>
   </Story>
 </template>
 

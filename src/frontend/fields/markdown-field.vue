@@ -3,6 +3,7 @@
     :class="{
       'rounded bg-white p-8': !isNested,
       'mt-4': isNested,
+      'no-markup': field.noMarkup,
     }"
   >
     <label
@@ -106,7 +107,7 @@ let mde: EasyMDE | null = null;
 const textArea = ref(undefined);
 
 const toolbar = computed((): (string | { name: string })[] => {
-  if (field.value.minimal) return [];
+  if (field.value.minimal || field.value.noMarkup) return [];
 
   if (props.isReadOnly)
     return [
@@ -132,7 +133,7 @@ onMounted(async () => {
   const easymdeModule = await import('easymde');
   const EasyMDE = easymdeModule.default;
   mde = new EasyMDE({
-    minHeight: field.value.minimal ? 'auto' : '300px',
+    minHeight: field.value.minimal || field.value.noMarkup ? 'auto' : '300px',
     element: textArea.value,
     spellChecker: false,
     nativeSpellcheck: false,
