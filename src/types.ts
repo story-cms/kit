@@ -37,6 +37,7 @@ export interface FieldSpec {
   options?: Array<SelectOption>;
   default?: any;
   minimal?: boolean;
+  noMarkup?: boolean;
   toolbar?: string[];
   description?: string;
   extensions?: string[];

@@ -3,6 +3,7 @@
     :class="{
       'rounded bg-white p-8': !isNested,
       'mt-4': isNested,
+      'no-markup': field.noMarkup,
     }"
   >
     <label
@@ -106,7 +107,7 @@ let mde: EasyMDE | null = null;
 const textArea = ref(undefined);
 
 const toolbar = computed((): (string | { name: string })[] => {
-  if (field.value.minimal) return [];
+  if (field.value.minimal || field.value.noMarkup) return [];
 
   if (props.isReadOnly)
     return [
