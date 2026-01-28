@@ -133,7 +133,7 @@ onMounted(async () => {
   const easymdeModule = await import('easymde');
   const EasyMDE = easymdeModule.default;
   mde = new EasyMDE({
-    minHeight: field.value.minimal || field.value.noMarkup ? 'auto' : '300px',
+    minHeight: field.value.minimal ? 'auto' : '300px',
     element: textArea.value,
     spellChecker: false,
     nativeSpellcheck: false,
