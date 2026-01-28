@@ -72,6 +72,8 @@ these optional extra properties:
 
 - `minimal` a boolean value which is `false` by default. `minimal` sets the widget to the
   minimal height possible.
+- `noMarkup` a boolean value which is `false` by default. `noMarkup` sets the widget to
+  not allow any markup and only display the text as plain text.
 - `toolbar` accepts an array of strings
   `['bold', 'italic', 'strikethrough', 'heading', 'heading-smaller', 'heading-bigger', 'heading-1', 'heading-2', 'heading-3', 'code', 'quote', 'unordered-list', 'ordered-list', 'clean-block', 'link', 'image', 'upload-image', 'table', 'horizontal-rule', 'preview', 'side-by-side', 'fullscreen', 'guide','undo', 'redo'`
   representing the formatting buttons to display.
@@ -88,6 +90,17 @@ Minimal and toolbar example:
   widget: 'markdown',
   minimal: true,
   toolbar: [ 'bold', 'italic', 'heading', 'quote', '|','unordered-list']
+},
+```
+
+No markup example:
+
+```ts
+{
+  label: 'Notes',
+  name: 'notes',
+  widget: 'markdown',
+  noMarkup: true,
 },
 ```
 

@@ -28,7 +28,7 @@
         },
       ]"
     >
-      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8 bg-white py-4">
+      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="py-4 space-y-8 bg-white">
         <StringField
           :field="{
             name: 'name',
@@ -88,7 +88,7 @@
             name: 'message',
             label: 'Message',
             widget: 'markdown',
-            minimal: true,
+            noMarkup: true,
           }"
           :is-nested="true"
           class="px-8"
