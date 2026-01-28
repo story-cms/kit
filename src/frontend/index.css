@@ -78,6 +78,8 @@
 .cm-s-easymde .cm-header-5 {
   font-size: calc(1rem) !important;
 }
+
+/* No markup styles */
 .no-markup .cm-s-easymde .cm-header {
   font-size: inherit !important;
 }
