@@ -96,6 +96,7 @@
             v-for="(item, i) in fields"
             :key="item.name + `${i.toString()}`"
             class="grid grid-rows-subgrid"
+            :style="{ gridRow: `span ${listItems.length}` }"
           >
             <component
               :is="widgets.picker(item.widget)"
