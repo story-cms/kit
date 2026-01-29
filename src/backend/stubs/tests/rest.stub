@@ -7,25 +7,24 @@ Accept: application/json
 
 ###
 GET \{\{ authority \}\}/api/v1/preview/1 HTTP/1.1
-Content-Type: application/json
 Accept: application/json
 
 ###
 GET \{\{ authority \}\}/api/v1/preview/1?locale=de HTTP/1.1
-Content-Type: application/json
 Accept: application/json
 
 ###
 GET \{\{ authority \}\}/api/v1/index HTTP/1.1
-Content-Type: application/json
 Accept: application/json
 
 ###
 GET \{\{ authority \}\}/api/v1/index?locale=de HTTP/1.1
-Content-Type: application/json
 Accept: application/json
 
 ###
 GET \{\{ authority \}\}/ui/v1/translation?locale=de HTTP/1.1
-Content-Type: application/json
+Accept: application/json
+
+###
+GET \{\{ authority \}\}/api/v1/campaigns?locale=en HTTP/1.1
 Accept: application/json

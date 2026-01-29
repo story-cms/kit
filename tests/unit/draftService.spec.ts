@@ -72,6 +72,7 @@ function createMockCmsConfig(sourceLocale: string = 'en'): CmsConfig {
       schemaVersion: 1,
       tracking: '',
     },
+    campaigns: {},
   };
 }
 

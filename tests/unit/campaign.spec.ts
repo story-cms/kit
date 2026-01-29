@@ -449,6 +449,176 @@ test.describe('Campaign Validator', () => {
       const result = await schema.validate(data);
       expect(result).toEqual(data);
     });
+
+    test.describe('maxLength validation', () => {
+      test('rejects title longer than 58 characters', async () => {
+        const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
+        const validator = new CampaignValidator(ctx);
+        const schema = validator.schema;
+
+        const data = {
+          name: 'Test Campaign',
+          window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
+          title: 'a'.repeat(59),
+          message: 'Test Message',
+          actionLabel: 'Click Here',
+          actionType: 'close' as const,
+          isPublished: true,
+        };
+
+        await expect(schema.validate(data)).rejects.toThrow();
+      });
+
+      test('accepts title exactly 58 characters', async () => {
+        const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
+        const validator = new CampaignValidator(ctx);
+        const schema = validator.schema;
+
+        const data = {
+          name: 'Test Campaign',
+          window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
+          title: 'a'.repeat(58),
+          message: 'Test Message',
+          actionLabel: 'Click Here',
+          actionType: 'close' as const,
+          isPublished: true,
+        };
+
+        const result = await schema.validate(data);
+        expect(result.title).toBe('a'.repeat(58));
+      });
+
+      test('accepts title shorter than 58 characters', async () => {
+        const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
+        const validator = new CampaignValidator(ctx);
+        const schema = validator.schema;
+
+        const data = {
+          name: 'Test Campaign',
+          window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
+          title: 'Short Title',
+          message: 'Test Message',
+          actionLabel: 'Click Here',
+          actionType: 'close' as const,
+          isPublished: true,
+        };
+
+        const result = await schema.validate(data);
+        expect(result.title).toBe('Short Title');
+      });
+
+      test('rejects message longer than 560 characters', async () => {
+        const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
+        const validator = new CampaignValidator(ctx);
+        const schema = validator.schema;
+
+        const data = {
+          name: 'Test Campaign',
+          window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
+          title: 'Test Title',
+          message: 'a'.repeat(561),
+          actionLabel: 'Click Here',
+          actionType: 'close' as const,
+          isPublished: true,
+        };
+
+        await expect(schema.validate(data)).rejects.toThrow();
+      });
+
+      test('accepts message exactly 560 characters', async () => {
+        const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
+        const validator = new CampaignValidator(ctx);
+        const schema = validator.schema;
+
+        const data = {
+          name: 'Test Campaign',
+          window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
+          title: 'Test Title',
+          message: 'a'.repeat(560),
+          actionLabel: 'Click Here',
+          actionType: 'close' as const,
+          isPublished: true,
+        };
+
+        const result = await schema.validate(data);
+        expect(result.message).toBe('a'.repeat(560));
+      });
+
+      test('accepts message shorter than 560 characters', async () => {
+        const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
+        const validator = new CampaignValidator(ctx);
+        const schema = validator.schema;
+
+        const data = {
+          name: 'Test Campaign',
+          window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
+          title: 'Test Title',
+          message: 'Short message',
+          actionLabel: 'Click Here',
+          actionType: 'close' as const,
+          isPublished: true,
+        };
+
+        const result = await schema.validate(data);
+        expect(result.message).toBe('Short message');
+      });
+
+      test('rejects actionLabel longer than 66 characters', async () => {
+        const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
+        const validator = new CampaignValidator(ctx);
+        const schema = validator.schema;
+
+        const data = {
+          name: 'Test Campaign',
+          window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
+          title: 'Test Title',
+          message: 'Test Message',
+          actionLabel: 'a'.repeat(67),
+          actionType: 'close' as const,
+          isPublished: true,
+        };
+
+        await expect(schema.validate(data)).rejects.toThrow();
+      });
+
+      test('accepts actionLabel exactly 66 characters', async () => {
+        const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
+        const validator = new CampaignValidator(ctx);
+        const schema = validator.schema;
+
+        const data = {
+          name: 'Test Campaign',
+          window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
+          title: 'Test Title',
+          message: 'Test Message',
+          actionLabel: 'a'.repeat(66),
+          actionType: 'close' as const,
+          isPublished: true,
+        };
+
+        const result = await schema.validate(data);
+        expect(result.actionLabel).toBe('a'.repeat(66));
+      });
+
+      test('accepts actionLabel shorter than 66 characters', async () => {
+        const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
+        const validator = new CampaignValidator(ctx);
+        const schema = validator.schema;
+
+        const data = {
+          name: 'Test Campaign',
+          window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
+          title: 'Test Title',
+          message: 'Test Message',
+          actionLabel: 'Click Here',
+          actionType: 'close' as const,
+          isPublished: true,
+        };
+
+        const result = await schema.validate(data);
+        expect(result.actionLabel).toBe('Click Here');
+      });
+    });
   });
 });
 test.describe('Campaign Status', () => {

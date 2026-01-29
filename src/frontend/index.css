@@ -78,3 +78,20 @@
 .cm-s-easymde .cm-header-5 {
   font-size: calc(1rem) !important;
 }
+
+/* No markup styles */
+.no-markup .cm-s-easymde .cm-header {
+  font-size: inherit !important;
+}
+.no-markup .cm-header,
+.no-markup .cm-strong {
+  font-weight: inherit !important;
+}
+.no-markup .cm-em {
+  font-style: inherit !important;
+}
+.no-markup .cm-link,
+.no-markup .cm-url {
+  text-decoration: inherit !important;
+  color: inherit !important;
+}

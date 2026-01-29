@@ -1,16 +1,20 @@
 import eslint from '@eslint/js';
-import eslintConfigPrettier from 'eslint-config-prettier';
+import eslintConfigPrettier from 'eslint-config-prettier/flat';
 import eslintPluginVue from 'eslint-plugin-vue';
 import globals from 'globals';
 import typescriptEslint from 'typescript-eslint';
+import { defineConfig } from 'eslint/config';
 
-export default typescriptEslint.config(
-  { ignores: ['*.d.ts', '**/dist', '.histoire/'] },
+export default defineConfig([
+  {
+    ignores: ['*.d.ts', '**/dist', '.histoire/'],
+  },
   {
     extends: [
       eslint.configs.recommended,
       ...typescriptEslint.configs.recommended,
       ...eslintPluginVue.configs['flat/recommended'],
+      eslintConfigPrettier,
     ],
     files: ['**/*.{ts,vue}'],
     languageOptions: {
@@ -27,5 +31,4 @@ export default typescriptEslint.config(
       'vue/no-v-html': 'off',
     },
   },
-  eslintConfigPrettier
-);
+]);

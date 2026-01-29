@@ -28,7 +28,7 @@
         },
       ]"
     >
-      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8 bg-white py-4">
+      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="py-4 space-y-8 bg-white">
         <StringField
           :field="{
             name: 'name',
@@ -42,7 +42,7 @@
         <RegionField
           :field="{
             name: 'regions',
-            label: 'Regions',
+            label: 'Filter Regions',
             widget: 'region',
           }"
           :is-nested="true"
@@ -88,6 +88,7 @@
             name: 'message',
             label: 'Message',
             widget: 'markdown',
+            noMarkup: true,
           }"
           :is-nested="true"
           class="px-8"
@@ -211,6 +212,11 @@ const getPayload = (): RequestPayload => {
 };
 
 const defaultType = 'donate';
+
+const currentActionType = model.getField('actionType', '');
+if (!currentActionType) {
+  model.setField('actionType', defaultType);
+}
 
 const selection = ref(model.getField('actionType', defaultType));
 const title = ref(model.getField('name', 'New Campaign'));

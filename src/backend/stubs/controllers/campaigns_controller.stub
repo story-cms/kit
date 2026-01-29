@@ -14,6 +14,7 @@ import {
   CampaignService,
   type CampaignEditProps,
   type CampaignIndexProps,
+  type Version,
 } from '@story-cms/kit';
 import cms from '#services/cms';
 import providers from '#config/providers';
@@ -21,9 +22,9 @@ import providers from '#config/providers';
 export default class CampaignsController {
   
   public async get(ctx: HttpContext) {
-    const { version } = cms.apiContextFrom(ctx);
-
-    const service = new CampaignService(version);
+    const version: Version = cms.apiContextFrom(ctx).version;
+    const { apiVersion, locale } = version;
+    const service = new CampaignService({ apiVersion, locale });
     const campaigns = await service.getCampaignItemsForClient();
 
     return { campaigns };
@@ -85,8 +86,15 @@ export default class CampaignsController {
       locale: version.locale,
       apiVersion: 1,
       bundle: {
-        name: 'New Campaign',
-        title: 'Campaign Title',
+        name: '',
+        window: '',
+        promoImage: '',
+        title: '',
+        message: '',
+        actionLabel: '',
+        actionType: '',
+        actionUrl: '',
+        regions: '',
       },
       updatedBy: ctx.auth.user?.id,
     });
@@ -130,6 +138,7 @@ export default class CampaignsController {
       // dynamic getter for the schema property
       const data = ctx.request.all();
       vine.messagesProvider = campaignErrorMessages;
+      vine.convertEmptyStringsToNull = true;
 
       const campaignValidator = new CampaignValidator(ctx);
       payload = await campaignValidator.schema.validate(data);
