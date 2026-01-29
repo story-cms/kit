@@ -133,41 +133,7 @@ export class Analytics {
     } catch (error: any) {
       const errorMessage = error?.message || String(error);
       console.error('Error fetching campaign stats:', errorMessage);
-
-      // Fallback: Try without specific filters if the main query fails
-      try {
-        const impressionFilterWithoutParams = {
-          andGroup: {
-            expressions: [{ filter: appsFilter }, { filter: impressionEventFilter }],
-          },
-        };
-
-        const ctaTapFilterWithoutParams = {
-          andGroup: {
-            expressions: [{ filter: appsFilter }, { filter: ctaTapEventFilter }],
-          },
-        };
-
-        // Changed to use fetchMetricsForAllTime
-        const [impressions, clicks] = await Promise.all([
-          this.fetchMetricsForAllTime('eventCount', impressionFilterWithoutParams),
-          this.fetchMetricsForAllTime('eventCount', ctaTapFilterWithoutParams),
-        ]);
-
-        console.warn(
-          `Campaign stats queried without filters. Falling back to global counts. ` +
-            `Ensure 'campaign_id' is registered as a Custom Dimension (Event Scope) and data exists.`,
-        );
-
-        return {
-          impressions,
-          clicks,
-        };
-      } catch (fallbackError: any) {
-        throw new Error(
-          `Failed to fetch stats: ${errorMessage}. Fallback failed: ${fallbackError?.message}`,
-        );
-      }
+      return { impressions: 0, clicks: 0 }; // Return 0 for impressions and clicks if there is an error
     }
   }
 
