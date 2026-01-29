@@ -37,7 +37,7 @@ export class Analytics {
    * Fetches campaign statistics for promotion_impression and promotion_cta_tap events
    * @param campaignId - The campaign ID to filter by
    * @param language - The language code to filter by (e.g., 'en', 'fr')
-   * @returns Object with impressions and clicks counts for the current period
+   * @returns Object with impressions and clicks counts for all time
    */
   async getCampaignStats(
     campaignId: number,
@@ -112,13 +112,14 @@ export class Analytics {
     const eventParameterDimensions = ['customEvent:campaign_id', 'customEvent:language'];
 
     try {
+      // Changed to use fetchMetricsForAllTime
       const [impressions, clicks] = await Promise.all([
-        this.fetchMetricsForBothPeriods(
+        this.fetchMetricsForAllTime(
           'eventCount',
           impressionDimensionFilter,
           eventParameterDimensions,
         ),
-        this.fetchMetricsForBothPeriods(
+        this.fetchMetricsForAllTime(
           'eventCount',
           ctaTapDimensionFilter,
           eventParameterDimensions,
@@ -126,8 +127,8 @@ export class Analytics {
       ]);
 
       return {
-        impressions: impressions.current,
-        clicks: clicks.current,
+        impressions,
+        clicks,
       };
     } catch (error: any) {
       const errorMessage = error?.message || String(error);
@@ -147,9 +148,10 @@ export class Analytics {
           },
         };
 
+        // Changed to use fetchMetricsForAllTime
         const [impressions, clicks] = await Promise.all([
-          this.fetchMetricsForBothPeriods('eventCount', impressionFilterWithoutParams),
-          this.fetchMetricsForBothPeriods('eventCount', ctaTapFilterWithoutParams),
+          this.fetchMetricsForAllTime('eventCount', impressionFilterWithoutParams),
+          this.fetchMetricsForAllTime('eventCount', ctaTapFilterWithoutParams),
         ]);
 
         console.warn(
@@ -158,8 +160,8 @@ export class Analytics {
         );
 
         return {
-          impressions: impressions.current,
-          clicks: clicks.current,
+          impressions,
+          clicks,
         };
       } catch (fallbackError: any) {
         throw new Error(
@@ -255,6 +257,11 @@ export class Analytics {
     endDate: '31daysAgo',
   };
 
+  private readonly ALL_TIME_PERIOD = {
+    startDate: '2026-01-01',
+    endDate: 'today',
+  };
+
   /**
    * Sums metric values across all streams from a GA report
    */
@@ -328,6 +335,32 @@ export class Analytics {
       current: this.sumMetricValues(currentPeriodData),
       previous: this.sumMetricValues(previousPeriodData),
     };
+  }
+
+  /**
+   * Fetches metrics for all time
+   */
+  private async fetchMetricsForAllTime(
+    metricName: string,
+    customDimensionFilter?: any,
+    additionalDimensions: string[] = [],
+  ): Promise<number> {
+    const baseSpec = this.createBaseSpec(additionalDimensions);
+    const reportConfig = {
+      ...baseSpec,
+      metrics: [{ name: metricName }],
+    };
+
+    if (customDimensionFilter) {
+      reportConfig.dimensionFilter = customDimensionFilter;
+    }
+
+    const [data] = await this.client.runReport({
+      ...reportConfig,
+      dateRanges: [this.ALL_TIME_PERIOD],
+    });
+
+    return this.sumMetricValues(data);
   }
 }
 
