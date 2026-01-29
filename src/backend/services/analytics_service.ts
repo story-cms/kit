@@ -59,17 +59,6 @@ export class Analytics {
       },
     };
 
-    // Create language filter (Standard Device Scope)
-    // We use the built-in 'language' dimension instead of a custom event parameter
-
-    // const languageFilter = {
-    //   fieldName: 'languageCode', // Currently using device language code to filter. We should use the language code instead in the event.params
-    //   stringFilter: {
-    //     value: language,
-    //     caseSensitive: false,
-    //   },
-    // };
-
     // Create language filter (Custom Event Scope)
     const languageFilter = {
       fieldName: 'customEvent:language',
