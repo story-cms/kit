@@ -49,7 +49,10 @@ export default class CampaignsController {
     
     try {
       const analytics = new Analytics(analyticsConfig);
-      stats = await analytics.getCampaignStats(campaign.id, campaign.locale);
+      
+      let locale = campaign.locale;
+      if (campaign.locale === 'en') locale = 'en_GB'; // We need to do for some instances where the locale is not the same as the content language
+      stats = await analytics.getCampaignStats(campaign.id, locale);
 
       // Check if the stats are not 0, if they are not 0, then use the stats
       if (stats.impressions !== 0 && stats.clicks !== 0) {

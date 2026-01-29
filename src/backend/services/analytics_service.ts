@@ -120,11 +120,7 @@ export class Analytics {
     };
 
     // We must request the dimensions we are filtering by to ensure accurate event counts
-    const eventParameterDimensions = [
-      'customEvent:campaign_id',
-      // 'languageCode', // Standard dimension
-      'customEvent:language', // Custom Event Scope
-    ];
+    const eventParameterDimensions = ['customEvent:campaign_id', 'customEvent:language'];
 
     try {
       const [impressions, clicks] = await Promise.all([
