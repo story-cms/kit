@@ -30,9 +30,6 @@
   .btn-blue {
     @apply bg-blue-400 text-white;
   }
-  .row-subgrid {
-    @apply row-[span_100] grid grid-rows-[subgrid];
-  }
   .debug {
     @apply [&>*]:border-2 [&>*]:border-red-500; /* debug class will be removed on production build */
   }

@@ -819,6 +819,72 @@ export const alMassira = {
           },
         ],
       },
+      {
+        label: 'Resources',
+        name: 'resources',
+        widget: 'list',
+        canFold: true,
+        fields: [
+          {
+            label: 'Title',
+            name: 'title',
+            widget: 'markdown',
+            minimal: true,
+          },
+          {
+            label: 'Description',
+            name: 'description',
+            widget: 'markdown',
+            minimal: true,
+          },
+          {
+            label: 'Author',
+            name: 'author',
+            widget: 'string',
+          },
+          {
+            label: 'Link',
+            name: 'link',
+            widget: 'string',
+          },
+          {
+            label: 'Cover image',
+            name: 'image',
+            widget: 'image',
+            uploadPreset: 'episode-thumbnail',
+            description: '500px square JPG or PNG up to 2MB',
+            extensions: ['.jpeg', '.jpg', '.png'],
+            maxSize: 2662310,
+          },
+          // {
+          //   label: 'Partner',
+          //   name: 'partner',
+          //   widget: 'object',
+          //   isRow: false,
+          //   fields: [
+          //     {
+          //       label: 'Logo',
+          //       name: 'logo',
+          //       widget: 'image',
+          //       uploadPreset: 'episode-thumbnail',
+          //       description: 'PNG or JPG up to 2MB',
+          //       extensions: ['.jpeg', '.jpg', '.png'],
+          //       maxSize: 2662310,
+          //     },
+          //     {
+          //       label: 'Url',
+          //       name: 'url',
+          //       widget: 'string',
+          //     },
+          //     {
+          //       label: 'Name',
+          //       name: 'name',
+          //       widget: 'string',
+          //     },
+          //   ],
+          // },
+        ],
+      },
       { label: 'Conclusion', name: 'conclusion', widget: 'markdown' },
       {
         label: '',
@@ -1128,6 +1194,99 @@ export const alMassira = {
           'Is God’s rescue plan powerful enough to reach us in the problems of today’s world?',
       },
     ],
+    resources: [
+      {
+        link: 'https://vimeo.com/996190128?share=copy',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1723127230/alpha-course/be9dhtveafx4axdt43um.png',
+        title: 'Quenching our Deepest Thirst',
+        author: 'Katherine Chow & Streams Studio',
+        partner: {
+          url: 'https://www.streams-studio.com/',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747136561/alpha-course/bddlccqcvsqvng9eh3kj.jpg',
+          name: 'Streams Studio',
+        },
+        description: 'Katherine Chow & Streams Studio',
+      },
+      {
+        link: 'https://vimeo.com/996398533?share=copy',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1723192175/alpha-course/nucvlwt93varvvnc2n0k.jpg',
+        title: 'Alpha Stories: Scott, Sarah and Steve',
+        author: 'Filmed live at the Leadership Conference, 2024',
+        partner: {
+          url: 'https://www.leadershipconference.org.uk/',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747655045/alpha-course/wjodafqzkqksalaloje4.png',
+          name: 'Leadership Conference',
+        },
+        description: 'Alpha Stories: Scott, Sarah and Steve',
+      },
+      {
+        link: 'https://vimeo.com/996186148?share=copy',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1723192399/alpha-course/fbgwtvs9d4lnrygea4ih.png',
+        title: 'Spiritual but not Religious',
+        author: 'Amanda Giannakos & Streams Studio',
+        partner: {
+          url: 'https://www.streams-studio.com/',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747136840/alpha-course/o5drc4rvrdwirqzavcge.jpg',
+          name: 'Streams Studio',
+        },
+        description: 'Spiritual but not Religious',
+      },
+      {
+        link: 'https://alpha.org/leadership-conversations-with-nicky-gumbel-podcast-francis-collins/',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1724851801/alpha-course/ovn6wb6pjf2sq2p8bfvx.png',
+        title: 'Podcast: Reconciling Faith with Science',
+        author: 'Nicky Gumbel and Francis Collins',
+        partner: {
+          url: 'https://www.leadershipconference.org.uk',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747655065/alpha-course/q17pbh9eghnoggfbgatk.png',
+          name: 'Leadership Conference',
+        },
+        description: 'Podcast: Reconciling Faith with Science',
+      },
+      {
+        link: 'https://guest-cdn.alpha.org/QoL%201%20Is%20There%20More%20To%20Life%20Than%20This.pdf',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1725537437/alpha-course/ad094e7i1y6bo356wt2l.png',
+        title: 'Questions of Life: Is There More to Life than This',
+        author: 'Nicky Gumbel',
+        partner: {
+          url: 'https://www.hodder.co.uk/',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747137372/alpha-course/sxrbvxzbrg5n4krkwcpj.jpg',
+          name: 'Hodder & Stoughton Publishers',
+        },
+        description: 'Questions of Life: Is There More to Life than This',
+      },
+      // {
+      //   link: 'https://guest-cdn.alpha.org/SI%201%20Why%20Does%20God%20Allow%20Suffering.pdf',
+      //   image:
+      //     'https://res.cloudinary.com/ddks6yqbn/image/upload/v1725632348/alpha-course/bbq93r05rfdrjstse1fx.png',
+      //   title: 'Searching Issues: Why Does God Allow Suffering?',
+      //   author: 'Nicky Gumbel',
+      //   partner: {
+      //     url: 'https://www.hodder.co.uk/',
+      //     logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747137416/alpha-course/bajv9p65ekgbtcqgn2kt.jpg',
+      //     name: 'Hodder & Stoughton Publishers',
+      //   },
+      //   description: 'Searching Issues: Why Does God Allow Suffering?',
+      // },
+      {
+        link: 'https://vimeo.com/1009224911?share=copy',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1726242030/alpha-course/vhsu1gb9sfxvuhlj5sj3.png',
+        title: 'For the Curious',
+        author: 'Alpha Stories',
+        partner: {
+          url: 'alpha.org',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747137521/alpha-course/uyfjbnizmrsa89kn6wk8.png',
+          name: 'Alpha International',
+        },
+        description: 'For the Curious',
+      },
+    ],
     videoUrl: 'https://youtu.be/GmPfTVl2JWI',
     footnotes: [
       {
@@ -1353,19 +1512,19 @@ export const flexibleListStory = {
         },
         description: 'Fragen des Lebens: Gibt es mehr im Leben als das?',
       },
-      {
-        link: 'https://guest-cdn.alpha.org/SI%201%20Why%20Does%20God%20Allow%20Suffering.pdf',
-        image:
-          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1725632348/alpha-course/bbq93r05rfdrjstse1fx.png',
-        title: 'Suchende Fragen: Warum lässt Gott Leid zu?',
-        author: 'Nicky Gumbel',
-        partner: {
-          url: 'https://www.hodder.co.uk/',
-          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747137416/alpha-course/bajv9p65ekgbtcqgn2kt.jpg',
-          name: 'Hodder & Stoughton Publishers',
-        },
-        description: 'Suchende Fragen: Warum lässt Gott Leid zu?',
-      },
+      // {
+      //   link: 'https://guest-cdn.alpha.org/SI%201%20Why%20Does%20God%20Allow%20Suffering.pdf',
+      //   image:
+      //     'https://res.cloudinary.com/ddks6yqbn/image/upload/v1725632348/alpha-course/bbq93r05rfdrjstse1fx.png',
+      //   title: 'Suchende Fragen: Warum lässt Gott Leid zu?',
+      //   author: 'Nicky Gumbel',
+      //   partner: {
+      //     url: 'https://www.hodder.co.uk/',
+      //     logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747137416/alpha-course/bajv9p65ekgbtcqgn2kt.jpg',
+      //     name: 'Hodder & Stoughton Publishers',
+      //   },
+      //   description: 'Suchende Fragen: Warum lässt Gott Leid zu?',
+      // },
       {
         link: 'https://vimeo.com/1009224911?share=copy',
         image:
@@ -1522,69 +1681,69 @@ export const flexibleListStory = {
             extensions: ['.jpeg', '.jpg', '.png'],
             maxSize: 2662310,
           },
-          {
-            label: 'Partner',
-            name: 'partner',
-            widget: 'object',
-            isRow: false,
-            fields: [
-              {
-                label: 'Logo',
-                name: 'logo',
-                widget: 'image',
-                uploadPreset: 'episode-thumbnail',
-                description: 'PNG or JPG up to 2MB',
-                extensions: ['.jpeg', '.jpg', '.png'],
-                maxSize: 2662310,
-              },
-              {
-                label: 'Url',
-                name: 'url',
-                widget: 'string',
-              },
-              {
-                label: 'Name',
-                name: 'name',
-                widget: 'string',
-              },
-            ],
-          },
+          // {
+          //   label: 'Partner',
+          //   name: 'partner',
+          //   widget: 'object',
+          //   isRow: false,
+          //   fields: [
+          //     {
+          //       label: 'Logo',
+          //       name: 'logo',
+          //       widget: 'image',
+          //       uploadPreset: 'episode-thumbnail',
+          //       description: 'PNG or JPG up to 2MB',
+          //       extensions: ['.jpeg', '.jpg', '.png'],
+          //       maxSize: 2662310,
+          //     },
+          //     {
+          //       label: 'Url',
+          //       name: 'url',
+          //       widget: 'string',
+          //     },
+          //     {
+          //       label: 'Name',
+          //       name: 'name',
+          //       widget: 'string',
+          //     },
+          //   ],
+          // },
         ],
       },
-      { label: 'Conclusion', name: 'conclusion', widget: 'markdown' },
-      {
-        label: '',
-        name: 'nextStop',
-        widget: 'object',
-        fields: {
-          intro: {
-            label: 'Next Stop Instruction',
-            name: 'intro',
-            widget: 'markdown',
-          },
-          reference: {
-            label: 'Next Stop Bible Passage(s)',
-            name: 'reference',
-            widget: 'string',
-          },
-        },
-      },
-      { label: 'Key Truth', name: 'keyTruth', widget: 'markdown' },
-      { label: 'Extra', name: 'extra', widget: 'markdown' },
-      {
-        label: 'Footnotes',
-        name: 'footnotes',
-        widget: 'list',
-        isFlexible: true,
-        fields: [
-          { label: 'Key', name: 'key', widget: 'string' },
-          {
-            label: 'Description',
-            name: 'description',
-            widget: 'markdown',
-          },
-        ],
-      },
+      // { label: 'Conclusion', name: 'conclusion', widget: 'markdown' },
+      // {
+      //   label: '',
+      //   name: 'nextStop',
+      //   widget: 'object',
+      //   fields: {
+      //     intro: {
+      //       label: 'Next Stop Instruction',
+      //       name: 'intro',
+      //       widget: 'markdown',
+      //     },
+      //     reference: {
+      //       label: 'Next Stop Bible Passage(s)',
+      //       name: 'reference',
+      //       widget: 'string',
+      //     },
+      //   },
+      // },
+      // { label: 'Key Truth', name: 'keyTruth', widget: 'markdown' },
+      // { label: 'Extra', name: 'extra', widget: 'markdown' },
+      // {
+      //   label: 'Footnotes',
+      //   name: 'footnotes',
+      //   widget: 'list',
+      //   isFlexible: true,
+      //   fields: [
+      //     { label: 'Key', name: 'key', widget: 'string' },
+      //     {
+      //       label: 'Description',
+      //       name: 'description',
+      //       widget: 'markdown',
+      //     },
+      //   ],
+      // },
     ],
   },
   hasEditReview: false,
@@ -1905,19 +2064,19 @@ export const flexibleListStory = {
         },
         description: 'Questions of Life: Is There More to Life than This',
       },
-      {
-        link: 'https://guest-cdn.alpha.org/SI%201%20Why%20Does%20God%20Allow%20Suffering.pdf',
-        image:
-          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1725632348/alpha-course/bbq93r05rfdrjstse1fx.png',
-        title: 'Searching Issues: Why Does God Allow Suffering?',
-        author: 'Nicky Gumbel',
-        partner: {
-          url: 'https://www.hodder.co.uk/',
-          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747137416/alpha-course/bajv9p65ekgbtcqgn2kt.jpg',
-          name: 'Hodder & Stoughton Publishers',
-        },
-        description: 'Searching Issues: Why Does God Allow Suffering?',
-      },
+      // {
+      //   link: 'https://guest-cdn.alpha.org/SI%201%20Why%20Does%20God%20Allow%20Suffering.pdf',
+      //   image:
+      //     'https://res.cloudinary.com/ddks6yqbn/image/upload/v1725632348/alpha-course/bbq93r05rfdrjstse1fx.png',
+      //   title: 'Searching Issues: Why Does God Allow Suffering?',
+      //   author: 'Nicky Gumbel',
+      //   partner: {
+      //     url: 'https://www.hodder.co.uk/',
+      //     logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747137416/alpha-course/bajv9p65ekgbtcqgn2kt.jpg',
+      //     name: 'Hodder & Stoughton Publishers',
+      //   },
+      //   description: 'Searching Issues: Why Does God Allow Suffering?',
+      // },
       {
         link: 'https://vimeo.com/1009224911?share=copy',
         image:
