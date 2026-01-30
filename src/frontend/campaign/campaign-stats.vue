@@ -2,9 +2,9 @@
   <MetaBox :primary="primary" :secondary="secondary" />
 </template>
 <script setup lang="ts">
+import MetaBox from '../shared/meta-box.vue';
 import { computed } from 'vue';
 import type { CampaignStats } from '../../types';
-import { MetaBox } from '@story-cms/kit/ui';
 
 const props = defineProps<CampaignStats>();
 
