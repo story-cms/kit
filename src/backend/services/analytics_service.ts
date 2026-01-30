@@ -108,30 +108,23 @@ export class Analytics {
     // We must request the dimensions we are filtering by to ensure accurate event counts
     const eventParameterDimensions = ['customEvent:campaign_id', 'customEvent:language'];
 
-    try {
-      // Changed to use fetchMetricsForAllTime
-      const [impressions, clicks] = await Promise.all([
-        this.fetchMetricsForAllTime(
-          'eventCount',
-          impressionDimensionFilter,
-          eventParameterDimensions,
-        ),
-        this.fetchMetricsForAllTime(
-          'eventCount',
-          ctaTapDimensionFilter,
-          eventParameterDimensions,
-        ),
-      ]);
+    const [impressions, clicks] = await Promise.all([
+      this.fetchMetricsForAllTime(
+        'eventCount',
+        impressionDimensionFilter,
+        eventParameterDimensions,
+      ),
+      this.fetchMetricsForAllTime(
+        'eventCount',
+        ctaTapDimensionFilter,
+        eventParameterDimensions,
+      ),
+    ]);
 
-      return {
-        impressions,
-        clicks,
-      };
-    } catch (error: any) {
-      const errorMessage = error?.message || String(error);
-      console.error('Error fetching campaign stats:', errorMessage);
-      return { impressions: 0, clicks: 0 }; // Return 0 for impressions and clicks if there is an error
-    }
+    return {
+      impressions,
+      clicks,
+    };
   }
 
   /**
