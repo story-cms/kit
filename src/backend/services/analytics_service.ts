@@ -1,6 +1,6 @@
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
 import vine from '@vinejs/vine';
-import { StatMetric } from '../../types';
+import { StatMetric, CampaignStats } from '../../types';
 import { getCredentialsFrom } from './helpers.js';
 
 /**
@@ -39,10 +39,7 @@ export class Analytics {
    * @param language - The language code to filter by (e.g., 'en', 'fr')
    * @returns Object with impressions and clicks counts for all time
    */
-  async getCampaignStats(
-    campaignId: number,
-    language: string,
-  ): Promise<{ impressions: number; clicks: number }> {
+  async getCampaignStats(campaignId: number, language: string): Promise<CampaignStats> {
     // Create base filter with stream names
     const appsFilter = {
       fieldName: 'streamName',
