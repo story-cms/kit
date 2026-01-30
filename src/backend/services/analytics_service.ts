@@ -269,9 +269,8 @@ export class Analytics {
   private async fetchMetricsForBothPeriods(
     metricName: string,
     customDimensionFilter?: any,
-    additionalDimensions: string[] = [],
   ): Promise<{ current: number; previous: number }> {
-    const baseSpec = this.createBaseSpec(additionalDimensions);
+    const baseSpec = this.createBaseSpec();
     const reportConfig = {
       ...baseSpec,
       metrics: [{ name: metricName }],
