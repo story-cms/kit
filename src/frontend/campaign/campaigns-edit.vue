@@ -28,7 +28,7 @@
         },
       ]"
     >
-      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8 bg-white py-4">
+      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="py-4 space-y-8 bg-white">
         <StringField
           :field="{
             name: 'name',
@@ -175,6 +175,7 @@ import SelectField from '../fields/select-field.vue';
 import MarkdownField from '../fields/markdown-field.vue';
 import BooleanField from '../fields/boolean-field.vue';
 import CampaignMetaBox from './campaign-meta-box.vue';
+import CampaignStats from './campaign-stats.vue';
 import DraftActions from '../shared/draft-actions.vue';
 import ContentSidebar from '../shared/content-sidebar.vue';
 import RegionField from '../fields/region-field.vue';
