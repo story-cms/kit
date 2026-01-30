@@ -46,34 +46,11 @@ export default class CampaignsController {
   public async edit(ctx: HttpContext) {
     const campaign = await Campaign.findOrFail(ctx.params.id);
     const shared = await cms.sharedProps(ctx);
-    let stats = { impressions: 0, clicks: 0 };
-    
-    try {
-      const analytics = new Analytics(analyticsConfig);
-      
-      let locale = campaign.locale;
-      if (campaign.locale === 'en') locale = 'en_GB'; // We need to do for some instances where the locale is not the same as the content language
-      stats = await analytics.getCampaignStats(campaign.id, locale);
-
-      // Check if the stats are not 0, if they are not 0, then use the stats
-      if (stats.impressions !== 0 && stats.clicks !== 0) {
-        campaign.stats = stats;
-        await campaign.save();
-      }
-    } catch (error) {
-      ctx.logger.error('Failed to fetch campaign stats', {
-        error: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-        campaignId: campaign.id,
-        locale: campaign.locale,
-      });
-    }
 
     const props: CampaignEditProps = {
       providers,
       campaign: campaign.meta,
       bundle: campaign.model,
-      stats,
       ...shared,
     };
 

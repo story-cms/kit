@@ -4,7 +4,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { CampaignStats } from '../../types';
-import MetaBox from '../shared/meta-box.vue';
+import { MetaBox } from '@story-cms/kit/ui';
 
 const props = defineProps<CampaignStats>();
 

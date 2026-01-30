@@ -4,6 +4,7 @@
 import router from '@adonisjs/core/services/router';
 
 const CampaignsController = () => import('#controllers/campaigns_controller');
+const AnalyticsController = () => import('#controllers/analytics_controller');
 
 export default () => {
   router.get(':locale/campaign/:id/edit', [CampaignsController, 'edit']);
@@ -11,4 +12,5 @@ export default () => {
   router.post(':locale/campaign/:id', [CampaignsController, 'update']);
   router.delete(':locale/campaign/:id', [CampaignsController, 'destroy']);
   router.get(':locale/campaign', [CampaignsController, 'index']);
+  router.get(':locale/campaign/:id/stats', [AnalyticsController, 'campaignStats']);
 };
