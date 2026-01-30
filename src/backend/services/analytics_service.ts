@@ -1,6 +1,6 @@
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
 import vine from '@vinejs/vine';
-import { StatMetric } from '../../types';
+import { StatMetric, CampaignStats } from '../../types';
 import { getCredentialsFrom } from './helpers.js';
 
 /**
@@ -31,6 +31,100 @@ export class Analytics {
   constructor(config: AnalyticsConfig) {
     this.config = config;
     this.initializeClient();
+  }
+
+  /**
+   * Fetches campaign statistics for promotion_impression and promotion_cta_tap events
+   * @param campaignId - The campaign ID to filter by
+   * @param language - The language code to filter by (e.g., 'en', 'fr')
+   * @returns Object with impressions and clicks counts for all time
+   */
+  async getCampaignStats(campaignId: number, language: string): Promise<CampaignStats> {
+    // Create base filter with stream names
+    const appsFilter = {
+      fieldName: 'streamName',
+      inListFilter: {
+        values: this.config.streams,
+      },
+    };
+
+    // Create campaign ID filter (Custom Event Scope)
+    const campaignIdFilter = {
+      fieldName: 'customEvent:campaign_id',
+      stringFilter: {
+        value: String(campaignId),
+      },
+    };
+
+    // Create language filter (Custom Event Scope)
+    const languageFilter = {
+      fieldName: 'customEvent:language',
+      stringFilter: {
+        value: language,
+        caseSensitive: false,
+      },
+    };
+
+    // Create promotion_impression event filter
+    const impressionEventFilter = {
+      fieldName: 'eventName',
+      stringFilter: {
+        value: 'promotion_impression',
+      },
+    };
+
+    // Create promotion_cta_tap event filter
+    const ctaTapEventFilter = {
+      fieldName: 'eventName',
+      stringFilter: {
+        value: 'promotion_cta_tap',
+      },
+    };
+
+    // Combined filter for impressions: stream + event + campaign_id + language
+    const impressionDimensionFilter = {
+      andGroup: {
+        expressions: [
+          { filter: appsFilter },
+          { filter: impressionEventFilter },
+          { filter: campaignIdFilter },
+          { filter: languageFilter },
+        ],
+      },
+    };
+
+    // Combined filter for CTA taps: stream + event + campaign_id + language
+    const ctaTapDimensionFilter = {
+      andGroup: {
+        expressions: [
+          { filter: appsFilter },
+          { filter: ctaTapEventFilter },
+          { filter: campaignIdFilter },
+          { filter: languageFilter },
+        ],
+      },
+    };
+
+    // We must request the dimensions we are filtering by to ensure accurate event counts
+    const eventParameterDimensions = ['customEvent:campaign_id', 'customEvent:language'];
+
+    const [impressions, clicks] = await Promise.all([
+      this.fetchMetricsForAllTime(
+        'eventCount',
+        impressionDimensionFilter,
+        eventParameterDimensions,
+      ),
+      this.fetchMetricsForAllTime(
+        'eventCount',
+        ctaTapDimensionFilter,
+        eventParameterDimensions,
+      ),
+    ]);
+
+    return {
+      impressions,
+      clicks,
+    };
   }
 
   /**
@@ -119,6 +213,11 @@ export class Analytics {
     endDate: '31daysAgo',
   };
 
+  private readonly ALL_TIME_PERIOD = {
+    startDate: '2026-01-01',
+    endDate: 'today',
+  };
+
   /**
    * Sums metric values across all streams from a GA report
    */
@@ -133,7 +232,7 @@ export class Analytics {
   /**
    * Creates the base specification for GA reports
    */
-  private createBaseSpec() {
+  private createBaseSpec(additionalDimensions: string[] = []) {
     const appsFilter = {
       fieldName: 'streamName',
       inListFilter: {
@@ -141,13 +240,16 @@ export class Analytics {
       },
     };
 
+    const dimensions = [
+      {
+        name: 'streamName',
+      },
+      ...additionalDimensions.map((name) => ({ name })),
+    ];
+
     return {
       property: `properties/${this.config.propertyId}`,
-      dimensions: [
-        {
-          name: 'streamName',
-        },
-      ],
+      dimensions,
       dimensionFilter: {
         filter: appsFilter,
       },
@@ -188,6 +290,32 @@ export class Analytics {
       current: this.sumMetricValues(currentPeriodData),
       previous: this.sumMetricValues(previousPeriodData),
     };
+  }
+
+  /**
+   * Fetches metrics for all time
+   */
+  private async fetchMetricsForAllTime(
+    metricName: string,
+    customDimensionFilter?: any,
+    additionalDimensions: string[] = [],
+  ): Promise<number> {
+    const baseSpec = this.createBaseSpec(additionalDimensions);
+    const reportConfig = {
+      ...baseSpec,
+      metrics: [{ name: metricName }],
+    };
+
+    if (customDimensionFilter) {
+      reportConfig.dimensionFilter = customDimensionFilter;
+    }
+
+    const [data] = await this.client.runReport({
+      ...reportConfig,
+      dateRanges: [this.ALL_TIME_PERIOD],
+    });
+
+    return this.sumMetricValues(data);
   }
 }
 

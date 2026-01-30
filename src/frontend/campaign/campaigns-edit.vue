@@ -131,7 +131,9 @@
           :is-nested="true"
           class="px-8"
         />
-        <div v-else><p class="my-16"></p></div>
+        <div v-else>
+          <p class="my-16"></p>
+        </div>
       </form>
 
       <ContentSidebar>
@@ -145,7 +147,7 @@
             :status="status"
           />
           <div class="mt-6"></div>
-          <CampaignStats :impressions="stats.impressions" :clicks="stats.clicks" />
+          <CampaignStats :impressions="stats?.impressions" :clicks="stats?.clicks" />
         </template>
       </ContentSidebar>
     </div>
@@ -156,10 +158,12 @@
 import { ref, computed, onMounted, toRefs, watch } from 'vue';
 import { DateTime } from 'luxon';
 import { router } from '@inertiajs/vue3';
+import axios from 'axios';
 import {
   type SharedPageProps,
   type CampaignEditProps,
   ResponseStatus,
+  type CampaignStats as CampaignStatsType,
 } from '../../types';
 import { useModelStore, useSharedStore, useWidgetsStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
@@ -291,7 +295,9 @@ const handleActionTypeChange = () => {
   model.setField('actionUrl', '');
 };
 
-onMounted(() => {
+const stats = ref<CampaignStatsType>({ impressions: 0, clicks: 0 });
+
+onMounted(async (): Promise<void> => {
   model.$subscribe(() => {
     handleActionTypeChange();
 
@@ -304,5 +310,16 @@ onMounted(() => {
     title.value = model.getField('name', 'Campaign');
     isPublished.value = Boolean(model.getField('isPublished', false));
   });
+
+  try {
+    const response = await axios.get(
+      `/${shared.locale}/campaign/${props.campaign.id}/stats`,
+    );
+    stats.value = response.data;
+  } catch (_error) {
+    console.error(_error);
+    shared.addMessage(ResponseStatus.Failure, 'Error getting campaign stats');
+    stats.value = { impressions: 0, clicks: 0 };
+  }
 });
 </script>

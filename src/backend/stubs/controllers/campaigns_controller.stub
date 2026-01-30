@@ -44,11 +44,11 @@ export default class CampaignsController {
   public async edit(ctx: HttpContext) {
     const campaign = await Campaign.findOrFail(ctx.params.id);
     const shared = await cms.sharedProps(ctx);
+
     const props: CampaignEditProps = {
       providers,
       campaign: campaign.meta,
       bundle: campaign.model,
-      stats: { impressions: 0, clicks: 0 }, // TODO: get stats from database
       ...shared,
     };
 
