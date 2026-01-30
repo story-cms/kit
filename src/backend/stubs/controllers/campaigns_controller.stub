@@ -3,10 +3,8 @@
 }}}
 import { HttpContext } from '@adonisjs/core/http';
 import vine from '@vinejs/vine';
-import analyticsConfig from '#config/analytics';
 import {
   Activity,
-  Analytics,
   trimmedErrors,
   Campaign,
   CampaignValidator,
