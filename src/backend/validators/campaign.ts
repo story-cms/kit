@@ -2,10 +2,10 @@ import vine, { SimpleMessagesProvider, VineValidator } from '@vinejs/vine';
 import type { HttpContext } from '@adonisjs/core/http';
 
 const draft = {
-  name: vine.string(),
+  name: vine.string().optional(),
   window: vine.string().optional(),
   promoImage: vine.string().optional(),
-  title: vine.string(),
+  title: vine.string().optional(),
   message: vine.string().optional(),
   actionLabel: vine.string().optional(),
   actionType: vine.enum(['close', 'donate', 'externalUrl']).optional(),
