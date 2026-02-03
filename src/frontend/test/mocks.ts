@@ -1338,6 +1338,8 @@ export const flexibleListStory = {
   bundle: {
     extra: '',
     title: 'The Story of Noah and the Flood',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Hendrerit gravida rutrum quisque non tellus orci. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Fermentum leo vel orci porta non pulvinar. In hendrerit gravida rutrum quisque. Morbi tincidunt ornare massa eget egestas purus viverra. Nulla pellentesque dignissim enim sit amet venenatis urna. Et ligula ullamcorper malesuada proin libero nunc. Venenatis cras sed felis eget velit. Viverra nam libero justo laoreet sit amet cursus sit amet. Eleifend donec pretium vulputate sapien nec sagittis. Amet risus nullam eget felis eget nunc lobortis mattis. Est pellentesque elit ullamcorper dignissim cras tincidunt. Auctor neque vitae tempus quam pellentesque nec nam aliquam.Sed risus pretium quam vulputate dignissim. Lectus arcu bibendum at varius vel. Sed velit dignissim sodales ut eu sem integer. Ullamcorper morbi tincidunt ornare massa eget egestas purus. Nulla malesuada pellentesque elit eget gravida cum sociis natoque penatibus. A diam sollicitudin tempor id eu nisl nunc. Amet facilisis magna etiam tempor orci eu lobortis elementum nibh. In pellentesque massa placerat duis ultricies. Quam lacus suspendisse faucibus interdum. Lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt. Nunc aliquet bibendum enim facilisis gravida. Magna fermentum iaculis eu non diam phasellus. Sed ullamcorper morbi tincidunt ornare massa eget egestas purus. Elit duis tristique sollicitudin nibh sit amet commodo nulla facilisi. Odio euismod lacinia at quis risus.',
     number: '',
     imageUrl:
       'http://res.cloudinary.com/almassira/image/upload/v1634652071/session_thumbnails/ujntltmyu5sgetlwhwma.png',
@@ -1598,6 +1600,11 @@ export const flexibleListStory = {
             name: 'imageUrl',
             widget: 'image',
             uploadPreset: 'session_thumbnail',
+          },
+          {
+            label: 'Description',
+            name: 'description',
+            widget: 'markdown',
           },
           { label: 'Video URL', name: 'videoUrl', widget: 'string' },
           {
@@ -1892,6 +1899,20 @@ export const flexibleListStory = {
   source: {
     extra: '',
     title: 'The Story of Noah and the Flood',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Hendrerit gravida rutrum quisque non tellus orci. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Fermentum leo vel orci porta non pulvinar. In hendrerit gravida rutrum quisque. Morbi tincidunt ornare massa eget egestas purus viverra. Nulla pellentesque dignissim enim sit amet venenatis urna. Et ligula ullamcorper malesuada proin libero nunc. Venenatis cras sed felis eget velit. Viverra nam libero justo laoreet sit amet cursus sit amet. Eleifend donec pretium vulputate sapien nec sagittis.',
+    moreInformation: [
+      {
+        title: 'More Information 1',
+        information:
+          '**Information 1**\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Hendrerit gravida rutrum quisque non tellus orci. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Fermentum leo vel orci porta non pulvinar. In hendrerit gravida rutrum quisque. Morbi tincidunt ornare massa eget egestas purus viverra. Nulla pellentesque dignissim enim sit amet venenatis urna. Et ligula ullamcorper malesuada proin libero nunc. Venenatis cras sed felis eget velit. Viverra nam libero justo laoreet sit amet cursus sit amet. Eleifend donec pretium vulputate sapien nec sagittis.',
+      },
+      {
+        title: 'More Information 2',
+        information:
+          '**Information 2**\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Hendrerit gravida rutrum quisque non tellus orci. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Fermentum leo vel orci porta non pulvinar. In hendrerit gravida rutrum quisque. Morbi tincidunt ornare massa eget egestas purus viverra. Nulla pellentesque dignissim enim sit amet venenatis urna. Et ligula ullamcorper malesuada proin libero nunc. Venenatis cras sed felis eget velit. Viverra nam libero justo laoreet sit amet cursus sit amet. Eleifend donec pretium vulputate sapien nec sagittis.',
+      },
+    ],
     number: '',
     imageUrl:
       'http://res.cloudinary.com/almassira/image/upload/v1634652071/session_thumbnails/ujntltmyu5sgetlwhwma.png',
