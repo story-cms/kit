@@ -1,5 +1,5 @@
 <template>
-  <div class="row-[span_100] ml-8 grid grid-rows-subgrid">
+  <div class="ml-8 grid">
     <ul
       v-for="(_listItem, index) in listItems"
       :key="index"

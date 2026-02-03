@@ -1,10 +1,6 @@
 <template>
-  <ul
-    v-for="(_listItem, index) in listItems"
-    :key="index"
-    class="row-[span_100] mb-8 grid grid-rows-subgrid"
-  >
-    <li :class="['relative row-[span_100] grid grid-rows-subgrid']">
+  <ul v-for="(_listItem, index) in listItems" :key="index" class="mb-8 grid">
+    <li :class="['relative grid']">
       <template v-if="!isEmpty(index)">
         <div
           :class="[
@@ -85,18 +81,11 @@
             </button>
           </template>
         </div>
-        <ul
-          v-if="isExpanded(index)"
-          :class="[
-            'row-[span_100] grid grid-rows-subgrid bg-white',
-            { 'ml-8': !isReadOnly },
-          ]"
-        >
+        <ul v-if="isExpanded(index)" :class="['grid bg-white', { 'ml-8': !isReadOnly }]">
           <li
             v-for="(item, i) in fields"
             :key="item.name + `${i.toString()}`"
-            class="grid grid-rows-subgrid"
-            :style="{ gridRow: `span ${listItems.length}` }"
+            class="grid"
           >
             <component
               :is="widgets.picker(item.widget)"

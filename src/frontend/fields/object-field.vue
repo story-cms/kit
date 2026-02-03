@@ -1,12 +1,12 @@
 <template>
-  <div class="row-[span_100] my-[32px] grid grid-rows-subgrid rounded bg-white p-[32px]">
+  <div class="my-[32px] grid rounded bg-white p-[32px]">
     <div v-if="field.label">
       <label class="input-label mb-3">
         {{ field.label }}
       </label>
     </div>
 
-    <div class="row-[span_100] grid grid-rows-subgrid gap-y-6">
+    <div class="grid gap-y-6">
       <div v-for="key in Object.keys(field.fields!)" :key="key">
         <component
           :is="widgetFor(key)"
