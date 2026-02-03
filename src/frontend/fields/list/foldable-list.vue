@@ -1,6 +1,11 @@
 <template>
-  <ul v-for="(_listItem, index) in listItems" :key="index" class="mb-8 grid">
-    <li :class="['relative grid']">
+  <ul
+    v-for="(_listItem, index) in listItems"
+    :key="index"
+    class="subgrid mb-8"
+    :style="{ gridRow: `span ${fields.length}` }"
+  >
+    <li :class="['subgrid relative']" :style="{ gridRow: `span ${fields.length}` }">
       <template v-if="!isEmpty(index)">
         <div
           :class="[
@@ -81,7 +86,11 @@
             </button>
           </template>
         </div>
-        <ul v-if="isExpanded(index)" :class="['grid bg-white', { 'ml-8': !isReadOnly }]">
+        <ul
+          v-if="isExpanded(index)"
+          :class="['subgrid bg-white', { 'ml-8': !isReadOnly }]"
+          :style="{ gridRow: `span ${fields.length}` }"
+        >
           <li
             v-for="(item, i) in fields"
             :key="item.name + `${i.toString()}`"

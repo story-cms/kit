@@ -47,6 +47,10 @@
   .auth-button {
     @apply relative mx-auto flex justify-center rounded-full border border-transparent bg-[--primary-color] px-4 py-2 text-sm font-medium text-white hover:bg-[--secondary-color];
   }
+
+  .subgrid {
+    @apply grid grid-rows-subgrid;
+  }
 }
 
 /* Overide CodeMirror styles */
