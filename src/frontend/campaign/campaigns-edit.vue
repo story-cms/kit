@@ -28,7 +28,7 @@
         },
       ]"
     >
-      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="py-4 space-y-8 bg-white">
+      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8 bg-white py-4">
         <StringField
           :field="{
             name: 'name',
@@ -68,6 +68,16 @@
             description: 'JPG file up to 300K',
             extensions: ['.jpg', '.jpeg'],
             maxSize: 300000,
+          }"
+          :is-nested="true"
+          class="px-8"
+        />
+
+        <StringField
+          :field="{
+            name: 'videoUrl',
+            label: 'Video URL',
+            widget: 'string',
           }"
           :is-nested="true"
           class="px-8"
@@ -188,6 +198,7 @@ type RequestPayload = {
   regions: string;
   window: string;
   promoImage: string;
+  videoUrl: string;
   title: string;
   message: string;
   actionLabel: string;
