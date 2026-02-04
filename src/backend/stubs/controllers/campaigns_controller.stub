@@ -64,6 +64,7 @@ export default class CampaignsController {
         name: '',
         window: '',
         promoImage: '',
+        videoUrl: '',
         title: '',
         message: '',
         actionLabel: '',

@@ -28,6 +28,7 @@ const campaignBundle: CampaignBundle = {
   window: '2026-01-08T02:58:00.000Z|2026-01-24T02:58:00.000Z',
   promoImage:
     'https://res.cloudinary.com/journeys/image/upload/v1756122407/christ-chaos-header_yqrufy_lzmfjt.jpg',
+  videoUrl: 'https://example.com/hosted/video.mp4',
   title: 'Giving Tuesday - Giving to the Poor',
   message:
     '## Support us further the development of this app\nAll giving should be done freely, not compelled or forced, but offered willingly from the heart.',

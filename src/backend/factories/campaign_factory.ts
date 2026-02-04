@@ -11,6 +11,7 @@ export const CampaignFactory = factory
       name: faker.company.name(),
       window: window,
       promoImage: faker.image.url(),
+      videoUrl: `https://${faker.internet.domainName()}.com/video.mp4`,
       title: faker.lorem.sentence(),
       message: faker.lorem.paragraph(),
       actionLabel: faker.lorem.words(2),

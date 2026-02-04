@@ -1,5 +1,9 @@
 import { test, expect } from '@playwright/test';
-import { CampaignValidator } from '../../src/backend/validators/campaign.js';
+import vine from '@vinejs/vine';
+import {
+  CampaignValidator,
+  campaignErrorMessages,
+} from '../../src/backend/validators/campaign.js';
 import type { HttpContext } from '@adonisjs/core/http';
 import { getCampaignStatus } from '../../src/frontend/shared/helpers.js';
 import { DateTime } from 'luxon';
@@ -16,60 +20,108 @@ function createMockHttpContext(inputs: Record<string, any>): HttpContext {
 test.describe('Campaign Validator', () => {
   test.describe('Draft Schema', () => {
     test('allows all fields to be optional', async () => {
-      const ctx = createMockHttpContext({ isPublished: false });
-      const validator = new CampaignValidator(ctx);
-      const schema = validator.schema;
-
       const data = {
         isPublished: false,
       };
+      const ctx = createMockHttpContext(data);
+      const validator = new CampaignValidator(ctx);
+      const schema = validator.schema;
+
       const result = await schema.validate(data);
       expect(result).toEqual({ isPublished: false });
     });
 
     test('accepts partial data', async () => {
-      const ctx = createMockHttpContext({ isPublished: false });
-      const validator = new CampaignValidator(ctx);
-      const schema = validator.schema;
-
       const data = {
         name: 'Test Campaign',
         title: 'Test Title',
         isPublished: false,
       };
+      const ctx = createMockHttpContext(data);
+      const validator = new CampaignValidator(ctx);
+      const schema = validator.schema;
+
       const result = await schema.validate(data);
       expect(result.name).toBe('Test Campaign');
       expect(result.title).toBe('Test Title');
     });
 
     test('accepts all fields', async () => {
-      const ctx = createMockHttpContext({ isPublished: false });
-      const validator = new CampaignValidator(ctx);
-      const schema = validator.schema;
-
       const data = {
         name: 'Test Campaign',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
         promoImage: 'https://example.com/image.jpg',
+        videoUrl: 'https://example.com/hosted/video.mp4',
         title: 'Test Title',
         message: 'Test Message',
         actionLabel: 'Click Here',
         actionType: 'externalUrl' as const,
         actionUrl: 'https://example.com',
         regions: 'US,CA',
-        isPublished: false,
+        isPublished: true,
       };
+      const ctx = createMockHttpContext(data);
+      const validator = new CampaignValidator(ctx);
+      const schema = validator.schema;
+
       const result = await schema.validate(data);
       expect(result).toEqual(data);
+    });
+
+    test('accepts a videoUrl in draft when it is optional', async () => {
+      const data = {
+        isPublished: false,
+      };
+      const ctx = createMockHttpContext(data);
+      const validator = new CampaignValidator(ctx);
+      const schema = validator.schema;
+
+      const result = await schema.validate(data);
+      expect(result.videoUrl).toBeUndefined();
+    });
+
+    test('accepts valid videoUrl when provided in draft', async () => {
+      const data = {
+        isPublished: false,
+        videoUrl: 'https://example.com/video.mp4',
+      };
+      const ctx = createMockHttpContext(data);
+      const validator = new CampaignValidator(ctx);
+      const schema = validator.schema;
+
+      const result = await schema.validate(data);
+      expect(result.videoUrl).toBe('https://example.com/video.mp4');
+    });
+
+    test('accepts a videoUrl in draft when it is not empty and does not start with https://', async () => {
+      const data = {
+        isPublished: false,
+        videoUrl: 'http://example.com/video.mp4',
+      };
+      const ctx = createMockHttpContext(data);
+      const validator = new CampaignValidator(ctx);
+      const schema = validator.schema;
+
+      const result = await schema.validate(data);
+      expect(result.videoUrl).toBe('http://example.com/video.mp4');
+    });
+
+    test('accepts a videoUrl in draft when it is not empty and does not end with .mp4', async () => {
+      const data = {
+        isPublished: false,
+        videoUrl: 'https://example.com/video.webm',
+      };
+      const ctx = createMockHttpContext(data);
+      const validator = new CampaignValidator(ctx);
+      const schema = validator.schema;
+
+      const result = await schema.validate(data);
+      expect(result.videoUrl).toBe('https://example.com/video.webm');
     });
   });
 
   test.describe('Live Schema', () => {
     test('requires name', async () => {
-      const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
-      const validator = new CampaignValidator(ctx);
-      const schema = validator.schema;
-
       const data = {
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
         title: 'Test Title',
@@ -78,15 +130,15 @@ test.describe('Campaign Validator', () => {
         actionType: 'close' as const,
         isPublished: true,
       };
+
+      const ctx = createMockHttpContext(data);
+      const validator = new CampaignValidator(ctx);
+      const schema = validator.schema;
 
       await expect(schema.validate(data)).rejects.toThrow();
     });
 
     test('requires window', async () => {
-      const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
-      const validator = new CampaignValidator(ctx);
-      const schema = validator.schema;
-
       const data = {
         name: 'Test Campaign',
         title: 'Test Title',
@@ -95,15 +147,15 @@ test.describe('Campaign Validator', () => {
         actionType: 'close' as const,
         isPublished: true,
       };
+
+      const ctx = createMockHttpContext(data);
+      const validator = new CampaignValidator(ctx);
+      const schema = validator.schema;
 
       await expect(schema.validate(data)).rejects.toThrow();
     });
 
     test('requires title', async () => {
-      const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
-      const validator = new CampaignValidator(ctx);
-      const schema = validator.schema;
-
       const data = {
         name: 'Test Campaign',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
@@ -112,15 +164,15 @@ test.describe('Campaign Validator', () => {
         actionType: 'close' as const,
         isPublished: true,
       };
+
+      const ctx = createMockHttpContext(data);
+      const validator = new CampaignValidator(ctx);
+      const schema = validator.schema;
 
       await expect(schema.validate(data)).rejects.toThrow();
     });
 
     test('requires message', async () => {
-      const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
-      const validator = new CampaignValidator(ctx);
-      const schema = validator.schema;
-
       const data = {
         name: 'Test Campaign',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
@@ -129,15 +181,15 @@ test.describe('Campaign Validator', () => {
         actionType: 'close' as const,
         isPublished: true,
       };
+
+      const ctx = createMockHttpContext(data);
+      const validator = new CampaignValidator(ctx);
+      const schema = validator.schema;
 
       await expect(schema.validate(data)).rejects.toThrow();
     });
 
     test('requires actionLabel', async () => {
-      const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
-      const validator = new CampaignValidator(ctx);
-      const schema = validator.schema;
-
       const data = {
         name: 'Test Campaign',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
@@ -147,14 +199,14 @@ test.describe('Campaign Validator', () => {
         isPublished: true,
       };
 
+      const ctx = createMockHttpContext(data);
+      const validator = new CampaignValidator(ctx);
+      const schema = validator.schema;
+
       await expect(schema.validate(data)).rejects.toThrow();
     });
 
     test('requires actionType', async () => {
-      const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
-      const validator = new CampaignValidator(ctx);
-      const schema = validator.schema;
-
       const data = {
         name: 'Test Campaign',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
@@ -164,14 +216,14 @@ test.describe('Campaign Validator', () => {
         isPublished: true,
       };
 
+      const ctx = createMockHttpContext(data);
+      const validator = new CampaignValidator(ctx);
+      const schema = validator.schema;
+
       await expect(schema.validate(data)).rejects.toThrow();
     });
 
     test('validates actionType enum', async () => {
-      const ctx = createMockHttpContext({ isPublished: true, actionType: 'invalid' });
-      const validator = new CampaignValidator(ctx);
-      const schema = validator.schema;
-
       const data = {
         name: 'Test Campaign',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
@@ -181,6 +233,9 @@ test.describe('Campaign Validator', () => {
         actionType: 'invalid' as any,
         isPublished: true,
       };
+      const ctx = createMockHttpContext(data);
+      const validator = new CampaignValidator(ctx);
+      const schema = validator.schema;
 
       await expect(schema.validate(data)).rejects.toThrow();
     });
@@ -189,10 +244,6 @@ test.describe('Campaign Validator', () => {
       const validActionTypes = ['close', 'donate', 'externalUrl'] as const;
 
       for (const actionType of validActionTypes) {
-        const ctx = createMockHttpContext({ isPublished: true, actionType });
-        const validator = new CampaignValidator(ctx);
-        const schema = validator.schema;
-
         const data = {
           name: 'Test Campaign',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
@@ -203,6 +254,9 @@ test.describe('Campaign Validator', () => {
           actionUrl: 'https://example.com',
           isPublished: true,
         };
+        const ctx = createMockHttpContext(data);
+        const validator = new CampaignValidator(ctx);
+        const schema = validator.schema;
 
         const result = await schema.validate(data);
         expect(result.actionType).toBe(actionType);
@@ -210,10 +264,6 @@ test.describe('Campaign Validator', () => {
     });
 
     test('requires actionUrl when actionType is externalUrl', async () => {
-      const ctx = createMockHttpContext({ isPublished: true, actionType: 'externalUrl' });
-      const validator = new CampaignValidator(ctx);
-      const schema = validator.schema;
-
       const data = {
         name: 'Test Campaign',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
@@ -224,14 +274,14 @@ test.describe('Campaign Validator', () => {
         isPublished: true,
       };
 
+      const ctx = createMockHttpContext(data);
+      const validator = new CampaignValidator(ctx);
+      const schema = validator.schema;
+
       await expect(schema.validate(data)).rejects.toThrow();
     });
 
     test('accepts valid actionUrl when actionType is externalUrl', async () => {
-      const ctx = createMockHttpContext({ isPublished: true, actionType: 'externalUrl' });
-      const validator = new CampaignValidator(ctx);
-      const schema = validator.schema;
-
       const data = {
         name: 'Test Campaign',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
@@ -243,15 +293,15 @@ test.describe('Campaign Validator', () => {
         isPublished: true,
       };
 
+      const ctx = createMockHttpContext(data);
+      const validator = new CampaignValidator(ctx);
+      const schema = validator.schema;
+
       const result = await schema.validate(data);
       expect(result.actionUrl).toBe('https://example.com');
     });
 
     test('validates actionUrl format', async () => {
-      const ctx = createMockHttpContext({ isPublished: true, actionType: 'externalUrl' });
-      const validator = new CampaignValidator(ctx);
-      const schema = validator.schema;
-
       const data = {
         name: 'Test Campaign',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
@@ -263,14 +313,14 @@ test.describe('Campaign Validator', () => {
         isPublished: true,
       };
 
+      const ctx = createMockHttpContext(data);
+      const validator = new CampaignValidator(ctx);
+      const schema = validator.schema;
+
       await expect(schema.validate(data)).rejects.toThrow();
     });
 
     test('requires protocol in actionUrl', async () => {
-      const ctx = createMockHttpContext({ isPublished: true, actionType: 'externalUrl' });
-      const validator = new CampaignValidator(ctx);
-      const schema = validator.schema;
-
       const data = {
         name: 'Test Campaign',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
@@ -282,6 +332,10 @@ test.describe('Campaign Validator', () => {
         isPublished: true,
       };
 
+      const ctx = createMockHttpContext(data);
+      const validator = new CampaignValidator(ctx);
+      const schema = validator.schema;
+
       await expect(schema.validate(data)).rejects.toThrow();
     });
 
@@ -289,13 +343,6 @@ test.describe('Campaign Validator', () => {
       const protocols = ['http', 'https'] as const;
 
       for (const protocol of protocols) {
-        const ctx = createMockHttpContext({
-          isPublished: true,
-          actionType: 'externalUrl',
-        });
-        const validator = new CampaignValidator(ctx);
-        const schema = validator.schema;
-
         const data = {
           name: 'Test Campaign',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
@@ -306,6 +353,9 @@ test.describe('Campaign Validator', () => {
           actionUrl: `${protocol}://example.com`,
           isPublished: true,
         };
+        const ctx = createMockHttpContext(data);
+        const validator = new CampaignValidator(ctx);
+        const schema = validator.schema;
 
         const result = await schema.validate(data);
         expect(result.actionUrl).toBe(`${protocol}://example.com`);
@@ -313,10 +363,6 @@ test.describe('Campaign Validator', () => {
     });
 
     test('allows empty actionUrl when actionType is not externalUrl', async () => {
-      const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
-      const validator = new CampaignValidator(ctx);
-      const schema = validator.schema;
-
       const data = {
         name: 'Test Campaign',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
@@ -328,15 +374,15 @@ test.describe('Campaign Validator', () => {
         isPublished: true,
       };
 
+      const ctx = createMockHttpContext(data);
+      const validator = new CampaignValidator(ctx);
+      const schema = validator.schema;
+
       const result = await schema.validate(data);
       expect(result.actionUrl).toBe('');
     });
 
     test('allows missing actionUrl when actionType is not externalUrl', async () => {
-      const ctx = createMockHttpContext({ isPublished: true, actionType: 'donate' });
-      const validator = new CampaignValidator(ctx);
-      const schema = validator.schema;
-
       const data = {
         name: 'Test Campaign',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
@@ -347,15 +393,15 @@ test.describe('Campaign Validator', () => {
         isPublished: true,
       };
 
+      const ctx = createMockHttpContext(data);
+      const validator = new CampaignValidator(ctx);
+      const schema = validator.schema;
+
       const result = await schema.validate(data);
       expect(result.actionUrl).toBeUndefined();
     });
 
     test('makes promoImage optional', async () => {
-      const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
-      const validator = new CampaignValidator(ctx);
-      const schema = validator.schema;
-
       const data = {
         name: 'Test Campaign',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
@@ -365,16 +411,16 @@ test.describe('Campaign Validator', () => {
         actionType: 'close' as const,
         isPublished: true,
       };
+
+      const ctx = createMockHttpContext(data);
+      const validator = new CampaignValidator(ctx);
+      const schema = validator.schema;
 
       const result = await schema.validate(data);
       expect(result.promoImage).toBeUndefined();
     });
 
     test('makes regions optional', async () => {
-      const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
-      const validator = new CampaignValidator(ctx);
-      const schema = validator.schema;
-
       const data = {
         name: 'Test Campaign',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
@@ -384,16 +430,181 @@ test.describe('Campaign Validator', () => {
         actionType: 'close' as const,
         isPublished: true,
       };
+      const ctx = createMockHttpContext(data);
+      const validator = new CampaignValidator(ctx);
+      const schema = validator.schema;
 
       const result = await schema.validate(data);
       expect(result.regions).toBeUndefined();
     });
 
-    test('accepts valid complete data', async () => {
-      const ctx = createMockHttpContext({ isPublished: true, actionType: 'externalUrl' });
-      const validator = new CampaignValidator(ctx);
-      const schema = validator.schema;
+    test.describe('videoUrl validation', () => {
+      test('accepts a videoUrl in live when it is optional', async () => {
+        const data = {
+          name: 'Test Campaign',
+          window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
+          title: 'Test Title',
+          message: 'Test Message',
+          actionLabel: 'Click Here',
+          actionType: 'close' as const,
+          isPublished: true,
+        };
 
+        const ctx = createMockHttpContext(data);
+        const validator = new CampaignValidator(ctx);
+        const schema = validator.schema;
+
+        const result = await schema.validate(data);
+        expect(result.videoUrl).toBeUndefined();
+      });
+
+      test('accepts empty videoUrl', async () => {
+        const data = {
+          name: 'Test Campaign',
+          window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
+          title: 'Test Title',
+          message: 'Test Message',
+          actionLabel: 'Click Here',
+          actionType: 'close' as const,
+          videoUrl: '',
+          isPublished: true,
+        };
+        const ctx = createMockHttpContext(data);
+        const validator = new CampaignValidator(ctx);
+        const schema = validator.schema;
+
+        const result = await schema.validate(data);
+        expect(result.videoUrl).toBe('');
+      });
+
+      test('accepts valid videoUrl starting with https:// and ending with .mp4', async () => {
+        const data = {
+          name: 'Test Campaign',
+          window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
+          title: 'Test Title',
+          message: 'Test Message',
+          actionLabel: 'Click Here',
+          actionType: 'close' as const,
+          videoUrl: 'https://example.com/hosted/video.mp4',
+          isPublished: true,
+        };
+        const ctx = createMockHttpContext(data);
+        const validator = new CampaignValidator(ctx);
+        const schema = validator.schema;
+
+        const result = await schema.validate(data);
+        expect(result.videoUrl).toBe('https://example.com/hosted/video.mp4');
+      });
+
+      test('rejects videoUrl that does not start with https://', async () => {
+        vine.messagesProvider = campaignErrorMessages;
+        const data = {
+          name: 'Test Campaign',
+          window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
+          title: 'Test Title',
+          message: 'Test Message',
+          actionLabel: 'Click Here',
+          actionType: 'close' as const,
+          videoUrl: 'http://example.com/video.mp4',
+          isPublished: true,
+        };
+
+        const ctx = createMockHttpContext(data);
+        const validator = new CampaignValidator(ctx);
+        const schema = validator.schema;
+
+        let error: {
+          status?: number;
+          code?: string;
+          messages?: Array<{ message: string; rule: string; field: string }>;
+        };
+        try {
+          await schema.validate(data);
+        } catch (e: any) {
+          error = e;
+        }
+        expect(error!).toBeDefined();
+        expect(error!).toMatchObject({
+          status: 422,
+          code: 'E_VALIDATION_ERROR',
+        });
+        expect(error!.messages).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              message: 'The campaign needs a valid URL for the video',
+              rule: 'url',
+              field: 'videoUrl',
+            }),
+          ]),
+        );
+      });
+
+      test('rejects videoUrl that does not end with .mp4', async () => {
+        vine.messagesProvider = campaignErrorMessages;
+        const data = {
+          name: 'Test Campaign',
+          window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
+          title: 'Test Title',
+          message: 'Test Message',
+          actionLabel: 'Click Here',
+          actionType: 'externalUrl',
+          actionUrl: 'https://example.com',
+          videoUrl: 'https://example.com/video.mov',
+          isPublished: true,
+        };
+
+        const ctx = createMockHttpContext(data);
+
+        const validator = new CampaignValidator(ctx);
+        const schema = validator.schema;
+
+        let error: {
+          status?: number;
+          code?: string;
+          messages?: Array<{ message: string; rule: string; field: string }>;
+        };
+        try {
+          await schema.validate(data);
+        } catch (e: any) {
+          error = e;
+        }
+        expect(error!).toBeDefined();
+        expect(error!).toMatchObject({
+          status: 422,
+          code: 'E_VALIDATION_ERROR',
+        });
+        expect(error!.messages).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              message: 'The video URL must end with .mp4',
+              rule: 'endsWith',
+              field: 'videoUrl',
+            }),
+          ]),
+        );
+      });
+
+      test('rejects videoUrl that is not a URL when not empty', async () => {
+        const data = {
+          name: 'Test Campaign',
+          window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
+          title: 'Test Title',
+          message: 'Test Message',
+          actionLabel: 'Click Here',
+          actionType: 'close' as const,
+          videoUrl: 'not-a-url',
+          isPublished: true,
+        };
+        const ctx = createMockHttpContext(data);
+
+        const validator = new CampaignValidator(ctx);
+        const schema = validator.schema;
+
+        await expect(schema.validate(data)).rejects.toThrow('Validation failure');
+      });
+    });
+
+    test('accepts valid complete data', async () => {
       const data = {
         name: 'Test Campaign',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
@@ -406,6 +617,9 @@ test.describe('Campaign Validator', () => {
         regions: 'US,CA',
         isPublished: true,
       };
+      const ctx = createMockHttpContext(data);
+      const validator = new CampaignValidator(ctx);
+      const schema = validator.schema;
 
       const result = await schema.validate(data);
       expect(result).toEqual(data);
@@ -413,10 +627,6 @@ test.describe('Campaign Validator', () => {
 
     test.describe('maxLength validation', () => {
       test('rejects title longer than 58 characters', async () => {
-        const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
-        const validator = new CampaignValidator(ctx);
-        const schema = validator.schema;
-
         const data = {
           name: 'Test Campaign',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
@@ -426,15 +636,14 @@ test.describe('Campaign Validator', () => {
           actionType: 'close' as const,
           isPublished: true,
         };
+        const ctx = createMockHttpContext(data);
+        const validator = new CampaignValidator(ctx);
+        const schema = validator.schema;
 
         await expect(schema.validate(data)).rejects.toThrow();
       });
 
       test('accepts title exactly 58 characters', async () => {
-        const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
-        const validator = new CampaignValidator(ctx);
-        const schema = validator.schema;
-
         const data = {
           name: 'Test Campaign',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
@@ -444,16 +653,15 @@ test.describe('Campaign Validator', () => {
           actionType: 'close' as const,
           isPublished: true,
         };
+        const ctx = createMockHttpContext(data);
+        const validator = new CampaignValidator(ctx);
+        const schema = validator.schema;
 
         const result = await schema.validate(data);
         expect(result.title).toBe('a'.repeat(58));
       });
 
       test('accepts title shorter than 58 characters', async () => {
-        const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
-        const validator = new CampaignValidator(ctx);
-        const schema = validator.schema;
-
         const data = {
           name: 'Test Campaign',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
@@ -464,15 +672,15 @@ test.describe('Campaign Validator', () => {
           isPublished: true,
         };
 
+        const ctx = createMockHttpContext(data);
+        const validator = new CampaignValidator(ctx);
+        const schema = validator.schema;
+
         const result = await schema.validate(data);
         expect(result.title).toBe('Short Title');
       });
 
       test('rejects message longer than 560 characters', async () => {
-        const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
-        const validator = new CampaignValidator(ctx);
-        const schema = validator.schema;
-
         const data = {
           name: 'Test Campaign',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
@@ -482,15 +690,14 @@ test.describe('Campaign Validator', () => {
           actionType: 'close' as const,
           isPublished: true,
         };
+        const ctx = createMockHttpContext(data);
+        const validator = new CampaignValidator(ctx);
+        const schema = validator.schema;
 
         await expect(schema.validate(data)).rejects.toThrow();
       });
 
       test('accepts message exactly 560 characters', async () => {
-        const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
-        const validator = new CampaignValidator(ctx);
-        const schema = validator.schema;
-
         const data = {
           name: 'Test Campaign',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
@@ -501,15 +708,15 @@ test.describe('Campaign Validator', () => {
           isPublished: true,
         };
 
+        const ctx = createMockHttpContext(data);
+        const validator = new CampaignValidator(ctx);
+        const schema = validator.schema;
+
         const result = await schema.validate(data);
         expect(result.message).toBe('a'.repeat(560));
       });
 
       test('accepts message shorter than 560 characters', async () => {
-        const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
-        const validator = new CampaignValidator(ctx);
-        const schema = validator.schema;
-
         const data = {
           name: 'Test Campaign',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
@@ -520,15 +727,15 @@ test.describe('Campaign Validator', () => {
           isPublished: true,
         };
 
+        const ctx = createMockHttpContext(data);
+        const validator = new CampaignValidator(ctx);
+        const schema = validator.schema;
+
         const result = await schema.validate(data);
         expect(result.message).toBe('Short message');
       });
 
       test('rejects actionLabel longer than 66 characters', async () => {
-        const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
-        const validator = new CampaignValidator(ctx);
-        const schema = validator.schema;
-
         const data = {
           name: 'Test Campaign',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
@@ -539,14 +746,14 @@ test.describe('Campaign Validator', () => {
           isPublished: true,
         };
 
+        const ctx = createMockHttpContext(data);
+        const validator = new CampaignValidator(ctx);
+        const schema = validator.schema;
+
         await expect(schema.validate(data)).rejects.toThrow();
       });
 
       test('accepts actionLabel exactly 66 characters', async () => {
-        const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
-        const validator = new CampaignValidator(ctx);
-        const schema = validator.schema;
-
         const data = {
           name: 'Test Campaign',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
@@ -557,15 +764,15 @@ test.describe('Campaign Validator', () => {
           isPublished: true,
         };
 
+        const ctx = createMockHttpContext(data);
+        const validator = new CampaignValidator(ctx);
+        const schema = validator.schema;
+
         const result = await schema.validate(data);
         expect(result.actionLabel).toBe('a'.repeat(66));
       });
 
       test('accepts actionLabel shorter than 66 characters', async () => {
-        const ctx = createMockHttpContext({ isPublished: true, actionType: 'close' });
-        const validator = new CampaignValidator(ctx);
-        const schema = validator.schema;
-
         const data = {
           name: 'Test Campaign',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
@@ -575,6 +782,9 @@ test.describe('Campaign Validator', () => {
           actionType: 'close' as const,
           isPublished: true,
         };
+        const ctx = createMockHttpContext(data);
+        const validator = new CampaignValidator(ctx);
+        const schema = validator.schema;
 
         const result = await schema.validate(data);
         expect(result.actionLabel).toBe('Click Here');
