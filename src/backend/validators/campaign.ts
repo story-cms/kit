@@ -15,14 +15,6 @@ const draft = {
   isPublished: vine.boolean(),
 };
 
-const videoUrlRule = vine
-  .string()
-  .url({
-    require_protocol: true,
-    protocols: ['https'],
-  })
-  .endsWith('.mp4');
-
 const live = {
   name: vine.string(),
   window: vine.string(),
@@ -54,26 +46,25 @@ export class CampaignValidator {
       return vine.compile(vine.object(draft));
     }
 
-    if (this.isExternalUrl) {
-      const liveExternalUrlSchema = {
-        ...live,
+    const liveSchema = {
+      ...live,
+      ...(this.isExternalUrl && {
         actionUrl: vine.string().url({
           require_protocol: true,
           protocols: ['http', 'https'],
         }),
-        ...(this.hasVideoUrl && { videoUrl: videoUrlRule }),
-      };
-      return vine.compile(vine.object(liveExternalUrlSchema));
-    }
-
-    if (this.hasVideoUrl) {
-      const liveVideoUrlSchema = {
-        ...live,
-        videoUrl: videoUrlRule,
-      };
-      return vine.compile(vine.object(liveVideoUrlSchema));
-    }
-    return vine.compile(vine.object(live));
+      }),
+      ...(this.hasVideoUrl && {
+        videoUrl: vine
+          .string()
+          .url({
+            require_protocol: true,
+            protocols: ['https'],
+          })
+          .endsWith('.mp4'),
+      }),
+    };
+    return vine.compile(vine.object(liveSchema));
   }
 }
 
