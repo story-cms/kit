@@ -114,7 +114,6 @@ export default class CampaignsController {
       // dynamic getter for the schema property
       const data = ctx.request.all();
       vine.messagesProvider = campaignErrorMessages;
-      vine.convertEmptyStringsToNull = true;
 
       const campaignValidator = new CampaignValidator(ctx);
       payload = await campaignValidator.schema.validate(data);
