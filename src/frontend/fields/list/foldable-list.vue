@@ -3,9 +3,9 @@
     v-for="(_listItem, index) in listItems"
     :key="index"
     class="subgrid mb-8"
-    :style="{ gridRow: `span ${fields.length}` }"
+    :style="{ gridRow: `span ${totalSpan}` }"
   >
-    <li :class="['subgrid relative']" :style="{ gridRow: `span ${fields.length}` }">
+    <li :class="['subgrid relative']" :style="{ gridRow: `span ${totalSpan}` }">
       <template v-if="!isEmpty(index)">
         <div
           :class="[
@@ -89,12 +89,13 @@
         <ul
           v-if="isExpanded(index)"
           :class="['subgrid bg-white', { 'ml-8': !isReadOnly }]"
-          :style="{ gridRow: `span ${fields.length}` }"
+          :style="{ gridRow: `span ${totalSpan}` }"
         >
           <li
             v-for="(item, i) in fields"
             :key="item.name + `${i.toString()}`"
             class="grid"
+            :style="{ gridRow: `span ${getFieldSpan(item)}` }"
           >
             <component
               :is="widgets.picker(item.widget)"
@@ -260,4 +261,15 @@ const isEmpty = (index: number): boolean => {
   const item = props.listItems[index] as Record<string, unknown>;
   return Object.keys(item).length === 0;
 };
+
+const getFieldSpan = (field: FieldSpec): number => {
+  if (field.widget === 'object' && field.fields) {
+    return Object.keys(field.fields).length;
+  }
+  return 1;
+};
+
+const totalSpan = computed(() => {
+  return fields.reduce((acc, field) => acc + getFieldSpan(field), 0);
+});
 </script>
