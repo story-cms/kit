@@ -1656,6 +1656,7 @@ export const flexibleListStory = {
         name: 'resources',
         widget: 'list',
         canFold: true,
+        isFlexible: true,
         fields: [
           {
             label: 'Title',
@@ -2150,6 +2151,197 @@ export const flexibleListStory = {
     ],
     conclusion:
       '# Link\nFrom Noah people spread out to fill the earth. However, when men reached the plain of Shinar (present-day Iraq), they decided to build a city and a high tower. They wanted to gather and make a name for themselves and rebelled against God’s command to spread out and fill the earth. Therefore God came down from heaven, confused their language and scattered them across the face of the earth (Genesis 10-11). Nearly 300 years after the flood and 10 generations in direct line from Shem the son of Noah, a man named Abraham was born. He is known by many as the ‘friend of God’. His name means ‘father of many’. His story is the next stop on our journey.',
+  },
+};
+
+const alphaFields = [
+  {
+    label: 'Topic',
+    name: 'title',
+    widget: 'string',
+  },
+  {
+    widget: 'panel',
+    isRow: true,
+    fields: [
+      {
+        label: 'Poster Pic',
+        name: 'image',
+        widget: 'image',
+        uploadPreset: 'episode-banner',
+        description: 'at least 1400 x 410 JPG up to 2MB',
+        extensions: ['.jpeg', '.jpg', '.png'],
+        maxSize: 2662310,
+      },
+      {
+        label: 'Thumbnail Pic',
+        name: 'thumbnail',
+        widget: 'image',
+        uploadPreset: 'episode-thumbnail',
+        description: '500px square JPG up to 2MB',
+        extensions: ['.jpeg', '.jpg', '.png'],
+        maxSize: 2662310,
+      },
+    ],
+  } as FieldSpec,
+  {
+    label: 'Talk URL',
+    name: 'videoUrl',
+    widget: 'string',
+  },
+  {
+    label: 'Notes',
+    name: 'notes',
+    widget: 'markdown',
+  },
+  {
+    label: 'Questions',
+    name: 'questions',
+    widget: 'list',
+    canFold: false,
+    fields: [
+      {
+        label: '',
+        name: 'question',
+        widget: 'markdown',
+        minimal: true,
+      },
+    ],
+  },
+  {
+    label: 'Resources',
+    name: 'resources',
+    widget: 'list',
+    canFold: true,
+    fields: [
+      {
+        label: 'Title',
+        name: 'title',
+        widget: 'markdown',
+        minimal: true,
+      },
+      {
+        label: 'Description',
+        name: 'description',
+        widget: 'markdown',
+        minimal: true,
+      },
+      {
+        label: 'Author',
+        name: 'author',
+        widget: 'string',
+      },
+      {
+        label: 'Link',
+        name: 'link',
+        widget: 'string',
+      },
+      {
+        label: 'Cover image',
+        name: 'image',
+        widget: 'image',
+        uploadPreset: 'episode-thumbnail',
+        description: '500px square JPG or PNG up to 2MB',
+        extensions: ['.jpeg', '.jpg', '.png'],
+        maxSize: 2662310,
+      },
+      {
+        label: 'Partner',
+        name: 'partner',
+        widget: 'object',
+        isRow: false,
+        fields: [
+          {
+            label: 'Logo',
+            name: 'logo',
+            widget: 'image',
+            uploadPreset: 'episode-thumbnail',
+            description: 'PNG or JPG up to 2MB',
+            extensions: ['.jpeg', '.jpg', '.png'],
+            maxSize: 2662310,
+          },
+          {
+            label: 'Url',
+            name: 'url',
+            widget: 'string',
+          },
+          {
+            label: 'Name',
+            name: 'name',
+            widget: 'string',
+          },
+        ],
+      },
+    ],
+  },
+];
+
+export const alphaCourseStory = {
+  draft: {
+    id: 1913,
+    number: 1,
+    status: 'started',
+    updatedAt: '2025-10-24T06:10:38.483+00:00',
+    createdAt: '2025-10-24T06:10:38.482+00:00',
+  },
+  bundle: {
+    title: 'Is There More to Life Than This?',
+    image:
+      'https://res.cloudinary.com/ddks6yqbn/image/upload/v1761902661/alpha-course/hrxmra2a5apgili9pt5a_i1i26d.png',
+    thumbnail:
+      'https://res.cloudinary.com/ddks6yqbn/image/upload/v1761902661/alpha-course/hrxmra2a5apgili9pt5a_i1i26d.png',
+    videoUrl: 'https://vimeo.com/996190128',
+    notes: '',
+    questions: [],
+    resources: [],
+  },
+  source: {
+    title: 'Is There More to Life Than This?',
+    image:
+      'https://res.cloudinary.com/ddks6yqbn/image/upload/v1761902661/alpha-course/hrxmra2a5apgili9pt5a_i1i26d.png',
+    thumbnail:
+      'https://res.cloudinary.com/ddks6yqbn/image/upload/v1761902661/alpha-course/hrxmra2a5apgili9pt5a_i1i26d.png',
+    videoUrl: 'https://vimeo.com/996190128',
+    notes:
+      '## Introduction\n\nWelcome to Alpha! This is an opportunity to explore the Christian faith in a relaxed, non-threatening environment over ten thought-provoking weekly sessions.\n\n## What is Alpha?\n\nAlpha is a series of sessions exploring the Christian faith. Each talk looks at a different question around faith and is designed to create conversation. Alpha is run all around the globe, and everyone is welcome.',
+    questions: [
+      {
+        question: 'What do you think about the idea that there might be more to life than what we can see?',
+      },
+      {
+        question: 'Have you ever felt like something was missing in your life?',
+      },
+      {
+        question: 'What questions do you have about life, faith, or God?',
+      },
+    ],
+    resources: [
+      {
+        title: '**Alpha Course Introduction**',
+        description: 'Learn more about what Alpha is and how it works.',
+        author: 'Alpha International',
+        link: 'https://alpha.org/',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1761902661/alpha-course/hrxmra2a5apgili9pt5a_i1i26d.png',
+        partner: {
+          logo:
+            'https://res.cloudinary.com/ddks6yqbn/image/upload/v1761902661/alpha-course/hrxmra2a5apgili9pt5a_i1i26d.png',
+          url: 'https://alpha.org/',
+          name: 'Alpha International',
+        },
+      },
+    ],
+  },
+  story: {
+    id: 1,
+    name: 'AFS Course',
+    coverImage:
+      'https://res.cloudinary.com/ddks6yqbn/image/upload/ar_1:1,c_fill,e_art:hokusai,g_auto,h_300,w_300/v1761902661/alpha-course/hrxmra2a5apgili9pt5a_i1i26d.png',
+    chapterType: 'Episode',
+    storyType: 'Alpha',
+    chapterLimit: 16,
+    schemaVersion: 1,
+    fields: [...alphaFields] as FieldSpec[],
   },
 };
 export const mockCampaigns: CampaignItem[] = [
