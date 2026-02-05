@@ -13,16 +13,16 @@
         </template>
         <template #extra-actions>
           <div
-            class="flex justify-between items-center py-4 text-sm font-medium leading-4"
+            class="flex items-center justify-between py-4 text-sm font-medium leading-4"
           >
             <p class="text-left">{{ shared.language.language }}</p>
-            <p class="inline-flex justify-end items-center">
+            <p class="inline-flex items-center justify-end">
               English
               <button
                 class="ml-2"
                 @click="shared.setSourceColumnAsHidden(!shared.showSourceColumn)"
               >
-                <Icon name="eyeoff" class="block text-black cursor-pointer size-6" />
+                <Icon name="eyeoff" class="block size-6 cursor-pointer text-black" />
               </button>
             </p>
           </div>
@@ -51,10 +51,10 @@
           },
         ]"
       >
-        <section class="row-[span_1000] grid grid-rows-subgrid">
+        <section class="subgrid row-[span_1000]">
           <form
             :dir="shared.isRtl ? 'rtl' : 'ltr'"
-            class="row-[span_1000] grid grid-rows-subgrid gap-y-4"
+            class="subgrid row-[span_1000] gap-y-4"
           >
             <template v-for="(item, index) in story.fields" :key="index">
               <component
@@ -68,12 +68,9 @@
         </section>
         <section
           ref="sourceSection"
-          :class="[
-            'row-[span_1000] grid grid-rows-subgrid',
-            { hidden: !shared.showSourceColumn },
-          ]"
+          :class="['subgrid row-[span_1000]', { hidden: !shared.showSourceColumn }]"
         >
-          <div dir="ltr" class="row-[span_1000] grid grid-rows-subgrid gap-y-4">
+          <div dir="ltr" class="subgrid row-[span_1000] gap-y-4">
             <template v-for="(item, index) in story.fields" :key="index">
               <component
                 :is="widgetFor(index)"
@@ -280,7 +277,6 @@ let resizeObserver: ResizeObserver | null = null;
 const setDimensions = () => {
   if (sourceSection.value) {
     const sourceSectionRect = sourceSection.value.getBoundingClientRect();
-    console.log(sourceSectionRect.width);
     shared.setSourceSectionWidth(sourceSectionRect.width);
   }
 };

@@ -1,24 +1,44 @@
 <template>
-  <div class="row-[span_100] ml-8 grid grid-rows-subgrid">
-    <ul v-for="(_listItem, index) in listItems" :key="index" role="listitem" :class="[
-      'relative my-2 gap-y-8',
-      isEmpty(index) ? '' : 'bg-gray-100 p-8',
-      { 'mr-2': shared.showSourceColumn && field.isFlexible },
-    ]">
+  <div class="subgrid row-[span_1000] ml-8">
+    <ul
+      v-for="(_listItem, index) in listItems"
+      :key="index"
+      role="listitem"
+      :class="[
+        'relative my-2 gap-y-8',
+        isEmpty(index) ? '' : 'bg-gray-100 p-8',
+        { 'mr-2': shared.showSourceColumn && field.isFlexible },
+      ]"
+    >
       <template v-if="!isEmpty(index)">
-        <div v-if="canMutate" class="absolute right-0 mr-3 cursor-pointer text-gray-500" @click="emit('removeSet', index)">
-          <Icon :name="field.isFlexible && canMutate ? 'minus' : 'trash'" :class="field.isFlexible && canMutate ? 'size-5' : 'h-auto w-auto'" />
+        <div
+          v-if="canMutate"
+          class="absolute right-0 mr-3 cursor-pointer text-gray-500"
+          @click="emit('removeSet', index)"
+        >
+          <Icon
+            :name="field.isFlexible && canMutate ? 'minus' : 'trash'"
+            :class="field.isFlexible && canMutate ? 'size-5' : 'h-auto w-auto'"
+          />
         </div>
 
         <li v-for="(item, i) in fields" :key="item.name + `${i.toString()}`">
-          <component :is="store.picker(item.widget)" :field="item" :is-read-only="props.isReadOnly" :root-path="`${fieldPath}.${index.toString()}`" :is-nested="true" />
+          <component
+            :is="store.picker(item.widget)"
+            :field="item"
+            :is-read-only="props.isReadOnly"
+            :root-path="`${fieldPath}.${index.toString()}`"
+            :is-nested="true"
+          />
         </li>
       </template>
     </ul>
     <div v-if="canMutate" class="mt-8 flex flex-row items-center gap-4">
       <AddItemButton :label="field.label" @add="emit('addSet')" />
       <div v-if="showEmptyListWarning()">
-        <div class="flex flex-row items-center rounded-full border bg-white p-2 text-error">
+        <div
+          class="flex flex-row items-center rounded-full border bg-white p-2 text-error"
+        >
           <Icon name="exclamation" class="pr-2" />
           <p class="text-sm">At least one item is required</p>
         </div>

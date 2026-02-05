@@ -593,7 +593,7 @@ export const alMassira = {
     imageUrl:
       'http://res.cloudinary.com/almassira/image/upload/v1634652071/session_thumbnails/ujntltmyu5sgetlwhwma.png',
     keyTruth:
-      '**The Covenant Name of God**\n\nExodus 3:15 / Genesis 4:26\n\nSeth also had a son, and he named him Enosh. At that time men began to call on the name of the **LORD** (YHWH).\n\nLiterally the word YHWH means: ‘He who is’ – the self-existent, eternal being. It is the personal name of God which distinguishes him from all other false gods. YHWH is used over 6500 times and the most common name for God in the Old Testament. This name was so holy that the Jewish people made a rule never to pronounce it.',
+      '**The Covenant Name of God**\n\nExodus 3:15 / Genesis 4:26\n\nSeth also had a son, and he named him Enosh. At that time men began to call on the name of the **LORD** (YHWH).\n\nLiterally the word YHWH means: ‘He who is’ – the self-existent, eternal being. It is the personal name of God which distinguishes him from all other false gods. YHWH is used over 6500 times and the most common name for God in the Old Testament. This name was so holy that the Jewish people made a rule never to pronounce it. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Hendrerit gravida rutrum quisque non tellus orci. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Fermentum leo vel orci porta non pulvinar. In hendrerit gravida rutrum quisque. Morbi tincidunt ornare massa eget egestas purus viverra. Nulla pellentesque dignissim enim sit amet venenatis urna. Et ligula ullamcorper malesuada proin libero nunc. Venenatis cras sed felis eget velit. Viverra nam libero justo laoreet sit amet cursus sit amet. Eleifend donec pretium vulputate sapien nec sagittis. Amet risus nullam eget felis eget nunc lobortis mattis. Est pellentesque elit ullamcorper dignissim cras tincidunt. Auctor neque vitae tempus quam pellentesque nec nam aliquam. Sed risus pretium quam vulputate dignissim. Lectus arcu bibendum at varius vel. Sed velit dignissim sodales ut eu sem integer. Ullamcorper morbi tincidunt ornare massa eget egestas purus. Nulla malesuada pellentesque elit eget gravida cum sociis natoque penatibus. A diam sollicitudin tempor id eu nisl nunc. Amet facilisis magna etiam tempor orci eu lobortis elementum nibh. In pellentesque massa placerat duis ultricies. Quam lacus suspendisse faucibus interdum. Lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt. Nunc aliquet bibendum enim facilisis gravida. Magna fermentum iaculis eu non diam phasellus. Sed ullamcorper morbi tincidunt ornare massa eget egestas purus. Elit duis tristique sollicitudin nibh sit amet commodo nulla facilisi. Odio euismod lacinia at quis risus.',
     nextStop: {
       intro:
         'If you get the chance, read the following passages in preparation for the next stop on Al Massira',
@@ -702,7 +702,7 @@ export const alMassira = {
       {
         key: 'gerecht',
         description:
-          'Ein gerechter Mann oder eine Frau ist jemand, der in allem, was er tut, Gott zu gefallen sucht.',
+          'Ein gerechter Mann oder eine Frau ist jemand, der in allem, was er tut, Gott zu gefallen sucht. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Hendrerit gravida rutrum quisque non tellus orci. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Fermentum leo vel orci porta non pulvinar. In hendrerit gravida rutrum quisque. Morbi tincidunt ornare massa eget egestas purus viverra. Nulla pellentesque dignissim enim sit amet venenatis urna. Et ligula ullamcorper malesuada proin libero nunc. Venenatis cras sed felis eget velit. Viverra nam libero justo laoreet sit amet cursus sit amet. Eleifend donec pretium vulputate sapien nec sagittis. Amet risus nullam eget felis eget nunc lobortis mattis. Est pellentesque elit ullamcorper dignissim cras tincidunt. Auctor neque vitae tempus quam pellentesque nec nam aliquam. Sed risus pretium quam vulputate dignissim. Lectus arcu bibendum at varius vel. Sed velit dignissim sodales ut eu sem integer. Ullamcorper morbi tincidunt ornare massa eget egestas purus. Nulla malesuada pellentesque elit eget gravida cum sociis natoque penatibus. A diam sollicitudin tempor id eu nisl nunc. Amet facilisis magna etiam tempor orci eu lobortis elementum nibh. In pellentesque massa placerat duis ultricies. Quam lacus suspendisse faucibus interdum. Lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt. Nunc aliquet bibendum enim facilisis gravida. Magna fermentum iaculis eu non diam phasellus. Sed ullamcorper morbi tincidunt ornare massa eget egestas purus. Elit duis tristique sollicitudin nibh sit amet commodo nulla facilisi. Odio euismod lacinia at quis risus.',
       },
       {
         key: 'Gnade',
@@ -715,7 +715,8 @@ export const alMassira = {
       },
       {
         key: 'Suehne',
-        description: 'Sühne\nDie Tat des Zudeckens und Auslöschens von Sünde. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Hendrerit gravida rutrum quisque non tellus orci. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Fermentum leo vel orci porta non pulvinar. In hendrerit gravida rutrum quisque.',
+        description:
+          'Sühne\nDie Tat des Zudeckens und Auslöschens von Sünde. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Hendrerit gravida rutrum quisque non tellus orci. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Fermentum leo vel orci porta non pulvinar. In hendrerit gravida rutrum quisque.',
       },
       {
         key: 'Heiligkeit',
@@ -816,6 +817,72 @@ export const alMassira = {
             name: 'closedQuestion',
             widget: 'markdown',
           },
+        ],
+      },
+      {
+        label: 'Resources',
+        name: 'resources',
+        widget: 'list',
+        canFold: true,
+        fields: [
+          {
+            label: 'Title',
+            name: 'title',
+            widget: 'markdown',
+            minimal: true,
+          },
+          {
+            label: 'Description',
+            name: 'description',
+            widget: 'markdown',
+            minimal: true,
+          },
+          {
+            label: 'Author',
+            name: 'author',
+            widget: 'string',
+          },
+          {
+            label: 'Link',
+            name: 'link',
+            widget: 'string',
+          },
+          {
+            label: 'Cover image',
+            name: 'image',
+            widget: 'image',
+            uploadPreset: 'episode-thumbnail',
+            description: '500px square JPG or PNG up to 2MB',
+            extensions: ['.jpeg', '.jpg', '.png'],
+            maxSize: 2662310,
+          },
+          // {
+          //   label: 'Partner',
+          //   name: 'partner',
+          //   widget: 'object',
+          //   isRow: false,
+          //   fields: [
+          //     {
+          //       label: 'Logo',
+          //       name: 'logo',
+          //       widget: 'image',
+          //       uploadPreset: 'episode-thumbnail',
+          //       description: 'PNG or JPG up to 2MB',
+          //       extensions: ['.jpeg', '.jpg', '.png'],
+          //       maxSize: 2662310,
+          //     },
+          //     {
+          //       label: 'Url',
+          //       name: 'url',
+          //       widget: 'string',
+          //     },
+          //     {
+          //       label: 'Name',
+          //       name: 'name',
+          //       widget: 'string',
+          //     },
+          //   ],
+          // },
         ],
       },
       { label: 'Conclusion', name: 'conclusion', widget: 'markdown' },
@@ -1127,6 +1194,99 @@ export const alMassira = {
           'Is God’s rescue plan powerful enough to reach us in the problems of today’s world?',
       },
     ],
+    resources: [
+      {
+        link: 'https://vimeo.com/996190128?share=copy',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1723127230/alpha-course/be9dhtveafx4axdt43um.png',
+        title: 'Quenching our Deepest Thirst',
+        author: 'Katherine Chow & Streams Studio',
+        partner: {
+          url: 'https://www.streams-studio.com/',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747136561/alpha-course/bddlccqcvsqvng9eh3kj.jpg',
+          name: 'Streams Studio',
+        },
+        description: 'Katherine Chow & Streams Studio',
+      },
+      {
+        link: 'https://vimeo.com/996398533?share=copy',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1723192175/alpha-course/nucvlwt93varvvnc2n0k.jpg',
+        title: 'Alpha Stories: Scott, Sarah and Steve',
+        author: 'Filmed live at the Leadership Conference, 2024',
+        partner: {
+          url: 'https://www.leadershipconference.org.uk/',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747655045/alpha-course/wjodafqzkqksalaloje4.png',
+          name: 'Leadership Conference',
+        },
+        description: 'Alpha Stories: Scott, Sarah and Steve',
+      },
+      {
+        link: 'https://vimeo.com/996186148?share=copy',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1723192399/alpha-course/fbgwtvs9d4lnrygea4ih.png',
+        title: 'Spiritual but not Religious',
+        author: 'Amanda Giannakos & Streams Studio',
+        partner: {
+          url: 'https://www.streams-studio.com/',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747136840/alpha-course/o5drc4rvrdwirqzavcge.jpg',
+          name: 'Streams Studio',
+        },
+        description: 'Spiritual but not Religious',
+      },
+      {
+        link: 'https://alpha.org/leadership-conversations-with-nicky-gumbel-podcast-francis-collins/',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1724851801/alpha-course/ovn6wb6pjf2sq2p8bfvx.png',
+        title: 'Podcast: Reconciling Faith with Science',
+        author: 'Nicky Gumbel and Francis Collins',
+        partner: {
+          url: 'https://www.leadershipconference.org.uk',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747655065/alpha-course/q17pbh9eghnoggfbgatk.png',
+          name: 'Leadership Conference',
+        },
+        description: 'Podcast: Reconciling Faith with Science',
+      },
+      {
+        link: 'https://guest-cdn.alpha.org/QoL%201%20Is%20There%20More%20To%20Life%20Than%20This.pdf',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1725537437/alpha-course/ad094e7i1y6bo356wt2l.png',
+        title: 'Questions of Life: Is There More to Life than This',
+        author: 'Nicky Gumbel',
+        partner: {
+          url: 'https://www.hodder.co.uk/',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747137372/alpha-course/sxrbvxzbrg5n4krkwcpj.jpg',
+          name: 'Hodder & Stoughton Publishers',
+        },
+        description: 'Questions of Life: Is There More to Life than This',
+      },
+      // {
+      //   link: 'https://guest-cdn.alpha.org/SI%201%20Why%20Does%20God%20Allow%20Suffering.pdf',
+      //   image:
+      //     'https://res.cloudinary.com/ddks6yqbn/image/upload/v1725632348/alpha-course/bbq93r05rfdrjstse1fx.png',
+      //   title: 'Searching Issues: Why Does God Allow Suffering?',
+      //   author: 'Nicky Gumbel',
+      //   partner: {
+      //     url: 'https://www.hodder.co.uk/',
+      //     logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747137416/alpha-course/bajv9p65ekgbtcqgn2kt.jpg',
+      //     name: 'Hodder & Stoughton Publishers',
+      //   },
+      //   description: 'Searching Issues: Why Does God Allow Suffering?',
+      // },
+      {
+        link: 'https://vimeo.com/1009224911?share=copy',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1726242030/alpha-course/vhsu1gb9sfxvuhlj5sj3.png',
+        title: 'For the Curious',
+        author: 'Alpha Stories',
+        partner: {
+          url: 'alpha.org',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747137521/alpha-course/uyfjbnizmrsa89kn6wk8.png',
+          name: 'Alpha International',
+        },
+        description: 'For the Curious',
+      },
+    ],
     videoUrl: 'https://youtu.be/GmPfTVl2JWI',
     footnotes: [
       {
@@ -1155,7 +1315,7 @@ export const alMassira = {
       {
         key: 'Altar',
         description:
-          'A place, usually of stone or wood covered by a layer of metal, where sacrifices are burned.',
+          'A place, usually of stone or wood covered by a layer of metal, where sacrifices are burned; an altar—often raised or set apart as sacred—used for offerings in religious rites, ceremonies, or acts of worship, sometimes also serving as a focal point for prayer, dedication, or covenant-making. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Hendrerit gravida rutrum quisque non tellus orci. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Fermentum leo vel orci porta non pulvinar. In hendrerit gravida rutrum quisque. Morbi tincidunt ornare massa eget egestas purus viverra. Nulla pellentesque dignissim enim sit amet venenatis urna. Et ligula ullamcorper malesuada proin libero nunc. Venenatis cras sed felis eget velit. Viverra nam libero justo laoreet sit amet cursus sit amet. Eleifend donec pretium vulputate sapien nec sagittis. Amet risus nullam eget felis eget nunc lobortis mattis. Est pellentesque elit ullamcorper dignissim cras tincidunt. Auctor neque vitae tempus quam pellentesque nec nam aliquam.Sed risus pretium quam vulputate dignissim. Lectus arcu bibendum at varius vel. Sed velit dignissim sodales ut eu sem integer. Ullamcorper morbi tincidunt ornare massa eget egestas purus. Nulla malesuada pellentesque elit eget gravida cum sociis natoque penatibus. A diam sollicitudin tempor id eu nisl nunc. Amet facilisis magna etiam tempor orci eu lobortis elementum nibh. In pellentesque massa placerat duis ultricies. Quam lacus suspendisse faucibus interdum. Lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt. Nunc aliquet bibendum enim facilisis gravida. Magna fermentum iaculis eu non diam phasellus. Sed ullamcorper morbi tincidunt ornare massa eget egestas purus. Elit duis tristique sollicitudin nibh sit amet commodo nulla facilisi. Odio euismod lacinia at quis risus.',
       },
       {
         key: 'Burnt',
@@ -1178,6 +1338,8 @@ export const flexibleListStory = {
   bundle: {
     extra: '',
     title: 'The Story of Noah and the Flood',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Hendrerit gravida rutrum quisque non tellus orci. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Fermentum leo vel orci porta non pulvinar. In hendrerit gravida rutrum quisque. Morbi tincidunt ornare massa eget egestas purus viverra. Nulla pellentesque dignissim enim sit amet venenatis urna. Et ligula ullamcorper malesuada proin libero nunc. Venenatis cras sed felis eget velit. Viverra nam libero justo laoreet sit amet cursus sit amet. Eleifend donec pretium vulputate sapien nec sagittis. Amet risus nullam eget felis eget nunc lobortis mattis. Est pellentesque elit ullamcorper dignissim cras tincidunt. Auctor neque vitae tempus quam pellentesque nec nam aliquam.Sed risus pretium quam vulputate dignissim. Lectus arcu bibendum at varius vel. Sed velit dignissim sodales ut eu sem integer. Ullamcorper morbi tincidunt ornare massa eget egestas purus. Nulla malesuada pellentesque elit eget gravida cum sociis natoque penatibus. A diam sollicitudin tempor id eu nisl nunc. Amet facilisis magna etiam tempor orci eu lobortis elementum nibh. In pellentesque massa placerat duis ultricies. Quam lacus suspendisse faucibus interdum. Lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt. Nunc aliquet bibendum enim facilisis gravida. Magna fermentum iaculis eu non diam phasellus. Sed ullamcorper morbi tincidunt ornare massa eget egestas purus. Elit duis tristique sollicitudin nibh sit amet commodo nulla facilisi. Odio euismod lacinia at quis risus.',
     number: '',
     imageUrl:
       'http://res.cloudinary.com/almassira/image/upload/v1634652071/session_thumbnails/ujntltmyu5sgetlwhwma.png',
@@ -1286,6 +1448,99 @@ export const flexibleListStory = {
           'Ist Gottes Rettungsplan stark genug, uns in den Problemen der heutigen Welt zu erreichen?',
       },
     ],
+    resources: [
+      {
+        link: 'https://vimeo.com/996190128?share=copy',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1723127230/alpha-course/be9dhtveafx4axdt43um.png',
+        title: 'Unseren tiefsten Durst stillen',
+        author: 'Katherine Chow & Streams Studio',
+        partner: {
+          url: 'https://www.streams-studio.com/',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747136561/alpha-course/bddlccqcvsqvng9eh3kj.jpg',
+          name: 'Streams Studio',
+        },
+        description: 'Katherine Chow & Streams Studio',
+      },
+      {
+        link: 'https://vimeo.com/996398533?share=copy',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1723192175/alpha-course/nucvlwt93varvvnc2n0k.jpg',
+        title: 'Alpha-Geschichten: Scott, Sarah und Steve',
+        author: 'Live gefilmt auf der Leadership Conference 2024',
+        partner: {
+          url: 'https://www.leadershipconference.org.uk/',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747655045/alpha-course/wjodafqzkqksalaloje4.png',
+          name: 'Leadership Conference',
+        },
+        description: 'Alpha-Geschichten: Scott, Sarah und Steve',
+      },
+      {
+        link: 'https://vimeo.com/996186148?share=copy',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1723192399/alpha-course/fbgwtvs9d4lnrygea4ih.png',
+        title: 'Spirituell, aber nicht religiös',
+        author: 'Amanda Giannakos & Streams Studio',
+        partner: {
+          url: 'https://www.streams-studio.com/',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747136840/alpha-course/o5drc4rvrdwirqzavcge.jpg',
+          name: 'Streams Studio',
+        },
+        description: 'Spirituell, aber nicht religiös',
+      },
+      {
+        link: 'https://alpha.org/leadership-conversations-with-nicky-gumbel-podcast-francis-collins/',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1724851801/alpha-course/ovn6wb6pjf2sq2p8bfvx.png',
+        title: 'Podcast: Glaube und Wissenschaft in Einklang bringen',
+        author: 'Nicky Gumbel und Francis Collins',
+        partner: {
+          url: 'https://www.leadershipconference.org.uk',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747655065/alpha-course/q17pbh9eghnoggfbgatk.png',
+          name: 'Leadership Conference',
+        },
+        description: 'Podcast: Glaube und Wissenschaft in Einklang bringen',
+      },
+      {
+        link: 'https://guest-cdn.alpha.org/QoL%201%20Is%20There%20More%20To%20Life%20Than%20This.pdf',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1725537437/alpha-course/ad094e7i1y6bo356wt2l.png',
+        title: 'Fragen des Lebens: Gibt es mehr im Leben als das?',
+        author: 'Nicky Gumbel',
+        partner: {
+          url: 'https://www.hodder.co.uk/',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747137372/alpha-course/sxrbvxzbrg5n4krkwcpj.jpg',
+          name: 'Hodder & Stoughton Publishers',
+        },
+        description: 'Fragen des Lebens: Gibt es mehr im Leben als das?',
+      },
+      // {
+      //   link: 'https://guest-cdn.alpha.org/SI%201%20Why%20Does%20God%20Allow%20Suffering.pdf',
+      //   image:
+      //     'https://res.cloudinary.com/ddks6yqbn/image/upload/v1725632348/alpha-course/bbq93r05rfdrjstse1fx.png',
+      //   title: 'Suchende Fragen: Warum lässt Gott Leid zu?',
+      //   author: 'Nicky Gumbel',
+      //   partner: {
+      //     url: 'https://www.hodder.co.uk/',
+      //     logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747137416/alpha-course/bajv9p65ekgbtcqgn2kt.jpg',
+      //     name: 'Hodder & Stoughton Publishers',
+      //   },
+      //   description: 'Suchende Fragen: Warum lässt Gott Leid zu?',
+      // },
+      {
+        link: 'https://vimeo.com/1009224911?share=copy',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1726242030/alpha-course/vhsu1gb9sfxvuhlj5sj3.png',
+        title: 'Für Neugierige',
+        author: 'Alpha-Geschichten',
+        partner: {
+          url: 'alpha.org',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747137521/alpha-course/uyfjbnizmrsa89kn6wk8.png',
+          name: 'Alpha International',
+        },
+        description: 'Für Neugierige',
+      },
+    ],
     videoUrl: 'https://youtu.be/GmPfTVl2JWI',
     footnotes: [
       {
@@ -1346,6 +1601,11 @@ export const flexibleListStory = {
             widget: 'image',
             uploadPreset: 'session_thumbnail',
           },
+          {
+            label: 'Description',
+            name: 'description',
+            widget: 'markdown',
+          },
           { label: 'Video URL', name: 'videoUrl', widget: 'string' },
           {
             label: 'Short Video URL',
@@ -1391,40 +1651,106 @@ export const flexibleListStory = {
           },
         ],
       },
-         { label: 'Conclusion', name: 'conclusion', widget: 'markdown' },
       {
-        label: '',
-        name: 'nextStop',
-        widget: 'object',
-        fields: {
-          intro: {
-            label: 'Next Stop Instruction',
-            name: 'intro',
-            widget: 'markdown',
-          },
-          reference: {
-            label: 'Next Stop Bible Passage(s)',
-            name: 'reference',
-            widget: 'string',
-          },
-        },
-      },
-      { label: 'Key Truth', name: 'keyTruth', widget: 'markdown' },
-      { label: 'Extra', name: 'extra', widget: 'markdown' },
-      {
-        label: 'Footnotes',
-        name: 'footnotes',
+        label: 'Resources',
+        name: 'resources',
         widget: 'list',
-        isFlexible: true,
+        canFold: true,
         fields: [
-          { label: 'Key', name: 'key', widget: 'string' },
+          {
+            label: 'Title',
+            name: 'title',
+            widget: 'markdown',
+            minimal: true,
+          },
           {
             label: 'Description',
             name: 'description',
             widget: 'markdown',
+            minimal: true,
           },
+          {
+            label: 'Author',
+            name: 'author',
+            widget: 'string',
+          },
+          {
+            label: 'Link',
+            name: 'link',
+            widget: 'string',
+          },
+          {
+            label: 'Cover image',
+            name: 'image',
+            widget: 'image',
+            uploadPreset: 'episode-thumbnail',
+            description: '500px square JPG or PNG up to 2MB',
+            extensions: ['.jpeg', '.jpg', '.png'],
+            maxSize: 2662310,
+          },
+          // {
+          //   label: 'Partner',
+          //   name: 'partner',
+          //   widget: 'object',
+          //   isRow: false,
+          //   fields: [
+          //     {
+          //       label: 'Logo',
+          //       name: 'logo',
+          //       widget: 'image',
+          //       uploadPreset: 'episode-thumbnail',
+          //       description: 'PNG or JPG up to 2MB',
+          //       extensions: ['.jpeg', '.jpg', '.png'],
+          //       maxSize: 2662310,
+          //     },
+          //     {
+          //       label: 'Url',
+          //       name: 'url',
+          //       widget: 'string',
+          //     },
+          //     {
+          //       label: 'Name',
+          //       name: 'name',
+          //       widget: 'string',
+          //     },
+          //   ],
+          // },
         ],
       },
+      // { label: 'Conclusion', name: 'conclusion', widget: 'markdown' },
+      // {
+      //   label: '',
+      //   name: 'nextStop',
+      //   widget: 'object',
+      //   fields: {
+      //     intro: {
+      //       label: 'Next Stop Instruction',
+      //       name: 'intro',
+      //       widget: 'markdown',
+      //     },
+      //     reference: {
+      //       label: 'Next Stop Bible Passage(s)',
+      //       name: 'reference',
+      //       widget: 'string',
+      //     },
+      //   },
+      // },
+      // { label: 'Key Truth', name: 'keyTruth', widget: 'markdown' },
+      // { label: 'Extra', name: 'extra', widget: 'markdown' },
+      // {
+      //   label: 'Footnotes',
+      //   name: 'footnotes',
+      //   widget: 'list',
+      //   isFlexible: true,
+      //   fields: [
+      //     { label: 'Key', name: 'key', widget: 'string' },
+      //     {
+      //       label: 'Description',
+      //       name: 'description',
+      //       widget: 'markdown',
+      //     },
+      //   ],
+      // },
     ],
   },
   hasEditReview: false,
@@ -1573,6 +1899,20 @@ export const flexibleListStory = {
   source: {
     extra: '',
     title: 'The Story of Noah and the Flood',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Hendrerit gravida rutrum quisque non tellus orci. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Fermentum leo vel orci porta non pulvinar. In hendrerit gravida rutrum quisque. Morbi tincidunt ornare massa eget egestas purus viverra. Nulla pellentesque dignissim enim sit amet venenatis urna. Et ligula ullamcorper malesuada proin libero nunc. Venenatis cras sed felis eget velit. Viverra nam libero justo laoreet sit amet cursus sit amet. Eleifend donec pretium vulputate sapien nec sagittis.',
+    moreInformation: [
+      {
+        title: 'More Information 1',
+        information:
+          '**Information 1**\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Hendrerit gravida rutrum quisque non tellus orci. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Fermentum leo vel orci porta non pulvinar. In hendrerit gravida rutrum quisque. Morbi tincidunt ornare massa eget egestas purus viverra. Nulla pellentesque dignissim enim sit amet venenatis urna. Et ligula ullamcorper malesuada proin libero nunc. Venenatis cras sed felis eget velit. Viverra nam libero justo laoreet sit amet cursus sit amet. Eleifend donec pretium vulputate sapien nec sagittis.',
+      },
+      {
+        title: 'More Information 2',
+        information:
+          '**Information 2**\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Hendrerit gravida rutrum quisque non tellus orci. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Fermentum leo vel orci porta non pulvinar. In hendrerit gravida rutrum quisque. Morbi tincidunt ornare massa eget egestas purus viverra. Nulla pellentesque dignissim enim sit amet venenatis urna. Et ligula ullamcorper malesuada proin libero nunc. Venenatis cras sed felis eget velit. Viverra nam libero justo laoreet sit amet cursus sit amet. Eleifend donec pretium vulputate sapien nec sagittis.',
+      },
+    ],
     number: '',
     imageUrl:
       'http://res.cloudinary.com/almassira/image/upload/v1634652071/session_thumbnails/ujntltmyu5sgetlwhwma.png',
@@ -1677,6 +2017,99 @@ export const flexibleListStory = {
           '**Genesis 9:1-17**\n\n`1` Then God blessed Noah and his sons, saying to them, “Be fruitful and increase in number and fill the earth... `3` Everything that lives and moves will be food for you. Just as I gave you the green plants, I now give you everything... `6` “Whoever sheds the blood of man, by man shall his blood be shed; for in the image of God has God made man...” `8` Then God said to Noah and to his sons with him: `9` “I now establish my covenant with you and with your descendants after you `10` and with every living creature that was with you—the birds, the livestock and all the wild animals, all those that came out of the ark with you— every living creature on earth. `11` I establish my covenant with you: Never again will all life be cut off by the waters of a flood; never again will there be a flood to destroy the earth.” `12` And God said, “This is the sign of the covenant I am making between me and you and every living creature with you, a covenant for all generations to come: `13` I have set my rainbow in the clouds, and it will be the sign of the covenant between me and the earth. `14` Whenever I bring clouds over the earth and the rainbow appears in the clouds, `15` I will remember my covenant between me and you and all living creatures of every kind. Never again will the waters become a flood to destroy all life. “',
         closedQuestion:
           'Is God’s rescue plan powerful enough to reach us in the problems of today’s world?',
+      },
+    ],
+    resources: [
+      {
+        link: 'https://vimeo.com/996190128?share=copy',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1723127230/alpha-course/be9dhtveafx4axdt43um.png',
+        title: 'Quenching our Deepest Thirst',
+        author: 'Katherine Chow & Streams Studio',
+        partner: {
+          url: 'https://www.streams-studio.com/',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747136561/alpha-course/bddlccqcvsqvng9eh3kj.jpg',
+          name: 'Streams Studio',
+        },
+        description: 'Katherine Chow & Streams Studio',
+      },
+      {
+        link: 'https://vimeo.com/996398533?share=copy',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1723192175/alpha-course/nucvlwt93varvvnc2n0k.jpg',
+        title: 'Alpha Stories: Scott, Sarah and Steve',
+        author: 'Filmed live at the Leadership Conference, 2024',
+        partner: {
+          url: 'https://www.leadershipconference.org.uk/',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747655045/alpha-course/wjodafqzkqksalaloje4.png',
+          name: 'Leadership Conference',
+        },
+        description: 'Alpha Stories: Scott, Sarah and Steve',
+      },
+      {
+        link: 'https://vimeo.com/996186148?share=copy',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1723192399/alpha-course/fbgwtvs9d4lnrygea4ih.png',
+        title: 'Spiritual but not Religious',
+        author: 'Amanda Giannakos & Streams Studio',
+        partner: {
+          url: 'https://www.streams-studio.com/',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747136840/alpha-course/o5drc4rvrdwirqzavcge.jpg',
+          name: 'Streams Studio',
+        },
+        description: 'Spiritual but not Religious',
+      },
+      {
+        link: 'https://alpha.org/leadership-conversations-with-nicky-gumbel-podcast-francis-collins/',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1724851801/alpha-course/ovn6wb6pjf2sq2p8bfvx.png',
+        title: 'Podcast: Reconciling Faith with Science',
+        author: 'Nicky Gumbel and Francis Collins',
+        partner: {
+          url: 'https://www.leadershipconference.org.uk',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747655065/alpha-course/q17pbh9eghnoggfbgatk.png',
+          name: 'Leadership Conference',
+        },
+        description: 'Podcast: Reconciling Faith with Science',
+      },
+      {
+        link: 'https://guest-cdn.alpha.org/QoL%201%20Is%20There%20More%20To%20Life%20Than%20This.pdf',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1725537437/alpha-course/ad094e7i1y6bo356wt2l.png',
+        title: 'Questions of Life: Is There More to Life than This',
+        author: 'Nicky Gumbel',
+        partner: {
+          url: 'https://www.hodder.co.uk/',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747137372/alpha-course/sxrbvxzbrg5n4krkwcpj.jpg',
+          name: 'Hodder & Stoughton Publishers',
+        },
+        description: 'Questions of Life: Is There More to Life than This',
+      },
+      // {
+      //   link: 'https://guest-cdn.alpha.org/SI%201%20Why%20Does%20God%20Allow%20Suffering.pdf',
+      //   image:
+      //     'https://res.cloudinary.com/ddks6yqbn/image/upload/v1725632348/alpha-course/bbq93r05rfdrjstse1fx.png',
+      //   title: 'Searching Issues: Why Does God Allow Suffering?',
+      //   author: 'Nicky Gumbel',
+      //   partner: {
+      //     url: 'https://www.hodder.co.uk/',
+      //     logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747137416/alpha-course/bajv9p65ekgbtcqgn2kt.jpg',
+      //     name: 'Hodder & Stoughton Publishers',
+      //   },
+      //   description: 'Searching Issues: Why Does God Allow Suffering?',
+      // },
+      {
+        link: 'https://vimeo.com/1009224911?share=copy',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1726242030/alpha-course/vhsu1gb9sfxvuhlj5sj3.png',
+        title: 'For the Curious',
+        author: 'Alpha Stories',
+        partner: {
+          url: 'alpha.org',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747137521/alpha-course/uyfjbnizmrsa89kn6wk8.png',
+          name: 'Alpha International',
+        },
+        description: 'For the Curious',
       },
     ],
     videoUrl: 'https://youtu.be/GmPfTVl2JWI',
