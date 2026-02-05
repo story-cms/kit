@@ -3,7 +3,7 @@
     :class="[
       'ml-8',
       {
-        'subgrid row-[span_1000]': !isNested,
+        'subgrid row-[span_100]': !isNested,
         'grid grid-cols-1': isNested,
       },
     ]"

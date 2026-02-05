@@ -99,7 +99,7 @@
             v-for="(item, i) in fields"
             :key="item.name + `${i.toString()}`"
             class="grid"
-            :style="{ gridRow: `span ${getFieldSpan(item)}` }"
+            :style="{ gridRow: `span ${getFieldSpan(item)} ` }"
           >
             <component
               :is="widgets.picker(item.widget)"
@@ -273,7 +273,8 @@ const isEmpty = (index: number): boolean => {
 
 const getFieldSpan = (field: FieldSpec): number => {
   if (field.widget === 'object' && field.fields) {
-    return Object.keys(field.fields).length;
+    const start = field.label ? 1 : 0;
+    return Object.keys(field.fields).length + start;
   }
   return 1;
 };
