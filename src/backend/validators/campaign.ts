@@ -16,13 +16,13 @@ const draft = {
 };
 
 const live = {
-  name: vine.string(),
-  window: vine.string(),
+  name: vine.string().trim().minLength(1),
+  window: vine.string().trim().minLength(1),
   promoImage: vine.string().optional(),
   videoUrl: vine.string().optional(),
-  title: vine.string().maxLength(58),
-  message: vine.string().maxLength(560),
-  actionLabel: vine.string().maxLength(66),
+  title: vine.string().trim().minLength(1).maxLength(58),
+  message: vine.string().trim().minLength(1).maxLength(560),
+  actionLabel: vine.string().trim().minLength(1).maxLength(66),
   actionType: vine.enum(['close', 'donate', 'externalUrl']),
   actionUrl: vine.string().optional(),
   regions: vine.string().optional(),
