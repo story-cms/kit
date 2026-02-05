@@ -2,10 +2,14 @@
   <ul
     v-for="(_listItem, index) in listItems"
     :key="index"
-    class="subgrid mb-8"
-    :style="{ gridRow: `span ${totalSpan}` }"
+    class="mb-8"
+    :class="{
+      subgrid: !isNested,
+      'grid grid-cols-1': isNested,
+    }"
+    :style="{ gridRow: `span ${getRowSpan(index)}` }"
   >
-    <li :class="['subgrid relative']" :style="{ gridRow: `span ${totalSpan}` }">
+    <li :class="['subgrid relative']" :style="{ gridRow: `span ${getRowSpan(index)}` }">
       <template v-if="!isEmpty(index)">
         <div
           :class="[
@@ -89,7 +93,7 @@
         <ul
           v-if="isExpanded(index)"
           :class="['subgrid bg-white', { 'ml-8': !isReadOnly }]"
-          :style="{ gridRow: `span ${totalSpan}` }"
+          :style="{ gridRow: `span ${fieldsSpan}` }"
         >
           <li
             v-for="(item, i) in fields"
@@ -151,6 +155,11 @@ const props = defineProps({
     default: false,
   },
   isFlexible: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+  isNested: {
     type: Boolean,
     required: false,
     default: false,
@@ -269,7 +278,11 @@ const getFieldSpan = (field: FieldSpec): number => {
   return 1;
 };
 
-const totalSpan = computed(() => {
+const fieldsSpan = computed(() => {
   return fields.reduce((acc, field) => acc + getFieldSpan(field), 0);
 });
+
+const getRowSpan = (index: number): number => {
+  return isExpanded(index) ? fieldsSpan.value + 1 : 1;
+};
 </script>

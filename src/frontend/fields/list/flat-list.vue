@@ -1,14 +1,23 @@
 <template>
-  <div class="subgrid row-[span_1000] ml-8">
+  <div
+    :class="[
+      'ml-8',
+      {
+        'subgrid row-[span_1000]': !isNested,
+        'grid grid-cols-1': isNested,
+      },
+    ]"
+  >
     <ul
       v-for="(_listItem, index) in listItems"
       :key="index"
       role="listitem"
       :class="[
-        'relative my-2 gap-y-8',
+        'subgrid relative my-2 gap-y-8',
         isEmpty(index) ? '' : 'bg-gray-100 p-8',
         { 'mr-2': shared.showSourceColumn && field.isFlexible },
       ]"
+      :style="{ gridRow: `span ${totalSpan}` }"
     >
       <template v-if="!isEmpty(index)">
         <div
@@ -22,7 +31,11 @@
           />
         </div>
 
-        <li v-for="(item, i) in fields" :key="item.name + `${i.toString()}`">
+        <li
+          v-for="(item, i) in fields"
+          :key="item.name + `${i.toString()}`"
+          :style="{ gridRow: `span ${getFieldSpan(item)}` }"
+        >
           <component
             :is="store.picker(item.widget)"
             :field="item"
@@ -73,6 +86,11 @@ const props = defineProps({
     required: false,
     default: false,
   },
+  isNested: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
 
 const emit = defineEmits(['addSet', 'removeSet']);
@@ -104,4 +122,15 @@ const isEmpty = (index: number): boolean => {
   const item = props.listItems[index] as Record<string, unknown>;
   return Object.keys(item).length === 0;
 };
+
+const getFieldSpan = (field: FieldSpec): number => {
+  if (field.widget === 'object' && field.fields) {
+    return Object.keys(field.fields).length;
+  }
+  return 1;
+};
+
+const totalSpan = computed(() => {
+  return fields.reduce((acc, field) => acc + getFieldSpan(field), 0);
+});
 </script>

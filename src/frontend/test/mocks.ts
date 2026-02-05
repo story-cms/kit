@@ -1614,43 +1614,43 @@ export const flexibleListStory = {
           },
         ],
       },
-      // {
-      //   label: 'Sections',
-      //   name: 'sections',
-      //   widget: 'list',
-      //   canFold: true,
-      //   isFlexible: true,
-      //   fields: [
-      //     { label: 'Title', name: 'title', widget: 'string' },
-      //     { label: 'Reference', name: 'reference', widget: 'string' },
-      //     {
-      //       label: 'Reference Text',
-      //       name: 'referenceText',
-      //       widget: 'markdown',
-      //     },
-      //     { label: 'Notes', name: 'notes', widget: 'markdown' },
-      //     {
-      //       label: 'Note Question',
-      //       name: 'noteQuestion',
-      //       widget: 'markdown',
-      //     },
-      //     {
-      //       label: 'Question Intro',
-      //       name: 'questionIntro',
-      //       widget: 'markdown',
-      //     },
-      //     {
-      //       label: 'Question One',
-      //       name: 'openQuestion',
-      //       widget: 'markdown',
-      //     },
-      //     {
-      //       label: 'Question Two',
-      //       name: 'closedQuestion',
-      //       widget: 'markdown',
-      //     },
-      //   ],
-      // },
+      {
+        label: 'Sections',
+        name: 'sections',
+        widget: 'list',
+        canFold: true,
+        isFlexible: true,
+        fields: [
+          { label: 'Title', name: 'title', widget: 'string' },
+          { label: 'Reference', name: 'reference', widget: 'string' },
+          {
+            label: 'Reference Text',
+            name: 'referenceText',
+            widget: 'markdown',
+          },
+          { label: 'Notes', name: 'notes', widget: 'markdown' },
+          {
+            label: 'Note Question',
+            name: 'noteQuestion',
+            widget: 'markdown',
+          },
+          {
+            label: 'Question Intro',
+            name: 'questionIntro',
+            widget: 'markdown',
+          },
+          {
+            label: 'Question One',
+            name: 'openQuestion',
+            widget: 'markdown',
+          },
+          {
+            label: 'Question Two',
+            name: 'closedQuestion',
+            widget: 'markdown',
+          },
+        ],
+      },
       {
         label: 'Resources',
         name: 'resources',
