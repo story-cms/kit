@@ -1,13 +1,13 @@
 <template>
-  <div class="my-[32px] grid rounded bg-white p-[32px]">
+  <div class="my-[32px] rounded bg-white p-[32px]">
     <div v-if="field.label">
       <label class="input-label mb-3">
         {{ field.label }}
       </label>
     </div>
 
-    <div class="grid gap-y-6">
-      <div v-for="key in Object.keys(field.fields!)" :key="key">
+    <div class="gap-y-6">
+      <div v-for="key in Object.keys(field.fields!)" :key="key" class="">
         <component
           :is="widgetFor(key)"
           class=""
