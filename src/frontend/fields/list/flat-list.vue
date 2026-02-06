@@ -3,10 +3,11 @@
     :class="[
       'ml-8',
       {
-        'subgrid row-[span_100]': !isNested,
+        subgrid: !isNested,
         'grid grid-cols-1': isNested,
       },
     ]"
+    :style="!isNested ? { gridRow: `span ${containerSpan}` } : undefined"
   >
     <ul
       v-for="(_listItem, index) in listItems"
@@ -132,5 +133,9 @@ const getFieldSpan = (field: FieldSpec): number => {
 
 const totalSpan = computed(() => {
   return fields.reduce((acc, field) => acc + getFieldSpan(field), 0);
+});
+
+const containerSpan = computed(() => {
+  return props.listItems.length * totalSpan.value + 1;
 });
 </script>
