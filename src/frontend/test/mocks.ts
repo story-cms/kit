@@ -1283,6 +1283,7 @@ export const alMassira = {
           url: 'alpha.org',
           logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747137521/alpha-course/uyfjbnizmrsa89kn6wk8.png',
           name: 'Alpha International',
+          description: 'Alpha International',
         },
         description: 'For the Curious',
       },
@@ -1693,7 +1694,6 @@ export const flexibleListStory = {
             label: 'Partner',
             name: 'partner',
             widget: 'object',
-            isRow: false,
             fields: [
               {
                 label: 'Logo',
@@ -2237,6 +2237,11 @@ const alphaFields = [
         widget: 'string',
       },
       {
+        label: 'Partner Description',
+        name: 'partnerDescription',
+        widget: 'markdown',
+      },
+      {
         label: 'Cover image',
         name: 'image',
         widget: 'image',
@@ -2259,6 +2264,11 @@ const alphaFields = [
             description: 'PNG or JPG up to 2MB',
             extensions: ['.jpeg', '.jpg', '.png'],
             maxSize: 2662310,
+          },
+          {
+            label: 'Description',
+            name: 'description',
+            widget: 'markdown',
           },
           {
             label: 'Url',
@@ -2293,7 +2303,23 @@ export const alphaCourseStory = {
     videoUrl: 'https://vimeo.com/996190128',
     notes: '',
     questions: [],
-    resources: [],
+    resources: [
+      {
+        title: '**Alpha Course Introduction**',
+        description: 'Learn more about what Alpha is and how it works.',
+        author: 'Alpha International',
+        link: 'https://alpha.org/',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1761902661/alpha-course/hrxmra2a5apgili9pt5a_i1i26d.png',
+        partner: {
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1761902661/alpha-course/hrxmra2a5apgili9pt5a_i1i26d.png',
+          url: 'https://alpha.org/',
+          name: 'Alpha International',
+          description:
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Hendrerit gravida rutrum quisque non tellus orci. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Fermentum leo vel orci porta non pulvinar. In hendrerit gravida rutrum quisque. Morbi tincidunt ornare massa eget egestas purus viverra. Nulla pellentesque dignissim enim sit amet venenatis urna. Et ligula ullamcorper malesuada proin libero nunc. Venenatis cras sed felis eget velit. Viverra nam libero justo laoreet sit amet cursus sit amet. Eleifend donec pretium vulputate sapien nec sagittis. Amet risus nullam eget felis eget nunc lobortis mattis. Est pellentesque elit ullamcorper dignissim cras tincidunt. Auctor neque vitae tempus quam pellentesque nec nam aliquam.Sed risus pretium quam vulputate dignissim. Lectus arcu bibendum at varius vel. Sed velit dignissim sodales ut eu sem integer. Ullamcorper morbi tincidunt ornare massa eget egestas purus. Nulla malesuada pellentesque elit eget gravida cum sociis natoque penatibus. A diam sollicitudin tempor id eu nisl nunc. Amet facilisis magna etiam tempor orci eu lobortis elementum nibh. In pellentesque massa placerat duis ultricies. Quam lacus suspendisse faucibus interdum. Lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt. Nunc aliquet bibendum enim facilisis gravida. Magna fermentum iaculis eu non diam phasellus. Sed ullamcorper morbi tincidunt ornare massa eget egestas purus. Elit duis tristique sollicitudin nibh sit amet commodo nulla facilisi. Odio euismod lacinia at quis risus..',
+        },
+      },
+    ],
   },
   source: {
     title: 'Is There More to Life Than This?',
@@ -2306,7 +2332,8 @@ export const alphaCourseStory = {
       '## Introduction\n\nWelcome to Alpha! This is an opportunity to explore the Christian faith in a relaxed, non-threatening environment over ten thought-provoking weekly sessions.\n\n## What is Alpha?\n\nAlpha is a series of sessions exploring the Christian faith. Each talk looks at a different question around faith and is designed to create conversation. Alpha is run all around the globe, and everyone is welcome.',
     questions: [
       {
-        question: 'What do you think about the idea that there might be more to life than what we can see?',
+        question:
+          'What do you think about the idea that there might be more to life than what we can see?',
       },
       {
         question: 'Have you ever felt like something was missing in your life?',
@@ -2321,13 +2348,16 @@ export const alphaCourseStory = {
         description: 'Learn more about what Alpha is and how it works.',
         author: 'Alpha International',
         link: 'https://alpha.org/',
+        partnerDescription:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Hendrerit gravida rutrum quisque non tellus orci. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Fermentum leo vel orci porta non pulvinar. In hendrerit gravida rutrum quisque. Morbi tincidunt ornare massa eget egestas purus viverra. Nulla pellentesque dignissim enim sit amet venenatis urna. Et ligula ullamcorper malesuada proin libero nunc. Venenatis cras sed felis eget velit. Viverra nam libero justo laoreet sit amet cursus sit amet. Eleifend donec pretium vulputate sapien nec sagittis. Amet risus nullam eget felis eget nunc lobortis mattis. Est pellentesque elit ullamcorper dignissim cras tincidunt. Auctor neque vitae tempus quam pellentesque nec nam aliquam.Sed risus pretium quam vulputate dignissim. Lectus arcu bibendum at varius vel. Sed velit dignissim sodales ut eu sem integer. Ullamcorper morbi tincidunt ornare massa eget egestas purus. Nulla malesuada pellentesque elit eget gravida cum sociis natoque penatibus. A diam sollicitudin tempor id eu nisl nunc. Amet facilisis magna etiam tempor orci eu lobortis elementum nibh. In pellentesque massa placerat duis ultricies. Quam lacus suspendisse faucibus interdum. Lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt. Nunc aliquet bibendum enim facilisis gravida. Magna fermentum iaculis eu non diam phasellus. Sed ullamcorper morbi tincidunt ornare massa eget egestas purus. Elit duis tristique sollicitudin nibh sit amet commodo nulla facilisi. Odio euismod lacinia at quis risus..',
         image:
           'https://res.cloudinary.com/ddks6yqbn/image/upload/v1761902661/alpha-course/hrxmra2a5apgili9pt5a_i1i26d.png',
         partner: {
-          logo:
-            'https://res.cloudinary.com/ddks6yqbn/image/upload/v1761902661/alpha-course/hrxmra2a5apgili9pt5a_i1i26d.png',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1761902661/alpha-course/hrxmra2a5apgili9pt5a_i1i26d.png',
           url: 'https://alpha.org/',
           name: 'Alpha International',
+          description:
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Hendrerit gravida rutrum quisque non tellus orci. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Fermentum leo vel orci porta non pulvinar. In hendrerit gravida rutrum quisque. Morbi tincidunt ornare massa eget egestas purus viverra. Nulla pellentesque dignissim enim sit amet venenatis urna. Et ligula ullamcorper malesuada proin libero nunc. Venenatis cras sed felis eget velit. Viverra nam libero justo laoreet sit amet cursus sit amet. Eleifend donec pretium vulputate sapien nec sagittis. Amet risus nullam eget felis eget nunc lobortis mattis. Est pellentesque elit ullamcorper dignissim cras tincidunt. Auctor neque vitae tempus quam pellentesque nec nam aliquam.Sed risus pretium Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Hendrerit gravida rutrum quisque non tellus orci. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Fermentum leo vel orci porta non pulvinar. In hendrerit gravida rutrum quisque. Morbi tincidunt ornare massa eget egestas purus viverra. Nulla pellentesque dignissim enim sit amet venenatis urna. Et ligula ullamcorper malesuada proin libero nunc. Venenatis cras sed felis eget velit. Viverra nam libero justo laoreet sit amet cursus sit amet. Eleifend donec pretium vulputate sapien nec sagittis. Amet risus nullam eget felis eget nunc lobortis mattis. Est pellentesque elit ullamcorper dignissim cras tincidunt. Auctor neque vitae tempus quam pellentesque nec nam aliquam.Sed risus pretium quam vulputate dignissim. Lectus arcu bibendum at varius vel. Sed velit dignissim sodales ut eu sem integer. Ullamcorper morbi tincidunt ornare massa eget egestas purus. Nulla malesuada pellentesque elit eget gravida cum sociis natoque penatibus. A diam sollicitudin tempor id eu nisl nunc. Amet facilisis magna etiam tempor orci eu lobortis elementum nibh. In pellentesque massa placerat duis ultricies. Quam lacus suspendisse faucibus interdum. Lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt. Nunc aliquet bibendum enim facilisis gravida. Magna fermentum iaculis eu non diam phasellus. Sed ullamcorper morbi tincidunt ornare massa eget egestas purus. Elit duis tristique sollicitudin nibh sit amet commodo nulla facilisi. Odio euismod lacinia at quis risus..',
         },
       },
     ],

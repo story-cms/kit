@@ -1,19 +1,22 @@
 <template>
   <div class="my-[32px] rounded bg-white p-[32px]">
-    <label v-if="field.label" class="input-label mb-3">
-      {{ field.label }}
-    </label>
-
-    <div v-for="key in Object.keys(field.fields!)" :key="key" class="">
-      <component
-        :is="widgetFor(key)"
-        class=""
-        :field="spec(key)"
-        :root-path="fieldPath"
-        :is-nested="true"
-        :is-read-only="props.isReadOnly"
-      />
+    <div v-if="field.label">
+      <label class="input-label mb-3">
+        {{ field.label }}
+      </label>
     </div>
+
+    <ul class="grid gap-y-6">
+      <li v-for="key in Object.keys(field.fields!)" :key="key">
+        <component
+          :is="widgetFor(key)"
+          :field="spec(key)"
+          :root-path="fieldPath"
+          :is-nested="true"
+          :is-read-only="props.isReadOnly"
+        />
+      </li>
+    </ul>
   </div>
 </template>
 
