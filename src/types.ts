@@ -458,7 +458,7 @@ export interface CampaignBundle {
 
 export interface CampaignItem {
   id: number;
-  title?: string;
+  name?: string;
   regions?: string;
   window?: string;
   isPublished: boolean;
