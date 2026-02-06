@@ -15,7 +15,7 @@ import CampaignIndexItem from './campaign-index-item.vue';
 
 const campaign = {
   id: 1,
-  title: 'Giving Tuesday',
+  name: 'Giving Tuesday',
   regions: 'CX, KE, UG, ZM',
   window: '2026-01-08T02:58:00.000Z|2026-01-24T02:58:00.000Z',
 } as CampaignItem;
