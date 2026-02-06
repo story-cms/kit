@@ -17,7 +17,7 @@ export class CampaignService {
         const startDate = campaign.splitWindow[0]?.toISO() ?? null;
         return {
           id: campaign.id,
-          title: campaign.bundle.title,
+          name: campaign.bundle.name,
           regions: campaign.bundle.regions,
           window: campaign.bundle.window,
           isPublished: campaign.isPublished,
