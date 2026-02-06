@@ -3,10 +3,10 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { CampaignStats } from '../../types';
 import MetaBox from '../shared/meta-box.vue';
+import type { CampaignStats as CampaignStatsType } from '../../types';
 
-const props = defineProps<CampaignStats>();
+const props = defineProps<CampaignStatsType>();
 
 const primary = computed(() => {
   return [{ label: 'Impressions', value: props.impressions.toString() }];

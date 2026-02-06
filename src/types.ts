@@ -330,11 +330,10 @@ export interface UserInterface {
   isAllowed: (locale: string) => boolean;
 }
 
-export interface UserMeta
-  extends Pick<
-    UserInterface,
-    'id' | 'name' | 'email' | 'role' | 'language' | 'initials' | 'hasPendingInvite'
-  > {
+export interface UserMeta extends Pick<
+  UserInterface,
+  'id' | 'name' | 'email' | 'role' | 'language' | 'initials' | 'hasPendingInvite'
+> {
   lastActivity: string | null;
 }
 
@@ -450,6 +449,7 @@ export interface CampaignBundle {
   regions: string;
   window: string;
   promoImage?: string;
+  videoUrl?: string;
   title: string;
   message: string;
   actionLabel: string;
@@ -479,6 +479,7 @@ export interface CampaignForApi {
   startDate: string | null;
   endDate: string | null;
   promoImage: string;
+  videoUrl: string | null;
   title: string;
   message: string;
   actionLabel: string;

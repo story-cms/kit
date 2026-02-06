@@ -4,7 +4,7 @@
 import type { HttpContext } from '@adonisjs/core/http';
 import cache from '@adonisjs/cache/services/main';
 import vine from '@vinejs/vine';
-import { Analytics, emptyAnalyticsReport, analyticsConfigSchema } from '@story-cms/kit';
+import { Analytics, emptyAnalyticsReport, analyticsConfigSchema, Campaign } from '@story-cms/kit';
 import config from '#config/analytics';
 
 export default class AnalyticsController {
@@ -34,6 +34,45 @@ export default class AnalyticsController {
     } catch (error) {
       logger.error(error);
       return emptyAnalyticsReport;
+    }
+  }
+
+  public async campaignStats(ctx: HttpContext) {
+    const campaignId = Number(ctx.params.id);
+    let locale = ctx.params.locale;
+
+    if (locale === 'en') locale = 'en_GB'; // We need to do for some instances where the locale is not the same as the content language
+
+    const cacheKey = {{ '`${config.cacheKey}:campaignStats:${campaignId}:${locale}`' }};
+
+    const cachedStats = await cache.get({ key: cacheKey });
+    if (cachedStats) {
+      return ctx.response.ok(cachedStats);
+    }
+
+    try {
+      const result = await vine.tryValidate({
+        schema: analyticsConfigSchema,
+        data: config,
+      });
+
+      if (result[0] instanceof Error) {
+        ctx.logger.error(result[0].message);
+        return ctx.response.ok({ impressions: 0, clicks: 0 });
+      }
+
+      const ga = new Analytics(config);
+      const stats = await ga.getCampaignStats(campaignId, locale);
+      const campaign = await Campaign.find(campaignId);
+      if (campaign) {
+        campaign.stats = stats;
+        await campaign.save();
+      }
+      await cache.set({ key: cacheKey, value: stats, ttl: '1h' });
+      return ctx.response.ok(stats);
+    } catch (error) {
+      ctx.logger.error(error);
+      return ctx.response.ok({ impressions: 0, clicks: 0 });
     }
   }
 }

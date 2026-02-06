@@ -44,11 +44,11 @@ export default class CampaignsController {
   public async edit(ctx: HttpContext) {
     const campaign = await Campaign.findOrFail(ctx.params.id);
     const shared = await cms.sharedProps(ctx);
+
     const props: CampaignEditProps = {
       providers,
       campaign: campaign.meta,
       bundle: campaign.model,
-      stats: { impressions: 0, clicks: 0 }, // TODO: get stats from database
       ...shared,
     };
 
@@ -64,6 +64,7 @@ export default class CampaignsController {
         name: '',
         window: '',
         promoImage: '',
+        videoUrl: '',
         title: '',
         message: '',
         actionLabel: '',
@@ -113,7 +114,6 @@ export default class CampaignsController {
       // dynamic getter for the schema property
       const data = ctx.request.all();
       vine.messagesProvider = campaignErrorMessages;
-      vine.convertEmptyStringsToNull = true;
 
       const campaignValidator = new CampaignValidator(ctx);
       payload = await campaignValidator.schema.validate(data);

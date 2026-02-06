@@ -5,6 +5,7 @@ const draft = {
   name: vine.string().optional(),
   window: vine.string().optional(),
   promoImage: vine.string().optional(),
+  videoUrl: vine.string().optional(),
   title: vine.string().optional(),
   message: vine.string().optional(),
   actionLabel: vine.string().optional(),
@@ -15,12 +16,13 @@ const draft = {
 };
 
 const live = {
-  name: vine.string(),
-  window: vine.string(),
+  name: vine.string().trim().minLength(1),
+  window: vine.string().trim().minLength(1),
   promoImage: vine.string().optional(),
-  title: vine.string().maxLength(58),
-  message: vine.string().maxLength(560),
-  actionLabel: vine.string().maxLength(66),
+  videoUrl: vine.string().optional(),
+  title: vine.string().trim().minLength(1).maxLength(58),
+  message: vine.string().trim().minLength(1).maxLength(560),
+  actionLabel: vine.string().trim().minLength(1).maxLength(66),
   actionType: vine.enum(['close', 'donate', 'externalUrl']),
   actionUrl: vine.string().optional(),
   regions: vine.string().optional(),
@@ -30,27 +32,39 @@ const live = {
 export class CampaignValidator {
   protected isPublished: boolean;
   protected isExternalUrl: boolean;
+  protected hasVideoUrl: boolean;
 
   constructor(protected ctx: HttpContext) {
     this.isPublished = ctx.request.input('isPublished') === true;
     this.isExternalUrl = ctx.request.input('actionType') === 'externalUrl';
+    const videoUrlInput = ctx.request.input('videoUrl');
+    this.hasVideoUrl = typeof videoUrlInput === 'string' && videoUrlInput.trim() !== '';
   }
 
   public get schema(): VineValidator<any, Record<string, any> | undefined> {
     if (!this.isPublished) {
       return vine.compile(vine.object(draft));
     }
-    if (this.isExternalUrl) {
-      const liveExternalUrlSchema = {
-        ...live,
+
+    const liveSchema = {
+      ...live,
+      ...(this.isExternalUrl && {
         actionUrl: vine.string().url({
           require_protocol: true,
           protocols: ['http', 'https'],
         }),
-      };
-      return vine.compile(vine.object(liveExternalUrlSchema));
-    }
-    return vine.compile(vine.object(live));
+      }),
+      ...(this.hasVideoUrl && {
+        videoUrl: vine
+          .string()
+          .url({
+            require_protocol: true,
+            protocols: ['https'],
+          })
+          .endsWith('.mp4'),
+      }),
+    };
+    return vine.compile(vine.object(liveSchema));
   }
 }
 
@@ -75,4 +89,7 @@ export const campaignErrorMessages = new SimpleMessagesProvider({
   'actionType.required': 'An action type is required',
   'actionUrl.required': 'An action URL is required',
   'actionUrl.url': 'The campaign needs a valid URL for the external action',
+  'videoUrl.required': 'A video URL is required',
+  'videoUrl.url': 'The campaign needs a valid URL for the video',
+  'videoUrl.endsWith': 'The video URL must end with .mp4',
 });
