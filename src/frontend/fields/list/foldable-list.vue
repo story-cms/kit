@@ -98,7 +98,7 @@
           <li
             v-for="(item, i) in fields"
             :key="item.name + `${i.toString()}`"
-            class="grid"
+            :class="item.widget === 'object' ? 'subgrid' : 'grid'"
             :style="{ gridRow: `span ${getFieldSpan(item)} ` }"
           >
             <component
