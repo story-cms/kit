@@ -1,28 +1,51 @@
 <template>
-  <div class="ml-8">
+  <div
+    :class="[
+      'ml-8',
+      {
+        subgrid: !isNested,
+        'grid grid-cols-1': isNested,
+      },
+    ]"
+    :style="!isNested ? { gridRow: `span ${containerSpan}` } : undefined"
+  >
     <ul
       v-for="(_listItem, index) in listItems"
       :key="index"
       role="listitem"
-      class="relative my-2 grid gap-y-8 bg-gray-100 p-8"
+      :class="[
+        'subgrid relative my-2 gap-y-8',
+        isEmpty(index) ? '' : 'bg-gray-100 p-8',
+        { 'mr-2': shared.showSourceColumn && field.isFlexible },
+      ]"
+      :style="{ gridRow: `span ${totalSpan}` }"
     >
-      <div
-        v-if="canMutate"
-        class="absolute right-0 mr-3 cursor-pointer text-gray-500"
-        @click="emit('removeSet', index)"
-      >
-        <Icon name="trash" class="h-10 w-10" />
-      </div>
+      <template v-if="!isEmpty(index)">
+        <div
+          v-if="canMutate"
+          class="absolute right-0 mr-3 cursor-pointer text-gray-500"
+          @click="emit('removeSet', index)"
+        >
+          <Icon
+            :name="field.isFlexible && canMutate ? 'minus' : 'trash'"
+            :class="field.isFlexible && canMutate ? 'size-5' : 'h-auto w-auto'"
+          />
+        </div>
 
-      <li v-for="(item, i) in fields" :key="item.name + `${i.toString()}`">
-        <component
-          :is="store.picker(item.widget)"
-          :field="item"
-          :is-read-only="props.isReadOnly"
-          :root-path="`${fieldPath}.${index.toString()}`"
-          :is-nested="true"
-        />
-      </li>
+        <li
+          v-for="(item, i) in fields"
+          :key="item.name + `${i.toString()}`"
+          :style="{ gridRow: `span ${getFieldSpan(item)}` }"
+        >
+          <component
+            :is="store.picker(item.widget)"
+            :field="item"
+            :is-read-only="props.isReadOnly"
+            :root-path="`${fieldPath}.${index.toString()}`"
+            :is-nested="true"
+          />
+        </li>
+      </template>
     </ul>
     <div v-if="canMutate" class="mt-8 flex flex-row items-center gap-4">
       <AddItemButton :label="field.label" @add="emit('addSet')" />
@@ -64,6 +87,11 @@ const props = defineProps({
     required: false,
     default: false,
   },
+  isNested: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
 
 const emit = defineEmits(['addSet', 'removeSet']);
@@ -75,7 +103,8 @@ const shared = useSharedStore();
 const canMutate = computed(() => {
   if (props.isReadOnly) return false;
 
-  return !shared.isTranslation;
+  // Allow mutations if not in translation mode OR if field is flexible
+  return !shared.isTranslation || field.value.isFlexible === true;
 });
 
 const showEmptyListWarning = (): boolean => {
@@ -88,4 +117,25 @@ const showEmptyListWarning = (): boolean => {
   }
   return false;
 };
+
+const isEmpty = (index: number): boolean => {
+  if (!props.isReadOnly) return false;
+  const item = props.listItems[index] as Record<string, unknown>;
+  return Object.keys(item).length === 0;
+};
+
+const getFieldSpan = (field: FieldSpec): number => {
+  if (field.widget === 'object' && field.fields) {
+    return Object.keys(field.fields).length;
+  }
+  return 1;
+};
+
+const totalSpan = computed(() => {
+  return fields.reduce((acc, field) => acc + getFieldSpan(field), 0);
+});
+
+const containerSpan = computed(() => {
+  return props.listItems.length * totalSpan.value + 1;
+});
 </script>

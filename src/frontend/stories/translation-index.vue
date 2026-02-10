@@ -51,10 +51,10 @@
           },
         ]"
       >
-        <section class="row-[span_1000] grid grid-rows-subgrid">
+        <section class="subgrid row-[span_1000]">
           <form
             :dir="shared.isRtl ? 'rtl' : 'ltr'"
-            class="row-[span_1000] grid grid-rows-subgrid gap-y-4"
+            class="subgrid row-[span_1000] gap-y-4"
           >
             <template v-for="(item, index) in story.fields" :key="index">
               <component :is="widgetFor(index)" :field="item" :is-nested="false" />
@@ -62,12 +62,10 @@
           </form>
         </section>
         <section
-          :class="[
-            'row-[span_1000] grid grid-rows-subgrid',
-            { hidden: !shared.showSourceColumn },
-          ]"
+          ref="sourceSection"
+          :class="['subgrid row-[span_1000]', { hidden: !shared.showSourceColumn }]"
         >
-          <div dir="ltr" class="row-[span_1000] grid grid-rows-subgrid gap-y-4">
+          <div dir="ltr" class="subgrid row-[span_1000] gap-y-4">
             <template v-for="(item, index) in story.fields" :key="index">
               <component
                 :is="widgetFor(index)"
@@ -112,12 +110,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, onUnmounted } from 'vue';
+import { ref, onMounted, computed, onUnmounted, nextTick, watch } from 'vue';
 import { router } from '@inertiajs/vue3';
 import type { Errors } from '@inertiajs/core';
 import type { FieldSpec, DraftEditProps, SharedPageProps } from '../../types';
 import { ResponseStatus } from '../../types';
 import { useSharedStore, useModelStore, useWidgetsStore, useDraftsStore } from '../store';
+import { storeToRefs } from 'pinia';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
 import DraftActions from '../shared/draft-actions.vue';
@@ -267,7 +266,26 @@ const marginRight = computed(() => {
 
 const sourceLength = ref(0);
 
-onMounted(() => {
+const sourceSection = ref<HTMLElement | null>(null);
+let resizeObserver: ResizeObserver | null = null;
+
+const setDimensions = () => {
+  if (sourceSection.value) {
+    const sourceSectionRect = sourceSection.value.getBoundingClientRect();
+    shared.setSourceSectionWidth(sourceSectionRect.width);
+  }
+};
+
+const { showSourceColumn } = storeToRefs(shared);
+
+watch(showSourceColumn, async (isVisible) => {
+  if (isVisible) {
+    await nextTick();
+    setDimensions();
+  }
+});
+
+onMounted(async () => {
   model.$subscribe(() => {
     if (isSettingErrors) {
       isSettingErrors = false;
@@ -285,12 +303,30 @@ onMounted(() => {
   }
 
   sourceLength.value = Object.keys(model.source).length;
+
+  await nextTick();
+  setDimensions();
+
+  if (sourceSection.value) {
+    resizeObserver = new ResizeObserver(() => {
+      setDimensions();
+    });
+    resizeObserver.observe(sourceSection.value);
+  }
+  window.addEventListener('resize', setDimensions);
 });
+
 onUnmounted(() => {
   shared.setSingleColumn(false);
   shared.setShowMetaBox(true);
   if (shared.meta.hasAppPreview) {
     shared.setShowAppPreview(true);
   }
+
+  if (resizeObserver) {
+    resizeObserver.disconnect();
+    resizeObserver = null;
+  }
+  window.removeEventListener('resize', setDimensions);
 });
 </script>

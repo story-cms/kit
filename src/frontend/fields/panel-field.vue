@@ -1,11 +1,12 @@
 <template>
   <div
     :class="[
-      'bg-white',
+      'subgrid bg-white',
       {
         'p-8 pt-2': !field.isRow,
       },
     ]"
+    :style="{ gridRow: `span ${fields.length + 1}` }"
   >
     <div class="relative flex justify-center">
       <button
@@ -17,15 +18,19 @@
       </button>
     </div>
     <div
-      :class="{
-        'flex flex-wrap': field.isRow,
-      }"
+      :class="[
+        'subgrid',
+        {
+          'flex flex-wrap': field.isRow,
+        },
+      ]"
+      :style="{ gridRow: `span ${fields.length + 1}` }"
     >
       <div
         v-for="(item, index) in fields"
         :key="index"
         :class="{
-          'w-[calc(50%_-_16px)] odd:mr-[32px]': field.isRow,
+          'w-[calc(50%_-_16px)] p-8 odd:mr-[32px]': field.isRow,
         }"
       >
         <component

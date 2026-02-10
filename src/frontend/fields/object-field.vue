@@ -1,23 +1,40 @@
 <template>
-  <div class="my-[32px] rounded bg-white p-[32px]">
+  <div
+    class="p-8"
+    :class="{
+      'my-[32px] rounded bg-white p-[32px]': !isNested,
+      subgrid: isNested,
+    }"
+    :style="isNested ? { gridRow: `span ${totalSpan}` } : undefined"
+  >
     <div v-if="field.label">
       <label class="input-label mb-3">
         {{ field.label }}
       </label>
     </div>
 
-    <div class="grid gap-y-6">
-      <div v-for="key in Object.keys(field.fields!)" :key="key">
+    <template v-if="isNested">
+      <component
+        :is="widgetFor(key)"
+        v-for="key in Object.keys(field.fields!)"
+        :key="key"
+        :field="spec(key)"
+        :root-path="fieldPath"
+        :is-nested="true"
+        :is-read-only="props.isReadOnly"
+      />
+    </template>
+    <ul v-else class="grid gap-y-6">
+      <li v-for="key in Object.keys(field.fields!)" :key="key">
         <component
           :is="widgetFor(key)"
-          class=""
           :field="spec(key)"
           :root-path="fieldPath"
           :is-nested="true"
           :is-read-only="props.isReadOnly"
         />
-      </div>
-    </div>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -36,10 +53,17 @@ const props = defineProps({
 });
 
 const field = computed(() => props.field as FieldSpec);
+const isNested = computed(() => props.isNested);
 
 const fieldPath = computed(() => {
   if (props.rootPath === undefined) return field.value.name;
   return `${props.rootPath}.${field.value.name}`;
+});
+
+const totalSpan = computed(() => {
+  if (!field.value.fields) return 1;
+  const start = field.value.label ? 1 : 0;
+  return Object.keys(field.value.fields).length + start;
 });
 
 const store = useWidgetsStore();
