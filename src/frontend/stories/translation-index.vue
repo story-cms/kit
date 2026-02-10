@@ -57,7 +57,12 @@
             class="subgrid row-[span_1000] gap-y-4"
           >
             <template v-for="(item, index) in story.fields" :key="index">
-              <component :is="widgetFor(index)" :field="item" :is-nested="false" />
+              <component
+                :is="widgetFor(index)"
+                :field="item"
+                :is-nested="false"
+                :is-flexible="item.isFlexible"
+              />
             </template>
           </form>
         </section>
