@@ -5,7 +5,6 @@
     :field-path="fieldPath"
     :list-items="listItems"
     :is-read-only="props.isReadOnly"
-    :is-flexible="props.isFlexible"
     @add-set="addSet"
     @remove-set="removeSet"
   />
@@ -30,11 +29,6 @@ import { useModelStore, useSharedStore } from '../store';
 
 const props = defineProps({
   ...commonProps,
-  isFlexible: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
 });
 
 const field = computed(() => props.field as FieldSpec);

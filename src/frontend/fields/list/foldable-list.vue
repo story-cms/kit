@@ -68,7 +68,7 @@
 
           <template v-if="canMutate">
             <button
-              v-if="isFlexible"
+              v-if="field.isFlexible"
               type="button"
               class="absolute z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
               :style="{ right: `-${shared.sourceSectionWidth}px` }"
@@ -154,11 +154,6 @@ const props = defineProps({
     required: false,
     default: false,
   },
-  isFlexible: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
   isNested: {
     type: Boolean,
     required: false,
@@ -175,7 +170,7 @@ const shared = useSharedStore();
 
 const canMutate = computed(() => {
   if (props.isReadOnly) return false;
-  if (props.isFlexible) return true;
+  if (props.field.isFlexible) return true;
   return !shared.isTranslation;
 });
 
