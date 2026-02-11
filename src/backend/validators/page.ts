@@ -2,7 +2,7 @@ import vine, { SimpleMessagesProvider, VineValidator } from '@vinejs/vine';
 import type { HttpContext } from '@adonisjs/core/http';
 
 const draft = {
-  title: vine.string(),
+  title: vine.string().trim().minLength(1),
   icon: vine.string().optional(),
   description: vine.string().optional(),
   body: vine.string().optional(),
@@ -12,11 +12,11 @@ const draft = {
 };
 
 const live = {
-  title: vine.string(),
-  icon: vine.string(),
-  description: vine.string(),
-  body: vine.string(),
-  type: vine.string(),
+  title: vine.string().trim().minLength(1),
+  icon: vine.string().trim().minLength(1),
+  description: vine.string().trim().minLength(1),
+  body: vine.string().trim().minLength(1),
+  type: vine.string().trim().minLength(1),
   category: vine.string().optional(),
   isPublished: vine.boolean(),
 };
