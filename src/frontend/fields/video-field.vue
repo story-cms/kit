@@ -17,7 +17,14 @@
       @attached="onAttached"
       @dropped="onDropped"
     >
-      <VideoPlayer :url="previewUrl" :library="host.library" />
+      <div class="flex w-full gap-x-8" :class="{ 'flex-col': field.isRow }">
+        <div class="w-1/2 overflow-hidden rounded-md">
+          <VideoPlayer :url="previewUrl" :library="host.library" />
+        </div>
+        <div class="w-1/2">
+          <VideoMeta :metadata-rows="metadataRows" />
+        </div>
+      </div>
     </AttachmentField>
 
     <div v-if="feedback" class="text-sm text-red-300">
@@ -27,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref } from 'vue';
+import { computed, nextTick, ref, onMounted } from 'vue';
 import type { FieldSpec, Video } from '../../types';
 import { useModelStore, useSharedStore } from '../store';
 import { commonProps } from '../shared/helpers';
@@ -36,6 +43,7 @@ import BunnyService from './attachments/bunny-service';
 import type { AttachmentModel } from './attachments/types';
 import VideoPlayer from './attachments/video-player.vue';
 import VideoProgress from './attachments/video-progress.vue';
+import VideoMeta from './attachments/video-meta.vue';
 
 const props = defineProps({
   ...commonProps,
@@ -122,4 +130,34 @@ const onAttached = (_data: AttachmentModel) => {
   // for video, the file is not uploaded yet,
   // so we need to wait for the onSuccess callback
 };
+
+const extractVideoIdFromUrl = (videoUrl: string | null): string | null => {
+  if (!videoUrl) return null;
+  const pieces = videoUrl.split('/');
+  return pieces.length >= 4 ? (pieces[pieces.length - 2] ?? null) : null;
+};
+
+const videoId = computed(() => extractVideoIdFromUrl(url.value));
+
+const displayUrl = computed(() => {
+  if (videoId.value && host.library) {
+    return `https://player.mediadelivery.net/embed/${host.library}/${videoId.value}`;
+  }
+  return url.value ?? '—';
+});
+
+const videoTitle = ref<string | null>(null);
+
+const metadataRows = computed(() => [
+  { label: 'Filename', value: videoTitle.value ?? '—' },
+  { label: 'Video ID', value: videoId.value ?? '—' },
+  { label: 'URL', value: displayUrl.value },
+]);
+
+onMounted(async () => {
+  if (videoId.value && host.library) {
+    const { title } = await host.fetchVideoTitle(videoId.value);
+    videoTitle.value = title ?? null;
+  }
+});
 </script>
