@@ -1,6 +1,12 @@
 <template>
-  <div class="w-auto h-48">
-    <iframe :src="`${source}?autoplay=false&loop=false&muted=false&preload=false&responsive=true`" style="height: 100%; width: 100%" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" allowfullscreen="true">
+  <div class="h-full w-auto">
+    <iframe
+      :src="`${source}?autoplay=false&loop=false&muted=false&preload=false&responsive=true`"
+      style="height: 100%; width: 100%"
+      loading="lazy"
+      allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
+      allowfullscreen="true"
+    >
     </iframe>
   </div>
 </template>

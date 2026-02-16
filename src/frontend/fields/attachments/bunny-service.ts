@@ -103,6 +103,23 @@ export default class BunnyService implements HostService {
     return { url: '' };
   };
 
+  public async fetchVideoTitle(videoId: string): Promise<{ title?: string }> {
+    const { default: axios } = await import('axios');
+
+    const response = await axios.get(
+      `${authority}/library/${this.libraryId}/videos/${videoId}`,
+      {
+        headers: {
+          AccessKey: this.accessKey,
+        },
+      },
+    );
+
+    return {
+      title: response.data.title,
+    };
+  }
+
   public get url(): string | null {
     return this.guid ? `https://${this.host}/${this.guid}/playlist.m3u8` : null;
   }
