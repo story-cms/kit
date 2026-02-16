@@ -17,13 +17,11 @@
       @attached="onAttached"
       @dropped="onDropped"
     >
-      <div class="flex w-full gap-x-8" :class="{ 'flex-col': field.isRow }">
-        <div class="w-1/2 overflow-hidden rounded-md">
+      <div class="grid w-full gap-8" :class="isStacked ? 'grid-cols-1' : 'grid-cols-2'">
+        <div class="overflow-hidden rounded-md">
           <VideoPlayer :url="previewUrl" :library="host.library" />
         </div>
-        <div class="w-1/2">
-          <VideoMeta :metadata-rows="metadataRows" />
-        </div>
+        <VideoMeta :metadata-rows="metadataRows" />
       </div>
     </AttachmentField>
 
@@ -82,6 +80,8 @@ const onSuccess = (url: string) => {
     url: newValue,
   });
 };
+
+const isStacked = computed(() => props.isNested === true);
 
 const onError = (error: Error) => {
   console.log('error', error);
@@ -149,7 +149,7 @@ const displayUrl = computed(() => {
 const videoTitle = ref<string | null>(null);
 
 const metadataRows = computed(() => [
-  { label: 'Filename', value: videoTitle.value ?? '—' },
+  { label: 'Title', value: videoTitle.value ?? '—' },
   { label: 'Video ID', value: videoId.value ?? '—' },
   { label: 'URL', value: displayUrl.value },
 ]);

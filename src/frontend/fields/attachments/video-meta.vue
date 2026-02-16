@@ -1,9 +1,11 @@
 <template>
-  <div>
-    <div v-for="row in metadataRows" :key="row.label" class="flex flex-col gap-2">
-      <label class="mt-1 text-sm font-medium text-gray-600">{{ row.label }}</label>
+  <div class="flex flex-col gap-[19px]">
+    <div v-for="row in metadataRows" :key="row.label">
+      <label class="block text-sm font-semibold text-gray-500">
+        {{ row.label }}
+      </label>
       <div
-        class="flex items-center gap-2 rounded-md border border-gray-200 bg-gray-50 px-3 py-2"
+        class="mt-2 flex items-center rounded-md border border-gray-200 bg-gray-50 px-3 py-2"
       >
         <span class="min-w-0 flex-1 truncate text-sm text-gray-900" :title="row.value">
           {{ row.value }}
