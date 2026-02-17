@@ -17,6 +17,9 @@
         <span>{{ field.label }}</span>
       </button>
     </div>
+    <div v-if="hasError" class="my-2 flex items-center justify-center">
+      <p class="text-sm text-error">{{ errors[0] }}</p>
+    </div>
     <div
       :class="[
         'subgrid',
@@ -36,7 +39,7 @@
         <component
           :is="widgetFor(index)"
           :field="item"
-          :root-path="rootPath"
+          :root-path="childRootPath"
           :is-nested="true"
           :is-read-only="props.isReadOnly"
         />
@@ -49,7 +52,8 @@
 import { computed } from 'vue';
 import { commonProps } from '../shared/helpers';
 import type { FieldSpec } from '../../types';
-import { useWidgetsStore } from '../store';
+import { useWidgetsStore, useSharedStore } from '../store';
+const shared = useSharedStore();
 
 const props = defineProps({
   ...commonProps,
@@ -60,9 +64,24 @@ const store = useWidgetsStore();
 const field = computed(() => props.field as FieldSpec);
 const fields = field.value.fields as FieldSpec[];
 
+const childRootPath = computed(() => props.rootPath);
+
 const widgetFor = (key: number) => {
   if (field.value.fields === null) throw new Error('No fields defined');
   const widget = (field.value.fields as FieldSpec[])[key].widget;
   return store.picker(widget);
 };
+
+const errors = computed(() => {
+  const allErrors: string[] = [];
+  for (const child of fields) {
+    const childPath =
+      childRootPath.value !== undefined
+        ? `${childRootPath.value}.${child.name}`
+        : child.name;
+    allErrors.push(...shared.errorMessages(childPath));
+  }
+  return allErrors;
+});
+const hasError = computed(() => errors.value.length > 0 && !props.isReadOnly);
 </script>

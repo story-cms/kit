@@ -15,6 +15,12 @@
         <ErrorControl :errors="panelErrors" />
       </template>
     </Variant>
+    <Variant title="Error Nested" :setup-app="loadData">
+      <PanelField :field="nestedSpec" />
+      <template #controls>
+        <ErrorControl :errors="panelErrors" />
+      </template>
+    </Variant>
 
     <Variant title="Readonly" :setup-app="loadData">
       <PanelField :field="spec" :is-read-only="true" />
@@ -41,7 +47,7 @@ const loadData: StoryHandler = ({ variant }): void => {
   const shared = useSharedStore();
 
   store.model = panelModel;
-  if (variant?.title === 'Error') {
+  if (variant?.title === 'Error' || variant?.title === 'Error Nested') {
     shared.errors = panelErrors;
   }
   if (variant?.title === 'Readonly') {
@@ -99,6 +105,41 @@ const isRowWithNoLabel = {
   ],
 };
 
+const nestedSpec = {
+  label: '',
+  name: 'notes',
+  widget: 'panel',
+  fields: [
+    {
+      label: 'Segments',
+      name: 'segments',
+      widget: 'list',
+      canFold: true,
+      fields: [
+        { label: 'Segment Title', name: 'title', widget: 'string' },
+        { label: 'Video URL', name: 'videoUrl', widget: 'string' },
+        {
+          label: 'Sections',
+          name: 'sections',
+          widget: 'list',
+          fields: [
+            { label: 'Title', name: 'title', widget: 'string' },
+            { label: 'Reference', name: 'reference', widget: 'string' },
+            { label: 'Reference Text', name: 'referenceText', widget: 'markdown' },
+
+            { label: 'Notes', name: 'notes', widget: 'markdown' },
+            { label: 'Note Question', name: 'noteQuestion', widget: 'markdown' },
+
+            { label: 'Question Intro', name: 'questionIntro', widget: 'markdown' },
+            { label: 'Question One', name: 'openQuestion', widget: 'markdown' },
+            { label: 'Question Two', name: 'closedQuestion', widget: 'markdown' },
+          ],
+        },
+      ],
+    },
+  ],
+};
+
 const panelModel = {
   title: 'John',
   description: '# Read about John',
@@ -106,6 +147,7 @@ const panelModel = {
 };
 
 const panelErrors = {
-  'bundle.title': ['required validation failed'],
+  'bundle.title': ['all notes are required'],
+  'bundle.segments': ['required validation failed'],
 };
 </script>
