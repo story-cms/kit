@@ -5,7 +5,7 @@ import { stubsRoot } from './stubs/main.js';
 import { fsReadAll } from '@poppinss/utils';
 
 async function addMigrations(command: Configure, codemods: Codemods) {
-  const allMigrations = ['base', 'audit', 'drops', 'preferences', 'campaigns'];
+  const allMigrations = ['base', 'audit', 'drops', 'preferences', 'campaigns', 'configs'];
 
   const path = command.app.migrationsPath();
   const migrations = await fsReadAll(path);
@@ -102,6 +102,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'resources/views/preview.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'resources/views/scripture.stub', {});
 
+  await codemods.makeUsingStub(stubsRoot, 'commands/migrate_config.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/make_user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/fix_database.stub', {});
   // NOTE: remove when this is resolved: https://github.com/adonisjs/inertia-starter-kit/issues/12
