@@ -44,6 +44,10 @@ export default defineConfig({
         title: 'Team',
       },
       {
+        id: 'settings',
+        title: 'Settings',
+      },
+      {
         id: 'shared',
         title: 'Shared',
       },
