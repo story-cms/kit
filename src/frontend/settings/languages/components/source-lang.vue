@@ -5,12 +5,12 @@
         {{ language }}
       </h4>
       <p class="text-[14px] font-normal leading-5 text-gray-500">
-        {{ nativeName }} ({{ locale }})
+        {{ nativeName }} ({{ spec.locale }})
       </p>
     </div>
     <div class="flex flex-col justify-center">
       <p class="text-sm/5 font-normal leading-5 text-gray-500">
-        ( {{ bibleVersionAbbreviation }} ) {{ bibleVersionName }}
+        {{ spec.bibleLabel }}
       </p>
     </div>
     <div class="flex flex-col items-center justify-center px-4">
@@ -24,20 +24,20 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import Icon from '../../../shared/icon.vue';
-import { LanguageSpecificationExtended } from '../../../../types';
+import { LanguageSpecification } from '../../../../types';
 
-const props = defineProps<LanguageSpecificationExtended>();
+const props = defineProps<{ spec: LanguageSpecification }>();
 
 const language = computed(() => {
-  if (props.language.includes('|')) {
-    return props.language.split('|')[0].trim();
+  if (props.spec.language.includes('|')) {
+    return props.spec.language.split('|')[0].trim();
   }
-  return props.language;
+  return props.spec.language;
 });
 const nativeName = computed(() => {
-  if (props.language.includes('|')) {
-    return props.language.split('|')[1].trim();
+  if (props.spec.language.includes('|')) {
+    return props.spec.language.split('|')[1].trim();
   }
-  return props.language;
+  return props.spec.language;
 });
 </script>

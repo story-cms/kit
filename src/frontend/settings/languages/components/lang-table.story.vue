@@ -16,13 +16,18 @@
 import LangTable from './lang-table.vue';
 import type { LangTableItem } from './lang-table.vue';
 
+const isAllowed = (allowed: boolean) => () => allowed;
+
 const languages: LangTableItem[] = [
   {
     language: 'English',
     languageDirection: 'ltr',
     locale: 'en',
     activeTranslations: 24,
-    translationProgress: 100,
+    translationProgress: [
+      { name: 'Interface', done: 100, draft: 0, total: 100 },
+      { name: 'Content', done: 240, draft: 0, total: 240 },
+    ],
     teamMembers: [
       {
         id: 1,
@@ -34,7 +39,7 @@ const languages: LangTableItem[] = [
         role: 'admin',
         language: null,
         hasPendingInvite: false,
-        isAllowed: () => false,
+        isAllowed: isAllowed(false),
       },
       {
         id: 2,
@@ -46,7 +51,7 @@ const languages: LangTableItem[] = [
         role: 'editor',
         language: null,
         hasPendingInvite: false,
-        isAllowed: () => true,
+        isAllowed: isAllowed(true),
       },
     ],
     bibleTranslation: 'King James Version',
@@ -56,7 +61,10 @@ const languages: LangTableItem[] = [
     languageDirection: 'ltr',
     locale: 'es',
     activeTranslations: 18,
-    translationProgress: 75,
+    translationProgress: [
+      { name: 'Interface', done: 75, draft: 0, total: 100 },
+      { name: 'Content', done: 225, draft: 0, total: 300 },
+    ],
     teamMembers: [
       {
         id: 3,
@@ -68,7 +76,7 @@ const languages: LangTableItem[] = [
         role: 'admin',
         language: null,
         hasPendingInvite: false,
-        isAllowed: () => true,
+        isAllowed: isAllowed(true),
       },
       {
         id: 4,
@@ -80,7 +88,7 @@ const languages: LangTableItem[] = [
         role: 'editor',
         language: null,
         hasPendingInvite: false,
-        isAllowed: () => true,
+        isAllowed: isAllowed(true),
       },
       {
         id: 5,
@@ -92,7 +100,7 @@ const languages: LangTableItem[] = [
         role: 'editor',
         language: null,
         hasPendingInvite: false,
-        isAllowed: () => true,
+        isAllowed: isAllowed(true),
       },
     ],
     bibleTranslation: 'Reina-Valera 1960',
@@ -102,7 +110,10 @@ const languages: LangTableItem[] = [
     languageDirection: 'ltr',
     locale: 'fr',
     activeTranslations: 12,
-    translationProgress: [{ name: 'Interface', done: 50, draft: 0, total: 100 }],
+    translationProgress: [
+      { name: 'Interface', done: 50, draft: 0, total: 100 },
+      { name: 'Content', done: 90, draft: 10, total: 150 },
+    ],
     teamMembers: [
       {
         id: 6,
@@ -114,7 +125,7 @@ const languages: LangTableItem[] = [
         role: 'editor',
         language: null,
         hasPendingInvite: false,
-        isAllowed: () => true,
+        isAllowed: isAllowed(true),
       },
     ],
     bibleTranslation: 'Louis Segond',
@@ -124,7 +135,10 @@ const languages: LangTableItem[] = [
     languageDirection: 'rtl',
     locale: 'ar',
     activeTranslations: 5,
-    translationProgress: 25,
+    translationProgress: [
+      { name: 'Interface', done: 25, draft: 0, total: 100 },
+      { name: 'Content', done: 50, draft: 0, total: 200 },
+    ],
     teamMembers: [],
     bibleTranslation: 'Smith & Van Dyke',
   },
@@ -133,7 +147,10 @@ const languages: LangTableItem[] = [
     languageDirection: 'ltr',
     locale: 'pt',
     activeTranslations: 0,
-    translationProgress: 0,
+    translationProgress: [
+      { name: 'Interface', done: 0, draft: 0, total: 100 },
+      { name: 'Content', done: 0, draft: 0, total: 100 },
+    ],
     teamMembers: [
       {
         id: 7,
@@ -145,7 +162,7 @@ const languages: LangTableItem[] = [
         role: 'editor',
         language: null,
         hasPendingInvite: false,
-        isAllowed: () => true,
+        isAllowed: isAllowed(true),
       },
     ],
     bibleTranslation: undefined,
@@ -159,7 +176,10 @@ const manyLanguages: LangTableItem[] = [
     languageDirection: 'ltr',
     locale: 'de',
     activeTranslations: 8,
-    translationProgress: 42,
+    translationProgress: [
+      { name: 'Interface', done: 42, draft: 0, total: 100 },
+      { name: 'Content', done: 84, draft: 0, total: 200 },
+    ],
     teamMembers: [
       {
         id: 8,
@@ -171,7 +191,7 @@ const manyLanguages: LangTableItem[] = [
         role: 'editor',
         language: null,
         hasPendingInvite: false,
-        isAllowed: () => true,
+        isAllowed: isAllowed(true),
       },
     ],
     bibleTranslation: 'Luther Bibel',
@@ -181,7 +201,10 @@ const manyLanguages: LangTableItem[] = [
     languageDirection: 'ltr',
     locale: 'sw',
     activeTranslations: 15,
-    translationProgress: 88,
+    translationProgress: [
+      { name: 'Interface', done: 88, draft: 0, total: 100 },
+      { name: 'Content', done: 264, draft: 0, total: 300 },
+    ],
     teamMembers: [
       {
         id: 9,
@@ -193,7 +216,7 @@ const manyLanguages: LangTableItem[] = [
         role: 'editor',
         language: null,
         hasPendingInvite: false,
-        isAllowed: () => true,
+        isAllowed: isAllowed(true),
       },
       {
         id: 10,
@@ -205,7 +228,7 @@ const manyLanguages: LangTableItem[] = [
         role: 'editor',
         language: null,
         hasPendingInvite: false,
-        isAllowed: () => true,
+        isAllowed: isAllowed(true),
       },
     ],
     bibleTranslation: 'Biblia Habari Njema',
@@ -215,7 +238,10 @@ const manyLanguages: LangTableItem[] = [
     languageDirection: 'ltr',
     locale: 'hi',
     activeTranslations: 3,
-    translationProgress: 12,
+    translationProgress: [
+      { name: 'Interface', done: 12, draft: 0, total: 100 },
+      { name: 'Content', done: 36, draft: 0, total: 300 },
+    ],
     teamMembers: [],
     bibleTranslation: 'Hindi Bible',
   },
@@ -224,7 +250,10 @@ const manyLanguages: LangTableItem[] = [
     languageDirection: 'ltr',
     locale: 'zh',
     activeTranslations: 20,
-    translationProgress: 92,
+    translationProgress: [
+      { name: 'Interface', done: 92, draft: 0, total: 100 },
+      { name: 'Content', done: 460, draft: 40, total: 500 },
+    ],
     teamMembers: [
       {
         id: 11,
@@ -236,7 +265,7 @@ const manyLanguages: LangTableItem[] = [
         role: 'editor',
         language: null,
         hasPendingInvite: false,
-        isAllowed: () => true,
+        isAllowed: isAllowed(true),
       },
       {
         id: 12,
@@ -248,7 +277,7 @@ const manyLanguages: LangTableItem[] = [
         role: 'editor',
         language: null,
         hasPendingInvite: false,
-        isAllowed: () => true,
+        isAllowed: isAllowed(true),
       },
       {
         id: 13,
@@ -260,7 +289,7 @@ const manyLanguages: LangTableItem[] = [
         role: 'editor',
         language: null,
         hasPendingInvite: false,
-        isAllowed: () => true,
+        isAllowed: isAllowed(true),
       },
     ],
     bibleTranslation: 'Chinese Union Version',
@@ -270,7 +299,10 @@ const manyLanguages: LangTableItem[] = [
     languageDirection: 'ltr',
     locale: 'ru',
     activeTranslations: 6,
-    translationProgress: 35,
+    translationProgress: [
+      { name: 'Interface', done: 35, draft: 0, total: 100 },
+      { name: 'Content', done: 105, draft: 0, total: 300 },
+    ],
     teamMembers: [
       {
         id: 14,
@@ -282,7 +314,7 @@ const manyLanguages: LangTableItem[] = [
         role: 'editor',
         language: null,
         hasPendingInvite: false,
-        isAllowed: () => true,
+        isAllowed: isAllowed(true),
       },
     ],
     bibleTranslation: 'Synodal Translation',

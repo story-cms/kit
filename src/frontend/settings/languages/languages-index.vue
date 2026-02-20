@@ -26,12 +26,15 @@
     </template>
 
     <SourceLang
-      :language="'English | American'"
-      :locale="'en'"
-      :language-direction="'ltr'"
-      :bible-version-name="'King James Version'"
-      :bible-version-abbreviation="'KJV'"
-      :bible-version-id="'de4e12af7f28f599-01'"
+      :spec="{
+        language: 'English | American',
+        locale: 'en',
+        languageDirection: 'ltr',
+        bibleVersion: 'King James Version',
+        bibleVersionId: 'de4e12af7f28f599-01',
+        bibleLabel: '(KJV) King James Version',
+      }"
+    />
     />
   </AppLayout>
 </template>

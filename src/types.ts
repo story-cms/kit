@@ -543,12 +543,8 @@ export interface LanguageSpecification {
   languageDirection: 'rtl' | 'ltr';
   locale: string;
   bibleVersion?: string;
-}
-
-export interface LanguageSpecificationExtended extends LanguageSpecification {
   bibleVersionId?: string;
-  bibleVersionName?: string;
-  bibleVersionAbbreviation?: string;
+  bibleLabel?: string;
 }
 
 export interface Providers {

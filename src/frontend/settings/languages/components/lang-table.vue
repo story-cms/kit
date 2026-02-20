@@ -38,7 +38,7 @@
             {{ item.activeTranslations ?? '—' }}
           </td>
           <td class="whitespace-nowrap px-3 py-4 text-sm">
-            <RingBlock :progress="item.translationProgress" />
+            <RingBlock :progress="item.translationProgress ?? []" />
           </td>
           <td class="px-3 py-4 text-sm text-gray-800">
             <div v-if="item.teamMembers?.length" class="flex flex-col gap-1">
@@ -86,15 +86,11 @@
 import { ref, computed } from 'vue';
 import Icon from '../../../shared/icon.vue';
 import Pagination from '../../../shared/pagination.vue';
-import type {
-  LanguageSpecificationExtended,
-  UserInterface,
-  Progress,
-} from '../../../../types';
+import type { LanguageSpecification, UserInterface, Progress } from '../../../../types';
 import MemberRow from './member-row.vue';
 import RingBlock from '../../../dashboard/ring-block.vue';
 
-export interface LangTableItem extends LanguageSpecificationExtended {
+export interface TableItem extends LanguageSpecification {
   activeTranslations?: number;
   translationProgress?: Omit<Progress, 'lastUpdated'>[];
   teamMembers?: UserInterface[];
@@ -103,14 +99,14 @@ export interface LangTableItem extends LanguageSpecificationExtended {
 
 const props = withDefaults(
   defineProps<{
-    items: LangTableItem[];
+    items: TableItem[];
     itemsPerPage?: number;
   }>(),
   { itemsPerPage: 10 },
 );
 
 const emit = defineEmits<{
-  (e: 'actions', item: LangTableItem): void;
+  (e: 'actions', item: TableItem): void;
 }>();
 
 const currentPage = ref(1);
