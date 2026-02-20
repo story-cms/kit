@@ -545,6 +545,12 @@ export interface LanguageSpecification {
   bibleVersion?: string;
 }
 
+export interface LanguageSpecificationExtended extends LanguageSpecification {
+  bibleVersionId?: string;
+  bibleVersionName?: string;
+  bibleVersionAbbreviation?: string;
+}
+
 export interface Providers {
   s3?: {
     accessKeyId: string;

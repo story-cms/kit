@@ -102,7 +102,7 @@ const languages: LangTableItem[] = [
     languageDirection: 'ltr',
     locale: 'fr',
     activeTranslations: 12,
-    translationProgress: 50,
+    translationProgress: [{ name: 'Interface', done: 50, draft: 0, total: 100 }],
     teamMembers: [
       {
         id: 6,

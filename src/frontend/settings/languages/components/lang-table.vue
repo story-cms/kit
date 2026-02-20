@@ -38,22 +38,7 @@
             {{ item.activeTranslations ?? '—' }}
           </td>
           <td class="whitespace-nowrap px-3 py-4 text-sm">
-            <div v-if="item.translationProgress != null" class="flex items-center gap-2">
-              <div
-                class="h-2 min-w-[80px] overflow-hidden rounded-full bg-gray-200"
-                role="progressbar"
-                :aria-valuenow="item.translationProgress"
-                aria-valuemin="0"
-                aria-valuemax="100"
-              >
-                <div
-                  class="h-full rounded-full bg-blue-500 transition-all"
-                  :style="{ width: `${item.translationProgress}%` }"
-                />
-              </div>
-              <span class="text-gray-700">{{ item.translationProgress }}%</span>
-            </div>
-            <span v-else class="text-gray-500">—</span>
+            <RingBlock :progress="item.translationProgress" />
           </td>
           <td class="px-3 py-4 text-sm text-gray-800">
             <div v-if="item.teamMembers?.length" class="flex flex-col gap-1">
@@ -101,12 +86,17 @@
 import { ref, computed } from 'vue';
 import Icon from '../../../shared/icon.vue';
 import Pagination from '../../../shared/pagination.vue';
-import type { LanguageSpecificationExtended, UserInterface } from '../../../../types';
+import type {
+  LanguageSpecificationExtended,
+  UserInterface,
+  Progress,
+} from '../../../../types';
 import MemberRow from './member-row.vue';
+import RingBlock from '../../../dashboard/ring-block.vue';
 
 export interface LangTableItem extends LanguageSpecificationExtended {
   activeTranslations?: number;
-  translationProgress?: number;
+  translationProgress?: Omit<Progress, 'lastUpdated'>[];
   teamMembers?: UserInterface[];
   bibleTranslation?: string;
 }

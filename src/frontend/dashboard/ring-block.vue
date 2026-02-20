@@ -67,15 +67,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import Icon from '../shared/icon.vue';
+import type { Progress } from '../../types';
 
-interface RingBlockProgress {
-  name: string;
-  done: number;
-  draft: number;
-  total: number;
-}
-
-const props = defineProps<{ progress: RingBlockProgress[] }>();
+const props = defineProps<{ progress: Omit<Progress, 'lastUpdated'>[] }>();
 
 const hasCompleteRings = computed(() => {
   return props.progress.every((stat) => stat.done === stat.total);
@@ -86,7 +80,7 @@ const center = circleWidth / 2;
 const circleRadius = circleWidth / 2 - 6;
 const circumference = 2 * Math.PI * circleRadius;
 
-function computeRingData(item: RingBlockProgress) {
+function computeRingData(item: Omit<Progress, 'lastUpdated'>) {
   const isOverdone = item.done + item.draft > item.total;
   const workingDone = isOverdone
     ? item.done - (item.done + item.draft - item.total)
