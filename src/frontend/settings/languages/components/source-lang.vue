@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-[auto_1fr_auto] gap-x-8 bg-white px-6 py-3">
+  <div class="grid gap-8 px-6 py-3 sm:grid-cols-[minmax(200px,auto)_1fr_auto]">
     <div class="pr-8">
       <h4 class="text-sm/5 font-normal leading-5 text-gray-900">
         {{ language }}
@@ -8,7 +8,7 @@
         {{ nativeName }} ({{ locale }})
       </p>
     </div>
-    <div>
+    <div class="flex flex-col justify-center">
       <p class="text-sm/5 font-normal leading-5 text-gray-500">
         ( {{ bibleVersionAbbreviation }} ) {{ bibleVersionName }}
       </p>
@@ -24,17 +24,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import Icon from '../../../shared/icon.vue';
+import { LanguageSpecificationExtended } from '../../../../types';
 
-const props = defineProps<{
-  language: string;
-  locale: string;
-  languageDirection: 'rtl' | 'ltr';
-  bibleVersionId?: string;
-  bibleVersionName?: string;
-  bibleVersionAbbreviation?: string;
-}>();
+const props = defineProps<LanguageSpecificationExtended>();
 
-// Check language if it looks like this "German | Deutsch" split it into language and native name
 const language = computed(() => {
   if (props.language.includes('|')) {
     return props.language.split('|')[0].trim();
@@ -45,6 +38,6 @@ const nativeName = computed(() => {
   if (props.language.includes('|')) {
     return props.language.split('|')[1].trim();
   }
-  return '';
+  return props.language;
 });
 </script>
