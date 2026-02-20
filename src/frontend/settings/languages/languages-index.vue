@@ -35,7 +35,6 @@
         bibleLabel: '(KJV) King James Version',
       }"
     />
-    />
   </AppLayout>
 </template>
 
