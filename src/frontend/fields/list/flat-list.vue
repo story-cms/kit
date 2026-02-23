@@ -23,7 +23,7 @@
       <template v-if="!isEmpty(index)">
         <template v-if="canMutate">
           <button
-            v-if="field.isFlexible && shared.isTranslation"
+            v-if="field.isFlexible && shared.isTranslation && hasSourceItem(index)"
             type="button"
             class="absolute z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
             :style="{ right: `-${shared.sourceSectionWidth}px` }"
@@ -80,7 +80,7 @@ import type { PropType } from 'vue';
 import type { FieldSpec } from '../../../types';
 import Icon from '../../shared/icon.vue';
 import AddItemButton from '../../shared/add-item-button.vue';
-import { useWidgetsStore, useSharedStore } from '../../store';
+import { useWidgetsStore, useSharedStore, useModelStore } from '../../store';
 
 const props = defineProps({
   field: {
@@ -112,6 +112,7 @@ const field = computed(() => props.field as FieldSpec);
 const fields = field.value.fields as FieldSpec[];
 const store = useWidgetsStore();
 const shared = useSharedStore();
+const model = useModelStore();
 
 const canMutate = computed(() => {
   if (props.isReadOnly) return false;
@@ -135,6 +136,11 @@ const isEmpty = (index: number): boolean => {
   if (!props.isReadOnly) return false;
   const item = props.listItems[index] as Record<string, unknown>;
   return Object.keys(item).length === 0;
+};
+
+const hasSourceItem = (index: number): boolean => {
+  const sourceList = model.getSourceField(props.fieldPath, []) as any[];
+  return Array.isArray(sourceList) && index < sourceList.length;
 };
 
 const getFieldSpan = (field: FieldSpec): number => {
