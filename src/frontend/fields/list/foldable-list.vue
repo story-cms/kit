@@ -68,7 +68,7 @@
 
           <template v-if="canMutate">
             <button
-              v-if="field.isFlexible"
+              v-if="field.isFlexible && shared.isTranslation"
               type="button"
               class="absolute z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
               :style="{ right: `-${shared.sourceSectionWidth}px` }"
