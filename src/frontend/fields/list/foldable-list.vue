@@ -68,7 +68,7 @@
 
           <template v-if="canMutate">
             <button
-              v-if="field.isFlexible && shared.isTranslation"
+              v-if="field.isFlexible && shared.isTranslation && hasSourceItem(index)"
               type="button"
               class="absolute z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
               :style="{ right: `-${shared.sourceSectionWidth}px` }"
@@ -221,6 +221,11 @@ const toggleRemove = (index: number) => {
 
 const isRemoved = (index: number): boolean => {
   return removedIndices.value.has(index);
+};
+
+const hasSourceItem = (index: number): boolean => {
+  const sourceList = model.getSourceField(props.fieldPath, []) as any[];
+  return Array.isArray(sourceList) && index < sourceList.length;
 };
 
 const sectionTitle = (index: number): string => {
