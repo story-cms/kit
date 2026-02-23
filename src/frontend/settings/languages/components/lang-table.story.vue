@@ -14,11 +14,11 @@
 
 <script setup lang="ts">
 import LangTable from './lang-table.vue';
-import type { LangTableItem } from './lang-table.vue';
+import type { TableItem } from './lang-table.vue';
 
 const isAllowed = (allowed: boolean) => () => allowed;
 
-const languages: LangTableItem[] = [
+const languages: TableItem[] = [
   {
     language: 'English',
     languageDirection: 'ltr',
@@ -169,7 +169,7 @@ const languages: LangTableItem[] = [
   },
 ];
 
-const manyLanguages: LangTableItem[] = [
+const manyLanguages: TableItem[] = [
   ...languages,
   {
     language: 'German',
@@ -321,7 +321,7 @@ const manyLanguages: LangTableItem[] = [
   },
 ];
 
-const onActions = (item: LangTableItem) => {
+const onActions = (item: TableItem) => {
   alert(`Actions for ${item.language} (${item.locale})`);
 };
 </script>
