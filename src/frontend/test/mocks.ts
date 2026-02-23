@@ -2199,6 +2199,7 @@ const alphaFields = [
     name: 'questions',
     widget: 'list',
     canFold: false,
+    isFlexible: true,
     fields: [
       {
         label: '',
@@ -2374,6 +2375,331 @@ export const alphaCourseStory = {
     fields: [...alphaFields] as FieldSpec[],
   },
 };
+
+const alphaFieldsAFS = [
+  {
+    label: 'Topic',
+    name: 'title',
+    widget: 'string',
+  },
+  {
+    widget: 'panel',
+    isRow: true,
+    fields: [
+      {
+        label: 'Poster Pic',
+        name: 'image',
+        widget: 'image',
+        uploadPreset: 'episode-banner',
+        description: 'at least 1400 x 410 JPG up to 2MB',
+        extensions: ['.jpeg', '.jpg', '.png'],
+        maxSize: 2662310,
+      },
+      {
+        label: 'Thumbnail Pic',
+        name: 'thumbnail',
+        widget: 'image',
+        uploadPreset: 'episode-thumbnail',
+        description: '500px square JPG up to 2MB',
+        extensions: ['.jpeg', '.jpg', '.png'],
+        maxSize: 2662310,
+      },
+    ],
+  } as FieldSpec,
+  {
+    label: 'Talk URL',
+    name: 'videoUrl',
+    widget: 'string',
+  },
+  {
+    label: 'Notes',
+    name: 'notes',
+    widget: 'markdown',
+  },
+  {
+    label: 'Questions',
+    name: 'questions',
+    widget: 'list',
+    canFold: false,
+    isFlexible: true,
+    fields: [
+      {
+        label: '',
+        name: 'question',
+        widget: 'markdown',
+        minimal: true,
+      },
+    ],
+  },
+  {
+    label: 'Resources',
+    name: 'resources',
+    widget: 'list',
+    canFold: true,
+    isFlexible: true,
+    fields: [
+      {
+        label: 'Title',
+        name: 'title',
+        widget: 'markdown',
+        minimal: true,
+      },
+      {
+        label: 'Description',
+        name: 'description',
+        widget: 'markdown',
+        minimal: true,
+      },
+      {
+        label: 'Author',
+        name: 'author',
+        widget: 'string',
+      },
+      {
+        label: 'Link',
+        name: 'link',
+        widget: 'string',
+      },
+      {
+        label: 'Cover image',
+        name: 'image',
+        widget: 'image',
+        uploadPreset: 'episode-thumbnail',
+        description: '500px square JPG or PNG up to 2MB',
+        extensions: ['.jpeg', '.jpg', '.png'],
+        maxSize: 2662310,
+      },
+      {
+        label: 'Partner',
+        name: 'partner',
+        widget: 'object',
+        isRow: false,
+        fields: [
+          {
+            label: 'Logo',
+            name: 'logo',
+            widget: 'image',
+            uploadPreset: 'episode-thumbnail',
+            description: 'PNG or JPG up to 2MB',
+            extensions: ['.jpeg', '.jpg', '.png'],
+            maxSize: 2662310,
+          },
+          {
+            label: 'Url',
+            name: 'url',
+            widget: 'string',
+          },
+          {
+            label: 'Name',
+            name: 'name',
+            widget: 'string',
+          },
+        ],
+      },
+    ],
+  },
+];
+
+export const afsCourseStory = {
+  draft: {
+    id: 1914,
+    number: 1,
+    status: 'started',
+    updatedAt: '2025-10-24T06:10:38.483+00:00',
+    createdAt: '2025-10-24T06:10:38.482+00:00',
+  },
+  bundle: {
+    title: '',
+    image: '',
+    thumbnail: '',
+    videoUrl: '',
+    notes: '',
+    questions: [],
+    resources: [
+      {
+        title: '',
+        description: '',
+        author: '',
+        link: '',
+        image: '',
+        partner: {
+          logo: '',
+          url: '',
+          name: '',
+        },
+      },
+    ],
+  },
+  source: {
+    image:
+      'https://res.cloudinary.com/ddks6yqbn/image/upload/v1722427496/alpha-course/ay46q4d6qolekrpaupks.jpg',
+    notes:
+      'What, if any, has been your experience of Christianity?\n**• Boring?\n• Untrue?\n• Irrelevant?**\n\nAt the heart of the Christian faith is a person: Jesus Christ.\n**Jesus said, ‘I am the bread of life.’ (John 6:35)**\n\n# 1. JESUS SAID, ‘I AM THE WAY.’\n\nThe first-order questions of life:\n• Is there more to life than this?\n• What am I doing on earth?\n• What is the point of life?\n• What is the purpose of my life?\n• Where am I heading?\n\nC. S. Lewis: ‘I believe in Christianity as I believe that the sun\nhas risen: not only because I see it, but because by it I see\neverything else.’\nJesus is the lens through which we see God. He is the way\nto God.\n\nJesus is also the lens by which we see the world in a totally\ndifferent dimension and clarity.\n\n# 2. JESUS SAID, ‘I AM THE TRUTH.’\n\nC. S. Lewis: ‘Christianity, if false, is of no importance, and if true, of infinite importance. The only thing it cannot be is moderately important.’\n• Truth – understood intellectually (head knowledge)\n• Truth – experienced as a relationship (heart knowledge)\n\n# 3. JESUS SAID, ‘I AM THE LIFE.’\n\n‘I have come that (you) may have life, and have it to the full’ (John 10:10).\nJesus came to deal with:\n• The things that spoil our lives\n• Our guilt\n\nGod loves you and he came, in the person of his Son, Jesus,\nto set you free to enjoy life to the full.\n\n>Jesus said, ‘I am the way and the truth and the life’ \n\n**John 14:6**',
+    title: 'Is there more to life than this?',
+    videoUrl: 'https://youtu.be/F8gnlP8r5Hc',
+    questions: [
+      { question: 'How and why did you end up coming to Alpha?' },
+      {
+        question:
+          'If it turned out there was a God after all, and you could ask one question, what would it be?',
+      },
+      {
+        question:
+          'What do you think about the idea of there being a spiritual side to life?',
+      },
+      {
+        question:
+          'What aspects of the evidence presented tonight did you find convincing/not convincing?',
+      },
+    ],
+    resources: [
+      {
+        link: 'https://vimeo.com/996190128?share=copy',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1723127230/alpha-course/be9dhtveafx4axdt43um.png',
+        title: 'Quenching our Deepest Thirst',
+        author: 'Katherine Chow & Streams Studio',
+        partner: {
+          url: 'https://www.streams-studio.com/',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747136561/alpha-course/bddlccqcvsqvng9eh3kj.jpg',
+          name: 'Streams Studio',
+        },
+        description: 'Katherine Chow & Streams Studio',
+      },
+      {
+        link: 'https://vimeo.com/1155042358?share=copy&fl=sv&fe=ci',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1768575450/alpha-course/ms0phzcnsnemfhimvox4.png',
+        title: 'Next time - Who is Jesus?',
+        author: 'Alpha',
+        partner: {
+          url: 'https://www.alpha.org/',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1768575458/alpha-course/frykm8lgakxg6o8ngtz3.png',
+          name: 'Alpha International',
+        },
+        description: 'Next time - Who is Jesus?',
+      },
+      {
+        link: 'https://vimeo.com/996186148?share=copy',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1723192399/alpha-course/fbgwtvs9d4lnrygea4ih.png',
+        title: 'Spiritual but not Religious',
+        author: 'Amanda Giannakos & Streams Studio',
+        partner: {
+          url: 'https://www.streams-studio.com/',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747136840/alpha-course/o5drc4rvrdwirqzavcge.jpg',
+          name: 'Streams Studio',
+        },
+        description: 'Spiritual but not Religious',
+      },
+      {
+        link: 'https://open.spotify.com/episode/0E9dV7fqK45USBVinMhyMO?si=a4d2f97fa73e4b27',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1754406801/alpha-course/cuybzpzw4qndhoi44s1b.png',
+        title: 'Podcast: Reconciling Faith with Science',
+        author: 'The Thread, from Alpha',
+        partner: {
+          url: 'https://www.leadershipconference.org.uk',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747655065/alpha-course/q17pbh9eghnoggfbgatk.png',
+          name: 'Leadership Conference',
+        },
+        description: 'Podcast: Dr. Francis Collins on Reconciling Faith with Science',
+      },
+      {
+        link: 'https://guest-cdn.alpha.org/QoL%201%20Is%20There%20More%20To%20Life%20Than%20This.pdf',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1725537437/alpha-course/ad094e7i1y6bo356wt2l.png',
+        title: 'Questions of Life: Is There More to Life than This',
+        author: 'Nicky Gumbel',
+        partner: {
+          url: 'https://www.hodder.co.uk/',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747137372/alpha-course/sxrbvxzbrg5n4krkwcpj.jpg',
+          name: 'Hodder & Stoughton Publishers',
+        },
+        description: 'Questions of Life: Is There More to Life than This',
+      },
+      {
+        link: 'https://guest-cdn.alpha.org/SI%201%20Why%20Does%20God%20Allow%20Suffering.pdf',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1725632348/alpha-course/bbq93r05rfdrjstse1fx.png',
+        title: 'Searching Issues: Why Does God Allow Suffering?',
+        author: 'Nicky Gumbel',
+        partner: {
+          url: 'https://www.hodder.co.uk/',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747137416/alpha-course/bajv9p65ekgbtcqgn2kt.jpg',
+          name: 'Hodder & Stoughton Publishers',
+        },
+        description: 'Searching Issues: Why Does God Allow Suffering?',
+      },
+      {
+        link: 'https://vimeo.com/1009224911?share=copy',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1726242030/alpha-course/vhsu1gb9sfxvuhlj5sj3.png',
+        title: 'For the Curious',
+        author: 'Alpha Stories',
+        partner: {
+          url: 'alpha.org',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747137521/alpha-course/uyfjbnizmrsa89kn6wk8.png',
+          name: 'Alpha International',
+        },
+        description: 'For the Curious',
+      },
+      {
+        link: 'https://vimeo.com/1123253780?share=copy',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1759250080/alpha-course/af1zjv4tiytr4qqtg4c5.png',
+        title: 'What is the Gospel?',
+        author: 'Nicky Gumbel ',
+        partner: {
+          url: 'https://www.youtube.com/@alpha_bnap',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1759250145/alpha-course/swuigqf33cphdpay2pmk.png',
+          name: 'The Bible with Nicky and Pippa Gumbel',
+        },
+        description: 'Taken from 30 Days: A practical introduction to reading the Bible',
+      },
+      {
+        link: 'https://vimeo.com/1123256290?share=copy',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1759250729/alpha-course/gnetr2hi5l4bpumrso56.png',
+        title: 'Is Christianity a Crutch?',
+        author: 'Nicky Gumbel',
+        partner: {
+          url: 'https://www.youtube.com/@alpha_bnap',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1759250373/alpha-course/moabiertm1zft3g7fzus.png',
+          name: 'The Bible with Nicky and Pippa Gumbel',
+        },
+        description: 'From 30 Days: A practical introduction to reading the Bible',
+      },
+      {
+        link: 'https://vimeo.com/996398533?share=copy',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1768575255/alpha-course/leqbhby7h3ldanlcjphb.jpg',
+        title: 'Alpha Stories: Scott, Sarah and Steve',
+        author: 'Filmed live at the Leadership Conference, 2024',
+        partner: {
+          url: 'https://www.leadershipconference.org.uk/',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1768575239/alpha-course/eydcsvppk1k8c4huqgdj.png',
+          name: 'Leadership Conference from Alpha',
+        },
+        description: "See the impact Jesus has had on Scott's life",
+      },
+    ],
+    thumbnail:
+      'https://res.cloudinary.com/ddks6yqbn/image/upload/v1722427500/alpha-course/mrgkd29t625z0phzmkre.jpg',
+  },
+  story: {
+    id: 1,
+    name: 'AFS Course',
+    coverImage:
+      'https://res.cloudinary.com/ddks6yqbn/image/upload/ar_1:1,c_fill,e_art:hokusai,g_auto,h_300,w_300/v1761902661/alpha-course/hrxmra2a5apgili9pt5a_i1i26d.png',
+    chapterType: 'Episode',
+    storyType: 'Alpha',
+    chapterLimit: 16,
+    schemaVersion: 1,
+    fields: [...alphaFieldsAFS] as FieldSpec[],
+  } as StorySpec,
+};
+
 export const mockCampaigns: CampaignItem[] = [
   {
     id: 1,

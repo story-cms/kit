@@ -21,16 +21,29 @@
       :style="{ gridRow: `span ${totalSpan}` }"
     >
       <template v-if="!isEmpty(index)">
-        <div
-          v-if="canMutate"
-          class="absolute right-0 mr-3 cursor-pointer text-gray-500"
-          @click="emit('removeSet', index)"
-        >
-          <Icon
-            :name="field.isFlexible && canMutate ? 'minus' : 'trash'"
-            :class="field.isFlexible && canMutate ? 'size-5' : 'h-auto w-auto'"
-          />
-        </div>
+        <template v-if="canMutate">
+          <button
+            v-if="field.isFlexible"
+            type="button"
+            class="absolute z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
+            :style="{ right: `-${shared.sourceSectionWidth}px` }"
+            @click="emit('removeSet', index)"
+          >
+            <span v-if="!props.isReadOnly" class="flex h-10 w-10 items-center justify-center">
+              <Icon name="minus" class="size-5" />
+            </span>
+          </button>
+          <button
+            v-else
+            type="button"
+            class="absolute right-0 z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
+            @click="emit('removeSet', index)"
+          >
+            <span v-if="!props.isReadOnly" class="flex h-10 w-10 items-center justify-center">
+              <Icon name="trash" class="h-auto w-auto" />
+            </span>
+          </button>
+        </template>
 
         <li
           v-for="(item, i) in fields"
