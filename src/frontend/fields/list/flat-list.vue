@@ -66,26 +66,29 @@
         </li>
       </template>
       <template v-else-if="isRemoved(index)">
-        <li class="relative flex items-center justify-between">
-          <span class="absolute left-0 right-0 top-1/2 border-t border-gray-300"></span>
-          <div
-            v-if="canMutate"
-            class="z-[1] inline-flex items-center rounded-full border border-gray-300 bg-gray-200 px-4 py-1.5 text-sm font-medium leading-5 text-gray-500 shadow-sm"
-          >
-            <span>Removed: {{ String(title(index)) }}</span>
-          </div>
-          <button
-            v-if="canMutate"
-            type="button"
-            class="absolute z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
-            :style="{ right: `-${shared.sourceSectionWidth}px` }"
-            @click="toggleRemove(index)"
-          >
-            <span class="flex h-10 w-10 items-center justify-center">
-              <Icon name="plus-mini" class="size-5" />
-            </span>
-          </button>
-        </li>
+        <template v-if="canMutate">
+          <li class="relative flex items-center justify-between">
+            <span
+              class="absolute left-0 right-0 top-1/2 border-t border-gray-300"
+              :style="{ width: `calc(100% + ${shared.sourceSectionWidth}px)` }"
+            ></span>
+            <div
+              class="z-[1] inline-flex items-center rounded-full border border-gray-300 bg-gray-200 px-4 py-1.5 text-sm font-medium leading-5 text-gray-500 shadow-sm"
+            >
+              <span>Removed: {{ String(title(index)) }}</span>
+            </div>
+            <button
+              type="button"
+              class="absolute z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
+              :style="{ right: `-${shared.sourceSectionWidth}px` }"
+              @click="toggleRemove(index)"
+            >
+              <span class="flex h-10 w-10 items-center justify-center">
+                <Icon name="plus-mini" class="size-5" />
+              </span>
+            </button>
+          </li>
+        </template>
       </template>
     </ul>
     <div v-if="canMutate" class="mt-8 flex flex-row items-center gap-4">
