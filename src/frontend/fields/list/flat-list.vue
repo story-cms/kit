@@ -29,7 +29,10 @@
             :style="{ right: `-${shared.sourceSectionWidth}px` }"
             @click="toggleRemove(index)"
           >
-            <span v-if="!props.isReadOnly" class="flex h-10 w-10 items-center justify-center">
+            <span
+              v-if="!props.isReadOnly"
+              class="flex h-10 w-10 items-center justify-center"
+            >
               <Icon name="minus" class="size-5" />
             </span>
           </button>
@@ -39,7 +42,10 @@
             class="absolute right-0 z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
             @click="emit('removeSet', index)"
           >
-            <span v-if="!props.isReadOnly" class="flex h-10 w-10 items-center justify-center">
+            <span
+              v-if="!props.isReadOnly"
+              class="flex h-10 w-10 items-center justify-center"
+            >
               <Icon name="trash" class="h-auto w-auto" />
             </span>
           </button>
@@ -61,9 +67,13 @@
       </template>
       <template v-else-if="isRemoved(index)">
         <li class="relative flex items-center justify-between">
-          <span
-            class="absolute left-0 right-0 top-1/2 border-t border-gray-300"
-          ></span>
+          <span class="absolute left-0 right-0 top-1/2 border-t border-gray-300"></span>
+          <div
+            v-if="canMutate"
+            class="z-[1] inline-flex items-center rounded-full border border-gray-300 bg-gray-200 px-4 py-1.5 text-sm font-medium leading-5 text-gray-500 shadow-sm"
+          >
+            <span>Removed: {{ String(title(index)) }}</span>
+          </div>
           <button
             v-if="canMutate"
             type="button"
@@ -182,6 +192,18 @@ const toggleRemove = (index: number) => {
 
 const isRemoved = (index: number): boolean => {
   return removedState.value[index] ?? false;
+};
+
+const title = (index: number): string => {
+  let path = `${props.fieldPath}.${index.toString()}`;
+  if (field.value.index) {
+    path = `${path}.${field.value.index}`;
+  } else {
+    path = `${path}.${fields[0].name}`;
+  }
+  const itemTitle = model.getField(path, 'New Section') as string;
+
+  return itemTitle.length > 20 ? `${itemTitle.substring(0, 20)}...` : itemTitle;
 };
 
 const getFieldSpan = (field: FieldSpec): number => {

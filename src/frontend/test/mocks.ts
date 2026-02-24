@@ -2329,6 +2329,25 @@ const simpleFlexibleListFields: FieldSpec[] = [
       },
     ],
   },
+  {
+    label: 'References',
+    name: 'references',
+    widget: 'list',
+    isFlexible: true,
+    fields: [
+      {
+        label: 'Title',
+        name: 'title',
+        widget: 'string',
+      },
+      {
+        label: 'Summary Statement',
+        name: 'summaryStatement',
+        widget: 'markdown',
+        minimal: true,
+      },
+    ],
+  },
 ];
 
 export const simpleFlexibleListStory = {
@@ -2342,6 +2361,7 @@ export const simpleFlexibleListStory = {
   bundle: {
     questions: [],
     conclusion: [],
+    references: [],
   },
   source: {
     questions: [
@@ -2373,6 +2393,20 @@ export const simpleFlexibleListStory = {
           'Jesus is the lens through which we see God. He is also the lens by which we see the world in a totally different dimension and clarity.',
         excerpt:
           'Christianity, if false, is of no importance, and if true, of infinite importance. The only thing it cannot be is moderately important.',
+      },
+    ],
+    references: [
+      {
+        title: 'Mere Christianity',
+        summaryStatement: 'A classic introduction to the Christian faith by C. S. Lewis.',
+      },
+      {
+        title: 'The Case for Christ',
+        summaryStatement: 'An investigation into the evidence for Jesus.',
+      },
+      {
+        title: 'Knowing God',
+        summaryStatement: 'A deeper exploration of who God is and how we can know him.',
       },
     ],
   },
