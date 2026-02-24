@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import SourceLang from './source-lang.vue';
+import SourceLang from './source-language.vue';
 import type { LanguageSpecification } from '../../../../types';
 
 const sourceLang: LanguageSpecification = {

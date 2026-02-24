@@ -114,7 +114,7 @@ import Pagination from '../../../shared/pagination.vue';
 import type { LanguageTableItem } from '../../../../types';
 import MemberRow from './member-row.vue';
 import RingBlock from '../../../dashboard/ring-block.vue';
-import LangStrip from './lang-strip.vue';
+import LangStrip from './language-strip.vue';
 
 const props = withDefaults(
   defineProps<{

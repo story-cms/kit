@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import Icon from '../../../shared/icon.vue';
-import LangStrip from './lang-strip.vue';
+import LangStrip from './language-strip.vue';
 import type { LanguageSpecification } from '../../../../types';
 
 defineProps<{ spec: LanguageSpecification }>();

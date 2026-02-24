@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import LangTable from './lang-table.vue';
+import LangTable from './language-table.vue';
 import type { LanguageTableItem } from '../../../../types';
 
 const isAllowed = (allowed: boolean) => () => allowed;

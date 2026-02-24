@@ -43,7 +43,7 @@ import AppLayout from '../../shared/app-layout.vue';
 import ContentHeader from '../../shared/content-header.vue';
 import Actions from './components/actions.vue';
 import Icon from '../../shared/icon.vue';
-import SourceLang from './components/source-lang.vue';
+import SourceLang from './components/source-language.vue';
 
 const addLanguage = () => {
   console.log('addLanguage');
