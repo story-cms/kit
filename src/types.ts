@@ -580,3 +580,11 @@ export interface Providers {
     host: string;
   };
 }
+/// ----------------------------------------------------
+///  settings
+/// ----------------------------------------------------
+
+export interface LanguagesProps {
+  sourceLanguage: LanguageSpecification;
+  languageItems: LanguageTableItem[];
+}

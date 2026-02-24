@@ -25,27 +25,31 @@
       </ContentHeader>
     </template>
 
-    <SourceLang
-      :spec="{
-        language: 'English | American',
-        locale: 'en',
-        languageDirection: 'ltr',
-        bibleVersion: 'King James Version',
-        bibleVersionId: 'de4e12af7f28f599-01',
-        bibleLabel: '(KJV) King James Version',
-      }"
-    />
+    <SourceLang :spec="sourceLanguage" />
+    <LanguagesTable :items="items" />
   </AppLayout>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import AppLayout from '../../shared/app-layout.vue';
 import ContentHeader from '../../shared/content-header.vue';
 import Actions from './components/actions.vue';
 import Icon from '../../shared/icon.vue';
 import SourceLang from './components/source-language.vue';
+import LanguagesTable from './components/language-table.vue';
+import type { LanguagesProps, SharedPageProps } from '../../../types';
+import { useSharedStore } from '../../store';
+
+const props = defineProps<LanguagesProps & SharedPageProps>();
+
+const shared = useSharedStore();
+shared.setFromProps(props);
+shared.setCurrentStoryName('');
 
 const addLanguage = () => {
   console.log('addLanguage');
 };
+
+const items = computed(() => props.languageItems ?? []);
 </script>
