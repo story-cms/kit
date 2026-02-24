@@ -68,11 +68,12 @@
             <button
               type="button"
               class="cursor-pointer text-gray-400 hover:text-gray-600"
-              @click="emit('actions', item)"
+              @click="toggleActions"
             >
               <Icon name="dots-vertical" class="size-5" />
             </button>
             <div
+              v-show="showActions"
               class="absolute right-10 top-3 z-10 flex max-w-[250px] flex-col items-start overflow-hidden rounded-md bg-white shadow"
             >
               <button
@@ -122,10 +123,6 @@ const props = withDefaults(
   { itemsPerPage: 10 },
 );
 
-const emit = defineEmits<{
-  (e: 'actions', item: LanguageTableItem): void;
-}>();
-
 const currentPage = ref(1);
 const paginatedItems = computed(() => {
   const startIndex = (currentPage.value - 1) * props.itemsPerPage;
@@ -135,5 +132,11 @@ const paginatedItems = computed(() => {
 
 const handlePageChange = (page: number) => {
   currentPage.value = page;
+};
+
+const showActions = ref(false);
+
+const toggleActions = () => {
+  showActions.value = !showActions.value;
 };
 </script>
