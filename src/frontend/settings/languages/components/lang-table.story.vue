@@ -23,7 +23,6 @@ const languages: TableItem[] = [
     language: 'English',
     languageDirection: 'ltr',
     locale: 'en',
-    activeTranslations: 24,
     translationProgress: [
       { name: 'Interface', done: 100, draft: 0, total: 100 },
       { name: 'Content', done: 240, draft: 0, total: 240 },
@@ -60,7 +59,6 @@ const languages: TableItem[] = [
     language: 'Spanish',
     languageDirection: 'ltr',
     locale: 'es',
-    activeTranslations: 18,
     translationProgress: [
       { name: 'Interface', done: 75, draft: 0, total: 100 },
       { name: 'Content', done: 225, draft: 0, total: 300 },
@@ -109,7 +107,6 @@ const languages: TableItem[] = [
     language: 'French',
     languageDirection: 'ltr',
     locale: 'fr',
-    activeTranslations: 12,
     translationProgress: [
       { name: 'Interface', done: 50, draft: 0, total: 100 },
       { name: 'Content', done: 90, draft: 10, total: 150 },
@@ -134,7 +131,7 @@ const languages: TableItem[] = [
     language: 'Arabic',
     languageDirection: 'rtl',
     locale: 'ar',
-    activeTranslations: 5,
+
     translationProgress: [
       { name: 'Interface', done: 25, draft: 0, total: 100 },
       { name: 'Content', done: 50, draft: 0, total: 200 },
@@ -146,7 +143,7 @@ const languages: TableItem[] = [
     language: 'Portuguese',
     languageDirection: 'ltr',
     locale: 'pt',
-    activeTranslations: 0,
+
     translationProgress: [
       { name: 'Interface', done: 0, draft: 0, total: 100 },
       { name: 'Content', done: 0, draft: 0, total: 100 },
@@ -175,7 +172,7 @@ const manyLanguages: TableItem[] = [
     language: 'German',
     languageDirection: 'ltr',
     locale: 'de',
-    activeTranslations: 8,
+
     translationProgress: [
       { name: 'Interface', done: 42, draft: 0, total: 100 },
       { name: 'Content', done: 84, draft: 0, total: 200 },
@@ -200,7 +197,7 @@ const manyLanguages: TableItem[] = [
     language: 'Swahili',
     languageDirection: 'ltr',
     locale: 'sw',
-    activeTranslations: 15,
+
     translationProgress: [
       { name: 'Interface', done: 88, draft: 0, total: 100 },
       { name: 'Content', done: 264, draft: 0, total: 300 },
@@ -237,7 +234,7 @@ const manyLanguages: TableItem[] = [
     language: 'Hindi',
     languageDirection: 'ltr',
     locale: 'hi',
-    activeTranslations: 3,
+
     translationProgress: [
       { name: 'Interface', done: 12, draft: 0, total: 100 },
       { name: 'Content', done: 36, draft: 0, total: 300 },
@@ -249,7 +246,7 @@ const manyLanguages: TableItem[] = [
     language: 'Chinese (Simplified)',
     languageDirection: 'ltr',
     locale: 'zh',
-    activeTranslations: 20,
+
     translationProgress: [
       { name: 'Interface', done: 92, draft: 0, total: 100 },
       { name: 'Content', done: 460, draft: 40, total: 500 },
@@ -298,7 +295,7 @@ const manyLanguages: TableItem[] = [
     language: 'Russian',
     languageDirection: 'ltr',
     locale: 'ru',
-    activeTranslations: 6,
+
     translationProgress: [
       { name: 'Interface', done: 35, draft: 0, total: 100 },
       { name: 'Content', done: 105, draft: 0, total: 300 },

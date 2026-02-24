@@ -34,8 +34,10 @@
       </thead>
       <tbody class="divide-y divide-gray-200 bg-white">
         <tr v-for="item in paginatedItems" :key="item.locale">
-          <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-800">
-            {{ item.activeTranslations ?? '—' }}
+          <td
+            class="flex flex-col gap-2 whitespace-nowrap px-3 py-4 text-sm text-gray-800"
+          >
+            <LangStrip :spec="item" />
           </td>
           <td class="whitespace-nowrap px-3 py-4 text-sm">
             <RingBlock :progress="item.translationProgress ?? []" />
@@ -57,7 +59,9 @@
               </p>
             </div>
           </td>
-          <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-800">
+          <td
+            class="whitespace-nowrap px-3 py-4 text-sm font-normal leading-5 text-gray-500"
+          >
             {{ item.bibleTranslation ?? '—' }}
           </td>
           <td class="relative py-4 pl-3 pr-4 text-right sm:pr-6">
@@ -89,9 +93,9 @@ import Pagination from '../../../shared/pagination.vue';
 import type { LanguageSpecification, UserInterface, Progress } from '../../../../types';
 import MemberRow from './member-row.vue';
 import RingBlock from '../../../dashboard/ring-block.vue';
+import LangStrip from './lang-strip.vue';
 
 export interface TableItem extends LanguageSpecification {
-  activeTranslations?: number;
   translationProgress?: Omit<Progress, 'lastUpdated'>[];
   teamMembers?: UserInterface[];
   bibleTranslation?: string;
