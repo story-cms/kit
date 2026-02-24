@@ -547,6 +547,11 @@ export interface LanguageSpecification {
   bibleLabel?: string;
 }
 
+export interface LanguageTableItem extends LanguageSpecification {
+  translationProgress?: Omit<Progress, 'lastUpdated'>[];
+  teamMembers?: UserInterface[];
+}
+
 export interface Providers {
   s3?: {
     accessKeyId: string;

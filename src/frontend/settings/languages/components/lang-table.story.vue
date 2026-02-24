@@ -14,15 +14,17 @@
 
 <script setup lang="ts">
 import LangTable from './lang-table.vue';
-import type { TableItem } from './lang-table.vue';
+import type { LanguageTableItem } from '../../../../types';
 
 const isAllowed = (allowed: boolean) => () => allowed;
 
-const languages: TableItem[] = [
+const languages: LanguageTableItem[] = [
   {
     language: 'English',
     languageDirection: 'ltr',
     locale: 'en',
+    bibleLabel: 'King James Version',
+
     translationProgress: [
       { name: 'Interface', done: 100, draft: 0, total: 100 },
       { name: 'Content', done: 240, draft: 0, total: 240 },
@@ -53,12 +55,12 @@ const languages: TableItem[] = [
         isAllowed: isAllowed(true),
       },
     ],
-    bibleTranslation: 'King James Version',
   },
   {
     language: 'Spanish',
     languageDirection: 'ltr',
     locale: 'es',
+    bibleLabel: 'Reina-Valera 1960',
     translationProgress: [
       { name: 'Interface', done: 75, draft: 0, total: 100 },
       { name: 'Content', done: 225, draft: 0, total: 300 },
@@ -101,12 +103,13 @@ const languages: TableItem[] = [
         isAllowed: isAllowed(true),
       },
     ],
-    bibleTranslation: 'Reina-Valera 1960',
   },
   {
     language: 'French',
     languageDirection: 'ltr',
     locale: 'fr',
+    bibleLabel: 'Louis Segond',
+
     translationProgress: [
       { name: 'Interface', done: 50, draft: 0, total: 100 },
       { name: 'Content', done: 90, draft: 10, total: 150 },
@@ -125,19 +128,18 @@ const languages: TableItem[] = [
         isAllowed: isAllowed(true),
       },
     ],
-    bibleTranslation: 'Louis Segond',
   },
   {
     language: 'Arabic',
     languageDirection: 'rtl',
     locale: 'ar',
+    bibleLabel: 'Smith & Van Dyke',
 
     translationProgress: [
       { name: 'Interface', done: 25, draft: 0, total: 100 },
       { name: 'Content', done: 50, draft: 0, total: 200 },
     ],
     teamMembers: [],
-    bibleTranslation: 'Smith & Van Dyke',
   },
   {
     language: 'Portuguese',
@@ -162,16 +164,16 @@ const languages: TableItem[] = [
         isAllowed: isAllowed(true),
       },
     ],
-    bibleTranslation: undefined,
   },
 ];
 
-const manyLanguages: TableItem[] = [
+const manyLanguages: LanguageTableItem[] = [
   ...languages,
   {
     language: 'German',
     languageDirection: 'ltr',
     locale: 'de',
+    bibleLabel: 'Luther Bibel',
 
     translationProgress: [
       { name: 'Interface', done: 42, draft: 0, total: 100 },
@@ -191,12 +193,12 @@ const manyLanguages: TableItem[] = [
         isAllowed: isAllowed(true),
       },
     ],
-    bibleTranslation: 'Luther Bibel',
   },
   {
     language: 'Swahili',
     languageDirection: 'ltr',
     locale: 'sw',
+    bibleLabel: 'Biblia Habari Njema',
 
     translationProgress: [
       { name: 'Interface', done: 88, draft: 0, total: 100 },
@@ -228,24 +230,24 @@ const manyLanguages: TableItem[] = [
         isAllowed: isAllowed(true),
       },
     ],
-    bibleTranslation: 'Biblia Habari Njema',
   },
   {
     language: 'Hindi',
     languageDirection: 'ltr',
     locale: 'hi',
+    bibleLabel: 'Hindi Bible',
 
     translationProgress: [
       { name: 'Interface', done: 12, draft: 0, total: 100 },
       { name: 'Content', done: 36, draft: 0, total: 300 },
     ],
     teamMembers: [],
-    bibleTranslation: 'Hindi Bible',
   },
   {
     language: 'Chinese (Simplified)',
     languageDirection: 'ltr',
     locale: 'zh',
+    bibleLabel: 'Chinese Union Version',
 
     translationProgress: [
       { name: 'Interface', done: 92, draft: 0, total: 100 },
@@ -289,12 +291,12 @@ const manyLanguages: TableItem[] = [
         isAllowed: isAllowed(true),
       },
     ],
-    bibleTranslation: 'Chinese Union Version',
   },
   {
     language: 'Russian',
     languageDirection: 'ltr',
     locale: 'ru',
+    bibleLabel: 'Synodal Translation',
 
     translationProgress: [
       { name: 'Interface', done: 35, draft: 0, total: 100 },
@@ -314,11 +316,10 @@ const manyLanguages: TableItem[] = [
         isAllowed: isAllowed(true),
       },
     ],
-    bibleTranslation: 'Synodal Translation',
   },
 ];
 
-const onActions = (item: TableItem) => {
+const onActions = (item: LanguageTableItem) => {
   alert(`Actions for ${item.language} (${item.locale})`);
 };
 </script>

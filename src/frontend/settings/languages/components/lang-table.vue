@@ -62,7 +62,7 @@
           <td
             class="whitespace-nowrap px-3 py-4 text-sm font-normal leading-5 text-gray-500"
           >
-            {{ item.bibleTranslation ?? '—' }}
+            {{ item.bibleLabel ?? '—' }}
           </td>
           <td class="relative py-4 pl-3 pr-4 text-right sm:pr-6">
             <button
@@ -90,27 +90,21 @@
 import { ref, computed } from 'vue';
 import Icon from '../../../shared/icon.vue';
 import Pagination from '../../../shared/pagination.vue';
-import type { LanguageSpecification, UserInterface, Progress } from '../../../../types';
+import type { LanguageTableItem } from '../../../../types';
 import MemberRow from './member-row.vue';
 import RingBlock from '../../../dashboard/ring-block.vue';
 import LangStrip from './lang-strip.vue';
 
-export interface TableItem extends LanguageSpecification {
-  translationProgress?: Omit<Progress, 'lastUpdated'>[];
-  teamMembers?: UserInterface[];
-  bibleTranslation?: string;
-}
-
 const props = withDefaults(
   defineProps<{
-    items: TableItem[];
+    items: LanguageTableItem[];
     itemsPerPage?: number;
   }>(),
   { itemsPerPage: 10 },
 );
 
 const emit = defineEmits<{
-  (e: 'actions', item: TableItem): void;
+  (e: 'actions', item: LanguageTableItem): void;
 }>();
 
 const currentPage = ref(1);
