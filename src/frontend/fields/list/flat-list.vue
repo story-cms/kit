@@ -15,19 +15,19 @@
       role="listitem"
       :class="[
         'subgrid relative my-2 gap-y-8',
-        isEmpty(index) ? '' : 'bg-gray-100 p-8',
+        isEmpty(index) || isRemoved(index) ? 'py-2' : 'bg-gray-100 p-8',
         { 'mr-2': shared.showSourceColumn && field.isFlexible },
       ]"
-      :style="{ gridRow: `span ${totalSpan}` }"
+      :style="{ gridRow: `span ${getItemSpan(index)}` }"
     >
-      <template v-if="!isEmpty(index)">
+      <template v-if="!isEmpty(index) && !isRemoved(index)">
         <template v-if="canMutate">
           <button
             v-if="field.isFlexible && shared.isTranslation && hasSourceItem(index)"
             type="button"
             class="absolute z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
             :style="{ right: `-${shared.sourceSectionWidth}px` }"
-            @click="emit('removeSet', index)"
+            @click="toggleRemove(index)"
           >
             <span v-if="!props.isReadOnly" class="flex h-10 w-10 items-center justify-center">
               <Icon name="minus" class="size-5" />
@@ -59,6 +59,24 @@
           />
         </li>
       </template>
+      <template v-else-if="isRemoved(index)">
+        <li class="relative flex items-center justify-between">
+          <span
+            class="absolute left-0 right-0 top-1/2 border-t border-gray-300"
+          ></span>
+          <button
+            v-if="canMutate"
+            type="button"
+            class="absolute z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
+            :style="{ right: `-${shared.sourceSectionWidth}px` }"
+            @click="toggleRemove(index)"
+          >
+            <span class="flex h-10 w-10 items-center justify-center">
+              <Icon name="plus-mini" class="size-5" />
+            </span>
+          </button>
+        </li>
+      </template>
     </ul>
     <div v-if="canMutate" class="mt-8 flex flex-row items-center gap-4">
       <AddItemButton :label="field.label" @add="emit('addSet')" />
@@ -75,7 +93,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import type { PropType } from 'vue';
 import type { FieldSpec } from '../../../types';
 import Icon from '../../shared/icon.vue';
@@ -143,6 +161,29 @@ const hasSourceItem = (index: number): boolean => {
   return Array.isArray(sourceList) && index < sourceList.length;
 };
 
+const removedState = computed(() => store.getListRemoved(props.fieldPath));
+
+const ensureRemoved = () => {
+  const current = removedState.value;
+  if (current.length < props.listItems.length) {
+    const needed = props.listItems.length - current.length;
+    const fresh = [...current, ...new Array(needed).fill(false)];
+    store.setListRemoved(props.fieldPath, fresh);
+  }
+};
+
+watch(() => props.listItems.length, ensureRemoved, { immediate: true });
+
+const toggleRemove = (index: number) => {
+  const fresh = [...removedState.value];
+  fresh[index] = !fresh[index];
+  store.setListRemoved(props.fieldPath, fresh);
+};
+
+const isRemoved = (index: number): boolean => {
+  return removedState.value[index] ?? false;
+};
+
 const getFieldSpan = (field: FieldSpec): number => {
   if (field.widget === 'object' && field.fields) {
     return Object.keys(field.fields).length;
@@ -154,7 +195,15 @@ const totalSpan = computed(() => {
   return fields.reduce((acc, field) => acc + getFieldSpan(field), 0);
 });
 
+const getItemSpan = (index: number): number => {
+  return isRemoved(index) ? 1 : totalSpan.value;
+};
+
 const containerSpan = computed(() => {
-  return props.listItems.length * totalSpan.value + 1;
+  let span = 1;
+  for (let i = 0; i < props.listItems.length; i++) {
+    span += getItemSpan(i);
+  }
+  return span;
 });
 </script>

@@ -48,6 +48,16 @@ export const useWidgetsStore = defineStore('widgets', () => {
   };
   const getListToggles = (path: string): boolean[] => listToggles.value[path] || [];
 
+  // list removed (for flat-list flexible translation items)
+
+  const listRemoved = ref<Record<string, boolean[]>>({});
+  const setListRemoved = (path: string, value: boolean[]): void => {
+    const fresh = { ...listRemoved.value };
+    fresh[path] = value;
+    listRemoved.value = fresh;
+  };
+  const getListRemoved = (path: string): boolean[] => listRemoved.value[path] || [];
+
   // providers
 
   const providers = ref<Providers>(defaultProviders);
@@ -67,6 +77,9 @@ export const useWidgetsStore = defineStore('widgets', () => {
 
     getListToggles,
     setListToggles,
+
+    getListRemoved,
+    setListRemoved,
 
     setProviders,
     providers,
