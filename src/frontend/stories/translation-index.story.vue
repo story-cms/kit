@@ -106,6 +106,28 @@
         :exclude="[]"
       />
     </Variant>
+    <Variant title="Simple Flexible List" :setup-app="miniSidebar">
+      <TranslationIndex
+        :meta="sharedProps.meta"
+        :user="sharedProps.user"
+        :language="spanish"
+        :languages="sharedProps.languages"
+        :errors="sharedProps.errors"
+        :draft="simpleFlexibleListStory.draft"
+        :bundle="simpleFlexibleListStory.bundle"
+        :source="simpleFlexibleListStory.source"
+        :providers="{}"
+        :last-published="'2021-10-10T14:48:00.000000Z'"
+        :story="{
+          ...simpleFlexibleListStory.story,
+          fields: simpleFlexibleListStory.story.fields as FieldSpec[],
+          chapterLimit: 16,
+        }"
+        :has-edit-review="false"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
+      />
+    </Variant>
   </Story>
 </template>
 
@@ -120,6 +142,7 @@ import {
   miniSidebar,
   alMassira,
   flexibleListStory,
+  simpleFlexibleListStory,
   alphaCourseStory,
   afsCourseStory,
 } from '../test/mocks';

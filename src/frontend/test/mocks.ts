@@ -2287,6 +2287,108 @@ const alphaFields = [
   },
 ];
 
+const simpleFlexibleListFields: FieldSpec[] = [
+  {
+    label: 'Questions',
+    name: 'questions',
+    widget: 'list',
+    canFold: false,
+    isFlexible: true,
+    fields: [
+      {
+        label: '',
+        name: 'question',
+        widget: 'markdown',
+        minimal: true,
+      },
+    ],
+  },
+  {
+    label: 'Conclusion',
+    name: 'conclusion',
+    widget: 'list',
+    canFold: true,
+    isFlexible: true,
+    fields: [
+      {
+        label: 'Title',
+        name: 'title',
+        widget: 'string',
+      },
+      {
+        label: 'Statement',
+        name: 'statement',
+        widget: 'markdown',
+        minimal: true,
+      },
+      {
+        label: 'Excerpt',
+        name: 'excerpt',
+        widget: 'markdown',
+        minimal: true,
+      },
+    ],
+  },
+];
+
+export const simpleFlexibleListStory = {
+  draft: {
+    id: 1999,
+    number: 1,
+    status: 'started',
+    updatedAt: '2025-10-24T06:10:38.483+00:00',
+    createdAt: '2025-10-24T06:10:38.482+00:00',
+  },
+  bundle: {
+    questions: [],
+    conclusion: [],
+  },
+  source: {
+    questions: [
+      { question: 'How and why did you end up coming to Alpha?' },
+      {
+        question:
+          'If it turned out there was a God after all, and you could ask one question, what would it be?',
+      },
+      {
+        question:
+          'What do you think about the idea of there being a spiritual side to life?',
+      },
+      {
+        question:
+          'What aspects of the evidence presented tonight did you find convincing/not convincing?',
+      },
+    ],
+    conclusion: [
+      {
+        title: 'Is there more to life than this?',
+        statement:
+          'Jesus said, **"I am the way and the truth and the life"** (John 14:6). At the heart of the Christian faith is a person: Jesus Christ.',
+        excerpt:
+          'C. S. Lewis: *"I believe in Christianity as I believe that the sun has risen: not only because I see it, but because by it I see everything else."*',
+      },
+      {
+        title: 'Who is Jesus?',
+        statement:
+          'Jesus is the lens through which we see God. He is also the lens by which we see the world in a totally different dimension and clarity.',
+        excerpt:
+          'Christianity, if false, is of no importance, and if true, of infinite importance. The only thing it cannot be is moderately important.',
+      },
+    ],
+  },
+  story: {
+    id: 1,
+    name: 'Simple Flexible List',
+    coverImage:
+      'https://res.cloudinary.com/ddks6yqbn/image/upload/ar_1:1,c_fill,e_art:hokusai,g_auto,h_300,w_300/v1761902661/alpha-course/hrxmra2a5apgili9pt5a_i1i26d.png',
+    chapterType: 'Episode',
+    storyType: 'Alpha',
+    chapterLimit: 16,
+    schemaVersion: 1,
+    fields: simpleFlexibleListFields,
+  } as StorySpec,
+};
+
 export const alphaCourseStory = {
   draft: {
     id: 1913,
