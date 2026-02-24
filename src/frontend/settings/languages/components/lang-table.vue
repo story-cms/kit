@@ -73,7 +73,7 @@
               <Icon name="dots-vertical" class="size-5" />
             </button>
             <div
-              class="absolute -top-0 right-0 z-10 flex max-w-[250px] flex-col items-start overflow-hidden rounded-md bg-white shadow"
+              class="absolute right-10 top-3 z-10 flex max-w-[250px] flex-col items-start overflow-hidden rounded-md bg-white shadow"
             >
               <button
                 class="w-full px-6 py-2 pt-3 text-left text-sm font-normal leading-5 text-gray-800 hover:bg-gray-100"
