@@ -33,7 +33,7 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200 bg-white">
-        <tr v-for="item in paginatedItems" :key="item.locale">
+        <tr v-for="item in paginatedItems" :key="item.locale" class="relative">
           <td
             class="flex flex-col gap-2 whitespace-nowrap px-3 py-4 text-sm text-gray-800"
           >
@@ -64,7 +64,7 @@
           >
             {{ item.bibleLabel ?? '—' }}
           </td>
-          <td class="relative py-4 pl-3 pr-4 text-right sm:pr-6">
+          <td class="py-4 pl-3 pr-4 text-right sm:pr-6">
             <button
               type="button"
               class="cursor-pointer text-gray-400 hover:text-gray-600"
@@ -72,6 +72,25 @@
             >
               <Icon name="dots-vertical" class="size-5" />
             </button>
+            <div
+              class="absolute -top-0 right-0 z-10 flex max-w-[250px] flex-col items-start overflow-hidden rounded-md bg-white shadow"
+            >
+              <button
+                class="w-full px-6 py-2 pt-3 text-left text-sm font-normal leading-5 text-gray-800 hover:bg-gray-100"
+              >
+                Assign team members
+              </button>
+              <button
+                class="w-full px-6 py-2 text-left text-sm font-normal leading-5 text-gray-800 hover:bg-gray-100"
+              >
+                Change Bible translation
+              </button>
+              <button
+                class="w-full px-6 py-2 pb-3 text-left text-sm font-normal leading-5 text-gray-800 hover:bg-gray-100"
+              >
+                Request language deletion
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>
