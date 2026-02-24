@@ -68,19 +68,20 @@
             <button
               type="button"
               class="cursor-pointer text-gray-400 hover:text-gray-600"
-              @click="toggleActions"
+              @click="toggleActions(item.locale)"
             >
               <Icon name="dots-vertical" class="size-5" />
             </button>
             <div
-              v-show="showActions"
+              v-show="openActionsLocale === item.locale"
               class="absolute right-10 top-3 z-10 flex max-w-[250px] flex-col items-start overflow-hidden rounded-md bg-white shadow"
             >
-              <button
+              <a
+                href="/{{ item.locale }}/user"
                 class="w-full px-6 py-2 pt-3 text-left text-sm font-normal leading-5 text-gray-800 hover:bg-gray-100"
               >
                 Assign team members
-              </button>
+              </a>
               <button
                 class="w-full px-6 py-2 text-left text-sm font-normal leading-5 text-gray-800 hover:bg-gray-100"
               >
@@ -134,9 +135,9 @@ const handlePageChange = (page: number) => {
   currentPage.value = page;
 };
 
-const showActions = ref(false);
+const openActionsLocale = ref<string | null>(null);
 
-const toggleActions = () => {
-  showActions.value = !showActions.value;
+const toggleActions = (locale: string) => {
+  openActionsLocale.value = openActionsLocale.value === locale ? null : locale;
 };
 </script>
