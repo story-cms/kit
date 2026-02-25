@@ -24,9 +24,10 @@
         </template>
       </ContentHeader>
     </template>
-
     <SourceLang :spec="sourceLanguage" />
-    <LanguagesTable :items="items" />
+    <div class="mt-14">
+      <LanguagesTable :items="items" />
+    </div>
   </AppLayout>
 </template>
 

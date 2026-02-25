@@ -569,7 +569,7 @@ export const languageTableItems: LanguageTableItem[] = [
     language: 'English',
     languageDirection: 'ltr',
     locale: 'en',
-    bibleLabel: 'King James Version',
+    bibleLabel: '(KJV) King James Version',
     translationProgress: [
       { name: 'Interface', done: 100, draft: 0, total: 100 },
       { name: 'Content', done: 240, draft: 0, total: 240 },
@@ -605,7 +605,7 @@ export const languageTableItems: LanguageTableItem[] = [
     language: 'Spanish',
     languageDirection: 'ltr',
     locale: 'es',
-    bibleLabel: 'Reina-Valera 1960',
+    bibleLabel: '(RVR1960) Reina-Valera 1960 Spanish Translation (2023) (Revised)',
     translationProgress: [
       { name: 'Interface', done: 75, draft: 0, total: 100 },
       { name: 'Content', done: 225, draft: 0, total: 300 },

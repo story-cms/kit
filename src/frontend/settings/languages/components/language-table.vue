@@ -62,7 +62,7 @@
           <td
             class="whitespace-nowrap px-3 py-4 text-sm font-normal leading-5 text-gray-500"
           >
-            {{ item.bibleLabel ?? '—' }}
+            {{ truncate(item.bibleLabel, 30) }} 
           </td>
           <td class="py-4 pl-3 pr-4 text-right sm:pr-6">
             <button
@@ -139,5 +139,10 @@ const openActionsLocale = ref<string | null>(null);
 
 const toggleActions = (locale: string) => {
   openActionsLocale.value = openActionsLocale.value === locale ? null : locale;
+};
+
+const truncate = (s: string | null | undefined, max: number) => {
+  const text = s ?? '—';
+  return text.length > max ? `${text.slice(0, max)}…` : text;
 };
 </script>
