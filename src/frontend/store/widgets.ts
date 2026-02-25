@@ -38,7 +38,7 @@ export const useWidgetsStore = defineStore('widgets', () => {
     picker.value = fresh;
   };
 
-  // list toggles
+  // track folding in foldable lists
 
   const listToggles = ref<Record<string, boolean[]>>({});
   const setListToggles = (path: string, value: boolean[]): void => {
@@ -47,6 +47,30 @@ export const useWidgetsStore = defineStore('widgets', () => {
     listToggles.value = fresh;
   };
   const getListToggles = (path: string): boolean[] => listToggles.value[path] || [];
+
+  // track removed items in flexible lists
+
+  const removedItems = ref<Record<string, number[]>>({});
+  const toggleRemovedIndex = (path: string, index: number): void => {
+    const fresh = { ...removedItems.value };
+    fresh[path] = Array.from(removedItems.value[path] || []);
+    if (fresh[path].includes(index)) {
+      fresh[path].splice(fresh[path].indexOf(index), 1);
+    } else {
+      fresh[path].push(index);
+    }
+    removedItems.value = fresh;
+  };
+  const isInRemovedList = (path: string, index: number): boolean =>
+    removedItems.value[path]?.includes(index) || false;
+
+  const listRemoved = ref<Record<string, boolean[]>>({});
+  const setListRemoved = (path: string, value: boolean[]): void => {
+    const fresh = { ...listRemoved.value };
+    fresh[path] = value;
+    listRemoved.value = fresh;
+  };
+  const getListRemoved = (path: string): boolean[] => listRemoved.value[path] || [];
 
   // providers
 
@@ -67,6 +91,11 @@ export const useWidgetsStore = defineStore('widgets', () => {
 
     getListToggles,
     setListToggles,
+
+    toggleRemovedIndex,
+    isInRemovedList,
+    setListRemoved,
+    getListRemoved,
 
     setProviders,
     providers,

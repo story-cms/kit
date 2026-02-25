@@ -2376,8 +2376,62 @@ export const simpleFlexibleListStory = {
           '¿Qué aspectos de la evidencia presentada esta noche te parecieron convincentes o no convincentes?',
       },
     ],
-    conclusion: [],
-    references: [],
+    conclusion: [
+      {
+        title: '¿Hay algo más en la vida que esto?',
+        statement:
+          'Jesús dijo: **«Yo soy el camino, la verdad y la vida»** (Juan 14:6). En el corazón de la fe cristiana hay una persona: Jesucristo.',
+        excerpt:
+          'C. S. Lewis: *"Creo en el cristianismo como creo que el sol ha salido: no solo porque lo veo, sino porque por él veo todo lo demás."*',
+      },
+      {
+        title: '¿Quién es Jesús?',
+        statement:
+          'Jesús es el lente a través del cual vemos a Dios. También es el lente con el que vemos el mundo en una dimensión y claridad totalmente distintas.',
+        excerpt:
+          'El cristianismo, si es falso, no tiene importancia; y si es verdadero, tiene importancia infinita. Lo único que no puede ser es moderadamente importante.',
+      },
+      {
+        title: '',
+        statement: '',
+        excerpt: '',
+      },
+      {
+        title: '¿Quién es Jesús?',
+        statement:
+          'Jesús es el lente a través del cual vemos a Dios. También es el lente con el que vemos el mundo en una dimensión y claridad totalmente distintas.',
+        excerpt:
+          'El cristianismo, si es falso, no tiene importancia; y si es verdadero, tiene importancia infinita. Lo único que no puede ser es moderadamente importante.',
+      },
+    ],
+    references: [
+      {
+        title: 'Mero Cristianismo',
+        summaryStatement: 'Una introducción clásica a la fe cristiana de C. S. Lewis.',
+      },
+      {
+        title: '',
+        summaryStatement: '',
+      },
+      {
+        title: 'Conociendo a Dios',
+        summaryStatement:
+          'Una exploración más profunda de quién es Dios y cómo podemos conocerlo.',
+      },
+      {
+        title: 'Mero Cristianismo',
+        summaryStatement: 'Una introducción clásica a la fe cristiana de C. S. Lewis.',
+      },
+      {
+        title: 'El caso de Cristo',
+        summaryStatement: 'Una investigación sobre la evidencia de Jesús.',
+      },
+      {
+        title: 'Conociendo a Dios',
+        summaryStatement:
+          'Una exploración más profunda de quién es Dios y cómo podemos conocerlo.',
+      },
+    ],
   },
   source: {
     questions: [
