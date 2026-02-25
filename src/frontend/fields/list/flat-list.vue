@@ -106,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from 'vue';
+import { computed } from 'vue';
 import type { PropType } from 'vue';
 import type { FieldSpec } from '../../../types';
 import Icon from '../../shared/icon.vue';
@@ -174,29 +174,14 @@ const hasSourceItem = (index: number): boolean => {
   return Array.isArray(sourceList) && index < sourceList.length;
 };
 
-const removedState = computed(() => widgets.getListRemoved(props.fieldPath));
-
-const ensureRemoved = () => {
-  const current = removedState.value;
-  if (current.length < props.listItems.length) {
-    const needed = props.listItems.length - current.length;
-    const fresh = [...current, ...new Array(needed).fill(false)];
-    widgets.setListRemoved(props.fieldPath, fresh);
-  }
-};
-
-watch(() => props.listItems.length, ensureRemoved, { immediate: true });
 
 const toggleRemove = (index: number) => {
-  const fresh = [...removedState.value];
-  fresh[index] = !fresh[index];
-  widgets.setListRemoved(props.fieldPath, fresh);
+  widgets.toggleRemovedIndex(props.fieldPath, index);
 };
 
 const isRemoved = (index: number): boolean => {
-  return removedState.value[index] ?? false;
+  return widgets.isInRemovedList(props.fieldPath, index);
 };
-
 
 const getFieldSpan = (field: FieldSpec): number => {
   if (field.widget === 'object' && field.fields) {

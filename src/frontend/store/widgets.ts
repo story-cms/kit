@@ -64,14 +64,6 @@ export const useWidgetsStore = defineStore('widgets', () => {
   const isInRemovedList = (path: string, index: number): boolean =>
     removedItems.value[path]?.includes(index) || false;
 
-  const listRemoved = ref<Record<string, boolean[]>>({});
-  const setListRemoved = (path: string, value: boolean[]): void => {
-    const fresh = { ...listRemoved.value };
-    fresh[path] = value;
-    listRemoved.value = fresh;
-  };
-  const getListRemoved = (path: string): boolean[] => listRemoved.value[path] || [];
-
   // providers
 
   const providers = ref<Providers>(defaultProviders);
@@ -94,8 +86,6 @@ export const useWidgetsStore = defineStore('widgets', () => {
 
     toggleRemovedIndex,
     isInRemovedList,
-    setListRemoved,
-    getListRemoved,
 
     setProviders,
     providers,
