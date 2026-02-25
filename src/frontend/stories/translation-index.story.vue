@@ -84,6 +84,50 @@
         :exclude="[]"
       />
     </Variant>
+    <Variant title="AFS Course" :setup-app="miniSidebar">
+      <TranslationIndex
+        :meta="sharedProps.meta"
+        :user="sharedProps.user"
+        :language="spanish"
+        :languages="sharedProps.languages"
+        :errors="sharedProps.errors"
+        :draft="afsCourseStory.draft"
+        :bundle="afsCourseStory.bundle"
+        :source="afsCourseStory.source"
+        :providers="{}"
+        :last-published="'2021-10-10T14:48:00.000000Z'"
+        :story="{
+          ...afsCourseStory.story,
+          fields: afsCourseStory.story.fields as FieldSpec[],
+          chapterLimit: 16,
+        }"
+        :has-edit-review="false"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
+      />
+    </Variant>
+    <Variant title="Simple Flexible List" :setup-app="miniSidebar">
+      <TranslationIndex
+        :meta="sharedProps.meta"
+        :user="sharedProps.user"
+        :language="spanish"
+        :languages="sharedProps.languages"
+        :errors="sharedProps.errors"
+        :draft="simpleFlexibleListStory.draft"
+        :bundle="simpleFlexibleListStory.bundle"
+        :source="simpleFlexibleListStory.source"
+        :providers="{}"
+        :last-published="'2021-10-10T14:48:00.000000Z'"
+        :story="{
+          ...simpleFlexibleListStory.story,
+          fields: simpleFlexibleListStory.story.fields as FieldSpec[],
+          chapterLimit: 16,
+        }"
+        :has-edit-review="false"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
+      />
+    </Variant>
   </Story>
 </template>
 
@@ -98,7 +142,9 @@ import {
   miniSidebar,
   alMassira,
   flexibleListStory,
+  simpleFlexibleListStory,
   alphaCourseStory,
+  afsCourseStory,
 } from '../test/mocks';
 import { FieldSpec } from '../../types';
 
