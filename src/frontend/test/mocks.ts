@@ -2359,7 +2359,23 @@ export const simpleFlexibleListStory = {
     createdAt: '2025-10-24T06:10:38.482+00:00',
   },
   bundle: {
-    questions: [],
+    questions: [
+      { question: '¿Cómo y por qué terminaste viniendo a Alpha?' },
+      {
+        question: '',
+      },
+      {
+        question:
+          '¿Qué piensas sobre la idea de que exista un lado espiritual en la vida?',
+      },
+      {
+        question: '',
+      },
+      {
+        question:
+          '¿Qué aspectos de la evidencia presentada esta noche te parecieron convincentes o no convincentes?',
+      },
+    ],
     conclusion: [],
     references: [],
   },

@@ -57,7 +57,7 @@
           :style="{ gridRow: `span ${getFieldSpan(item)}` }"
         >
           <component
-            :is="store.picker(item.widget)"
+            :is="widgets.picker(item.widget)"
             :field="item"
             :is-read-only="props.isReadOnly"
             :root-path="`${fieldPath}.${index.toString()}`"
@@ -75,7 +75,7 @@
             <div
               class="z-[1] inline-flex items-center rounded-full border border-gray-300 bg-gray-200 px-4 py-1.5 text-sm font-medium leading-5 text-gray-500 shadow-sm"
             >
-              <span>Removed: {{ String(title(index)) }}</span>
+              <span>Removed</span>
             </div>
             <button
               type="button"
@@ -106,12 +106,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from 'vue';
+import { computed, ref } from 'vue';
 import type { PropType } from 'vue';
 import type { FieldSpec } from '../../../types';
 import Icon from '../../shared/icon.vue';
 import AddItemButton from '../../shared/add-item-button.vue';
-import { useWidgetsStore, useSharedStore, useModelStore } from '../../store';
+import {  useSharedStore, useModelStore, useWidgetsStore } from '../../store';
 
 const props = defineProps({
   field: {
@@ -141,9 +141,9 @@ const props = defineProps({
 const emit = defineEmits(['addSet', 'removeSet']);
 const field = computed(() => props.field as FieldSpec);
 const fields = field.value.fields as FieldSpec[];
-const store = useWidgetsStore();
 const shared = useSharedStore();
 const model = useModelStore();
+const widgets = useWidgetsStore();
 
 const canMutate = computed(() => {
   if (props.isReadOnly) return false;
@@ -151,6 +151,9 @@ const canMutate = computed(() => {
   // Allow mutations if not in translation mode OR if field is flexible
   return !shared.isTranslation || field.value.isFlexible === true;
 });
+
+const sourceList = model.getSourceField(props.fieldPath, []) as any[];
+
 
 const showEmptyListWarning = (): boolean => {
   if (props.isReadOnly) return false;
@@ -170,44 +173,31 @@ const isEmpty = (index: number): boolean => {
 };
 
 const hasSourceItem = (index: number): boolean => {
-  const sourceList = model.getSourceField(props.fieldPath, []) as any[];
   return Array.isArray(sourceList) && index < sourceList.length;
 };
 
-const removedState = computed(() => store.getListRemoved(props.fieldPath));
+const removedList = ref<number[]>([]);
 
-const ensureRemoved = () => {
-  const current = removedState.value;
-  if (current.length < props.listItems.length) {
-    const needed = props.listItems.length - current.length;
-    const fresh = [...current, ...new Array(needed).fill(false)];
-    store.setListRemoved(props.fieldPath, fresh);
-  }
-};
 
-watch(() => props.listItems.length, ensureRemoved, { immediate: true });
+
+
+
+
+
+
 
 const toggleRemove = (index: number) => {
-  const fresh = [...removedState.value];
-  fresh[index] = !fresh[index];
-  store.setListRemoved(props.fieldPath, fresh);
+  if (removedList.value.includes(index)) {
+    removedList.value.splice(removedList.value.indexOf(index), 1);
+  } else {
+    removedList.value.push(index);
+  }
 };
 
 const isRemoved = (index: number): boolean => {
-  return removedState.value[index] ?? false;
+  return removedList.value.includes(index);
 };
 
-const title = (index: number): string => {
-  let path = `${props.fieldPath}.${index.toString()}`;
-  if (field.value.index) {
-    path = `${path}.${field.value.index}`;
-  } else {
-    path = `${path}.${fields[0].name}`;
-  }
-  const itemTitle = model.getField(path, 'New Section') as string;
-
-  return itemTitle.length > 20 ? `${itemTitle.substring(0, 20)}...` : itemTitle;
-};
 
 const getFieldSpan = (field: FieldSpec): number => {
   if (field.widget === 'object' && field.fields) {
@@ -231,4 +221,6 @@ const containerSpan = computed(() => {
   }
   return span;
 });
+
+
 </script>
