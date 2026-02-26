@@ -1,0 +1,73 @@
+{{{ 
+  exports({ to: app.makePath('tests/unit/configs.spec.ts') }) 
+}}}
+import { test } from '@japa/runner';
+import testUtils from '@adonisjs/core/services/test_utils';
+import { Config } from '@story-cms/kit';
+import cmsConfig from '#config/cms';
+
+test.group('Config', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction());
+
+  test('can store cms config in configs table', async ({ assert }) => {
+    const config = new Config();
+    config.key = 'cms';
+    config.version = 1;
+    config.data = cmsConfig as Record<string, any>;
+    await config.save();
+
+    assert.isTrue(config.$isPersisted);
+    assert.equal(config.key, 'cms');
+    assert.equal(config.version, 1);
+    assert.deepEqual(config.data, cmsConfig);
+  });
+
+  test('can retrieve stored cms config from configs table', async ({ assert }) => {
+    const config = new Config();
+    config.key = 'cms';
+    config.version = 1;
+    config.data = cmsConfig as Record<string, any>;
+    await config.save();
+
+    const retrieved = await Config.findOrFail(config.id);
+
+    assert.equal(retrieved.key, 'cms');
+    assert.equal(retrieved.version, 1);
+    assert.deepEqual(retrieved.data, cmsConfig);
+    assert.equal(retrieved.data.meta.name, 'Pilot CMS');
+    assert.equal(
+      retrieved.data.meta.logo,
+      'https://res.cloudinary.com/journeys/image/upload/v1756295658/logo_g8k7tf.png',
+    );
+  });
+
+  test('can store multiple versions of cms config', async ({ assert }) => {
+    const configV1 = new Config();
+    configV1.key = 'cms';
+    configV1.version = 1;
+    configV1.data = cmsConfig as Record<string, any>;
+    await configV1.save();
+
+    const modifiedConfig = {
+      ...cmsConfig,
+      meta: { ...cmsConfig.meta, name: 'Updated Pilot CMS' },
+    };
+    const configV2 = new Config();
+    configV2.key = 'cms';
+    configV2.version = 2;
+    configV2.data = modifiedConfig as Record<string, any>;
+    await configV2.save();
+
+    const retrievedV1 = await Config.query()
+      .where({ key: 'cms', version: 1 })
+      .firstOrFail();
+    const retrievedV2 = await Config.query()
+      .where({ key: 'cms', version: 2 })
+      .firstOrFail();
+
+    assert.equal(retrievedV1.version, 1);
+    assert.equal(retrievedV1.data.meta.name, 'Pilot CMS');
+    assert.equal(retrievedV2.version, 2);
+    assert.equal(retrievedV2.data.meta.name, 'Updated Pilot CMS');
+  });
+});
