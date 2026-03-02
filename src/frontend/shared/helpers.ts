@@ -188,13 +188,17 @@ export const getCampaignStatus = (
 
 /**
  * Normalizes a date for storage when the date field is used without a time picker.
- * Ensures the stored value is T00:00:00.000Z on the selected date so that:
- * - When user selects today: element is visible instantly (valid at T00:00:00.000Z)
- * - When user selects any other day: element is shown from T00:00:00.000Z on that date
+ *
+ * When endOfDay is false: stores as T00:00:00.000Z on the selected date.
+ * - User selects today → visible instantly from midnight UTC
+ * - User selects any other day → shown from T00:00:00.000Z on that date
+ *
+ * When endOfDay is true (date-range end dates): stores as T23:59:59.999Z so the
+ * range includes the full last day; campaign stays Live through end of that day.
  *
  * @param date - The date selected by the user
  * @param hasTimePicker - Whether the field has time picker enabled
- * @param endOfDay - When true (date-only only), store as T23:59:59.999Z for range end dates
+ * @param endOfDay - When true, store as T23:59:59.999Z for date-range end dates
  * @returns The date to store (Date object that serializes to ISO string)
  */
 export function normalizeDateForStorage(
