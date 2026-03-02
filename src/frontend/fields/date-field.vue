@@ -75,8 +75,7 @@ model.$subscribe(() => {
 
 const onUpdate = (date: Date) => {
   if (props.isReadOnly) return;
-  const hasTimePicker = field.value.hasTimePicker ?? false;
-  const valueToStore = normalizeDateForStorage(date, hasTimePicker);
+  const valueToStore = normalizeDateForStorage(date, field.value.hasTimePicker ?? false);
   model.setField(fieldPath.value, valueToStore);
 };
 
