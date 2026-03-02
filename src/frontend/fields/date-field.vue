@@ -47,6 +47,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import type { FieldSpec } from '../../types';
 import { useModelStore, useSharedStore } from '../store/index';
 import { commonProps } from '../shared/helpers';
+import { normalizeDateForStorage } from '../shared/helpers';
 
 const props = defineProps({
   ...commonProps,
@@ -74,7 +75,9 @@ model.$subscribe(() => {
 
 const onUpdate = (date: Date) => {
   if (props.isReadOnly) return;
-  model.setField(fieldPath.value, date);
+  const hasTimePicker = field.value.hasTimePicker ?? false;
+  const valueToStore = normalizeDateForStorage(date, hasTimePicker);
+  model.setField(fieldPath.value, valueToStore);
 };
 
 const errors = computed(() => shared.errorMessages(fieldPath.value));

@@ -185,3 +185,24 @@ export const getCampaignStatus = (
   if (currentTime > windowEnd) return 'Completed';
   return 'Live';
 };
+
+/**
+ * Normalizes a date for storage when the date field is used without a time picker.
+ * Ensures the stored value is T00:00:00.000Z on the selected date so that:
+ * - When user selects today: element is visible instantly (valid at T00:00:00.000Z)
+ * - When user selects any other day: element is shown from T00:00:00.000Z on that date
+ *
+ * @param date - The date selected by the user
+ * @param hasTimePicker - Whether the field has time picker enabled
+ * @returns The date to store (Date object that serializes to ISO string)
+ */
+export function normalizeDateForStorage(date: Date, hasTimePicker: boolean): Date {
+  if (hasTimePicker) {
+    return date;
+  }
+  // For date-only selection: store as T00:00:00.000Z on the selected calendar date
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const day = date.getDate();
+  return new Date(Date.UTC(year, month, day, 0, 0, 0, 0));
+}
