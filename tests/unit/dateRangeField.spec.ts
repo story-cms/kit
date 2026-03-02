@@ -11,6 +11,16 @@ function formatDateRangeForStorage(start: Date, end: Date): string {
   return `${normalizedStart.toISOString()}|${normalizedEnd.toISOString()}`;
 }
 
+/**
+ * Mirrors date-range-field.vue onUpdate logic.
+ * Start at T00:00:00.000Z, end at T23:59:59.999Z so the range includes the full end day.
+ */
+function formatDateRangeAsComponentDoes(start: Date, end: Date): string {
+  const normalizedStart = normalizeDateForStorage(start, false);
+  const normalizedEnd = normalizeDateForStorage(end, false, true);
+  return `${normalizedStart.toISOString()}|${normalizedEnd.toISOString()}`;
+}
+
 test.describe('Date Range Field storage normalization', () => {
   test.describe('when user selects a date range (start and end dates)', () => {
     test('stores both dates as T00:00:00.000Z on the selected dates', () => {
@@ -38,6 +48,29 @@ test.describe('Date Range Field storage normalization', () => {
       const result = formatDateRangeForStorage(startDate, endDate);
 
       expect(result).toBe('2025-06-14T00:00:00.000Z|2025-06-15T00:00:00.000Z');
+    });
+  });
+
+  test.describe('date-range-field onUpdate logic', () => {
+    test('stores start at T00:00:00.000Z and end at T23:59:59.999Z for full-day coverage', () => {
+      const startDate = new Date(2025, 2, 2, 14, 30, 0, 0); // March 2, 2025 2:30 PM local
+      const endDate = new Date(2025, 2, 15, 9, 0, 0, 0); // March 15, 2025 9:00 AM local
+
+      const result = formatDateRangeAsComponentDoes(startDate, endDate);
+
+      expect(result).toBe('2025-03-02T00:00:00.000Z|2025-03-15T23:59:59.999Z');
+    });
+
+    test('uses pipe-separated ISO format for storage', () => {
+      const startDate = new Date(2025, 0, 1, 0, 0, 0, 0);
+      const endDate = new Date(2025, 0, 31, 12, 0, 0, 0);
+
+      const result = formatDateRangeAsComponentDoes(startDate, endDate);
+
+      const [startPart, endPart] = result.split('|');
+      expect(startPart).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
+      expect(endPart).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
+      expect(result).toBe('2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z');
     });
   });
 

@@ -101,10 +101,11 @@ const onUpdate = (date: WidgetValue) => {
     return;
   }
 
-  // Date range is always date-only (no time picker) - store as T00:00:00.000Z
+  // Date range is always date-only (no time picker) - start at T00:00:00.000Z
   const start = normalizeDateForStorage(date[0], false);
-  const end = normalizeDateForStorage(date[1], false);
-  const fresh = `${start.toISOString()}|${end.toISOString()}`;
+  // End date runs until the very end of the day at T23:59:59.999Z
+  const normalizedEnd = normalizeDateForStorage(date[1], false, true);
+  const fresh = `${start.toISOString()}|${normalizedEnd.toISOString()}`;
   model.setField(fieldPath.value, fresh);
 };
 

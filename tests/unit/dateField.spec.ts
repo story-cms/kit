@@ -43,6 +43,16 @@ test.describe('Date Field storage normalization', () => {
     });
   });
 
+  test.describe('when endOfDay is true (for range end dates)', () => {
+    test('stores value as T23:59:59.999Z on the selected date', () => {
+      const selectedDate = new Date(2025, 2, 15, 9, 0, 0, 0); // March 15, 2025 9:00 AM local
+
+      const result = normalizeDateForStorage(selectedDate, false, true);
+
+      expect(result.toISOString()).toBe('2025-03-15T23:59:59.999Z');
+    });
+  });
+
   test.describe('when time picker is enabled', () => {
     test('preserves the full date and time without normalization', () => {
       const selectedDate = new Date(2025, 2, 2, 14, 30, 45, 123);

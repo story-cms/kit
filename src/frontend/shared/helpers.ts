@@ -194,15 +194,22 @@ export const getCampaignStatus = (
  *
  * @param date - The date selected by the user
  * @param hasTimePicker - Whether the field has time picker enabled
+ * @param endOfDay - When true (date-only only), store as T23:59:59.999Z for range end dates
  * @returns The date to store (Date object that serializes to ISO string)
  */
-export function normalizeDateForStorage(date: Date, hasTimePicker: boolean): Date {
+export function normalizeDateForStorage(
+  date: Date,
+  hasTimePicker: boolean,
+  endOfDay = false,
+): Date {
   if (hasTimePicker) {
     return date;
   }
-  // For date-only selection: store as T00:00:00.000Z on the selected calendar date
   const year = date.getFullYear();
   const month = date.getMonth();
   const day = date.getDate();
+  if (endOfDay) {
+    return new Date(Date.UTC(year, month, day, 23, 59, 59, 999));
+  }
   return new Date(Date.UTC(year, month, day, 0, 0, 0, 0));
 }
