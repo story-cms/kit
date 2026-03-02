@@ -44,6 +44,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import type { FieldSpec } from '../../types';
 import { useModelStore, useSharedStore } from '../store/index';
 import { commonProps } from '../shared/helpers';
+import { normalizeDateForStorage } from '../shared/helpers';
 
 type WidgetValue = [Date | null, Date | null];
 
@@ -100,7 +101,10 @@ const onUpdate = (date: WidgetValue) => {
     return;
   }
 
-  const fresh = `${date[0].toISOString()}|${date[1].toISOString()}`;
+  // Date range is always date-only (no time picker) - store as T00:00:00.000Z
+  const start = normalizeDateForStorage(date[0], false);
+  const end = normalizeDateForStorage(date[1], false);
+  const fresh = `${start.toISOString()}|${end.toISOString()}`;
   model.setField(fieldPath.value, fresh);
 };
 
