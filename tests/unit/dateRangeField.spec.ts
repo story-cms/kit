@@ -1,7 +1,10 @@
 import { test, expect } from '@playwright/test';
-import { normalizeDateForStorage } from '../../src/frontend/shared/helpers';
+import {
+  normalizeDateForStorage,
+  parseIsoDateForDisplay,
+} from '../../src/frontend/shared/helpers';
 
-/**
+/**î
  * Helpers that mirror date-range-field.vue storage format.
  * Date range is always date-only - both dates stored as T00:00:00.000Z.
  */
@@ -71,6 +74,25 @@ test.describe('Date Range Field storage normalization', () => {
       expect(startPart).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
       expect(endPart).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
       expect(result).toBe('2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z');
+    });
+  });
+
+  test.describe('parseIsoDateForDisplay (picker display)', () => {
+    test('extracts calendar date from end-of-day ISO so picker shows correct day in all timezones', () => {
+      // T23:59:59.999Z would show as April 16 in UTC+ without this fix
+      const parsed = parseIsoDateForDisplay('2025-04-15T23:59:59.999Z');
+      expect(parsed).not.toBeNull();
+      expect(parsed!.getFullYear()).toBe(2025);
+      expect(parsed!.getMonth()).toBe(3); // April
+      expect(parsed!.getDate()).toBe(15);
+    });
+
+    test('extracts calendar date from start-of-day ISO', () => {
+      const parsed = parseIsoDateForDisplay('2025-04-15T00:00:00.000Z');
+      expect(parsed).not.toBeNull();
+      expect(parsed!.getFullYear()).toBe(2025);
+      expect(parsed!.getMonth()).toBe(3);
+      expect(parsed!.getDate()).toBe(15);
     });
   });
 

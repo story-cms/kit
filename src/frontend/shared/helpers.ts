@@ -213,3 +213,18 @@ export function normalizeDateForStorage(
   }
   return new Date(Date.UTC(year, month, day, 0, 0, 0, 0));
 }
+
+/**
+ * Parses an ISO date string (e.g. from date-range storage) to a local Date for picker display.
+ * Extracts the calendar date (Y-M-D) and creates noon local - avoids timezone shift
+ * where T00:00:00.000Z or T23:59:59.999Z would display as the wrong day.
+ */
+export function parseIsoDateForDisplay(iso: string): Date | null {
+  const match = iso.trim().match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!match) return null;
+  const year = parseInt(match[1], 10);
+  const month = parseInt(match[2], 10) - 1;
+  const day = parseInt(match[3], 10);
+  const d = new Date(year, month, day, 12, 0, 0, 0);
+  return isNaN(d.getTime()) ? null : d;
+}
