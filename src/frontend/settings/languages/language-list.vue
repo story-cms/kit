@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white">
+  <div class="bg-white pb-11">
     <div class="grid grid-cols-1 gap-4 pb-6 pl-2 md:grid-cols-[1fr_auto]">
       <ul class="flex flex-row flex-wrap items-center gap-[10px] py-[9px]">
         <li v-for="letter in letters" :key="letter">

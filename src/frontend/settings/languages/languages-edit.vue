@@ -10,7 +10,8 @@
         </template>
         <template #actions>
           <button
-            class="rounded-[38px] border bg-blue-500 px-[15px] py-[9px] text-sm/5 font-medium text-white shadow hover:bg-blue-400 focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset]"
+            class="w-[128px] rounded-[38px] border bg-blue-500 px-[15px] py-[9px] text-sm/5 font-medium text-white shadow hover:bg-blue-400 focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset] disabled:cursor-not-allowed disabled:bg-gray-400 disabled:opacity-50 disabled:shadow-none"
+            :disabled="selectedLanguages.length === 0"
             @click="addLanguage"
           >
             Add
