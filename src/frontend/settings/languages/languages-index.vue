@@ -46,6 +46,7 @@
     <RequestFeedbackModal
       :open="showFeedbackModal"
       :variant="feedbackModalVariant"
+      :contact-email="shared.meta.mailFromAddress ?? 'ops@scoutredeem.co'"
       @close="showFeedbackModal = false"
     />
   </AppLayout>

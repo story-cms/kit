@@ -23,14 +23,11 @@ import { computed } from 'vue';
 import LanguageModal from './language-modal.vue';
 import PillButton from '../../../shared/pill-button.vue';
 
-const props = withDefaults(
-  defineProps<{
-    open: boolean;
-    variant: 'success' | 'error';
-    contactEmail?: string;
-  }>(),
-  { contactEmail: 'ops@scoutredeem.co' },
-);
+const props = defineProps<{
+  open: boolean;
+  variant: 'success' | 'error';
+  contactEmail: string;
+}>();
 
 defineEmits<{
   (e: 'close'): void;

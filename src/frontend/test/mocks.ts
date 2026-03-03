@@ -432,6 +432,7 @@ export const meta: CmsMeta = {
   logo: 'https://res.cloudinary.com/theword121/image/upload/v1687245360/episodes/viseg2hegowcrapio6pt.svg',
   helpUrl: 'https://www.theword121.com/',
   hasAppPreview: false,
+  mailFromAddress: 'ops@scoutredeem.co',
 };
 
 export const user = {

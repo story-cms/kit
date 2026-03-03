@@ -10,6 +10,7 @@ export function defineConfig(config: Partial<CmsConfig>): CmsConfig {
       hasAppPreview: false,
       helpUrl: 'https://journeys.helpscoutdocs.com/',
       logo: 'https://res.cloudinary.com/journeys/image/upload/v1756295658/logo_g8k7tf.png',
+      mailFromAddress: 'ops@scoutredeem.co',
       ...config.meta,
     },
 

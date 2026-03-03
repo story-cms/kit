@@ -502,6 +502,8 @@ export interface CmsMeta {
   logo: string;
   helpUrl?: string;
   hasAppPreview: boolean;
+  /** Contact email for enquiries (e.g. from MAIL_FROM_ADDRESS) */
+  mailFromAddress?: string;
 }
 
 export type CmsConfig = {

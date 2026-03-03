@@ -1,12 +1,16 @@
 <template>
   <Story title="Request Feedback Modal" group="settings">
     <Variant title="Success">
-      <button class="rounded bg-blue-500 px-4 py-2 text-white" @click="showSuccess = true">
+      <button
+        class="rounded bg-blue-500 px-4 py-2 text-white"
+        @click="showSuccess = true"
+      >
         Show success
       </button>
       <RequestFeedbackModal
         :open="showSuccess"
         variant="success"
+        contact-email="ops@example.com"
         @close="showSuccess = false"
       />
     </Variant>
@@ -17,6 +21,7 @@
       <RequestFeedbackModal
         :open="showError"
         variant="error"
+        contact-email="ops@example.com"
         @close="showError = false"
       />
     </Variant>
