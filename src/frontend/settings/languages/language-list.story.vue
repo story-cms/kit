@@ -1,21 +1,20 @@
 <template>
-    <Story title="Language List" group="settings" :layout="{ type: 'grid', width: 350 }">
+    <Story title="Language List" group="settings" >
             <Variant title="List" :setup-app="miniSidebar">
-                <LanguageList />
+                <LanguageList :items="items" />
             </Variant>
-            <Variant title="Empty" :setup-app="miniSidebar">
-                <LanguageList />
-            </Variant>
-            <Variant title="Loading" :setup-app="miniSidebar">
-                <LanguageList />
-            </Variant>
-            <Variant title="Error" :setup-app="miniSidebar">
-                <LanguageList />
-            </Variant>
+
     </Story>
 </template>
 
 <script setup lang="ts">
 import { miniSidebar } from '../../test/mocks';
-import LanguageList from './language-list.vue';
+import LanguageList, { type LanguageListItemProps } from './language-list.vue';
+import { languages } from './languages';
+
+const items: LanguageListItemProps[] = languages.map((language, index) => ({
+  language,
+  isSelected: index % 3 === 1,
+  isAdded: index % 3 === 2,
+}));
 </script>

@@ -27,6 +27,18 @@
 
         }" :is-selected="true" :is-added="false" />
     </Variant>
+    <Variant title="Long Language">
+      <LanguageListItem
+        :language="{
+          language: 'Swiss German Alemannic Alsatian - Alemannisch',
+          locale: 'gsw',
+          languageDirection: 'ltr',
+          bibleVersionId: 'de4e12af7f28f599-01',
+
+        }"
+        
+        :is-selected="true" :is-added="false" />
+    </Variant>
     <Variant title="Added">
       <LanguageListItem
         :language="{
