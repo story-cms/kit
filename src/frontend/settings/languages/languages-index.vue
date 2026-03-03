@@ -90,13 +90,7 @@ const handleRequestAppUpdateConfirm = async (reason: string) => {
 };
 
 const submitAppUpdateRequest = async (_reason: string): Promise<void> => {
-  // Simulate API call - replace with actual implementation
-  await new Promise<void>((resolve) => {
-    setTimeout(() => {
-      // Simulate success; use reject() to test error modal
-      resolve(undefined);
-    }, 300);
-  });
+  console.log('submitAppUpdateRequest', _reason);
 };
 
 const handleRemove = (_item: LanguageTableItem) => {
