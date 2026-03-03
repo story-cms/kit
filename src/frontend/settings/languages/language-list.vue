@@ -5,7 +5,8 @@
         <li v-for="letter in letters" :key="letter">
           <button
             type="button"
-            class="text-sm leading-5 tracking-[133%] text-gray-500"
+            class="flex size-8 shrink-0 items-center justify-center rounded-full p-0 text-sm text-gray-500"
+            :class="{ 'bg-blue-100': letterFilter === letter }"
             @click="letterFilter = letter"
           >
             {{ letter }}
