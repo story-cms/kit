@@ -105,10 +105,11 @@ const addedLanguageItems = computed(() =>
   })),
 );
 
-const languageListItems = computed(() => [
-  ...addedLanguageItems.value,
-  ...availableLanguageItems.value,
-]);
+const languageListItems = computed(() =>
+  [...addedLanguageItems.value, ...availableLanguageItems.value].sort((a, b) =>
+    a.language.language.localeCompare(b.language.language),
+  ),
+);
 
 const removeSelectedLanguage = (locale: string) => {
   const next = new Set(selectedLocales.value);
