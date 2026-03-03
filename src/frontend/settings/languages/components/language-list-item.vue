@@ -1,7 +1,11 @@
 <template>
   <div
     class="flex w-[208px] justify-between rounded-md px-2 py-5"
-    :class="{ 'bg-white hover:bg-gray-100': !isSelected, 'bg-[#EFF6FF]': isSelected }"
+    :class="{
+      'bg-gray-100': isAdded,
+      'bg-[#EFF6FF]': isSelected && !isAdded,
+      'bg-white hover:bg-gray-100': !isSelected && !isAdded,
+    }"
   >
     <LanguageStrip :spec="language" />
     <div class="group grid size-4 grid-cols-1">
