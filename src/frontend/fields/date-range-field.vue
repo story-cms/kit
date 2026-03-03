@@ -43,7 +43,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 
 import type { FieldSpec } from '../../types';
 import { useModelStore, useSharedStore } from '../store/index';
-import { commonProps } from '../shared/helpers';
+import { commonProps, normalizeDateForStorage, parseIsoDateForDisplay } from '../shared/helpers';
 
 type WidgetValue = [Date | null, Date | null];
 
@@ -74,12 +74,10 @@ const getValueFromStore = (): WidgetValue => {
   const startStr = parts[0]?.trim();
   const endStr = parts[1]?.trim();
 
-  const start = startStr ? new Date(startStr) : null;
-  const end = endStr ? new Date(endStr) : null;
-
-  // Validate dates - if invalid, return null
-  const startDate = start && !isNaN(start.getTime()) ? start : null;
-  const endDate = end && !isNaN(end.getTime()) ? end : null;
+  // Parse using calendar date to avoid timezone display issues
+  // (T23:59:59.999Z shows as next day in UTC+; T00:00:00.000Z as previous day in UTC-)
+  const startDate = startStr ? parseIsoDateForDisplay(startStr) : null;
+  const endDate = endStr ? parseIsoDateForDisplay(endStr) : null;
 
   return [startDate, endDate];
 };
@@ -100,7 +98,11 @@ const onUpdate = (date: WidgetValue) => {
     return;
   }
 
-  const fresh = `${date[0].toISOString()}|${date[1].toISOString()}`;
+  // Date range is always date-only (no time picker) - start at T00:00:00.000Z
+  const start = normalizeDateForStorage(date[0], false);
+  // End date runs until the very end of the day at T23:59:59.999Z
+  const normalizedEnd = normalizeDateForStorage(date[1], false, true);
+  const fresh = `${start.toISOString()}|${normalizedEnd.toISOString()}`;
   model.setField(fieldPath.value, fresh);
 };
 

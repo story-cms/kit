@@ -185,3 +185,50 @@ export const getCampaignStatus = (
   if (currentTime > windowEnd) return 'Completed';
   return 'Live';
 };
+
+/**
+ * Normalizes a date for storage when the date field is used without a time picker.
+ *
+ * When endOfDay is false: stores as T00:00:00.000Z on the selected date.
+ * - User selects today → visible instantly from midnight UTC
+ * - User selects any other day → shown from T00:00:00.000Z on that date
+ *
+ * When endOfDay is true (date-range end dates): stores as T23:59:59.999Z so the
+ * range includes the full last day; campaign stays Live through end of that day.
+ *
+ * @param date - The date selected by the user
+ * @param hasTimePicker - Whether the field has time picker enabled
+ * @param endOfDay - When true, store as T23:59:59.999Z for date-range end dates
+ * @returns The date to store (Date object that serializes to ISO string)
+ */
+export function normalizeDateForStorage(
+  date: Date,
+  hasTimePicker: boolean,
+  endOfDay = false,
+): Date {
+  if (hasTimePicker) {
+    return date;
+  }
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const day = date.getDate();
+  if (endOfDay) {
+    return new Date(Date.UTC(year, month, day, 23, 59, 59, 999));
+  }
+  return new Date(Date.UTC(year, month, day, 0, 0, 0, 0));
+}
+
+/**
+ * Parses an ISO date string (e.g. from date-range storage) to a local Date for picker display.
+ * Extracts the calendar date (Y-M-D) and creates noon local - avoids timezone shift
+ * where T00:00:00.000Z or T23:59:59.999Z would display as the wrong day.
+ */
+export function parseIsoDateForDisplay(iso: string): Date | null {
+  const match = iso.trim().match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!match) return null;
+  const year = parseInt(match[1], 10);
+  const month = parseInt(match[2], 10) - 1;
+  const day = parseInt(match[3], 10);
+  const d = new Date(year, month, day, 12, 0, 0, 0);
+  return isNaN(d.getTime()) ? null : d;
+}

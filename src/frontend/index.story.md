@@ -214,8 +214,10 @@ DateField with time picker
 
 ## dateRange
 
-A date range picker that renders a [DateRangeField](#). This field has no special keys.
-The two dates are stored in the model with the current time as UTC time.
+A date-only range picker that renders a [DateRangeField](#). This field has no special
+keys and no time picker. The two dates are stored as pipe-separated ISO strings: the
+start at T00:00:00.000Z (midnight UTC) and the end at T23:59:59.999Z (end of day UTC) so
+the range includes the full last day.
 
 example:
 

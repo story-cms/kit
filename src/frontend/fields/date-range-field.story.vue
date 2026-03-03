@@ -10,6 +10,11 @@
       <ModelControl :model="objectModel" />
     </Variant>
 
+      <Variant title="With defined end of day" :setup-app="loadData">
+        <DateRangeField :field="modelSpec" />
+        <ModelControl :model="objectModelWithDefinedEndOfDay" />
+      </Variant>
+
     <Variant title="With error" :setup-app="loadData">
       <DateRangeField :field="modelSpec" />
       <template #controls>
@@ -37,6 +42,11 @@ const objectModel = {
   description: 'March Giving is a campaign to raise money for the charity.',
   type: 'giving',
   window: '2027-01-08T07:30:00.000Z|2027-01-15T07:30:00.000Z',
+};
+
+const objectModelWithDefinedEndOfDay = {
+  ...objectModel,
+  window: '2027-01-08T07:30:00.000Z|2027-01-15T23:59:59.999Z',
 };
 
 const readonlyModel = {
