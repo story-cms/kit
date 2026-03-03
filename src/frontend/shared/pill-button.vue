@@ -15,7 +15,7 @@ import { computed } from 'vue';
 const props = withDefaults(
   defineProps<{
     label: string;
-    variant?: 'green' | 'blue' | 'gray';
+    variant?: 'green' | 'blue' | 'gray' | 'red';
     disabled?: boolean;
   }>(),
   { variant: 'blue', disabled: false },
@@ -30,6 +30,7 @@ const variantClasses: Record<string, string> = {
     'bg-green-500 hover:bg-green-400 disabled:bg-gray-400 disabled:hover:bg-gray-400',
   blue: 'bg-blue-500 hover:bg-blue-400 disabled:bg-gray-400 disabled:hover:bg-gray-400',
   gray: 'bg-gray-200 hover:bg-gray-400 disabled:bg-gray-400 disabled:hover:bg-gray-400',
+  red: 'bg-red-500 hover:bg-red-400 disabled:bg-gray-400 disabled:hover:bg-gray-400',
 };
 
 const buttonClasses = computed(

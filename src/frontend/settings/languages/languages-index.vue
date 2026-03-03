@@ -30,7 +30,11 @@
     </template>
     <SourceLang :spec="sourceLanguage" />
     <div class="mt-14">
-      <LanguagesTable :items="items" />
+      <LanguagesTable
+        :items="items"
+        @remove="handleRemove"
+        @request-deletion="handleRequestDeletion"
+      />
     </div>
   </AppLayout>
 </template>
@@ -44,7 +48,7 @@ import Icon from '../../shared/icon.vue';
 import PillButton from '../../shared/pill-button.vue';
 import SourceLang from './components/source-language.vue';
 import LanguagesTable from './components/language-table.vue';
-import type { LanguagesProps, SharedPageProps } from '../../../types';
+import type { LanguageTableItem, LanguagesProps, SharedPageProps } from '../../../types';
 import { useSharedStore } from '../../store';
 
 const props = defineProps<LanguagesProps & SharedPageProps>();
@@ -54,7 +58,15 @@ shared.setFromProps(props);
 shared.setCurrentStoryName('');
 
 const requestAppUpdate = () => {
-  console.log('addLanguage');
+  console.log('requestAppUpdate');
+};
+
+const handleRemove = (_item: LanguageTableItem) => {
+  console.log('remove language', _item.locale);
+};
+
+const handleRequestDeletion = (_item: LanguageTableItem) => {
+  console.log('request language deletion', _item.locale);
 };
 
 const items = computed(() => props.languageItems ?? []);

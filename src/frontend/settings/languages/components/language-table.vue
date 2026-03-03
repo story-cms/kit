@@ -62,7 +62,7 @@
           <td
             class="whitespace-nowrap px-3 py-4 text-sm font-normal leading-5 text-gray-500"
           >
-            {{ truncate(item.bibleLabel, 30) }} 
+            {{ truncate(item.bibleLabel, 30) }}
           </td>
           <td class="py-4 pl-3 pr-4 text-right sm:pr-6">
             <button
@@ -89,14 +89,47 @@
               </button>
               <button
                 class="w-full px-6 py-2 pb-3 text-left text-sm font-normal leading-5 text-gray-800 hover:bg-gray-100"
+                @click="handleRemoveOrRequestDeletion(item)"
               >
-                Request language deletion
+                {{ hasContent(item) ? 'Request language deletion' : 'Remove language' }}
               </button>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
+
+    <LanguageModal
+      :open="removeModalLocale !== null"
+      title="Remove language"
+      message="Are you sure you want to remove this language? All your unpublished translation work will be lost."
+      @close="removeModalLocale = null"
+    >
+      <template #actions>
+        <PillButton label="Cancel" variant="gray" @click="removeModalLocale = null" />
+        <PillButton label="Remove" variant="red" @click="confirmRemove" />
+      </template>
+    </LanguageModal>
+
+    <LanguageModal
+      :open="requestDeletionModalLocale !== null"
+      title="Remove language"
+      message="Are you sure you want to request to remove this language? All your progress will be lost."
+      @close="requestDeletionModalLocale = null"
+    >
+      <template #actions>
+        <PillButton
+          label="Cancel"
+          variant="gray"
+          @click="requestDeletionModalLocale = null"
+        />
+        <PillButton
+          label="Request removal"
+          variant="red"
+          @click="confirmRequestDeletion"
+        />
+      </template>
+    </LanguageModal>
 
     <Pagination
       :current-page="currentPage"
@@ -111,6 +144,8 @@
 import { ref, computed } from 'vue';
 import Icon from '../../../shared/icon.vue';
 import Pagination from '../../../shared/pagination.vue';
+import PillButton from '../../../shared/pill-button.vue';
+import LanguageModal from './language-modal.vue';
 import type { LanguageTableItem } from '../../../../types';
 import MemberRow from './member-row.vue';
 import RingBlock from '../../../dashboard/ring-block.vue';
@@ -124,6 +159,11 @@ const props = withDefaults(
   { itemsPerPage: 10 },
 );
 
+const emit = defineEmits<{
+  remove: [item: LanguageTableItem];
+  requestDeletion: [item: LanguageTableItem];
+}>();
+
 const currentPage = ref(1);
 const paginatedItems = computed(() => {
   const startIndex = (currentPage.value - 1) * props.itemsPerPage;
@@ -136,13 +176,41 @@ const handlePageChange = (page: number) => {
 };
 
 const openActionsLocale = ref<string | null>(null);
+const removeModalLocale = ref<string | null>(null);
+const requestDeletionModalLocale = ref<string | null>(null);
 
 const toggleActions = (locale: string) => {
   openActionsLocale.value = openActionsLocale.value === locale ? null : locale;
+};
+
+const handleRemoveOrRequestDeletion = (item: LanguageTableItem) => {
+  openActionsLocale.value = null;
+  if (hasContent(item)) {
+    requestDeletionModalLocale.value = item.locale;
+  } else {
+    removeModalLocale.value = item.locale;
+  }
+};
+
+const confirmRemove = () => {
+  const item = props.items.find((i) => i.locale === removeModalLocale.value);
+  if (item) emit('remove', item);
+  removeModalLocale.value = null;
+};
+
+const confirmRequestDeletion = () => {
+  const item = props.items.find((i) => i.locale === requestDeletionModalLocale.value);
+  if (item) emit('requestDeletion', item);
+  requestDeletionModalLocale.value = null;
 };
 
 const truncate = (s: string | null | undefined, max: number) => {
   const text = s ?? '—';
   return text.length > max ? `${text.slice(0, max)}…` : text;
 };
+
+const hasContent = (item: LanguageTableItem) =>
+  item.translationProgress?.every((progress) => progress.done > 0) ?? false;
+
+
 </script>

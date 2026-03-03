@@ -1,26 +1,36 @@
 <template>
-  <Story title="Lang Table" group="settings">
+  <Story title="Language Table" group="settings">
     <Variant title="Default">
-      <LangTable :items="languageTableItems" @actions="onActions" />
+      <LangTable
+        :items="languageTableItems"
+        @remove="onRemove"
+        @request-deletion="onRequestDeletion"
+      />
     </Variant>
     <Variant title="Empty">
       <LangTable :items="[]" />
     </Variant>
     <Variant title="With pagination">
-      <LangTable :items="manyLanguageTableItems" :items-per-page="5" @actions="onActions" />
+      <LangTable
+        :items="manyLanguageTableItems"
+        :items-per-page="5"
+        @remove="onRemove"
+        @request-deletion="onRequestDeletion"
+      />
     </Variant>
   </Story>
 </template>
 
 <script setup lang="ts">
 import LangTable from './language-table.vue';
-import {
-  languageTableItems,
-  manyLanguageTableItems,
-} from '../../../test/mocks';
+import { languageTableItems, manyLanguageTableItems } from '../../../test/mocks';
 import type { LanguageTableItem } from '../../../../types';
 
-const onActions = (item: LanguageTableItem) => {
-  alert(`Actions for ${item.language} (${item.locale})`);
+const onRemove = (item: LanguageTableItem) => {
+  alert(`Remove: ${item.language} (${item.locale})`);
+};
+
+const onRequestDeletion = (item: LanguageTableItem) => {
+  alert(`Request deletion: ${item.language} (${item.locale})`);
 };
 </script>
