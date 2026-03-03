@@ -3,7 +3,11 @@
     <template #header>
       <ContentHeader title="Settings">
         <template #actions>
-          <PillButton label="Add" variant="blue" @click="addLanguage" />
+          <PillButton
+            label="Request App Update"
+            variant="green"
+            @click="requestAppUpdate"
+          />
         </template>
         <template #extra-actions>
           <div class="flex items-center justify-between pb-4">
@@ -16,7 +20,7 @@
             </div>
             <button
               class="rounded-full bg-blue-500 p-1 shadow-md hover:bg-blue-700"
-              @click="addLanguage"
+              @click="router.visit('/settings/languages/edit')"
             >
               <Icon name="plus" class="text-white" />
             </button>
@@ -33,6 +37,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { router } from '@inertiajs/vue3';
 import AppLayout from '../../shared/app-layout.vue';
 import ContentHeader from '../../shared/content-header.vue';
 import Icon from '../../shared/icon.vue';
@@ -48,7 +53,7 @@ const shared = useSharedStore();
 shared.setFromProps(props);
 shared.setCurrentStoryName('');
 
-const addLanguage = () => {
+const requestAppUpdate = () => {
   console.log('addLanguage');
 };
 

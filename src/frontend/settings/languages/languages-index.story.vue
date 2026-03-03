@@ -1,5 +1,5 @@
 <template>
-  <Story title="Languages Page" group="settings">
+  <Story title="Languages Index" group="settings">
     <Variant title="Index" :setup-app="miniSidebar">
       <LanguagesIndex
         :meta="sharedProps.meta"
