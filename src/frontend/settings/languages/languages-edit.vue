@@ -17,23 +17,56 @@
           </button>
         </template>
         <template #extra-actions>
-          <div class="flex items-center justify-between pb-4">
+          <div
+            v-if="selectedLanguages.length > 0"
+            class="flex items-center justify-between pb-4"
+          >
             <div>
               <h3 class="text-sm font-medium leading-5 text-gray-800">Selected</h3>
+
+              <ul class="mt-2 flex flex-wrap gap-4">
+                <li
+                  v-for="language in selectedLanguages"
+                  :key="language.locale"
+                  class="flex items-center justify-between gap-2 rounded-full bg-blue-100 px-[10px] py-1 text-sm font-medium leading-5"
+                >
+                  <span class="text-sm font-normal leading-5 text-blue-800">
+                    {{ language.language }}</span
+                  >
+                  <button @click="removeSelectedLanguage(language.locale)">
+                    <svg
+                      width="8"
+                      height="8"
+                      viewBox="0 0 8 8"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M6.75 0.75L0.75 6.75M0.75 0.75L6.75 6.75L0.75 0.75Z"
+                        stroke="#9CA3AF"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </button>
+                </li>
+              </ul>
             </div>
           </div>
         </template>
       </ContentHeader>
     </template>
-    <LanguageList :items="allItems" />
+    <LanguageList :items="languageListItems" @update="handleSelectionUpdate" />
   </AppLayout>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 import AppLayout from '../../shared/app-layout.vue';
 import ContentHeader from '../../shared/content-header.vue';
 import LanguageList from './language-list.vue';
+
 import type { LanguageSpecification } from '../../../types';
 import { languages as allLanguages } from './languages';
 
@@ -41,27 +74,47 @@ const props = defineProps<{
   addedLanguages: LanguageSpecification[];
 }>();
 
-const items = computed(() => {
-  return allLanguages
+const selectedLocales = ref<Set<string>>(new Set());
+
+const availableLanguageItems = computed(() =>
+  allLanguages
     .filter((language: LanguageSpecification) => !props.addedLanguages.includes(language))
     .map((language: LanguageSpecification) => ({
       language,
-      isSelected: false,
+      isSelected: selectedLocales.value.has(language.locale),
       isAdded: false,
-    }));
-});
+    })),
+);
 
-const addedItems = computed(() => {
-  return props.addedLanguages.map((language: LanguageSpecification) => ({
+const selectedLanguages = computed(() =>
+  allLanguages.filter((language) => selectedLocales.value.has(language.locale)),
+);
+
+const handleSelectionUpdate = (locale: string, isSelected: boolean) => {
+  const next = new Set(selectedLocales.value);
+  if (isSelected) next.add(locale);
+  else next.delete(locale);
+  selectedLocales.value = next;
+};
+
+const addedLanguageItems = computed(() =>
+  props.addedLanguages.map((language: LanguageSpecification) => ({
     language,
     isSelected: false,
     isAdded: true,
-  }));
-});
+  })),
+);
 
-const allItems = computed(() => {
-  return [...addedItems.value, ...items.value];
-});
+const languageListItems = computed(() => [
+  ...addedLanguageItems.value,
+  ...availableLanguageItems.value,
+]);
+
+const removeSelectedLanguage = (locale: string) => {
+  const next = new Set(selectedLocales.value);
+  next.delete(locale);
+  selectedLocales.value = next;
+};
 
 const addLanguage = () => {
   console.log('addLanguage');

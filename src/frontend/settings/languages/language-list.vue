@@ -1,6 +1,6 @@
 <template>
   <div class="bg-white">
-    <div class="flex justify-between gap-x-4 pb-6 pl-2">
+    <div class="grid grid-cols-1 gap-4 pb-6 pl-2 md:grid-cols-[1fr_auto]">
       <ul class="flex flex-row flex-wrap items-center gap-[10px] py-[9px]">
         <li v-for="letter in letters" :key="letter">
           <button
@@ -12,19 +12,21 @@
           </button>
         </li>
       </ul>
-      <div class="grid grid-cols-1">
-        <input
-          id="search"
-          v-model="searchFilter"
-          type="text"
-          name="search"
-          class="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pl-10 pr-3 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:pl-9 sm:text-sm/6"
-          placeholder="Search"
-        />
-        <Icon
-          name="search"
-          class="pointer-events-none col-start-1 row-start-1 ml-4 size-4 self-center text-gray-400"
-        />
+      <div class="flex items-center justify-end">
+        <div class="grid w-full grid-cols-1">
+          <input
+            id="search"
+            v-model="searchFilter"
+            type="text"
+            name="search"
+            class="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pl-10 pr-3 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:pl-9 sm:text-sm/6"
+            placeholder="Search"
+          />
+          <Icon
+            name="search"
+            class="pointer-events-none col-start-1 row-start-1 ml-4 size-4 self-center text-gray-400"
+          />
+        </div>
       </div>
     </div>
 
@@ -38,6 +40,7 @@
         :is-selected="item.isSelected"
         :is-added="item.isAdded"
         class="w-full"
+        @update="(isSelected) => emit('update', item.language.locale, isSelected)"
       />
     </div>
     <div v-if="filteredItems.length === 0" class="mt-10 flex justify-center">
@@ -82,6 +85,10 @@ import Icon from '../../shared/icon.vue';
 
 const props = defineProps<{
   items: LanguageListItemProps[];
+}>();
+
+const emit = defineEmits<{
+  update: [locale: string, isSelected: boolean];
 }>();
 
 const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
