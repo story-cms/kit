@@ -68,11 +68,11 @@
           You’re going to the ends of the earth! We couldn’t find that language in our
           system...yet. If you’d like us to add it, please contact us.
         </p>
-        <button
-          class="my-8 rounded-[38px] border bg-blue-500 px-[15px] py-[9px] text-sm/5 font-medium text-white shadow hover:bg-blue-400 focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset]"
-        >
-          Request Language
-        </button>
+        <PillButton
+          label="Request Language"
+          variant="blue"
+          class="my-8"
+        />
       </div>
     </div>
   </div>
@@ -83,6 +83,7 @@ import { ref, computed, watch } from 'vue';
 import type { LanguageSpecification } from '../../../types';
 import LanguageListItem from './components/language-list-item.vue';
 import Icon from '../../shared/icon.vue';
+import PillButton from '../../shared/pill-button.vue';
 
 const props = defineProps<{
   items: LanguageListItemProps[];

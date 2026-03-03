@@ -9,13 +9,12 @@
           </p>
         </template>
         <template #actions>
-          <button
-            class="w-[128px] rounded-[38px] border bg-blue-500 px-[15px] py-[9px] text-sm/5 font-medium text-white shadow hover:bg-blue-400 focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset] disabled:cursor-not-allowed disabled:bg-gray-400 disabled:opacity-50 disabled:shadow-none"
+          <PillButton
+            label="Add"
+            variant="blue"
             :disabled="selectedLanguages.length === 0"
             @click="addLanguage"
-          >
-            Add
-          </button>
+          />
         </template>
         <template #extra-actions>
           <div
@@ -74,6 +73,7 @@
 import { ref, computed } from 'vue';
 import AppLayout from '../../shared/app-layout.vue';
 import ContentHeader from '../../shared/content-header.vue';
+import PillButton from '../../shared/pill-button.vue';
 import LanguageList from './language-list.vue';
 import LanguageAddModal from './components/language-add-modal.vue';
 import type { LanguageSpecification } from '../../../types';

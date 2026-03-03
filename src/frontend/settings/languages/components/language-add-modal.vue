@@ -54,18 +54,8 @@
         </div>
 
         <div class="mt-8 flex justify-center gap-4">
-          <button
-            class="w-[128px] rounded-[38px] border bg-gray-200 px-[15px] py-[9px] text-sm/5 font-medium text-white shadow hover:bg-gray-400 focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset] disabled:cursor-not-allowed disabled:bg-gray-400 disabled:opacity-50 disabled:shadow-none"
-            @click="emit('back')"
-          >
-            Back
-          </button>
-          <button
-            class="w-[128px] rounded-[38px] border bg-green-500 px-[15px] py-[9px] text-sm/5 font-medium text-white shadow hover:bg-green-400 focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset] disabled:cursor-not-allowed disabled:bg-gray-400 disabled:opacity-50 disabled:shadow-none"
-            @click="emit('add')"
-          >
-            Add
-          </button>
+          <PillButton label="Back" variant="gray" @click="emit('back')" />
+          <PillButton label="Add" variant="green" @click="emit('add')" />
         </div>
       </div>
     </div>
@@ -75,6 +65,7 @@
 <script setup lang="ts">
 import { watch, onUnmounted } from 'vue';
 import Icon from '../../../shared/icon.vue';
+import PillButton from '../../../shared/pill-button.vue';
 import type { LanguageSpecification } from '../../../../types';
 
 const props = defineProps<{

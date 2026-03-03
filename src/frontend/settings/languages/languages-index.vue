@@ -3,7 +3,7 @@
     <template #header>
       <ContentHeader title="Settings">
         <template #actions>
-          <Actions />
+          <PillButton label="Add" variant="blue" @click="addLanguage" />
         </template>
         <template #extra-actions>
           <div class="flex items-center justify-between pb-4">
@@ -35,8 +35,8 @@
 import { computed } from 'vue';
 import AppLayout from '../../shared/app-layout.vue';
 import ContentHeader from '../../shared/content-header.vue';
-import Actions from './components/actions.vue';
 import Icon from '../../shared/icon.vue';
+import PillButton from '../../shared/pill-button.vue';
 import SourceLang from './components/source-language.vue';
 import LanguagesTable from './components/language-table.vue';
 import type { LanguagesProps, SharedPageProps } from '../../../types';
