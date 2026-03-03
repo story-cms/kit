@@ -6,7 +6,7 @@
           <PillButton
             label="Request App Update"
             variant="green"
-            @click="requestAppUpdate"
+            @click="showRequestAppUpdateModal = true"
           />
         </template>
         <template #extra-actions>
@@ -36,11 +36,17 @@
         @request-deletion="handleRequestDeletion"
       />
     </div>
+
+    <RequestAppUpdateModal
+      :open="showRequestAppUpdateModal"
+      @close="showRequestAppUpdateModal = false"
+      @confirm="handleRequestAppUpdateConfirm"
+    />
   </AppLayout>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
 import AppLayout from '../../shared/app-layout.vue';
 import ContentHeader from '../../shared/content-header.vue';
@@ -48,6 +54,7 @@ import Icon from '../../shared/icon.vue';
 import PillButton from '../../shared/pill-button.vue';
 import SourceLang from './components/source-language.vue';
 import LanguagesTable from './components/language-table.vue';
+import RequestAppUpdateModal from './components/request-app-update-modal.vue';
 import type { LanguageTableItem, LanguagesProps, SharedPageProps } from '../../../types';
 import { useSharedStore } from '../../store';
 
@@ -57,8 +64,11 @@ const shared = useSharedStore();
 shared.setFromProps(props);
 shared.setCurrentStoryName('');
 
-const requestAppUpdate = () => {
-  console.log('requestAppUpdate');
+const showRequestAppUpdateModal = ref(false);
+
+const handleRequestAppUpdateConfirm = (reason: string) => {
+  console.log('requestAppUpdate', reason);
+  showRequestAppUpdateModal.value = false;
 };
 
 const handleRemove = (_item: LanguageTableItem) => {
