@@ -19,19 +19,49 @@
         <template #extra-actions>
           <div class="flex items-center justify-between pb-4">
             <div>
-              <h3 class=" text-sm leading-5 font-medium text-gray-800">Selected</h3>
+              <h3 class="text-sm font-medium leading-5 text-gray-800">Selected</h3>
             </div>
           </div>
         </template>
       </ContentHeader>
     </template>
+    <LanguageList :items="allItems" />
   </AppLayout>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import AppLayout from '../../shared/app-layout.vue';
 import ContentHeader from '../../shared/content-header.vue';
+import LanguageList from './language-list.vue';
+import type { LanguageSpecification } from '../../../types';
+import { languages as allLanguages } from './languages';
 
+const props = defineProps<{
+  addedLanguages: LanguageSpecification[];
+}>();
+
+const items = computed(() => {
+  return allLanguages
+    .filter((language: LanguageSpecification) => !props.addedLanguages.includes(language))
+    .map((language: LanguageSpecification) => ({
+      language,
+      isSelected: false,
+      isAdded: false,
+    }));
+});
+
+const addedItems = computed(() => {
+  return props.addedLanguages.map((language: LanguageSpecification) => ({
+    language,
+    isSelected: false,
+    isAdded: true,
+  }));
+});
+
+const allItems = computed(() => {
+  return [...addedItems.value, ...items.value];
+});
 
 const addLanguage = () => {
   console.log('addLanguage');
