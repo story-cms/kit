@@ -42,6 +42,12 @@
       @close="showRequestAppUpdateModal = false"
       @confirm="handleRequestAppUpdateConfirm"
     />
+
+    <RequestFeedbackModal
+      :open="showFeedbackModal"
+      :variant="feedbackModalVariant"
+      @close="showFeedbackModal = false"
+    />
   </AppLayout>
 </template>
 
@@ -55,6 +61,7 @@ import PillButton from '../../shared/pill-button.vue';
 import SourceLang from './components/source-language.vue';
 import LanguagesTable from './components/language-table.vue';
 import RequestAppUpdateModal from './components/request-app-update-modal.vue';
+import RequestFeedbackModal from './components/request-feedback-modal.vue';
 import type { LanguageTableItem, LanguagesProps, SharedPageProps } from '../../../types';
 import { useSharedStore } from '../../store';
 
@@ -65,10 +72,30 @@ shared.setFromProps(props);
 shared.setCurrentStoryName('');
 
 const showRequestAppUpdateModal = ref(false);
+const showFeedbackModal = ref(false);
+const feedbackModalVariant = ref<'success' | 'error'>('success');
 
-const handleRequestAppUpdateConfirm = (reason: string) => {
-  console.log('requestAppUpdate', reason);
+const handleRequestAppUpdateConfirm = async (reason: string) => {
   showRequestAppUpdateModal.value = false;
+  try {
+    // TODO: Replace with actual API call
+    await submitAppUpdateRequest(reason);
+    feedbackModalVariant.value = 'success';
+    showFeedbackModal.value = true;
+  } catch {
+    feedbackModalVariant.value = 'error';
+    showFeedbackModal.value = true;
+  }
+};
+
+const submitAppUpdateRequest = async (_reason: string): Promise<void> => {
+  // Simulate API call - replace with actual implementation
+  await new Promise<void>((resolve) => {
+    setTimeout(() => {
+      // Simulate success; use reject() to test error modal
+      resolve(undefined);
+    }, 300);
+  });
 };
 
 const handleRemove = (_item: LanguageTableItem) => {
