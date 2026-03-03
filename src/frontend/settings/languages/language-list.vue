@@ -7,7 +7,7 @@
             type="button"
             class="flex size-8 shrink-0 items-center justify-center rounded-full p-0 text-sm text-gray-500"
             :class="{ 'bg-blue-100': letterFilter === letter }"
-            @click="letterFilter = letter"
+            @click="handleLetterFilter(letter)"
           >
             {{ letter }}
           </button>
@@ -129,4 +129,8 @@ export interface LanguageListItemProps {
   isSelected: boolean;
   isAdded: boolean;
 }
+
+const handleLetterFilter = (letter: string) => {
+  letterFilter.value = letterFilter.value === letter ? '' : letter;
+};
 </script>
