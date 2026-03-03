@@ -59,6 +59,14 @@
       </ContentHeader>
     </template>
     <LanguageList :items="languageListItems" @update="handleSelectionUpdate" />
+
+    <LanguageAddModal
+      :open="showAddModal"
+      :languages="selectedLanguages"
+      @close="showAddModal = false"
+      @back="showAddModal = false"
+      @add="confirmAddLanguages"
+    />
   </AppLayout>
 </template>
 
@@ -67,12 +75,16 @@ import { ref, computed } from 'vue';
 import AppLayout from '../../shared/app-layout.vue';
 import ContentHeader from '../../shared/content-header.vue';
 import LanguageList from './language-list.vue';
-
+import LanguageAddModal from './components/language-add-modal.vue';
 import type { LanguageSpecification } from '../../../types';
 import { languages as allLanguages } from './languages';
 
 const props = defineProps<{
   addedLanguages: LanguageSpecification[];
+}>();
+
+const emit = defineEmits<{
+  add: [locales: string[]];
 }>();
 
 const selectedLocales = ref<Set<string>>(new Set());
@@ -118,7 +130,15 @@ const removeSelectedLanguage = (locale: string) => {
   selectedLocales.value = next;
 };
 
+const showAddModal = ref(false);
+
 const addLanguage = () => {
-  console.log('addLanguage');
+  showAddModal.value = true;
+};
+
+const confirmAddLanguages = () => {
+  showAddModal.value = false;
+  emit('add', [...selectedLocales.value]);
+  selectedLocales.value = new Set();
 };
 </script>

@@ -31,7 +31,12 @@
           <p class="text-center text-sm text-black">
             You're adding the following languages:
           </p>
-          <ul class="flex flex-col items-center gap-2">
+          <ul
+            class="flex flex-col items-center gap-2"
+            :class="{
+              'max-h-96 overflow-y-auto': languages.length > 10,
+            }"
+          >
             <li
               v-for="language in languages"
               :key="language.locale"
