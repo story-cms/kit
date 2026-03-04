@@ -14,6 +14,12 @@
           <span class="text-xs text-gray-500">{{ errorMessage }}</span>
         </div>
       </div>
+      <div
+        v-else-if="currentBibleTranslations.length === 0"
+        class="flex min-h-[160px] flex-col items-center justify-center gap-2 text-center"
+      >
+        <span class="text-sm text-gray-600">No Bible translations available for this language.</span>
+      </div>
       <Listbox v-else v-model="selectedBibleVersion" as="div" class="relative">
         <ListboxButton
           class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2.5 pl-3 pr-10 text-left text-sm text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
@@ -72,7 +78,7 @@
       <PillButton
         label="Confirm selection"
         variant="green"
-        :disabled="isLoading || hasError"
+        :disabled="isLoading || hasError || currentBibleTranslations.length === 0"
         @click="handleConfirm"
       />
     </template>
