@@ -119,15 +119,15 @@ const handleConfirm = () => {
   emit('close');
 };
 
-const getBibleVersions = async (): Promise<
-  Array<{
-    name: string;
-    id: string;
-    abbreviation: string;
-    description: string;
-    language: string;
-  }>
-> => {
+type APIBibleVersion = {
+  name: string;
+  id: string;
+  abbreviation: string;
+  description: string;
+  language: string;
+};
+
+const getBibleVersions = async (): Promise<Array<APIBibleVersion>> => {
   const apiKey = widgets.providers.scripture?.bibleApiKey;
   if (!apiKey) {
     return [];
