@@ -540,17 +540,13 @@ export type CmsConfig = {
   };
 };
 
-export interface BibleSpecification {
-  id: string;
-  bibleVersion?: string;
-  bibleVersionId?: string;
-  bibleLabel?: string;
-}
-
-export interface LanguageSpecification extends Omit<BibleSpecification, 'id'> {
+export interface LanguageSpecification {
   language: string;
   languageDirection: 'rtl' | 'ltr';
   locale: string;
+  bibleVersion?: string;
+  bibleVersionId?: string;
+  bibleLabel?: string;
 }
 
 export interface LanguageTableItem extends LanguageSpecification {

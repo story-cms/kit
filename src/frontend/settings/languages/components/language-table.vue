@@ -84,6 +84,7 @@
               </a>
               <button
                 class="w-full px-6 py-2 text-left text-sm font-normal leading-5 text-gray-800 hover:bg-gray-100"
+                @click="openBibleModal(item)"
               >
                 Change Bible translation
               </button>
@@ -131,6 +132,82 @@
       </template>
     </LanguageModal>
 
+    <LanguageModal
+      :open="bibleModalLocale !== null"
+      title="Change Bible translation"
+      @close="closeBibleModal"
+    >
+      <div class="space-y-4 pb-[130px]">
+        <Listbox v-model="selectedBibleVersion" as="div" class="relative">
+          <ListboxButton
+            class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2.5 pl-3 pr-10 text-left text-sm text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+          >
+            <span class="block truncate">
+              {{ selectedBibleVersion?.name ?? 'Select translation' }}
+            </span>
+            <span
+              class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+            >
+              <Icon
+                name="chevron-down"
+                class="h-5 w-5 text-gray-400"
+                aria-hidden="true"
+              />
+            </span>
+          </ListboxButton>
+
+          <transition
+            leave-active-class="transition duration-100 ease-in"
+            leave-from-class="opacity-100"
+            leave-to-class="opacity-0"
+          >
+            <ListboxOptions
+              class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+            >
+              <ListboxOption
+                v-for="version in BIBLE_VERSIONS"
+                :key="version.id"
+                v-slot="{ active, selected }"
+                :value="version"
+                as="template"
+              >
+                <li
+                  :class="[
+                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    'relative cursor-default select-none py-2 pl-3 pr-9',
+                  ]"
+                >
+                  <span
+                    :class="[
+                      selected ? 'font-semibold' : 'font-normal',
+                      'block truncate',
+                    ]"
+                  >
+                    {{ version.name }}
+                  </span>
+                  <span
+                    v-if="selected"
+                    class="absolute inset-y-0 right-0 flex items-center pr-4 text-blue-600"
+                  >
+                    <Icon name="check" class="h-5 w-5" aria-hidden="true" />
+                  </span>
+                </li>
+              </ListboxOption>
+            </ListboxOptions>
+          </transition>
+        </Listbox>
+      </div>
+
+      <template #actions>
+        <PillButton label="Cancel" variant="gray" @click="closeBibleModal" />
+        <PillButton
+          label="Confirm selection"
+          variant="green"
+          @click="confirmBibleChange"
+        />
+      </template>
+    </LanguageModal>
+
     <Pagination
       :current-page="currentPage"
       :total-items="items.length"
@@ -142,6 +219,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue';
 import Icon from '../../../shared/icon.vue';
 import Pagination from '../../../shared/pagination.vue';
 import PillButton from '../../../shared/pill-button.vue';
@@ -150,6 +228,14 @@ import type { LanguageTableItem } from '../../../../types';
 import MemberRow from './member-row.vue';
 import RingBlock from '../../../dashboard/ring-block.vue';
 import LangStrip from './language-strip.vue';
+
+const BIBLE_VERSIONS = [
+  { id: 'eng-ESV', name: 'English Standard Version' },
+  { id: 'eng-NIV', name: 'New International Version' },
+  { id: 'eng-NLT', name: 'New Living Translation' },
+  { id: 'eng-NASB', name: 'New American Standard Bible' },
+  { id: 'eng-KJV', name: 'King James Version' },
+] as const;
 
 const props = withDefaults(
   defineProps<{
@@ -162,6 +248,11 @@ const props = withDefaults(
 const emit = defineEmits<{
   remove: [item: LanguageTableItem];
   requestDeletion: [item: LanguageTableItem];
+  bibleChange: [
+    item: LanguageTableItem,
+    bibleVersionId: string,
+    bibleVersionName: string,
+  ];
 }>();
 
 const currentPage = ref(1);
@@ -178,6 +269,8 @@ const handlePageChange = (page: number) => {
 const openActionsLocale = ref<string | null>(null);
 const removeModalLocale = ref<string | null>(null);
 const requestDeletionModalLocale = ref<string | null>(null);
+const bibleModalLocale = ref<string | null>(null);
+const selectedBibleVersion = ref<{ id: string; name: string } | null>(null);
 
 const toggleActions = (locale: string) => {
   openActionsLocale.value = openActionsLocale.value === locale ? null : locale;
@@ -204,6 +297,32 @@ const confirmRequestDeletion = () => {
   requestDeletionModalLocale.value = null;
 };
 
+const openBibleModal = (item: LanguageTableItem) => {
+  openActionsLocale.value = null;
+  bibleModalLocale.value = item.locale;
+  const current = BIBLE_VERSIONS.find(
+    (v) => v.id === item.bibleVersionId || v.name === item.bibleLabel,
+  );
+  selectedBibleVersion.value = current ?? BIBLE_VERSIONS[0];
+};
+
+const closeBibleModal = () => {
+  bibleModalLocale.value = null;
+};
+
+const confirmBibleChange = () => {
+  const item = props.items.find((i) => i.locale === bibleModalLocale.value);
+  if (item && selectedBibleVersion.value) {
+    emit(
+      'bibleChange',
+      item,
+      selectedBibleVersion.value.id,
+      selectedBibleVersion.value.name,
+    );
+  }
+  closeBibleModal();
+};
+
 const truncate = (s: string | null | undefined, max: number) => {
   const text = s ?? '—';
   return text.length > max ? `${text.slice(0, max)}…` : text;
@@ -211,6 +330,4 @@ const truncate = (s: string | null | undefined, max: number) => {
 
 const hasContent = (item: LanguageTableItem) =>
   item.translationProgress?.every((progress) => progress.done > 0) ?? false;
-
-
 </script>

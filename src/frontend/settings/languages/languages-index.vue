@@ -53,8 +53,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { router } from '@inertiajs/vue3';
+import axios from 'axios';
 import AppLayout from '../../shared/app-layout.vue';
 import ContentHeader from '../../shared/content-header.vue';
 import Icon from '../../shared/icon.vue';
@@ -64,11 +65,12 @@ import LanguagesTable from './components/language-table.vue';
 import RequestAppUpdateModal from './components/request-app-update-modal.vue';
 import RequestFeedbackModal from './components/request-feedback-modal.vue';
 import type { LanguageTableItem, LanguagesProps, SharedPageProps } from '../../../types';
-import { useSharedStore } from '../../store';
+import { useSharedStore, useWidgetsStore } from '../../store';
 
 const props = defineProps<LanguagesProps & SharedPageProps>();
 
 const shared = useSharedStore();
+const widgets = useWidgetsStore();
 shared.setFromProps(props);
 shared.setCurrentStoryName('');
 
@@ -102,4 +104,52 @@ const handleRequestDeletion = (_item: LanguageTableItem) => {
 };
 
 const items = computed(() => props.languageItems ?? []);
+
+function getBibleVersions(): Promise<
+  Array<{
+    name: string; // "World English Bible"
+    id: string; // "de4e12af7f28f599-01"
+    abbreviation: string; // "engWEBUS"
+    description: string; // "Orthodox"
+    language: string; // "English"
+  }>
+> {
+  const apiKey = widgets.providers.scripture?.bibleApiKey;
+  if (!apiKey) {
+    return Promise.resolve([]);
+  }
+  return axios
+    .get('https://api.scripture.api.bible/v1/bibles', {
+      headers: { 'api-key': apiKey },
+    })
+    .then((res) => {
+      const { data } = res.data;
+      return (data ?? []).map((item: Record<string, unknown>) => ({
+        name: item.name,
+        id: item.id,
+        abbreviation: item.abbreviation,
+        description: item.description,
+        language: (item.language as { name?: string })?.name ?? '',
+      }));
+    })
+    .catch((err) => {
+      console.error('getBibleVersions failed:', err);
+      return [];
+    });
+}
+
+onMounted(async () => {
+  const versions = await getBibleVersions();
+
+  /*
+  {
+    name: 'King James Version',
+    id: 'de4e12af7f28f599-01',
+    abbreviation: 'KJV',
+    description: 'King James Version',
+    language: 'English',
+  }
+  */
+  console.log(versions);
+});
 </script>
