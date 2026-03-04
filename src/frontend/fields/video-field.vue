@@ -81,7 +81,7 @@ const onSuccess = (url: string) => {
   });
 };
 
-const isStacked = computed(() => props.isNested === true);
+const isStacked = computed(() => shared.isTranslation && shared.showSourceColumn);
 
 const onError = (error: Error) => {
   console.log('error', error);
