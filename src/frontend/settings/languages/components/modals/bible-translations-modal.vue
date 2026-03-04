@@ -18,7 +18,9 @@
         v-else-if="currentBibleTranslations.length === 0"
         class="flex min-h-[160px] flex-col items-center justify-center gap-2 text-center"
       >
-        <span class="text-sm text-gray-600">No Bible translations available for this language.</span>
+        <span class="text-sm text-gray-600"
+          >No Bible translations available for this language.</span
+        >
       </div>
       <Listbox v-else v-model="selectedBibleVersion" as="div" class="relative">
         <ListboxButton
@@ -93,6 +95,7 @@ import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headless
 import Icon from '../../../../shared/icon.vue';
 import LanguageModal from '../language-modal.vue';
 import PillButton from '../../../../shared/pill-button.vue';
+import { languageMatches } from '../../../../shared/helpers';
 import type { LanguageTableItem, LanguageSpecification } from '../../../../../types';
 
 const widgets = useWidgetsStore();
@@ -118,8 +121,8 @@ watch(
   () => [props.open, props.item] as const,
   ([isOpen, item]) => {
     if (isOpen && item) {
-      const filtered = shared.bibleTranslations.filter(
-        (v) => v.language === item.language,
+      const filtered = shared.bibleTranslations.filter((v) =>
+        languageMatches(item.language, v.language),
       );
       const current = filtered.find(
         (v) =>
@@ -191,7 +194,10 @@ const transformBibleVersions = (
 };
 
 const currentBibleTranslations = computed(() => {
-  return shared.bibleTranslations.filter((v) => v.language === props.item?.language);
+  const itemLanguage = props.item?.language ?? '';
+  return shared.bibleTranslations.filter((v) =>
+    languageMatches(itemLanguage, v.language),
+  );
 });
 
 onMounted(async () => {

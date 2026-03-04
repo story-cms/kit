@@ -675,10 +675,32 @@ export const languageTableItems: LanguageTableItem[] = [
     ],
   },
   {
-    language: 'Arabic',
+    language: 'Arabic - عربى',
     languageDirection: 'rtl',
     locale: 'ar',
     bibleLabel: 'Smith & Van Dyke',
+    translationProgress: [
+      { name: 'Interface', done: 25, draft: 0, total: 100 },
+      { name: 'Content', done: 50, draft: 0, total: 200 },
+    ],
+    teamMembers: [],
+  },
+  {
+    language: 'Bengali - বাংলা',
+    languageDirection: 'ltr',
+    locale: 'bn',
+    bibleLabel: 'Bangla Bible',
+    translationProgress: [
+      { name: 'Interface', done: 25, draft: 0, total: 100 },
+      { name: 'Content', done: 50, draft: 0, total: 200 },
+    ],
+    teamMembers: [],
+  },
+  {
+    language: 'Chinese - 中文',
+    languageDirection: 'ltr',
+    locale: 'zh',
+    bibleLabel: 'Chinese Union Version',
     translationProgress: [
       { name: 'Interface', done: 25, draft: 0, total: 100 },
       { name: 'Content', done: 50, draft: 0, total: 200 },
