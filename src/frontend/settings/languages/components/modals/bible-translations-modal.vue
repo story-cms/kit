@@ -1,25 +1,17 @@
 <template>
-  <LanguageModal
-    :open="open"
-    title="Change Bible translation"
-    @close="handleClose"
-  >
+  <LanguageModal :open="open" title="Bible translations available" @close="handleClose">
     <div class="space-y-4 pb-[130px]">
       <Listbox v-model="selectedBibleVersion" as="div" class="relative">
         <ListboxButton
           class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2.5 pl-3 pr-10 text-left text-sm text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
         >
           <span class="block truncate">
-            {{ selectedBibleVersion?.name ?? 'Select translation' }}
+            {{ selectedBibleVersion?.bibleLabel ?? 'Select translation' }}
           </span>
           <span
             class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
           >
-            <Icon
-              name="chevron-down"
-              class="h-5 w-5 text-gray-400"
-              aria-hidden="true"
-            />
+            <Icon name="chevron-down" class="h-5 w-5 text-gray-400" aria-hidden="true" />
           </span>
         </ListboxButton>
 
@@ -33,7 +25,7 @@
           >
             <ListboxOption
               v-for="version in BIBLE_VERSIONS"
-              :key="version.id"
+              :key="version.bibleVersionId"
               v-slot="{ active, selected }"
               :value="version"
               as="template"
@@ -45,12 +37,9 @@
                 ]"
               >
                 <span
-                  :class="[
-                    selected ? 'font-semibold' : 'font-normal',
-                    'block truncate',
-                  ]"
+                  :class="[selected ? 'font-semibold' : 'font-normal', 'block truncate']"
                 >
-                  {{ version.name }}
+                  {{ version.bibleLabel }}
                 </span>
                 <span
                   v-if="selected"
@@ -67,11 +56,7 @@
 
     <template #actions>
       <PillButton label="Cancel" variant="gray" @click="handleClose" />
-      <PillButton
-        label="Confirm selection"
-        variant="green"
-        @click="handleConfirm"
-      />
+      <PillButton label="Confirm selection" variant="green" @click="handleConfirm" />
     </template>
   </LanguageModal>
 </template>
@@ -82,14 +67,37 @@ import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headless
 import Icon from '../../../../shared/icon.vue';
 import LanguageModal from '../language-modal.vue';
 import PillButton from '../../../../shared/pill-button.vue';
-import type { LanguageTableItem } from '../../../../../types';
+import type { LanguageTableItem, LanguageSpecification } from '../../../../../types';
 
-const BIBLE_VERSIONS = [
-  { id: 'eng-ESV', name: 'English Standard Version' },
-  { id: 'eng-NIV', name: 'New International Version' },
-  { id: 'eng-NLT', name: 'New Living Translation' },
-  { id: 'eng-NASB', name: 'New American Standard Bible' },
-  { id: 'eng-KJV', name: 'King James Version' },
+const BIBLE_VERSIONS: Omit<
+  LanguageSpecification,
+  'language' | 'languageDirection' | 'locale'
+>[] = [
+  {
+    bibleVersion: 'English Standard Version',
+    bibleVersionId: 'de4e12af7f28f599-02',
+    bibleLabel: '(ESV) English Standard Version',
+  },
+  {
+    bibleVersion: 'New International Version',
+    bibleVersionId: 'de4e12af7f28f599-03',
+    bibleLabel: '(NIV) New International Version',
+  },
+  {
+    bibleVersion: 'New Living Translation',
+    bibleVersionId: 'de4e12af7f28f599-04',
+    bibleLabel: '(NLT) New Living Translation',
+  },
+  {
+    bibleVersion: 'New American Standard Bible',
+    bibleVersionId: 'de4e12af7f28f599-05',
+    bibleLabel: '(NASB) New American Standard Bible',
+  },
+  {
+    bibleVersion: 'King James Version',
+    bibleVersionId: 'de4e12af7f28f599-01',
+    bibleLabel: '(KJV) King James Version',
+  },
 ] as const;
 
 const props = defineProps<{
@@ -102,14 +110,16 @@ const emit = defineEmits<{
   confirm: [bibleVersionId: string, bibleVersionName: string];
 }>();
 
-const selectedBibleVersion = ref<{ id: string; name: string } | null>(null);
+type BibleVersion = (typeof BIBLE_VERSIONS)[number];
+const selectedBibleVersion = ref<BibleVersion | null>(null);
 
 watch(
   () => [props.open, props.item] as const,
   ([isOpen, item]) => {
     if (isOpen && item) {
       const current = BIBLE_VERSIONS.find(
-        (v) => v.id === item.bibleVersionId || v.name === item.bibleLabel,
+        (v) =>
+          v.bibleVersionId === item.bibleVersionId || v.bibleLabel === item.bibleLabel,
       );
       selectedBibleVersion.value = current ?? BIBLE_VERSIONS[0];
     }
@@ -123,7 +133,11 @@ const handleClose = () => {
 
 const handleConfirm = () => {
   if (selectedBibleVersion.value) {
-    emit('confirm', selectedBibleVersion.value.id, selectedBibleVersion.value.name);
+    emit(
+      'confirm',
+      selectedBibleVersion.value.bibleVersionId ?? '',
+      selectedBibleVersion.value.bibleLabel ?? '',
+    );
   }
   emit('close');
 };
