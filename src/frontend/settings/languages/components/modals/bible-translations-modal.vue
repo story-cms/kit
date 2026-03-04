@@ -156,13 +156,7 @@ onMounted(async () => {
 });
 
 const transformBibleVersions = (
-  versions: Array<{
-    name: string;
-    id: string;
-    abbreviation: string;
-    description: string;
-    language: string;
-  }>,
+  versions: Array<APIBibleVersion>,
 ): Omit<LanguageSpecification, 'language' | 'languageDirection' | 'locale'>[] => {
   return versions.map((version) => ({
     bibleVersion: version.name,
