@@ -1,4 +1,10 @@
 <template>
+  <div class="pb-6">
+    <h3 class="text-xl font-semibold leading-7 text-black">Active languages</h3>
+    <p class="text-sm font-normal leading-5 text-black">
+      You can manage your languages here.
+    </p>
+  </div>
   <div class="border-2 border-black/5 sm:rounded-lg">
     <table class="min-w-full divide-y divide-gray-300">
       <thead class="bg-gray-50 uppercase">
@@ -174,8 +180,8 @@ const removeModalLocale = ref<string | null>(null);
 const requestDeletionModalLocale = ref<string | null>(null);
 const bibleTranslationsModalLocale = ref<string | null>(null);
 
-const bibleTranslationsModalItem = computed(() =>
-  props.items.find((i) => i.locale === bibleTranslationsModalLocale.value) ?? null,
+const bibleTranslationsModalItem = computed(
+  () => props.items.find((i) => i.locale === bibleTranslationsModalLocale.value) ?? null,
 );
 
 const toggleActions = (locale: string) => {
@@ -212,7 +218,10 @@ const closeBibleTranslationsModal = () => {
   bibleTranslationsModalLocale.value = null;
 };
 
-const handleBibleTranslationConfirm = (bibleVersionId: string, bibleVersionName: string) => {
+const handleBibleTranslationConfirm = (
+  bibleVersionId: string,
+  bibleVersionName: string,
+) => {
   const item = bibleTranslationsModalItem.value;
   if (item) {
     emit('bibleTranslationChange', item, bibleVersionId, bibleVersionName);
