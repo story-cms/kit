@@ -84,7 +84,7 @@
               </a>
               <button
                 class="w-full px-6 py-2 text-left text-sm font-normal leading-5 text-gray-800 hover:bg-gray-100"
-                @click="openBibleModal(item)"
+                @click="openBibleTranslationsModal(item)"
               >
                 Change Bible translation
               </button>
@@ -133,9 +133,9 @@
     </LanguageModal>
 
     <LanguageModal
-      :open="bibleModalLocale !== null"
+      :open="bibleTranslationsModalLocale !== null"
       title="Change Bible translation"
-      @close="closeBibleModal"
+      @close="closeBibleTranslationsModal"
     >
       <div class="space-y-4 pb-[130px]">
         <Listbox v-model="selectedBibleVersion" as="div" class="relative">
@@ -199,11 +199,11 @@
       </div>
 
       <template #actions>
-        <PillButton label="Cancel" variant="gray" @click="closeBibleModal" />
+        <PillButton label="Cancel" variant="gray" @click="closeBibleTranslationsModal" />
         <PillButton
           label="Confirm selection"
           variant="green"
-          @click="confirmBibleChange"
+          @click="bibleTranslationChange"
         />
       </template>
     </LanguageModal>
@@ -248,7 +248,7 @@ const props = withDefaults(
 const emit = defineEmits<{
   remove: [item: LanguageTableItem];
   requestDeletion: [item: LanguageTableItem];
-  bibleChange: [
+  bibleTranslationChange: [
     item: LanguageTableItem,
     bibleVersionId: string,
     bibleVersionName: string,
@@ -269,7 +269,7 @@ const handlePageChange = (page: number) => {
 const openActionsLocale = ref<string | null>(null);
 const removeModalLocale = ref<string | null>(null);
 const requestDeletionModalLocale = ref<string | null>(null);
-const bibleModalLocale = ref<string | null>(null);
+const bibleTranslationsModalLocale = ref<string | null>(null);
 const selectedBibleVersion = ref<{ id: string; name: string } | null>(null);
 
 const toggleActions = (locale: string) => {
@@ -297,30 +297,30 @@ const confirmRequestDeletion = () => {
   requestDeletionModalLocale.value = null;
 };
 
-const openBibleModal = (item: LanguageTableItem) => {
+const openBibleTranslationsModal = (item: LanguageTableItem) => {
   openActionsLocale.value = null;
-  bibleModalLocale.value = item.locale;
+  bibleTranslationsModalLocale.value = item.locale;
   const current = BIBLE_VERSIONS.find(
     (v) => v.id === item.bibleVersionId || v.name === item.bibleLabel,
   );
   selectedBibleVersion.value = current ?? BIBLE_VERSIONS[0];
 };
 
-const closeBibleModal = () => {
-  bibleModalLocale.value = null;
+const closeBibleTranslationsModal = () => {
+  bibleTranslationsModalLocale.value = null;
 };
 
-const confirmBibleChange = () => {
-  const item = props.items.find((i) => i.locale === bibleModalLocale.value);
+const bibleTranslationChange = () => {
+  const item = props.items.find((i) => i.locale === bibleTranslationsModalLocale.value);
   if (item && selectedBibleVersion.value) {
     emit(
-      'bibleChange',
+      'bibleTranslationChange',
       item,
       selectedBibleVersion.value.id,
       selectedBibleVersion.value.name,
     );
   }
-  closeBibleModal();
+  closeBibleTranslationsModal();
 };
 
 const truncate = (s: string | null | undefined, max: number) => {
