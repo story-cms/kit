@@ -23,6 +23,7 @@ import ImageField from './fields/image-field.vue';
 import IndexCard from './stories/components/index-card.vue';
 import IndexFilter from './shared/index-filter.vue';
 import LabelButton from './shared/label-button.vue';
+import LanguageIndex from './settings/languages/languages-index.vue';
 import ListField from './fields/list-field.vue';
 import ListSwitcher from './shared/list-switcher.vue';
 import Login from './auth/login-index.vue';
@@ -91,6 +92,7 @@ export {
   IndexCard,
   IndexFilter,
   LabelButton,
+  LanguageIndex,
   ListField,
   ListSwitcher,
   Login,
