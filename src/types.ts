@@ -590,3 +590,7 @@ export interface LanguagesProps {
   sourceLanguage: LanguageSpecification;
   languageItems: LanguageTableItem[];
 }
+
+export interface LanguagesEditProps {
+  addedLanguages: LanguageSpecification[];
+}

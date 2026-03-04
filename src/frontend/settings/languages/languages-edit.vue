@@ -76,12 +76,21 @@ import ContentHeader from '../../shared/content-header.vue';
 import PillButton from '../../shared/pill-button.vue';
 import LanguageList from './language-list.vue';
 import LanguageAddModal from './components/language-add-modal.vue';
-import type { LanguageSpecification } from '../../../types';
+import type {
+  LanguageSpecification,
+  LanguagesEditProps,
+  SharedPageProps,
+} from '../../../types';
 import { languages as allLanguages } from './languages';
 
-const props = defineProps<{
-  addedLanguages: LanguageSpecification[];
-}>();
+import { useSharedStore } from '../../store';
+
+const props = defineProps<LanguagesEditProps & SharedPageProps>();
+
+const shared = useSharedStore();
+
+shared.setFromProps(props);
+shared.setCurrentStoryName('');
 
 const emit = defineEmits<{
   add: [locales: string[]];
