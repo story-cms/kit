@@ -20,7 +20,7 @@
             </div>
             <button
               class="rounded-full bg-blue-500 p-1 shadow-md hover:bg-blue-700"
-              @click="router.visit('/settings/languages/edit')"
+              @click="router.visit(`/${shared.locale}/settings/languages/edit`)"
             >
               <Icon name="plus" class="text-white" />
             </button>
