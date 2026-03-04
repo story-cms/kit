@@ -9,17 +9,48 @@
       </p>
     </div>
     <div class="flex flex-col items-center justify-center px-4">
-      <button>
+      <button
+        type="button"
+        class="cursor-pointer text-gray-400 hover:text-gray-600"
+        @click="showBibleTranslationsModal = true"
+      >
         <Icon name="dots-vertical" class="size-5" />
       </button>
     </div>
   </div>
+
+  <BibleTranslationsModal
+    :open="showBibleTranslationsModal"
+    :item="specAsItem"
+    @close="showBibleTranslationsModal = false"
+    @confirm="handleBibleTranslationConfirm"
+  />
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from 'vue';
 import Icon from '../../../shared/icon.vue';
 import LangStrip from './language-strip.vue';
-import type { LanguageSpecification } from '../../../../types';
+import BibleTranslationsModal from './modals/bible-translations-modal.vue';
+import type { LanguageSpecification, LanguageTableItem } from '../../../../types';
 
-defineProps<{ spec: LanguageSpecification }>();
+const props = defineProps<{ spec: LanguageSpecification }>();
+
+const emit = defineEmits<{
+  bibleTranslationChange: [bibleVersionId: string, bibleVersionName: string];
+}>();
+
+const showBibleTranslationsModal = ref(false);
+
+const specAsItem = computed<LanguageTableItem | null>(() =>
+  props.spec ? ({ ...props.spec } as LanguageTableItem) : null,
+);
+
+const handleBibleTranslationConfirm = (
+  bibleVersionId: string,
+  bibleVersionName: string,
+) => {
+  emit('bibleTranslationChange', bibleVersionId, bibleVersionName);
+  showBibleTranslationsModal.value = false;
+};
 </script>

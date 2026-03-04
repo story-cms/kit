@@ -35,11 +35,12 @@ export const expandShortcuts = (text: string) => {
 export const padZero = (value: number): string => (value > 9 ? `${value}` : `0${value}`);
 
 /**
- * Match stored language ("Arabic - عربى") with API language ("Arabic" or "Arabic, Sudanese Creole").
- * Extracts the base name before " - " and checks for exact match or API dialect (comma/space suffix).
+ * Match stored language to API language.
+ * Handles stored formats: "Bengali - বাংলা", "Arabic - عربى", "English | American".
+ * API returns: "Bengali", "Arabic, Sudanese Creole", "English".
  */
 export const languageMatches = (stored: string, api: string): boolean => {
-  const storedBase = stored.split(' - ')[0].trim();
+  const storedBase = stored.split(/\s*-\s*|\s*\|\s*/)[0].trim();
   return (
     api === storedBase ||
     api.startsWith(storedBase + ',') ||

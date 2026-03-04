@@ -28,7 +28,10 @@
         </template>
       </ContentHeader>
     </template>
-    <SourceLang :spec="sourceLanguage" />
+    <SourceLang
+      :spec="sourceLanguage"
+      @bible-translation-change="handleBibleTranslationChange"
+    />
     <div class="mt-14">
       <LanguagesTable
         :items="items"
@@ -103,4 +106,11 @@ const handleRequestDeletion = (_item: LanguageTableItem) => {
 };
 
 const items = computed(() => props.languageItems ?? []);
+
+const handleBibleTranslationChange = (
+  bibleVersionId: string,
+  bibleVersionName: string,
+) => {
+  console.log('bible translation change', bibleVersionId, bibleVersionName);
+};
 </script>

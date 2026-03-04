@@ -14,6 +14,11 @@ test.describe('languageMatches', () => {
     expect(languageMatches('English - English', 'English')).toBe(true);
   });
 
+  test('match stored format with pipe separator (e.g. source language)', () => {
+    expect(languageMatches('English | American', 'English')).toBe(true);
+    expect(languageMatches('English | American', 'English, American Standard')).toBe(true);
+  });
+
   test('match stored format to API dialect with comma', () => {
     expect(languageMatches('Arabic - عربى', 'Arabic, Sudanese Creole')).toBe(true);
   });
