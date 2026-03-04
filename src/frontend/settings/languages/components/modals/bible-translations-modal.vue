@@ -1,7 +1,10 @@
 <template>
   <LanguageModal :open="open" title="Bible translations available" @close="handleClose">
     <div class="space-y-4 pb-[130px]">
-      <Listbox v-model="selectedBibleVersion" as="div" class="relative">
+      <div v-if="isLoading" class="flex items-center justify-center py-12">
+        <span class="text-sm text-gray-500">Loading translations…</span>
+      </div>
+      <Listbox v-else v-model="selectedBibleVersion" as="div" class="relative">
         <ListboxButton
           class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2.5 pl-3 pr-10 text-left text-sm text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
         >
@@ -56,7 +59,12 @@
 
     <template #actions>
       <PillButton label="Cancel" variant="gray" @click="handleClose" />
-      <PillButton label="Confirm selection" variant="green" @click="handleConfirm" />
+      <PillButton
+        label="Confirm selection"
+        variant="green"
+        :disabled="isLoading"
+        @click="handleConfirm"
+      />
     </template>
   </LanguageModal>
 </template>
@@ -79,6 +87,7 @@ type BibleVersion = Omit<
   'language' | 'languageDirection' | 'locale'
 >;
 const selectedBibleVersion = ref<BibleVersion | null>(null);
+const isLoading = ref(false);
 
 const props = defineProps<{
   open: boolean;
@@ -151,8 +160,13 @@ const getBibleVersions = async (): Promise<Array<APIBibleVersion>> => {
 };
 
 onMounted(async () => {
-  const versions = await getBibleVersions();
-  shared.setBibleTranslations(transformBibleVersions(versions));
+  isLoading.value = true;
+  try {
+    const versions = await getBibleVersions();
+    shared.setBibleTranslations(transformBibleVersions(versions));
+  } finally {
+    isLoading.value = false;
+  }
 });
 
 const transformBibleVersions = (
