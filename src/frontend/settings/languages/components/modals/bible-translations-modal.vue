@@ -24,7 +24,7 @@
             class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
           >
             <ListboxOption
-              v-for="version in BIBLE_VERSIONS"
+              v-for="version in shared.bibleTranslations"
               :key="version.bibleVersionId"
               v-slot="{ active, selected }"
               :value="version"
@@ -62,43 +62,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
+import axios from 'axios';
+import { useWidgetsStore, useSharedStore } from '../../../../store';
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue';
 import Icon from '../../../../shared/icon.vue';
 import LanguageModal from '../language-modal.vue';
 import PillButton from '../../../../shared/pill-button.vue';
 import type { LanguageTableItem, LanguageSpecification } from '../../../../../types';
 
-const BIBLE_VERSIONS: Omit<
+const widgets = useWidgetsStore();
+const shared = useSharedStore();
+
+type BibleVersion = Omit<
   LanguageSpecification,
   'language' | 'languageDirection' | 'locale'
->[] = [
-  {
-    bibleVersion: 'English Standard Version',
-    bibleVersionId: 'de4e12af7f28f599-02',
-    bibleLabel: '(ESV) English Standard Version',
-  },
-  {
-    bibleVersion: 'New International Version',
-    bibleVersionId: 'de4e12af7f28f599-03',
-    bibleLabel: '(NIV) New International Version',
-  },
-  {
-    bibleVersion: 'New Living Translation',
-    bibleVersionId: 'de4e12af7f28f599-04',
-    bibleLabel: '(NLT) New Living Translation',
-  },
-  {
-    bibleVersion: 'New American Standard Bible',
-    bibleVersionId: 'de4e12af7f28f599-05',
-    bibleLabel: '(NASB) New American Standard Bible',
-  },
-  {
-    bibleVersion: 'King James Version',
-    bibleVersionId: 'de4e12af7f28f599-01',
-    bibleLabel: '(KJV) King James Version',
-  },
-] as const;
+>;
+const selectedBibleVersion = ref<BibleVersion | null>(null);
 
 const props = defineProps<{
   open: boolean;
@@ -110,18 +90,15 @@ const emit = defineEmits<{
   confirm: [bibleVersionId: string, bibleVersionName: string];
 }>();
 
-type BibleVersion = (typeof BIBLE_VERSIONS)[number];
-const selectedBibleVersion = ref<BibleVersion | null>(null);
-
 watch(
   () => [props.open, props.item] as const,
   ([isOpen, item]) => {
     if (isOpen && item) {
-      const current = BIBLE_VERSIONS.find(
+      const current = shared.bibleTranslations.find(
         (v) =>
           v.bibleVersionId === item.bibleVersionId || v.bibleLabel === item.bibleLabel,
       );
-      selectedBibleVersion.value = current ?? BIBLE_VERSIONS[0];
+      selectedBibleVersion.value = current ?? shared.bibleTranslations[0];
     }
   },
   { immediate: true },
@@ -140,5 +117,57 @@ const handleConfirm = () => {
     );
   }
   emit('close');
+};
+
+const getBibleVersions = async (): Promise<
+  Array<{
+    name: string;
+    id: string;
+    abbreviation: string;
+    description: string;
+    language: string;
+  }>
+> => {
+  const apiKey = widgets.providers.scripture?.bibleApiKey;
+  if (!apiKey) {
+    return [];
+  }
+  try {
+    const res = await axios.get('https://api.scripture.api.bible/v1/bibles', {
+      headers: { 'api-key': apiKey },
+    });
+    const { data } = res.data;
+    return (data ?? []).map((item: Record<string, unknown>) => ({
+      name: item.name,
+      id: item.id,
+      abbreviation: item.abbreviation,
+      description: item.description,
+      language: (item.language as { name?: string })?.name ?? '',
+    }));
+  } catch (err) {
+    console.error('getBibleVersions failed:', err);
+    return [];
+  }
+};
+
+onMounted(async () => {
+  const versions = await getBibleVersions();
+  shared.setBibleTranslations(transformBibleVersions(versions));
+});
+
+const transformBibleVersions = (
+  versions: Array<{
+    name: string;
+    id: string;
+    abbreviation: string;
+    description: string;
+    language: string;
+  }>,
+): Omit<LanguageSpecification, 'language' | 'languageDirection' | 'locale'>[] => {
+  return versions.map((version) => ({
+    bibleVersion: version.name,
+    bibleVersionId: version.id,
+    bibleLabel: `(${version.abbreviation}) ${version.name}`,
+  }));
 };
 </script>
