@@ -94,10 +94,7 @@ import type { LanguageTableItem, LanguageSpecification } from '../../../../../ty
 const widgets = useWidgetsStore();
 const shared = useSharedStore();
 
-type BibleVersion = Omit<
-  LanguageSpecification,
-  'language' | 'languageDirection' | 'locale'
->;
+type BibleVersion = Omit<LanguageSpecification, 'languageDirection' | 'locale'>;
 const selectedBibleVersion = ref<BibleVersion | null>(null);
 const isLoading = ref(false);
 const hasError = ref(false);
@@ -120,7 +117,8 @@ watch(
         (v) =>
           v.bibleVersionId === item.bibleVersionId || v.bibleLabel === item.bibleLabel,
       );
-      selectedBibleVersion.value = current ?? shared.bibleTranslations[0];
+      selectedBibleVersion.value =
+        current ?? shared.bibleTranslations[0] ?? null;
     }
   },
   { immediate: true },
@@ -189,6 +187,7 @@ const transformBibleVersions = (
   versions: Array<APIBibleVersion>,
 ): Array<BibleVersion> => {
   return versions.map((version) => ({
+    language: version.language,
     bibleVersion: version.name,
     bibleVersionId: version.id,
     bibleLabel: `(${version.abbreviation}) ${version.name}`,

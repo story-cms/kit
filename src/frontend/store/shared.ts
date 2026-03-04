@@ -179,10 +179,10 @@ export const useSharedStore = defineStore('shared', () => {
 
   // bible translations
   const bibleTranslations = ref<
-    Omit<LanguageSpecification, 'language' | 'languageDirection' | 'locale'>[]
+    Omit<LanguageSpecification, 'languageDirection' | 'locale'>[]
   >([]);
   const setBibleTranslations = (
-    value: Omit<LanguageSpecification, 'language' | 'languageDirection' | 'locale'>[],
+    value: Omit<LanguageSpecification, 'languageDirection' | 'locale'>[],
   ) => {
     bibleTranslations.value = value;
   };
