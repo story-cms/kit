@@ -5,7 +5,7 @@
         <li v-for="letter in letters" :key="letter">
           <button
             type="button"
-            class="flex size-8 shrink-0 items-center justify-center rounded-full p-0 text-sm text-gray-500"
+            class="flex size-7 shrink-0 items-center justify-center rounded-full p-0 text-sm text-gray-500"
             :class="{ 'bg-blue-100': letterFilter === letter }"
             @click="handleLetterFilter(letter)"
           >
@@ -68,11 +68,7 @@
           You’re going to the ends of the earth! We couldn’t find that language in our
           system...yet. If you’d like us to add it, please contact us.
         </p>
-        <PillButton
-          label="Request Language"
-          variant="blue"
-          class="my-8"
-        />
+        <PillButton label="Request Language" variant="blue" class="my-8" />
       </div>
     </div>
   </div>
