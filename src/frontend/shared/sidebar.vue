@@ -115,10 +115,15 @@
           </div>
           <div class="my-7 border-t border-gray-200"></div>
           <section class="grid grid-cols-1">
-            <a :class="classList('settings', true)" :href="`/${locale}/settings`">
+            <a
+              v-if="isAdmin"
+              :class="classList('settings', true)"
+              :href="`/${locale}/settings`"
+            >
               <Icon name="settings" />
               <span>Settings</span>
             </a>
+
             <a v-if="isAdmin" :class="classList('user', true)" :href="`/${locale}/user`">
               <Icon name="users" />
               <span>Team</span>
