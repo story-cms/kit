@@ -11,9 +11,7 @@
         </div>
         <div v-else class="flex flex-col items-center gap-2 text-center">
           <span class="text-sm text-red-600">Failed to load translations.</span>
-          <span class="text-xs text-gray-500"
-            >Please check your connection and try again.</span
-          >
+          <span class="text-xs text-gray-500">{{ errorMessage }}</span>
         </div>
       </div>
       <Listbox v-else v-model="selectedBibleVersion" as="div" class="relative">
@@ -83,7 +81,7 @@
 
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useWidgetsStore, useSharedStore } from '../../../../store';
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue';
 import Icon from '../../../../shared/icon.vue';
@@ -98,6 +96,7 @@ type BibleVersion = Omit<LanguageSpecification, 'languageDirection' | 'locale'>;
 const selectedBibleVersion = ref<BibleVersion | null>(null);
 const isLoading = ref(false);
 const hasError = ref(false);
+const errorMessage = ref('');
 
 const props = defineProps<{
   open: boolean;
@@ -117,8 +116,7 @@ watch(
         (v) =>
           v.bibleVersionId === item.bibleVersionId || v.bibleLabel === item.bibleLabel,
       );
-      selectedBibleVersion.value =
-        current ?? shared.bibleTranslations[0] ?? null;
+      selectedBibleVersion.value = current ?? shared.bibleTranslations[0] ?? null;
     }
   },
   { immediate: true },
@@ -165,7 +163,9 @@ const getBibleVersions = async (): Promise<Array<APIBibleVersion>> => {
       language: (item.language as { name?: string })?.name ?? '',
     }));
   } catch (err) {
-    console.error('getBibleVersions failed:', err);
+    errorMessage.value =
+      (err as AxiosError<{ message: string }>).response?.data?.message ??
+      'Failed to load translations. Please try again later.';
     throw err;
   }
 };
