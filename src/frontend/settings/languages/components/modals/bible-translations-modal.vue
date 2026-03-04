@@ -195,6 +195,9 @@ const currentBibleTranslations = computed(() => {
 });
 
 onMounted(async () => {
+  if (shared.bibleTranslations.length > 0) {
+    return;
+  }
   isLoading.value = true;
   hasError.value = false;
   try {
