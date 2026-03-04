@@ -37,7 +37,7 @@
             class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
           >
             <ListboxOption
-              v-for="version in shared.bibleTranslations"
+              v-for="version in currentBibleTranslations"
               :key="version.bibleVersionId"
               v-slot="{ active, selected }"
               :value="version"
@@ -80,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, computed } from 'vue';
 import axios, { AxiosError } from 'axios';
 import { useWidgetsStore, useSharedStore } from '../../../../store';
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue';
@@ -112,11 +112,14 @@ watch(
   () => [props.open, props.item] as const,
   ([isOpen, item]) => {
     if (isOpen && item) {
-      const current = shared.bibleTranslations.find(
+      const filtered = shared.bibleTranslations.filter(
+        (v) => v.language === item.language,
+      );
+      const current = filtered.find(
         (v) =>
           v.bibleVersionId === item.bibleVersionId || v.bibleLabel === item.bibleLabel,
       );
-      selectedBibleVersion.value = current ?? shared.bibleTranslations[0] ?? null;
+      selectedBibleVersion.value = current ?? filtered[0] ?? null;
     }
   },
   { immediate: true },
@@ -170,6 +173,21 @@ const getBibleVersions = async (): Promise<Array<APIBibleVersion>> => {
   }
 };
 
+const transformBibleVersions = (
+  versions: Array<APIBibleVersion>,
+): Array<BibleVersion> => {
+  return versions.map((version) => ({
+    language: version.language,
+    bibleVersion: version.name,
+    bibleVersionId: version.id,
+    bibleLabel: `(${version.abbreviation}) ${version.name}`,
+  }));
+};
+
+const currentBibleTranslations = computed(() => {
+  return shared.bibleTranslations.filter((v) => v.language === props.item?.language);
+});
+
 onMounted(async () => {
   isLoading.value = true;
   hasError.value = false;
@@ -182,15 +200,4 @@ onMounted(async () => {
     isLoading.value = false;
   }
 });
-
-const transformBibleVersions = (
-  versions: Array<APIBibleVersion>,
-): Array<BibleVersion> => {
-  return versions.map((version) => ({
-    language: version.language,
-    bibleVersion: version.name,
-    bibleVersionId: version.id,
-    bibleLabel: `(${version.abbreviation}) ${version.name}`,
-  }));
-};
 </script>
