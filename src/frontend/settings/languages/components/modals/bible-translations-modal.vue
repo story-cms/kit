@@ -1,8 +1,20 @@
 <template>
   <LanguageModal :open="open" title="Bible translations available" @close="handleClose">
     <div class="space-y-4 pb-[130px]">
-      <div v-if="isLoading" class="flex items-center justify-center py-12">
-        <span class="text-sm text-gray-500">Loading translations…</span>
+      <div
+        v-if="isLoading || hasError"
+        class="flex min-h-[160px] flex-col items-center justify-center gap-3"
+      >
+        <div v-if="isLoading" class="flex items-center gap-3">
+          <Icon name="spinner" class="size-5 text-blue-500" />
+          <span class="text-sm text-gray-600">Getting translations…</span>
+        </div>
+        <div v-else class="flex flex-col items-center gap-2 text-center">
+          <span class="text-sm text-red-600">Failed to load translations.</span>
+          <span class="text-xs text-gray-500"
+            >Please check your connection and try again.</span
+          >
+        </div>
       </div>
       <Listbox v-else v-model="selectedBibleVersion" as="div" class="relative">
         <ListboxButton
@@ -62,7 +74,7 @@
       <PillButton
         label="Confirm selection"
         variant="green"
-        :disabled="isLoading"
+        :disabled="isLoading || hasError"
         @click="handleConfirm"
       />
     </template>
@@ -88,6 +100,7 @@ type BibleVersion = Omit<
 >;
 const selectedBibleVersion = ref<BibleVersion | null>(null);
 const isLoading = ref(false);
+const hasError = ref(false);
 
 const props = defineProps<{
   open: boolean;
@@ -155,15 +168,18 @@ const getBibleVersions = async (): Promise<Array<APIBibleVersion>> => {
     }));
   } catch (err) {
     console.error('getBibleVersions failed:', err);
-    return [];
+    throw err;
   }
 };
 
 onMounted(async () => {
   isLoading.value = true;
+  hasError.value = false;
   try {
     const versions = await getBibleVersions();
     shared.setBibleTranslations(transformBibleVersions(versions));
+  } catch {
+    hasError.value = true;
   } finally {
     isLoading.value = false;
   }
