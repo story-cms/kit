@@ -61,17 +61,19 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { LanguageSpecification } from '../../../../types';
+import { computed } from 'vue';
+import type { LanguageListItemProps } from '../../../../types';
 import LanguageStrip from './language-strip.vue';
-const props = defineProps<{
-  language: LanguageSpecification;
-  isSelected: boolean;
-  isAdded: boolean;
-}>();
+const props = defineProps<LanguageListItemProps>();
+
 const emit = defineEmits<{
   update: [isSelected: boolean];
 }>();
+
+const isSelected = computed<boolean>(() => props.status === 'selected');
+const isAdded = computed<boolean>(() => props.status === 'added');
+
 const handleUpdate = () => {
-  emit('update', !props.isSelected);
+  emit('update', !isSelected.value);
 };
 </script>
