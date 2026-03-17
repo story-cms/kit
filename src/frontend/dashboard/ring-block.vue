@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col items-center text-gray-500">
     <template v-if="hasCompleteRings">
-      <div class="relative mx-auto size-24 rounded-full border-[3px] border-teal-500">
+      <div class="relative mx-auto size-20 rounded-full border-[3px] border-teal-500">
         <div class="absolute inset-0 flex items-center justify-center">
           <Icon name="check-large" class="h-auto w-6 text-teal-500" />
         </div>
