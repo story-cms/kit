@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex w-[208px] justify-between rounded-md px-2 py-5"
+    class="grid w-[208px] grid-cols-[1fr_auto] gap-x-1 rounded-md px-2 py-5"
     :class="{
       'cursor-not-allowed bg-gray-100': isAdded,
       'bg-[#EFF6FF]': isSelected && !isAdded,
