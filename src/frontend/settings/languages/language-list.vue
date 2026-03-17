@@ -38,8 +38,7 @@
         v-for="item in filteredItems"
         :key="item.language.locale"
         :language="item.language"
-        :is-selected="item.isSelected"
-        :is-added="item.isAdded"
+        :status="item.status"
         class="w-full"
         @update="(isSelected) => emit('update', item.language.locale, isSelected)"
       />
@@ -76,14 +75,12 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
-import type { LanguageSpecification } from '../../../types';
+import type { LanguageListItemProps } from '../../../types';
 import LanguageListItem from './components/language-list-item.vue';
 import Icon from '../../shared/icon.vue';
 import PillButton from '../../shared/pill-button.vue';
 
-const props = defineProps<{
-  items: LanguageListItemProps[];
-}>();
+const props = defineProps<LanguageListItemProps[]>();
 
 const emit = defineEmits<{
   update: [locale: string, isSelected: boolean];
@@ -103,7 +100,7 @@ watch(letterFilter, (value) => {
 });
 
 const filteredItems = computed(() => {
-  let items = props.items;
+  let items = props;
   if (letterFilter.value) {
     items = items.filter((item: LanguageListItemProps) => {
       return item.language.language
@@ -120,12 +117,6 @@ const filteredItems = computed(() => {
   }
   return items;
 });
-
-export interface LanguageListItemProps {
-  language: LanguageSpecification;
-  isSelected: boolean;
-  isAdded: boolean;
-}
 
 const handleLetterFilter = (letter: string) => {
   letterFilter.value = letterFilter.value === letter ? '' : letter;
