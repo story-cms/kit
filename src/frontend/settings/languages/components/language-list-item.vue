@@ -4,7 +4,7 @@
     :class="{
       'cursor-not-allowed bg-gray-100': isAdded,
       'bg-[#EFF6FF]': isSelected && !isAdded,
-      'bg-white hover:bg-gray-100': !isSelected && !isAdded,
+      'hover:bg-gray-100': !isSelected && !isAdded,
     }"
   >
     <LanguageStrip :spec="language" />
