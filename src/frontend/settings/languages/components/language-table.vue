@@ -126,6 +126,7 @@
     />
 
     <Pagination
+      v-if="items.length > itemsPerPage"
       :current-page="currentPage"
       :total-items="items.length"
       :items-per-page="itemsPerPage"
