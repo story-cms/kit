@@ -588,6 +588,7 @@ export interface Providers {
 export interface SettingsPageProps {
   sourceLanguage: LanguageSpecification;
   languageItems: LanguageTableItem[];
+  providers: Providers;
 }
 
 export interface LanguagesEditProps {

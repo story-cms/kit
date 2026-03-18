@@ -67,14 +67,16 @@ import LanguagesTable from './languages/components/language-table.vue';
 import RequestAppUpdateModal from './languages/components/request-app-update-modal.vue';
 import RequestFeedbackModal from './languages/components/request-feedback-modal.vue';
 import type { LanguageTableItem, SettingsPageProps, SharedPageProps } from '../../types';
-import { useSharedStore } from '../store';
+import { useSharedStore, useWidgetsStore } from '../store';
 
 const props = defineProps<SettingsPageProps & SharedPageProps>();
 
 const shared = useSharedStore();
+const widgets = useWidgetsStore();
 
 shared.setFromProps(props);
 shared.setCurrentStoryName('');
+widgets.setProviders(props.providers);
 
 const showRequestAppUpdateModal = ref(false);
 const showFeedbackModal = ref(false);
