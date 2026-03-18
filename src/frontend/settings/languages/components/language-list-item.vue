@@ -9,7 +9,7 @@
   >
     <LanguageStrip :spec="language" />
     <div class="group grid size-4 grid-cols-1">
-      <template v-if="isAvailable">
+      <template v-if="!isReadOnly">
         <input
           :id="language.locale"
           type="checkbox"
@@ -42,7 +42,7 @@
         </svg>
       </template>
 
-      <template v-if="isReadOnly">
+      <template v-else>
         <svg
           width="24"
           height="24"
