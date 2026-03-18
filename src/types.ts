@@ -585,7 +585,7 @@ export interface Providers {
 ///  settings
 /// ----------------------------------------------------
 
-export interface LanguagesProps {
+export interface SettingsPageProps {
   sourceLanguage: LanguageSpecification;
   languageItems: LanguageTableItem[];
 }

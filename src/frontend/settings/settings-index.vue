@@ -65,10 +65,10 @@ import PillButton from '../shared/pill-button.vue';
 import SourceLang from './languages/components/source-language.vue';
 import LanguagesTable from './languages/components/language-table.vue';
 import RequestAppUpdateModal from './languages/components/request-app-update-modal.vue';
-import type { LanguageTableItem, LanguagesProps, SharedPageProps } from '../../types';
+import type { LanguageTableItem, SettingsPageProps, SharedPageProps } from '../../types';
 import { useSharedStore } from '../store';
 
-const props = defineProps<LanguagesProps & SharedPageProps>();
+const props = defineProps<SettingsPageProps & SharedPageProps>();
 
 const shared = useSharedStore();
 
