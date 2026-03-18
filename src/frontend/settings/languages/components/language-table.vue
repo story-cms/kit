@@ -160,7 +160,7 @@ const emit = defineEmits<{
   requestDeletion: [item: LanguageTableItem];
   bibleTranslationChange: [
     item: LanguageTableItem,
-    bibleVersionId: string,
+    bibleVersion: string,
     bibleVersionName: string,
   ];
 }>();
@@ -220,12 +220,12 @@ const closeBibleTranslationsModal = () => {
 };
 
 const handleBibleTranslationConfirm = (
-  bibleVersionId: string,
+  bibleVersion: string,
   bibleVersionName: string,
 ) => {
   const item = bibleTranslationsModalItem.value;
   if (item) {
-    emit('bibleTranslationChange', item, bibleVersionId, bibleVersionName);
+    emit('bibleTranslationChange', item, bibleVersion, bibleVersionName);
   }
   closeBibleTranslationsModal();
 };

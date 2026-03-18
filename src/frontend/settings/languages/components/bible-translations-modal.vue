@@ -46,7 +46,7 @@
           >
             <ListboxOption
               v-for="version in currentBibleTranslations"
-              :key="version.bibleVersionId"
+              :key="version.bibleVersion"
               v-slot="{ active, selected }"
               :value="version"
               as="template"
@@ -114,7 +114,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   close: [];
-  confirm: [bibleVersionId: string, bibleVersionName: string];
+  confirm: [bibleVersion: string, bibleVersionName: string];
 }>();
 
 watch(
@@ -125,8 +125,7 @@ watch(
         languageMatches(item.language, v.language),
       );
       const current = filtered.find(
-        (v) =>
-          v.bibleVersionId === item.bibleVersionId || v.bibleLabel === item.bibleLabel,
+        (v) => v.bibleVersion === item.bibleVersion || v.bibleLabel === item.bibleLabel,
       );
       selectedBibleVersion.value = current ?? filtered[0] ?? null;
     }
@@ -142,7 +141,7 @@ const handleConfirm = () => {
   if (selectedBibleVersion.value) {
     emit(
       'confirm',
-      selectedBibleVersion.value.bibleVersionId ?? '',
+      selectedBibleVersion.value.bibleVersion ?? '',
       selectedBibleVersion.value.bibleLabel ?? '',
     );
   }
@@ -187,8 +186,7 @@ const transformBibleVersions = (
 ): Array<BibleVersion> => {
   return versions.map((version) => ({
     language: version.language,
-    bibleVersion: version.name,
-    bibleVersionId: version.id,
+    bibleVersion: version.id,
     bibleLabel: `(${version.abbreviation}) ${version.name}`,
   }));
 };

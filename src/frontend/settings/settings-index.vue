@@ -106,10 +106,7 @@ const handleRequestDeletion = (_item: LanguageTableItem) => {
 
 const items = computed(() => props.languageItems ?? []);
 
-const handleBibleTranslationChange = (
-  bibleVersionId: string,
-  bibleVersionName: string,
-) => {
-  console.log('bible translation change', bibleVersionId, bibleVersionName);
+const handleBibleTranslationChange = (bibleVersion: string, bibleVersionName: string) => {
+  console.log('bible translation change', bibleVersion, bibleVersionName);
 };
 </script>

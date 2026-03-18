@@ -10,7 +10,7 @@
           language: 'English',
           locale: 'en',
           languageDirection: 'ltr',
-          bibleVersionId: 'de4e12af7f28f599-01',
+          bibleVersion: 'de4e12af7f28f599-01',
           bibleLabel: '(KJV) King James Version',
         }"
         status="available"
@@ -22,7 +22,7 @@
           language: 'Amharic - አማርኛ',
           locale: 'am',
           languageDirection: 'ltr',
-          bibleVersionId: 'de4e12af7f28f599-01',
+          bibleVersion: 'de4e12af7f28f599-01',
         }"
         status="selected"
       />
@@ -33,7 +33,7 @@
           language: 'Swiss German Alemannic Alsatian - Alemannisch',
           locale: 'gsw',
           languageDirection: 'ltr',
-          bibleVersionId: 'de4e12af7f28f599-01',
+          bibleVersion: 'de4e12af7f28f599-01',
         }"
         status="selected"
       />
@@ -44,7 +44,7 @@
           language: 'Arabic - العربية',
           locale: 'ar',
           languageDirection: 'rtl',
-          bibleVersionId: 'de4e12af7f28f599-01',
+          bibleVersion: 'de4e12af7f28f599-01',
         }"
         status="readonly"
       />
@@ -55,7 +55,7 @@
           language: 'English',
           locale: 'en',
           languageDirection: 'ltr',
-          bibleVersionId: 'de4e12af7f28f599-01',
+          bibleVersion: 'de4e12af7f28f599-01',
           bibleLabel: '(KJV) King James Version',
         }"
         status="available"

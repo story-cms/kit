@@ -16,7 +16,7 @@ const sourceLang: LanguageSpecification = {
   language: 'English',
   locale: 'en',
   languageDirection: 'ltr',
-  bibleVersionId: 'de4e12af7f28f599-01',
+  bibleVersion: 'de4e12af7f28f599-01',
   bibleLabel: '(KJV) King James Version',
 };
 </script>

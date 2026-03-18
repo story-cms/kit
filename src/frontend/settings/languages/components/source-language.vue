@@ -37,7 +37,7 @@ import type { LanguageSpecification, LanguageTableItem } from '../../../../types
 const props = defineProps<{ spec: LanguageSpecification }>();
 
 const emit = defineEmits<{
-  bibleTranslationChange: [bibleVersionId: string, bibleVersionName: string];
+  bibleTranslationChange: [bibleVersion: string, bibleVersionName: string];
 }>();
 
 const showBibleTranslationsModal = ref(false);
@@ -47,10 +47,10 @@ const specAsItem = computed<LanguageTableItem | null>(() =>
 );
 
 const handleBibleTranslationConfirm = (
-  bibleVersionId: string,
+  bibleVersion: string,
   bibleVersionName: string,
 ) => {
-  emit('bibleTranslationChange', bibleVersionId, bibleVersionName);
+  emit('bibleTranslationChange', bibleVersion, bibleVersionName);
   showBibleTranslationsModal.value = false;
 };
 </script>

@@ -736,8 +736,7 @@ export const sourceLanguage: LanguageSpecification = {
   language: 'English | American',
   locale: 'en',
   languageDirection: 'ltr',
-  bibleVersion: 'King James Version',
-  bibleVersionId: 'de4e12af7f28f599-01',
+  bibleVersion: 'de4e12af7f28f599-01',
   bibleLabel: '(KJV) King James Version',
 };
 

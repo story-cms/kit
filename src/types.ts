@@ -545,7 +545,6 @@ export interface LanguageSpecification {
   languageDirection: 'rtl' | 'ltr';
   locale: string;
   bibleVersion?: string;
-  bibleVersionId?: string;
   bibleLabel?: string;
 }
 
