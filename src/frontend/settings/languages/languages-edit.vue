@@ -78,8 +78,8 @@ import LanguageList from './language-list.vue';
 import LanguageAddModal from './components/language-add-modal.vue';
 import type {
   LanguageListItemProps,
-  LanguageSpecification,
   LanguagesEditProps,
+  LanguageSpecification,
   SharedPageProps,
 } from '../../../types';
 import { languages as allLanguages } from './languages';
@@ -99,21 +99,20 @@ const emit = defineEmits<{
 
 const selectedLocales = ref<Set<string>>(new Set());
 
-const availableLanguageItems = computed((): LanguageListItemProps[] =>
-  allLanguages
-    .filter((language: LanguageSpecification) => !props.addedLanguages.includes(language))
-    .map(
-      (language: LanguageSpecification): LanguageListItemProps => ({
-        language,
-        status: selectedLocales.value.has(language.locale) ? 'selected' : 'available',
-      }),
-    ),
-);
+const addedLocales = computed(() => new Set(props.addedLanguages.map((l) => l.locale)));
 
 const selectedLanguages = computed((): LanguageSpecification[] =>
-  allLanguages.filter((language: LanguageSpecification) =>
-    selectedLocales.value.has(language.locale),
-  ),
+  allLanguages.filter((language) => selectedLocales.value.has(language.locale)),
+);
+
+const languageListItems = computed((): LanguageListItemProps[] =>
+  allLanguages
+    .map((language): LanguageListItemProps => {
+      if (addedLocales.value.has(language.locale)) return { language, status: 'readonly' };
+      const status = selectedLocales.value.has(language.locale) ? 'selected' : 'available';
+      return { language, status };
+    })
+    .sort((a, b) => a.language.language.localeCompare(b.language.language)),
 );
 
 const handleSelectionUpdate = (locale: string, isSelected: boolean) => {
@@ -122,21 +121,6 @@ const handleSelectionUpdate = (locale: string, isSelected: boolean) => {
   else next.delete(locale);
   selectedLocales.value = next;
 };
-
-const addedLanguageItems = computed((): LanguageListItemProps[] =>
-  props.addedLanguages.map(
-    (language: LanguageSpecification): LanguageListItemProps => ({
-      language,
-      status: 'readonly',
-    }),
-  ),
-);
-
-const languageListItems = computed((): LanguageListItemProps[] =>
-  [...addedLanguageItems.value, ...availableLanguageItems.value].sort((a, b) =>
-    a.language.language.localeCompare(b.language.language),
-  ),
-);
 
 const removeSelectedLanguage = (locale: string) => {
   const next = new Set(selectedLocales.value);
