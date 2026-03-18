@@ -77,6 +77,7 @@ import PillButton from '../../shared/pill-button.vue';
 import LanguageList from './language-list.vue';
 import LanguageAddModal from './components/language-add-modal.vue';
 import type {
+  LanguageListItemProps,
   LanguageSpecification,
   LanguagesEditProps,
   SharedPageProps,
@@ -98,13 +99,12 @@ const emit = defineEmits<{
 
 const selectedLocales = ref<Set<string>>(new Set());
 
-const availableLanguageItems = computed(() =>
+const availableLanguageItems = computed((): LanguageListItemProps[] =>
   allLanguages
     .filter((language: LanguageSpecification) => !props.addedLanguages.includes(language))
-    .map((language: LanguageSpecification) => ({
+    .map((language: LanguageSpecification): LanguageListItemProps => ({
       language,
-      isSelected: selectedLocales.value.has(language.locale),
-      isAdded: false,
+      status: selectedLocales.value.has(language.locale) ? 'selected' : 'available',
     })),
 );
 
@@ -119,11 +119,10 @@ const handleSelectionUpdate = (locale: string, isSelected: boolean) => {
   selectedLocales.value = next;
 };
 
-const addedLanguageItems = computed(() =>
-  props.addedLanguages.map((language: LanguageSpecification) => ({
+const addedLanguageItems = computed((): LanguageListItemProps[] =>
+  props.addedLanguages.map((language: LanguageSpecification): LanguageListItemProps => ({
     language,
-    isSelected: false,
-    isAdded: true,
+    status: 'readonly',
   })),
 );
 
