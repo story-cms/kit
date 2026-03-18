@@ -14,6 +14,6 @@ import type { LanguageListItemProps } from '../../../types';
 
 const items: LanguageListItemProps[] = languages.map((language, index) => ({
   language,
-  status: (['selected', 'added'] as const)[index % 3],
+  status: (['selected', 'readonly', 'available'] as const)[index % 3],
 }));
 </script>
