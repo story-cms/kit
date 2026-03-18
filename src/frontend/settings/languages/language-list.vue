@@ -80,7 +80,9 @@ import LanguageListItem from './components/language-list-item.vue';
 import Icon from '../../shared/icon.vue';
 import PillButton from '../../shared/pill-button.vue';
 
-const props = defineProps<LanguageListItemProps[]>();
+const props = defineProps<{
+  items: LanguageListItemProps[];
+}>();
 
 const emit = defineEmits<{
   update: [locale: string, isSelected: boolean];
@@ -100,7 +102,7 @@ watch(letterFilter, (value) => {
 });
 
 const filteredItems = computed(() => {
-  let items = props;
+  let items = props.items;
   if (letterFilter.value) {
     items = items.filter((item: LanguageListItemProps) => {
       return item.language.language
