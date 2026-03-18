@@ -102,14 +102,18 @@ const selectedLocales = ref<Set<string>>(new Set());
 const availableLanguageItems = computed((): LanguageListItemProps[] =>
   allLanguages
     .filter((language: LanguageSpecification) => !props.addedLanguages.includes(language))
-    .map((language: LanguageSpecification): LanguageListItemProps => ({
-      language,
-      status: selectedLocales.value.has(language.locale) ? 'selected' : 'available',
-    })),
+    .map(
+      (language: LanguageSpecification): LanguageListItemProps => ({
+        language,
+        status: selectedLocales.value.has(language.locale) ? 'selected' : 'available',
+      }),
+    ),
 );
 
-const selectedLanguages = computed(() =>
-  allLanguages.filter((language) => selectedLocales.value.has(language.locale)),
+const selectedLanguages = computed((): LanguageSpecification[] =>
+  allLanguages.filter((language: LanguageSpecification) =>
+    selectedLocales.value.has(language.locale),
+  ),
 );
 
 const handleSelectionUpdate = (locale: string, isSelected: boolean) => {
@@ -120,13 +124,15 @@ const handleSelectionUpdate = (locale: string, isSelected: boolean) => {
 };
 
 const addedLanguageItems = computed((): LanguageListItemProps[] =>
-  props.addedLanguages.map((language: LanguageSpecification): LanguageListItemProps => ({
-    language,
-    status: 'readonly',
-  })),
+  props.addedLanguages.map(
+    (language: LanguageSpecification): LanguageListItemProps => ({
+      language,
+      status: 'readonly',
+    }),
+  ),
 );
 
-const languageListItems = computed(() =>
+const languageListItems = computed((): LanguageListItemProps[] =>
   [...addedLanguageItems.value, ...availableLanguageItems.value].sort((a, b) =>
     a.language.language.localeCompare(b.language.language),
   ),
