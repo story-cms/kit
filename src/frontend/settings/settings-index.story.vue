@@ -1,7 +1,7 @@
 <template>
-  <Story title="Languages Index" group="settings">
+  <Story title="Settings Index" group="settings">
     <Variant title="Index" :setup-app="miniSidebar">
-      <LanguagesIndex
+      <SettingsIndex
         :meta="sharedProps.meta"
         :user="sharedProps.user"
         :language="sharedProps.language"
@@ -14,7 +14,7 @@
       />
     </Variant>
     <Variant title="Empty" :setup-app="miniSidebar">
-      <LanguagesIndex
+      <SettingsIndex
         :meta="sharedProps.meta"
         :user="sharedProps.user"
         :language="sharedProps.language"
@@ -30,11 +30,11 @@
 </template>
 
 <script setup lang="ts">
-import LanguagesIndex from './languages-index.vue';
+import SettingsIndex from './settings-index.vue';
 import {
   sharedProps,
   miniSidebar,
   sourceLanguage,
   languageTableItems,
-} from '../../test/mocks';
+} from '../test/mocks';
 </script>

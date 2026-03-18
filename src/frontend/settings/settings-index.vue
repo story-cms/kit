@@ -58,16 +58,15 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
-import AppLayout from '../../shared/app-layout.vue';
-import ContentHeader from '../../shared/content-header.vue';
-import Icon from '../../shared/icon.vue';
-import PillButton from '../../shared/pill-button.vue';
-import SourceLang from './components/source-language.vue';
-import LanguagesTable from './components/language-table.vue';
-import RequestAppUpdateModal from './components/request-app-update-modal.vue';
-import RequestFeedbackModal from './components/request-feedback-modal.vue';
-import type { LanguageTableItem, LanguagesProps, SharedPageProps } from '../../../types';
-import { useSharedStore } from '../../store';
+import AppLayout from '../shared/app-layout.vue';
+import ContentHeader from '../shared/content-header.vue';
+import Icon from '../shared/icon.vue';
+import PillButton from '../shared/pill-button.vue';
+import SourceLang from './languages/components/source-language.vue';
+import LanguagesTable from './languages/components/language-table.vue';
+import RequestAppUpdateModal from './languages/components/request-app-update-modal.vue';
+import type { LanguageTableItem, LanguagesProps, SharedPageProps } from '../../types';
+import { useSharedStore } from '../store';
 
 const props = defineProps<LanguagesProps & SharedPageProps>();
 
