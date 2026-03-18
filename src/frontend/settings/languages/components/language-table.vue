@@ -139,9 +139,9 @@
 import { ref, computed } from 'vue';
 import Icon from '../../../shared/icon.vue';
 import Pagination from '../../../shared/pagination.vue';
-import RemoveLanguageModal from './modals/remove-language-modal.vue';
-import RequestDeletionModal from './modals/request-deletion-modal.vue';
-import BibleTranslationsModal from './modals/bible-translations-modal.vue';
+import RemoveLanguageModal from './remove-language-modal.vue';
+import RequestDeletionModal from './request-deletion-modal.vue';
+import BibleTranslationsModal from './bible-translations-modal.vue';
 import type { LanguageTableItem } from '../../../../types';
 import MemberRow from './member-row.vue';
 import RingBlock from '../../../dashboard/ring-block.vue';

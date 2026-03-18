@@ -90,13 +90,13 @@
 <script setup lang="ts">
 import { ref, watch, onMounted, computed } from 'vue';
 import axios, { AxiosError } from 'axios';
-import { useWidgetsStore, useSharedStore } from '../../../../store';
+import { useWidgetsStore, useSharedStore } from '../../../store';
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue';
-import Icon from '../../../../shared/icon.vue';
-import LanguageModal from '../language-modal.vue';
-import PillButton from '../../../../shared/pill-button.vue';
-import { languageMatches } from '../../../../shared/helpers';
-import type { LanguageTableItem, LanguageSpecification } from '../../../../../types';
+import Icon from '../../../shared/icon.vue';
+import LanguageModal from './language-modal.vue';
+import PillButton from '../../../shared/pill-button.vue';
+import { languageMatches } from '../../../shared/helpers';
+import type { LanguageTableItem, LanguageSpecification } from '../../../../types';
 
 const widgets = useWidgetsStore();
 const shared = useSharedStore();

@@ -31,7 +31,7 @@
 import { ref, computed } from 'vue';
 import Icon from '../../../shared/icon.vue';
 import LangStrip from './language-strip.vue';
-import BibleTranslationsModal from './modals/bible-translations-modal.vue';
+import BibleTranslationsModal from './bible-translations-modal.vue';
 import type { LanguageSpecification, LanguageTableItem } from '../../../../types';
 
 const props = defineProps<{ spec: LanguageSpecification }>();
