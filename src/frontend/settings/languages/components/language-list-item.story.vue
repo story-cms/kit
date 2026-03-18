@@ -13,8 +13,7 @@
           bibleVersionId: 'de4e12af7f28f599-01',
           bibleLabel: '(KJV) King James Version',
         }"
-        :is-selected="false"
-        :is-added="false"
+        status="available"
       />
     </Variant>
     <Variant title="Selected">
@@ -24,8 +23,9 @@
           locale: 'am',
           languageDirection: 'ltr',
           bibleVersionId: 'de4e12af7f28f599-01',
-
-        }" :is-selected="true" :is-added="false" />
+        }"
+        status="selected"
+      />
     </Variant>
     <Variant title="Long Language">
       <LanguageListItem
@@ -34,10 +34,9 @@
           locale: 'gsw',
           languageDirection: 'ltr',
           bibleVersionId: 'de4e12af7f28f599-01',
-
         }"
-        
-        :is-selected="true" :is-added="false" />
+        status="selected"
+      />
     </Variant>
     <Variant title="Added">
       <LanguageListItem
@@ -46,10 +45,9 @@
           locale: 'ar',
           languageDirection: 'rtl',
           bibleVersionId: 'de4e12af7f28f599-01',
-
-        }" :is-selected="false" 
-        :is-added="true"
-        />
+        }"
+        status="readonly"
+      />
     </Variant>
     <Variant title="Interactive">
       <LanguageListItem
@@ -60,8 +58,7 @@
           bibleVersionId: 'de4e12af7f28f599-01',
           bibleLabel: '(KJV) King James Version',
         }"
-        :is-selected="isSelected"
-        :is-added="false"
+        status="available"
         @update="isSelected = $event"
       />
     </Variant>

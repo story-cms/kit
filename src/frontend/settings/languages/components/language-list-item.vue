@@ -2,14 +2,14 @@
   <div
     class="grid w-[208px] grid-cols-[1fr_auto] gap-x-1 rounded-md px-2 py-5"
     :class="{
-      'cursor-not-allowed bg-gray-100': isAdded,
-      'bg-[#EFF6FF]': isSelected && !isAdded,
-      'hover:bg-gray-100': !isSelected && !isAdded,
+      'cursor-not-allowed bg-gray-100': isReadOnly,
+      'bg-[#EFF6FF]': isSelected && !isReadOnly,
+      'hover:bg-gray-100': isAvailable,
     }"
   >
     <LanguageStrip :spec="language" />
     <div class="group grid size-4 grid-cols-1">
-      <template v-if="!isAdded">
+      <template v-if="isAvailable">
         <input
           :id="language.locale"
           type="checkbox"
@@ -42,7 +42,7 @@
         </svg>
       </template>
 
-      <template v-if="isAdded">
+      <template v-if="isReadOnly">
         <svg
           width="24"
           height="24"
@@ -71,7 +71,8 @@ const emit = defineEmits<{
 }>();
 
 const isSelected = computed<boolean>(() => props.status === 'selected');
-const isAdded = computed<boolean>(() => props.status === 'added');
+const isReadOnly = computed<boolean>(() => props.status === 'readonly');
+const isAvailable = computed<boolean>(() => props.status === 'available');
 
 const handleUpdate = () => {
   emit('update', !isSelected.value);

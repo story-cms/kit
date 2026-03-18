@@ -597,5 +597,5 @@ export interface LanguagesEditProps {
 
 export interface LanguageListItemProps {
   language: LanguageSpecification;
-  status: 'selected' | 'added';
+  status: 'selected' | 'readonly' | 'available';
 }
