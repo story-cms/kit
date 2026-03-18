@@ -177,6 +177,16 @@ export const useSharedStore = defineStore('shared', () => {
     sourceSectionWidth.value = value;
   };
 
+  // bible translations
+  const bibleTranslations = ref<
+    Omit<LanguageSpecification, 'languageDirection' | 'locale'>[]
+  >([]);
+  const setBibleTranslations = (
+    value: Omit<LanguageSpecification, 'languageDirection' | 'locale'>[],
+  ) => {
+    bibleTranslations.value = value;
+  };
+
   return {
     exclude,
     meta,
@@ -239,5 +249,8 @@ export const useSharedStore = defineStore('shared', () => {
 
     sourceSectionWidth,
     setSourceSectionWidth,
+
+    bibleTranslations,
+    setBibleTranslations,
   };
 });
