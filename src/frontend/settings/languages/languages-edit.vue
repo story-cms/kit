@@ -82,6 +82,7 @@ import type {
   LanguageSpecification,
   SharedPageProps,
 } from '../../../types';
+import { ResponseStatus } from '../../../types';
 import { languages as allLanguages } from './languages';
 
 import { useSharedStore } from '../../store';
@@ -135,6 +136,9 @@ const addLanguage = () => {
 };
 
 const confirmAddLanguages = () => {
+  const languages = [...selectedLanguages.value];
+  console.log('Selected languages added:', languages);
+  shared.addMessage(ResponseStatus.Confirmation, `Added ${languages.length} language(s): ${languages.map((l) => l.language).join(', ')}`);
   showAddModal.value = false;
   emit('add', [...selectedLocales.value]);
   selectedLocales.value = new Set();
