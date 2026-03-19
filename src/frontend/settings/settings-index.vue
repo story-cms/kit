@@ -66,7 +66,12 @@ import SourceLang from './languages/components/source-language.vue';
 import LanguagesTable from './languages/components/language-table.vue';
 import RequestAppUpdateModal from './languages/components/request-app-update-modal.vue';
 import RequestFeedbackModal from './languages/components/request-feedback-modal.vue';
-import type { LanguageTableItem, SettingsPageProps, SharedPageProps } from '../../types';
+import {
+  type LanguageTableItem,
+  type SettingsPageProps,
+  type SharedPageProps,
+  ResponseStatus,
+} from '../../types';
 import { useSharedStore, useWidgetsStore } from '../store';
 
 const props = defineProps<SettingsPageProps & SharedPageProps>();
@@ -97,19 +102,23 @@ const handleRequestAppUpdateConfirm = async (reason: string) => {
 
 const submitAppUpdateRequest = async (_reason: string): Promise<void> => {
   console.log('submitAppUpdateRequest', _reason);
+  shared.addMessage(ResponseStatus.Confirmation, 'App update request submitted');
 };
 
 const handleRemove = (_item: LanguageTableItem) => {
   console.log('remove language', _item.locale);
+  shared.addMessage(ResponseStatus.Confirmation, 'Language removed');
 };
 
 const handleRequestDeletion = (_item: LanguageTableItem) => {
   console.log('request language deletion', _item.locale);
+  shared.addMessage(ResponseStatus.Confirmation, 'Language deletion requested');
 };
 
 const items = computed(() => props.languageItems ?? []);
 
 const handleBibleTranslationChange = (bibleVersion: string, bibleVersionName: string) => {
   console.log('bible translation change', bibleVersion, bibleVersionName);
+  shared.addMessage(ResponseStatus.Confirmation, 'Bible translation changed');
 };
 </script>
