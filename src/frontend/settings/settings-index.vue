@@ -133,7 +133,10 @@ watch(
   { immediate: true },
 );
 
-const handleSourceBibleTranslationChange = (bibleVersion: string, bibleVersionName: string) => {
+const handleSourceBibleTranslationChange = (
+  bibleVersion: string,
+  bibleVersionName: string,
+) => {
   shared.setSourceLanguageBibleTranslation(bibleVersion, bibleVersionName);
   shared.addMessage(ResponseStatus.Confirmation, 'Bible translation changed');
 };
@@ -143,7 +146,30 @@ const handleTableBibleTranslationChange = (
   bibleVersion: string,
   bibleVersionName: string,
 ) => {
-  shared.setLanguageItemBibleTranslation(item.locale, bibleVersion, bibleVersionName);
-  shared.addMessage(ResponseStatus.Confirmation, 'Bible translation changed');
+  console.log(
+    'handleTableBibleTranslationChange',
+    item.locale,
+    bibleVersion,
+    bibleVersionName,
+  );
+  router.post(
+    `/${shared.locale}/settings/languages/${item.locale}/bible-translation`,
+    { bibleVersion, bibleVersionName },
+    {
+      preserveScroll: true,
+      onSuccess: () => {
+        shared.setLanguageItemBibleTranslation(
+          item.locale,
+          bibleVersion,
+          bibleVersionName,
+        );
+        shared.addMessage(ResponseStatus.Confirmation, 'Bible translation changed');
+      },
+      onError: (errors) => {
+        shared.setErrors(errors);
+        shared.addMessage(ResponseStatus.Failure, 'Error updating Bible translation');
+      },
+    },
+  );
 };
 </script>

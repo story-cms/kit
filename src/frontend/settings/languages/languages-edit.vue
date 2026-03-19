@@ -163,10 +163,7 @@ const addLanguages = (languages: LanguageSpecification[]) => {
       preserveScroll: true,
       onSuccess: () => {
         router.reload({ only: ['languages'] });
-        shared.addMessage(
-          ResponseStatus.Confirmation,
-          `Added ${selectedLanguages.value.length} language(s)`,
-        );
+        shared.addMessage(ResponseStatus.Confirmation, `Language(s) added successfully`);
       },
       onError: (errors) => {
         shared.setErrors(errors);
