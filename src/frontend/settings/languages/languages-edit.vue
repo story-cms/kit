@@ -71,6 +71,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import { router } from '@inertiajs/vue3';
 import AppLayout from '../../shared/app-layout.vue';
 import ContentHeader from '../../shared/content-header.vue';
 import PillButton from '../../shared/pill-button.vue';
@@ -109,8 +110,11 @@ const selectedLanguages = computed((): LanguageSpecification[] =>
 const languageListItems = computed((): LanguageListItemProps[] =>
   allLanguages
     .map((language): LanguageListItemProps => {
-      if (addedLocales.value.has(language.locale)) return { language, status: 'readonly' };
-      const status = selectedLocales.value.has(language.locale) ? 'selected' : 'available';
+      if (addedLocales.value.has(language.locale))
+        return { language, status: 'readonly' };
+      const status = selectedLocales.value.has(language.locale)
+        ? 'selected'
+        : 'available';
       return { language, status };
     })
     .sort((a, b) => a.language.language.localeCompare(b.language.language)),
@@ -137,10 +141,38 @@ const addLanguage = () => {
 
 const confirmAddLanguages = () => {
   const languages = [...selectedLanguages.value];
-  console.log('Selected languages added:', languages);
-  shared.addMessage(ResponseStatus.Confirmation, `Added ${languages.length} language(s): ${languages.map((l) => l.language).join(', ')}`);
+  addLanguages(languages);
   showAddModal.value = false;
   emit('add', [...selectedLocales.value]);
   selectedLocales.value = new Set();
+};
+
+const addLanguages = (languages: LanguageSpecification[]) => {
+  const payload = languages.map(({ locale, language, languageDirection }) => ({
+    locale,
+    language,
+    languageDirection,
+  }));
+
+  console.log('payload', payload);
+
+  router.post(
+    `/${shared.locale}/settings/languages/add`,
+    { languages: payload },
+    {
+      preserveScroll: true,
+      onSuccess: () => {
+        router.reload({ only: ['languages'] });
+        shared.addMessage(
+          ResponseStatus.Confirmation,
+          `Added ${selectedLanguages.value.length} language(s)`,
+        );
+      },
+      onError: (errors) => {
+        shared.setErrors(errors);
+        shared.addMessage(ResponseStatus.Failure, 'Error adding languages');
+      },
+    },
+  );
 };
 </script>
