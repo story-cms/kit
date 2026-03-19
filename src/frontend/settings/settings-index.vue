@@ -108,8 +108,8 @@ const submitAppUpdateRequest = async (_reason: string): Promise<void> => {
   shared.addMessage(ResponseStatus.Confirmation, 'App update request submitted');
 };
 
-const handleRemove = (_item: LanguageTableItem) => {
-  console.log('remove language', _item.locale);
+const handleRemove = (item: LanguageTableItem) => {
+  shared.removeLanguageItem(item.locale);
   shared.addMessage(ResponseStatus.Confirmation, 'Language removed');
 };
 

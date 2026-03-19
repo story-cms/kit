@@ -224,6 +224,10 @@ export const useSharedStore = defineStore('shared', () => {
     }
   };
 
+  const removeLanguageItem = (locale: string) => {
+    languageItems.value = languageItems.value.filter((i) => i.locale !== locale);
+  };
+
   return {
     exclude,
     meta,
@@ -296,5 +300,6 @@ export const useSharedStore = defineStore('shared', () => {
     setLanguageItems,
     setSourceLanguageBibleTranslation,
     setLanguageItemBibleTranslation,
+    removeLanguageItem,
   };
 });
