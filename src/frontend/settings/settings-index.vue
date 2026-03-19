@@ -37,6 +37,7 @@
         :items="items"
         @remove="handleRemove"
         @request-deletion="handleRequestDeletion"
+        @bible-translation-change="(_item, v, n) => handleBibleTranslationChange(v, n)"
       />
     </div>
 
