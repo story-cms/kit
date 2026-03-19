@@ -502,6 +502,8 @@ export interface CmsMeta {
   logo: string;
   helpUrl?: string;
   hasAppPreview: boolean;
+  /** Contact email for enquiries (e.g. from MAIL_FROM_ADDRESS) */
+  mailFromAddress?: string;
 }
 
 export type CmsConfig = {
@@ -543,6 +545,12 @@ export interface LanguageSpecification {
   languageDirection: 'rtl' | 'ltr';
   locale: string;
   bibleVersion?: string;
+  bibleLabel?: string;
+}
+
+export interface LanguageTableItem extends LanguageSpecification {
+  translationProgress?: Omit<Progress, 'lastUpdated'>[];
+  teamMembers?: UserInterface[];
 }
 
 export interface Providers {
@@ -572,4 +580,22 @@ export interface Providers {
     libraryId: string;
     host: string;
   };
+}
+/// ----------------------------------------------------
+///  settings
+/// ----------------------------------------------------
+
+export interface SettingsPageProps {
+  sourceLanguage: LanguageSpecification;
+  languageItems: LanguageTableItem[];
+  providers: Providers;
+}
+
+export interface LanguagesEditProps {
+  addedLanguages: LanguageSpecification[];
+}
+
+export interface LanguageListItemProps {
+  language: LanguageSpecification;
+  status: 'selected' | 'readonly' | 'available';
 }

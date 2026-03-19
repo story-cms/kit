@@ -4,6 +4,7 @@ import { computed, ref, reactive, shallowRef } from 'vue';
 import {
   type SharedPageProps,
   type LanguageSpecification,
+  type LanguageTableItem,
   type Bookmark,
   type CmsMeta,
   type UserInterface,
@@ -177,6 +178,56 @@ export const useSharedStore = defineStore('shared', () => {
     sourceSectionWidth.value = value;
   };
 
+  // bible translations
+  const bibleTranslations = ref<
+    Omit<LanguageSpecification, 'languageDirection' | 'locale'>[]
+  >([]);
+  const setBibleTranslations = (
+    value: Omit<LanguageSpecification, 'languageDirection' | 'locale'>[],
+  ) => {
+    bibleTranslations.value = value;
+  };
+
+  // settings page: source language and language table
+  const sourceLanguage = ref<LanguageSpecification>(defaultLanguage);
+  const languageItems = ref<LanguageTableItem[]>([]);
+
+  const setSourceLanguage = (fresh: LanguageSpecification) => {
+    sourceLanguage.value = fresh;
+  };
+
+  const setLanguageItems = (fresh: LanguageTableItem[]) => {
+    languageItems.value = fresh;
+  };
+
+  const setSourceLanguageBibleTranslation = (
+    bibleVersion: string,
+    bibleLabel: string,
+  ) => {
+    sourceLanguage.value = {
+      ...sourceLanguage.value,
+      bibleVersion,
+      bibleLabel,
+    };
+  };
+
+  const setLanguageItemBibleTranslation = (
+    locale: string,
+    bibleVersion: string,
+    bibleLabel: string,
+  ) => {
+    const idx = languageItems.value.findIndex((i) => i.locale === locale);
+    if (idx >= 0) {
+      languageItems.value = languageItems.value.map((x, i) =>
+        i === idx ? { ...x, bibleVersion, bibleLabel } : x,
+      );
+    }
+  };
+
+  const removeLanguageItem = (locale: string) => {
+    languageItems.value = languageItems.value.filter((i) => i.locale !== locale);
+  };
+
   return {
     exclude,
     meta,
@@ -239,5 +290,16 @@ export const useSharedStore = defineStore('shared', () => {
 
     sourceSectionWidth,
     setSourceSectionWidth,
+
+    bibleTranslations,
+    setBibleTranslations,
+
+    sourceLanguage,
+    languageItems,
+    setSourceLanguage,
+    setLanguageItems,
+    setSourceLanguageBibleTranslation,
+    setLanguageItemBibleTranslation,
+    removeLanguageItem,
   };
 });

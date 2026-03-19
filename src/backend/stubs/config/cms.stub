@@ -80,6 +80,11 @@ const cmsConfig: CmsConfig = defineConfig({
      * Are we embedding a Flutter preview?
      */
     hasAppPreview: false,
+
+    /**
+     * Contact email for enquiries (from MAIL_FROM_ADDRESS)
+     */
+    mailFromAddress: 'ops@scoutredeem.co',
   },
 
   languages: {
