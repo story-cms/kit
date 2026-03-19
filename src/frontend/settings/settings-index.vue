@@ -29,15 +29,15 @@
       </ContentHeader>
     </template>
     <SourceLang
-      :spec="sourceLanguage"
-      @bible-translation-change="handleBibleTranslationChange"
+      :spec="shared.sourceLanguage"
+      @bible-translation-change="handleSourceBibleTranslationChange"
     />
     <div class="mt-14">
       <LanguagesTable
-        :items="items"
+        :items="shared.languageItems"
         @remove="handleRemove"
         @request-deletion="handleRequestDeletion"
-        @bible-translation-change="(_item, v, n) => handleBibleTranslationChange(v, n)"
+        @bible-translation-change="handleTableBibleTranslationChange"
       />
     </div>
 
@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, watch } from 'vue';
 import { router } from '@inertiajs/vue3';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
@@ -82,6 +82,8 @@ const widgets = useWidgetsStore();
 
 shared.setFromProps(props);
 shared.setCurrentStoryName('');
+shared.setSourceLanguage(props.sourceLanguage);
+shared.setLanguageItems(props.languageItems ?? []);
 widgets.setProviders(props.providers);
 
 const showRequestAppUpdateModal = ref(false);
@@ -116,10 +118,32 @@ const handleRequestDeletion = (_item: LanguageTableItem) => {
   shared.addMessage(ResponseStatus.Confirmation, 'Language deletion requested');
 };
 
-const items = computed(() => props.languageItems ?? []);
+watch(
+  () => props.sourceLanguage,
+  (next) => {
+    shared.setSourceLanguage(next);
+  },
+  { immediate: true },
+);
+watch(
+  () => props.languageItems,
+  (next) => {
+    shared.setLanguageItems(next ?? []);
+  },
+  { immediate: true },
+);
 
-const handleBibleTranslationChange = (bibleVersion: string, bibleVersionName: string) => {
-  console.log('bible translation change', bibleVersion, bibleVersionName);
+const handleSourceBibleTranslationChange = (bibleVersion: string, bibleVersionName: string) => {
+  shared.setSourceLanguageBibleTranslation(bibleVersion, bibleVersionName);
+  shared.addMessage(ResponseStatus.Confirmation, 'Bible translation changed');
+};
+
+const handleTableBibleTranslationChange = (
+  item: LanguageTableItem,
+  bibleVersion: string,
+  bibleVersionName: string,
+) => {
+  shared.setLanguageItemBibleTranslation(item.locale, bibleVersion, bibleVersionName);
   shared.addMessage(ResponseStatus.Confirmation, 'Bible translation changed');
 };
 </script>
