@@ -2,7 +2,7 @@
   exports({ to: app.makePath('app/controllers/audiences_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
-import { AudienceMeta, AudienceService } from '@story-cms/kit';
+import { type AudienceMeta, AudienceService } from '@story-cms/kit';
 import cms from '#services/cms';
 
 export default class AudiencesController {
@@ -24,4 +24,23 @@ export default class AudiencesController {
 
     return ctx.inertia.render('AudiencesIndex', { ...props });
   }
+
+  public async export(ctx: HttpContext) {
+    let audiences: AudienceMeta[] = [];
+    const service = new AudienceService();
+    try {
+      audiences = await service.getAllUsers();
+    } catch {
+      throw new Error('Failed to retrieve user list from Firebase.');
+    }
+
+    const csv = service.exportToCsv(audiences);
+    const filename = {{ '`audience-export-${new Date().toISOString().slice(0, 10)}.csv`' }};
+
+    return ctx.response
+      .header('Content-Type', 'text/csv')
+      .header('Content-Disposition', {{ '`attachment; filename="${filename}"`' }})
+      .send(csv);
+  }
 }
+

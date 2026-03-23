@@ -3,13 +3,12 @@
     <template #header>
       <ContentHeader title="Audiences">
         <template #actions>
-          <button
-            type="button"
+          <a
+            :href="exportUrl"
             class="inline-flex items-center rounded-xl bg-indigo-50 px-3 py-[9px] text-sm font-medium leading-4 text-indigo-700 shadow-sm"
-            @click="exportAudiences"
           >
             Export
-          </button>
+          </a>
         </template>
       </ContentHeader>
     </template>
@@ -97,7 +96,5 @@ const handlePageChange = (page: number) => {
   currentPage.value = page;
 };
 
-const exportAudiences = () => {
-  console.log('exportAudiences');
-};
+const exportUrl = computed(() => `/${shared.locale}/audience/export`);
 </script>
