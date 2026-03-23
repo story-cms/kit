@@ -4,6 +4,7 @@
       <ContentHeader title="Audiences">
         <template #actions>
           <a
+            v-if="audiences.length > 0"
             :href="exportUrl"
             class="inline-flex items-center rounded-xl bg-indigo-50 px-3 py-[9px] text-sm font-medium leading-4 text-indigo-700 shadow-sm"
           >
