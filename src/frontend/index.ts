@@ -3,6 +3,7 @@ import AddItemButton from './shared/add-item-button.vue';
 import AnimationField from './fields/animation-field.vue';
 import AppLayout from './shared/app-layout.vue';
 import AudiencesIndex from './audiences/audiences-index.vue';
+import AudienceRow from './audiences/components/audience-row.vue';
 import AudioField from './fields/audio-field.vue';
 import BooleanField from './fields/boolean-field.vue';
 import CampaignsEdit from './campaign/campaigns-edit.vue';
@@ -123,4 +124,6 @@ export {
   UiPage,
   UsersIndex,
   VideoField,
+  // Remove this
+  AudienceRow,
 };
