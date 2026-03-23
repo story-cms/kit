@@ -1,7 +1,17 @@
 <template>
   <AppLayout>
     <template #header>
-      <ContentHeader title="Audiences"> </ContentHeader>
+      <ContentHeader title="Audiences">
+        <template #actions>
+          <button
+            type="button"
+            class="inline-flex items-center rounded-xl bg-indigo-50 px-3 py-[9px] text-sm font-medium leading-4 text-indigo-700 shadow-sm"
+            @click="exportAudiences"
+          >
+            Export
+          </button>
+        </template>
+      </ContentHeader>
     </template>
     <div>
       <section class="mt-8 flow-root">
@@ -39,7 +49,9 @@
               </table>
 
               <!-- Pagination -->
+
               <Pagination
+                v-if="audiences.length > itemsPerPage"
                 :current-page="currentPage"
                 :total-items="audiences.length"
                 :items-per-page="itemsPerPage"
@@ -83,5 +95,9 @@ const paginatedAudiences = computed(() => {
 // Handle page changes
 const handlePageChange = (page: number) => {
   currentPage.value = page;
+};
+
+const exportAudiences = () => {
+  console.log('exportAudiences');
 };
 </script>
