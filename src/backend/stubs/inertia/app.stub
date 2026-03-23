@@ -11,7 +11,11 @@ import '@story-cms/kit/styles.css';
 import { createApp, h } from 'vue';
 import type { DefineComponent } from 'vue';
 import { resolvePageComponent } from '@adonisjs/inertia/helpers';
-import { createInertiaApp, pinia } from '@story-cms/kit/ui';
+import { createInertiaApp, pinia, router, helpScoutWidget } from '@story-cms/kit/ui';
+
+router.on('navigate', (event) => {
+  helpScoutWidget(event.detail.page);
+});
 
 createInertiaApp({
   progress: { color: '#5468FF' },
