@@ -35,11 +35,11 @@ export default class AudiencesController {
     }
 
     const csv = service.exportToCsv(audiences);
-    const filename = {{ '`audience-export-${new Date().toISOString().slice(0, 10)}.csv`' }};
+    const filename = {{{ '`audience-export-${new Date().toISOString().slice(0, 10)}.csv`' }}};
 
     return ctx.response
       .header('Content-Type', 'text/csv')
-      .header('Content-Disposition', {{ '`attachment; filename="${filename}"`' }})
+      .header('Content-Disposition', {{{ '`attachment; filename="${filename}"`' }}})
       .send(csv);
   }
 }
