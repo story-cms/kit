@@ -34,7 +34,7 @@ export default class AudiencesController {
       throw new Error('Failed to retrieve user list from Firebase.');
     }
 
-    const csv = service.exportToCsv(audiences);
+    const csv = service.toCsvFrom(audiences);
     const filename = {{{ '`audience-export-${new Date().toISOString().slice(0, 10)}.csv`' }}};
 
     return ctx.response

@@ -79,30 +79,10 @@ export class AudienceService {
   }
 
   /**
-   * Exports audience data to CSV.
+   * Converts audience data to a CSV string.
    */
-  public exportToCsv(audiences: AudienceMeta[]): string {
-    return this.#toCsv(audiences as unknown as Record<string, unknown>[]);
-  }
-
-  /**
-   * Escapes a value for RFC 4180 CSV format.
-   */
-  static #escapeCsvValue(value: unknown): string {
-    const str = value === null || value === undefined ? '' : String(value);
-    if (str.includes(',') || str.includes('\n') || str.includes('"')) {
-      return `"${str.replace(/"/g, '""')}"`;
-    }
-    return str;
-  }
-
-  /**
-   * Converts an array of records to CSV string.
-   */
-  #toCsv(rows: Record<string, unknown>[]): string {
-    if (rows.length === 0) {
-      return '';
-    }
+  public toCsvFrom(audiences: AudienceMeta[]): string {
+    if (audiences.length === 0) return '';
 
     const columns = [
       { key: 'uid', header: 'UID' },
@@ -112,14 +92,18 @@ export class AudienceService {
       { key: 'lastSignInTime', header: 'Last Sign In' },
     ];
 
-    const headerRow = columns
-      .map((c) => AudienceService.#escapeCsvValue(c.header))
-      .join(',');
-    const dataRows = rows.map((row) =>
+    const escape = (value: unknown): string => {
+      const str = value === null || value === undefined ? '' : String(value);
+      if (str.includes(',') || str.includes('\n') || str.includes('"')) {
+        return `"${str.replace(/"/g, '""')}"`;
+      }
+      return str;
+    };
+
+    const headerRow = columns.map((c) => escape(c.header)).join(',');
+    const dataRows = audiences.map((row) =>
       columns
-        .map((c) =>
-          AudienceService.#escapeCsvValue((row as Record<string, unknown>)[c.key]),
-        )
+        .map((c) => escape((row as unknown as Record<string, unknown>)[c.key]))
         .join(','),
     );
 
