@@ -3,7 +3,7 @@
     <template #header>
       <ContentHeader title="Audiences">
         <template #actions>
-          <button
+          <!-- <button
             v-if="audiences.length > 0"
             type="button"
             :disabled="user.role !== 'admin'"
@@ -11,7 +11,7 @@
             @click.prevent="exportAudiences"
           >
             Export
-          </button>
+          </button> -->
         </template>
       </ContentHeader>
     </template>
@@ -99,8 +99,8 @@ const handlePageChange = (page: number) => {
   currentPage.value = page;
 };
 
-const exportUrl = computed(() => `/${shared.locale}/audience/export`);
-const exportAudiences = () => {
-  window.location.href = exportUrl.value;
-};
+// const exportUrl = computed(() => `/${shared.locale}/audience/export`);
+// const exportAudiences = () => {
+//   window.location.href = exportUrl.value;
+// };
 </script>
