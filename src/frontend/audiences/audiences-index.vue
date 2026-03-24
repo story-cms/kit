@@ -3,13 +3,15 @@
     <template #header>
       <ContentHeader title="Audiences">
         <template #actions>
-          <a
+          <button
             v-if="audiences.length > 0"
-            :href="exportUrl"
-            class="inline-flex items-center rounded-xl bg-indigo-50 px-3 py-[9px] text-sm font-medium leading-4 text-indigo-700 shadow-sm"
+            type="button"
+            :disabled="user.role !== 'admin'"
+            class="w-32 rounded-[38px] border bg-blue-500 px-[15px] py-[9px] text-center text-sm/5 font-medium text-white opacity-80 shadow focus:outline-none focus:ring focus:ring-indigo-500 active:opacity-80 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset] enabled:hover:bg-blue-400 enabled:hover:shadow-none disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
+            @click.prevent="exportAudiences"
           >
             Export
-          </a>
+          </button>
         </template>
       </ContentHeader>
     </template>
@@ -98,4 +100,7 @@ const handlePageChange = (page: number) => {
 };
 
 const exportUrl = computed(() => `/${shared.locale}/audience/export`);
+const exportAudiences = () => {
+  window.location.href = exportUrl.value;
+};
 </script>
