@@ -97,15 +97,10 @@ import ContentHeader from '../shared/content-header.vue';
 import Pagination from '../shared/pagination.vue';
 import AudienceRow from './components/audience-row.vue';
 
-import {
-  type SharedPageProps,
-  type AudiencesProps,
-  type AudienceMeta,
-  ResponseStatus,
-} from '../../types';
+import { type SharedPageProps, type AudienceMeta, ResponseStatus } from '../../types';
 import { useSharedStore } from '../store';
 
-const props = defineProps<AudiencesProps & SharedPageProps>();
+const props = defineProps<SharedPageProps>();
 
 const shared = useSharedStore();
 shared.setFromProps(props);

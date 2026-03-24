@@ -8,15 +8,11 @@ import cms from '#services/cms';
 export default class AudiencesController {
   public async index(ctx: HttpContext) {
     const shared = await cms.sharedProps(ctx);
-    const props = {
-      audiences: [] as AudienceMeta[],
-      ...shared,
-    };
 
-    return ctx.inertia.render('AudiencesIndex', { ...props });
+    return ctx.inertia.render('AudiencesIndex', { ...shared });
   }
 
-  public async users(ctx: HttpContext) {
+  public async getAudience(ctx: HttpContext) {
     if (!cms.config.audience?.hasAudience) {
       return ctx.response.json({ audiences: [] });
     }
@@ -32,7 +28,7 @@ export default class AudiencesController {
     return ctx.response.json({ audiences });
   }
 
-  public async export(ctx: HttpContext) {
+  public async exportAudience(ctx: HttpContext) {
     let audiences: AudienceMeta[] = [];
     const service = new AudienceService();
     try {

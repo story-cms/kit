@@ -418,10 +418,6 @@ export interface AudienceMeta {
   lastSignInTime: string;
 }
 
-export interface AudiencesProps {
-  audiences: AudienceMeta[];
-}
-
 /// ----------------------------------------------------
 ///  campaigns
 /// ----------------------------------------------------
