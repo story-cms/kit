@@ -7,22 +7,29 @@ import cms from '#services/cms';
 
 export default class AudiencesController {
   public async index(ctx: HttpContext) {
-    let audiences: AudienceMeta[];
-    try {
-      // for apps that are not configured yet, we will return an empty array
-      const service = new AudienceService();
-      audiences = await service.getAllUsers();
-    } catch (error) {
-      audiences = [];
-    }
-
     const shared = await cms.sharedProps(ctx);
     const props = {
-      audiences: audiences,
+      audiences: [] as AudienceMeta[],
       ...shared,
     };
 
     return ctx.inertia.render('AudiencesIndex', { ...props });
+  }
+
+  public async users(ctx: HttpContext) {
+    if (!cms.config.audience?.hasAudience) {
+      return ctx.response.json({ audiences: [] });
+    }
+
+    let audiences: AudienceMeta[];
+    try {
+      const service = new AudienceService();
+      audiences = await service.getAllUsers();
+    } catch {
+      audiences = [];
+    }
+
+    return ctx.response.json({ audiences });
   }
 
   public async export(ctx: HttpContext) {

@@ -5,6 +5,10 @@ import { DateTime } from 'luxon';
 import type { AudienceMeta } from '../../types.js';
 import { getCredentialsFrom } from './helpers.js';
 
+const CACHE_TTL_MS = 60_000;
+
+let cache: { data: AudienceMeta[]; expiresAt: number } | null = null;
+
 export class AudienceService {
   private app: App;
 
@@ -13,6 +17,10 @@ export class AudienceService {
   }
 
   public async getAllUsers(): Promise<AudienceMeta[]> {
+    if (cache && Date.now() < cache.expiresAt) {
+      return cache.data;
+    }
+
     const allUsers: AudienceMeta[] = [];
     let nextPageToken: string | undefined;
 
@@ -47,6 +55,10 @@ export class AudienceService {
         nextPageToken = listUsersResult.pageToken;
       } while (nextPageToken);
 
+      cache = {
+        data: allUsers,
+        expiresAt: Date.now() + CACHE_TTL_MS,
+      };
       return allUsers;
     } catch (error) {
       console.error('Error listing all users:', error);

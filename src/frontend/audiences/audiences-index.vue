@@ -44,16 +44,37 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr v-for="audience in paginatedAudiences" :key="audience.uid">
-                    <AudienceRow :audience="audience" />
-                  </tr>
+                  <template v-if="isLoading">
+                    <tr v-for="i in 5" :key="i" class="animate-pulse">
+                      <td class="px-3 py-4">
+                        <div class="flex items-center gap-4">
+                          <div class="size-11 rounded-full bg-gray-200" />
+                          <div class="space-y-2">
+                            <div class="h-4 w-32 rounded bg-gray-200" />
+                            <div class="h-3 w-48 rounded bg-gray-100" />
+                          </div>
+                        </div>
+                      </td>
+                      <td class="px-3 py-4">
+                        <div class="h-4 w-24 rounded bg-gray-200" />
+                      </td>
+                      <td class="px-3 py-4">
+                        <div class="h-4 w-24 rounded bg-gray-200" />
+                      </td>
+                    </tr>
+                  </template>
+                  <template v-else>
+                    <tr v-for="audience in paginatedAudiences" :key="audience.uid">
+                      <AudienceRow :audience="audience" />
+                    </tr>
+                  </template>
                 </tbody>
               </table>
 
               <!-- Pagination -->
 
               <Pagination
-                v-if="audiences.length > itemsPerPage"
+                v-if="!isLoading && audiences.length > itemsPerPage"
                 :current-page="currentPage"
                 :total-items="audiences.length"
                 :items-per-page="itemsPerPage"
@@ -68,14 +89,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
+
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
 import Pagination from '../shared/pagination.vue';
-
 import AudienceRow from './components/audience-row.vue';
-import { type SharedPageProps, type AudiencesProps, ResponseStatus } from '../../types';
+
+import {
+  type SharedPageProps,
+  type AudiencesProps,
+  type AudienceMeta,
+  ResponseStatus,
+} from '../../types';
 import { useSharedStore } from '../store';
 
 const props = defineProps<AudiencesProps & SharedPageProps>();
@@ -83,6 +110,9 @@ const props = defineProps<AudiencesProps & SharedPageProps>();
 const shared = useSharedStore();
 shared.setFromProps(props);
 shared.setCurrentStoryName('');
+
+const audiences = ref<AudienceMeta[]>([]);
+const isLoading = ref(true);
 
 // Pagination state
 const currentPage = ref(1);
@@ -92,7 +122,7 @@ const itemsPerPage = 10;
 const paginatedAudiences = computed(() => {
   const startIndex = (currentPage.value - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  return props.audiences.slice(startIndex, endIndex);
+  return audiences.value.slice(startIndex, endIndex);
 });
 
 // Handle page changes
@@ -131,4 +161,17 @@ const exportAudiences = async () => {
     isExporting.value = false;
   }
 };
+
+onMounted(async () => {
+  try {
+    const { data } = await axios.get<{ audiences: AudienceMeta[] }>(
+      `/${shared.locale}/audience/users`,
+    );
+    audiences.value = data.audiences ?? [];
+  } catch {
+    audiences.value = [];
+  } finally {
+    isLoading.value = false;
+  }
+});
 </script>
