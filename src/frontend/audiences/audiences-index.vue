@@ -3,15 +3,15 @@
     <template #header>
       <ContentHeader title="Audiences">
         <template #actions>
-          <!-- <button
+          <button
             v-if="audiences.length > 0"
             type="button"
-            :disabled="user.role !== 'admin'"
+            :disabled="user.role !== 'admin' || isExporting"
             class="w-32 rounded-[38px] border bg-blue-500 px-[15px] py-[9px] text-center text-sm/5 font-medium text-white opacity-80 shadow focus:outline-none focus:ring focus:ring-indigo-500 active:opacity-80 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset] enabled:hover:bg-blue-400 enabled:hover:shadow-none disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
             @click.prevent="exportAudiences"
           >
-            Export
-          </button> -->
+            {{ isExporting ? 'Exporting...' : 'Export' }}
+          </button>
         </template>
       </ContentHeader>
     </template>
@@ -69,12 +69,13 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import axios from 'axios';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
 import Pagination from '../shared/pagination.vue';
 
 import AudienceRow from './components/audience-row.vue';
-import { SharedPageProps, AudiencesProps } from '../../types';
+import { type SharedPageProps, type AudiencesProps, ResponseStatus } from '../../types';
 import { useSharedStore } from '../store';
 
 const props = defineProps<AudiencesProps & SharedPageProps>();
@@ -99,8 +100,35 @@ const handlePageChange = (page: number) => {
   currentPage.value = page;
 };
 
-// const exportUrl = computed(() => `/${shared.locale}/audience/export`);
-// const exportAudiences = () => {
-//   window.location.href = exportUrl.value;
-// };
+const exportUrl = computed(() => `/${shared.locale}/audience/export`);
+const isExporting = ref(false);
+
+const exportAudiences = async () => {
+  isExporting.value = true;
+
+  try {
+    const response = await axios.get(exportUrl.value, {
+      responseType: 'blob',
+    });
+
+    const blob = response.data as Blob;
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const disposition = response.headers['content-disposition'];
+    const filename =
+      disposition?.split('filename=')[1]?.replace(/"/g, '') ?? 'audience_export.csv';
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    shared.addMessage(ResponseStatus.Accomplishment, 'Download started');
+  } catch (_e) {
+    console.error(_e);
+    const message = 'Download failed. Contact support.';
+    shared.addMessage(ResponseStatus.Failure, message);
+  } finally {
+    isExporting.value = false;
+  }
+};
 </script>
