@@ -40,7 +40,7 @@ export default class AudiencesController {
     const csv = service.toCsvFrom(audiences);
     
     const appName = cms.config.meta.name.toLowerCase().replace(/ /g, '_');
-    const filename = {{{ '`${appName}_audience_Journeysstudio.csv`' }}};
+    const filename = {{{ '`${appName}_audience_Journeys_studio.csv`' }}};
 
     return ctx.response
       .header('Content-Type', 'text/csv')
