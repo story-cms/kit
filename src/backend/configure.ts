@@ -22,7 +22,7 @@ async function getExistingEnvKeys(appRoot: string): Promise<Set<string>> {
   }
 }
 
-async function defineEnvVariablesIfMissing(
+async function addMissingEnvVariables(
   codemods: Codemods,
   appRoot: string,
   variables: Record<string, string>,
@@ -162,7 +162,7 @@ export async function configure(command: Configure) {
    * Define environment variables (skip if already defined in .env)
    */
   const appRoot = fileURLToPath(command.app.appRoot);
-  await defineEnvVariablesIfMissing(codemods, appRoot, {
+  await addMissingEnvVariables(codemods, appRoot, {
     MAIL_FROM_ADDRESS: 'ops@scoutredeem.co',
     CLOUDINARY_API_KEY: 'redacted',
     CLOUDINARY_SECRET: 'redacted',
