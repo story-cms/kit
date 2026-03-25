@@ -1,124 +1,141 @@
 import admin from 'firebase-admin';
 import { type App, type ServiceAccount } from 'firebase-admin/app';
-import { type Auth, type UserRecord } from 'firebase-admin/auth';
+import { type UserRecord } from 'firebase-admin/auth';
 import { DateTime } from 'luxon';
-import type { AudienceMeta } from '../../types.js';
+
+import { type AudienceMeta } from '../../types.js';
 import { getCredentialsFrom } from './helpers.js';
 
-const CACHE_TTL_MS = 60_000;
+/** Firebase Admin `listUsers` max batch size. */
+export const FIREBASE_MAX_LIST_USERS = 1000;
 
-let cache: { data: AudienceMeta[]; expiresAt: number } | null = null;
+export type AudienceListPageResult = {
+  audiences: AudienceMeta[];
+  nextPageToken: string | null;
+  hasMore: boolean;
+};
+
+const CSV_COLUMNS: { key: keyof AudienceMeta; header: string }[] = [
+  { key: 'uid', header: 'UID' },
+  { key: 'name', header: 'Name' },
+  { key: 'email', header: 'Email' },
+  { key: 'signUpDate', header: 'Signed Up' },
+  { key: 'lastSignInTime', header: 'Last Sign In' },
+];
+
+let cachedApp: App | undefined;
 
 export class AudienceService {
-  private app: App;
-
-  constructor() {
-    this.app = this.initializeClient();
-  }
-
-  public async getAllUsers(): Promise<AudienceMeta[]> {
-    if (cache && Date.now() < cache.expiresAt) {
-      return cache.data;
+  public parseListQuery(qs: Record<string, unknown>): {
+    perPage: number;
+    pageToken: string | undefined;
+  } | null {
+    const rawPerPage = qs['perPage'];
+    const perPageStr = Array.isArray(rawPerPage) ? rawPerPage[0] : rawPerPage;
+    let perPage = 10;
+    if (perPageStr !== undefined && perPageStr !== null && perPageStr !== '') {
+      const n = Number(perPageStr);
+      if (!Number.isFinite(n) || n < 1 || n > FIREBASE_MAX_LIST_USERS) {
+        return null;
+      }
+      perPage = n;
     }
 
-    const allUsers: AudienceMeta[] = [];
-    let nextPageToken: string | undefined;
+    const rawToken = qs['pageToken'];
+    const tokenStr = Array.isArray(rawToken) ? rawToken[0] : rawToken;
+    const pageToken =
+      typeof tokenStr === 'string' && tokenStr.length > 0 ? tokenStr : undefined;
+
+    return { perPage, pageToken };
+  }
+
+  public async listUsersPage(
+    perPage: number,
+    pageToken?: string,
+  ): Promise<AudienceListPageResult> {
+    const capped = Math.min(Math.max(1, perPage), FIREBASE_MAX_LIST_USERS);
 
     try {
-      do {
-        const listUsersResult = await this.getAuthService().listUsers(
-          1000,
-          nextPageToken,
-        );
+      const result = await this.getAuth().listUsers(capped, pageToken);
+      const audiences = result.users.map(this.toAudienceMeta);
+      const nextPageToken = result.pageToken ?? null;
 
-        listUsersResult.users.forEach((userRecord: UserRecord) => {
-          const signUpDate = userRecord.metadata.creationTime
-            ? DateTime.fromHTTP(userRecord.metadata.creationTime).toISO()
-            : null;
-
-          const lastSignInTime = userRecord.metadata.lastSignInTime
-            ? DateTime.fromHTTP(userRecord.metadata.lastSignInTime).toISO()
-            : null;
-
-          allUsers.push({
-            uid: userRecord.uid,
-            name: userRecord.displayName || '',
-            email: userRecord.email || '',
-            photoURL:
-              userRecord.photoURL ||
-              'https://res.cloudinary.com/journeys/image/upload/v1755260359/profile_qblxey.jpg',
-            signUpDate: signUpDate || '',
-            lastSignInTime: lastSignInTime || '',
-          });
-        });
-
-        nextPageToken = listUsersResult.pageToken;
-      } while (nextPageToken);
-
-      cache = {
-        data: allUsers,
-        expiresAt: Date.now() + CACHE_TTL_MS,
-      };
-      return allUsers;
+      return { audiences, nextPageToken, hasMore: Boolean(nextPageToken) };
     } catch (error) {
-      console.error('Error listing all users:', error);
+      console.error('Error listing users page:', error);
       throw new Error('Failed to retrieve user list from Firebase.');
     }
   }
 
-  /**
-   * Initializes and returns the Firebase Admin SDK client.
-   */
-  private initializeClient(): App {
-    if (admin.apps && admin.apps.length > 0 && admin.apps[0]) {
-      return admin.apps[0];
+  public async getAllUsers(): Promise<AudienceMeta[]> {
+    const allUsers: AudienceMeta[] = [];
+    let nextPageToken: string | undefined;
+
+    do {
+      const page = await this.listUsersPage(FIREBASE_MAX_LIST_USERS, nextPageToken);
+      allUsers.push(...page.audiences);
+      nextPageToken = page.nextPageToken ?? undefined;
+    } while (nextPageToken);
+
+    return allUsers;
+  }
+
+  public toCsvFrom(audiences: AudienceMeta[]): string {
+    if (audiences.length === 0) return '';
+
+    const headerRow = CSV_COLUMNS.map((c) => this.escapeCsvField(c.header)).join(',');
+    const dataRows = audiences.map((row) =>
+      CSV_COLUMNS.map((c) => this.escapeCsvField(row[c.key])).join(','),
+    );
+
+    return [headerRow, ...dataRows].join('\n');
+  }
+
+  private getFirebaseApp(): App {
+    if (cachedApp) return cachedApp;
+
+    if (admin.apps.length > 0 && admin.apps[0]) {
+      cachedApp = admin.apps[0];
+      return cachedApp;
     }
 
     const credentials: ServiceAccount = getCredentialsFrom(
       'FIREBASE_SERVICE_ACCOUNT_KEY_JSON',
     );
-
-    return admin.initializeApp({
-      credential: admin.credential.cert(credentials),
-    });
+    cachedApp = admin.initializeApp({ credential: admin.credential.cert(credentials) });
+    return cachedApp;
   }
 
-  /**
-   * Returns the Firebase Auth instance.
-   */
-  private getAuthService(): Auth {
-    return admin.auth(this.app);
+  private getAuth() {
+    return admin.auth(this.getFirebaseApp());
   }
 
-  /**
-   * Converts audience data to a CSV string.
-   */
-  public toCsvFrom(audiences: AudienceMeta[]): string {
-    if (audiences.length === 0) return '';
+  private toAudienceMeta(userRecord: UserRecord): AudienceMeta {
+    const signUpDate = userRecord.metadata.creationTime
+      ? DateTime.fromHTTP(userRecord.metadata.creationTime).toISO()
+      : null;
 
-    const columns = [
-      { key: 'uid', header: 'UID' },
-      { key: 'name', header: 'Name' },
-      { key: 'email', header: 'Email' },
-      { key: 'signUpDate', header: 'Signed Up' },
-      { key: 'lastSignInTime', header: 'Last Sign In' },
-    ];
+    const lastSignInTime = userRecord.metadata.lastSignInTime
+      ? DateTime.fromHTTP(userRecord.metadata.lastSignInTime).toISO()
+      : null;
 
-    const escape = (value: unknown): string => {
-      const str = value === null || value === undefined ? '' : String(value);
-      if (str.includes(',') || str.includes('\n') || str.includes('"')) {
-        return `"${str.replace(/"/g, '""')}"`;
-      }
-      return str;
+    return {
+      uid: userRecord.uid,
+      name: userRecord.displayName || '',
+      email: userRecord.email || '',
+      photoURL:
+        userRecord.photoURL ||
+        'https://res.cloudinary.com/journeys/image/upload/v1755260359/profile_qblxey.jpg',
+      signUpDate: signUpDate || '',
+      lastSignInTime: lastSignInTime || '',
     };
+  }
 
-    const headerRow = columns.map((c) => escape(c.header)).join(',');
-    const dataRows = audiences.map((row) =>
-      columns
-        .map((c) => escape((row as unknown as Record<string, unknown>)[c.key]))
-        .join(','),
-    );
-
-    return [headerRow, ...dataRows].join('\n');
+  private escapeCsvField(value: unknown): string {
+    const str = value === null || value === undefined ? '' : String(value);
+    if (str.includes(',') || str.includes('\n') || str.includes('"')) {
+      return `"${str.replace(/"/g, '""')}"`;
+    }
+    return str;
   }
 }

@@ -4,7 +4,7 @@
       <ContentHeader title="Audiences">
         <template #actions>
           <button
-            v-if="audiences.length > 0"
+            v-if="showExport"
             type="button"
             :disabled="user.role !== 'admin' || isExporting"
             class="w-32 rounded-[38px] border bg-blue-500 px-[15px] py-[9px] text-center text-sm/5 font-medium text-white opacity-80 shadow focus:outline-none focus:ring focus:ring-indigo-500 active:opacity-80 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset] enabled:hover:bg-blue-400 enabled:hover:shadow-none disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
@@ -64,22 +64,37 @@
                     </tr>
                   </template>
                   <template v-else>
-                    <tr v-for="audience in paginatedAudiences" :key="audience.uid">
+                    <tr v-for="audience in audiences" :key="audience.uid">
                       <AudienceRow :audience="audience" />
                     </tr>
                   </template>
                 </tbody>
               </table>
 
-              <!-- Pagination -->
-
-              <Pagination
-                v-if="!isLoading && audiences.length > itemsPerPage"
-                :current-page="currentPage"
-                :total-items="audiences.length"
-                :items-per-page="itemsPerPage"
-                @page-change="handlePageChange"
-              />
+              <div
+                v-if="!isLoading && (listMeta.hasPrevious || listMeta.hasMore)"
+                class="flex flex-wrap items-center justify-between gap-3 border-t border-gray-200 px-4 py-3 sm:px-6"
+              >
+                <p class="text-sm text-gray-600">Page {{ currentPageNumber }}</p>
+                <div class="flex gap-2">
+                  <button
+                    type="button"
+                    :disabled="!listMeta.hasPrevious || isLoadingPage"
+                    class="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm enabled:hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+                    @click="goPrevious"
+                  >
+                    Previous
+                  </button>
+                  <button
+                    type="button"
+                    :disabled="!listMeta.hasMore || isLoadingPage"
+                    class="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm enabled:hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+                    @click="goNext"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -92,12 +107,15 @@
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 
+import {
+  type SharedPageProps,
+  type AudienceMeta,
+  type AudienceListMeta,
+  ResponseStatus,
+} from '../../types';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
-import Pagination from '../shared/pagination.vue';
 import AudienceRow from './components/audience-row.vue';
-
-import { type SharedPageProps, type AudienceMeta, ResponseStatus } from '../../types';
 import { useSharedStore } from '../store';
 
 const props = defineProps<SharedPageProps>();
@@ -108,22 +126,81 @@ shared.setCurrentStoryName('');
 
 const audiences = ref<AudienceMeta[]>([]);
 const isLoading = ref(true);
+const isLoadingPage = ref(false);
 
-// Pagination state
-const currentPage = ref(1);
 const itemsPerPage = 10;
 
-// Computed properties for pagination
-const paginatedAudiences = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  return audiences.value.slice(startIndex, endIndex);
+/** `pageTokens[i]` is the Firebase `pageToken` query param to load page `i + 1` (first page uses `undefined`). */
+const pageTokens = ref<(string | undefined)[]>([undefined]);
+
+/** Zero-based index of the current page. */
+const currentPageIndex = ref(0);
+
+const listMeta = ref<AudienceListMeta>({
+  perPage: itemsPerPage,
+  nextPageToken: null,
+  hasMore: false,
+  hasPrevious: false,
 });
 
-// Handle page changes
-const handlePageChange = (page: number) => {
-  currentPage.value = page;
-};
+const currentPageNumber = computed(() => currentPageIndex.value + 1);
+
+const showExport = computed(
+  () => audiences.value.length > 0 || currentPageIndex.value > 0,
+);
+
+const usersUrl = computed(() => `/${shared.locale}/audience/users`);
+
+async function loadPage(pageIndex: number) {
+  const pageToken = pageTokens.value[pageIndex];
+  const { data } = await axios.get<{
+    audiences: AudienceMeta[];
+    meta: AudienceListMeta;
+  }>(usersUrl.value, {
+    params: {
+      perPage: itemsPerPage,
+      ...(pageToken !== undefined ? { pageToken } : {}),
+    },
+  });
+
+  audiences.value = data.audiences;
+  listMeta.value = data.meta;
+
+  const next = data.meta.nextPageToken;
+  if (next) {
+    pageTokens.value[pageIndex + 1] = next;
+  } else {
+    pageTokens.value = pageTokens.value.slice(0, pageIndex + 1);
+  }
+}
+
+async function goNext() {
+  if (!listMeta.value.hasMore) return;
+  isLoadingPage.value = true;
+  try {
+    currentPageIndex.value += 1;
+    await loadPage(currentPageIndex.value);
+  } catch {
+    currentPageIndex.value -= 1;
+    shared.addMessage(ResponseStatus.Failure, 'Could not load the next page.');
+  } finally {
+    isLoadingPage.value = false;
+  }
+}
+
+async function goPrevious() {
+  if (!listMeta.value.hasPrevious) return;
+  isLoadingPage.value = true;
+  try {
+    currentPageIndex.value -= 1;
+    await loadPage(currentPageIndex.value);
+  } catch {
+    currentPageIndex.value += 1;
+    shared.addMessage(ResponseStatus.Failure, 'Could not load the previous page.');
+  } finally {
+    isLoadingPage.value = false;
+  }
+}
 
 const exportUrl = computed(() => `/${shared.locale}/audience/export`);
 const isExporting = ref(false);
@@ -148,10 +225,9 @@ const exportAudiences = async () => {
     URL.revokeObjectURL(url);
 
     shared.addMessage(ResponseStatus.Accomplishment, 'Download started');
-  } catch (_e) {
-    console.error(_e);
-    const message = 'Download failed. Contact support.';
-    shared.addMessage(ResponseStatus.Failure, message);
+  } catch (error) {
+    console.error(error);
+    shared.addMessage(ResponseStatus.Failure, 'Download failed. Contact support.');
   } finally {
     isExporting.value = false;
   }
@@ -159,12 +235,15 @@ const exportAudiences = async () => {
 
 onMounted(async () => {
   try {
-    const { data } = await axios.get<{ audiences: AudienceMeta[] }>(
-      `/${shared.locale}/audience/users`,
-    );
-    audiences.value = data.audiences ?? [];
+    await loadPage(0);
   } catch {
     audiences.value = [];
+    listMeta.value = {
+      perPage: itemsPerPage,
+      nextPageToken: null,
+      hasMore: false,
+      hasPrevious: false,
+    };
   } finally {
     isLoading.value = false;
   }

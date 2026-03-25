@@ -418,6 +418,13 @@ export interface AudienceMeta {
   lastSignInTime: string;
 }
 
+export interface AudienceListMeta {
+  perPage: number;
+  nextPageToken: string | null;
+  hasMore: boolean;
+  hasPrevious: boolean;
+}
+
 /// ----------------------------------------------------
 ///  campaigns
 /// ----------------------------------------------------
