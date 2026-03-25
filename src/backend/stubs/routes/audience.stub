@@ -8,4 +8,6 @@ const AudiencesController = () => import('#controllers/audiences_controller');
 
 export default () => {
   router.get(':locale/audience', [AudiencesController, 'index']);
+  router.get(':locale/audience/users', [AudiencesController, 'getAudience']);
+  router.get(':locale/audience/export', [AudiencesController, 'exportAudience']);
 };

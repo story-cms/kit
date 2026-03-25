@@ -418,8 +418,11 @@ export interface AudienceMeta {
   lastSignInTime: string;
 }
 
-export interface AudiencesProps {
-  audiences: AudienceMeta[];
+export interface AudienceListMeta {
+  perPage: number;
+  nextPageToken: string | null;
+  hasMore: boolean;
+  hasPrevious: boolean;
 }
 
 /// ----------------------------------------------------

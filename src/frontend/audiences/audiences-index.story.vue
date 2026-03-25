@@ -36,6 +36,18 @@
         :exclude="[]"
       />
     </Variant>
+    <Variant title="With admin user" :setup-app="miniSidebar">
+      <AudiencesIndex
+        :meta="sharedProps.meta"
+        :user="{ ...sharedProps.user, role: 'admin' }"
+        :languages="sharedProps.languages"
+        :language="sharedProps.language"
+        :errors="sharedProps.errors"
+        :audiences="audiences"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
+      />
+    </Variant>
   </Story>
 </template>
 
