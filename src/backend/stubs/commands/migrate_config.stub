@@ -1,0 +1,56 @@
+{{{
+  exports({ to: app.commandsPath('migrate_config.ts') })
+}}}
+import { BaseCommand } from '@adonisjs/core/ace';
+import type { CommandOptions } from '@adonisjs/core/types/ace';
+import { CmsConfig, Config, defineConfig } from '@story-cms/kit';
+
+export default class MigrateConfig extends BaseCommand {
+  static commandName = 'migrate:config';
+  static description = 'Migrate the active configuration';
+
+  static options: CommandOptions = { startApp: true };
+
+  async run() {
+    // fetch active configuration
+    const active = await Config.query()
+      .where('key', 'cms')
+      .orderBy('version', 'desc')
+      .first();
+
+    if (!active) {
+      this.logger.info('No active configuration found, skipping migration');
+      return;
+    }
+
+    try {
+      const overrides = active.data as CmsConfig;
+      const newConfig = defineConfig(overrides);
+      if (this.isEqual(newConfig, overrides)) {
+        this.logger.info('Configuration is up to date, skipping migration');
+        return;
+      }
+
+      const config = new Config();
+      config.key = 'cms';
+      config.version = active.version + 1;
+      config.data = newConfig;
+      await config.save();
+      this.logger.info('Configuration migrated successfully');
+    } catch (error) {
+      this.logger.error('Error migrating configuration: ' + error);
+    }
+  }
+
+  private isEqual(a: CmsConfig, b: CmsConfig): boolean {
+    const sortedStringify = (obj: unknown): string =>
+      JSON.stringify(obj, (_key, value) =>
+        value && typeof value === 'object' && !Array.isArray(value)
+          ? Object.fromEntries(
+              Object.entries(value).sort(([x], [y]) => x.localeCompare(y)),
+            )
+          : value,
+      );
+    return sortedStringify(a) === sortedStringify(b);
+  }
+}
