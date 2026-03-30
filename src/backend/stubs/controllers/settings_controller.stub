@@ -13,10 +13,6 @@ const subjectMap: Record<SupportCode, string> = {
 };
 
 export default class SettingsController {
-  async emailTest(ctx: HttpContext) {
-    const shared = await cms.sharedProps(ctx);
-    return ctx.inertia.render('EmailTest', shared);
-  }
 
   async support(ctx: HttpContext) {
     try {

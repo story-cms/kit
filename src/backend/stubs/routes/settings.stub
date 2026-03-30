@@ -6,6 +6,5 @@ import router from '@adonisjs/core/services/router';
 const SettingsController = () => import('#controllers/settings_controller');
 
 export default () => {
-  router.get(':locale/settings/email-test', [SettingsController, 'emailTest']); // @TODO: Remove this route
   router.post(':locale/settings/support', [SettingsController, 'support']);
 };
