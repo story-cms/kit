@@ -1,4 +1,3 @@
-import User from '../models/user.js';
 import db from '@adonisjs/lucid/services/db';
 import vine, { SimpleMessagesProvider } from '@vinejs/vine';
 import { FieldContext } from '@vinejs/vine/types';
@@ -36,6 +35,8 @@ async function unique(value: unknown, options: Options, field: FieldContext) {
  */
 export const uniqueRule = vine.createRule(unique);
 
+const roles = ['admin', 'editor'];
+
 /**
  * Validates the user's creation action
  */
@@ -48,7 +49,7 @@ export const createUserValidator = vine.compile(
       .email()
       .use(uniqueRule({ table: 'users', column: 'email' })),
     language: vine.string(),
-    role: vine.enum(User.roles),
+    role: vine.enum(roles),
   }),
 );
 
@@ -60,7 +61,7 @@ export const updateUserValidator = vine.compile(
     name: vine.string(),
     email: vine.string().trim().email(),
     language: vine.string(),
-    role: vine.enum(User.roles),
+    role: vine.enum(roles),
   }),
 );
 

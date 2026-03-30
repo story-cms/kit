@@ -143,6 +143,14 @@ export async function configure(command: Configure) {
   /**
    * Define environment variables validations
    */
+
+  await codemods.defineEnvValidations({
+    variables: {
+      DB_CONNECTION: `Env.schema.string(),`,
+    },
+    leadingComment: 'Variables for configuring the database connection',
+  });
+
   await codemods.defineEnvValidations({
     variables: {
       MAIL_FROM_ADDRESS: `Env.schema.string(),`,
