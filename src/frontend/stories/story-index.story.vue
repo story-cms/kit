@@ -17,6 +17,27 @@
             title: 'Sample Item 2',
             tags: ['Live'],
           },
+          {
+            number: 3,
+            imageUrl:
+              'https://res.cloudinary.com/redeem/image/upload/v1752849347/story-cms-ui/placeholder_bafmfz.jpg',
+            title: 'Sample Item 2',
+            tags: ['Live'],
+          },
+          {
+            number: 4,
+            imageUrl:
+              'https://res.cloudinary.com/redeem/image/upload/v1752849347/story-cms-ui/placeholder_bafmfz.jpg',
+            title: 'Sample Item 2',
+            tags: ['Live'],
+          },
+          {
+            number: 5,
+            imageUrl:
+              'https://res.cloudinary.com/redeem/image/upload/v1752849347/story-cms-ui/placeholder_bafmfz.jpg',
+            title: 'Sample Item 2',
+            tags: ['Live'],
+          },
         ]"
         :meta="sharedProps.meta"
         :user="user"
