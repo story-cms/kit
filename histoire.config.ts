@@ -3,7 +3,7 @@ import { HstVue } from '@histoire/plugin-vue';
 import type { Plugin } from 'vite';
 
 function splitLargeVendors(id: string): string | undefined {
-  if (!id.includes('node_modules')) return;
+  if (!id.includes('node_modules')) return undefined;
 
   if (id.includes('@rive-app')) return 'vendor-rive';
   if (id.includes('easymde') || id.includes('codemirror')) return 'vendor-easymde';
@@ -11,6 +11,8 @@ function splitLargeVendors(id: string): string | undefined {
     return 'vendor-shiki-langs';
   if (id.includes('@shikijs/themes')) return 'vendor-shiki-themes';
   if (id.includes('shiki') || id.includes('@shikijs')) return 'vendor-shiki-core';
+
+  return undefined;
 }
 
 function chunksPlugin(): Plugin {
