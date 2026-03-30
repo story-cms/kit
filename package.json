@@ -121,7 +121,6 @@
       "./src/backend/models/**/*.ts",
       "./src/backend/providers/**/*.ts",
       "./src/backend/services/**/*.ts",
-      "./src/backend/database/**/*.ts",
       "./src/backend/validators/**/*.ts"
     ],
     "outDir": "./dist/backend",

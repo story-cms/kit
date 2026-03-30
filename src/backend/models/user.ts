@@ -1,5 +1,5 @@
 import type { UserMeta } from '../../types';
-import { UserSchema } from '../database/schema';
+import { UserSchema } from './schema.js';
 import hash from '@adonisjs/core/services/hash';
 import { compose } from '@adonisjs/core/helpers';
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid';
