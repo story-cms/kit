@@ -232,3 +232,43 @@ export function parseIsoDateForDisplay(iso: string): Date | null {
   const d = new Date(year, month, day, 12, 0, 0, 0);
   return isNaN(d.getTime()) ? null : d;
 }
+
+const HELPSCOUT_BEACON_ID = '14f5b859-dd91-4433-917d-d1a94e412eea';
+
+export const helpScoutWidget = (page: { props: Record<string, unknown> }) => {
+  if (!page.props.user || (window as any).__helpscoutBeaconInitialized) return;
+
+  (window as any).__helpscoutBeaconInitialized = true;
+
+  const loadBeacon = () => {
+    const s = document.getElementsByTagName('script')[0];
+    const n = document.createElement('script');
+    n.type = 'text/javascript';
+    n.async = true;
+    n.src = 'https://beacon-v2.helpscout.net';
+    s.parentNode?.insertBefore(n, s);
+  };
+
+  if (!(window as any).Beacon) {
+    (window as any).Beacon = function (
+      method: string,
+      options?: unknown,
+      data?: unknown,
+    ) {
+      ((window as any).Beacon.readyQueue = (window as any).Beacon.readyQueue || []).push({
+        method,
+        options,
+        data,
+      });
+    };
+    (window as any).Beacon.readyQueue = [];
+  }
+
+  if (document.readyState === 'complete') {
+    loadBeacon();
+  } else {
+    window.addEventListener('load', loadBeacon, false);
+  }
+
+  (window as any).Beacon('init', HELPSCOUT_BEACON_ID);
+};
