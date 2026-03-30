@@ -1,0 +1,32 @@
+{{{
+  exports({ to: app.makePath('resources/views/emails/support_request.edge') })
+}}}
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>\{\{ subject \}\}</title>
+  </head>
+  <body style="font-family: Ubuntu, Helvetica, Arial, sans-serif; margin: 0; padding: 20px; color: #333;">
+    <div style="max-width: 600px; margin: 0 auto;">
+      <div style="border-top: solid 4px #002666; padding: 20px 0;">
+        <h2 style="color: #002666; margin-top: 0;">\{\{ subject \}\}</h2>
+
+        <p><strong>App name:</strong> \{\{ appName \}\}</p>
+        <p><strong>Requested by:</strong> \{\{ requester \}\}</p>
+        <p><strong>Support code:</strong> \{\{ supportCode \}\}</p>
+
+        <h3 style="color: #002666;">Details</h3>
+        <table style="border-collapse: collapse; width: 100%;">
+          @each((value, key) in context)
+            <tr>
+              <td style="padding: 6px 12px; border: 1px solid #ddd; font-weight: bold;">\{\{ key \}\}</td>
+              <td style="padding: 6px 12px; border: 1px solid #ddd;">\{\{ value \}\}</td>
+            </tr>
+          @end
+        </table>
+      </div>
+    </div>
+  </body>
+</html>
