@@ -15,7 +15,7 @@ export const PageFactory = factory
       apiVersion: 1,
       locale: 'en',
       order: 1,
-      bundle: JSON.stringify(bundle),
+      bundle: bundle as any,
       isPublished: true,
     };
   })

@@ -42,7 +42,7 @@ export * from './validators/campaign.js';
 export * from './validators/bundle.js';
 export * from './validators/chapter.js';
 export * from './validators/drop.js';
-export * from './validators/page.js';
+export { default as PageValidator } from './validators/page.js';
 export * from './validators/user.js';
 export { default as audioRule } from './validators/audio_rule.js';
 export { default as videoRule } from './validators/video_rule.js';

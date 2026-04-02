@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { PageValidator, pageErrorMessages } from '../../src/backend/validators/page.js';
+import PageValidator from '../../src/backend/validators/page.js';
 import type { HttpContext } from '@adonisjs/core/http';
 
 // Helper to create a mock HttpContext
@@ -20,9 +20,8 @@ test.describe('Page Validator', () => {
       };
       const ctx = createMockHttpContext(data);
       const validator = new PageValidator(ctx);
-      const schema = validator.schema;
 
-      await expect(schema.validate(data)).rejects.toThrow();
+      await expect(validator.validate(data)).rejects.toThrow();
     });
 
     test('accepts minimal draft data with title and isPublished', async () => {
@@ -32,9 +31,8 @@ test.describe('Page Validator', () => {
       };
       const ctx = createMockHttpContext(data);
       const validator = new PageValidator(ctx);
-      const schema = validator.schema;
 
-      const result = await schema.validate(data);
+      const result = (await validator.validate(data)).bundle;
       expect(result.title).toBe('Test Page');
       expect(result.isPublished).toBe(false);
     });
@@ -47,9 +45,8 @@ test.describe('Page Validator', () => {
       };
       const ctx = createMockHttpContext(data);
       const validator = new PageValidator(ctx);
-      const schema = validator.schema;
 
-      const result = await schema.validate(data);
+      const result = (await validator.validate(data)).bundle;
       expect(result.title).toBe('Test Page');
       expect(result.description).toBe('Test Description');
     });
@@ -66,10 +63,9 @@ test.describe('Page Validator', () => {
       };
       const ctx = createMockHttpContext(data);
       const validator = new PageValidator(ctx);
-      const schema = validator.schema;
 
-      const result = await schema.validate(data);
-      expect(result).toEqual(data);
+      const result = await validator.validate(data);
+      expect(result.bundle).toEqual(data);
     });
   });
 
@@ -86,9 +82,8 @@ test.describe('Page Validator', () => {
 
       const ctx = createMockHttpContext(data);
       const validator = new PageValidator(ctx);
-      const schema = validator.schema;
 
-      await expect(schema.validate(data)).rejects.toThrow();
+      await expect(validator.validate(data)).rejects.toThrow();
     });
 
     test('requires icon', async () => {
@@ -102,9 +97,8 @@ test.describe('Page Validator', () => {
 
       const ctx = createMockHttpContext(data);
       const validator = new PageValidator(ctx);
-      const schema = validator.schema;
 
-      await expect(schema.validate(data)).rejects.toThrow();
+      await expect(validator.validate(data)).rejects.toThrow();
     });
 
     test('requires description', async () => {
@@ -118,9 +112,8 @@ test.describe('Page Validator', () => {
 
       const ctx = createMockHttpContext(data);
       const validator = new PageValidator(ctx);
-      const schema = validator.schema;
 
-      await expect(schema.validate(data)).rejects.toThrow();
+      await expect(validator.validate(data)).rejects.toThrow();
     });
 
     test('requires body', async () => {
@@ -135,9 +128,8 @@ test.describe('Page Validator', () => {
 
       const ctx = createMockHttpContext(data);
       const validator = new PageValidator(ctx);
-      const schema = validator.schema;
 
-      await expect(schema.validate(data)).rejects.toThrow();
+      await expect(validator.validate(data)).rejects.toThrow();
     });
 
     test('requires type', async () => {
@@ -151,9 +143,8 @@ test.describe('Page Validator', () => {
 
       const ctx = createMockHttpContext(data);
       const validator = new PageValidator(ctx);
-      const schema = validator.schema;
 
-      await expect(schema.validate(data)).rejects.toThrow();
+      await expect(validator.validate(data)).rejects.toThrow();
     });
 
     test('makes category optional', async () => {
@@ -168,9 +159,8 @@ test.describe('Page Validator', () => {
 
       const ctx = createMockHttpContext(data);
       const validator = new PageValidator(ctx);
-      const schema = validator.schema;
 
-      const result = await schema.validate(data);
+      const result = (await validator.validate(data)).bundle;
       expect(result.category).toBeUndefined();
     });
 
@@ -187,9 +177,8 @@ test.describe('Page Validator', () => {
 
       const ctx = createMockHttpContext(data);
       const validator = new PageValidator(ctx);
-      const schema = validator.schema;
 
-      const result = await schema.validate(data);
+      const result = (await validator.validate(data)).bundle;
       expect(result.category).toBe('');
     });
 
@@ -205,10 +194,9 @@ test.describe('Page Validator', () => {
       };
       const ctx = createMockHttpContext(data);
       const validator = new PageValidator(ctx);
-      const schema = validator.schema;
 
-      const result = await schema.validate(data);
-      expect(result).toEqual(data);
+      const result = await validator.validate(data);
+      expect(result.bundle).toEqual(data);
     });
   });
 
@@ -225,9 +213,8 @@ test.describe('Page Validator', () => {
 
       const ctx = createMockHttpContext(data);
       const validator = new PageValidator(ctx);
-      const schema = validator.schema;
 
-      await expect(schema.validate(data)).rejects.toThrow();
+      await expect(validator.validate(data)).rejects.toThrow();
     });
 
     test('rejects body without protocol when type is link', async () => {
@@ -242,9 +229,8 @@ test.describe('Page Validator', () => {
 
       const ctx = createMockHttpContext(data);
       const validator = new PageValidator(ctx);
-      const schema = validator.schema;
 
-      await expect(schema.validate(data)).rejects.toThrow();
+      await expect(validator.validate(data)).rejects.toThrow();
     });
 
     test('rejects invalid URL for body when type is link', async () => {
@@ -259,9 +245,8 @@ test.describe('Page Validator', () => {
 
       const ctx = createMockHttpContext(data);
       const validator = new PageValidator(ctx);
-      const schema = validator.schema;
 
-      await expect(schema.validate(data)).rejects.toThrow();
+      await expect(validator.validate(data)).rejects.toThrow();
     });
 
     test('accepts https URL for body when type is link', async () => {
@@ -276,16 +261,9 @@ test.describe('Page Validator', () => {
 
       const ctx = createMockHttpContext(data);
       const validator = new PageValidator(ctx);
-      const schema = validator.schema;
 
-      const result = await schema.validate(data);
+      const result = (await validator.validate(data)).bundle;
       expect(result.body).toBe('https://example.com/page');
-    });
-  });
-
-  test.describe('pageErrorMessages', () => {
-    test('is exported for use as messages provider', () => {
-      expect(pageErrorMessages).toBeDefined();
     });
   });
 });
