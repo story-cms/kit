@@ -45,9 +45,9 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'config/cms.stub', {});
 
   codemods.overwriteExisting = true;
+  await codemods.makeUsingStub(stubsRoot, 'config/database.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/bodyparser.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/cache.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'config/inertia.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/providers.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/auth.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/cms.stub', {});
@@ -79,6 +79,8 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'controllers/stories_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/users_controller.stub', {});
 
+  await codemods.makeUsingStub(stubsRoot, 'inertia/middleware.stub', {});
+
   await codemods.makeUsingStub(stubsRoot, 'routes/users.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/auth.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/routes.stub', {});
@@ -97,6 +99,8 @@ export async function configure(command: Configure) {
 
   await codemods.makeUsingStub(stubsRoot, 'inertia/app.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'inertia/css.stub', {});
+
+  await codemods.makeUsingStub(stubsRoot, 'validators/story_validator.stub', {});
 
   await codemods.makeUsingStub(stubsRoot, 'resources/layout.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'resources/views/preview.stub', {});

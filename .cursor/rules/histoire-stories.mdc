@@ -1,5 +1,5 @@
 ---
-description: Histoire story patterns and conventions for Vue components in StoryCMS Kit
+description: Histoire story patterns and conventions for Vue components in Journeys Studio Kit
 globs: src/frontend/**/*.story.vue
 alwaysApply: false
 ---

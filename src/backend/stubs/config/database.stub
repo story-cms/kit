@@ -1,0 +1,27 @@
+{{{
+  exports({ to: app.configPath('database.ts') })
+}}}
+import env from '#start/env';
+import app from '@adonisjs/core/services/app';
+import { defineConfig } from '@adonisjs/lucid';
+
+const dbConfig = defineConfig({
+  connection: 'pg',
+
+  connections: {
+    pg: {
+      client: 'pg',
+      connection: env.get('DB_CONNECTION'),
+      migrations: {
+        naturalSort: true,
+        paths: ['database/migrations'],
+      },
+      debug: app.inDev,
+      schemaGeneration: {
+        enabled: false,
+      },
+    },
+  },
+});
+
+export default dbConfig;
