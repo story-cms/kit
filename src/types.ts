@@ -299,7 +299,7 @@ export interface PageBundle {
 
 export interface SharedPageProps {
   meta: CmsMeta;
-  user: UserInterface;
+  user: AppUserInterface;
   language: LanguageSpecification;
   languages: LanguageSpecification[];
   errors?: any;
@@ -326,6 +326,14 @@ export interface PageEditProps {
 /// ----------------------------------------------------
 ///  team
 /// ----------------------------------------------------
+
+export interface AppUserInterface {
+  id: number;
+  name: string;
+  isAdmin: boolean;
+  isManager: boolean;
+  role: string;
+}
 
 export interface UserInterface {
   id: number;

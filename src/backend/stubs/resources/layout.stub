@@ -11,8 +11,9 @@
 
   <title inertia>Journeys Studio</title>
 
-  @vite(['inertia/app/app.ts'])
+  @vite(['inertia/app.ts'])
   @inertiaHead()
+  @stack('dumper')
 </head>
 
 <body>

@@ -251,9 +251,9 @@ test.group('Page', (group) => {
 
   test('it identifies the type', async ({ assert }) => {
     const page = await PageFactory.merge({
-      bundle: JSON.stringify({
+      bundle: {
         body: 'https://test.com',
-      }),
+      },
     }).create();
     assert.isTrue(page.isLink);
   });
@@ -262,16 +262,16 @@ test.group('Page', (group) => {
     const tracking = cmsConfig.pages.tracking;
 
     const page = await PageFactory.merge({
-      bundle: JSON.stringify({
+      bundle: {
         body: 'https://test.com',
-      }),
+      },
     }).make();
     assert.equal(page.bundleWithTracking(tracking).body, {{{ '`https://test.com?${tracking}`' }}});
 
     const withQuery = await PageFactory.merge({
-      bundle: JSON.stringify({
+      bundle: {
         body: 'https://test.com?q=1&q=some+other+thing',
-      }),
+      },
     }).make();
     assert.equal(
       withQuery.bundleWithTracking(tracking).body,
@@ -279,9 +279,9 @@ test.group('Page', (group) => {
     );
 
     const withComplexQuery = await PageFactory.merge({
-      bundle: JSON.stringify({
+      bundle: {
         body: 'https://test.com?q=is+it+worth+it?',
-      }),
+      },
     }).make();
     assert.equal(
       withComplexQuery.bundleWithTracking(tracking).body,
@@ -291,30 +291,29 @@ test.group('Page', (group) => {
 
   test('it can update the bundle', async ({ assert }) => {
     const page = await PageFactory.merge({
-      bundle: JSON.stringify({
+      bundle: {
         junk: 'Should not be in the bundle',
         body: 'the original body',
         icon: 'https://test.com',
-      }),
+      },
     }).create();
 
     page.updateBundle({ title: 'Adam and Eve', icon: '' });
 
-    assert.isString(page.bundle);
-    const updated = JSON.parse(page.bundle);
+    const updated = page.bundle;
 
     // removes junk
     assert.isUndefined(updated.junk);
     // updates fresh attributes
     assert.equal(updated.title, 'Adam and Eve');
     // adds missing attributes
-    assert.equal(page.parsedBundle.description, '');
+    assert.equal(page.bundle.description, '');
     // adds missing attributes with default
-    assert.equal(page.parsedBundle.group, 1);
+    assert.equal(page.bundle.group, 1);
     // does not change existing attributes
-    assert.equal(page.parsedBundle.body, 'the original body');
+    assert.equal(page.bundle.body, 'the original body');
     // deletes attributes that are empty
-    assert.equal(page.parsedBundle.icon, '');
+    assert.equal(page.bundle.icon, '');
   });
 });
 

@@ -7,6 +7,7 @@ import type {
   SharedPageProps,
   LanguageSpecification,
   Bookmark,
+  AppUserInterface,
 } from '../../types';
 import { defineConfig } from '../define_config.js';
 import { PreferenceService } from './preference_service.js';
@@ -169,9 +170,17 @@ export class CmsService {
 
     const bookmarks = await this.getBookmarks(ctx);
 
+    const user: AppUserInterface = ctx.auth?.use('web')?.user?.appUser ?? {
+      id: 0,
+      name: '',
+      isAdmin: false,
+      isManager: false,
+      role: '',
+    };
+
     return {
+      user,
       meta: this.#config.meta,
-      user: ctx.auth?.use('web')?.user,
       language: this.getLanguage(ctx.params.locale ?? 'en'),
       languages: this.#config.languages.languages,
       exclude,

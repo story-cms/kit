@@ -6,7 +6,7 @@ import {
   type LanguageSpecification,
   type Bookmark,
   type CmsMeta,
-  type UserInterface,
+  type AppUserInterface,
   ResponseStatus,
 } from '../../types';
 import standardSidebar from '../shared/sidebar.vue';
@@ -20,7 +20,7 @@ const defaultLanguage: LanguageSpecification = {
 export const useSharedStore = defineStore('shared', () => {
   const exclude: Ref<string[]> = ref([]);
   const meta: Ref<CmsMeta> = ref({} as CmsMeta);
-  const user: Ref<UserInterface> = ref({} as UserInterface);
+  const user: Ref<AppUserInterface> = ref({} as AppUserInterface);
   const languages: Ref<LanguageSpecification[]> = ref([] as LanguageSpecification[]);
   const bookmarks: Ref<Bookmark[]> = ref([]);
 
