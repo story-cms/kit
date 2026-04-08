@@ -6,7 +6,7 @@ export const DraftFactory = factory
     return {
       apiVersion: 1,
       locale: 'en',
-      bundle: '[]',
+      bundle: {},
       number: 1,
       storyId: 1,
       feedback: faker.lorem.sentence(),

@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import { BaseModel, column } from '@adonisjs/lucid/orm';
-import { IndexItem, Specifier, Version, DraftMeta } from '../../types';
+import type { IndexItem, Specifier, Version, DraftMeta, JSON } from '../../types';
 
 export default class Draft extends BaseModel {
   @column({ isPrimary: true })
@@ -16,7 +16,7 @@ export default class Draft extends BaseModel {
   declare number: number;
 
   @column()
-  declare bundle: string;
+  declare bundle: JSON<any>;
 
   @column()
   declare storyId: number;
@@ -36,16 +36,11 @@ export default class Draft extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime;
 
-  public get parsedBundle(): Record<string, unknown> {
-    const start = typeof this.bundle === 'string' ? JSON.parse(this.bundle) : this.bundle;
-    return start;
-  }
-
   public get index(): IndexItem {
     return {
       number: this.number,
-      title: this.parsedBundle['title'] as string,
-      imageUrl: this.parsedBundle['imageUrl'] as string,
+      title: this.bundle['title'] as string,
+      imageUrl: this.bundle['imageUrl'] as string,
     };
   }
 
