@@ -120,7 +120,7 @@ test.group('Chapter', (group) => {
 
     const fresh = await Chapter.findOrFail(chapter.id);
 
-    assert.equal(fresh.parsedBundle['title'], 'Adam and Eve');
+    assert.equal(fresh.bundle['title'], 'Adam and Eve');
   });
 });
 
@@ -241,7 +241,7 @@ test.group('Draft', (group) => {
 
     const fresh = await Draft.findOrFail(draft.id);
 
-    assert.equal(fresh.parsedBundle['title'], 'Adam and Eve');
+    assert.equal(fresh.bundle['title'], 'Adam and Eve');
     assert.equal(fresh.status, 'submitted');
   });
 });

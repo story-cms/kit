@@ -1,5 +1,5 @@
 {{{
-  exports({ to: app.makePath('resources/views/preview.edge') })
+  exports({ to: app.makePath('resources/views/preview_1.edge') })
 }}}
 <section>
   <div class="mb-1 text-sm font-medium leading-5 text-gray-400">Title</div>

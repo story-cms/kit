@@ -6,7 +6,7 @@ import router from '@adonisjs/core/services/router';
 const PagesController = () => import('#controllers/pages_controller');
 
 export default () => {
-  router.on('/page').redirect('/:locale/page', {
+  router.on('/page').redirect('pages.index', {
     locale: 'en',
   });
   router.get(':locale/page', [PagesController, 'index']);

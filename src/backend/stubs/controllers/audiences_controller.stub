@@ -22,6 +22,7 @@ export default class AudiencesController {
       ...shared,
     };
 
+    // @ts-expect-error Inertia page name
     return ctx.inertia.render('AudiencesIndex', { ...props });
   }
 }

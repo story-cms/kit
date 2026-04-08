@@ -8,8 +8,9 @@ import cms from '#services/cms';
 export default class StoriesController {
   public async index(ctx: HttpContext) {
     const stories = await this.galleryIndex(ctx.params.locale);
-
     const shared = await cms.sharedProps(ctx);
+
+    // @ts-expect-error Inertia page name
     return ctx.inertia.render('StoryGallery', { stories, ...shared });
   }
 
