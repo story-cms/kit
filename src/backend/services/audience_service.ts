@@ -5,8 +5,11 @@ import { DateTime } from 'luxon';
 import type { AudienceMeta, AudiencesUsersPageResponse } from '../../types';
 import { getCredentialsFrom } from './helpers.js';
 
-/** Page size for audience list (Firebase `listUsers` per request). */
-export const AUDIENCE_LIST_PAGE_SIZE = 100;
+/**
+ * Page size for audience list.
+ * Should be less than 1000 because of Firebase Auth API limits.
+ */
+export const AUDIENCE_LIST_PAGE_SIZE = 800;
 
 export class AudienceService {
   private app: App;
@@ -29,28 +32,17 @@ export class AudienceService {
       this.userRecordToMeta(userRecord),
     );
 
+    const nextPageToken = listUsersResult.pageToken ?? null;
+
+    // Sort the users if there are no more users to fetch
+    if (nextPageToken === null) {
+      users.sort((a, b) => b.lastSignInTime.localeCompare(a.lastSignInTime));
+    }
+
     return {
       users,
-      nextPageToken: listUsersResult.pageToken ?? null,
+      nextPageToken,
     };
-  }
-
-  public async getAllUsers(): Promise<AudienceMeta[]> {
-    const allUsers: AudienceMeta[] = [];
-    let nextPageToken: string | undefined;
-
-    try {
-      do {
-        const page = await this.listUsersPage(1000, nextPageToken);
-        allUsers.push(...page.users);
-        nextPageToken = page.nextPageToken ?? undefined;
-      } while (nextPageToken);
-
-      return allUsers;
-    } catch (error) {
-      console.error('Error listing all users:', error);
-      throw new Error('Failed to retrieve user list from Firebase.');
-    }
   }
 
   private userRecordToMeta(userRecord: UserRecord): AudienceMeta {
@@ -68,7 +60,7 @@ export class AudienceService {
       email: userRecord.email || '',
       photoURL:
         userRecord.photoURL ||
-        'https://res.cloudinary.com/journeys/image/upload/v1755260359/profile_qblxey.jpg',
+        'https://res.cloudinary.com/journeys/image/upload/q_auto/f_auto/v1776103874/profile_mopacr.png',
       signUpDate: signUpDate || '',
       lastSignInTime: lastSignInTime || '',
     };
