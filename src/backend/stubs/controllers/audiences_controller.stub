@@ -2,26 +2,46 @@
   exports({ to: app.makePath('app/controllers/audiences_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
-import { AudienceMeta, AudienceService } from '@story-cms/kit';
+import {
+  AudienceMeta,
+  AudienceService,
+  AUDIENCE_LIST_PAGE_SIZE,
+} from '@story-cms/kit';
 import cms from '#services/cms';
 
 export default class AudiencesController {
   public async index(ctx: HttpContext) {
-    let audiences: AudienceMeta[];
+    let audiences: AudienceMeta[] = [];
+    let nextPageToken: string | null = null;
     try {
-      // for apps that are not configured yet, we will return an empty array
       const service = new AudienceService();
-      audiences = await service.getAllUsers();
-    } catch (error) {
+      const page = await service.listUsersPage(AUDIENCE_LIST_PAGE_SIZE);
+      audiences = page.users;
+      nextPageToken = page.nextPageToken;
+    } catch {
       audiences = [];
+      nextPageToken = null;
     }
 
     const shared = await cms.sharedProps(ctx);
     const props = {
-      audiences: audiences,
+      audiences,
+      nextPageToken,
       ...shared,
     };
 
     return ctx.inertia.render('AudiencesIndex', { ...props });
+  }
+
+  /** Cursor-paginated JSON for infinite scroll (`pageToken` query = previous `nextPageToken`). */
+  public async users(ctx: HttpContext) {
+    const pageToken = ctx.request.input('pageToken') as string | undefined;
+    try {
+      const service = new AudienceService();
+      const page = await service.listUsersPage(AUDIENCE_LIST_PAGE_SIZE, pageToken);
+      return ctx.response.ok(page);
+    } catch {
+      return ctx.response.ok({ users: [], nextPageToken: null });
+    }
   }
 }

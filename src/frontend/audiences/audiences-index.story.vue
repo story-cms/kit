@@ -391,3 +391,9 @@ const loadData = () => {
   shared.addMessage(ResponseStatus.Accomplishment, 'User updated successfully');
 };
 </script>
+
+<docs lang="md">
+# Audiences index
+
+Stories omit `nextPageToken` so Histoire does not call `GET /:locale/audience/users`. In the app, when the server sends a non-null `nextPageToken`, the table loads more rows as you scroll (IntersectionObserver + axios).
+</docs>

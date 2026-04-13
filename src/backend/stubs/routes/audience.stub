@@ -7,5 +7,6 @@ import router from '@adonisjs/core/services/router';
 const AudiencesController = () => import('#controllers/audiences_controller');
 
 export default () => {
+  router.get(':locale/audience/users', [AudiencesController, 'users']);
   router.get(':locale/audience', [AudiencesController, 'index']);
 };

@@ -2,8 +2,14 @@ import admin from 'firebase-admin';
 import { type App, type ServiceAccount } from 'firebase-admin/app';
 import { type Auth, type UserRecord } from 'firebase-admin/auth';
 import { DateTime } from 'luxon';
-import type { AudienceMeta } from '../../types';
+import type { AudienceMeta, AudiencesUsersPageResponse } from '../../types';
 import { getCredentialsFrom } from './helpers.js';
+
+/**
+ * Page size for audience list.
+ * Should be less than 1000 because of Firebase Auth API limits.
+ */
+export const AUDIENCE_LIST_PAGE_SIZE = 800;
 
 export class AudienceService {
   private app: App;
@@ -12,46 +18,52 @@ export class AudienceService {
     this.app = this.initializeClient();
   }
 
-  public async getAllUsers(): Promise<AudienceMeta[]> {
-    const allUsers: AudienceMeta[] = [];
-    let nextPageToken: string | undefined;
+  /**
+   * One page of users from Firebase Auth. Pass `pageToken` from the previous
+   * response to fetch the next page; omit for the first page.
+   */
+  public async listUsersPage(
+    maxResults: number,
+    pageToken?: string,
+  ): Promise<AudiencesUsersPageResponse> {
+    const listUsersResult = await this.getAuthService().listUsers(maxResults, pageToken);
 
-    try {
-      do {
-        const listUsersResult = await this.getAuthService().listUsers(
-          1000,
-          nextPageToken,
-        );
+    const users = listUsersResult.users.map((userRecord) =>
+      this.userRecordToMeta(userRecord),
+    );
 
-        listUsersResult.users.forEach((userRecord: UserRecord) => {
-          const signUpDate = userRecord.metadata.creationTime
-            ? DateTime.fromHTTP(userRecord.metadata.creationTime).toISO()
-            : null;
+    const nextPageToken = listUsersResult.pageToken ?? null;
 
-          const lastSignInTime = userRecord.metadata.lastSignInTime
-            ? DateTime.fromHTTP(userRecord.metadata.lastSignInTime).toISO()
-            : null;
-
-          allUsers.push({
-            uid: userRecord.uid,
-            name: userRecord.displayName || '',
-            email: userRecord.email || '',
-            photoURL:
-              userRecord.photoURL ||
-              'https://res.cloudinary.com/journeys/image/upload/v1755260359/profile_qblxey.jpg',
-            signUpDate: signUpDate || '',
-            lastSignInTime: lastSignInTime || '',
-          });
-        });
-
-        nextPageToken = listUsersResult.pageToken;
-      } while (nextPageToken);
-
-      return allUsers;
-    } catch (error) {
-      console.error('Error listing all users:', error);
-      throw new Error('Failed to retrieve user list from Firebase.');
+    // Sort the users if there are no more users to fetch
+    if (nextPageToken === null) {
+      users.sort((a, b) => b.lastSignInTime.localeCompare(a.lastSignInTime));
     }
+
+    return {
+      users,
+      nextPageToken,
+    };
+  }
+
+  private userRecordToMeta(userRecord: UserRecord): AudienceMeta {
+    const signUpDate = userRecord.metadata.creationTime
+      ? DateTime.fromHTTP(userRecord.metadata.creationTime).toISO()
+      : null;
+
+    const lastSignInTime = userRecord.metadata.lastSignInTime
+      ? DateTime.fromHTTP(userRecord.metadata.lastSignInTime).toISO()
+      : null;
+
+    return {
+      uid: userRecord.uid,
+      name: userRecord.displayName || '',
+      email: userRecord.email || '',
+      photoURL:
+        userRecord.photoURL ||
+        'https://res.cloudinary.com/journeys/image/upload/q_auto/f_auto/v1776103874/profile_mopacr.png',
+      signUpDate: signUpDate || '',
+      lastSignInTime: lastSignInTime || '',
+    };
   }
 
   /**
