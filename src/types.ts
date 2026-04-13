@@ -420,6 +420,7 @@ export interface AudienceMeta {
 
 export interface AudiencesProps {
   audiences: AudienceMeta[];
+  nextPageToken?: string | null;
 }
 
 /// ----------------------------------------------------

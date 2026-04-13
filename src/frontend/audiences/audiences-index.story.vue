@@ -2,7 +2,6 @@
   <Story title="Audiences Page" group="team">
     <Variant title="Index" :setup-app="miniSidebar">
       <AudiencesIndex
-        :audiences="audiences"
         :errors="sharedProps.errors"
         :meta="sharedProps.meta"
         :user="sharedProps.user"
@@ -10,11 +9,11 @@
         :languages="sharedProps.languages"
         :bookmarks="sharedProps.bookmarks"
         :exclude="[]"
+        :audiences="audiences"
       />
     </Variant>
     <Variant title="Empty" :setup-app="miniSidebar">
       <AudiencesIndex
-        :audiences="[]"
         :errors="sharedProps.errors"
         :meta="sharedProps.meta"
         :user="sharedProps.user"
@@ -22,6 +21,19 @@
         :languages="sharedProps.languages"
         :bookmarks="sharedProps.bookmarks"
         :exclude="[]"
+        :audiences="[]"
+      />
+    </Variant>
+    <Variant title="With extra columns" :setup-app="miniSidebar">
+      <AudiencesIndex
+        :meta="sharedProps.meta"
+        :user="sharedProps.user"
+        :languages="sharedProps.languages"
+        :language="sharedProps.language"
+        :errors="sharedProps.errors"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
+        :audiences="audiencesWithExtraColumns"
       />
     </Variant>
     <Variant title="With feedback" :setup-app="loadData">
@@ -31,9 +43,9 @@
         :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
-        :audiences="audiences"
         :bookmarks="sharedProps.bookmarks"
         :exclude="[]"
+        :audiences="audiences"
       />
     </Variant>
   </Story>
@@ -239,7 +251,138 @@ const audiences: AudienceMeta[] = [
     signUpDate: '2025-12-18T12:10:38.405+00:00',
     lastSignInTime: '2025-12-18T12:10:38.405+00:00',
   },
+  {
+    uid: '25',
+    name: 'Uma Johnson',
+    email: 'uma.johnson@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389852987/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
+  {
+    uid: '26',
+    name: 'Victoria Johnson',
+    email: 'victoria.johnson@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389872701/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
+  {
+    uid: '27',
+    name: 'William Johnson',
+    email: 'william.johnson@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389892523/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
+  {
+    uid: '28',
+    name: 'Xavier Johnson',
+    email: 'xavier.johnson@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389912345/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
+  {
+    uid: '29',
+    name: 'Yasmine Johnson',
+    email: 'yasmine.johnson@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389932167/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
+  {
+    uid: '30',
+    name: 'Zara Johnson',
+    email: 'zara.johnson@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389952987/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
+  {
+    uid: '31',
+    name: 'Abigail Smith',
+    email: 'abigail.smith@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389952987/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
+  {
+    uid: '32',
+    name: 'Benjamin Brown',
+    email: 'benjamin.brown@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389952987/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
+  {
+    uid: '33',
+    name: 'Christopher Brown',
+    email: 'christopher.brown@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389952987/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
+  {
+    uid: '34',
+    name: 'Daniel Brown',
+    email: 'daniel.brown@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389952987/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
+  {
+    uid: '35',
+    name: 'Edward Brown',
+    email: 'edward.brown@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389952987/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
+  {
+    uid: '36',
+    name: 'Felix Brown',
+    email: 'felix.brown@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389952987/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
+  {
+    uid: '37',
+    name: 'George Brown',
+    email: 'george.brown@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389952987/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
+  {
+    uid: '38',
+    name: 'Henry Brown',
+    email: 'henry.brown@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389952987/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
 ];
+
+const churches = [
+  'Christ Church Stratford',
+  'Christ Church Kensington',
+  'Christ Church Hackney',
+  'Christ Church Notting Hill',
+  'Christ Church Marylebone',
+  'Christ Church Mayfair',
+  'Christ Church Soho',
+  'Christ Church Covent Garden',
+  'Christ Church Chiswick',
+  'Christ Church Fulham',
+];
+
+const audiencesWithExtraColumns = audiences.map((audience) => ({
+  ...audience,
+  role: Math.random() > 0.7 ? 'Admin' : 'Member',
+  localChurch: churches[Math.floor(Math.random() * churches.length)],
+}));
 
 const loadData = () => {
   const shared = useSharedStore();
