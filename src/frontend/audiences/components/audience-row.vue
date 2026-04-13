@@ -23,6 +23,13 @@
   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
     {{ formatDate(audience.signUpDate) }}
   </td>
+  <td
+    v-for="column in extraColumns"
+    :key="column"
+    class="px-3 py-4 text-sm text-gray-500"
+  >
+    {{ audience[column as keyof AudienceMeta] }}
+  </td>
 </template>
 
 <script setup lang="ts">
@@ -31,6 +38,7 @@ import type { AudienceMeta } from '../../../types';
 
 defineProps<{
   audience: AudienceMeta;
+  extraColumns: string[];
 }>();
 
 const formatDate = (dateString: string) => {

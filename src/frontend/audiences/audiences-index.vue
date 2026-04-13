@@ -1,7 +1,7 @@
 <template>
   <AppLayout>
     <template #header>
-      <ContentHeader title="Audiences"> </ContentHeader>
+      <ContentHeader title="Audience"> </ContentHeader>
     </template>
     <div>
       <section class="mt-8 flow-root">
@@ -29,22 +29,23 @@
                     >
                       Created At
                     </th>
+
+                    <th
+                      scope="col"
+                      class="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
+                      v-for="title in extraColumnTitles"
+                      :key="title"
+                    >
+                      {{ title }}
+                    </th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr v-for="audience in paginatedAudiences" :key="audience.uid">
-                    <AudienceRow :audience="audience" />
+                  <tr v-for="audience in audiences" :key="audience.uid">
+                    <AudienceRow :audience="audience" :extra-columns="extraColumns" />
                   </tr>
                 </tbody>
               </table>
-
-              <!-- Pagination -->
-              <Pagination
-                :current-page="currentPage"
-                :total-items="audiences.length"
-                :items-per-page="itemsPerPage"
-                @page-change="handlePageChange"
-              />
             </div>
           </div>
         </div>
@@ -54,34 +55,49 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
-import Pagination from '../shared/pagination.vue';
 
 import AudienceRow from './components/audience-row.vue';
-import { SharedPageProps, AudiencesProps } from '../../types';
+import type { SharedPageProps, AudiencesProps, AudienceMeta } from '../../types';
 import { useSharedStore } from '../store';
 
 const props = defineProps<AudiencesProps & SharedPageProps>();
 
+/** Fixed audience table fields; any other keys on row objects are treated as extra columns. */
+const AUDIENCE_META_KEYS = [
+  'uid',
+  'name',
+  'email',
+  'photoURL',
+  'signUpDate',
+  'lastSignInTime',
+] as const satisfies readonly (keyof AudienceMeta)[];
+
+type _AssertAudienceMetaKeysExhaustive =
+  Exclude<keyof AudienceMeta, (typeof AUDIENCE_META_KEYS)[number]> extends never
+    ? true
+    : never;
+const _audienceMetaKeysExhaustive: _AssertAudienceMetaKeysExhaustive = true;
+void _audienceMetaKeysExhaustive;
+
+const standardAudienceKeys = new Set<string>(AUDIENCE_META_KEYS);
+
+const extraColumns = computed(() => {
+  if (props.audiences.length === 0) return [];
+  const user = props.audiences[0];
+  return Object.keys(user).filter((key) => !standardAudienceKeys.has(key));
+});
+
+const extraColumnTitles = computed(() => {
+  return extraColumns.value.map((column): string => {
+    // localChurch => "Local church"
+    return column.replace(/([A-Z])/g, ' $1').trim();
+  });
+});
+
 const shared = useSharedStore();
 shared.setFromProps(props);
 shared.setCurrentStoryName('');
-
-// Pagination state
-const currentPage = ref(1);
-const itemsPerPage = 10;
-
-// Computed properties for pagination
-const paginatedAudiences = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  return props.audiences.slice(startIndex, endIndex);
-});
-
-// Handle page changes
-const handlePageChange = (page: number) => {
-  currentPage.value = page;
-};
 </script>
