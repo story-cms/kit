@@ -55,11 +55,11 @@ export default class AudiencesController {
     const csv = await service.toCsvFromUsers();
 
     const appName = cms.config.meta.name.toLowerCase().replace(/ /g, '_');
-    const filename = {{ '`${appName}_audience.csv`' }};
+    const filename = {{{ '`${appName}_audience.csv`' }}};
 
     return ctx.response
       .header('Content-Type', 'text/csv')
-      .header('Content-Disposition', {{ '`attachment; filename="${filename}"`' }})
+      .header('Content-Disposition', {{{ '`attachment; filename="${filename}"`' }}})
       .send(csv);
   }
 }
