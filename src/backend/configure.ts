@@ -1,8 +1,39 @@
 import type Configure from '@adonisjs/core/commands/configure';
 import { Codemods } from '@adonisjs/core/ace/codemods';
 import { stubsRoot } from './stubs/main.js';
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { fsReadAll } from '@poppinss/utils';
+
+async function getExistingEnvKeys(appRoot: string): Promise<Set<string>> {
+  try {
+    const envPath = join(appRoot, '.env');
+    const content = await readFile(envPath, 'utf-8');
+    const keys = new Set<string>();
+    for (const line of content.split('\n')) {
+      const match = line.match(/^([A-Za-z_][A-Za-z0-9_]*)=/);
+      if (match) keys.add(match[1]);
+    }
+    return keys;
+  } catch {
+    return new Set();
+  }
+}
+
+async function addMissingEnvVariables(
+  codemods: Codemods,
+  appRoot: string,
+  variables: Record<string, string>,
+): Promise<void> {
+  const existing = await getExistingEnvKeys(appRoot);
+  const toAdd = Object.fromEntries(
+    Object.entries(variables).filter(([key]) => !existing.has(key)),
+  );
+  if (Object.keys(toAdd).length === 0) return;
+  await codemods.defineEnvVariables(toAdd);
+}
 
 async function addMigrations(command: Configure, codemods: Codemods) {
   const allMigrations = ['base', 'audit', 'drops', 'preferences', 'campaigns'];
@@ -128,17 +159,20 @@ export async function configure(command: Configure) {
   await addMigrations(command, codemods);
 
   /**
-   * Define environment variables
+   * Define environment variables (skip if already defined in .env)
    */
-  await codemods.defineEnvVariables({ MAIL_FROM_ADDRESS: 'ops@scoutredeem.co' });
-  await codemods.defineEnvVariables({ CLOUDINARY_API_KEY: 'redacted' });
-  await codemods.defineEnvVariables({ CLOUDINARY_SECRET: 'redacted' });
-  await codemods.defineEnvVariables({ CLOUDINARY_CLOUD_NAME: 'pending' });
-  await codemods.defineEnvVariables({ CLOUDINARY_PRESET: 'pending' });
-  await codemods.defineEnvVariables({ BIBLE_API_KEY: 'redacted' });
-  await codemods.defineEnvVariables({ OPENAI_API_KEY: 'redacted' });
-  await codemods.defineEnvVariables({ GOOGLE_APPLICATION_CREDENTIALS_JSON: 'redacted' });
-  await codemods.defineEnvVariables({ FIREBASE_SERVICE_ACCOUNT_KEY_JSON: 'redacted' });
+  const appRoot = fileURLToPath(command.app.appRoot);
+  await addMissingEnvVariables(codemods, appRoot, {
+    MAIL_FROM_ADDRESS: 'ops@scoutredeem.co',
+    CLOUDINARY_API_KEY: 'redacted',
+    CLOUDINARY_SECRET: 'redacted',
+    CLOUDINARY_CLOUD_NAME: 'pending',
+    CLOUDINARY_PRESET: 'pending',
+    BIBLE_API_KEY: 'redacted',
+    OPENAI_API_KEY: 'redacted',
+    GOOGLE_APPLICATION_CREDENTIALS_JSON: 'redacted',
+    FIREBASE_SERVICE_ACCOUNT_KEY_JSON: 'redacted',
+  });
 
   /**
    * Define environment variables validations

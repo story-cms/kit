@@ -5,9 +5,10 @@ import type { HttpContext } from '@adonisjs/core/http';
 import {
   AudienceMeta,
   AudienceService,
-  AUDIENCE_LIST_PAGE_SIZE,
 } from '@story-cms/kit';
 import cms from '#services/cms';
+
+const AUDIENCE_LIST_PAGE_SIZE = 800;
 
 export default class AudiencesController {
   public async index(ctx: HttpContext) {
@@ -43,5 +44,19 @@ export default class AudiencesController {
     } catch {
       return ctx.response.ok({ users: [], nextPageToken: null });
     }
+  }
+
+  public async exportAudience(ctx: HttpContext) {
+    const service = new AudienceService();
+    const audiences = await service.getAllUsers();
+    const csv = service.toCsvFrom(audiences);
+
+    const appName = cms.config.meta.name.toLowerCase().replace(/ /g, '_');
+    const filename = {{ '`${appName}_audience_Journeys_studio.csv`' }};
+
+     return ctx.response
+      .header('Content-Type', 'text/csv')
+      .header('Content-Disposition', {{{ '`attachment; filename="${filename}"`' }}})
+      .send(csv);
   }
 }
