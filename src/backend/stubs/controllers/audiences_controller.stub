@@ -7,16 +7,12 @@ import {
   AudienceService,
 } from '@story-cms/kit';
 import cms from '#services/cms';
-import { type AudienceListMeta, AudienceService } from '@story-cms/kit';
 
-const emptyMeta = {
-  perPage: 10,
-  nextPageToken: null,
-  hasMore: false,
-  hasPrevious: false,
-} as AudienceListMeta;
-
-const AUDIENCE_LIST_PAGE_SIZE = 800;
+/**
+ * Page size for audience list.
+ * Should be less than 1000 because of Firebase Auth API limits.
+ */
+export const AUDIENCE_LIST_PAGE_SIZE = 800;
 
 export default class AudiencesController {
   public async index(ctx: HttpContext) {
@@ -39,41 +35,10 @@ export default class AudiencesController {
       ...shared,
     };
 
-    const { perPage, pageToken } = query;
-
-    try {
-      const { audiences, nextPageToken, hasMore } = await service.listUsersPage(
-        perPage,
-        pageToken,
-      );
-
-      return ctx.response.json({
-        audiences,
-        meta: { perPage, nextPageToken, hasMore, hasPrevious: Boolean(pageToken) },
-      });
-    } catch {
-      return ctx.response.json({
-        audiences: [],
-        meta: { perPage, nextPageToken: null, hasMore: false, hasPrevious: false },
-      });
-    }
+    return ctx.inertia.render('AudiencesIndex', { ...props });
   }
 
-  public async exportAudience(ctx: HttpContext) {
-    const service = new AudienceService();
-    const audiences = await service.getAllUsers();
-    const csv = service.toCsvFrom(audiences);
-
-    const appName = cms.config.meta.name.toLowerCase().replace(/ /g, '_');
-    const filename = {{ '`${appName}_audience_Journeys_studio.csv`' }};
-
-     return ctx.response
-      .header('Content-Type', 'text/csv')
-      .header('Content-Disposition', {{{ '`attachment; filename="${filename}"`' }}})
-      .send(csv);
-  }
-
-  /** Cursor-paginated JSON for infinite scroll (`pageToken` query = previous `nextPageToken`). */
+  /** Cursor-paginated JSON for infinite scroll (pageToken query = previous nextPageToken). */
   public async users(ctx: HttpContext) {
     const pageToken = ctx.request.input('pageToken') as string | undefined;
     try {
@@ -87,15 +52,14 @@ export default class AudiencesController {
 
   public async exportAudience(ctx: HttpContext) {
     const service = new AudienceService();
-    const audiences = await service.getAllUsers();
-    const csv = service.toCsvFrom(audiences);
+    const csv = await service.toCsvFromUsers();
 
     const appName = cms.config.meta.name.toLowerCase().replace(/ /g, '_');
-    const filename = {{ '`${appName}_audience_Journeys_studio.csv`' }};
+    const filename = {{ '`${appName}_audience.csv`' }};
 
-     return ctx.response
+    return ctx.response
       .header('Content-Type', 'text/csv')
-      .header('Content-Disposition', {{{ '`attachment; filename="${filename}"`' }}})
+      .header('Content-Disposition', {{ '`attachment; filename="${filename}"`' }})
       .send(csv);
   }
 }
