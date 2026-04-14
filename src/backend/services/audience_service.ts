@@ -11,7 +11,7 @@ import {
   keyToTitle,
 } from './helpers.js';
 
-export default class AudienceService {
+export class AudienceService {
   private app: App;
 
   constructor() {
