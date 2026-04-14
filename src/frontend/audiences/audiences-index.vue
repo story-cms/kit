@@ -1,7 +1,19 @@
 <template>
   <AppLayout>
     <template #header>
-      <ContentHeader title="Audience"> </ContentHeader>
+      <ContentHeader title="Audience">
+        <template #actions>
+          <button
+            v-if="showExport"
+            type="button"
+            :disabled="user.role !== 'admin' || isExporting"
+            class="w-32 rounded-[38px] border bg-blue-500 px-[15px] py-[9px] text-center text-sm/5 font-medium text-white opacity-80 shadow focus:outline-none focus:ring focus:ring-indigo-500 active:opacity-80 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset] enabled:hover:bg-blue-400 enabled:hover:shadow-none disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
+            @click.prevent="exportAudiences"
+          >
+            {{ isExporting ? 'Exporting...' : 'Export' }}
+          </button>
+        </template>
+      </ContentHeader>
     </template>
     <div>
       <section class="mt-8 flow-root">
@@ -54,6 +66,7 @@
                   </tr>
                 </tbody>
               </table>
+
               <div
                 v-if="cursor != null"
                 ref="sentinelRef"
@@ -83,20 +96,22 @@ import type {
 } from '../../types';
 import { ResponseStatus } from '../../types';
 import { useSharedStore } from '../store';
+import { extraAudienceColumns, keyToTitle } from '../../backend/services/helpers';
 
-const props = defineProps<AudiencesProps & SharedPageProps>();
+const props = defineProps<SharedPageProps & AudiencesProps>();
 
-/** Fixed audience table fields; any other keys on row objects are treated as extra columns. */
-const AUDIENCE_META_KEYS = [
-  'uid',
-  'name',
-  'email',
-  'photoURL',
-  'signUpDate',
-  'lastSignInTime',
-] as const satisfies readonly (keyof AudienceMeta)[];
+const extraColumns = computed(() => {
+  if (audienceRows.value.length === 0) return [];
+  const user = audienceRows.value[0];
+  return extraAudienceColumns(user);
+});
 
-const standardAudienceKeys = new Set<string>(AUDIENCE_META_KEYS);
+const tableColspan = computed(() => 3 + extraColumns.value.length);
+
+const extraColumnTitles = computed(() => {
+  const columns = extraColumns.value;
+  return columns.map((column) => keyToTitle(column));
+});
 
 const audienceRows = ref<AudienceMeta[]>([...props.audiences]);
 const cursor = ref<string | null>(props.nextPageToken ?? null);
@@ -104,23 +119,42 @@ const loadingMore = ref(false);
 const sentinelRef = ref<HTMLElement | null>(null);
 let scrollObserver: IntersectionObserver | null = null;
 
-const extraColumns = computed(() => {
-  if (audienceRows.value.length === 0) return [];
-  const user = audienceRows.value[0];
-  return Object.keys(user).filter((key) => !standardAudienceKeys.has(key));
-});
-
-const tableColspan = computed(() => 3 + extraColumns.value.length);
-
-const extraColumnTitles = computed(() => {
-  return extraColumns.value.map((column): string => {
-    return column.replace(/([A-Z])/g, ' $1').trim();
-  });
-});
-
 const shared = useSharedStore();
 shared.setFromProps(props);
 shared.setCurrentStoryName('');
+
+const showExport = computed(() => audienceRows.value.length > 0);
+
+const isExporting = ref(false);
+
+const exportAudiences = async () => {
+  isExporting.value = true;
+
+  try {
+    const exportUrl = `/${shared.locale}/audience/export`;
+    const response = await axios.get(exportUrl, {
+      responseType: 'blob',
+    });
+
+    const blob = response.data as Blob;
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const disposition = response.headers['content-disposition'];
+    const filename =
+      disposition?.split('filename=')[1]?.replace(/"/g, '') ?? 'audience_export.csv';
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    shared.addMessage(ResponseStatus.Accomplishment, 'Download started');
+  } catch (error) {
+    console.error(error);
+    shared.addMessage(ResponseStatus.Failure, 'Download failed. Contact support.');
+  } finally {
+    isExporting.value = false;
+  }
+};
 
 const resetFromProps = () => {
   audienceRows.value = [...props.audiences];

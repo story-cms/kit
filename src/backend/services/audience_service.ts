@@ -1,17 +1,17 @@
 import admin from 'firebase-admin';
 import { type App, type ServiceAccount } from 'firebase-admin/app';
-import { type Auth, type UserRecord } from 'firebase-admin/auth';
+import { Auth, type UserRecord } from 'firebase-admin/auth';
 import { DateTime } from 'luxon';
-import type { AudienceMeta, AudiencesUsersPageResponse } from '../../types';
-import { getCredentialsFrom } from './helpers.js';
 
-/**
- * Page size for audience list.
- * Should be less than 1000 because of Firebase Auth API limits.
- */
-export const AUDIENCE_LIST_PAGE_SIZE = 800;
+import type { AudiencesUsersPageResponse, AudienceMeta } from '../../types.js';
+import {
+  getCredentialsFrom,
+  standardAudienceKeys,
+  extraAudienceColumns,
+  keyToTitle,
+} from './helpers.js';
 
-export class AudienceService {
+export default class AudienceService {
   private app: App;
 
   constructor() {
@@ -28,7 +28,7 @@ export class AudienceService {
   ): Promise<AudiencesUsersPageResponse> {
     const listUsersResult = await this.getAuthService().listUsers(maxResults, pageToken);
 
-    const users = listUsersResult.users.map((userRecord) =>
+    const users = listUsersResult.users.map((userRecord: UserRecord) =>
       this.userRecordToMeta(userRecord),
     );
 
@@ -36,13 +36,40 @@ export class AudienceService {
 
     // Sort the users if there are no more users to fetch
     if (nextPageToken === null) {
-      users.sort((a, b) => b.lastSignInTime.localeCompare(a.lastSignInTime));
+      users.sort((a: AudienceMeta, b: AudienceMeta) =>
+        b.lastSignInTime.localeCompare(a.lastSignInTime),
+      );
     }
 
     return {
       users,
       nextPageToken,
     };
+  }
+
+  /**
+   * Returns a CSV string of all users.
+   * @returns CSV string
+   */
+  async toCsvFromUsers(): Promise<string> {
+    const allUsers = await this.getAuthService().listUsers(1000);
+    const audience = allUsers.users.map((user: UserRecord) =>
+      this.userRecordToMeta(user),
+    );
+
+    if (audience.length === 0) return '';
+
+    const keys = this.getUserKeys(audience[0]);
+    const headerRow = keys.map((key) => this.escapeCsvField(keyToTitle(key))).join(',');
+    const dataRows = audience.map((row: AudienceMeta) =>
+      keys.map((key) => this.escapeCsvField(row[key as keyof AudienceMeta])).join(','),
+    );
+
+    return [headerRow, ...dataRows].join('\n');
+  }
+
+  private getUserKeys(row: AudienceMeta): string[] {
+    return [...standardAudienceKeys, ...extraAudienceColumns(row)];
   }
 
   private userRecordToMeta(userRecord: UserRecord): AudienceMeta {
@@ -88,5 +115,13 @@ export class AudienceService {
    */
   private getAuthService(): Auth {
     return admin.auth(this.app);
+  }
+
+  private escapeCsvField(value: unknown): string {
+    const str = value === null || value === undefined ? '' : String(value);
+    if (str.includes(',') || str.includes('\n') || str.includes('"')) {
+      return `"${str.replace(/"/g, '""')}"`;
+    }
+    return str;
   }
 }
