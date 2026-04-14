@@ -7,6 +7,14 @@ import {
   AudienceService,
 } from '@story-cms/kit';
 import cms from '#services/cms';
+import { type AudienceListMeta, AudienceService } from '@story-cms/kit';
+
+const emptyMeta = {
+  perPage: 10,
+  nextPageToken: null,
+  hasMore: false,
+  hasPrevious: false,
+} as AudienceListMeta;
 
 const AUDIENCE_LIST_PAGE_SIZE = 800;
 
@@ -31,7 +39,38 @@ export default class AudiencesController {
       ...shared,
     };
 
-    return ctx.inertia.render('AudiencesIndex', { ...props });
+    const { perPage, pageToken } = query;
+
+    try {
+      const { audiences, nextPageToken, hasMore } = await service.listUsersPage(
+        perPage,
+        pageToken,
+      );
+
+      return ctx.response.json({
+        audiences,
+        meta: { perPage, nextPageToken, hasMore, hasPrevious: Boolean(pageToken) },
+      });
+    } catch {
+      return ctx.response.json({
+        audiences: [],
+        meta: { perPage, nextPageToken: null, hasMore: false, hasPrevious: false },
+      });
+    }
+  }
+
+  public async exportAudience(ctx: HttpContext) {
+    const service = new AudienceService();
+    const audiences = await service.getAllUsers();
+    const csv = service.toCsvFrom(audiences);
+
+    const appName = cms.config.meta.name.toLowerCase().replace(/ /g, '_');
+    const filename = {{ '`${appName}_audience_Journeys_studio.csv`' }};
+
+     return ctx.response
+      .header('Content-Type', 'text/csv')
+      .header('Content-Disposition', {{{ '`attachment; filename="${filename}"`' }}})
+      .send(csv);
   }
 
   /** Cursor-paginated JSON for infinite scroll (`pageToken` query = previous `nextPageToken`). */
