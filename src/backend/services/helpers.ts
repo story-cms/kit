@@ -67,12 +67,8 @@ export const extraAudienceColumns = (user: AudienceMeta) => {
   return Object.keys(user).filter((key) => !standardAudienceKeys.has(key));
 };
 
-export const extraAudienceColumnTitles = (user: AudienceMeta) => {
-  const columns = extraAudienceColumns(user);
-  return columns.map((column): string => {
-    return column
-      .replace(/([A-Z])/g, ' $1')
-      .trim()
-      .toUpperCase();
-  });
-};
+export const keyToTitle = (key: string) =>
+  key
+    .replace(/([A-Z])/g, ' $1')
+    .trim()
+    .toUpperCase();

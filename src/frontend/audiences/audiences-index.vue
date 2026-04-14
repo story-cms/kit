@@ -96,10 +96,7 @@ import type {
 } from '../../types';
 import { ResponseStatus } from '../../types';
 import { useSharedStore } from '../store';
-import {
-  extraAudienceColumns,
-  extraAudienceColumnTitles,
-} from '../../backend/services/helpers';
+import { extraAudienceColumns, keyToTitle } from '../../backend/services/helpers';
 
 const props = defineProps<SharedPageProps & AudiencesProps>();
 
@@ -112,9 +109,8 @@ const extraColumns = computed(() => {
 const tableColspan = computed(() => 3 + extraColumns.value.length);
 
 const extraColumnTitles = computed(() => {
-  if (audienceRows.value.length === 0) return [];
-  const user = audienceRows.value[0];
-  return extraAudienceColumnTitles(user);
+  const columns = extraColumns.value;
+  return columns.map((column) => keyToTitle(column));
 });
 
 const audienceRows = ref<AudienceMeta[]>([...props.audiences]);
