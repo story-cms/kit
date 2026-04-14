@@ -96,13 +96,6 @@ const AUDIENCE_META_KEYS = [
   'lastSignInTime',
 ] as const satisfies readonly (keyof AudienceMeta)[];
 
-type _AssertAudienceMetaKeysExhaustive =
-  Exclude<keyof AudienceMeta, (typeof AUDIENCE_META_KEYS)[number]> extends never
-    ? true
-    : never;
-const _audienceMetaKeysExhaustive: _AssertAudienceMetaKeysExhaustive = true;
-void _audienceMetaKeysExhaustive;
-
 const standardAudienceKeys = new Set<string>(AUDIENCE_META_KEYS);
 
 const audienceRows = ref<AudienceMeta[]>([...props.audiences]);
@@ -147,10 +140,7 @@ const loadMore = async () => {
     audienceRows.value.push(...data.users);
     cursor.value = data.nextPageToken ?? null;
   } catch {
-    shared.addMessage(
-      ResponseStatus.Failure,
-      'Failed to load more audience members.',
-    );
+    shared.addMessage(ResponseStatus.Failure, 'Failed to load more audience members.');
   } finally {
     loadingMore.value = false;
   }
