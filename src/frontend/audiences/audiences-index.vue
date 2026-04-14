@@ -101,7 +101,7 @@ import {
   extraAudienceColumnTitles,
 } from '../../backend/services/helpers';
 
-const props = defineProps<SharedPageProps>();
+const props = defineProps<SharedPageProps & AudiencesProps>();
 
 const extraColumns = computed(() => {
   if (audienceRows.value.length === 0) return [];
