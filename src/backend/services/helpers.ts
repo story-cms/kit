@@ -1,3 +1,5 @@
+import { AudienceMeta } from '../../types';
+
 export function trimmedErrors(e: any): Record<string, string[]> {
   let trimmed = e.messages.reduce((acc: Record<string, string[]>, error: any) => {
     const field = error.field;
@@ -47,4 +49,30 @@ export const getCredentialsFrom = (key: string): any => {
   } catch {
     throw new Error(`${key} environment variable is not a valid encoded JSON string.`);
   }
+};
+
+/** Fixed audience table fields; any other keys on row objects are treated as extra columns. */
+const AUDIENCE_META_KEYS = [
+  'uid',
+  'name',
+  'email',
+  'photoURL',
+  'signUpDate',
+  'lastSignInTime',
+] as const satisfies readonly (keyof AudienceMeta)[];
+
+export const standardAudienceKeys = new Set<string>(AUDIENCE_META_KEYS);
+
+export const extraAudienceColumns = (user: AudienceMeta) => {
+  return Object.keys(user).filter((key) => !standardAudienceKeys.has(key));
+};
+
+export const extraAudienceColumnTitles = (user: AudienceMeta) => {
+  const columns = extraAudienceColumns(user);
+  return columns.map((column): string => {
+    return column
+      .replace(/([A-Z])/g, ' $1')
+      .trim()
+      .toUpperCase();
+  });
 };

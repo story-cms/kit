@@ -96,40 +96,32 @@ import type {
 } from '../../types';
 import { ResponseStatus } from '../../types';
 import { useSharedStore } from '../store';
+import {
+  extraAudienceColumns,
+  extraAudienceColumnTitles,
+} from '../../backend/services/helpers';
 
 const props = defineProps<AudiencesProps & SharedPageProps>();
 
-/** Fixed audience table fields; any other keys on row objects are treated as extra columns. */
-const AUDIENCE_META_KEYS = [
-  'uid',
-  'name',
-  'email',
-  'photoURL',
-  'signUpDate',
-  'lastSignInTime',
-] as const satisfies readonly (keyof AudienceMeta)[];
+const extraColumns = computed(() => {
+  if (audienceRows.value.length === 0) return [];
+  const user = audienceRows.value[0];
+  return extraAudienceColumns(user);
+});
 
-const standardAudienceKeys = new Set<string>(AUDIENCE_META_KEYS);
+const tableColspan = computed(() => 3 + extraColumns.value.length);
+
+const extraColumnTitles = computed(() => {
+  if (audienceRows.value.length === 0) return [];
+  const user = audienceRows.value[0];
+  return extraAudienceColumnTitles(user);
+});
 
 const audienceRows = ref<AudienceMeta[]>([...props.audiences]);
 const cursor = ref<string | null>(props.nextPageToken ?? null);
 const loadingMore = ref(false);
 const sentinelRef = ref<HTMLElement | null>(null);
 let scrollObserver: IntersectionObserver | null = null;
-
-const extraColumns = computed(() => {
-  if (audienceRows.value.length === 0) return [];
-  const user = audienceRows.value[0];
-  return Object.keys(user).filter((key) => !standardAudienceKeys.has(key));
-});
-
-const tableColspan = computed(() => 3 + extraColumns.value.length);
-
-const extraColumnTitles = computed(() => {
-  return extraColumns.value.map((column): string => {
-    return column.replace(/([A-Z])/g, ' $1').trim();
-  });
-});
 
 const shared = useSharedStore();
 shared.setFromProps(props);
