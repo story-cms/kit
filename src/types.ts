@@ -406,7 +406,7 @@ export interface DashboardProps {
 }
 
 /// ----------------------------------------------------
-///  audiences
+///  audience
 /// ----------------------------------------------------
 
 export interface AudienceMeta {
@@ -418,13 +418,13 @@ export interface AudienceMeta {
   lastSignInTime: string;
 }
 
-export interface AudiencesProps {
-  audiences: AudienceMeta[];
+export interface AudienceProps {
+  audience: AudienceMeta[];
   nextPageToken?: string | null;
 }
 
 /** JSON body for GET `/:locale/audience/users` (cursor pagination). */
-export interface AudiencesUsersPageResponse {
+export interface AudienceUsersPageResponse {
   users: AudienceMeta[];
   nextPageToken: string | null;
 }

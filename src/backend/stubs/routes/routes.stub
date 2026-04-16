@@ -13,7 +13,7 @@
 import router from '@adonisjs/core/services/router';
 import { middleware } from '#start/kernel';
 import api from '#start/routes/api';
-import audiences from '#start/routes/audiences';
+import audience from '#start/routes/audience';
 import auth from '#start/routes/auth';
 import campaigns from '#start/routes/campaigns';
 import dashboard from '#start/routes/dashboard';
@@ -34,7 +34,7 @@ uiTools();
 
 router
   .group(() => {
-    audiences();
+    audience();
     campaigns();
     dashboard();
     stories();

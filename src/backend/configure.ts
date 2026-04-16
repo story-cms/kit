@@ -104,7 +104,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'controllers/analytics_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/preview_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/indices_controller.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'controllers/audiences_controller.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'controllers/audience_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/preferences_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/streams_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/stories_controller.stub', {});

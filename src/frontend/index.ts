@@ -2,7 +2,7 @@ import ActionButton from './shared/action-button.vue';
 import AddItemButton from './shared/add-item-button.vue';
 import AnimationField from './fields/animation-field.vue';
 import AppLayout from './shared/app-layout.vue';
-import AudiencesIndex from './audiences/audiences-index.vue';
+import AudienceIndex from './audience/audience-index.vue';
 import AudioField from './fields/audio-field.vue';
 import BooleanField from './fields/boolean-field.vue';
 import CampaignsEdit from './campaign/campaigns-edit.vue';
@@ -70,7 +70,7 @@ export {
   AddItemButton,
   AnimationField,
   AppLayout,
-  AudiencesIndex,
+  AudienceIndex,
   AudioField,
   BooleanField,
   CampaignsEdit,
