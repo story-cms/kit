@@ -15,17 +15,17 @@ test.group('Invitation items for the API', (group) => {
     locale: 'en',
   };
 
-  test('spec: returns list of all active and future scheduled campaigns in date order', async ({
+  test('spec: returns list of all active and future scheduled invitations in date order', async ({
     assert,
   }) => {
-    // arrange - Create campaigns with different window states
+    // arrange - Create invitations with different window states
     const now = DateTime.now();
 
-    // Past campaign (should be excluded)
+    // Past invitation (should be excluded)
     const pastStart = now.minus({ days: 5 });
     const pastEnd = now.minus({ days: 2 });
 
-    // Active campaigns (should be included, sorted by start time ascending)
+    // Active invitations (should be included, sorted by start time ascending)
     const active1Start = now.minus({ days: 3 });
     const active1End = now.plus({ days: 2 });
     const active2Start = now.minus({ days: 1 });
@@ -33,7 +33,7 @@ test.group('Invitation items for the API', (group) => {
     const active3Start = now.minus({ hours: 6 });
     const active3End = now.plus({ days: 5 });
 
-    // Future campaigns (should be included, sorted by start time ascending)
+    // Future invitations (should be included, sorted by start time ascending)
     const future1Start = now.plus({ days: 1 });
     const future1End = now.plus({ days: 4 });
     const future2Start = now.plus({ days: 5 });
@@ -41,13 +41,13 @@ test.group('Invitation items for the API', (group) => {
     const future3Start = now.plus({ days: 10 });
     const future3End = now.plus({ days: 13 });
 
-    // Create past campaign
+    // Create past invitation
     await InvitationFactory.merge({
       id: 1,
       locale: 'en',
       apiVersion: 1,
       bundle: {
-        name: 'Past Campaign',
+        name: 'Past Invitation',
         window: {{ '`${pastStart.toISO()}|${pastEnd.toISO()}`' }},
         title: 'Past',
         message: 'Message',
@@ -57,13 +57,13 @@ test.group('Invitation items for the API', (group) => {
       isPublished: true,
     }).create();
 
-    // Create active campaigns
+    // Create active invitations
     await InvitationFactory.merge({
       id: 2,
       locale: 'en',
       apiVersion: 1,
       bundle: {
-        name: 'Active Campaign 1',
+        name: 'Active Invitation 1',
         window: {{ '`${active1Start.toISO()}|${active1End.toISO()}`' }},
         title: 'Active 1',
         message: 'Message',
@@ -78,7 +78,7 @@ test.group('Invitation items for the API', (group) => {
       locale: 'en',
       apiVersion: 1,
       bundle: {
-        name: 'Active Campaign 2',
+        name: 'Active Invitation 2',
         window: {{ '`${active2Start.toISO()}|${active2End.toISO()}`' }},
         title: 'Active 2',
         message: 'Message',
@@ -93,7 +93,7 @@ test.group('Invitation items for the API', (group) => {
       locale: 'en',
       apiVersion: 1,
       bundle: {
-        name: 'Active Campaign 3',
+        name: 'Active Invitation 3',
         window: {{ '`${active3Start.toISO()}|${active3End.toISO()}`' }},
         title: 'Active 3',
         message: 'Message',
@@ -103,13 +103,13 @@ test.group('Invitation items for the API', (group) => {
       isPublished: true,
     }).create();
 
-    // Create future campaigns
+    // Create future invitations
     await InvitationFactory.merge({
       id: 5,
       locale: 'en',
       apiVersion: 1,
       bundle: {
-        name: 'Future Campaign 1',
+        name: 'Future Invitation 1',
         window: {{ '`${future1Start.toISO()}|${future1End.toISO()}`' }},
         title: 'Future 1',
         message: 'Message',
@@ -124,7 +124,7 @@ test.group('Invitation items for the API', (group) => {
       locale: 'en',
       apiVersion: 1,
       bundle: {
-        name: 'Future Campaign 2',
+        name: 'Future Invitation 2',
         window: {{ '`${future2Start.toISO()}|${future2End.toISO()}`' }},
         title: 'Future 2',
         message: 'Message',
@@ -139,7 +139,7 @@ test.group('Invitation items for the API', (group) => {
       locale: 'en',
       apiVersion: 1,
       bundle: {
-        name: 'Future Campaign 3',
+        name: 'Future Invitation 3',
         window: {{ '`${future3Start.toISO()}|${future3End.toISO()}`' }},
         title: 'Future 3',
         message: 'Message',
@@ -153,33 +153,33 @@ test.group('Invitation items for the API', (group) => {
     const service = new InvitationService(englishVersion);
     const items = await service.getInvitationItemsForClient();
 
-    // assert - Should return only active and future campaigns
-    assert.equal(items.length, 6, 'Should return 6 campaigns (3 active + 3 future)');
+    // assert - Should return only active and future invitations
+    assert.equal(items.length, 6, 'Should return 6 invitations (3 active + 3 future)');
 
-    // Verify past campaign is excluded
+    // Verify past invitation is excluded
     assert.isFalse(
-      items.some((item) => item.name === 'Past Campaign'),
-      'Past campaigns should be excluded',
+      items.some((item) => item.name === 'Past Invitation'),
+      'Past invitations should be excluded',
     );
 
-    // Verify all returned campaigns are active or future
+    // Verify all returned invitations are active or future
     const allActiveOrFuture = items.every(
       (item) => item.title.startsWith('Active') || item.title.startsWith('Future'),
     );
-    assert.isTrue(allActiveOrFuture, 'All campaigns should be active or future');
+    assert.isTrue(allActiveOrFuture, 'All invitations should be active or future');
 
-    // Verify date order: active campaigns first, sorted by start time ascending
-    assert.equal(items[0].title, 'Active 1', 'First active campaign (earliest start)');
-    assert.equal(items[1].title, 'Active 2', 'Second active campaign');
-    assert.equal(items[2].title, 'Active 3', 'Third active campaign (latest start)');
+    // Verify date order: active invitations first, sorted by start time ascending
+    assert.equal(items[0].title, 'Active 1', 'First active invitation (earliest start)');
+    assert.equal(items[1].title, 'Active 2', 'Second active invitation');
+    assert.equal(items[2].title, 'Active 3', 'Third active invitation (latest start)');
 
-    // Verify date order: future campaigns follow, sorted by start time ascending
-    assert.equal(items[3].title, 'Future 1', 'First future campaign (earliest start)');
-    assert.equal(items[4].title, 'Future 2', 'Second future campaign');
-    assert.equal(items[5].title, 'Future 3', 'Third future campaign (latest start)');
+    // Verify date order: future invitations follow, sorted by start time ascending
+    assert.equal(items[3].title, 'Future 1', 'First future invitation (earliest start)');
+    assert.equal(items[4].title, 'Future 2', 'Second future invitation');
+    assert.equal(items[5].title, 'Future 3', 'Third future invitation (latest start)');
   });
 
-  test('spec: excludes unpublished campaigns from active and future list', async ({
+  test('spec: excludes unpublished invitations from active and future list', async ({
     assert,
   }) => {
     // arrange
@@ -189,7 +189,7 @@ test.group('Invitation items for the API', (group) => {
     const futureStart = now.plus({ days: 2 });
     const futureEnd = now.plus({ days: 4 });
 
-    // Published active campaign (should be included)
+    // Published active invitation (should be included)
     await InvitationFactory.merge({
       id: 1,
       locale: 'en',
@@ -205,7 +205,7 @@ test.group('Invitation items for the API', (group) => {
       isPublished: true,
     }).create();
 
-    // Unpublished active campaign (should be excluded)
+    // Unpublished active invitation (should be excluded)
     await InvitationFactory.merge({
       id: 2,
       locale: 'en',
@@ -221,7 +221,7 @@ test.group('Invitation items for the API', (group) => {
       isPublished: false,
     }).create();
 
-    // Published future campaign (should be included)
+    // Published future invitation (should be included)
     await InvitationFactory.merge({
       id: 3,
       locale: 'en',
@@ -237,7 +237,7 @@ test.group('Invitation items for the API', (group) => {
       isPublished: true,
     }).create();
 
-    // Unpublished future campaign (should be excluded)
+    // Unpublished future invitation (should be excluded)
     await InvitationFactory.merge({
       id: 4,
       locale: 'en',
@@ -258,16 +258,16 @@ test.group('Invitation items for the API', (group) => {
     const items = await service.getInvitationItemsForClient();
 
     // assert
-    assert.equal(items.length, 2, 'Only published campaigns should be included');
+    assert.equal(items.length, 2, 'Only published invitations should be included');
     assert.equal(items[0].title, 'Published Active');
     assert.equal(items[1].title, 'Published Future');
     assert.isFalse(
       items.some((item) => item.title.includes('Unpublished')),
-      'Unpublished campaigns should be excluded',
+      'Unpublished invitations should be excluded',
     );
   });
 
-  test('spec: includes campaign that starts exactly at now as active', async ({
+  test('spec: includes invitation that starts exactly at now as active', async ({
     assert,
   }) => {
     // arrange
@@ -280,9 +280,9 @@ test.group('Invitation items for the API', (group) => {
       locale: 'en',
       apiVersion: 1,
       bundle: {
-        name: 'Campaign Starting Now',
+        name: 'Invitation Starting Now',
         window: {{ '`${start.toISO()}|${end.toISO()}`' }},
-        title: 'Campaign Starting Now',
+        title: 'Invitation Starting Now',
         message: 'Message',
         actionLabel: 'Click',
         actionType: 'close',
@@ -296,10 +296,10 @@ test.group('Invitation items for the API', (group) => {
 
     // assert
     assert.equal(items.length, 1);
-    assert.equal(items[0].title, 'Campaign Starting Now');
+    assert.equal(items[0].title, 'Invitation Starting Now');
   });
 
-  test('spec: excludes campaign that ended before now as past', async ({ assert }) => {
+  test('spec: excludes invitation that ended before now as past', async ({ assert }) => {
     // arrange
     const now = DateTime.now();
     const start = now.minus({ days: 2 });
@@ -310,9 +310,9 @@ test.group('Invitation items for the API', (group) => {
       locale: 'en',
       apiVersion: 1,
       bundle: {
-        name: 'Just Ended Campaign',
+        name: 'Just Ended Invitation',
         window: {{ '`${start.toISO()}|${end.toISO()}`' }},
-        title: 'Just Ended Campaign',
+        title: 'Just Ended Invitation',
         message: 'Message',
         actionLabel: 'Click',
         actionType: 'close',
@@ -326,10 +326,10 @@ test.group('Invitation items for the API', (group) => {
 
     // assert
     assert.equal(items.length, 0);
-    assert.isFalse(items.some((item) => item.title === 'Just Ended Campaign'));
+    assert.isFalse(items.some((item) => item.title === 'Just Ended Invitation'));
   });
 
-  test('spec: includes campaign that starts just after now as future', async ({
+  test('spec: includes invitation that starts just after now as future', async ({
     assert,
   }) => {
     // arrange
@@ -342,9 +342,9 @@ test.group('Invitation items for the API', (group) => {
       locale: 'en',
       apiVersion: 1,
       bundle: {
-        name: 'Starting Soon Campaign',
+        name: 'Starting Soon Invitation',
         window: {{ '`${start.toISO()}|${end.toISO()}`' }},
-        title: 'Starting Soon Campaign',
+        title: 'Starting Soon Invitation',
         message: 'Message',
         actionLabel: 'Click',
         actionType: 'close',
@@ -358,16 +358,16 @@ test.group('Invitation items for the API', (group) => {
 
     // assert
     assert.equal(items.length, 1);
-    assert.equal(items[0].title, 'Starting Soon Campaign');
+    assert.equal(items[0].title, 'Starting Soon Invitation');
   });
 
-  test('spec: maintains date order with multiple active and future campaigns', async ({
+  test('spec: maintains date order with multiple active and future invitations', async ({
     assert,
   }) => {
     // arrange
     const now = DateTime.now();
 
-    // Active campaigns with different start times
+    // Active invitations with different start times
     const active1Start = now.minus({ days: 5 });
     const active1End = now.plus({ days: 2 });
     const active2Start = now.minus({ days: 2 });
@@ -375,7 +375,7 @@ test.group('Invitation items for the API', (group) => {
     const active3Start = now.minus({ hours: 12 });
     const active3End = now.plus({ days: 4 });
 
-    // Future campaigns with different start times
+    // Future invitations with different start times
     const future1Start = now.plus({ days: 1 });
     const future1End = now.plus({ days: 3 });
     const future2Start = now.plus({ days: 5 });
@@ -430,7 +430,7 @@ test.group('Invitation items for the API', (group) => {
     assert.equal(items[5].title, 'Future Invitation 3', 'Future 3 (starts in 10 days)');
   });
 
-  test('spec: returns empty array when no active or future campaigns exist', async ({
+  test('spec: returns empty array when no active or future invitations exist', async ({
     assert,
   }) => {
     // arrange
@@ -438,15 +438,15 @@ test.group('Invitation items for the API', (group) => {
     const pastStart = now.minus({ days: 5 });
     const pastEnd = now.minus({ days: 2 });
 
-    // Only past campaigns
+    // Only past invitations
     await InvitationFactory.merge({
       id: 1,
       locale: 'en',
       apiVersion: 1,
       bundle: {
-        name: 'Past Campaign',
+        name: 'Past Invitation',
         window: {{ '`${pastStart.toISO()}|${pastEnd.toISO()}`' }},
-        title: 'Past Campaign',
+        title: 'Past Invitation',
         message: 'Message',
         actionLabel: 'Click',
         actionType: 'close',
@@ -462,7 +462,7 @@ test.group('Invitation items for the API', (group) => {
     assert.equal(
       items.length,
       0,
-      'Should return empty array when no active or future campaigns',
+      'Should return empty array when no active or future invitations',
     );
   });
 
@@ -472,15 +472,15 @@ test.group('Invitation items for the API', (group) => {
     const activeStart = now.minus({ days: 1 });
     const activeEnd = now.plus({ days: 1 });
 
-    // Campaign matching version and locale (should be included)
+    // Invitation matching version and locale (should be included)
     await InvitationFactory.merge({
       id: 1,
       locale: 'en',
       apiVersion: 1,
       bundle: {
-        name: 'Matching Campaign',
+        name: 'Matching Invitation',
         window: {{ '`${activeStart.toISO()}|${activeEnd.toISO()}`' }},
-        title: 'Matching Campaign',
+        title: 'Matching Invitation',
         message: 'Message',
         actionLabel: 'Click',
         actionType: 'close',
@@ -488,15 +488,15 @@ test.group('Invitation items for the API', (group) => {
       isPublished: true,
     }).create();
 
-    // Campaign with different locale (should be excluded)
+    // Invitation with different locale (should be excluded)
     await InvitationFactory.merge({
       id: 2,
       locale: 'es',
       apiVersion: 1,
       bundle: {
-        name: 'Spanish Campaign',
+        name: 'Spanish Invitation',
         window: {{ '`${activeStart.toISO()}|${activeEnd.toISO()}`' }},
-        title: 'Spanish Campaign',
+        title: 'Spanish Invitation',
         message: 'Message',
         actionLabel: 'Click',
         actionType: 'close',
@@ -504,15 +504,15 @@ test.group('Invitation items for the API', (group) => {
       isPublished: true,
     }).create();
 
-    // Campaign with different apiVersion (should be excluded)
+    // Invitation with different apiVersion (should be excluded)
     await InvitationFactory.merge({
       id: 3,
       locale: 'en',
       apiVersion: 2,
       bundle: {
-        name: 'Version 2 Campaign',
+        name: 'Version 2 Invitation',
         window: {{ '`${activeStart.toISO()}|${activeEnd.toISO()}`' }},
-        title: 'Version 2 Campaign',
+        title: 'Version 2 Invitation',
         message: 'Message',
         actionLabel: 'Click',
         actionType: 'close',
@@ -526,9 +526,9 @@ test.group('Invitation items for the API', (group) => {
 
     // assert
     assert.equal(items.length, 1);
-    assert.equal(items[0].title, 'Matching Campaign');
-    assert.isFalse(items.some((item) => item.title === 'Spanish Campaign'));
-    assert.isFalse(items.some((item) => item.title === 'Version 2 Campaign'));
+    assert.equal(items[0].title, 'Matching Invitation');
+    assert.isFalse(items.some((item) => item.title === 'Spanish Invitation'));
+    assert.isFalse(items.some((item) => item.title === 'Version 2 Invitation'));
   });
 
 });
