@@ -1,13 +1,13 @@
 {{{ 
-  exports({ to: app.makePath('tests/unit/campaign_service.spec.ts') }) 
+  exports({ to: app.makePath('tests/unit/invitation_service.spec.ts') }) 
 }}}
 import { test } from '@japa/runner';
 import testUtils from '@adonisjs/core/services/test_utils';
 import { DateTime } from 'luxon';
 
-import { CampaignFactory, CampaignService } from '@story-cms/kit';
+import { InvitationFactory, InvitationService } from '@story-cms/kit';
 
-test.group('Campaign Items for the API', (group) => {
+test.group('Invitation items for the API', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction());
 
   const englishVersion = {
@@ -42,7 +42,7 @@ test.group('Campaign Items for the API', (group) => {
     const future3End = now.plus({ days: 13 });
 
     // Create past campaign
-    await CampaignFactory.merge({
+    await InvitationFactory.merge({
       id: 1,
       locale: 'en',
       apiVersion: 1,
@@ -58,7 +58,7 @@ test.group('Campaign Items for the API', (group) => {
     }).create();
 
     // Create active campaigns
-    await CampaignFactory.merge({
+    await InvitationFactory.merge({
       id: 2,
       locale: 'en',
       apiVersion: 1,
@@ -73,7 +73,7 @@ test.group('Campaign Items for the API', (group) => {
       isPublished: true,
     }).create();
 
-    await CampaignFactory.merge({
+    await InvitationFactory.merge({
       id: 3,
       locale: 'en',
       apiVersion: 1,
@@ -88,7 +88,7 @@ test.group('Campaign Items for the API', (group) => {
       isPublished: true,
     }).create();
 
-    await CampaignFactory.merge({
+    await InvitationFactory.merge({
       id: 4,
       locale: 'en',
       apiVersion: 1,
@@ -104,7 +104,7 @@ test.group('Campaign Items for the API', (group) => {
     }).create();
 
     // Create future campaigns
-    await CampaignFactory.merge({
+    await InvitationFactory.merge({
       id: 5,
       locale: 'en',
       apiVersion: 1,
@@ -119,7 +119,7 @@ test.group('Campaign Items for the API', (group) => {
       isPublished: true,
     }).create();
 
-    await CampaignFactory.merge({
+    await InvitationFactory.merge({
       id: 6,
       locale: 'en',
       apiVersion: 1,
@@ -134,7 +134,7 @@ test.group('Campaign Items for the API', (group) => {
       isPublished: true,
     }).create();
 
-    await CampaignFactory.merge({
+    await InvitationFactory.merge({
       id: 7,
       locale: 'en',
       apiVersion: 1,
@@ -150,8 +150,8 @@ test.group('Campaign Items for the API', (group) => {
     }).create();
 
     // act
-    const service = new CampaignService(englishVersion);
-    const items = await service.getCampaignItemsForClient();
+    const service = new InvitationService(englishVersion);
+    const items = await service.getInvitationItemsForClient();
 
     // assert - Should return only active and future campaigns
     assert.equal(items.length, 6, 'Should return 6 campaigns (3 active + 3 future)');
@@ -190,7 +190,7 @@ test.group('Campaign Items for the API', (group) => {
     const futureEnd = now.plus({ days: 4 });
 
     // Published active campaign (should be included)
-    await CampaignFactory.merge({
+    await InvitationFactory.merge({
       id: 1,
       locale: 'en',
       apiVersion: 1,
@@ -206,7 +206,7 @@ test.group('Campaign Items for the API', (group) => {
     }).create();
 
     // Unpublished active campaign (should be excluded)
-    await CampaignFactory.merge({
+    await InvitationFactory.merge({
       id: 2,
       locale: 'en',
       apiVersion: 1,
@@ -222,7 +222,7 @@ test.group('Campaign Items for the API', (group) => {
     }).create();
 
     // Published future campaign (should be included)
-    await CampaignFactory.merge({
+    await InvitationFactory.merge({
       id: 3,
       locale: 'en',
       apiVersion: 1,
@@ -238,7 +238,7 @@ test.group('Campaign Items for the API', (group) => {
     }).create();
 
     // Unpublished future campaign (should be excluded)
-    await CampaignFactory.merge({
+    await InvitationFactory.merge({
       id: 4,
       locale: 'en',
       apiVersion: 1,
@@ -254,8 +254,8 @@ test.group('Campaign Items for the API', (group) => {
     }).create();
 
     // act
-    const service = new CampaignService(englishVersion);
-    const items = await service.getCampaignItemsForClient();
+    const service = new InvitationService(englishVersion);
+    const items = await service.getInvitationItemsForClient();
 
     // assert
     assert.equal(items.length, 2, 'Only published campaigns should be included');
@@ -275,7 +275,7 @@ test.group('Campaign Items for the API', (group) => {
     const start = now;
     const end = now.plus({ days: 1 });
 
-    await CampaignFactory.merge({
+    await InvitationFactory.merge({
       id: 1,
       locale: 'en',
       apiVersion: 1,
@@ -291,8 +291,8 @@ test.group('Campaign Items for the API', (group) => {
     }).create();
 
     // act
-    const service = new CampaignService(englishVersion);
-    const items = await service.getCampaignItemsForClient();
+    const service = new InvitationService(englishVersion);
+    const items = await service.getInvitationItemsForClient();
 
     // assert
     assert.equal(items.length, 1);
@@ -305,7 +305,7 @@ test.group('Campaign Items for the API', (group) => {
     const start = now.minus({ days: 2 });
     const end = now.minus({ minutes: 1 }); // Ended 1 minute ago
 
-    await CampaignFactory.merge({
+    await InvitationFactory.merge({
       id: 1,
       locale: 'en',
       apiVersion: 1,
@@ -321,8 +321,8 @@ test.group('Campaign Items for the API', (group) => {
     }).create();
 
     // act
-    const service = new CampaignService(englishVersion);
-    const items = await service.getCampaignItemsForClient();
+    const service = new InvitationService(englishVersion);
+    const items = await service.getInvitationItemsForClient();
 
     // assert
     assert.equal(items.length, 0);
@@ -337,7 +337,7 @@ test.group('Campaign Items for the API', (group) => {
     const start = now.plus({ minutes: 1 }); // Starts 1 minute from now
     const end = now.plus({ days: 1 });
 
-    await CampaignFactory.merge({
+    await InvitationFactory.merge({
       id: 1,
       locale: 'en',
       apiVersion: 1,
@@ -353,8 +353,8 @@ test.group('Campaign Items for the API', (group) => {
     }).create();
 
     // act
-    const service = new CampaignService(englishVersion);
-    const items = await service.getCampaignItemsForClient();
+    const service = new InvitationService(englishVersion);
+    const items = await service.getInvitationItemsForClient();
 
     // assert
     assert.equal(items.length, 1);
@@ -383,27 +383,27 @@ test.group('Campaign Items for the API', (group) => {
     const future3Start = now.plus({ days: 10 });
     const future3End = now.plus({ days: 12 });
 
-    // Create campaigns in random order
-    const campaigns = [
-      { id: 1, title: 'Active Campaign 1', start: active1Start, end: active1End },
-      { id: 2, title: 'Future Campaign 1', start: future1Start, end: future1End },
-      { id: 3, title: 'Active Campaign 2', start: active2Start, end: active2End },
-      { id: 4, title: 'Future Campaign 2', start: future2Start, end: future2End },
-      { id: 5, title: 'Active Campaign 3', start: active3Start, end: active3End },
-      { id: 6, title: 'Future Campaign 3', start: future3Start, end: future3End },
+    // Create invitations in random order
+    const invitationsSeed = [
+      { id: 1, title: 'Active Invitation 1', start: active1Start, end: active1End },
+      { id: 2, title: 'Future Invitation 1', start: future1Start, end: future1End },
+      { id: 3, title: 'Active Invitation 2', start: active2Start, end: active2End },
+      { id: 4, title: 'Future Invitation 2', start: future2Start, end: future2End },
+      { id: 5, title: 'Active Invitation 3', start: active3Start, end: active3End },
+      { id: 6, title: 'Future Invitation 3', start: future3Start, end: future3End },
     ];
 
     // Shuffle to test sorting
-    const shuffled = [...campaigns].sort(() => Math.random() - 0.5);
-    for (const campaign of shuffled) {
-      await CampaignFactory.merge({
-        id: campaign.id,
+    const shuffled = [...invitationsSeed].sort(() => Math.random() - 0.5);
+    for (const invitation of shuffled) {
+      await InvitationFactory.merge({
+        id: invitation.id,
         locale: 'en',
         apiVersion: 1,
         bundle: {
-          name: campaign.title,
-          window: {{ '`${campaign.start.toISO()}|${campaign.end.toISO()}`' }},
-          title: campaign.title,
+          name: invitation.title,
+          window: {{ '`${invitation.start.toISO()}|${invitation.end.toISO()}`' }},
+          title: invitation.title,
           message: 'Message',
           actionLabel: 'Click',
           actionType: 'close',
@@ -413,21 +413,21 @@ test.group('Campaign Items for the API', (group) => {
     }
 
     // act
-    const service = new CampaignService(englishVersion);
-    const items = await service.getCampaignItemsForClient();
+    const service = new InvitationService(englishVersion);
+    const items = await service.getInvitationItemsForClient();
 
     // assert
-    assert.equal(items.length, 6, 'All 6 campaigns should be returned');
+    assert.equal(items.length, 6, 'All 6 invitations should be returned');
 
-    // Verify active campaigns come first, sorted by start time ascending
-    assert.equal(items[0].title, 'Active Campaign 1', 'Active 1 (started 5 days ago)');
-    assert.equal(items[1].title, 'Active Campaign 2', 'Active 2 (started 2 days ago)');
-    assert.equal(items[2].title, 'Active Campaign 3', 'Active 3 (started 12 hours ago)');
+    // Verify active invitations come first, sorted by start time ascending
+    assert.equal(items[0].title, 'Active Invitation 1', 'Active 1 (started 5 days ago)');
+    assert.equal(items[1].title, 'Active Invitation 2', 'Active 2 (started 2 days ago)');
+    assert.equal(items[2].title, 'Active Invitation 3', 'Active 3 (started 12 hours ago)');
 
-    // Verify future campaigns follow, sorted by start time ascending
-    assert.equal(items[3].title, 'Future Campaign 1', 'Future 1 (starts in 1 day)');
-    assert.equal(items[4].title, 'Future Campaign 2', 'Future 2 (starts in 5 days)');
-    assert.equal(items[5].title, 'Future Campaign 3', 'Future 3 (starts in 10 days)');
+    // Verify future invitations follow, sorted by start time ascending
+    assert.equal(items[3].title, 'Future Invitation 1', 'Future 1 (starts in 1 day)');
+    assert.equal(items[4].title, 'Future Invitation 2', 'Future 2 (starts in 5 days)');
+    assert.equal(items[5].title, 'Future Invitation 3', 'Future 3 (starts in 10 days)');
   });
 
   test('spec: returns empty array when no active or future campaigns exist', async ({
@@ -439,7 +439,7 @@ test.group('Campaign Items for the API', (group) => {
     const pastEnd = now.minus({ days: 2 });
 
     // Only past campaigns
-    await CampaignFactory.merge({
+    await InvitationFactory.merge({
       id: 1,
       locale: 'en',
       apiVersion: 1,
@@ -455,8 +455,8 @@ test.group('Campaign Items for the API', (group) => {
     }).create();
 
     // act
-    const service = new CampaignService(englishVersion);
-    const items = await service.getCampaignItemsForClient();
+    const service = new InvitationService(englishVersion);
+    const items = await service.getInvitationItemsForClient();
 
     // assert
     assert.equal(
@@ -473,7 +473,7 @@ test.group('Campaign Items for the API', (group) => {
     const activeEnd = now.plus({ days: 1 });
 
     // Campaign matching version and locale (should be included)
-    await CampaignFactory.merge({
+    await InvitationFactory.merge({
       id: 1,
       locale: 'en',
       apiVersion: 1,
@@ -489,7 +489,7 @@ test.group('Campaign Items for the API', (group) => {
     }).create();
 
     // Campaign with different locale (should be excluded)
-    await CampaignFactory.merge({
+    await InvitationFactory.merge({
       id: 2,
       locale: 'es',
       apiVersion: 1,
@@ -505,7 +505,7 @@ test.group('Campaign Items for the API', (group) => {
     }).create();
 
     // Campaign with different apiVersion (should be excluded)
-    await CampaignFactory.merge({
+    await InvitationFactory.merge({
       id: 3,
       locale: 'en',
       apiVersion: 2,
@@ -521,8 +521,8 @@ test.group('Campaign Items for the API', (group) => {
     }).create();
 
     // act
-    const service = new CampaignService(englishVersion);
-    const items = await service.getCampaignItemsForClient();
+    const service = new InvitationService(englishVersion);
+    const items = await service.getInvitationItemsForClient();
 
     // assert
     assert.equal(items.length, 1);

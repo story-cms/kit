@@ -159,8 +159,8 @@ export class CmsService {
       exclude.push('audience');
     }
 
-    if (!this.#config.campaigns.hasCampaigns) {
-      exclude.push('campaign');
+    if (!this.#config.invitations.hasInvitations) {
+      exclude.push('invitation');
     }
 
     if (!this.#config.pages.hasPages) {

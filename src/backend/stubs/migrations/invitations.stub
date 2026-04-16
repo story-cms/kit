@@ -6,7 +6,7 @@
 import { BaseSchema } from '@adonisjs/lucid/schema';
 
 export default class extends BaseSchema {
-  protected tableName = 'campaigns';
+  protected tableName = 'invitations';
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
@@ -15,26 +15,26 @@ export default class extends BaseSchema {
       table
         .integer('api_version')
         .notNullable()
-        .comment('the api version of this campaign');
+        .comment('the api version of this invitation');
 
       table
         .string('locale', 15)
         .notNullable()
         .comment('IETF BCP 47 language tag like en-US or zh-Hans');
 
-      table.jsonb('stats').notNullable().defaultTo('{}').comment('campaign analytics');
+      table.jsonb('stats').notNullable().defaultTo('{}').comment('invitation analytics');
 
       table
         .jsonb('bundle')
         .notNullable()
         .defaultTo('{}')
-        .comment('serialised, localised campaign content');
+        .comment('serialised, localised invitation content');
 
       table
         .boolean('is_published')
         .notNullable()
         .defaultTo(false)
-        .comment('is this campaign published?');
+        .comment('is this invitation published?');
 
       table.integer('updated_by').unsigned().references('users.id');
 

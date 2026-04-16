@@ -61,7 +61,7 @@ const itemsWithImages: any[] = [
     id: 1,
     title: 'Item 1',
     subTitle: 'Whose cruel idea was it for the word "lisp" to have an "s" in it?',
-    link: '/en/campaign/1',
+    link: '/en/invitation/1',
     coverImage:
       'https://res.cloudinary.com/journeys/image/upload/v1756122407/christ-chaos-header_yqrufy_lzmfjt.jpg',
   },
@@ -69,14 +69,14 @@ const itemsWithImages: any[] = [
     id: 2,
     title: 'Item 2',
     subTitle: 'How come abbreviated is such a long word?',
-    link: '/en/campaign/2',
+    link: '/en/invitation/2',
     coverImage:
       'https://res.cloudinary.com/journeys/image/upload/v1756122183/aatrg9bikextwwun4vb2_kblpui.svg',
   },
   {
     id: 3,
     title: 'Item 3',
-    link: '/en/campaign/3',
+    link: '/en/invitation/3',
     subTitle: 'Do fish get cramps after eating?',
     coverImage:
       'https://res.cloudinary.com/journeys/image/upload/v1756121793/mountain-placeholder_yuflkz.jpg',
@@ -84,7 +84,7 @@ const itemsWithImages: any[] = [
   {
     id: 4,
     title: 'Item 4',
-    link: '/en/campaign/4',
+    link: '/en/invitation/4',
     subTitle: "I got food poisoning today. I don't know when I'll use it.",
     coverImage:
       'https://res.cloudinary.com/journeys/image/upload/v1756121793/mountain-placeholder_yuflkz.jpg',
@@ -92,7 +92,7 @@ const itemsWithImages: any[] = [
   {
     id: 5,
     title: 'Item 5',
-    link: '/en/campaign/1',
+    link: '/en/invitation/1',
     subTitle: "I'm writing a book. I've got the page numbers done.",
     coverImage:
       'https://res.cloudinary.com/journeys/image/upload/v1756121793/mountain-placeholder_yuflkz.jpg',

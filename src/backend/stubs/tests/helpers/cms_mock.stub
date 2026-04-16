@@ -85,8 +85,8 @@ export const testCmsConfig: CmsConfig = {
     hasAudience: false,
   },
   
-  campaigns: {
-    hasCampaigns: false,
+  invitations: {
+    hasInvitations: false,
   },
 };
 

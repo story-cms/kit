@@ -3,7 +3,7 @@ import { normalizeDateForStorage } from '../../src/frontend/shared/helpers';
 
 test.describe('Date Field storage normalization', () => {
   test.describe('when user selects today (date-only, no time picker)', () => {
-    test('stores value as T00:00:00.000Z on the date selected for instant campaign visibility', () => {
+    test('stores value as T00:00:00.000Z on the date selected for instant invitation visibility', () => {
       // User selects today - e.g. 2025-03-02 in local timezone
       const selectedDate = new Date(2025, 2, 2, 14, 30, 0, 0); // March 2, 2025 2:30 PM local
 
@@ -14,7 +14,7 @@ test.describe('Date Field storage normalization', () => {
   });
 
   test.describe('when user selects any other day (date-only, no time picker)', () => {
-    test('stores value as T00:00:00.000Z on the date selected so campaign is shown from that time', () => {
+    test('stores value as T00:00:00.000Z on the date selected so invitation is shown from that time', () => {
       // User selects a future date - e.g. 2025-03-15
       const selectedDate = new Date(2025, 2, 15, 9, 0, 0, 0); // March 15, 2025 9:00 AM local
 
