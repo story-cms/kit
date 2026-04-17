@@ -60,7 +60,7 @@ export { createInertiaApp, usePage, useForm, router } from '@inertiajs/vue3';
 
 export * from './store/index';
 
-export { commonProps } from './shared/helpers';
+export { commonProps, helpScoutWidget } from './shared/helpers';
 
 // Re-export types for easier access
 export * from '../types';

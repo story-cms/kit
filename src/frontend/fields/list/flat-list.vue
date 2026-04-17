@@ -15,22 +15,41 @@
       role="listitem"
       :class="[
         'subgrid relative my-2 gap-y-8',
-        isEmpty(index) ? '' : 'bg-gray-100 p-8',
+        isPlaceholder(index) || isRemoved(index) ? 'py-2' : 'bg-gray-100 p-8',
         { 'mr-2': shared.showSourceColumn && field.isFlexible },
       ]"
-      :style="{ gridRow: `span ${totalSpan}` }"
+      :style="{ gridRow: `span ${getItemSpan(index)}` }"
     >
-      <template v-if="!isEmpty(index)">
-        <div
-          v-if="canMutate"
-          class="absolute right-0 mr-3 cursor-pointer text-gray-500"
-          @click="emit('removeSet', index)"
-        >
-          <Icon
-            :name="field.isFlexible && canMutate ? 'minus' : 'trash'"
-            :class="field.isFlexible && canMutate ? 'size-5' : 'h-auto w-auto'"
-          />
-        </div>
+      <template v-if="!isPlaceholder(index) && !isRemoved(index)">
+        <template v-if="canMutate">
+          <button
+            v-if="field.isFlexible && shared.isTranslation && hasSourceItem(index)"
+            type="button"
+            class="absolute z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
+            :style="{ right: `-${shared.sourceSectionWidth}px` }"
+            @click="toggleRemove(index)"
+          >
+            <span
+              v-if="!props.isReadOnly"
+              class="flex h-10 w-10 items-center justify-center"
+            >
+              <Icon name="minus" class="size-5" />
+            </span>
+          </button>
+          <button
+            v-else
+            type="button"
+            class="absolute right-0 z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
+            @click="emit('removeSet', index)"
+          >
+            <span
+              v-if="!props.isReadOnly"
+              class="flex h-10 w-10 items-center justify-center"
+            >
+              <Icon name="trash" class="h-auto w-auto" />
+            </span>
+          </button>
+        </template>
 
         <li
           v-for="(item, i) in fields"
@@ -38,13 +57,38 @@
           :style="{ gridRow: `span ${getFieldSpan(item)}` }"
         >
           <component
-            :is="store.picker(item.widget)"
+            :is="widgets.picker(item.widget)"
             :field="item"
             :is-read-only="props.isReadOnly"
             :root-path="`${fieldPath}.${index.toString()}`"
             :is-nested="true"
           />
         </li>
+      </template>
+      <template v-else-if="isRemoved(index)">
+        <template v-if="canMutate">
+          <li class="relative flex items-center justify-between">
+            <span
+              class="absolute left-0 right-0 top-1/2 border-t border-gray-300"
+              :style="{ width: `calc(100% + ${shared.sourceSectionWidth}px)` }"
+            ></span>
+            <div
+              class="z-[1] inline-flex items-center rounded-full border border-gray-300 bg-gray-200 px-4 py-1.5 text-sm font-medium leading-5 text-gray-500 shadow-sm"
+            >
+              <span>Removed</span>
+            </div>
+            <button
+              type="button"
+              class="absolute z-[1] flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white text-gray-500"
+              :style="{ right: `-${shared.sourceSectionWidth}px` }"
+              @click="toggleRemove(index)"
+            >
+              <span class="flex h-10 w-10 items-center justify-center">
+                <Icon name="plus-mini" class="size-5" />
+              </span>
+            </button>
+          </li>
+        </template>
       </template>
     </ul>
     <div v-if="canMutate" class="mt-8 flex flex-row items-center gap-4">
@@ -67,7 +111,7 @@ import type { PropType } from 'vue';
 import type { FieldSpec } from '../../../types';
 import Icon from '../../shared/icon.vue';
 import AddItemButton from '../../shared/add-item-button.vue';
-import { useWidgetsStore, useSharedStore } from '../../store';
+import { useWidgetsStore, useSharedStore, useModelStore } from '../../store';
 
 const props = defineProps({
   field: {
@@ -97,8 +141,9 @@ const props = defineProps({
 const emit = defineEmits(['addSet', 'removeSet']);
 const field = computed(() => props.field as FieldSpec);
 const fields = field.value.fields as FieldSpec[];
-const store = useWidgetsStore();
+const widgets = useWidgetsStore();
 const shared = useSharedStore();
+const model = useModelStore();
 
 const canMutate = computed(() => {
   if (props.isReadOnly) return false;
@@ -118,10 +163,24 @@ const showEmptyListWarning = (): boolean => {
   return false;
 };
 
-const isEmpty = (index: number): boolean => {
+const isPlaceholder = (index: number): boolean => {
   if (!props.isReadOnly) return false;
   const item = props.listItems[index] as Record<string, unknown>;
   return Object.keys(item).length === 0;
+};
+
+const hasSourceItem = (index: number): boolean => {
+  const sourceList = model.getSourceField(props.fieldPath, []) as any[];
+  return Array.isArray(sourceList) && index < sourceList.length;
+};
+
+
+const toggleRemove = (index: number) => {
+  widgets.toggleRemovedIndex(props.fieldPath, index);
+};
+
+const isRemoved = (index: number): boolean => {
+  return widgets.isInRemovedList(props.fieldPath, index);
 };
 
 const getFieldSpan = (field: FieldSpec): number => {
@@ -135,7 +194,15 @@ const totalSpan = computed(() => {
   return fields.reduce((acc, field) => acc + getFieldSpan(field), 0);
 });
 
+const getItemSpan = (index: number): number => {
+  return isRemoved(index) ? 1 : totalSpan.value;
+};
+
 const containerSpan = computed(() => {
-  return props.listItems.length * totalSpan.value + 1;
+  let span = 1;
+  for (let i = 0; i < props.listItems.length; i++) {
+    span += getItemSpan(i);
+  }
+  return span;
 });
 </script>
