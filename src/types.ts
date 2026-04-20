@@ -596,6 +596,7 @@ export interface SettingsPageProps {
   sourceLanguage: LanguageSpecification;
   languageItems: LanguageTableItem[];
   providers: Providers;
+  requireAppUpdate: boolean;
 }
 
 export interface LanguagesEditProps {
