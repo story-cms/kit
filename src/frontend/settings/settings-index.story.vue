@@ -12,6 +12,22 @@
         :source-language="sourceLanguage"
         :language-items="languageTableItems"
         :providers="settingsProviders"
+        :require-app-update="false"
+      />
+    </Variant>
+    <Variant title="Require App Update" :setup-app="setupSettings">
+      <SettingsIndex
+        :meta="sharedProps.meta"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :languages="sharedProps.languages"
+        :errors="sharedProps.errors"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
+        :source-language="sourceLanguage"
+        :language-items="languageTableItems"
+        :providers="settingsProviders"
+        :require-app-update="true"
       />
     </Variant>
     <Variant title="Empty" :setup-app="setupSettings">
@@ -26,6 +42,7 @@
         :source-language="sourceLanguage"
         :language-items="[]"
         :providers="settingsProviders"
+        :require-app-update="true"
       />
     </Variant>
   </Story>
@@ -67,10 +84,26 @@ const settingsProviders: Providers = {
 };
 
 const mockBibleTranslations = [
-  { language: 'English', bibleVersion: 'de4e12af7f28f599-01', bibleLabel: '(KJV) King James Version' },
-  { language: 'English', bibleVersion: '9879dbb7cfe39e4d-01', bibleLabel: '(ERV) Easy-to-Read Version' },
-  { language: 'Spanish', bibleVersion: '592420522e16049f-01', bibleLabel: '(RVR1960) Reina-Valera 1960 Spanish Translation (2023) (Revised)' },
-  { language: 'Spanish', bibleVersion: 'spa002-01', bibleLabel: '(NTV) Nueva Traducción Viviente' },
+  {
+    language: 'English',
+    bibleVersion: 'de4e12af7f28f599-01',
+    bibleLabel: '(KJV) King James Version',
+  },
+  {
+    language: 'English',
+    bibleVersion: '9879dbb7cfe39e4d-01',
+    bibleLabel: '(ERV) Easy-to-Read Version',
+  },
+  {
+    language: 'Spanish',
+    bibleVersion: '592420522e16049f-01',
+    bibleLabel: '(RVR1960) Reina-Valera 1960 Spanish Translation (2023) (Revised)',
+  },
+  {
+    language: 'Spanish',
+    bibleVersion: 'spa002-01',
+    bibleLabel: '(NTV) Nueva Traducción Viviente',
+  },
   { language: 'French', bibleVersion: 'frlsg-01', bibleLabel: 'Louis Segond' },
   { language: 'German', bibleVersion: 'de-lut-01', bibleLabel: 'Luther Bibel' },
   { language: 'Swahili', bibleVersion: 'swah-01', bibleLabel: 'Biblia Habari Njema' },

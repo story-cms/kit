@@ -71,7 +71,7 @@ import Icon from '../../../shared/icon.vue';
 import LanguageModal from './language-modal.vue';
 import PillButton from '../../../shared/pill-button.vue';
 
-const reasons = ['New language', 'New content', 'Other'] as const;
+const reasons = ['New language', 'New content'] as const;
 
 const props = defineProps<{
   open: boolean;

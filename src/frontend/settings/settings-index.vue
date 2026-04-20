@@ -6,6 +6,7 @@
           <PillButton
             label="Request App Update"
             variant="green"
+            :disabled="!props.requireAppUpdate"
             @click="showRequestAppUpdateModal = true"
           />
         </template>
