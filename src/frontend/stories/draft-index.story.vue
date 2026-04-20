@@ -22,7 +22,15 @@
 
 <script setup lang="ts">
 import DraftIndex from './draft-index.vue';
-import { sharedProps, listSpec, listModel, story, miniSidebar } from '../test/mocks';
+import {
+  sharedProps,
+  listSpec,
+  listModel,
+  listInListSpec,
+  listInListModel,
+  story,
+  miniSidebar,
+} from '../test/mocks';
 import { FieldSpec } from '../../types';
 
 const fields: FieldSpec[] = [
@@ -55,6 +63,7 @@ const fields: FieldSpec[] = [
     ],
   },
   { ...listSpec },
+  { ...listInListSpec },
   { name: 'image', label: 'Image', widget: 'image' },
   { name: 'description', label: 'Description', widget: 'string' },
   { name: 'body', label: 'Body', widget: 'markdown' },
@@ -78,6 +87,7 @@ const bundle = {
   animationUrl:
     'https://res.cloudinary.com/onesheep/raw/upload/v1685641667/cmsplayground/fnu2m4ogxi9wdhi91iqi.riv',
   ...listModel,
+  ...listInListModel,
   image: 'https://source.unsplash.com/random/800x600',
   description: 'We will look at the first chapter of the book of John.',
   body: '## The Word Became Flesh\n\nIn the beginning was the Word, and the Word was with God, and the Word was God. He was with God in the beginning. Through him all things were made; without him nothing was made that has been made. In him was life, and that life was the light of all mankind. The light shines in the darkness, and the darkness has not overcome it.',
