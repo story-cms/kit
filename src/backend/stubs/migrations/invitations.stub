@@ -55,9 +55,11 @@ export default class extends BaseSchema {
     });
   }
 
-  async down() {
+   async down() {
     this.defer(async (db) => {
-      await db.schema.dropTableIfExists(this.tableName);
+      if (await db.schema.hasTable(this.tableName)) {
+        await db.schema.renameTable(this.tableName, 'campaigns');
+      }
     });
   }
 }
