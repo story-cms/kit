@@ -1,11 +1,11 @@
 import { test, expect } from '@playwright/test';
 import vine from '@vinejs/vine';
 import {
-  CampaignValidator,
-  campaignErrorMessages,
-} from '../../src/backend/validators/campaign.js';
+  InvitationValidator,
+  invitationErrorMessages,
+} from '../../src/backend/validators/invitation.js';
 import type { HttpContext } from '@adonisjs/core/http';
-import { getCampaignStatus } from '../../src/frontend/shared/helpers.js';
+import { getInvitationStatus } from '../../src/frontend/shared/helpers.js';
 import { DateTime } from 'luxon';
 
 // Helper to create a mock HttpContext
@@ -17,14 +17,14 @@ function createMockHttpContext(inputs: Record<string, any>): HttpContext {
   } as HttpContext;
 }
 
-test.describe('Campaign Validator', () => {
+test.describe('Invitation validator', () => {
   test.describe('Draft Schema', () => {
     test('allows all fields to be optional', async () => {
       const data = {
         isPublished: false,
       };
       const ctx = createMockHttpContext(data);
-      const validator = new CampaignValidator(ctx);
+      const validator = new InvitationValidator(ctx);
       const schema = validator.schema;
 
       const result = await schema.validate(data);
@@ -33,22 +33,22 @@ test.describe('Campaign Validator', () => {
 
     test('accepts partial data', async () => {
       const data = {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         title: 'Test Title',
         isPublished: false,
       };
       const ctx = createMockHttpContext(data);
-      const validator = new CampaignValidator(ctx);
+      const validator = new InvitationValidator(ctx);
       const schema = validator.schema;
 
       const result = await schema.validate(data);
-      expect(result.name).toBe('Test Campaign');
+      expect(result.name).toBe('Test Invitation');
       expect(result.title).toBe('Test Title');
     });
 
     test('accepts all fields', async () => {
       const data = {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
         promoImage: 'https://example.com/image.jpg',
         videoUrl: 'https://example.com/hosted/video.mp4',
@@ -61,7 +61,7 @@ test.describe('Campaign Validator', () => {
         isPublished: true,
       };
       const ctx = createMockHttpContext(data);
-      const validator = new CampaignValidator(ctx);
+      const validator = new InvitationValidator(ctx);
       const schema = validator.schema;
 
       const result = await schema.validate(data);
@@ -73,7 +73,7 @@ test.describe('Campaign Validator', () => {
         isPublished: false,
       };
       const ctx = createMockHttpContext(data);
-      const validator = new CampaignValidator(ctx);
+      const validator = new InvitationValidator(ctx);
       const schema = validator.schema;
 
       const result = await schema.validate(data);
@@ -86,7 +86,7 @@ test.describe('Campaign Validator', () => {
         videoUrl: 'https://example.com/video.mp4',
       };
       const ctx = createMockHttpContext(data);
-      const validator = new CampaignValidator(ctx);
+      const validator = new InvitationValidator(ctx);
       const schema = validator.schema;
 
       const result = await schema.validate(data);
@@ -99,7 +99,7 @@ test.describe('Campaign Validator', () => {
         videoUrl: 'http://example.com/video.mp4',
       };
       const ctx = createMockHttpContext(data);
-      const validator = new CampaignValidator(ctx);
+      const validator = new InvitationValidator(ctx);
       const schema = validator.schema;
 
       const result = await schema.validate(data);
@@ -112,7 +112,7 @@ test.describe('Campaign Validator', () => {
         videoUrl: 'https://example.com/video.webm',
       };
       const ctx = createMockHttpContext(data);
-      const validator = new CampaignValidator(ctx);
+      const validator = new InvitationValidator(ctx);
       const schema = validator.schema;
 
       const result = await schema.validate(data);
@@ -132,7 +132,7 @@ test.describe('Campaign Validator', () => {
       };
 
       const ctx = createMockHttpContext(data);
-      const validator = new CampaignValidator(ctx);
+      const validator = new InvitationValidator(ctx);
       const schema = validator.schema;
 
       await expect(schema.validate(data)).rejects.toThrow();
@@ -140,7 +140,7 @@ test.describe('Campaign Validator', () => {
 
     test('requires window', async () => {
       const data = {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         title: 'Test Title',
         message: 'Test Message',
         actionLabel: 'Click Here',
@@ -149,7 +149,7 @@ test.describe('Campaign Validator', () => {
       };
 
       const ctx = createMockHttpContext(data);
-      const validator = new CampaignValidator(ctx);
+      const validator = new InvitationValidator(ctx);
       const schema = validator.schema;
 
       await expect(schema.validate(data)).rejects.toThrow();
@@ -157,7 +157,7 @@ test.describe('Campaign Validator', () => {
 
     test('requires title', async () => {
       const data = {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
         message: 'Test Message',
         actionLabel: 'Click Here',
@@ -166,7 +166,7 @@ test.describe('Campaign Validator', () => {
       };
 
       const ctx = createMockHttpContext(data);
-      const validator = new CampaignValidator(ctx);
+      const validator = new InvitationValidator(ctx);
       const schema = validator.schema;
 
       await expect(schema.validate(data)).rejects.toThrow();
@@ -174,7 +174,7 @@ test.describe('Campaign Validator', () => {
 
     test('requires message', async () => {
       const data = {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
         title: 'Test Title',
         actionLabel: 'Click Here',
@@ -183,7 +183,7 @@ test.describe('Campaign Validator', () => {
       };
 
       const ctx = createMockHttpContext(data);
-      const validator = new CampaignValidator(ctx);
+      const validator = new InvitationValidator(ctx);
       const schema = validator.schema;
 
       await expect(schema.validate(data)).rejects.toThrow();
@@ -191,7 +191,7 @@ test.describe('Campaign Validator', () => {
 
     test('requires actionLabel', async () => {
       const data = {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
         title: 'Test Title',
         message: 'Test Message',
@@ -200,7 +200,7 @@ test.describe('Campaign Validator', () => {
       };
 
       const ctx = createMockHttpContext(data);
-      const validator = new CampaignValidator(ctx);
+      const validator = new InvitationValidator(ctx);
       const schema = validator.schema;
 
       await expect(schema.validate(data)).rejects.toThrow();
@@ -208,7 +208,7 @@ test.describe('Campaign Validator', () => {
 
     test('requires actionType', async () => {
       const data = {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
         title: 'Test Title',
         message: 'Test Message',
@@ -217,7 +217,7 @@ test.describe('Campaign Validator', () => {
       };
 
       const ctx = createMockHttpContext(data);
-      const validator = new CampaignValidator(ctx);
+      const validator = new InvitationValidator(ctx);
       const schema = validator.schema;
 
       await expect(schema.validate(data)).rejects.toThrow();
@@ -225,7 +225,7 @@ test.describe('Campaign Validator', () => {
 
     test('validates actionType enum', async () => {
       const data = {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
         title: 'Test Title',
         message: 'Test Message',
@@ -234,7 +234,7 @@ test.describe('Campaign Validator', () => {
         isPublished: true,
       };
       const ctx = createMockHttpContext(data);
-      const validator = new CampaignValidator(ctx);
+      const validator = new InvitationValidator(ctx);
       const schema = validator.schema;
 
       await expect(schema.validate(data)).rejects.toThrow();
@@ -245,7 +245,7 @@ test.describe('Campaign Validator', () => {
 
       for (const actionType of validActionTypes) {
         const data = {
-          name: 'Test Campaign',
+          name: 'Test Invitation',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
           title: 'Test Title',
           message: 'Test Message',
@@ -255,7 +255,7 @@ test.describe('Campaign Validator', () => {
           isPublished: true,
         };
         const ctx = createMockHttpContext(data);
-        const validator = new CampaignValidator(ctx);
+        const validator = new InvitationValidator(ctx);
         const schema = validator.schema;
 
         const result = await schema.validate(data);
@@ -265,7 +265,7 @@ test.describe('Campaign Validator', () => {
 
     test('requires actionUrl when actionType is externalUrl', async () => {
       const data = {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
         title: 'Test Title',
         message: 'Test Message',
@@ -275,7 +275,7 @@ test.describe('Campaign Validator', () => {
       };
 
       const ctx = createMockHttpContext(data);
-      const validator = new CampaignValidator(ctx);
+      const validator = new InvitationValidator(ctx);
       const schema = validator.schema;
 
       await expect(schema.validate(data)).rejects.toThrow();
@@ -283,7 +283,7 @@ test.describe('Campaign Validator', () => {
 
     test('accepts valid actionUrl when actionType is externalUrl', async () => {
       const data = {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
         title: 'Test Title',
         message: 'Test Message',
@@ -294,7 +294,7 @@ test.describe('Campaign Validator', () => {
       };
 
       const ctx = createMockHttpContext(data);
-      const validator = new CampaignValidator(ctx);
+      const validator = new InvitationValidator(ctx);
       const schema = validator.schema;
 
       const result = await schema.validate(data);
@@ -303,7 +303,7 @@ test.describe('Campaign Validator', () => {
 
     test('validates actionUrl format', async () => {
       const data = {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
         title: 'Test Title',
         message: 'Test Message',
@@ -314,7 +314,7 @@ test.describe('Campaign Validator', () => {
       };
 
       const ctx = createMockHttpContext(data);
-      const validator = new CampaignValidator(ctx);
+      const validator = new InvitationValidator(ctx);
       const schema = validator.schema;
 
       await expect(schema.validate(data)).rejects.toThrow();
@@ -322,7 +322,7 @@ test.describe('Campaign Validator', () => {
 
     test('requires protocol in actionUrl', async () => {
       const data = {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
         title: 'Test Title',
         message: 'Test Message',
@@ -333,7 +333,7 @@ test.describe('Campaign Validator', () => {
       };
 
       const ctx = createMockHttpContext(data);
-      const validator = new CampaignValidator(ctx);
+      const validator = new InvitationValidator(ctx);
       const schema = validator.schema;
 
       await expect(schema.validate(data)).rejects.toThrow();
@@ -344,7 +344,7 @@ test.describe('Campaign Validator', () => {
 
       for (const protocol of protocols) {
         const data = {
-          name: 'Test Campaign',
+          name: 'Test Invitation',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
           title: 'Test Title',
           message: 'Test Message',
@@ -354,7 +354,7 @@ test.describe('Campaign Validator', () => {
           isPublished: true,
         };
         const ctx = createMockHttpContext(data);
-        const validator = new CampaignValidator(ctx);
+        const validator = new InvitationValidator(ctx);
         const schema = validator.schema;
 
         const result = await schema.validate(data);
@@ -364,7 +364,7 @@ test.describe('Campaign Validator', () => {
 
     test('allows empty actionUrl when actionType is not externalUrl', async () => {
       const data = {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
         title: 'Test Title',
         message: 'Test Message',
@@ -375,7 +375,7 @@ test.describe('Campaign Validator', () => {
       };
 
       const ctx = createMockHttpContext(data);
-      const validator = new CampaignValidator(ctx);
+      const validator = new InvitationValidator(ctx);
       const schema = validator.schema;
 
       const result = await schema.validate(data);
@@ -384,7 +384,7 @@ test.describe('Campaign Validator', () => {
 
     test('allows missing actionUrl when actionType is not externalUrl', async () => {
       const data = {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
         title: 'Test Title',
         message: 'Test Message',
@@ -394,7 +394,7 @@ test.describe('Campaign Validator', () => {
       };
 
       const ctx = createMockHttpContext(data);
-      const validator = new CampaignValidator(ctx);
+      const validator = new InvitationValidator(ctx);
       const schema = validator.schema;
 
       const result = await schema.validate(data);
@@ -403,7 +403,7 @@ test.describe('Campaign Validator', () => {
 
     test('makes promoImage optional', async () => {
       const data = {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
         title: 'Test Title',
         message: 'Test Message',
@@ -413,7 +413,7 @@ test.describe('Campaign Validator', () => {
       };
 
       const ctx = createMockHttpContext(data);
-      const validator = new CampaignValidator(ctx);
+      const validator = new InvitationValidator(ctx);
       const schema = validator.schema;
 
       const result = await schema.validate(data);
@@ -422,7 +422,7 @@ test.describe('Campaign Validator', () => {
 
     test('makes regions optional', async () => {
       const data = {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
         title: 'Test Title',
         message: 'Test Message',
@@ -431,7 +431,7 @@ test.describe('Campaign Validator', () => {
         isPublished: true,
       };
       const ctx = createMockHttpContext(data);
-      const validator = new CampaignValidator(ctx);
+      const validator = new InvitationValidator(ctx);
       const schema = validator.schema;
 
       const result = await schema.validate(data);
@@ -441,7 +441,7 @@ test.describe('Campaign Validator', () => {
     test.describe('videoUrl validation', () => {
       test('accepts a videoUrl in live when it is optional', async () => {
         const data = {
-          name: 'Test Campaign',
+          name: 'Test Invitation',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
           title: 'Test Title',
           message: 'Test Message',
@@ -451,7 +451,7 @@ test.describe('Campaign Validator', () => {
         };
 
         const ctx = createMockHttpContext(data);
-        const validator = new CampaignValidator(ctx);
+        const validator = new InvitationValidator(ctx);
         const schema = validator.schema;
 
         const result = await schema.validate(data);
@@ -460,7 +460,7 @@ test.describe('Campaign Validator', () => {
 
       test('accepts empty videoUrl', async () => {
         const data = {
-          name: 'Test Campaign',
+          name: 'Test Invitation',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
           title: 'Test Title',
           message: 'Test Message',
@@ -470,7 +470,7 @@ test.describe('Campaign Validator', () => {
           isPublished: true,
         };
         const ctx = createMockHttpContext(data);
-        const validator = new CampaignValidator(ctx);
+        const validator = new InvitationValidator(ctx);
         const schema = validator.schema;
 
         const result = await schema.validate(data);
@@ -479,7 +479,7 @@ test.describe('Campaign Validator', () => {
 
       test('accepts valid videoUrl starting with https:// and ending with .mp4', async () => {
         const data = {
-          name: 'Test Campaign',
+          name: 'Test Invitation',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
           title: 'Test Title',
           message: 'Test Message',
@@ -489,7 +489,7 @@ test.describe('Campaign Validator', () => {
           isPublished: true,
         };
         const ctx = createMockHttpContext(data);
-        const validator = new CampaignValidator(ctx);
+        const validator = new InvitationValidator(ctx);
         const schema = validator.schema;
 
         const result = await schema.validate(data);
@@ -497,9 +497,9 @@ test.describe('Campaign Validator', () => {
       });
 
       test('rejects videoUrl that does not start with https://', async () => {
-        vine.messagesProvider = campaignErrorMessages;
+        vine.messagesProvider = invitationErrorMessages;
         const data = {
-          name: 'Test Campaign',
+          name: 'Test Invitation',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
           title: 'Test Title',
           message: 'Test Message',
@@ -510,7 +510,7 @@ test.describe('Campaign Validator', () => {
         };
 
         const ctx = createMockHttpContext(data);
-        const validator = new CampaignValidator(ctx);
+        const validator = new InvitationValidator(ctx);
         const schema = validator.schema;
 
         let error: {
@@ -531,7 +531,7 @@ test.describe('Campaign Validator', () => {
         expect(error!.messages).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
-              message: 'The campaign needs a valid URL for the video',
+              message: 'The invitation needs a valid URL for the video',
               rule: 'url',
               field: 'videoUrl',
             }),
@@ -540,9 +540,9 @@ test.describe('Campaign Validator', () => {
       });
 
       test('rejects videoUrl that does not end with .mp4', async () => {
-        vine.messagesProvider = campaignErrorMessages;
+        vine.messagesProvider = invitationErrorMessages;
         const data = {
-          name: 'Test Campaign',
+          name: 'Test Invitation',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
           title: 'Test Title',
           message: 'Test Message',
@@ -555,7 +555,7 @@ test.describe('Campaign Validator', () => {
 
         const ctx = createMockHttpContext(data);
 
-        const validator = new CampaignValidator(ctx);
+        const validator = new InvitationValidator(ctx);
         const schema = validator.schema;
 
         let error: {
@@ -586,7 +586,7 @@ test.describe('Campaign Validator', () => {
 
       test('rejects videoUrl that is not a URL when not empty', async () => {
         const data = {
-          name: 'Test Campaign',
+          name: 'Test Invitation',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
           title: 'Test Title',
           message: 'Test Message',
@@ -597,7 +597,7 @@ test.describe('Campaign Validator', () => {
         };
         const ctx = createMockHttpContext(data);
 
-        const validator = new CampaignValidator(ctx);
+        const validator = new InvitationValidator(ctx);
         const schema = validator.schema;
 
         await expect(schema.validate(data)).rejects.toThrow('Validation failure');
@@ -606,7 +606,7 @@ test.describe('Campaign Validator', () => {
 
     test('accepts valid complete data', async () => {
       const data = {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
         promoImage: 'https://example.com/image.jpg',
         title: 'Test Title',
@@ -618,7 +618,7 @@ test.describe('Campaign Validator', () => {
         isPublished: true,
       };
       const ctx = createMockHttpContext(data);
-      const validator = new CampaignValidator(ctx);
+      const validator = new InvitationValidator(ctx);
       const schema = validator.schema;
 
       const result = await schema.validate(data);
@@ -628,7 +628,7 @@ test.describe('Campaign Validator', () => {
     test.describe('maxLength validation', () => {
       test('rejects title longer than 58 characters', async () => {
         const data = {
-          name: 'Test Campaign',
+          name: 'Test Invitation',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
           title: 'a'.repeat(59),
           message: 'Test Message',
@@ -637,7 +637,7 @@ test.describe('Campaign Validator', () => {
           isPublished: true,
         };
         const ctx = createMockHttpContext(data);
-        const validator = new CampaignValidator(ctx);
+        const validator = new InvitationValidator(ctx);
         const schema = validator.schema;
 
         await expect(schema.validate(data)).rejects.toThrow();
@@ -645,7 +645,7 @@ test.describe('Campaign Validator', () => {
 
       test('accepts title exactly 58 characters', async () => {
         const data = {
-          name: 'Test Campaign',
+          name: 'Test Invitation',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
           title: 'a'.repeat(58),
           message: 'Test Message',
@@ -654,7 +654,7 @@ test.describe('Campaign Validator', () => {
           isPublished: true,
         };
         const ctx = createMockHttpContext(data);
-        const validator = new CampaignValidator(ctx);
+        const validator = new InvitationValidator(ctx);
         const schema = validator.schema;
 
         const result = await schema.validate(data);
@@ -663,7 +663,7 @@ test.describe('Campaign Validator', () => {
 
       test('accepts title shorter than 58 characters', async () => {
         const data = {
-          name: 'Test Campaign',
+          name: 'Test Invitation',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
           title: 'Short Title',
           message: 'Test Message',
@@ -673,7 +673,7 @@ test.describe('Campaign Validator', () => {
         };
 
         const ctx = createMockHttpContext(data);
-        const validator = new CampaignValidator(ctx);
+        const validator = new InvitationValidator(ctx);
         const schema = validator.schema;
 
         const result = await schema.validate(data);
@@ -682,7 +682,7 @@ test.describe('Campaign Validator', () => {
 
       test('rejects message longer than 560 characters', async () => {
         const data = {
-          name: 'Test Campaign',
+          name: 'Test Invitation',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
           title: 'Test Title',
           message: 'a'.repeat(561),
@@ -691,7 +691,7 @@ test.describe('Campaign Validator', () => {
           isPublished: true,
         };
         const ctx = createMockHttpContext(data);
-        const validator = new CampaignValidator(ctx);
+        const validator = new InvitationValidator(ctx);
         const schema = validator.schema;
 
         await expect(schema.validate(data)).rejects.toThrow();
@@ -699,7 +699,7 @@ test.describe('Campaign Validator', () => {
 
       test('accepts message exactly 560 characters', async () => {
         const data = {
-          name: 'Test Campaign',
+          name: 'Test Invitation',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
           title: 'Test Title',
           message: 'a'.repeat(560),
@@ -709,7 +709,7 @@ test.describe('Campaign Validator', () => {
         };
 
         const ctx = createMockHttpContext(data);
-        const validator = new CampaignValidator(ctx);
+        const validator = new InvitationValidator(ctx);
         const schema = validator.schema;
 
         const result = await schema.validate(data);
@@ -718,7 +718,7 @@ test.describe('Campaign Validator', () => {
 
       test('accepts message shorter than 560 characters', async () => {
         const data = {
-          name: 'Test Campaign',
+          name: 'Test Invitation',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
           title: 'Test Title',
           message: 'Short message',
@@ -728,7 +728,7 @@ test.describe('Campaign Validator', () => {
         };
 
         const ctx = createMockHttpContext(data);
-        const validator = new CampaignValidator(ctx);
+        const validator = new InvitationValidator(ctx);
         const schema = validator.schema;
 
         const result = await schema.validate(data);
@@ -737,7 +737,7 @@ test.describe('Campaign Validator', () => {
 
       test('rejects actionLabel longer than 66 characters', async () => {
         const data = {
-          name: 'Test Campaign',
+          name: 'Test Invitation',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
           title: 'Test Title',
           message: 'Test Message',
@@ -747,7 +747,7 @@ test.describe('Campaign Validator', () => {
         };
 
         const ctx = createMockHttpContext(data);
-        const validator = new CampaignValidator(ctx);
+        const validator = new InvitationValidator(ctx);
         const schema = validator.schema;
 
         await expect(schema.validate(data)).rejects.toThrow();
@@ -755,7 +755,7 @@ test.describe('Campaign Validator', () => {
 
       test('accepts actionLabel exactly 66 characters', async () => {
         const data = {
-          name: 'Test Campaign',
+          name: 'Test Invitation',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
           title: 'Test Title',
           message: 'Test Message',
@@ -765,7 +765,7 @@ test.describe('Campaign Validator', () => {
         };
 
         const ctx = createMockHttpContext(data);
-        const validator = new CampaignValidator(ctx);
+        const validator = new InvitationValidator(ctx);
         const schema = validator.schema;
 
         const result = await schema.validate(data);
@@ -774,7 +774,7 @@ test.describe('Campaign Validator', () => {
 
       test('accepts actionLabel shorter than 66 characters', async () => {
         const data = {
-          name: 'Test Campaign',
+          name: 'Test Invitation',
           window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
           title: 'Test Title',
           message: 'Test Message',
@@ -783,7 +783,7 @@ test.describe('Campaign Validator', () => {
           isPublished: true,
         };
         const ctx = createMockHttpContext(data);
-        const validator = new CampaignValidator(ctx);
+        const validator = new InvitationValidator(ctx);
         const schema = validator.schema;
 
         const result = await schema.validate(data);
@@ -792,15 +792,15 @@ test.describe('Campaign Validator', () => {
     });
   });
 });
-test.describe('Campaign Status', () => {
+test.describe('Invitation status', () => {
   test('returns Draft when isPublished is false', () => {
-    const status = getCampaignStatus(false, '');
+    const status = getInvitationStatus(false, '');
     expect(status).toBe('Draft');
   });
 
   test('returns Draft when isPublished is false even with window', () => {
     const window = '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z';
-    const status = getCampaignStatus(false, window);
+    const status = getInvitationStatus(false, window);
     expect(status).toBe('Draft');
   });
 
@@ -810,7 +810,7 @@ test.describe('Campaign Status', () => {
     const window = `${windowStart.toISO()}|${windowEnd.toISO()}`;
     const now = DateTime.now();
 
-    const status = getCampaignStatus(true, window, now);
+    const status = getInvitationStatus(true, window, now);
     expect(status).toBe('Scheduled');
   });
 
@@ -820,7 +820,7 @@ test.describe('Campaign Status', () => {
     const window = `${windowStart.toISO()}|${windowEnd.toISO()}`;
     const now = DateTime.now();
 
-    const status = getCampaignStatus(true, window, now);
+    const status = getInvitationStatus(true, window, now);
     expect(status).toBe('Completed');
   });
 
@@ -830,7 +830,7 @@ test.describe('Campaign Status', () => {
     const window = `${windowStart.toISO()}|${windowEnd.toISO()}`;
     const now = DateTime.now();
 
-    const status = getCampaignStatus(true, window, now);
+    const status = getInvitationStatus(true, window, now);
     expect(status).toBe('Live');
   });
 
@@ -839,7 +839,7 @@ test.describe('Campaign Status', () => {
     const windowEnd = now.plus({ hours: 1 });
     const window = `${now.toISO()}|${windowEnd.toISO()}`;
 
-    const status = getCampaignStatus(true, window, now);
+    const status = getInvitationStatus(true, window, now);
     expect(status).toBe('Live');
   });
 
@@ -848,12 +848,12 @@ test.describe('Campaign Status', () => {
     const now = DateTime.now();
     const window = `${windowStart.toISO()}|${now.toISO()}`;
 
-    const status = getCampaignStatus(true, window, now);
+    const status = getInvitationStatus(true, window, now);
     expect(status).toBe('Live');
   });
 
   test('returns Draft when published with empty window value', () => {
-    const status = getCampaignStatus(true, '');
+    const status = getInvitationStatus(true, '');
     expect(status).toBe('Draft');
   });
 
@@ -861,7 +861,7 @@ test.describe('Campaign Status', () => {
     const windowEnd = DateTime.now().plus({ days: 1 });
     const window = `invalid-date|${windowEnd.toISO()}`;
 
-    const status = getCampaignStatus(true, window);
+    const status = getInvitationStatus(true, window);
     expect(status).toBe('Draft');
   });
 
@@ -869,21 +869,21 @@ test.describe('Campaign Status', () => {
     const windowStart = DateTime.now().minus({ days: 1 });
     const window = `${windowStart.toISO()}|invalid-date`;
 
-    const status = getCampaignStatus(true, window);
+    const status = getInvitationStatus(true, window);
     expect(status).toBe('Draft');
   });
 
   test('returns Draft when published with both invalid window dates', () => {
     const window = 'invalid-start|invalid-end';
 
-    const status = getCampaignStatus(true, window);
+    const status = getInvitationStatus(true, window);
     expect(status).toBe('Draft');
   });
 
   test('returns Draft when published with malformed window format', () => {
     const window = '2025-01-01T00:00:00.000Z'; // missing separator
 
-    const status = getCampaignStatus(true, window);
+    const status = getInvitationStatus(true, window);
     expect(status).toBe('Draft');
   });
 
@@ -893,7 +893,7 @@ test.describe('Campaign Status', () => {
     const window = `  ${windowStart.toISO()}  |  ${windowEnd.toISO()}  `;
     const now = DateTime.now();
 
-    const status = getCampaignStatus(true, window, now);
+    const status = getInvitationStatus(true, window, now);
     expect(status).toBe('Live');
   });
 });

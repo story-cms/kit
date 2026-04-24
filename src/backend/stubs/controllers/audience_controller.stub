@@ -1,5 +1,5 @@
 {{{
-  exports({ to: app.makePath('app/controllers/audiences_controller.ts') })
+  exports({ to: app.makePath('app/controllers/audience_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
 import {
@@ -14,28 +14,28 @@ import cms from '#services/cms';
  */
 export const AUDIENCE_LIST_PAGE_SIZE = 800;
 
-export default class AudiencesController {
+export default class AudienceController {
   public async index(ctx: HttpContext) {
-    let audiences: AudienceMeta[] = [];
+    let audience: AudienceMeta[] = [];
     let nextPageToken: string | null = null;
     try {
       const service = new AudienceService();
       const page = await service.listUsersPage(AUDIENCE_LIST_PAGE_SIZE);
-      audiences = page.users;
+      audience = page.users;
       nextPageToken = page.nextPageToken;
     } catch {
-      audiences = [];
+      audience = [];
       nextPageToken = null;
     }
 
     const shared = await cms.sharedProps(ctx);
     const props = {
-      audiences,
+      audience,
       nextPageToken,
       ...shared,
     };
 
-    return ctx.inertia.render('AudiencesIndex', { ...props });
+    return ctx.inertia.render('AudienceIndex', { ...props });
   }
 
   /** Cursor-paginated JSON for infinite scroll (pageToken query = previous nextPageToken). */

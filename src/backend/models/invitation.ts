@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon';
 import { BaseModel, column } from '@adonisjs/lucid/orm';
-import type { CampaignBundle, CampaignMeta, CampaignForApi } from '../../types';
+import type { InvitationBundle, InvitationMeta, InvitationForApi } from '../../types';
 
-export default class Campaign extends BaseModel {
+export default class Invitation extends BaseModel {
   @column({ isPrimary: true })
   declare id: number;
 
@@ -38,7 +38,7 @@ export default class Campaign extends BaseModel {
     };
   }
 
-  public get forApi(): CampaignForApi {
+  public get forApi(): InvitationForApi {
     const [start, end] = this.splitWindow;
     return {
       id: this.id,
@@ -73,7 +73,7 @@ export default class Campaign extends BaseModel {
 
   public updateBundle(changes: any) {
     const old = this.bundle;
-    const fresh = <CampaignBundle>{
+    const fresh = <InvitationBundle>{
       name: this.freshValue(changes, old, 'name', ''),
       window: this.freshValue(changes, old, 'window', ''),
       promoImage: this.freshValue(changes, old, 'promoImage', ''),
@@ -100,7 +100,7 @@ export default class Campaign extends BaseModel {
     return fallback;
   }
 
-  public get meta(): CampaignMeta {
+  public get meta(): InvitationMeta {
     return {
       id: this.id,
       createdAt: this.createdAt.toString(),
