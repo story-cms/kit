@@ -16,10 +16,6 @@ export default class extends BaseSchema {
         return;
       }
 
-      if (await db.schema.hasTable(this.tableName)) {
-        return;
-      }
-
       await db.schema.createTable(this.tableName, (table) => {
         table.increments('id');
 
@@ -61,17 +57,7 @@ export default class extends BaseSchema {
 
   async down() {
     this.defer(async (db) => {
-      const hasInvitations = await db.schema.hasTable(this.tableName);
-      if (!hasInvitations) {
-        return;
-      }
-
-      const hasCampaigns = await db.schema.hasTable('campaigns');
-      if (hasCampaigns) {
-        return;
-      }
-
-      await db.schema.renameTable(this.tableName, 'campaigns');
+      await db.schema.dropTableIfExists(this.tableName);
     });
   }
 }
