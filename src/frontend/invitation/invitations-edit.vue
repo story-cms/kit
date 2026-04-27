@@ -234,7 +234,7 @@ if (!currentActionType) {
 }
 
 const selection = ref(model.getField('actionType', defaultType));
-const title = ref(model.getField('name', 'New invitation'));
+const title = ref(model.getField('name', 'New Invitation'));
 const isPublished = ref(Boolean(model.getField('isPublished', false)));
 
 const savedAt = ref(invitation.value['updatedAt']);
