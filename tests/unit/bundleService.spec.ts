@@ -283,7 +283,7 @@ test.describe('Bundle validator', () => {
           },
           window: {
             name: 'dates',
-            label: 'Campaign dates',
+            label: 'Invitation dates',
             widget: 'dateRange',
           },
         },

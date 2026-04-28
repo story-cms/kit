@@ -3,7 +3,7 @@ import { type App, type ServiceAccount } from 'firebase-admin/app';
 import { Auth, type UserRecord } from 'firebase-admin/auth';
 import { DateTime } from 'luxon';
 
-import type { AudiencesUsersPageResponse, AudienceMeta } from '../../types.js';
+import type { AudienceUsersPageResponse, AudienceMeta } from '../../types.js';
 import {
   getCredentialsFrom,
   standardAudienceKeys,
@@ -25,7 +25,7 @@ export class AudienceService {
   public async listUsersPage(
     maxResults: number,
     pageToken?: string,
-  ): Promise<AudiencesUsersPageResponse> {
+  ): Promise<AudienceUsersPageResponse> {
     const listUsersResult = await this.getAuthService().listUsers(maxResults, pageToken);
 
     const users = listUsersResult.users.map((userRecord: UserRecord) =>

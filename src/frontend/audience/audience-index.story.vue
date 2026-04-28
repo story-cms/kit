@@ -1,7 +1,7 @@
 <template>
-  <Story title="Audiences Page" group="team">
+  <Story title="Audience Page" group="team">
     <Variant title="Index" :setup-app="miniSidebar">
-      <AudiencesIndex
+      <AudienceIndex
         :errors="sharedProps.errors"
         :meta="sharedProps.meta"
         :user="sharedProps.user"
@@ -9,11 +9,11 @@
         :languages="sharedProps.languages"
         :bookmarks="sharedProps.bookmarks"
         :exclude="[]"
-        :audiences="audiences"
+        :audience="audience"
       />
     </Variant>
     <Variant title="Empty" :setup-app="miniSidebar">
-      <AudiencesIndex
+      <AudienceIndex
         :errors="sharedProps.errors"
         :meta="sharedProps.meta"
         :user="sharedProps.user"
@@ -21,11 +21,11 @@
         :languages="sharedProps.languages"
         :bookmarks="sharedProps.bookmarks"
         :exclude="[]"
-        :audiences="[]"
+        :audience="[]"
       />
     </Variant>
     <Variant title="With extra columns" :setup-app="miniSidebar">
-      <AudiencesIndex
+      <AudienceIndex
         :meta="sharedProps.meta"
         :user="sharedProps.user"
         :languages="sharedProps.languages"
@@ -33,29 +33,29 @@
         :errors="sharedProps.errors"
         :bookmarks="sharedProps.bookmarks"
         :exclude="[]"
-        :audiences="audiencesWithExtraColumns"
+        :audience="audienceWithExtraColumns"
       />
     </Variant>
     <Variant title="With feedback" :setup-app="loadData">
-      <AudiencesIndex
+      <AudienceIndex
         :meta="sharedProps.meta"
         :user="sharedProps.user"
         :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
-        :audiences="audiences"
+        :audience="audience"
         :bookmarks="sharedProps.bookmarks"
         :exclude="[]"
       />
     </Variant>
     <Variant title="With admin user" :setup-app="miniSidebar">
-      <AudiencesIndex
+      <AudienceIndex
         :meta="sharedProps.meta"
         :user="{ ...sharedProps.user, role: 'admin' }"
         :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
-        :audiences="audiences"
+        :audience="audience"
         :bookmarks="sharedProps.bookmarks"
         :exclude="[]"
       />
@@ -64,13 +64,13 @@
 </template>
 
 <script setup lang="ts">
-import AudiencesIndex from './audiences-index.vue';
+import AudienceIndex from './audience-index.vue';
 import { sharedProps, miniSidebar } from '../test/mocks';
 import type { AudienceMeta } from '../../types';
 import { ResponseStatus } from '../../types';
 import { useSharedStore } from '../store';
 
-const audiences: AudienceMeta[] = [
+const audience: AudienceMeta[] = [
   {
     uid: '1',
     name: 'Lindsay Walton',
@@ -390,8 +390,8 @@ const churches = [
   'Christ Church Fulham',
 ];
 
-const audiencesWithExtraColumns = audiences.map((audience) => ({
-  ...audience,
+const audienceWithExtraColumns = audience.map((member) => ({
+  ...member,
   role: Math.random() > 0.7 ? 'Admin' : 'Member',
   localChurch: churches[Math.floor(Math.random() * churches.length)],
 }));
@@ -405,7 +405,7 @@ const loadData = () => {
 </script>
 
 <docs lang="md">
-# Audiences index
+# Audience index
 
 Stories omit `nextPageToken` so Histoire does not call `GET /:locale/audience/users`. In the app, when the server sends a non-null `nextPageToken`, the table loads more rows as you scroll (IntersectionObserver + axios).
 </docs>

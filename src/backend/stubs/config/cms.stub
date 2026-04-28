@@ -133,8 +133,8 @@ const cmsConfig: CmsConfig = defineConfig({
     tracking: 'utm_source=storyapp&utm_medium=referral&utm_campaign=page_menu',
   },
 
-  campaigns: {
-    hasCampaigns: false,
+  invitations: {
+    hasInvitations: false,
   },
 });
 

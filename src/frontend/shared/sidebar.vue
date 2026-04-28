@@ -70,10 +70,10 @@
             >
 
             <a
-              v-if="include('campaign')"
-              :class="classList('campaign')"
-              :href="`/${locale}/campaign`"
-              >Campaigns</a
+              v-if="include('invitation')"
+              :class="classList('invitation')"
+              :href="`/${locale}/invitation`"
+              >Invitations</a
             >
 
             <a

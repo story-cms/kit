@@ -51,9 +51,9 @@ export function defineConfig(config: Partial<CmsConfig>): CmsConfig {
       ...config.audience,
     },
 
-    campaigns: {
-      hasCampaigns: false,
-      ...config.campaigns,
+    invitations: {
+      hasInvitations: false,
+      ...config.invitations,
     },
   } satisfies CmsConfig;
 }

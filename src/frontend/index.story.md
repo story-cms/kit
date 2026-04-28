@@ -223,7 +223,7 @@ example:
 
 ```ts
 {
-  label: 'Campaign window',
+  label: 'Invitation window',
   name: 'window',
   widget: 'dateRange',
 },

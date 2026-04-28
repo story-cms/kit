@@ -39,7 +39,7 @@ import ModelControl from '../test/model-control.vue';
 
 const objectModel = {
   name: 'March Giving',
-  description: 'March Giving is a campaign to raise money for the charity.',
+  description: 'March Giving is an invitation to raise money for the charity.',
   type: 'giving',
   window: '2027-01-08T07:30:00.000Z|2027-01-15T07:30:00.000Z',
 };
@@ -61,7 +61,7 @@ const emptyModel = {
 
 const modelSpec = {
   name: 'window',
-  label: 'Campaign window',
+  label: 'Invitation window',
   widget: 'dateRange',
 };
 
@@ -105,7 +105,7 @@ example:
 
 ```ts
 {
-  label: 'Campaign window',
+  label: 'Invitation window',
   name: 'window',
   widget: 'dateRange',
 },

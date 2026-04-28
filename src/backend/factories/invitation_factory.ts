@@ -1,8 +1,8 @@
 import factory from '@adonisjs/lucid/factories';
-import Campaign from '../models/campaign.js';
+import Invitation from '../models/invitation.js';
 
-export const CampaignFactory = factory
-  .define(Campaign, async ({ faker }) => {
+export const InvitationFactory = factory
+  .define(Invitation, async ({ faker }) => {
     const startDate = faker.date.future();
     const endDate = faker.date.future({ refDate: startDate });
     const window = `${startDate.toISOString()}|${endDate.toISOString()}`;
