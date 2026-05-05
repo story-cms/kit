@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import { BaseModel, column } from '@adonisjs/lucid/orm';
-import { DropIndexItem, DropMeta, JSON } from '../../types';
+import type { DropIndexItem, DropMeta, JSON } from '../../types';
 
 export default class Drop extends BaseModel {
   @column({ isPrimary: true })
