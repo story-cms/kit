@@ -1,7 +1,7 @@
 import vine, { SimpleMessagesProvider } from '@vinejs/vine';
 import { SchemaTypes } from '@vinejs/vine/types';
-import { FieldSpec } from '../../types';
-import { BundleService } from '../services/bundle_service';
+import type { FieldSpec } from '../../types';
+import { BundleService } from '../services/bundle_service.js';
 
 const draft = {
   title: vine.string(),
