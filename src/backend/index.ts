@@ -41,7 +41,7 @@ export * from './validators/auth.js';
 export * from './validators/campaign.js';
 export * from './validators/bundle.js';
 export * from './validators/chapter.js';
-export * from './validators/drop.js';
+export { default as DropValidator } from './validators/drop.js';
 export { default as PageValidator } from './validators/page.js';
 export * from './validators/user.js';
 export { default as audioRule } from './validators/audio_rule.js';
