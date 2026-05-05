@@ -3,7 +3,6 @@
 }}}
 import { HttpContext } from '@adonisjs/core/http';
 import db from '@adonisjs/lucid/services/db';
-import { DateTime } from 'luxon';
 import type {
   StreamEditProps,
   StreamGalleryProps,
@@ -17,8 +16,6 @@ import {
   BundleService,
   StreamService,
   DropValidator,
-  trimmedErrors,
-  bundledErrors,
 } from '@story-cms/kit';
 import providers from '#config/providers';
 import cms from '#services/cms';
@@ -63,6 +60,7 @@ export default class StreamController {
       ...shared,
     } as StreamGalleryProps;
 
+    // @ts-expect-error Inertia page name
     return ctx.inertia.render('StreamGallery', data);
   }
 
@@ -81,6 +79,7 @@ export default class StreamController {
       ...shared,
     } as StreamIndexProps;
 
+    // @ts-expect-error Inertia page name
     return ctx.inertia.render('StreamIndex', data);
   }
 
@@ -132,6 +131,7 @@ export default class StreamController {
       ...shared,
     };
 
+    // @ts-expect-error Inertia page name
     return ctx.inertia.render('DropEdit', { ...props });
   }
 
@@ -147,7 +147,7 @@ export default class StreamController {
         action: {{'`deleted drop ${drop.id}`'}},
       });
     } catch (e) {
-      ctx.session.flash('errorsBag', { other: e.message });
+      ctx.session.flash('inputErrorsBag', { other: e.message });
     }
 
     return ctx.response.redirect({{'`/${version.locale}/stream`'}}, false, 303);
@@ -166,26 +166,18 @@ export default class StreamController {
     }
 
     let payload;
-    try {
-      const data = ctx.request.all();
-      //   vine.messagesProvider = errorMessages;
-      const isPublished = ctx.request.input('isPublished') === true;
+    const data = ctx.request.all();
+    const isPublished = ctx.request.input('isPublished') === true;
 
-      const validator = new DropValidator(isPublished, stream.fields);
-      payload = await validator.schema.validate(data);
-    } catch (e) {
-      const errors = trimmedErrors(e);
-
-      ctx.session.flash('errorsBag', bundledErrors(errors));
-      return ctx.response.redirect().back();
-    }
+    const validator = new DropValidator(isPublished, stream.fields);
+    payload = (await validator.validate(data)).bundle;
 
     const service = new BundleService(stream.fields);
-    drop.bundle = service.updatedBundle(drop.parsedBundle, payload);
+    drop.bundle = service.updatedBundle(drop.bundle, payload);
     drop.isPublished = payload.isPublished;
     drop.title = payload.title;
     drop.coverImage = payload.coverImage ?? '';
-    drop.releaseAt = payload.releaseAt ? DateTime.fromJSDate(payload.releaseAt) : null;
+    drop.releaseAt = payload.releaseAt;
     drop.updatedBy = ctx.auth.user?.id ?? 0;
 
     await drop.save();
