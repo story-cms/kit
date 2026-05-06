@@ -7,7 +7,7 @@ import { CmsConfig, Config, defineConfig } from '@story-cms/kit';
 
 export default class MigrateConfig extends BaseCommand {
   static commandName = 'migrate:config';
-  static description = 'Migrate the active configuration';
+  static description = 'Migrate the schema of the active configuration';
 
   static options: CommandOptions = { startApp: true };
 
@@ -25,6 +25,7 @@ export default class MigrateConfig extends BaseCommand {
 
     try {
       const overrides = active.data as CmsConfig;
+      // defineConfig from the kit dictates the target schema of the configuration
       const newConfig = defineConfig(overrides);
       if (this.isEqual(newConfig, overrides)) {
         this.logger.info('Configuration is up to date, skipping migration');

@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
 import { BaseModel, column } from '@adonisjs/lucid/orm';
+import type { JSON } from '../../types';
 
 export default class Config extends BaseModel {
   @column({ isPrimary: true })
@@ -12,7 +13,7 @@ export default class Config extends BaseModel {
   declare version: number;
 
   @column()
-  declare data: Record<string, any>;
+  declare data: JSON<any>;
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime;

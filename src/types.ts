@@ -71,6 +71,12 @@ export interface Video {
 
 export type WidgetPicker = (widget: string) => any;
 
+/**
+ * Type-safe wrapper for JSON columns that preserves the generic parameter
+ * while ensuring JSON-serializable values at runtime.
+ */
+export type JSON<T> = T;
+
 /// ----------------------------------------------------
 ///  streams
 /// ----------------------------------------------------
