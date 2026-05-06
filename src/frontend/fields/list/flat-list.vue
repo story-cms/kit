@@ -1,14 +1,5 @@
 <template>
-  <div
-    :class="[
-      'ml-8',
-      {
-        subgrid: !isNested,
-        'grid grid-cols-1': isNested,
-      },
-    ]"
-    :style="!isNested ? { gridRow: `span ${containerSpan}` } : undefined"
-  >
+  <div :class="['ml-8', 'subgrid']" :style="{ gridRow: `span ${containerSpan}` }">
     <ul
       v-for="(_listItem, index) in listItems"
       :key="index"
@@ -54,6 +45,7 @@
         <li
           v-for="(item, i) in fields"
           :key="item.name + `${i.toString()}`"
+          :class="item.widget === 'object' || item.widget === 'note' ? 'subgrid' : ''"
           :style="{ gridRow: `span ${getFieldSpan(item)}` }"
         >
           <component
@@ -174,7 +166,6 @@ const hasSourceItem = (index: number): boolean => {
   return Array.isArray(sourceList) && index < sourceList.length;
 };
 
-
 const toggleRemove = (index: number) => {
   widgets.toggleRemovedIndex(props.fieldPath, index);
 };
@@ -187,6 +178,7 @@ const getFieldSpan = (field: FieldSpec): number => {
   if (field.widget === 'object' && field.fields) {
     return Object.keys(field.fields).length;
   }
+  if (field.widget === 'note') return 2;
   return 1;
 };
 

@@ -93,13 +93,15 @@
         <ul
           v-if="isExpanded(index)"
           :class="['subgrid bg-white', { 'ml-8': !isReadOnly }]"
-          :style="{ gridRow: `span ${fieldsSpan}` }"
+          :style="{ gridRow: `span ${fieldsSpan(index)}` }"
         >
           <li
             v-for="(item, i) in fields"
             :key="item.name + `${i.toString()}`"
-            :class="item.widget === 'object' ? 'subgrid' : 'grid'"
-            :style="{ gridRow: `span ${getFieldSpan(item)} ` }"
+            :class="
+              item.widget === 'object' || item.widget === 'list' ? 'subgrid' : 'grid'
+            "
+            :style="{ gridRow: `span ${getFieldSpan(item, index)} ` }"
           >
             <component
               :is="widgets.picker(item.widget)"
@@ -271,19 +273,50 @@ const isEmpty = (index: number): boolean => {
   return Object.keys(item).length === 0;
 };
 
-const getFieldSpan = (field: FieldSpec): number => {
+const getFieldSpan = (field: FieldSpec, index: number): number => {
   if (field.widget === 'object' && field.fields) {
     const start = field.label ? 1 : 0;
     return Object.keys(field.fields).length + start;
   }
+  if (field.widget === 'list') {
+    let path = `${props.fieldPath}.${index.toString()}`;
+    if (props.field.index) {
+      path = `${path}.${props.field.index}`;
+    } else {
+      path = `${path}.${fields[0].name}`;
+    }
+    // The path above is for title(). We need the path for the actual field!
+    // wait, the path for the list field is simply:
+    let listPath = `${props.fieldPath}.${index.toString()}.${field.name}`;
+    const items = model.getField(listPath, []) as any[];
+
+    // total span of ONE item in the list
+    let itemSpan = 1;
+    if (field.fields) {
+      itemSpan = (field.fields as FieldSpec[]).reduce((acc: number, f: FieldSpec) => {
+        let span = 1;
+        if (f.widget === 'object' && f.fields) {
+          const start = f.label ? 1 : 0;
+          span = Object.keys(f.fields).length + start;
+        } else if (f.widget === 'note') {
+          span = 2;
+        }
+        return acc + span;
+      }, 0);
+    }
+
+    // If there are items, we sum the spans. Add 1 for the 'Add Item' row.
+    return Math.max(1, items.length * itemSpan + 1);
+  }
+  if (field.widget === 'note') return 2;
   return 1;
 };
 
-const fieldsSpan = computed(() => {
-  return fields.reduce((acc, field) => acc + getFieldSpan(field), 0);
-});
+const fieldsSpan = (index: number) => {
+  return fields.reduce((acc, field) => acc + getFieldSpan(field, index), 0);
+};
 
 const getRowSpan = (index: number): number => {
-  return isExpanded(index) ? fieldsSpan.value + 1 : 1;
+  return isExpanded(index) ? fieldsSpan(index) + 1 : 1;
 };
 </script>
