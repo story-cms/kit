@@ -1,7 +1,7 @@
 <template>
-  <Story title="Campaign Edit" group="campaign">
+  <Story title="Invitation edit" group="invitation">
     <Variant title="With model" :setup-app="miniSidebar">
-      <CampaignEdit
+      <InvitationsEdit
         :meta="sharedProps.meta"
         :user="sharedProps.user"
         :languages="sharedProps.languages"
@@ -9,8 +9,8 @@
         :errors="sharedProps.errors"
         :bookmarks="sharedProps.bookmarks"
         :exclude="[]"
-        :bundle="campaignBundle"
-        :campaign="campaign"
+        :bundle="invitationBundle"
+        :invitation="invitation"
         :providers="{}"
         :stats="stats"
       />
@@ -19,11 +19,11 @@
 </template>
 
 <script setup lang="ts">
-import CampaignEdit from './campaigns-edit.vue';
-import type { CampaignBundle, CampaignMeta, CampaignStats } from '../../types';
+import InvitationsEdit from './invitations-edit.vue';
+import type { InvitationBundle, InvitationMeta, InvitationStats } from '../../types';
 import { sharedProps, miniSidebar } from '../test/mocks';
 
-const campaignBundle: CampaignBundle = {
+const invitationBundle: InvitationBundle = {
   name: 'Giving Tuesday',
   window: '2026-01-08T02:58:00.000Z|2026-01-24T02:58:00.000Z',
   promoImage:
@@ -38,13 +38,13 @@ const campaignBundle: CampaignBundle = {
   regions: 'CX, KE, UG, ZM',
 };
 
-const campaign: CampaignMeta = {
+const invitation: InvitationMeta = {
   id: 1,
   createdAt: '2021-10-10T14:48:00.000000Z',
   updatedAt: '2021-10-10T14:48:00.000000Z',
 };
 
-const stats: CampaignStats = {
+const stats: InvitationStats = {
   impressions: 100,
   clicks: 10,
 };

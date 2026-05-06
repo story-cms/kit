@@ -72,8 +72,8 @@ export default defineConfig({
         title: 'Pages',
       },
       {
-        id: 'campaign',
-        title: 'Campaign',
+        id: 'invitation',
+        title: 'Invitation',
       },
       {
         id: 'interface',

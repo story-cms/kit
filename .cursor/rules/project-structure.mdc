@@ -59,7 +59,7 @@ storycmskit/
 
 ```
 src/frontend/
-├── audiences/              # Audience management components
+├── audience/               # Audience management components
 ├── auth/                   # Authentication components
 ├── dashboard/              # Dashboard components
 ├── fields/                 # Form field components (core UI)

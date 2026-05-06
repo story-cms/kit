@@ -1,13 +1,13 @@
 <template>
   <AppLayout>
     <template #header>
-      <ContentHeader title="Campaigns">
+      <ContentHeader title="Invitations">
         <template #actions>
           <div class="flex items-center gap-x-6">
             <button
               type="button"
               class="rounded-full bg-blue-500 p-2 shadow-md hover:bg-blue-700"
-              @click="addCampaign"
+              @click="addInvitation"
             >
               <Icon name="plus" class="text-white" />
             </button>
@@ -23,8 +23,8 @@
     </template>
     <div class="my-8 grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
       <div v-for="item in filteredItems" :key="item.id">
-        <a :href="`/${shared.locale}/campaign/${item.id}/edit`">
-          <CampaignIndexItem :campaign="item" />
+        <a :href="`/${shared.locale}/invitation/${item.id}/edit`">
+          <InvitationIndexItem :invitation="item" />
         </a>
       </div>
     </div>
@@ -36,9 +36,9 @@ import { ref, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
 import type {
   TabItem,
-  CampaignItem,
+  InvitationItem,
   SharedPageProps,
-  CampaignIndexProps,
+  InvitationIndexProps,
 } from '../../types';
 import { useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
@@ -46,20 +46,20 @@ import IndexFilter from '../shared/index-filter.vue';
 import Icon from '../shared/icon.vue';
 
 import ContentHeader from '../shared/content-header.vue';
-import CampaignIndexItem from './campaign-index-item.vue';
+import InvitationIndexItem from './invitation-index-item.vue';
 
-const props = defineProps<CampaignIndexProps & SharedPageProps>();
+const props = defineProps<InvitationIndexProps & SharedPageProps>();
 const shared = useSharedStore();
 shared.setFromProps(props);
 shared.setCurrentStoryName('');
 
-const items = ref<CampaignItem[]>([...props.campaigns]);
+const items = ref<InvitationItem[]>([...props.invitations]);
 
 // filtering
 const currentTab = ref('Published');
 const tabs = computed(() => {
   const publishedCount = items.value.reduce(
-    (carry, item: CampaignItem) => (item.isPublished ? carry + 1 : carry),
+    (carry, item: InvitationItem) => (item.isPublished ? carry + 1 : carry),
     0,
   );
   return [
@@ -82,7 +82,7 @@ const filteredItems = computed(() => {
 
 const isShowingPublished = computed(() => currentTab.value === 'Published');
 
-const addCampaign = () => {
-  router.visit(`/${shared.locale}/campaign/create`);
+const addInvitation = () => {
+  router.visit(`/${shared.locale}/invitation/create`);
 };
 </script>

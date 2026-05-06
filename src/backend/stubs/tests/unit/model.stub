@@ -7,12 +7,12 @@ import { DateTime } from 'luxon';
 
 import {
   User,
-  Campaign,
+  Invitation,
   Draft,
   Chapter,
   Index,
   UserFactory,
-  CampaignFactory,
+  InvitationFactory,
   ChapterFactory,
   IndexFactory,
   DraftFactory,
@@ -318,47 +318,47 @@ test.group('Page', (group) => {
   });
 });
 
-test.group('Campaign', (group) => {
+test.group('Invitation', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction());
 
-  test('campaigns are persisted', async ({ assert }) => {
-    const campaign = await CampaignFactory.create();
-    assert.isTrue(campaign.$isPersisted);
+  test('invitations are persisted', async ({ assert }) => {
+    const invitation = await InvitationFactory.create();
+    assert.isTrue(invitation.$isPersisted);
 
-    const campaigns = await CampaignFactory.createMany(3);
-    assert.lengthOf(campaigns, 3);
+    const invitations = await InvitationFactory.createMany(3);
+    assert.lengthOf(invitations, 3);
   });
 
-  test('campaign bundle is accessible as object', async ({ assert }) => {
+  test('invitation bundle is accessible as object', async ({ assert }) => {
     const window = '2025-12-15T05:54:00.000Z|2025-12-18T05:53:00.000Z';
-    const campaign = await CampaignFactory.merge({
+    const invitation = await InvitationFactory.merge({
       bundle: {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: window,
-        title: 'Campaign Title',
-        message: 'Campaign message',
+        title: 'Invitation Title',
+        message: 'Invitation message',
         actionLabel: 'Click Here',
         actionType: 'close',
       },
     }).create();
 
-    assert.isTrue(campaign.$isPersisted);
+    assert.isTrue(invitation.$isPersisted);
 
-    const fresh = await Campaign.findOrFail(campaign.id);
+    const fresh = await Invitation.findOrFail(invitation.id);
     // refresh to ensure bundle is parsed
     await fresh.refresh();
 
-    assert.equal((fresh.model as any).name, 'Test Campaign');
+    assert.equal((fresh.model as any).name, 'Test Invitation');
     assert.equal((fresh.model as any).window, window);
-    assert.equal((fresh.model as any).title, 'Campaign Title');
-    assert.equal((fresh.model as any).message, 'Campaign message');
+    assert.equal((fresh.model as any).title, 'Invitation Title');
+    assert.equal((fresh.model as any).message, 'Invitation message');
     assert.equal((fresh.model as any).actionLabel, 'Click Here');
     assert.equal((fresh.model as any).actionType, 'close');
   });
 
   test('it can update the bundle', async ({ assert }) => {
     const window = '2025-12-15T05:54:00.000Z|2025-12-18T05:53:00.000Z';
-    const campaign = await CampaignFactory.merge({
+    const invitation = await InvitationFactory.merge({
       bundle: {
         junk: 'Should not be in the bundle',
         name: 'Original Name',
@@ -370,7 +370,7 @@ test.group('Campaign', (group) => {
       },
     }).create();
 
-    campaign.updateBundle({
+    invitation.updateBundle({
       name: 'Updated Name',
       title: 'Updated Title',
       message: 'Updated message',
@@ -381,44 +381,44 @@ test.group('Campaign', (group) => {
     });
 
     // removes junk
-    assert.isUndefined((campaign.model as any).junk);
+    assert.isUndefined((invitation.model as any).junk);
     // updates fresh attributes
-    assert.equal((campaign.model as any).name, 'Updated Name');
-    assert.equal((campaign.model as any).title, 'Updated Title');
-    assert.equal((campaign.model as any).message, 'Updated message');
-    assert.equal((campaign.model as any).actionLabel, 'Updated Label');
-    assert.equal((campaign.model as any).actionType, 'externalUrl');
-    assert.equal((campaign.model as any).actionUrl, 'https://example.com');
+    assert.equal((invitation.model as any).name, 'Updated Name');
+    assert.equal((invitation.model as any).title, 'Updated Title');
+    assert.equal((invitation.model as any).message, 'Updated message');
+    assert.equal((invitation.model as any).actionLabel, 'Updated Label');
+    assert.equal((invitation.model as any).actionType, 'externalUrl');
+    assert.equal((invitation.model as any).actionUrl, 'https://example.com');
     // isPublished is updated separately
-    assert.equal(campaign.isPublished, true);
+    assert.equal(invitation.isPublished, true);
   });
 
-  test('campaign has default stats', async ({ assert }) => {
-    const campaign = await CampaignFactory.merge({
+  test('invitation has default stats', async ({ assert }) => {
+    const invitation = await InvitationFactory.merge({
       stats: {},
     }).create();
 
-    assert.deepEqual(campaign.stats, {});
-    assert.isObject(campaign.stats);
+    assert.deepEqual(invitation.stats, {});
+    assert.isObject(invitation.stats);
   });
 
-  test('campaign can have custom stats', async ({ assert }) => {
-    const campaign = await CampaignFactory.merge({
+  test('invitation can have custom stats', async ({ assert }) => {
+    const invitation = await InvitationFactory.merge({
       stats: {
         impressions: 100,
         clicks: 25,
       },
     }).create();
 
-    assert.equal(campaign.stats.impressions, 100);
-    assert.equal(campaign.stats.clicks, 25);
+    assert.equal(invitation.stats.impressions, 100);
+    assert.equal(invitation.stats.clicks, 25);
   });
 
-  test('campaign has meta and model properties', async ({ assert }) => {
+  test('invitation has meta and model properties', async ({ assert }) => {
     const window = '2025-12-15T05:54:00.000Z|2025-12-18T05:53:00.000Z';
-    const campaign = await CampaignFactory.merge({
+    const invitation = await InvitationFactory.merge({
       bundle: {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: window,
         title: 'Test Title',
         message: 'Test message',
@@ -428,10 +428,10 @@ test.group('Campaign', (group) => {
       isPublished: true,
     }).create();
 
-    assert.isObject(campaign.meta);
-    assert.isObject(campaign.model);
-    assert.equal((campaign.model as any).name, 'Test Campaign');
-    assert.isTrue(campaign.isPublished);
+    assert.isObject(invitation.meta);
+    assert.isObject(invitation.model);
+    assert.equal((invitation.model as any).name, 'Test Invitation');
+    assert.isTrue(invitation.isPublished);
   });
 
   test('splitWindow returns valid DateTime tuple for normal window', async ({
@@ -440,14 +440,14 @@ test.group('Campaign', (group) => {
     const startDate = '2025-12-15T05:54:00.000Z';
     const endDate = '2025-12-18T05:53:00.000Z';
     const window = {{ '`${startDate}|${endDate}`' }};
-    const campaign = await CampaignFactory.merge({
+    const invitation = await InvitationFactory.merge({
       bundle: {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: window,
       },
     }).create();
 
-    const [start, end] = (campaign as any).splitWindow;
+    const [start, end] = (invitation as any).splitWindow;
 
     assert.isNotNull(start);
     assert.isNotNull(end);
@@ -460,55 +460,55 @@ test.group('Campaign', (group) => {
   });
 
   test('splitWindow returns null tuple for undefined window', async ({ assert }) => {
-    const campaign = await CampaignFactory.merge({
+    const invitation = await InvitationFactory.merge({
       bundle: {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
       },
     }).create();
 
-    const [start, end] = (campaign as any).splitWindow;
+    const [start, end] = (invitation as any).splitWindow;
 
     assert.isNull(start);
     assert.isNull(end);
   });
 
   test('splitWindow returns null tuple for null window', async ({ assert }) => {
-    const campaign = await CampaignFactory.merge({
+    const invitation = await InvitationFactory.merge({
       bundle: {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: null,
       },
     }).create();
 
-    const [start, end] = (campaign as any).splitWindow;
+    const [start, end] = (invitation as any).splitWindow;
 
     assert.isNull(start);
     assert.isNull(end);
   });
 
   test('splitWindow returns null tuple for empty window string', async ({ assert }) => {
-    const campaign = await CampaignFactory.merge({
+    const invitation = await InvitationFactory.merge({
       bundle: {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: '',
       },
     }).create();
 
-    const [start, end] = (campaign as any).splitWindow;
+    const [start, end] = (invitation as any).splitWindow;
 
     assert.isNull(start);
     assert.isNull(end);
   });
 
   test('splitWindow handles missing pipe separator', async ({ assert }) => {
-    const campaign = await CampaignFactory.merge({
+    const invitation = await InvitationFactory.merge({
       bundle: {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: '2025-12-15T05:54:00.000Z',
       },
     }).create();
 
-    const [start, end] = (campaign as any).splitWindow;
+    const [start, end] = (invitation as any).splitWindow;
 
     assert.isNotNull(start);
     assert.isNull(end);
@@ -518,15 +518,15 @@ test.group('Campaign', (group) => {
   });
 
   test('splitWindow handles multiple pipes', async ({ assert }) => {
-    const campaign = await CampaignFactory.merge({
+    const invitation = await InvitationFactory.merge({
       bundle: {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window:
           '2025-12-15T05:54:00.000Z|2025-12-18T05:53:00.000Z|2025-12-20T05:53:00.000Z',
       },
     }).create();
 
-    const [start, end] = (campaign as any).splitWindow;
+    const [start, end] = (invitation as any).splitWindow;
 
     assert.isNotNull(start);
     assert.isNotNull(end);
@@ -540,28 +540,28 @@ test.group('Campaign', (group) => {
   });
 
   test('splitWindow handles invalid ISO date strings', async ({ assert }) => {
-    const campaign = await CampaignFactory.merge({
+    const invitation = await InvitationFactory.merge({
       bundle: {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: 'invalid-date|also-invalid',
       },
     }).create();
 
-    const [start, end] = (campaign as any).splitWindow;
+    const [start, end] = (invitation as any).splitWindow;
 
     assert.isNull(start);
     assert.isNull(end);
   });
 
   test('splitWindow handles only start date (no end date)', async ({ assert }) => {
-    const campaign = await CampaignFactory.merge({
+    const invitation = await InvitationFactory.merge({
       bundle: {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: '2025-12-15T05:54:00.000Z|',
       },
     }).create();
 
-    const [start, end] = (campaign as any).splitWindow;
+    const [start, end] = (invitation as any).splitWindow;
 
     assert.isNotNull(start);
     assert.isNull(end);
@@ -571,14 +571,14 @@ test.group('Campaign', (group) => {
   });
 
   test('splitWindow handles only end date (no start date)', async ({ assert }) => {
-    const campaign = await CampaignFactory.merge({
+    const invitation = await InvitationFactory.merge({
       bundle: {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: '|2025-12-18T05:53:00.000Z',
       },
     }).create();
 
-    const [start, end] = (campaign as any).splitWindow;
+    const [start, end] = (invitation as any).splitWindow;
 
     assert.isNull(start);
     assert.isNotNull(end);
@@ -588,14 +588,14 @@ test.group('Campaign', (group) => {
   });
 
   test('splitWindow handles empty dates on both sides', async ({ assert }) => {
-    const campaign = await CampaignFactory.merge({
+    const invitation = await InvitationFactory.merge({
       bundle: {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: '|',
       },
     }).create();
 
-    const [start, end] = (campaign as any).splitWindow;
+    const [start, end] = (invitation as any).splitWindow;
 
     assert.isNull(start);
     assert.isNull(end);
@@ -604,14 +604,14 @@ test.group('Campaign', (group) => {
   test('splitWindow handles whitespace around dates', async ({ assert }) => {
     const startDate = '2025-12-15T05:54:00.000Z';
     const endDate = '2025-12-18T05:53:00.000Z';
-    const campaign = await CampaignFactory.merge({
+    const invitation = await InvitationFactory.merge({
       bundle: {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: {{ '`  ${startDate}  |  ${endDate}  `' }},
       },
     }).create();
 
-    const [start, end] = (campaign as any).splitWindow;
+    const [start, end] = (invitation as any).splitWindow;
 
     assert.isNotNull(start);
     assert.isNotNull(end);
@@ -628,14 +628,14 @@ test.group('Campaign', (group) => {
   });
 
   test('splitWindow handles partial ISO dates', async ({ assert }) => {
-    const campaign = await CampaignFactory.merge({
+    const invitation = await InvitationFactory.merge({
       bundle: {
-        name: 'Test Campaign',
+        name: 'Test Invitation',
         window: '2025-12-15|2025-12-18',
       },
     }).create();
 
-    const [start, end] = (campaign as any).splitWindow;
+    const [start, end] = (invitation as any).splitWindow;
 
     assert.isNotNull(start);
     assert.isNotNull(end);

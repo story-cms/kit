@@ -412,7 +412,7 @@ export interface DashboardProps {
 }
 
 /// ----------------------------------------------------
-///  audiences
+///  audience
 /// ----------------------------------------------------
 
 export interface AudienceMeta {
@@ -424,40 +424,40 @@ export interface AudienceMeta {
   lastSignInTime: string;
 }
 
-export interface AudiencesProps {
-  audiences: AudienceMeta[];
+export interface AudienceProps {
+  audience: AudienceMeta[];
   nextPageToken?: string | null;
 }
 
 /** JSON body for GET `/:locale/audience/users` (cursor pagination). */
-export interface AudiencesUsersPageResponse {
+export interface AudienceUsersPageResponse {
   users: AudienceMeta[];
   nextPageToken: string | null;
 }
 
 /// ----------------------------------------------------
-///  campaigns
+///  invitations
 /// ----------------------------------------------------
 
-export interface CampaignMeta {
+export interface InvitationMeta {
   id: number;
   createdAt: string;
   updatedAt: string;
 }
 
-export interface CampaignStats {
+export interface InvitationStats {
   impressions: number;
   clicks: number;
 }
 
-export interface CampaignEditProps {
-  campaign: CampaignMeta;
-  stats: CampaignStats;
+export interface InvitationEditProps {
+  invitation: InvitationMeta;
+  stats: InvitationStats;
   bundle: any; // model
   providers: Providers; // widgets
 }
 
-export interface CampaignBundle {
+export interface InvitationBundle {
   name: string;
   regions: string;
   window: string;
@@ -470,7 +470,7 @@ export interface CampaignBundle {
   actionUrl?: string;
 }
 
-export interface CampaignItem {
+export interface InvitationItem {
   id: number;
   name?: string;
   regions?: string;
@@ -478,16 +478,16 @@ export interface CampaignItem {
   isPublished: boolean;
 }
 
-export interface CampaignIndexProps {
-  campaigns: CampaignItem[];
+export interface InvitationIndexProps {
+  invitations: InvitationItem[];
 }
 
-export interface CampaignVersion {
+export interface InvitationVersion {
   apiVersion: number;
   locale: string;
 }
 
-export interface CampaignForApi {
+export interface InvitationForApi {
   id: number;
   startDate: string | null;
   endDate: string | null;
@@ -546,8 +546,8 @@ export type CmsConfig = {
     hasAudience?: boolean;
   };
 
-  campaigns: {
-    hasCampaigns?: boolean;
+  invitations: {
+    hasInvitations?: boolean;
   };
 };
 

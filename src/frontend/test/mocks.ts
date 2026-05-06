@@ -4,7 +4,7 @@ import type {
   CmsMeta,
   SharedPageProps,
   StorySpec,
-  CampaignItem,
+  InvitationItem,
 } from '../../types.ts';
 import { StoryHandler } from '../shared/helpers.js';
 import { useSharedStore } from '../store/shared.js';
@@ -2906,7 +2906,7 @@ export const afsCourseStory = {
   } as StorySpec,
 };
 
-export const mockCampaigns: CampaignItem[] = [
+export const mockInvitations: InvitationItem[] = [
   {
     id: 1,
     name: 'Giving Tuesday',
@@ -2916,7 +2916,7 @@ export const mockCampaigns: CampaignItem[] = [
   },
   {
     id: 2,
-    name: 'Christmas Campaign',
+    name: 'Christmas invitation',
     regions:
       'CX, KE, UG, ZM, UK, US, AU, ZA, CA, IE, NZ, SG, MY, HK, TW, JP, KR, CN, IN, ID, PH, TH, VN, MY, HK, TW, JP, KR, CN, IN, ID, PH, TH, VN',
     window: '2025-12-24T02:58:00.000Z|2025-12-26T02:58:00.000Z',
@@ -2924,14 +2924,14 @@ export const mockCampaigns: CampaignItem[] = [
   },
   {
     id: 3,
-    name: 'New Year Campaign',
+    name: 'New Year invitation',
     regions: 'CX, KE, UG, ZM, GB, US',
     window: '2026-01-01T02:58:00.000Z|2026-01-03T02:58:00.000Z',
     isPublished: true,
   },
   {
     id: 4,
-    name: "Valentine's Day Campaign",
+    name: "Valentine's Day invitation",
     regions:
       'CX, KE, UG, ZM, UK, US, AU, ZA, CA, IE, NZ, SG, MY, HK, TW, JP, KR, CN, IN, ID, PH, TH, VN, MY, HK, TW, JP, KR, CN, IN, ID, PH, TH, VN',
     window: '2026-02-14T02:58:00.000Z|2026-02-15T02:58:00.000Z',
@@ -2939,14 +2939,14 @@ export const mockCampaigns: CampaignItem[] = [
   },
   {
     id: 5,
-    name: 'Easter Campaign',
+    name: 'Easter invitation',
     regions: 'CX, KE, UG, ZM',
     window: '2025-04-18T02:58:00.000Z|2025-04-21T02:58:00.000Z',
     isPublished: true,
   },
   {
     id: 6,
-    name: 'Summer Campaign',
+    name: 'Summer invitation',
     regions: 'CX, KE, UG, ZM',
     window: '2026-06-01T02:58:00.000Z|2026-06-15T02:58:00.000Z',
     isPublished: false,

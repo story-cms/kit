@@ -8,7 +8,7 @@
             type="button"
             :disabled="user.role !== 'admin' || isExporting"
             class="w-32 rounded-[38px] border bg-blue-500 px-[15px] py-[9px] text-center text-sm/5 font-medium text-white opacity-80 shadow focus:outline-none focus:ring focus:ring-indigo-500 active:opacity-80 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset] enabled:hover:bg-blue-400 enabled:hover:shadow-none disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
-            @click.prevent="exportAudiences"
+            @click.prevent="exportAudience"
           >
             {{ isExporting ? 'Exporting...' : 'Export' }}
           </button>
@@ -90,15 +90,15 @@ import ContentHeader from '../shared/content-header.vue';
 import AudienceRow from './components/audience-row.vue';
 import type {
   SharedPageProps,
-  AudiencesProps,
+  AudienceProps,
   AudienceMeta,
-  AudiencesUsersPageResponse,
+  AudienceUsersPageResponse,
 } from '../../types';
 import { ResponseStatus } from '../../types';
 import { useSharedStore } from '../store';
 import { extraAudienceColumns, keyToTitle } from '../../backend/services/helpers';
 
-const props = defineProps<SharedPageProps & AudiencesProps>();
+const props = defineProps<SharedPageProps & AudienceProps>();
 
 const extraColumns = computed(() => {
   if (audienceRows.value.length === 0) return [];
@@ -113,7 +113,7 @@ const extraColumnTitles = computed(() => {
   return columns.map((column) => keyToTitle(column));
 });
 
-const audienceRows = ref<AudienceMeta[]>([...props.audiences]);
+const audienceRows = ref<AudienceMeta[]>([...props.audience]);
 const cursor = ref<string | null>(props.nextPageToken ?? null);
 const loadingMore = ref(false);
 const sentinelRef = ref<HTMLElement | null>(null);
@@ -127,7 +127,7 @@ const showExport = computed(() => audienceRows.value.length > 0);
 
 const isExporting = ref(false);
 
-const exportAudiences = async () => {
+const exportAudience = async () => {
   isExporting.value = true;
 
   try {
@@ -157,17 +157,17 @@ const exportAudiences = async () => {
 };
 
 const resetFromProps = () => {
-  audienceRows.value = [...props.audiences];
+  audienceRows.value = [...props.audience];
   cursor.value = props.nextPageToken ?? null;
 };
 
-watch(() => [props.audiences, props.nextPageToken] as const, resetFromProps);
+watch(() => [props.audience, props.nextPageToken] as const, resetFromProps);
 
 const loadMore = async () => {
   if (loadingMore.value || cursor.value == null) return;
   loadingMore.value = true;
   try {
-    const { data } = await axios.get<AudiencesUsersPageResponse>(
+    const { data } = await axios.get<AudienceUsersPageResponse>(
       `/${shared.locale}/audience/users`,
       { params: { pageToken: cursor.value } },
     );

@@ -26,5 +26,5 @@ GET \{\{ authority \}\}/ui/v1/translation?locale=de HTTP/1.1
 Accept: application/json
 
 ###
-GET \{\{ authority \}\}/api/v1/campaigns?locale=en HTTP/1.1
+GET \{\{ authority \}\}/api/v1/invitations?locale=en HTTP/1.1
 Accept: application/json

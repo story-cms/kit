@@ -36,7 +36,14 @@ async function addMissingEnvVariables(
 }
 
 async function addMigrations(command: Configure, codemods: Codemods) {
-  const allMigrations = ['base', 'audit', 'drops', 'preferences', 'campaigns', 'configs'];
+  const allMigrations = [
+    'base',
+    'audit',
+    'drops',
+    'preferences',
+    'invitations',
+    'configs',
+  ];
 
   const path = command.app.migrationsPath();
   const migrations = await fsReadAll(path);
@@ -95,7 +102,7 @@ export async function configure(command: Configure) {
     {},
   );
   await codemods.makeUsingStub(stubsRoot, 'controllers/dashboard_controller.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'controllers/campaigns_controller.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'controllers/invitations_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/chapters_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/drafts_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/pages_controller.stub', {});
@@ -104,7 +111,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'controllers/analytics_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/preview_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/indices_controller.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'controllers/audiences_controller.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'controllers/audience_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/preferences_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/streams_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/stories_controller.stub', {});
@@ -113,7 +120,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'routes/users.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/auth.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/routes.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'routes/campaigns.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'routes/invitations.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/dashboard.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/pages.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/stories.stub', {});
@@ -144,7 +151,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'tests/ui.rest.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/functional/draft.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/ui_service.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'tests/unit/campaign_service.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'tests/unit/invitation_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/page_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/stream_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/user_service.stub', {});

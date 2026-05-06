@@ -4,9 +4,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import MetaBox from '../shared/meta-box.vue';
-import type { CampaignStats as CampaignStatsType } from '../../types';
+import type { InvitationStats as InvitationStatsType } from '../../types';
 
-const props = defineProps<CampaignStatsType>();
+const props = defineProps<InvitationStatsType>();
 
 const primary = computed(() => {
   return [{ label: 'Impressions', value: props.impressions.toString() }];
