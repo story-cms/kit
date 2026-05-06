@@ -17,11 +17,18 @@
     </div>
   </td>
   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-    {{ formatDate(audience.lastSignInTime) }}
+    {{ formatAudienceDate(audience.lastSignInTime, 'No activity') }}
   </td>
 
   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-    {{ formatDate(audience.signUpDate) }}
+    {{ formatAudienceDate(audience.signUpDate, '-') }}
+  </td>
+  <td
+    v-for="column in extraColumns"
+    :key="column"
+    class="px-3 py-4 text-sm text-gray-500"
+  >
+    {{ audience[column as keyof AudienceMeta] }}
   </td>
 </template>
 
@@ -31,16 +38,20 @@ import type { AudienceMeta } from '../../../types';
 
 defineProps<{
   audience: AudienceMeta;
+  extraColumns: string[];
 }>();
 
-const formatDate = (dateString: string) => {
-  if (dateString === null) {
-    return 'No activity';
+const formatAudienceDate = (dateString: string, emptyLabel: string) => {
+  if (dateString == null || String(dateString).trim() === '') {
+    return emptyLabel;
   }
 
   const date = DateTime.fromISO(dateString);
-  const now = DateTime.now();
+  if (!date.isValid) {
+    return emptyLabel;
+  }
 
+  const now = DateTime.now();
   const diff = now.diff(date, 'days').days;
 
   if (diff < 1) {

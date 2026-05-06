@@ -420,6 +420,13 @@ export interface AudienceMeta {
 
 export interface AudiencesProps {
   audiences: AudienceMeta[];
+  nextPageToken?: string | null;
+}
+
+/** JSON body for GET `/:locale/audience/users` (cursor pagination). */
+export interface AudiencesUsersPageResponse {
+  users: AudienceMeta[];
+  nextPageToken: string | null;
 }
 
 /// ----------------------------------------------------
