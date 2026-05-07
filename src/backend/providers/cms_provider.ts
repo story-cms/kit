@@ -2,33 +2,41 @@ import { CmsService } from '../services/cms_service.js';
 import type { ApplicationService } from '@adonisjs/core/types';
 import Config from '../models/config.js';
 import { CmsConfig } from '../../types.js';
+import { defineConfig } from '../define_config.js';
 
 export default class CmsProvider {
   constructor(protected app: ApplicationService) {}
 
   register() {
     this.app.container.singleton(CmsService, async (resolver) => {
-      // check to see if we have a config in the database
+      // untracked config
+      let untrackedConfig: CmsConfig;
       const persisted = await Config.query()
         .where('key', 'cms')
         .orderBy('version', 'desc')
         .first();
 
-      let cmsConfig: CmsConfig;
       if (persisted) {
-        cmsConfig = persisted.data as CmsConfig;
+        untrackedConfig = defineConfig(persisted.data as CmsConfig);
       } else {
-        // save the default config to the database
-        const configService = await resolver.make('config');
-        cmsConfig = configService.get<any>('cms') as CmsConfig;
+        untrackedConfig = defineConfig({});
         await Config.create({
           key: 'cms',
           version: 1,
-          data: cmsConfig as Record<string, any>,
+          data: untrackedConfig,
         });
       }
 
-      return new CmsService(cmsConfig!);
+      // tracked config
+      const configService = await resolver.make('config');
+      const trackedConfig = configService.get<any>('cms') as CmsConfig;
+
+      const cmsConfig = {
+        ...untrackedConfig,
+        ...trackedConfig,
+      };
+
+      return new CmsService(cmsConfig);
     });
   }
 }
