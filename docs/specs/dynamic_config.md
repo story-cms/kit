@@ -21,47 +21,6 @@ Key files:
 - `src/backend/define_config.ts`: the config schema and starting defaults
 - `config/cms.ts`: tracked settings
 
-## Sensible starting schema
-
-- toggle all features including users and languages
-- hasVideo, hasAudio, hasScripture
-
-```
-export type CmsConfig = {
-  meta: CmsMeta;
-
-  languages: {
-    languages: LanguageSpecification[];
-    microcopySource: string;
-  };
-
-  streams: {
-    hasStreams?: boolean;
-    streams: StreamSpec[];
-  };
-
-  stories: {
-    hasStories?: boolean;
-    hasEditReview: boolean;
-    stories: StorySpec[];
-  };
-
-  pages: {
-    hasPages?: boolean;
-    schemaVersion: number;
-    tracking: string;
-  };
-
-  audience: {
-    hasAudience?: boolean;
-  };
-
-  campaigns: {
-    hasCampaigns?: boolean;
-  };
-};
-```
-
 ## Config schema migration
 
 The schema of the framework config will change as we iterate over features. The migration
@@ -80,4 +39,20 @@ enforced:
 2. settings from the config table which can be superceded by
 3. config/cms.ts tracked settings
 
-## Config sync
+## Usage
+
+If we have a settings page where a user can edit, say their languages, the configuration
+can be updated thusly:
+
+```typescript
+ async index({ request, response }: HttpContext) {
+
+    const fresh = {
+      // set the new thing
+      name: request.input('name'),
+    } as Partial<CmsConfig>;
+
+    await cms.patchConfig(fresh);
+    return response.redirect('/');
+  }
+```
