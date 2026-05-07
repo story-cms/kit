@@ -17,8 +17,6 @@ import DateField from './date-field.vue';
 import DateRangeField from './date-range-field.vue';
 import TagField from './tag-field.vue';
 import RegionField from './region-field.vue';
-import SpreadField from './spread-field.vue';
-import NoteFile from './note-file.vue';
 
 export const widgetField = (widget: string) => {
   const up = widget[0].toUpperCase() + widget.substring(1);
@@ -64,10 +62,6 @@ export const widgetField = (widget: string) => {
       return TagField;
     case 'RegionField':
       return RegionField;
-    case 'SpreadField':
-      return SpreadField;
-    case 'NoteField':
-      return NoteFile;
     default:
       return NullField;
   }

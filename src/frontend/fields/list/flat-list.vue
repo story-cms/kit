@@ -45,7 +45,7 @@
         <li
           v-for="(item, i) in fields"
           :key="item.name + `${i.toString()}`"
-          :class="item.widget === 'object' || item.widget === 'note' ? 'subgrid' : ''"
+          :class="isSubgridWidget(item.widget) ? 'subgrid' : ''"
           :style="{ gridRow: `span ${getFieldSpan(item)}` }"
         >
           <component
@@ -62,7 +62,6 @@
           <li class="relative flex items-center justify-between">
             <span
               class="absolute left-0 right-0 top-1/2 border-t border-gray-300"
-              :style="{ width: `calc(100% + ${shared.sourceSectionWidth}px)` }"
             ></span>
             <div
               class="z-[1] inline-flex items-center rounded-full border border-gray-300 bg-gray-200 px-4 py-1.5 text-sm font-medium leading-5 text-gray-500 shadow-sm"
@@ -75,6 +74,10 @@
               :style="{ right: `-${shared.sourceSectionWidth}px` }"
               @click="toggleRemove(index)"
             >
+              <span
+                class="pointer-events-none absolute right-full top-1/2 h-px -translate-y-1/2 bg-gray-300"
+                :style="{ width: `${shared.sourceSectionWidth}px` }"
+              ></span>
               <span class="flex h-10 w-10 items-center justify-center">
                 <Icon name="plus-mini" class="size-5" />
               </span>
@@ -174,11 +177,15 @@ const isRemoved = (index: number): boolean => {
   return widgets.isInRemovedList(props.fieldPath, index);
 };
 
+const isSubgridWidget = (widget: string): boolean => {
+  return widget === 'object' || widgets.customComponents.includes(widget);
+};
+
 const getFieldSpan = (field: FieldSpec): number => {
   if (field.widget === 'object' && field.fields) {
     return Object.keys(field.fields).length;
   }
-  if (field.widget === 'note') return 2;
+  if (widgets.customComponents.includes(field.widget)) return 2;
   return 1;
 };
 

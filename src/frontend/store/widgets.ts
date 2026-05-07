@@ -76,6 +76,13 @@ export const useWidgetsStore = defineStore('widgets', () => {
     isDirty.value = fresh;
   };
 
+  // custom components
+  const customComponents = ref<string[]>([]);
+
+  const setCustomComponents = (fresh: string[]) => {
+    customComponents.value = fresh;
+  };
+
   return {
     picker,
     setPicker,
@@ -92,5 +99,8 @@ export const useWidgetsStore = defineStore('widgets', () => {
 
     isDirty,
     setIsDirty,
+
+    customComponents,
+    setCustomComponents,
   };
 });

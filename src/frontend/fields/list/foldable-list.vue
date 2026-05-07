@@ -279,14 +279,6 @@ const getFieldSpan = (field: FieldSpec, index: number): number => {
     return Object.keys(field.fields).length + start;
   }
   if (field.widget === 'list') {
-    let path = `${props.fieldPath}.${index.toString()}`;
-    if (props.field.index) {
-      path = `${path}.${props.field.index}`;
-    } else {
-      path = `${path}.${fields[0].name}`;
-    }
-    // The path above is for title(). We need the path for the actual field!
-    // wait, the path for the list field is simply:
     let listPath = `${props.fieldPath}.${index.toString()}.${field.name}`;
     const items = model.getField(listPath, []) as any[];
 
@@ -298,7 +290,7 @@ const getFieldSpan = (field: FieldSpec, index: number): number => {
         if (f.widget === 'object' && f.fields) {
           const start = f.label ? 1 : 0;
           span = Object.keys(f.fields).length + start;
-        } else if (f.widget === 'note') {
+        } else if (widgets.customComponents.includes(f.widget)) {
           span = 2;
         }
         return acc + span;
@@ -308,7 +300,7 @@ const getFieldSpan = (field: FieldSpec, index: number): number => {
     // If there are items, we sum the spans. Add 1 for the 'Add Item' row.
     return Math.max(1, items.length * itemSpan + 1);
   }
-  if (field.widget === 'note') return 2;
+  if (widgets.customComponents.includes(field.widget)) return 2;
   return 1;
 };
 
