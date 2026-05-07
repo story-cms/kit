@@ -1,63 +1,63 @@
 {{{
-  exports({ to: app.makePath('app/controllers/campaigns_controller.ts') })
+  exports({ to: app.makePath('app/controllers/invitations_controller.ts') })
 }}}
 import { HttpContext } from '@adonisjs/core/http';
 import vine from '@vinejs/vine';
 import {
   Activity,
   trimmedErrors,
-  Campaign,
-  CampaignValidator,
-  campaignErrorMessages,
-  CampaignService,
-  type CampaignEditProps,
-  type CampaignIndexProps,
+  Invitation,
+  InvitationValidator,
+  invitationErrorMessages,
+  InvitationService,
+  type InvitationEditProps,
+  type InvitationIndexProps,
   type Version,
 } from '@story-cms/kit';
 import cms from '#services/cms';
 import providers from '#config/providers';
 
-export default class CampaignsController {
+export default class InvitationsController {
   
   public async get(ctx: HttpContext) {
     const version: Version = cms.apiContextFrom(ctx).version;
     const { apiVersion, locale } = version;
-    const service = new CampaignService({ apiVersion, locale });
-    const campaigns = await service.getCampaignItemsForClient();
+    const service = new InvitationService({ apiVersion, locale });
+    const invitations = await service.getInvitationItemsForClient();
 
-    return { campaigns };
+    return { invitations };
   }
 
   public async index(ctx: HttpContext) {
     const version = cms.pagesContextFrom(ctx);
-    const service = new CampaignService(version);
-    const campaigns = await service.getCampaignItems();
+    const service = new InvitationService(version);
+    const invitations = await service.getInvitationItems();
 
     const shared = await cms.sharedProps(ctx);
-    const props: CampaignIndexProps = {
-      campaigns,
+    const props: InvitationIndexProps = {
+      invitations,
       ...shared,
     };
-    return ctx.inertia.render('CampaignsIndex', props);
+    return ctx.inertia.render('InvitationsIndex', props);
   }
 
   public async edit(ctx: HttpContext) {
-    const campaign = await Campaign.findOrFail(ctx.params.id);
+    const invitation = await Invitation.findOrFail(ctx.params.id);
     const shared = await cms.sharedProps(ctx);
 
-    const props: CampaignEditProps = {
+    const props: InvitationEditProps = {
       providers,
-      campaign: campaign.meta,
-      bundle: campaign.model,
+      invitation: invitation.meta,
+      bundle: invitation.model,
       ...shared,
     };
 
-    return ctx.inertia.render('CampaignsEdit', props);
+    return ctx.inertia.render('InvitationsEdit', props);
   }
 
   public async create(ctx: HttpContext) {
     const version = cms.pagesContextFrom(ctx);
-    const campaign = await Campaign.create({
+    const invitation = await Invitation.create({
       locale: version.locale,
       apiVersion: 1,
       bundle: {
@@ -78,11 +78,11 @@ export default class CampaignsController {
     await Activity.create({
       userId: ctx.auth.user?.id,
       locale: version.locale,
-      action: {{ '`created campaign ${campaign.id}`' }},
+      action: {{ '`created invitation ${invitation.id}`' }},
     });
 
     return ctx.response.redirect(
-      {{ '`/${version.locale}/campaign/${campaign.id}/edit`' }},
+      {{ '`/${version.locale}/invitation/${invitation.id}/edit`' }},
       false,
       303,
     );
@@ -91,19 +91,19 @@ export default class CampaignsController {
   public async destroy(ctx: HttpContext) {
     const version = cms.pagesContextFrom(ctx);
     const id = Number(ctx.params.id);
-    const campaign = await Campaign.findOrFail(id);
+    const invitation = await Invitation.findOrFail(id);
     try {
-      await campaign.delete();
+      await invitation.delete();
       await Activity.create({
         userId: ctx.auth.user?.id,
         locale: version.locale,
-        action: {{ '`deleted campaign ${campaign.id}`' }},
+        action: {{ '`deleted invitation ${invitation.id}`' }},
       });
     } catch (e) {
       ctx.session.flash('errorsBag', { other: e.message });
     }
 
-    return ctx.response.redirect({{ '`/${version.locale}/campaign`' }}, false, 303);
+    return ctx.response.redirect({{ '`/${version.locale}/invitation`' }}, false, 303);
   }
 
   public async update(ctx: HttpContext) {
@@ -113,10 +113,10 @@ export default class CampaignsController {
       // constructing the validator first so we can have a
       // dynamic getter for the schema property
       const data = ctx.request.all();
-      vine.messagesProvider = campaignErrorMessages;
+      vine.messagesProvider = invitationErrorMessages;
 
-      const campaignValidator = new CampaignValidator(ctx);
-      payload = await campaignValidator.schema.validate(data);
+      const invitationValidator = new InvitationValidator(ctx);
+      payload = await invitationValidator.schema.validate(data);
     } catch (e) {
       const errors = trimmedErrors(e);
 
@@ -125,23 +125,23 @@ export default class CampaignsController {
     }
 
     const id = Number(ctx.params.id);
-    const campaign = await Campaign.findOrFail(id);
+    const invitation = await Invitation.findOrFail(id);
 
-    campaign.updateBundle(payload);
+    invitation.updateBundle(payload);
 
-    campaign.isPublished = payload.isPublished;
-    await campaign.save();
+    invitation.isPublished = payload.isPublished;
+    await invitation.save();
     if (payload.isPublished) {
       await Activity.create({
         userId: ctx.auth.user?.id,
         locale: version.locale,
-        action: {{ '`published campaign ${campaign.id}`' }},
+        action: {{ '`published invitation ${invitation.id}`' }},
       });
     } else {
       await Activity.create({
         userId: ctx.auth.user?.id,
         locale: version.locale,
-        action: {{ '`updated campaign ${campaign.id}`' }},
+        action: {{ '`updated invitation ${invitation.id}`' }},
       });
     }
 

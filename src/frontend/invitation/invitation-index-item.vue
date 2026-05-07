@@ -6,7 +6,7 @@
         class="mr-2 inline-flex flex-wrap items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs font-medium leading-4 text-green-800"
         >Live</span
       ><span>
-        {{ campaignName }}
+        {{ invitationName }}
       </span>
     </h3>
     <div class="w-full grow text-sm font-medium leading-5 text-gray-500">
@@ -47,53 +47,52 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { formatDate, getCampaignStatus } from '../shared/helpers';
-import type { CampaignItem } from '../../types';
-import { padZero } from '../shared/helpers';
+import { formatDate, getInvitationStatus, padZero } from '../shared/helpers';
+import type { InvitationItem } from '../../types';
 
 const props = defineProps<{
-  campaign: CampaignItem;
+  invitation: InvitationItem;
 }>();
 
 const isForAllRegions = computed(() => {
-  if (props.campaign.regions?.length === 0) return true;
+  if (props.invitation.regions?.length === 0) return true;
   return false;
 });
 
 const parsedRegions = computed(() => {
-  return props.campaign.regions?.split(',').map((region) => region.trim());
+  return props.invitation.regions?.split(',').map((region) => region.trim());
 });
 
 const startDate = computed(() => {
-  if (!props.campaign.window) return '—';
-  return formatDate(props.campaign.window?.split('|')[0])
+  if (!props.invitation.window) return '—';
+  return formatDate(props.invitation.window?.split('|')[0])
     .split(' ')[0]
     .replace('-', '/')
     .replace(',', '');
 });
 
 const endDate = computed(() => {
-  if (!props.campaign.window) return '—';
-  return formatDate(props.campaign.window?.split('|')[1])
+  if (!props.invitation.window) return '—';
+  return formatDate(props.invitation.window?.split('|')[1])
     .split(' ')[0]
     .replace('-', '/')
     .replace(',', '');
 });
 
-// check if the campaign is live
+// check if the invitation is live
 const isLive = computed(() => {
-  const status = getCampaignStatus(
-    props.campaign.isPublished,
-    props.campaign.window ?? '',
+  const status = getInvitationStatus(
+    props.invitation.isPublished,
+    props.invitation.window ?? '',
   );
   return status === 'Live';
 });
 
-const campaignName = computed(() =>
-  props.campaign.name === null ||
-  props.campaign.name === undefined ||
-  props.campaign.name === ''
-    ? `Campaign ${padZero(props.campaign.id)}`
-    : props.campaign.name,
+const invitationName = computed(() =>
+  props.invitation.name === null ||
+  props.invitation.name === undefined ||
+  props.invitation.name === ''
+    ? `Invitation ${padZero(props.invitation.id)}`
+    : props.invitation.name,
 );
 </script>

@@ -169,7 +169,7 @@ export type StoryHandler = (payload: {
   variant: Variant;
 }) => void | Promise<void>;
 
-export const getCampaignStatus = (
+export const getInvitationStatus = (
   isPublished: boolean,
   windowValue: string,
   now?: DateTime,
@@ -194,7 +194,7 @@ export const getCampaignStatus = (
  * - User selects any other day → shown from T00:00:00.000Z on that date
  *
  * When endOfDay is true (date-range end dates): stores as T23:59:59.999Z so the
- * range includes the full last day; campaign stays Live through end of that day.
+ * range includes the full last day; invitation stays Live through end of that day.
  *
  * @param date - The date selected by the user
  * @param hasTimePicker - Whether the field has time picker enabled

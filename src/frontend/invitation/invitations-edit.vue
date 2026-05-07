@@ -3,7 +3,7 @@
     <template #header>
       <ContentHeader dir="ltr" :title="title">
         <template #actions>
-          <DraftActions @delete="deleteCampaign" />
+          <DraftActions @delete="deleteInvitation" />
           <BooleanField
             :field="{
               name: 'isPublished',
@@ -52,7 +52,7 @@
         <DateRangeField
           :field="{
             name: 'window',
-            label: 'Campaign Window',
+            label: 'Invitation window',
             widget: 'dateRange',
           }"
           :is-nested="true"
@@ -64,7 +64,7 @@
             label: 'Promo Image',
             name: 'promoImage',
             widget: 'image',
-            uploadPreset: 'campaigns',
+            uploadPreset: 'invitations',
             description: 'JPG file up to 300K',
             extensions: ['.jpg', '.jpeg'],
             maxSize: 300000,
@@ -148,16 +148,16 @@
 
       <ContentSidebar>
         <template #meta-box>
-          <CampaignMetaBox
-            :id="campaign.id"
-            :created-at="campaign.createdAt"
+          <InvitationMetaBox
+            :id="invitation.id"
+            :created-at="invitation.createdAt"
             :saved-at="savedAt"
-            :updated-at="campaign.updatedAt"
+            :updated-at="invitation.updatedAt"
             :published-at="publishedAt"
             :status="status"
           />
           <div class="mt-6"></div>
-          <CampaignStats :impressions="stats?.impressions" :clicks="stats?.clicks" />
+          <InvitationStats :impressions="stats?.impressions" :clicks="stats?.clicks" />
         </template>
       </ContentSidebar>
     </div>
@@ -171,27 +171,27 @@ import { router } from '@inertiajs/vue3';
 import axios from 'axios';
 import {
   type SharedPageProps,
-  type CampaignEditProps,
+  type InvitationEditProps,
   ResponseStatus,
-  type CampaignStats as CampaignStatsType,
+  type InvitationStats as InvitationStatsType,
 } from '../../types';
 import { useModelStore, useSharedStore, useWidgetsStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
-import { debounce, getCampaignStatus } from '../shared/helpers';
+import { debounce, getInvitationStatus } from '../shared/helpers';
 import StringField from '../fields/string-field.vue';
 import ImageField from '../fields/image-field.vue';
 import SelectField from '../fields/select-field.vue';
 import MarkdownField from '../fields/markdown-field.vue';
 import BooleanField from '../fields/boolean-field.vue';
-import CampaignMetaBox from './campaign-meta-box.vue';
-import CampaignStats from './campaign-stats.vue';
+import InvitationMetaBox from './invitation-meta-box.vue';
+import InvitationStats from './invitation-stats.vue';
 import DraftActions from '../shared/draft-actions.vue';
 import ContentSidebar from '../shared/content-sidebar.vue';
 import RegionField from '../fields/region-field.vue';
 import DateRangeField from '../fields/date-range-field.vue';
 
-const props = defineProps<CampaignEditProps & SharedPageProps>();
+const props = defineProps<InvitationEditProps & SharedPageProps>();
 
 type RequestPayload = {
   name: string;
@@ -209,7 +209,7 @@ type RequestPayload = {
 
 let ignoreTheNextChange = false;
 
-const { bundle, campaign } = toRefs(props);
+const { bundle, invitation } = toRefs(props);
 const model = useModelStore();
 const shared = useSharedStore();
 
@@ -234,23 +234,23 @@ if (!currentActionType) {
 }
 
 const selection = ref(model.getField('actionType', defaultType));
-const title = ref(model.getField('name', 'New Campaign'));
+const title = ref(model.getField('name', 'New Invitation'));
 const isPublished = ref(Boolean(model.getField('isPublished', false)));
 
-const savedAt = ref(campaign.value['updatedAt']);
+const savedAt = ref(invitation.value['updatedAt']);
 const publishedAt = computed(() =>
-  isPublished.value ? (campaign.value['updatedAt'] as string) : 'unpublished',
+  isPublished.value ? (invitation.value['updatedAt'] as string) : 'unpublished',
 );
 
 const status = computed(() => {
   const windowValue = model.getField('window', '') as string;
-  return getCampaignStatus(isPublished.value, windowValue);
+  return getInvitationStatus(isPublished.value, windowValue);
 });
 
 const save = debounce(1000, () => {
   shared.clearErrors();
 
-  router.post(`/${shared.locale}/campaign/${props.campaign.id}`, getPayload(), {
+  router.post(`/${shared.locale}/invitation/${props.invitation.id}`, getPayload(), {
     preserveScroll: true,
 
     onSuccess: () => {
@@ -262,15 +262,15 @@ const save = debounce(1000, () => {
       // Set isPublished to false when errors occur
       isPublished.value = false;
       model.setField('isPublished', false);
-      shared.addMessage(ResponseStatus.Failure, 'Error saving campaign');
+      shared.addMessage(ResponseStatus.Failure, 'Error saving invitation');
     },
   });
 });
 
-const deleteCampaign = () => {
-  router.delete(`/${shared.locale}/campaign/${props.campaign.id}`, {
-    onSuccess: () => shared.addMessage(ResponseStatus.Confirmation, 'Campaign deleted'),
-    onError: () => shared.addMessage(ResponseStatus.Failure, 'Error deleting campaign'),
+const deleteInvitation = () => {
+  router.delete(`/${shared.locale}/invitation/${props.invitation.id}`, {
+    onSuccess: () => shared.addMessage(ResponseStatus.Confirmation, 'Invitation deleted'),
+    onError: () => shared.addMessage(ResponseStatus.Failure, 'Error deleting invitation'),
   });
 };
 
@@ -306,7 +306,7 @@ const handleActionTypeChange = () => {
   model.setField('actionUrl', '');
 };
 
-const stats = ref<CampaignStatsType>({ impressions: 0, clicks: 0 });
+const stats = ref<InvitationStatsType>({ impressions: 0, clicks: 0 });
 
 onMounted(async (): Promise<void> => {
   model.$subscribe(() => {
@@ -318,18 +318,18 @@ onMounted(async (): Promise<void> => {
     }
 
     save();
-    title.value = model.getField('name', 'Campaign');
+    title.value = model.getField('name', 'Invitation');
     isPublished.value = Boolean(model.getField('isPublished', false));
   });
 
   try {
     const response = await axios.get(
-      `/${shared.locale}/campaign/${props.campaign.id}/stats`,
+      `/${shared.locale}/invitation/${props.invitation.id}/stats`,
     );
     stats.value = response.data;
   } catch (_error) {
     console.error(_error);
-    shared.addMessage(ResponseStatus.Failure, 'Error getting campaign stats');
+    shared.addMessage(ResponseStatus.Failure, 'Error getting invitation stats');
     stats.value = { impressions: 0, clicks: 0 };
   }
 });

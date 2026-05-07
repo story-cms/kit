@@ -1,0 +1,65 @@
+{{{
+  exports({ to: app.makePath('app/controllers/audience_controller.ts') })
+}}}
+import type { HttpContext } from '@adonisjs/core/http';
+import {
+  AudienceMeta,
+  AudienceService,
+} from '@story-cms/kit';
+import cms from '#services/cms';
+
+/**
+ * Page size for audience list.
+ * Should be less than 1000 because of Firebase Auth API limits.
+ */
+export const AUDIENCE_LIST_PAGE_SIZE = 800;
+
+export default class AudienceController {
+  public async index(ctx: HttpContext) {
+    let audience: AudienceMeta[] = [];
+    let nextPageToken: string | null = null;
+    try {
+      const service = new AudienceService();
+      const page = await service.listUsersPage(AUDIENCE_LIST_PAGE_SIZE);
+      audience = page.users;
+      nextPageToken = page.nextPageToken;
+    } catch {
+      audience = [];
+      nextPageToken = null;
+    }
+
+    const shared = await cms.sharedProps(ctx);
+    const props = {
+      audience,
+      nextPageToken,
+      ...shared,
+    };
+
+    return ctx.inertia.render('AudienceIndex', { ...props });
+  }
+
+  /** Cursor-paginated JSON for infinite scroll (pageToken query = previous nextPageToken). */
+  public async users(ctx: HttpContext) {
+    const pageToken = ctx.request.input('pageToken') as string | undefined;
+    try {
+      const service = new AudienceService();
+      const page = await service.listUsersPage(AUDIENCE_LIST_PAGE_SIZE, pageToken);
+      return ctx.response.ok(page);
+    } catch {
+      return ctx.response.ok({ users: [], nextPageToken: null });
+    }
+  }
+
+  public async exportAudience(ctx: HttpContext) {
+    const service = new AudienceService();
+    const csv = await service.toCsvFromUsers();
+
+    const appName = cms.config.meta.name.toLowerCase().replace(/ /g, '_');
+    const filename = {{{ '`${appName}_audience.csv`' }}};
+
+    return ctx.response
+      .header('Content-Type', 'text/csv')
+      .header('Content-Disposition', {{{ '`attachment; filename="${filename}"`' }}})
+      .send(csv);
+  }
+}

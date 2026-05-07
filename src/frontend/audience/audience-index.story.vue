@@ -1,8 +1,7 @@
 <template>
-  <Story title="Audiences Page" group="team">
+  <Story title="Audience Page" group="team">
     <Variant title="Index" :setup-app="miniSidebar">
-      <AudiencesIndex
-        :audiences="audiences"
+      <AudienceIndex
         :errors="sharedProps.errors"
         :meta="sharedProps.meta"
         :user="sharedProps.user"
@@ -10,11 +9,11 @@
         :languages="sharedProps.languages"
         :bookmarks="sharedProps.bookmarks"
         :exclude="[]"
+        :audience="audience"
       />
     </Variant>
     <Variant title="Empty" :setup-app="miniSidebar">
-      <AudiencesIndex
-        :audiences="[]"
+      <AudienceIndex
         :errors="sharedProps.errors"
         :meta="sharedProps.meta"
         :user="sharedProps.user"
@@ -22,16 +21,41 @@
         :languages="sharedProps.languages"
         :bookmarks="sharedProps.bookmarks"
         :exclude="[]"
+        :audience="[]"
       />
     </Variant>
-    <Variant title="With feedback" :setup-app="loadData">
-      <AudiencesIndex
+    <Variant title="With extra columns" :setup-app="miniSidebar">
+      <AudienceIndex
         :meta="sharedProps.meta"
         :user="sharedProps.user"
         :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
-        :audiences="audiences"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
+        :audience="audienceWithExtraColumns"
+      />
+    </Variant>
+    <Variant title="With feedback" :setup-app="loadData">
+      <AudienceIndex
+        :meta="sharedProps.meta"
+        :user="sharedProps.user"
+        :languages="sharedProps.languages"
+        :language="sharedProps.language"
+        :errors="sharedProps.errors"
+        :audience="audience"
+        :bookmarks="sharedProps.bookmarks"
+        :exclude="[]"
+      />
+    </Variant>
+    <Variant title="With admin user" :setup-app="miniSidebar">
+      <AudienceIndex
+        :meta="sharedProps.meta"
+        :user="{ ...sharedProps.user, role: 'admin' }"
+        :languages="sharedProps.languages"
+        :language="sharedProps.language"
+        :errors="sharedProps.errors"
+        :audience="audience"
         :bookmarks="sharedProps.bookmarks"
         :exclude="[]"
       />
@@ -40,13 +64,13 @@
 </template>
 
 <script setup lang="ts">
-import AudiencesIndex from './audiences-index.vue';
+import AudienceIndex from './audience-index.vue';
 import { sharedProps, miniSidebar } from '../test/mocks';
 import type { AudienceMeta } from '../../types';
 import { ResponseStatus } from '../../types';
 import { useSharedStore } from '../store';
 
-const audiences: AudienceMeta[] = [
+const audience: AudienceMeta[] = [
   {
     uid: '1',
     name: 'Lindsay Walton',
@@ -239,7 +263,138 @@ const audiences: AudienceMeta[] = [
     signUpDate: '2025-12-18T12:10:38.405+00:00',
     lastSignInTime: '2025-12-18T12:10:38.405+00:00',
   },
+  {
+    uid: '25',
+    name: 'Uma Johnson',
+    email: 'uma.johnson@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389852987/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
+  {
+    uid: '26',
+    name: 'Victoria Johnson',
+    email: 'victoria.johnson@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389872701/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
+  {
+    uid: '27',
+    name: 'William Johnson',
+    email: 'william.johnson@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389892523/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
+  {
+    uid: '28',
+    name: 'Xavier Johnson',
+    email: 'xavier.johnson@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389912345/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
+  {
+    uid: '29',
+    name: 'Yasmine Johnson',
+    email: 'yasmine.johnson@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389932167/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
+  {
+    uid: '30',
+    name: 'Zara Johnson',
+    email: 'zara.johnson@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389952987/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
+  {
+    uid: '31',
+    name: 'Abigail Smith',
+    email: 'abigail.smith@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389952987/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
+  {
+    uid: '32',
+    name: 'Benjamin Brown',
+    email: 'benjamin.brown@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389952987/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
+  {
+    uid: '33',
+    name: 'Christopher Brown',
+    email: 'christopher.brown@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389952987/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
+  {
+    uid: '34',
+    name: 'Daniel Brown',
+    email: 'daniel.brown@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389952987/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
+  {
+    uid: '35',
+    name: 'Edward Brown',
+    email: 'edward.brown@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389952987/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
+  {
+    uid: '36',
+    name: 'Felix Brown',
+    email: 'felix.brown@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389952987/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
+  {
+    uid: '37',
+    name: 'George Brown',
+    email: 'george.brown@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389952987/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
+  {
+    uid: '38',
+    name: 'Henry Brown',
+    email: 'henry.brown@example.com',
+    photoURL: 'https://picsum.photos/seed/1754389952987/800/400',
+    signUpDate: '2025-12-18T12:10:38.405+00:00',
+    lastSignInTime: '2025-12-18T12:10:38.405+00:00',
+  },
 ];
+
+const churches = [
+  'Christ Church Stratford',
+  'Christ Church Kensington',
+  'Christ Church Hackney',
+  'Christ Church Notting Hill',
+  'Christ Church Marylebone',
+  'Christ Church Mayfair',
+  'Christ Church Soho',
+  'Christ Church Covent Garden',
+  'Christ Church Chiswick',
+  'Christ Church Fulham',
+];
+
+const audienceWithExtraColumns = audience.map((member) => ({
+  ...member,
+  role: Math.random() > 0.7 ? 'Admin' : 'Member',
+  localChurch: churches[Math.floor(Math.random() * churches.length)],
+}));
 
 const loadData = () => {
   const shared = useSharedStore();
@@ -248,3 +403,9 @@ const loadData = () => {
   shared.addMessage(ResponseStatus.Accomplishment, 'User updated successfully');
 };
 </script>
+
+<docs lang="md">
+# Audience index
+
+Stories omit `nextPageToken` so Histoire does not call `GET /:locale/audience/users`. In the app, when the server sends a non-null `nextPageToken`, the table loads more rows as you scroll (IntersectionObserver + axios).
+</docs>
