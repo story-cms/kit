@@ -27,8 +27,8 @@ export class CmsService {
     return this.#config;
   }
 
-  public set config(config: Partial<CmsConfig>) {
-    this.#config = defineConfig(config);
+  public set config(config: CmsConfig) {
+    this.#config = config;
   }
 
   public storyFrom(ctx: HttpContext): StorySpec | undefined {
