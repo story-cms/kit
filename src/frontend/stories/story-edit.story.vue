@@ -2,13 +2,11 @@
   <Story title="Story Edit" group="stories">
     <Variant title="Default" :setup-app="loadNormalData">
       <StoryEdit
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
-        :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="{}"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
         :story="storyData"
         :is-new="false"
         :providers="{}"
@@ -17,13 +15,11 @@
 
     <Variant title="New story" :setup-app="loadNormalData">
       <StoryEdit
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
-        :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="{}"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
         :story="newStoryData"
         :is-new="true"
         :providers="{}"
@@ -88,13 +84,11 @@ A comprehensive page component for creating and editing stories in the CMS.
 
 ```vue
 <StoryEdit
-  :meta="meta"
+  :config="config"
   :user="user"
-  :languages="languages"
   :language="language"
   :errors="errors"
   :bookmarks="bookmarks"
-  :exclude="[]"
   :story="story"
   :providers="providers"
 />
@@ -102,13 +96,11 @@ A comprehensive page component for creating and editing stories in the CMS.
 
 ## Props
 
-- `meta` - CMS metadata from sharedProps
+- `config` - CMS config from sharedProps
 - `user` - User data from sharedProps
-- `languages` - Available languages from sharedProps
 - `language` - Current language from sharedProps
 - `errors` - Error state from sharedProps
 - `bookmarks` - Available bookmarks array
-- `exclude` - Exclude nav bar elements
 - `story` - Story data object with fields like name, coverImage, chapterLimit, tags, description
 - `providers` - Media providers for file uploads
 

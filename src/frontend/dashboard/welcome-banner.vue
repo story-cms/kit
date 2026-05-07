@@ -15,7 +15,7 @@
     >
       <Link href="/">
         <img
-          :src="shared.meta.logo"
+          :src="shared.config.logo"
           alt="Logo"
           :class="['w-auto', shared.isMainUnderHeader ? 'h-12' : 'h-[100px]']"
         />
@@ -33,7 +33,7 @@
         v-show="!shared.isMainUnderHeader"
         class="mt-[14px] text-2xl font-semibold leading-8"
       >
-        Welcome to {{ shared.meta.name }}
+        Welcome to {{ shared.config.name }}
       </p>
     </div>
     <div class="flex flex-wrap gap-4">
@@ -53,9 +53,9 @@
         New User
       </Link>
       <a
-        v-if="shared.meta.helpUrl"
+        v-if="shared.config.helpUrl"
         class="flex items-center gap-x-2 rounded-full bg-blue-50 px-3 py-[9px] text-sm font-medium leading-4 text-blue-700 shadow-[0px_1px_2px_0px_#0000000D] hover:bg-blue-100"
-        :href="shared.meta.helpUrl"
+        :href="shared.config.helpUrl"
         target="_blank"
         rel="noopener noreferrer"
       >

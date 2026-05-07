@@ -4,13 +4,11 @@
       <StreamIndex
         :stream="stream"
         :drops="drops"
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
-        :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
       />
     </Variant>
 
@@ -18,13 +16,11 @@
       <StreamIndex
         :stream="stream"
         :drops="liveDrops"
-        :meta="sharedProps.meta"
         :user="sharedProps.user"
-        :languages="sharedProps.languages"
+        :config="sharedProps.config"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
       />
     </Variant>
 
@@ -32,13 +28,11 @@
       <StreamIndex
         :stream="stream"
         :drops="draftDrops"
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
-        :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
       />
     </Variant>
 
@@ -46,13 +40,11 @@
       <StreamIndex
         :stream="stream"
         :drops="[]"
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
-        :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
       />
     </Variant>
   </Story>
@@ -154,13 +146,11 @@ A page component that displays a collection of drops (content items) for a speci
 
 - `stream` - Stream information (id, title, coverImage, etc.)
 - `drops` - Array of drop items to display
-- `meta` - CMS metadata
+- `config` - CMS config
 - `user` - Current user information
-- `languages` - Available languages
 - `language` - Current language
 - `errors` - Error state
 - `bookmarks` - Available bookmarks array
-- `exclude` - Exclude nav bar elements
 
 ## Variants
 
@@ -176,13 +166,11 @@ A page component that displays a collection of drops (content items) for a speci
 <StreamIndex
   :stream="streamData"
   :drops="dropsData"
-  :meta="metaData"
+  :config="configData"
   :user="userData"
-  :languages="languages"
   :language="currentLanguage"
   :errors="errors"
   :bookmarks="bookmarks"
-  :exclude="[]"
 />
 ```
 </docs>

@@ -1,7 +1,7 @@
 <template>
   <PublicLayout>
     <template #logo>
-      <img :src="meta.logo" alt="Logo" class="h-12 w-auto" />
+      <img :src="config.logo" alt="Logo" class="h-12 w-auto" />
     </template>
 
     <div>
@@ -85,7 +85,7 @@
 import { PropType, ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import PublicLayout from '../shared/public-layout.vue';
-import { CmsMeta } from '../../types';
+import type { UiConfig } from '../../types';
 
 defineProps({
   errors: {
@@ -93,8 +93,8 @@ defineProps({
     default: () => ({}),
   },
 
-  meta: {
-    type: Object as PropType<CmsMeta>,
+  config: {
+    type: Object as PropType<UiConfig>,
     required: true,
   },
 });

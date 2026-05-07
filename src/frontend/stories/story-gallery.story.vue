@@ -2,13 +2,11 @@
   <Story title="Story Gallery" group="stories">
     <Variant title="Default" :setup-app="miniSidebar">
       <StoryGallery
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
-        :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
         :stories="sampleStories"
         :can-add-stories="true"
       />
@@ -78,9 +76,8 @@ The Story Gallery component displays a collection of stories in either grid or l
 
 - `bookmarks` - Available bookmarks array
 - `exclude` - Exclude nav bar elements
-- `meta` - CMS metadata
+- `config` - CMS config
 - `user` - Current user information
-- `languages` - Available languages
 - `language` - Current language
 - `errors` - Error state
 
@@ -89,10 +86,8 @@ The Story Gallery component displays a collection of stories in either grid or l
 ```vue
 <StoryGallery
   :bookmarks="bookmarks"
-  :exclude="[]"
-  :meta="meta"
+  :config="config"
   :user="user"
-  :languages="languages"
   :language="language"
   :errors="errors"
 />

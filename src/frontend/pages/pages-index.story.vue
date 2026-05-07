@@ -2,13 +2,11 @@
   <Story title="Index Page" group="pages">
     <Variant title="Index" :setup-app="miniSidebar">
       <PagesIndex
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
-        :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
         :pages="pages"
       />
     </Variant>

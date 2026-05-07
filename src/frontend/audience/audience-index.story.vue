@@ -3,10 +3,9 @@
     <Variant title="Index" :setup-app="miniSidebar">
       <AudienceIndex
         :errors="sharedProps.errors"
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
-        :languages="sharedProps.languages"
         :bookmarks="sharedProps.bookmarks"
         :exclude="[]"
         :audience="audience"
@@ -15,10 +14,9 @@
     <Variant title="Empty" :setup-app="miniSidebar">
       <AudienceIndex
         :errors="sharedProps.errors"
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
-        :languages="sharedProps.languages"
         :bookmarks="sharedProps.bookmarks"
         :exclude="[]"
         :audience="[]"
@@ -26,9 +24,8 @@
     </Variant>
     <Variant title="With extra columns" :setup-app="miniSidebar">
       <AudienceIndex
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
-        :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
         :bookmarks="sharedProps.bookmarks"
@@ -38,9 +35,8 @@
     </Variant>
     <Variant title="With feedback" :setup-app="loadData">
       <AudienceIndex
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
-        :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
         :audience="audience"
@@ -50,9 +46,8 @@
     </Variant>
     <Variant title="With admin user" :setup-app="miniSidebar">
       <AudienceIndex
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="{ ...sharedProps.user, role: 'admin' }"
-        :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
         :audience="audience"

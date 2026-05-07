@@ -2,27 +2,23 @@
   <Story title="Stream Gallery" group="streams">
     <Variant title="Default" :setup-app="miniSidebar">
       <StreamGallery
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
-        :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
         :streams="streams"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="['story']"
       />
     </Variant>
 
     <Variant title="Empty" :setup-app="miniSidebar">
       <StreamGallery
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
-        :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
         :streams="[]"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
       />
     </Variant>
   </Story>
@@ -84,9 +80,8 @@ A component that displays a collection of streams in either grid or list view fo
 ## Props
 
 - `streams` - Array of StreamIndexItem objects to display
-- `meta` - CMS metadata (from SharedPageProps)
+- `config` - CMS config (from SharedPageProps)
 - `user` - User data (from SharedPageProps)
-- `languages` - Available languages (from SharedPageProps)
 - `language` - Current language (from SharedPageProps)
 - `errors` - Error state (from SharedPageProps)
 
@@ -95,9 +90,8 @@ A component that displays a collection of streams in either grid or list view fo
 ```vue
 <StreamGallery
   :streams="streams"
-  :meta="meta"
+  :config="config"
   :user="user"
-  :languages="languages"
   :language="language"
   :errors="errors"
 />

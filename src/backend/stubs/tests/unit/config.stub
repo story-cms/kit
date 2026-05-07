@@ -34,9 +34,9 @@ test.group('Config', (group) => {
     assert.equal(retrieved.key, 'cms');
     assert.equal(retrieved.version, 1);
     assert.deepEqual(retrieved.data, cmsConfig);
-    assert.equal(retrieved.data.meta.name, 'Pilot CMS');
+    assert.equal(retrieved.data.name, 'Pilot CMS');
     assert.equal(
-      retrieved.data.meta.logo,
+      retrieved.data.logo,
       'https://res.cloudinary.com/journeys/image/upload/v1756295658/logo_g8k7tf.png',
     );
   });
@@ -66,8 +66,8 @@ test.group('Config', (group) => {
       .firstOrFail();
 
     assert.equal(retrievedV1.version, 1);
-    assert.equal(retrievedV1.data.meta.name, 'Pilot CMS');
+    assert.equal(retrievedV1.data.name, 'Pilot CMS');
     assert.equal(retrievedV2.version, 2);
-    assert.equal(retrievedV2.data.meta.name, 'Updated Pilot CMS');
+    assert.equal(retrievedV2.data.name, 'Updated Pilot CMS');
   });
 });

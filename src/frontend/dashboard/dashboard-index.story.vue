@@ -18,10 +18,9 @@
             tags: ['tag3', 'tag4'],
           },
         ]"
-        :story-name="sharedProps.meta.name"
-        :meta="sharedProps.meta"
+        :story-name="sharedProps.config.name"
+        :config="sharedProps.config"
         :language="sharedProps.language"
-        :languages="sharedProps.languages"
         :user="sharedProps.user"
         :translation-progress="translationProgress"
         :is-read-only="false"
@@ -48,10 +47,9 @@
           },
         ]"
         :add-status="AddStatus.Add"
-        :story-name="sharedProps.meta.name"
-        :meta="sharedProps.meta"
+        :story-name="sharedProps.config.name"
+        :config="sharedProps.config"
         :language="sharedProps.language"
-        :languages="sharedProps.languages"
         :user="{
           ...sharedProps.user,
           isManager: true,

@@ -12,7 +12,7 @@ export class StreamService {
   ) {
     const needle = Number(streamId);
     this.stream =
-      this.cms.config.streams.streams.find((s: StreamSpec) => s.id === needle) ??
+      this.cms.config.streams.find((s: StreamSpec) => s.id === needle) ??
       ({
         id: 0,
         title: '',

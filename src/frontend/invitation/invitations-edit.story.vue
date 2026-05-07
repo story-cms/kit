@@ -2,13 +2,11 @@
   <Story title="Invitation edit" group="invitation">
     <Variant title="With model" :setup-app="miniSidebar">
       <InvitationsEdit
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
-        :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
         :bundle="invitationBundle"
         :invitation="invitation"
         :providers="{}"

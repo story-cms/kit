@@ -15,9 +15,9 @@ test.group('CMS Mock Example', (group) => {
     const mockCms = setupMockCms();
 
     // Verify the mock is working
-    assert.equal(mockCms.config.meta.name, 'Test CMS');
+    assert.equal(mockCms.config.name, 'Test CMS');
     assert.equal(
-      mockCms.config.pages.tracking,
+      mockCms.config.pagesTracking,
       'utm_source=test&utm_medium=test&utm_campaign=test',
     );
 
@@ -53,13 +53,9 @@ test.group('CMS Mock Example', (group) => {
   test('can use custom mock CMS config', async ({ assert }) => {
     // Create custom config for this specific test
     const customConfig = createCustomCmsConfig({
-      pages: {
-        schemaVersion: 2,
-        tracking: 'utm_source=custom&utm_medium=custom&utm_campaign=custom',
-      },
-      languages: {
-        microcopySource: '',
-        languages: [
+      pagesSchemaVersion: 2,
+      pagesTracking: 'utm_source=custom&utm_medium=custom&utm_campaign=custom',
+      languages: [
           {
             locale: 'es',
             language: 'Spanish',
@@ -75,10 +71,10 @@ test.group('CMS Mock Example', (group) => {
 
     // Verify the custom config is applied
     assert.equal(
-      mockCms.config.pages.tracking,
+      mockCms.config.pagesTracking,
       'utm_source=custom&utm_medium=custom&utm_campaign=custom',
     );
-    assert.equal(mockCms.config.languages.languages[0].locale, 'es');
+    assert.equal(mockCms.config.languages[0].locale, 'es');
 
     // Your test logic here
     const p1 = await PageFactory.merge({
@@ -112,9 +108,8 @@ test.group('CMS Mock Example', (group) => {
   test('can test different story configurations', async ({ assert }) => {
     // Create config with different story settings
     const storyConfig = createCustomCmsConfig({
-      stories: {
-        hasEditReview: true, // Enable edit review for this test
-        stories: [
+      storiesHasEditReview: true, // Enable edit review for this test
+      stories: [
           {
             id: 999,
             name: 'Test Story with Review',
@@ -143,9 +138,9 @@ test.group('CMS Mock Example', (group) => {
     const mockCms = setupMockCms(storyConfig);
 
     // Verify the story config is applied
-    assert.isTrue(mockCms.config.stories.hasEditReview);
-    assert.equal(mockCms.config.stories.stories[0].id, 999);
-    assert.equal(mockCms.config.stories.stories[0].name, 'Test Story with Review');
+    assert.isTrue(mockCms.config.storiesHasEditReview);
+    assert.equal(mockCms.config.stories[0].id, 999);
+    assert.equal(mockCms.config.stories[0].name, 'Test Story with Review');
 
     // Your test logic here that depends on the story configuration
     // For example, testing edit review functionality
