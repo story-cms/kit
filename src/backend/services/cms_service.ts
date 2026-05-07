@@ -1,4 +1,5 @@
 import { errors, HttpContext } from '@adonisjs/core/http';
+import config from '@adonisjs/core/services/config';
 import type {
   StorySpec,
   CmsConfig,
@@ -11,8 +12,7 @@ import type {
 } from '../../types';
 import { defineConfig } from '../define_config.js';
 import { PreferenceService } from './preference_service.js';
-import Config from '../models/config';
-import config from '@adonisjs/core/services/config';
+import Config from '../models/config.js';
 
 export class CmsService {
   #config: CmsConfig;
