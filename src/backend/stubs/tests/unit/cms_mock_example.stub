@@ -63,7 +63,6 @@ test.group('CMS Mock Example', (group) => {
             bibleVersion: 'spanish-bible-version',
           },
         ],
-      },
     });
 
     // Set up mock CMS with custom config
@@ -132,7 +131,6 @@ test.group('CMS Mock Example', (group) => {
             ],
           },
         ],
-      },
     });
 
     const mockCms = setupMockCms(storyConfig);

@@ -33,7 +33,7 @@ export default class StoriesController {
   protected async galleryIndex(locale: string): Promise<StoryIndexItem[]> {
     const stamp = new Date().toISOString();
     const indices = await Index.query().where('locale', locale);
-    return cms.config.stories.stories.map((row: StorySpec) => {
+    return cms.config.stories.map((row: StorySpec) => {
       const item: StoryIndexItem = {
         id: row.id,
         name: row.name,
