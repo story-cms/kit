@@ -11,6 +11,8 @@ import type {
 } from '../../types';
 import { defineConfig } from '../define_config.js';
 import { PreferenceService } from './preference_service.js';
+import Config from '../models/config';
+import config from '@adonisjs/core/services/config';
 
 export class CmsService {
   #config: CmsConfig;
@@ -97,6 +99,28 @@ export class CmsService {
     }
 
     return defaultStory;
+  }
+
+  async patchConfig(fresh: Partial<CmsConfig>) {
+    // get the active config
+    const active = await Config.query()
+      .where('key', 'cms')
+      .orderBy('version', 'desc')
+      .first();
+
+    if (!active) return;
+
+    // mutate the config
+    const newConfig = defineConfig({ ...active.data, ...fresh });
+
+    // persist the config
+    active.data = newConfig;
+    await active.save();
+
+    const trackedConfig = config.get<CmsConfig>('cms') || {};
+
+    // make sure we do not clobber the tracked config
+    this.#config = { ...newConfig, ...trackedConfig };
   }
 
   public apiContextFrom(ctx: HttpContext): {
