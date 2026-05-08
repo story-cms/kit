@@ -59,7 +59,7 @@ k.startsWith('@adonisjs/') || k === '@vinejs/vine' || k === 'edge.js' || k ===
 - [x] auth: model, validator, service, controller, tests
 - [x] streams: model, validator, service, controller, tests
 - [x] invitations: model, validator, service, controller, tests
-- [ ] ui: model, validator, service, controller, tests
+- [x] ui: model, validator, service, controller, tests
 - [ ] team: model, validator, service, controller, tests
 - [ ] deprecate trimmedErrors
 
