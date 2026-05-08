@@ -3,12 +3,10 @@
     <Variant title="Index">
       <MessageTest
         :errors="sharedProps.errors"
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
-        :languages="sharedProps.languages"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
       />
     </Variant>
   </Story>

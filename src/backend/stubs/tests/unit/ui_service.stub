@@ -19,17 +19,15 @@ test.group('UiService.pull()', (group) => {
     // Set up mock CMS with microcopy source URL
     setupMockCms(
       createCustomCmsConfig({
-        languages: {
-          microcopySource: 'https://example.com/api/microcopy.json',
-          languages: [
-            {
-              locale: 'en',
-              language: 'English',
-              languageDirection: 'ltr',
-              bibleVersion: 'test-bible-version',
-            },
-          ],
-        },
+        microcopySource: 'https://example.com/api/microcopy.json',
+        languages: [
+          {
+            locale: 'en',
+            language: 'English',
+            languageDirection: 'ltr',
+            bibleVersion: 'test-bible-version',
+          },
+        ],
       }),
     );
 
@@ -126,17 +124,15 @@ test.group('UiService.pull()', (group) => {
   test('should filter out @@locale from attributes', async ({ assert }) => {
     setupMockCms(
       createCustomCmsConfig({
-        languages: {
-          microcopySource: 'https://example.com/api/microcopy.json',
-          languages: [
-            {
-              locale: 'en',
-              language: 'English',
-              languageDirection: 'ltr',
-              bibleVersion: 'test-bible-version',
-            },
-          ],
-        },
+        microcopySource: 'https://example.com/api/microcopy.json',
+        languages: [
+          {
+            locale: 'en',
+            language: 'English',
+            languageDirection: 'ltr',
+            bibleVersion: 'test-bible-version',
+          },
+        ],
       }),
     );
 
@@ -173,17 +169,15 @@ test.group('UiService.pull()', (group) => {
   test('should handle empty microcopy data', async ({ assert }) => {
     setupMockCms(
       createCustomCmsConfig({
-        languages: {
-          microcopySource: 'https://example.com/api/microcopy.json',
-          languages: [
-            {
-              locale: 'en',
-              language: 'English',
-              languageDirection: 'ltr',
-              bibleVersion: 'test-bible-version',
-            },
-          ],
-        },
+        microcopySource: 'https://example.com/api/microcopy.json',
+        languages: [
+          {
+            locale: 'en',
+            language: 'English',
+            languageDirection: 'ltr',
+            bibleVersion: 'test-bible-version',
+          },
+        ],
       }),
     );
 
@@ -222,17 +216,15 @@ test.group('UiService.pull()', (group) => {
   test('should handle attributes with veruy long descriptions', async ({ assert }) => {
     setupMockCms(
       createCustomCmsConfig({
-        languages: {
-          microcopySource: 'https://example.com/api/microcopy.json',
-          languages: [
-            {
-              locale: 'en',
-              language: 'English',
-              languageDirection: 'ltr',
-              bibleVersion: 'test-bible-version',
-            },
-          ],
-        },
+        microcopySource: 'https://example.com/api/microcopy.json',
+        languages: [
+          {
+            locale: 'en',
+            language: 'English',
+            languageDirection: 'ltr',
+            bibleVersion: 'test-bible-version',
+          },
+        ],
       }),
     );
 
@@ -264,23 +256,21 @@ test.group('UiService.pull()', (group) => {
   test('should delete stale items not in the new data', async ({ assert }) => {
     setupMockCms(
       createCustomCmsConfig({
-        languages: {
-          microcopySource: 'https://example.com/api/microcopy.json',
-          languages: [
-            {
-              locale: 'en',
-              language: 'English',
-              languageDirection: 'ltr',
-              bibleVersion: 'test-bible-version',
-            },
-            {
-              locale: 'es',
-              language: 'Spanish',
-              languageDirection: 'ltr',
-              bibleVersion: 'es-bible-version',
-            },
-          ],
-        },
+        microcopySource: 'https://example.com/api/microcopy.json',
+        languages: [
+          {
+            locale: 'en',
+            language: 'English',
+            languageDirection: 'ltr',
+            bibleVersion: 'test-bible-version',
+          },
+          {
+            locale: 'es',
+            language: 'Spanish',
+            languageDirection: 'ltr',
+            bibleVersion: 'es-bible-version',
+          },
+        ],
       }),
     );
 
@@ -349,17 +339,15 @@ test.group('UiService.pull()', (group) => {
   test('should overwrite existing data', async ({ assert }) => {
     setupMockCms(
       createCustomCmsConfig({
-        languages: {
-          microcopySource: 'https://example.com/api/microcopy.json',
-          languages: [
-            {
-              locale: 'en',
-              language: 'English',
-              languageDirection: 'ltr',
-              bibleVersion: 'test-bible-version',
-            },
-          ],
-        },
+        microcopySource: 'https://example.com/api/microcopy.json',
+        languages: [
+          {
+            locale: 'en',
+            language: 'English',
+            languageDirection: 'ltr',
+            bibleVersion: 'test-bible-version',
+          },
+        ],
       }),
     );
 

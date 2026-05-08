@@ -137,14 +137,14 @@ export class BundleService {
         return {
           [spec.name]: this.isDraft
             ? vine.string().trim().nullable()
-            : vine.string().trim(),
+            : vine.string().trim().minLength(1),
         };
     }
   };
 
   private scriptureSchema = vine.object({
-    reference: vine.string(),
-    verse: vine.string(),
+    reference: vine.string().trim().minLength(1),
+    verse: vine.string().trim().minLength(1),
   });
 
   private scriptureDraftSchema = vine.object({
@@ -159,7 +159,7 @@ export class BundleService {
 
   private audioSchema = vine
     .object({
-      url: vine.string(),
+      url: vine.string().trim().minLength(1),
       length: vine.number(),
     })
     .use(audioRule());
@@ -173,7 +173,7 @@ export class BundleService {
 
   private videoSchema = vine
     .object({
-      url: vine.string(),
+      url: vine.string().url(),
     })
     .use(videoRule(null));
 

@@ -110,28 +110,26 @@ test.group('StreamService', (group) => {
   test('getDrops filters by streamId correctly', async ({ assert }) => {
     // arrange
     const customConfig = createCustomCmsConfig({
-      streams: {
-        streams: [
-          {
-            id: 1,
-            title: 'Test Stream 1',
-            coverImage: 'https://example.com/cover1.jpg',
-            streamType: 'Channel',
-            dropType: 'Post',
-            schemaVersion: 1,
-            fields: [],
-          },
-          {
-            id: 2,
-            title: 'Test Stream 2',
-            coverImage: 'https://example.com/cover2.jpg',
-            streamType: 'Channel',
-            dropType: 'Post',
-            schemaVersion: 1,
-            fields: [],
-          },
-        ],
-      },
+      streams: [
+        {
+          id: 1,
+          title: 'Test Stream 1',
+          coverImage: 'https://example.com/cover1.jpg',
+          streamType: 'Channel',
+          dropType: 'Post',
+          schemaVersion: 1,
+          fields: [],
+        },
+        {
+          id: 2,
+          title: 'Test Stream 2',
+          coverImage: 'https://example.com/cover2.jpg',
+          streamType: 'Channel',
+          dropType: 'Post',
+          schemaVersion: 1,
+          fields: [],
+        },
+      ],
     });
     setupMockCms(customConfig);
     const service = new StreamService(1, cms);

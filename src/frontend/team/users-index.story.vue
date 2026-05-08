@@ -4,24 +4,20 @@
       <UsersIndex
         :users="users"
         :errors="sharedProps.errors"
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
-        :languages="sharedProps.languages"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
       />
     </Variant>
     <Variant title="With feedback" :setup-app="loadData">
       <UsersIndex
         :users="users"
         :errors="sharedProps.errors"
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
-        :languages="sharedProps.languages"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
       />
     </Variant>
   </Story>

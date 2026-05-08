@@ -93,11 +93,11 @@ export default class DraftsController {
       lastPublished,
       providers,
       story,
-      hasEditReview: cms.config.stories.hasEditReview,
+      hasEditReview: cms.config.storiesHasEditReview,
       ...shared,
     };
 
-    const isTranslation = version.locale !== cms.config.languages.languages[0].locale;
+    const isTranslation = version.locale !== cms.sourceLocale;
 
     if (!isTranslation) {
       return ctx.inertia.render('DraftIndex', data);
@@ -106,7 +106,7 @@ export default class DraftsController {
     const source = await Chapter.query()
       .where({
         ...specifier,
-        locale: cms.config.languages.languages[0].locale,
+        locale: cms.sourceLocale,
       })
       .first();
 

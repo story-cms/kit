@@ -18,7 +18,6 @@ import {
   DraftFactory,
   PageFactory,
 } from '@story-cms/kit';
-import cmsConfig from '#config/cms';
 
 test.group('User', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction());
@@ -259,7 +258,7 @@ test.group('Page', (group) => {
   });
 
   test('it can add tracking to links', async ({ assert }) => {
-    const tracking = cmsConfig.pages.tracking;
+    const tracking = 'utm_source=storyapp&utm_medium=referral&utm_campaign=page_menu';
 
     const page = await PageFactory.merge({
       bundle: JSON.stringify({

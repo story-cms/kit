@@ -114,7 +114,7 @@ export class IndexService {
     if (index.length >= this.story.chapterLimit) return AddStatus.Full;
 
     // We have not reached the limit for the number of chapters and we're not a translation
-    if (version.locale === this.cms.config.languages.languages[0].locale) {
+    if (version.locale === this.cms.sourceLocale) {
       return AddStatus.Add;
     }
 
@@ -122,7 +122,7 @@ export class IndexService {
 
     const specifier = {
       apiVersion: version.apiVersion,
-      locale: this.cms.config.languages.languages[0].locale,
+      locale: this.cms.sourceLocale,
       storyId: this.story.id,
       number: number,
     };

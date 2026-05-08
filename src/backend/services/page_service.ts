@@ -40,7 +40,7 @@ export class PageService {
       .where('isPublished', true)
       .orderBy('order', 'asc');
 
-    const tracking = this.cms.config.pages.tracking;
+    const tracking = this.cms.config.pagesTracking;
     return pages.map((page) => page.bundleWithTracking(tracking));
   }
 

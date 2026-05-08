@@ -92,7 +92,7 @@ onBeforeMount(() => {
 });
 
 onMounted(() => {
-  shared.setShowAppPreview(shared.meta.hasAppPreview);
+  shared.setShowAppPreview(shared.config.hasAppPreview);
   window.addEventListener('resize', resizeHook);
   resizeHook();
   setDimensions();

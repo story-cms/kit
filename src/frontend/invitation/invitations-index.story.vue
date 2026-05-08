@@ -2,13 +2,11 @@
   <Story title="Invitations index page" group="invitation">
     <Variant title="Index" :setup-app="miniSidebar">
       <InvitationsIndex
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
-        :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
         :invitations="invitations"
       />
     </Variant>

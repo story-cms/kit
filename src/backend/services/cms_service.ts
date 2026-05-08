@@ -1,4 +1,5 @@
 import { errors, HttpContext } from '@adonisjs/core/http';
+import config from '@adonisjs/core/services/config';
 import type {
   StorySpec,
   CmsConfig,
@@ -7,9 +8,11 @@ import type {
   SharedPageProps,
   LanguageSpecification,
   Bookmark,
+  UiConfig,
 } from '../../types';
 import { defineConfig } from '../define_config.js';
 import { PreferenceService } from './preference_service.js';
+import Config from '../models/config.js';
 
 export class CmsService {
   #config: CmsConfig;
@@ -27,9 +30,13 @@ export class CmsService {
     return this.#config;
   }
 
+  public set config(config: CmsConfig) {
+    this.#config = config;
+  }
+
   public storyFrom(ctx: HttpContext): StorySpec | undefined {
     const storyId = Number.parseInt(ctx.params.storyId);
-    const story = this.#config.stories.stories.find((s) => s.id === storyId);
+    const story = this.#config.stories.find((s) => s.id === storyId);
     return story;
   }
 
@@ -38,15 +45,15 @@ export class CmsService {
       throw errors.E_ROUTE_NOT_FOUND;
     }
 
-    return ctx.params.locale || this.#config.languages.languages[0].locale;
+    return ctx.params.locale || this.sourceLocale;
   }
 
   public get sourceLocale(): string {
-    return this.#config.languages.languages[0].locale;
+    return this.#config.languages[0].locale;
   }
 
   public isTranslation(locale: string | undefined): boolean {
-    return locale !== this.#config.languages.languages[0].locale;
+    return locale !== this.sourceLocale;
   }
 
   public storyContextFrom(ctx: HttpContext): {
@@ -68,24 +75,24 @@ export class CmsService {
   }
 
   public localeFromApi(ctx: HttpContext): string {
-    return ctx.request.qs()['locale'] || this.#config.languages.languages[0].locale;
+    return ctx.request.qs()['locale'] || this.sourceLocale;
   }
 
   public storyFromApi(ctx: HttpContext): StorySpec | undefined {
-    if (this.#config.stories.stories.length === 0) return undefined;
+    if (this.#config.stories.length === 0) return undefined;
 
-    const defaultStory = this.#config.stories.stories[0];
+    const defaultStory = this.#config.stories[0];
 
     const storyId = ctx.request.qs()['storyId'];
     if (storyId !== undefined) {
-      const story = this.#config.stories.stories.find((s) => s.id === Number(storyId));
+      const story = this.#config.stories.find((s) => s.id === Number(storyId));
       if (story !== undefined) return story;
     }
 
     let storylabel = ctx.request.qs()['story'];
     if (storylabel !== undefined) {
       storylabel = storylabel.toLowerCase();
-      const story = this.#config.stories.stories.find(
+      const story = this.#config.stories.find(
         (s) => s.name.toLocaleLowerCase() === storylabel,
       );
       if (story !== undefined) return story;
@@ -94,13 +101,34 @@ export class CmsService {
     return defaultStory;
   }
 
+  async patchConfig(fresh: Partial<CmsConfig>) {
+    // get the active config
+    const active = await Config.query()
+      .where('key', 'cms')
+      .orderBy('version', 'desc')
+      .first();
+
+    if (!active) return;
+
+    // mutate the config
+    const newConfig = defineConfig({ ...active.data, ...fresh });
+
+    // persist the config
+    active.data = newConfig;
+    await active.save();
+
+    const trackedConfig = config.get<CmsConfig>('cms') || {};
+
+    // make sure we do not clobber the tracked config
+    this.#config = { ...newConfig, ...trackedConfig };
+  }
+
   public apiContextFrom(ctx: HttpContext): {
     story: StorySpec | undefined;
     version: Version;
   } {
     const story = this.storyFromApi(ctx);
-    const locale =
-      ctx.request.qs()['locale'] || this.#config.languages.languages[0].locale;
+    const locale = ctx.request.qs()['locale'] || this.sourceLocale;
     const version = <Version>{
       apiVersion: 1,
       locale: locale,
@@ -116,16 +144,16 @@ export class CmsService {
     }
 
     return {
-      apiVersion: this.#config.pages.schemaVersion,
+      apiVersion: this.#config.pagesSchemaVersion,
       locale: ctx.params.locale || 'en',
     };
   }
 
   protected getLanguage(locale: string | null): LanguageSpecification {
     const found =
-      this.#config.languages.languages.find(
+      this.#config.languages.find(
         (language: LanguageSpecification) => language.locale === locale,
-      ) || this.#config.languages.languages[0];
+      ) || this.#config.languages[0];
     return found as LanguageSpecification;
   }
 
@@ -142,39 +170,19 @@ export class CmsService {
   }
 
   public async sharedProps(ctx: HttpContext): Promise<SharedPageProps> {
-    const exclude: string[] = [];
-    if (!this.#config.stories.hasStories) {
-      exclude.push('story');
-    }
-
-    if (!this.#config.streams.hasStreams) {
-      exclude.push('stream');
-    }
-
-    if (this.#config.languages.languages.length < 1) {
-      exclude.push('language');
-    }
-
-    if (!this.#config.audience.hasAudience) {
-      exclude.push('audience');
-    }
-
-    if (!this.#config.invitations.hasInvitations) {
-      exclude.push('invitation');
-    }
-
-    if (!this.#config.pages.hasPages) {
-      exclude.push('page');
-    }
-
     const bookmarks = await this.getBookmarks(ctx);
 
     return {
-      meta: this.#config.meta,
+      config: {
+        name: this.#config.name,
+        logo: this.#config.logo,
+        helpUrl: this.#config.helpUrl,
+        hasAppPreview: this.#config.hasAppPreview,
+        languages: this.#config.languages,
+        subscriptions: this.#config.subscriptions,
+      } as UiConfig,
       user: ctx.auth?.use('web')?.user,
       language: this.getLanguage(ctx.params.locale ?? 'en'),
-      languages: this.#config.languages.languages,
-      exclude,
       bookmarks,
     };
   }

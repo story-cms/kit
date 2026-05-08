@@ -71,6 +71,12 @@ export interface Video {
 
 export type WidgetPicker = (widget: string) => any;
 
+/**
+ * Type-safe wrapper for JSON columns that preserves the generic parameter
+ * while ensuring JSON-serializable values at runtime.
+ */
+export type JSON<T> = T;
+
 /// ----------------------------------------------------
 ///  streams
 /// ----------------------------------------------------
@@ -288,12 +294,10 @@ export interface PageBundle {
 }
 
 export interface SharedPageProps {
-  meta: CmsMeta;
+  config: UiConfig;
   user: UserInterface;
   language: LanguageSpecification;
-  languages: LanguageSpecification[];
   errors?: any;
-  exclude: string[];
   bookmarks?: Bookmark[];
 }
 
@@ -504,6 +508,7 @@ export interface Bookmark {
   link: string;
 }
 
+// deprecated
 export interface CmsMeta {
   name: string;
   logo: string;
@@ -511,38 +516,39 @@ export interface CmsMeta {
   hasAppPreview: boolean;
 }
 
+export interface UiConfig {
+  name: string;
+  logo: string;
+  helpUrl: string;
+  hasAppPreview: boolean;
+  languages: LanguageSpecification[];
+  subscriptions: Subscription[];
+}
+
+export type Subscription =
+  | 'story'
+  | 'stream'
+  | 'language'
+  | 'audience'
+  | 'invitation'
+  | 'page';
+
+// trackable settings should not be nested
+// no optional settings in the type definition
 export type CmsConfig = {
-  meta: CmsMeta;
+  name: string;
+  logo: string;
+  helpUrl: string;
+  languages: LanguageSpecification[];
+  pagesTracking: string;
+  pagesSchemaVersion: number;
+  streams: StreamSpec[];
+  storiesHasEditReview: boolean;
+  stories: StorySpec[];
 
-  languages: {
-    languages: LanguageSpecification[];
-    microcopySource: string;
-  };
-
-  streams: {
-    hasStreams?: boolean;
-    streams: StreamSpec[];
-  };
-
-  stories: {
-    hasStories?: boolean;
-    hasEditReview: boolean;
-    stories: StorySpec[];
-  };
-
-  pages: {
-    hasPages?: boolean;
-    schemaVersion: number;
-    tracking: string;
-  };
-
-  audience: {
-    hasAudience?: boolean;
-  };
-
-  invitations: {
-    hasInvitations?: boolean;
-  };
+  subscriptions: Subscription[];
+  microcopySource: string;
+  hasAppPreview: boolean;
 };
 
 export interface LanguageSpecification {

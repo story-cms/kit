@@ -2,12 +2,10 @@
   <Story title="Preview" group="stories">
     <Variant title="Minimal" :setup-app="miniSidebar">
       <ChapterPreview
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="user"
-        :languages="sharedProps.languages"
         :language="sharedProps.language"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
         :story="story"
         :chapter="meta"
         :bundle="{}"
