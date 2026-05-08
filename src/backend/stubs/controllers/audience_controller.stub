@@ -2,10 +2,7 @@
   exports({ to: app.makePath('app/controllers/audience_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
-import {
-  AudienceMeta,
-  AudienceService,
-} from '@story-cms/kit';
+import { AudienceMeta, AudienceService } from '@story-cms/kit';
 import cms from '#services/cms';
 
 /**
@@ -35,7 +32,8 @@ export default class AudienceController {
       ...shared,
     };
 
-    return ctx.inertia.render('AudienceIndex', { ...props });
+    // @ts-expect-error Inertia page name
+    return ctx.inertia.render('AudienceIndex', props);
   }
 
   /** Cursor-paginated JSON for infinite scroll (pageToken query = previous nextPageToken). */
