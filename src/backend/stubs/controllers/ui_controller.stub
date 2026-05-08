@@ -15,10 +15,10 @@ export default class UisController {
     const props: UiPageProps = {
       items,
     };
-    const errors = ctx.session.flashMessages.get('errorsBag') ?? {};
 
     const shared = await cms.sharedProps(ctx);
-    return ctx.inertia.render('UiPage', { ...props, errors, ...shared });
+    // @ts-expect-error Inertia page name
+    return ctx.inertia.render('UiPage', { ...props, ...shared });
   }
 
   // API endpoint to get the translation for a specific locale
