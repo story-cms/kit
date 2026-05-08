@@ -1,5 +1,6 @@
-import vine, { SimpleMessagesProvider, VineValidator } from '@vinejs/vine';
+import vine, { SimpleMessagesProvider } from '@vinejs/vine';
 import type { HttpContext } from '@adonisjs/core/http';
+import type { SchemaTypes } from '@vinejs/vine/types';
 
 const draft = {
   name: vine.string().optional(),
@@ -41,10 +42,22 @@ export class InvitationValidator {
     this.hasVideoUrl = typeof videoUrlInput === 'string' && videoUrlInput.trim() !== '';
   }
 
-  public get schema(): VineValidator<any, Record<string, any> | undefined> {
-    if (!this.isPublished) {
-      return vine.compile(vine.object(draft));
-    }
+  public async validate(data: Record<string, unknown>): Promise<{ bundle: Record<string, unknown> }> {
+    vine.messagesProvider = invitationErrorMessages;
+
+    const schema = vine.object({
+      bundle: this.effectiveSchema,
+    });
+
+    const result = await vine.validate({ schema, data: { bundle: data } });
+
+    return {
+      bundle: (result.bundle ?? {}) as Record<string, unknown>,
+    };
+  }
+
+  protected get effectiveSchema(): SchemaTypes {
+    if (!this.isPublished) return vine.object(draft);
 
     const liveSchema = {
       ...live,
@@ -64,7 +77,12 @@ export class InvitationValidator {
           .endsWith('.mp4'),
       }),
     };
-    return vine.compile(vine.object(liveSchema));
+    return vine.object(liveSchema);
+  }
+
+  // Kept for backwards compatibility with existing tests/usages.
+  public get schema() {
+    return vine.compile(this.effectiveSchema);
   }
 }
 

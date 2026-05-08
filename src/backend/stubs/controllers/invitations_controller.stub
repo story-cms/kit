@@ -1,14 +1,12 @@
 {{{
   exports({ to: app.makePath('app/controllers/invitations_controller.ts') })
 }}}
-import { HttpContext } from '@adonisjs/core/http';
-import vine from '@vinejs/vine';
+import type { HttpContext } from '@adonisjs/core/http';
 import {
   Activity,
   trimmedErrors,
   Invitation,
   InvitationValidator,
-  invitationErrorMessages,
   InvitationService,
   type InvitationEditProps,
   type InvitationIndexProps,
@@ -38,6 +36,7 @@ export default class InvitationsController {
       invitations,
       ...shared,
     };
+    // @ts-expect-error Inertia page name
     return ctx.inertia.render('InvitationsIndex', props);
   }
 
@@ -52,6 +51,7 @@ export default class InvitationsController {
       ...shared,
     };
 
+    // @ts-expect-error Inertia page name
     return ctx.inertia.render('InvitationsEdit', props);
   }
 
@@ -68,7 +68,7 @@ export default class InvitationsController {
         title: '',
         message: '',
         actionLabel: '',
-        actionType: '',
+        actionType: 'close',
         actionUrl: '',
         regions: '',
       },
@@ -110,13 +110,9 @@ export default class InvitationsController {
     const version = cms.pagesContextFrom(ctx);
     let payload;
     try {
-      // constructing the validator first so we can have a
-      // dynamic getter for the schema property
       const data = ctx.request.all();
-      vine.messagesProvider = invitationErrorMessages;
-
       const invitationValidator = new InvitationValidator(ctx);
-      payload = await invitationValidator.schema.validate(data);
+      payload = (await invitationValidator.validate(data)).bundle;
     } catch (e) {
       const errors = trimmedErrors(e);
 

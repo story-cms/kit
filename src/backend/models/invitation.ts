@@ -1,6 +1,12 @@
 import { DateTime } from 'luxon';
 import { BaseModel, column } from '@adonisjs/lucid/orm';
-import type { InvitationBundle, InvitationMeta, InvitationForApi } from '../../types';
+import type {
+  InvitationBundle,
+  InvitationMeta,
+  InvitationForApi,
+  InvitationStats,
+  JSON,
+} from '../../types';
 
 export default class Invitation extends BaseModel {
   @column({ isPrimary: true })
@@ -16,10 +22,10 @@ export default class Invitation extends BaseModel {
   declare isPublished: boolean;
 
   @column()
-  declare bundle: Record<string, any>;
+  declare bundle: JSON<InvitationBundle>;
 
   @column()
-  declare stats: Record<string, any>;
+  declare stats: JSON<InvitationStats>;
 
   @column()
   declare updatedBy: number;
@@ -30,7 +36,7 @@ export default class Invitation extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime;
 
-  public get model() {
+  public get model(): InvitationBundle & { id: number; isPublished: boolean } {
     return {
       ...this.bundle,
       id: this.id,
@@ -44,13 +50,13 @@ export default class Invitation extends BaseModel {
       id: this.id,
       startDate: start?.toISO() ?? null,
       endDate: end?.toISO() ?? null,
-      promoImage: this.bundle.promoImage,
-      videoUrl: this.bundle.videoUrl,
+      promoImage: this.bundle.promoImage ?? '',
+      videoUrl: this.bundle.videoUrl ?? '',
       title: this.bundle.title,
       message: this.bundle.message,
       actionLabel: this.bundle.actionLabel,
       actionType: this.bundle.actionType,
-      actionUrl: this.bundle.actionUrl,
+      actionUrl: this.bundle.actionUrl ?? '',
       regions: this.bundle.regions,
     };
   }
@@ -71,7 +77,7 @@ export default class Invitation extends BaseModel {
     return [parseDate(startDate), parseDate(endDate)];
   }
 
-  public updateBundle(changes: any) {
+  public updateBundle(changes: Partial<InvitationBundle>) {
     const old = this.bundle;
     const fresh = <InvitationBundle>{
       name: this.freshValue(changes, old, 'name', ''),
@@ -81,8 +87,8 @@ export default class Invitation extends BaseModel {
       title: this.freshValue(changes, old, 'title', ''),
       message: this.freshValue(changes, old, 'message', ''),
       actionLabel: this.freshValue(changes, old, 'actionLabel', ''),
-      actionType: this.freshValue(changes, old, 'actionType', ''),
-      actionUrl: this.freshValue(changes, old, 'actionUrl', ''),
+      actionType: this.freshValue(changes, old, 'actionType', 'close'),
+      actionUrl: this.freshValue(changes, old, 'actionUrl', undefined),
       regions: this.freshValue(changes, old, 'regions', ''),
     };
 
@@ -90,13 +96,17 @@ export default class Invitation extends BaseModel {
   }
 
   protected freshValue(
-    changes: Record<string, any>,
-    old: Record<string, any>,
-    key: string,
-    fallback: string | number,
-  ): string | number {
-    if (changes[key] !== undefined) return changes[key];
-    if (old[key] !== undefined) return old[key];
+    changes: Partial<InvitationBundle>,
+    old: Partial<InvitationBundle>,
+    key: keyof InvitationBundle,
+    fallback: string | undefined,
+  ): string | undefined {
+    const changed = changes[key];
+    if (typeof changed === 'string') return changed;
+
+    const previous = old[key];
+    if (typeof previous === 'string') return previous;
+
     return fallback;
   }
 

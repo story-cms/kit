@@ -35,13 +35,14 @@ export class InvitationService {
 
   public async getInvitationItemsForClient(): Promise<InvitationForApi[]> {
     const invitations = await this.getInvitationsForVersion();
+    const now = DateTime.now();
     return invitations
       .filter((invitation) => {
         if (!invitation.isPublished) return false;
         const [start, end] = invitation.splitWindow;
         if (!start || !end) return false;
 
-        if (end < DateTime.now()) return false;
+        if (end < now) return false;
 
         return true;
       })
@@ -55,7 +56,7 @@ export class InvitationService {
       });
   }
 
-  async getInvitationsForVersion(): Promise<Invitation[]> {
+  public async getInvitationsForVersion(): Promise<Invitation[]> {
     const invitations = await Invitation.query().where(this.version);
     return invitations;
   }
