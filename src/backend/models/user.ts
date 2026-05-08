@@ -3,7 +3,7 @@ import { compose } from '@adonisjs/core/helpers';
 import hash from '@adonisjs/core/services/hash';
 import { BaseModel, column, computed } from '@adonisjs/lucid/orm';
 import { DateTime } from 'luxon';
-import type { UserMeta, AppUserInterface } from '../../types';
+import type { UserMeta, AppUserInterface, UserRole } from '../../types';
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -38,7 +38,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare resetTokenCreatedAt?: DateTime;
 
   @column()
-  declare role: 'admin' | 'editor';
+  declare role: UserRole;
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime;

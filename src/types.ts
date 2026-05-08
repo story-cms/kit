@@ -327,6 +327,8 @@ export interface PageEditProps {
 ///  team
 /// ----------------------------------------------------
 
+export type UserRole = 'admin' | 'editor';
+
 export interface AppUserInterface {
   id: number;
   name: string;
