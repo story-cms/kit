@@ -3,7 +3,7 @@ import vine, { SimpleMessagesProvider } from '@vinejs/vine';
 import type { SchemaTypes } from '@vinejs/vine/types';
 
 const draft = {
-  name: vine.string().trim().minLength(1),
+  name: vine.string().optional(),
   window: vine.string().optional(),
   promoImage: vine.string().optional(),
   videoUrl: vine.string().optional(),
