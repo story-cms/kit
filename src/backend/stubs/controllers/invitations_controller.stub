@@ -6,7 +6,7 @@ import {
   Activity,
   Invitation,
   InvitationService,
-  InvitationValidator
+  InvitationValidator,
   type InvitationEditProps,
   type InvitationIndexProps,
   type Version,
