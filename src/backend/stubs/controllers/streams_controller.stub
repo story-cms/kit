@@ -22,7 +22,7 @@ import cms from '#services/cms';
 
 export default class StreamController {
   public async gallery(ctx: HttpContext) {
-    const streamsFromSpec = cms.config.streams.streams.map((stream: StreamSpec) => ({
+    const streamsFromSpec = cms.config.streams.map((stream: StreamSpec) => ({
       id: stream.id,
       title: stream.title,
       coverImage: stream.coverImage,
@@ -109,9 +109,7 @@ export default class StreamController {
 
   public async edit(ctx: HttpContext) {
     const drop = await Drop.findOrFail(ctx.params.id);
-    const stream = cms.config.streams.streams.find(
-      (s: StreamSpec) => s.id === drop.streamId,
-    );
+    const stream = cms.config.streams.find((s: StreamSpec) => s.id === drop.streamId);
     if (!stream) {
       return ctx.response.redirect().back();
     }
@@ -158,9 +156,7 @@ export default class StreamController {
 
     const id = Number(ctx.params.id);
     const drop = await Drop.findOrFail(id);
-    const stream = cms.config.streams.streams.find(
-      (s: StreamSpec) => s.id === drop.streamId,
-    );
+    const stream = cms.config.streams.find((s: StreamSpec) => s.id === drop.streamId);
     if (!stream) {
       return ctx.response.redirect().back();
     }
@@ -211,7 +207,7 @@ export default class StreamController {
 
   protected getStream(ctx: HttpContext): StreamSpec {
     const streamId = Number(ctx.params.id);
-    const stream = cms.config.streams.streams.find((s: StreamSpec) => s.id === streamId);
+    const stream = cms.config.streams.find((s: StreamSpec) => s.id === streamId);
     if (!stream) {
       ctx.response.internalServerError('Stream not found');
     }

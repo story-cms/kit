@@ -17,7 +17,7 @@ export class ProgressService {
   public async progress(user: UserInterface): Promise<TranslationProgress[]> {
     const translationProgress: TranslationProgress[] = [];
 
-    const languages = this.cms.config.languages.languages
+    const languages = this.cms.config.languages
       .filter((lang: LanguageSpecification) => lang.locale !== 'en')
       .sort((a: LanguageSpecification, b: LanguageSpecification) =>
         a.language.localeCompare(b.language),

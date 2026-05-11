@@ -159,7 +159,7 @@ export class BundleService {
 
   private audioSchema = vine
     .object({
-      url: vine.string(),
+      url: vine.string().trim().minLength(1),
       length: vine.number(),
     })
     .use(audioRule());
@@ -173,7 +173,7 @@ export class BundleService {
 
   private videoSchema = vine
     .object({
-      url: vine.string(),
+      url: vine.string().url(),
     })
     .use(videoRule(null));
 

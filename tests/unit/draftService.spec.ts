@@ -42,37 +42,22 @@ function teardownChapterMock() {
 
 function createMockCmsConfig(sourceLocale: string = 'en'): CmsConfig {
   return {
-    meta: {
-      name: 'Test CMS',
-      logo: '',
-      hasAppPreview: false,
-    },
-    languages: {
-      languages: [
-        { locale: sourceLocale, language: 'English', languageDirection: 'ltr' },
-        { locale: 'es', language: 'Spanish', languageDirection: 'ltr' },
-        { locale: 'fr', language: 'French', languageDirection: 'ltr' },
-      ],
-      microcopySource: sourceLocale,
-    },
-    stories: {
-      stories: [],
-      hasStories: false,
-      hasEditReview: false,
-    },
-    streams: {
-      hasStreams: false,
-      streams: [],
-    },
-    audience: {
-      hasAudience: false,
-    },
-    pages: {
-      hasPages: false,
-      schemaVersion: 1,
-      tracking: '',
-    },
-    invitations: {},
+    name: 'Test CMS',
+    logo: '',
+    helpUrl: 'https://example.com/help',
+    hasAppPreview: false,
+    microcopySource: sourceLocale,
+    languages: [
+      { locale: sourceLocale, language: 'English', languageDirection: 'ltr' },
+      { locale: 'es', language: 'Spanish', languageDirection: 'ltr' },
+      { locale: 'fr', language: 'French', languageDirection: 'ltr' },
+    ],
+    streams: [],
+    storiesHasEditReview: false,
+    stories: [],
+    pagesSchemaVersion: 1,
+    pagesTracking: '',
+    subscriptions: ['story', 'stream', 'language', 'audience', 'invitation', 'page'],
   };
 }
 
@@ -95,7 +80,8 @@ test.describe('DraftService.getDraftBundle', () => {
 
   test.beforeEach(async () => {
     await setupChapterMock();
-    mockCms = new CmsService(createMockCmsConfig());
+    const config = createMockCmsConfig();
+    mockCms = new CmsService(config);
     storySpec = createStorySpec(1);
   });
 

@@ -11,7 +11,7 @@ export class UiService {
   protected sourceLocale = 'en';
 
   constructor(protected cms: CmsService) {
-    this.sourceLocale = cms.config.languages.languages[0].locale;
+    this.sourceLocale = cms.sourceLocale;
   }
 
   public async fillMissing(locale: string): Promise<number> {
@@ -197,7 +197,7 @@ export class UiService {
       Authorization: `Bearer ${token}`,
     };
 
-    const sourcePath = this.cms.config.languages.microcopySource;
+    const sourcePath = this.cms.config.microcopySource;
     const req = await axios.get(sourcePath, { headers });
     const data = req.data as Record<string, any>;
 

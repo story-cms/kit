@@ -2,14 +2,12 @@
   <Story title="Ui Page" group="interface">
     <Variant title="Index" :setup-app="miniSidebar">
       <UiPage
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
-        :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="{ onBoardTitle: 'This is an error' }"
         :items="items"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
       />
     </Variant>
   </Story>

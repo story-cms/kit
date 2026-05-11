@@ -12,12 +12,12 @@ export class AdminService {
    * Builds all the indexes freshly from the published chapters
    */
   public async rebuildIndexes() {
-    const defaultStory = this.cms.config.stories.stories[0];
+    const defaultStory = this.cms.config.stories[0];
     const service = new IndexService(defaultStory, this.cms);
     this._feedback = [];
 
-    for (const language of this.cms.config.languages.languages) {
-      for (const story of this.cms.config.stories.stories) {
+    for (const language of this.cms.config.languages) {
+      for (const story of this.cms.config.stories) {
         service.story = story;
         await service.buildIndex({
           apiVersion: 1,

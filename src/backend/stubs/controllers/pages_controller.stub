@@ -60,7 +60,7 @@ export default class PagesController {
     const version = cms.pagesContextFrom(ctx);
     const page = await Page.create({
       locale: version.locale,
-      apiVersion: cms.config.pages.schemaVersion,
+      apiVersion: cms.config.pagesSchemaVersion,
       order: 1,
       bundle: '{"group":1}',
       updatedBy: ctx.auth.user?.id,

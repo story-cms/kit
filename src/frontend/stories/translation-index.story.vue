@@ -2,10 +2,9 @@
   <Story title="Translation Page" group="stories">
     <Variant title="Index" :setup-app="miniSidebar">
       <TranslationIndex
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
         :language="spanish"
-        :languages="sharedProps.languages"
         :errors="sharedProps.errors"
         :draft="draft"
         :bundle="bundle"
@@ -15,15 +14,13 @@
         :story="{ ...story, fields, chapterLimit: 21 }"
         :has-edit-review="false"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
       />
     </Variant>
     <Variant title="Al Massira" :setup-app="miniSidebar">
       <TranslationIndex
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
         :language="spanish"
-        :languages="sharedProps.languages"
         :errors="sharedProps.errors"
         :draft="draft"
         :bundle="alMassira.bundle"
@@ -37,15 +34,13 @@
         }"
         :has-edit-review="false"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
       />
     </Variant>
     <Variant title="Flexible List" :setup-app="miniSidebar">
       <TranslationIndex
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
         :language="spanish"
-        :languages="sharedProps.languages"
         :errors="sharedProps.errors"
         :draft="flexibleListStory.draft"
         :bundle="flexibleListStory.bundle"
@@ -59,15 +54,13 @@
         }"
         :has-edit-review="false"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
       />
     </Variant>
     <Variant title="Alpha Course" :setup-app="miniSidebar">
       <TranslationIndex
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
         :language="spanish"
-        :languages="sharedProps.languages"
         :errors="sharedProps.errors"
         :draft="alphaCourseStory.draft"
         :bundle="alphaCourseStory.bundle"
@@ -81,15 +74,13 @@
         }"
         :has-edit-review="false"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
       />
     </Variant>
     <Variant title="AFS Course" :setup-app="miniSidebar">
       <TranslationIndex
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
         :language="spanish"
-        :languages="sharedProps.languages"
         :errors="sharedProps.errors"
         :draft="afsCourseStory.draft"
         :bundle="afsCourseStory.bundle"
@@ -103,15 +94,13 @@
         }"
         :has-edit-review="false"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
       />
     </Variant>
     <Variant title="Simple Flexible List" :setup-app="miniSidebar">
       <TranslationIndex
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
         :language="spanish"
-        :languages="sharedProps.languages"
         :errors="sharedProps.errors"
         :draft="simpleFlexibleListStory.draft"
         :bundle="simpleFlexibleListStory.bundle"
@@ -125,7 +114,6 @@
         }"
         :has-edit-review="false"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
       />
     </Variant>
   </Story>

@@ -7,7 +7,7 @@
     <Icon name="info" class="action-icon" />
   </button>
   <button
-    v-if="shared.meta.hasAppPreview && !$page?.url?.includes('page')"
+    v-if="shared.config.hasAppPreview && !$page?.url?.includes('page')"
     type="button"
     :class="['action-button', shared.showAppPreview ? 'active' : 'bg-white']"
     @click.prevent="shared.setShowAppPreview(!shared.showAppPreview)"

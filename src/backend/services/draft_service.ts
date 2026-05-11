@@ -24,7 +24,7 @@ export class DraftService {
     number: number,
   ): Promise<JSON<any> | null> {
     // is this the source language?
-    if (version.locale === this.cms.config.languages.languages[0].locale) {
+    if (version.locale === this.cms.sourceLocale) {
       const bundleService = new BundleService(this.story.fields);
       return bundleService.defaultBundle;
     }
@@ -32,7 +32,7 @@ export class DraftService {
     // it's a translation, so we need to get the source bundle
     const specifier = {
       apiVersion: version.apiVersion,
-      locale: this.cms.config.languages.languages[0].locale,
+      locale: this.cms.sourceLocale,
       storyId: this.story.id,
       number: number,
     };

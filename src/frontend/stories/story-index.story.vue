@@ -39,14 +39,12 @@
             tags: ['Live'],
           },
         ]"
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="user"
-        :languages="sharedProps.languages"
         :language="sharedProps.language"
         :add-status="AddStatus.Add"
         :story="story"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="['streams']"
         :can-edit-story="true"
       />
     </Variant>

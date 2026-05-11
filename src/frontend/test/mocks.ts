@@ -1,10 +1,10 @@
 import type {
   FieldSpec,
   LanguageSpecification,
-  CmsMeta,
   SharedPageProps,
   StorySpec,
   InvitationItem,
+  UiConfig,
 } from '../../types.ts';
 import { StoryHandler } from '../shared/helpers.js';
 import { useSharedStore } from '../store/shared.js';
@@ -426,13 +426,6 @@ export const scriptureInListError = {
   'bundle.scriptures.0.scripture': ['required validation failed'],
 };
 
-export const meta: CmsMeta = {
-  name: 'The Word One to One',
-  logo: 'https://res.cloudinary.com/theword121/image/upload/v1687245360/episodes/viseg2hegowcrapio6pt.svg',
-  helpUrl: 'https://www.theword121.com/',
-  hasAppPreview: false,
-};
-
 export const user = {
   id: 2,
   name: 'John Doe',
@@ -560,13 +553,20 @@ const languages: LanguageSpecification[] = [
   ukrainian,
 ];
 
+export const config: UiConfig = {
+  name: 'The Word One to One',
+  logo: 'https://res.cloudinary.com/theword121/image/upload/v1687245360/episodes/viseg2hegowcrapio6pt.svg',
+  helpUrl: 'https://www.theword121.com/',
+  hasAppPreview: false,
+  languages,
+  subscriptions: ['story', 'stream', 'language', 'audience', 'invitation', 'page'],
+};
+
 export const sharedProps: SharedPageProps = {
-  meta,
+  config,
   user,
   language: english,
-  languages,
   errors: {},
-  exclude: [],
   bookmarks: [
     { label: 'John', link: '/en/story/1' },
     { label: 'Acts', link: '/en/story/2' },

@@ -52,7 +52,7 @@ export default class AudienceController {
     const service = new AudienceService();
     const csv = await service.toCsvFromUsers();
 
-    const appName = cms.config.meta.name.toLowerCase().replace(/ /g, '_');
+    const appName = cms.config.name.toLowerCase().replace(/ /g, '_');
     const filename = {{{ '`${appName}_audience.csv`' }}};
 
     return ctx.response
