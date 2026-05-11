@@ -5,7 +5,7 @@ import {
   type SharedPageProps,
   type LanguageSpecification,
   type Bookmark,
-  type UserInterface,
+  type AppUserInterface,
   ResponseStatus,
   UiConfig,
 } from '../../types';
@@ -18,8 +18,8 @@ const defaultLanguage: LanguageSpecification = {
 };
 
 export const useSharedStore = defineStore('shared', () => {
+  const user: Ref<AppUserInterface> = ref({} as AppUserInterface);
   const config: Ref<UiConfig> = ref({} as UiConfig);
-  const user: Ref<UserInterface> = ref({} as UserInterface);
   const bookmarks: Ref<Bookmark[]> = ref([]);
 
   const setFromProps = (props: SharedPageProps) => {

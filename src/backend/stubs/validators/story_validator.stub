@@ -1,0 +1,50 @@
+{{{
+  exports({ to: app.makePath('app/validators/story_validator.ts') })
+}}}
+import vine, { SimpleMessagesProvider } from '@vinejs/vine';
+import type { StorySpec, ValidatorType } from '@story-cms/kit';
+
+// to save us from setting vine.string().trim().minLength(1) everywhere
+vine.convertEmptyStringsToNull = true;
+
+const scriptureSchema = {
+  reference: vine.string(),
+  verse: vine.string(),
+};
+
+export default class Story1 implements ValidatorType {
+  validate(data: any): Promise<any> {
+    vine.messagesProvider = new SimpleMessagesProvider({
+      'bundle.title.required': 'The station must have a title',
+      'bundle.subtitle.required': 'The station must have a subtitle',
+      'bundle.scripture.required': 'The station must have a scripture',
+      'bundle.reflection.required': 'The station must have a reflection',
+      'bundle.prayer.required': 'The station must have a prayer',
+      'bundle.outro.required': 'The station must have an outro',
+      'bundle.imageUrl.required': 'The station must have an image',
+    });
+
+    const schema = vine.object({
+      bundle: vine.object({
+        title: vine.string(),
+        imageUrl: vine.string(),
+        subtitle: vine.string(),
+        scripture: vine.object(scriptureSchema),
+        reflection: vine.string(),
+        prayer: vine.string(),
+        outro: vine.string(),
+      }),
+    });
+
+    return vine.validate({ schema, data });
+  }
+}
+
+export const storyValidator = (story: StorySpec): ValidatorType => {
+  switch (story.id) {
+    case 1:
+      return new Story1();
+    default:
+      throw new Error({{ '`No validator found for story ${story.id}`' }});
+  }
+};

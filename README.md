@@ -1,10 +1,11 @@
-# StoryCMS Kit
+# Journeys Studio Kit
 
-StoryCMS package for AdonisJS
+Journeys Studio package for AdonisJS
 
 ## Setup
 
 Setup git hooks for commit message linting.
+
 ```
 make setup-hooks
 ```

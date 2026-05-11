@@ -8,16 +8,13 @@ import {
   Activity,
   Chapter,
   Draft,
-  trimmedErrors,
   DraftService,
   IndexService,
-  ChapterValidator,
-  chapterErrorMessages,
   type DraftEditProps,
 } from '@story-cms/kit';
 import cms from '#services/cms';
 import providers from '#config/providers';
-import vine from '@vinejs/vine';
+import { storyValidator } from '#validators/story_validator';
 
 export default class DraftsController {
   public async create(ctx: HttpContext) {
@@ -100,6 +97,7 @@ export default class DraftsController {
     const isTranslation = version.locale !== cms.sourceLocale;
 
     if (!isTranslation) {
+      // @ts-expect-error Inertia page name
       return ctx.inertia.render('DraftIndex', data);
     }
 
@@ -110,6 +108,7 @@ export default class DraftsController {
       })
       .first();
 
+    // @ts-expect-error Inertia page name
     return ctx.inertia.render('TranslationIndex', {
       ...data,
       source: source?.bundle,
@@ -150,18 +149,9 @@ export default class DraftsController {
     const id = Number(ctx.params.id);
     const draft = await Draft.findOrFail(id);
 
-    let payload;
-
-    try {
-      const data = ctx.request.all();
-      vine.messagesProvider = chapterErrorMessages;
-      const validator = new ChapterValidator(story);
-      payload = await validator.schema.validate(data);
-    } catch (e) {
-      const errors = trimmedErrors(e);
-      ctx.session.flash('errorsBag', errors);
-      return ctx.response.redirect().back();
-    }
+    const data = ctx.request.all();
+    const validator = storyValidator(story);
+    const payload = await validator.validate(data);
 
     const service = new IndexService(story, cms);
 
@@ -205,19 +195,10 @@ export default class DraftsController {
     const id = Number(ctx.params.id);
     const draft = await Draft.findOrFail(id);
 
-    try {
-      const data = ctx.request.all();
-      vine.messagesProvider = chapterErrorMessages;
-      const validator = new ChapterValidator(story);
-      const payload = await validator.schema.validate(data);
-      draft.bundle = JSON.stringify(payload.bundle);
-    } catch (e) {
-      const errors = trimmedErrors(e);
-      ctx.session.flash('errorsBag', errors);
-      return ctx.response.redirect().back();
-    }
-
-    draft.bundle = ctx.request.input('bundle');
+    const data = ctx.request.all();
+    const validator = storyValidator(story);
+    const payload = await validator.validate(data);
+    draft.bundle = JSON.stringify(payload.bundle);
     const version = { ...draft.version };
 
     await db.transaction(async (trx) => {

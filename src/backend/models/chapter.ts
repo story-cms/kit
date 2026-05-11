@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import { BaseModel, column } from '@adonisjs/lucid/orm';
-import { IndexItem, Specifier, ChapterMeta } from '../../types';
+import type { IndexItem, Specifier, ChapterMeta, JSON } from '../../types';
 
 export default class Chapter extends BaseModel {
   @column({ isPrimary: true })
@@ -16,7 +16,7 @@ export default class Chapter extends BaseModel {
   declare number: number;
 
   @column()
-  declare bundle: string;
+  declare bundle: JSON<any>;
 
   @column()
   declare updatedBy: number;
@@ -30,14 +30,8 @@ export default class Chapter extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime;
 
-  public get parsedBundle(): Record<string, unknown> {
-    const start = typeof this.bundle === 'string' ? JSON.parse(this.bundle) : this.bundle;
-    return start;
-  }
-
-  public get escapedBundle() {
-    const start =
-      typeof this.bundle === 'string' ? this.bundle : JSON.stringify(this.bundle);
+  public get escapedBundle(): JSON<any> {
+    const start = JSON.stringify(this.bundle);
     const cleaned = start.replace(/\u00A0/g, '\\\\u00A0');
     const parsed = JSON.parse(cleaned);
     return parsed;
@@ -46,8 +40,8 @@ export default class Chapter extends BaseModel {
   public get index(): IndexItem {
     return {
       number: this.number,
-      title: this.parsedBundle['title'] as string,
-      imageUrl: this.parsedBundle['imageUrl'] as string,
+      title: this.bundle['title'] as string,
+      imageUrl: this.bundle['imageUrl'] as string,
     };
   }
 

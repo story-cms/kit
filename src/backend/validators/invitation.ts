@@ -1,5 +1,6 @@
-import vine, { SimpleMessagesProvider, VineValidator } from '@vinejs/vine';
 import type { HttpContext } from '@adonisjs/core/http';
+import vine, { SimpleMessagesProvider } from '@vinejs/vine';
+import type { SchemaTypes } from '@vinejs/vine/types';
 
 const draft = {
   name: vine.string().optional(),
@@ -41,20 +42,47 @@ export class InvitationValidator {
     this.hasVideoUrl = typeof videoUrlInput === 'string' && videoUrlInput.trim() !== '';
   }
 
-  public get schema(): VineValidator<any, Record<string, any> | undefined> {
+  validate(data: any): Promise<any> {
+    vine.messagesProvider = invitationErrorMessages;
+
+    const schema = vine.object({
+      bundle: this.effectiveSchema,
+    });
+
+    return vine.validate({ schema, data: { bundle: data } });
+  }
+
+  protected get effectiveSchema(): SchemaTypes {
     if (!this.isPublished) {
-      return vine.compile(vine.object(draft));
+      return vine.object(draft);
     }
 
-    const liveSchema = {
-      ...live,
-      ...(this.isExternalUrl && {
+    if (this.isExternalUrl) {
+      const liveWithUrl = {
+        ...live,
         actionUrl: vine.string().url({
           require_protocol: true,
           protocols: ['http', 'https'],
         }),
-      }),
-      ...(this.hasVideoUrl && {
+      };
+      if (this.hasVideoUrl) {
+        return vine.object({
+          ...liveWithUrl,
+          videoUrl: vine
+            .string()
+            .url({
+              require_protocol: true,
+              protocols: ['https'],
+            })
+            .endsWith('.mp4'),
+        });
+      }
+      return vine.object(liveWithUrl);
+    }
+
+    if (this.hasVideoUrl) {
+      const liveWithVideo = {
+        ...live,
         videoUrl: vine
           .string()
           .url({
@@ -62,34 +90,42 @@ export class InvitationValidator {
             protocols: ['https'],
           })
           .endsWith('.mp4'),
-      }),
-    };
-    return vine.compile(vine.object(liveSchema));
+      };
+      return vine.object(liveWithVideo);
+    }
+
+    return vine.object(live);
+  }
+
+  // Kept for backwards compatibility with existing tests/usages.
+  public get schema() {
+    return vine.create(this.effectiveSchema);
   }
 }
 
 export const invitationErrorMessages = new SimpleMessagesProvider({
-  name: 'Name must be a string',
-  window: 'Window must be a string',
-  promoImage: 'Promo image must be a string',
-  title: 'Title must be a string',
-  message: 'Message must be a string',
-  actionLabel: 'Action button must be a string',
-  actionType: 'Action type must be a string',
-  actionUrl: 'Action URL must be a valid URL',
-  regions: 'Regions must be a string',
-  'name.required': 'Give the invitation a short, descriptive name',
-  'window.required': 'Specify the start and end dates',
-  'title.required': 'An invitation title is required',
-  'title.maxLength': 'Title cannot exceed 58 characters',
-  'message.required': 'An invitation message is required',
-  'message.maxLength': 'Message cannot exceed 560 characters',
-  'actionLabel.required': 'A label for the action button is required',
-  'actionLabel.maxLength': 'Action label cannot exceed 66 characters',
-  'actionType.required': 'An action type is required',
-  'actionUrl.required': 'An action URL is required',
-  'actionUrl.url': 'The invitation needs a valid URL for the external action',
-  'videoUrl.required': 'A video URL is required',
-  'videoUrl.url': 'The invitation needs a valid URL for the video',
-  'videoUrl.endsWith': 'The video URL must end with .mp4',
+  'bundle.name': 'Name must be a string',
+  'bundle.window': 'Window must be a string',
+  'bundle.promoImage': 'Promo image must be a string',
+  'bundle.title': 'Title must be a string',
+  'bundle.message': 'Message must be a string',
+  'bundle.actionLabel': 'Action button must be a string',
+  'bundle.actionType': 'Action type must be a string',
+  'bundle.actionUrl': 'Action URL must be a valid URL',
+  'bundle.regions': 'Regions must be a string',
+  'bundle.name.required': 'Give the invitation a short, descriptive name',
+  'bundle.name.minLength': 'Give the invitation a short, descriptive name',
+  'bundle.window.minLength': 'Specify the start and end dates',
+  'bundle.title.minLength': 'An invitation title is required',
+  'bundle.title.maxLength': 'Title cannot exceed 58 characters',
+  'bundle.message.minLength': 'An invitation message is required',
+  'bundle.message.maxLength': 'Message cannot exceed 560 characters',
+  'bundle.actionLabel.minLength': 'A label for the action button is required',
+  'bundle.actionLabel.maxLength': 'Action label cannot exceed 66 characters',
+  'bundle.actionType.required': 'An action type is required',
+  'bundle.actionUrl.required': 'An action URL is required',
+  'bundle.actionUrl.url': 'The invitation needs a valid URL for the external action',
+  'bundle.videoUrl.required': 'A video URL is required',
+  'bundle.videoUrl.url': 'The invitation needs a valid URL for the video',
+  'bundle.videoUrl.endsWith': 'The video URL must end with .mp4',
 });

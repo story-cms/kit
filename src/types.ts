@@ -263,6 +263,10 @@ export interface PreviewProps {
   title: string;
 }
 
+export interface ValidatorType {
+  validate: (data: any) => Promise<any>;
+}
+
 /// ----------------------------------------------------
 ///  pages
 /// ----------------------------------------------------
@@ -294,8 +298,8 @@ export interface PageBundle {
 }
 
 export interface SharedPageProps {
+  user: AppUserInterface;
   config: UiConfig;
-  user: UserInterface;
   language: LanguageSpecification;
   errors?: any;
   bookmarks?: Bookmark[];
@@ -320,6 +324,16 @@ export interface PageEditProps {
 /// ----------------------------------------------------
 ///  team
 /// ----------------------------------------------------
+
+export type UserRole = 'admin' | 'editor';
+
+export interface AppUserInterface {
+  id: number;
+  name: string;
+  isAdmin: boolean;
+  isManager: boolean;
+  role: string;
+}
 
 export interface UserInterface {
   id: number;

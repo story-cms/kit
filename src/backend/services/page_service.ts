@@ -19,9 +19,8 @@ export class PageService {
     const collected: PageItem[] = [];
     let group = 1;
     pages.forEach((page: Page) => {
-      const bundle = page.parsedBundle;
-      if (page.isPublished && bundle.group !== group) {
-        group = bundle.group;
+      if (page.isPublished && page.bundle.group !== group) {
+        group = page.bundle.group;
         collected.push({
           id: maxId + group,
           isDivider: true,

@@ -13,14 +13,14 @@ test.group('Page service', (group) => {
     await PageFactory.merge({
       id: 4,
       order: 1,
-      bundle: JSON.stringify({ title: 'Title for Page 4', group: 1 }),
+      bundle: { title: 'Title for Page 4', group: 1 },
       isPublished: false,
     }).create();
 
     const p3 = await PageFactory.merge({
       id: 3,
       order: 2,
-      bundle: JSON.stringify({ title: 'Title for Page 3', group: 2 }),
+      bundle: { title: 'Title for Page 3', group: 2 },
       isPublished: false,
     }).create();
 
@@ -44,20 +44,20 @@ test.group('Page service', (group) => {
     await PageFactory.merge({
       id: 4,
       order: 1,
-      bundle: JSON.stringify({ title: 'Title for Page 4', group: 1 }),
+      bundle: { title: 'Title for Page 4', group: 1 },
     }).create();
 
     // const p3 = await PageFactory.merge({
     await PageFactory.merge({
       id: 3,
       order: 2,
-      bundle: JSON.stringify({ title: 'Title for Page 3', group: 2 }),
+      bundle: { title: 'Title for Page 3', group: 2 },
     }).create();
 
     const p2 = await PageFactory.merge({
       id: 2,
       order: 3,
-      bundle: JSON.stringify({ title: 'Title for Page 2', group: 2 }),
+      bundle: { title: 'Title for Page 2', group: 2 },
     }).create();
 
     // act
@@ -98,7 +98,7 @@ test.group('Page service', (group) => {
     const p4 = await PageFactory.merge({
       id: 4,
       order: 0,
-      bundle: JSON.stringify({ title: 'Title for Page 4', group: 8 }),
+      bundle: { title: 'Title for Page 4', group: 8 },
     }).create();
 
     const service = new PageService(
@@ -148,7 +148,7 @@ test.group('Page service', (group) => {
     const p4 = await PageFactory.merge({
       id: 4,
       order: 0,
-      bundle: JSON.stringify({ title: 'Title for Page 4', group: 8 }),
+      bundle: { title: 'Title for Page 4', group: 8 },
     }).create();
 
     const service = new PageService(
@@ -161,7 +161,6 @@ test.group('Page service', (group) => {
 
     // act
     const clientPages = await service.getPageItemsForClient();
-    console.log(clientPages[0]['title']);
     // assert
     assert.equal(clientPages.length, 3);
     assert.equal(clientPages[0]['title'], p2.model.title);
@@ -188,7 +187,7 @@ test.group('Page service', (group) => {
     const p4 = await PageFactory.merge({
       id: 4,
       order: 2,
-      bundle: JSON.stringify({ title: 'Title for Page 4', group: 8 }),
+      bundle: { title: 'Title for Page 4', group: 8 },
     }).create();
 
     const service = new PageService(
@@ -230,14 +229,14 @@ test.group('Page service', (group) => {
     const p4 = await PageFactory.merge({
       id: 4,
       order: 2,
-      bundle: JSON.stringify({ title: 'Title for Page 4', group: 8 }),
+      bundle: { title: 'Title for Page 4', group: 8 },
     }).create();
 
     await PageFactory.merge({
       isPublished: false,
       id: 5,
       order: 2,
-      bundle: JSON.stringify({ title: 'Title for Page 4', group: 8 }),
+      bundle: { title: 'Title for Page 4', group: 8 },
     }).create();
 
     const service = new PageService(
@@ -260,33 +259,33 @@ test.group('Page service', (group) => {
     const p1 = await PageFactory.merge({
       id: 1,
       order: 1,
-      bundle: JSON.stringify({
+      bundle: {
         title: 'Title for link 1',
         group: 1,
         body: 'https://www.example.com',
-      }),
+      },
       isPublished: true,
     }).create();
 
     await PageFactory.merge({
       id: 3,
       order: 3,
-      bundle: JSON.stringify({
+      bundle: {
         title: 'Link with parameters',
         group: 1,
         body: 'https://www.example.com?param=1&param2=2',
-      }),
+      },
       isPublished: true,
     }).create();
 
     await PageFactory.merge({
       id: 2,
       order: 2,
-      bundle: JSON.stringify({
+      bundle: {
         title: 'Title for page 2',
         group: 1,
         body: '## Not a link',
-      }),
+      },
       isPublished: true,
     }).create();
 

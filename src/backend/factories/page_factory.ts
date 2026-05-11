@@ -1,5 +1,6 @@
 import factory from '@adonisjs/lucid/factories';
 import Page from '../models/page.js';
+import type { PageBundle } from '../../types.js';
 
 export const PageFactory = factory
   .define(Page, async ({ faker }) => {
@@ -15,7 +16,7 @@ export const PageFactory = factory
       apiVersion: 1,
       locale: 'en',
       order: 1,
-      bundle: JSON.stringify(bundle),
+      bundle: bundle as PageBundle,
       isPublished: true,
     };
   })

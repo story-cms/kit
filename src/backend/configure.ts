@@ -83,9 +83,9 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'config/cms.stub', {});
 
   codemods.overwriteExisting = true;
+  await codemods.makeUsingStub(stubsRoot, 'config/database.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/bodyparser.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/cache.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'config/inertia.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/providers.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/auth.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/cms.stub', {});
@@ -117,6 +117,8 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'controllers/stories_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/users_controller.stub', {});
 
+  await codemods.makeUsingStub(stubsRoot, 'inertia/middleware.stub', {});
+
   await codemods.makeUsingStub(stubsRoot, 'routes/users.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/auth.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/routes.stub', {});
@@ -135,6 +137,9 @@ export async function configure(command: Configure) {
 
   await codemods.makeUsingStub(stubsRoot, 'inertia/app.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'inertia/css.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'inertia/default_layout.stub', {});
+
+  await codemods.makeUsingStub(stubsRoot, 'validators/story_validator.stub', {});
 
   await codemods.makeUsingStub(stubsRoot, 'resources/layout.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'resources/views/preview.stub', {});
@@ -143,8 +148,6 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'commands/migrate_config.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/make_user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/fix_database.stub', {});
-  // NOTE: remove when this is resolved: https://github.com/adonisjs/inertia-starter-kit/issues/12
-  await codemods.makeUsingStub(stubsRoot, 'exceptions/handler.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/bootstrap.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/mock.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/rest.stub', {});
@@ -171,6 +174,7 @@ export async function configure(command: Configure) {
    */
   const appRoot = fileURLToPath(command.app.appRoot);
   await addMissingEnvVariables(codemods, appRoot, {
+    DB_CONNECTION: 'redacted',
     MAIL_FROM_ADDRESS: 'ops@scoutredeem.co',
     CLOUDINARY_API_KEY: 'redacted',
     CLOUDINARY_SECRET: 'redacted',
@@ -185,6 +189,14 @@ export async function configure(command: Configure) {
   /**
    * Define environment variables validations
    */
+
+  await codemods.defineEnvValidations({
+    variables: {
+      DB_CONNECTION: `Env.schema.string(),`,
+    },
+    leadingComment: 'Variables for configuring the database connection',
+  });
+
   await codemods.defineEnvValidations({
     variables: {
       MAIL_FROM_ADDRESS: `Env.schema.string(),`,

@@ -531,7 +531,7 @@ test.describe('Invitation validator', () => {
         expect(error!.messages).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
-              message: 'The invitation needs a valid URL for the video',
+              message: 'The videoUrl field must be a valid URL',
               rule: 'url',
               field: 'videoUrl',
             }),
@@ -576,7 +576,7 @@ test.describe('Invitation validator', () => {
         expect(error!.messages).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
-              message: 'The video URL must end with .mp4',
+              message: 'The videoUrl field must end with .mp4',
               rule: 'endsWith',
               field: 'videoUrl',
             }),

@@ -60,10 +60,11 @@
   },
   "//": {},
   "devDependencies": {
-    "@adonisjs/auth": "^9.4.0",
-    "@adonisjs/core": "^6.18.0",
-    "@adonisjs/lucid": "^21.6.1",
-    "@adonisjs/session": "^7.5.1",
+    "@adonisjs/auth": "^10.0.0",
+    "@adonisjs/core": "^7.0.0",
+    "@adonisjs/lucid": "^22.0.0",
+    "@adonisjs/session": "^8.0.0",
+    "@adonisjs/shield": "^9.0.0",
     "@eslint/js": "^9.39.2",
     "@google-analytics/data": "^5.2.1",
     "@histoire/plugin-vue": "v1.0.0-beta.1",
@@ -71,7 +72,7 @@
     "@swc/core": "^1.15.8",
     "@tailwindcss/forms": "^0.5.11",
     "@types/node": "^22.15.1",
-    "@vinejs/vine": "^3.0.1",
+    "@vinejs/vine": "^4.3.0",
     "@vitejs/plugin-vue": "^6.0.3",
     "autoprefixer": "^10.4.23",
     "copyfiles": "^2.4.1",
@@ -95,18 +96,22 @@
     "zod": "^4.3.5"
   },
   "peerDependencies": {
-    "@adonisjs/auth": "^9.4.0",
-    "@adonisjs/core": "^6.18.0",
-    "@adonisjs/lucid": "^21.6.1",
-    "@adonisjs/session": "^7.5.1",
+    "@adonisjs/auth": "^10.0.0",
+    "@adonisjs/core": "^7.0.0",
+    "@adonisjs/lucid": "^22.0.0",
+    "@adonisjs/session": "^8.0.0",
+    "@adonisjs/shield": "^9.0.0",
     "@google-analytics/data": "^5.2.1",
-    "@vinejs/vine": "^3.0.1",
+    "@vinejs/vine": "^4.3.0",
     "firebase-admin": "^13.6.0",
     "luxon": "^3.7.2",
     "openai": "^6.15.0",
     "pinia": "^3.0.4",
     "vue": "^3.5.26",
     "zod": "^4.3.5"
+  },
+  "imports": {
+    "#database/*": "./database/*.js"
   },
   "tsup": {
     "entry": [

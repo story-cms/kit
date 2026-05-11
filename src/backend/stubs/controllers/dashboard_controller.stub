@@ -29,6 +29,7 @@ export default class DashboardController {
       ...(await cms.sharedProps(ctx)),
     };
 
+    // @ts-expect-error Inertia page name
     return ctx.inertia.render('DashboardIndex', props);
   }
 }

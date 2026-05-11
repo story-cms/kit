@@ -1,0 +1,10 @@
+{{{
+  exports({ to: app.makePath('inertia/layouts/default.vue') })
+}}}
+<template>
+  <main class="flex flex-col items-center justify-center h-screen">
+    <slot />
+  </main>
+</template>
+
+<script setup lang="ts"></script>

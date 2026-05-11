@@ -5,7 +5,7 @@ import router from '@adonisjs/core/services/router';
 const StreamController = () => import('#controllers/streams_controller');
 
 export default () => {
-  router.on('/stream').redirect('/:locale/stream', {
+  router.on('/stream').redirect('stream.gallery', {
     locale: 'en',
   });
   // gallery of configured streams

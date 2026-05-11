@@ -30,6 +30,7 @@ export default class ChaptersController {
       ...shared,
     };
 
+    // @ts-expect-error Inertia page name
     return ctx.inertia.render('StoryIndex', props);
   }
 
@@ -45,7 +46,7 @@ export default class ChaptersController {
     };
 
     const chapter = await Chapter.query().where(specifier).firstOrFail();
-    const bundleView = await edge.render('preview', {
+    const bundleView = await edge.render({{ '`preview_${story.id}`' }}, {
       bundle: chapter.bundle,
       marked: marked,
       number: chapter.number,
@@ -62,6 +63,7 @@ export default class ChaptersController {
       ...shared,
     };
 
+    // @ts-expect-error Inertia page name
     return ctx.inertia.render('ChapterPreview', props);
   }
 

@@ -1,7 +1,7 @@
 import audioRule from '../validators/audio_rule.js';
 import videoRule from '../validators/video_rule.js';
 import dateRangeRule from '../validators/date_range_rule.js';
-import { FieldSpec } from '@story-cms/kit';
+import type { FieldSpec } from '@story-cms/kit';
 import vine, {
   VineArray,
   VineBoolean,

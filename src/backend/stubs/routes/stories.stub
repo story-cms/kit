@@ -16,7 +16,7 @@ export default () => {
   router.post(':locale/story/:id', [StoriesController, 'update']);
 
   // chapters
-  router.on('/story/:storyId').redirect('/:locale/story/:storyId', {
+  router.on('/story/:storyId').redirect('chapters.index', {
     locale: 'en',
     storyId: 1,
   });

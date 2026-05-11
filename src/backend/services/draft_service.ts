@@ -1,5 +1,5 @@
 import Chapter from '../models/chapter.js';
-import { FieldMap, FieldSpec, StorySpec, Version } from '../../types';
+import type { FieldMap, FieldSpec, StorySpec, Version, JSON } from '../../types';
 import { BundleService } from './bundle_service.js';
 import { CmsService } from './cms_service.js';
 
@@ -19,7 +19,10 @@ export class DraftService {
     this.story = story;
   }
 
-  public async getDraftBundle(version: Version, number: number): Promise<string | null> {
+  public async getDraftBundle(
+    version: Version,
+    number: number,
+  ): Promise<JSON<any> | null> {
     // is this the source language?
     if (version.locale === this.cms.sourceLocale) {
       const bundleService = new BundleService(this.story.fields);

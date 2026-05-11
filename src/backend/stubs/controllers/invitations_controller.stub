@@ -1,15 +1,12 @@
 {{{
   exports({ to: app.makePath('app/controllers/invitations_controller.ts') })
 }}}
-import { HttpContext } from '@adonisjs/core/http';
-import vine from '@vinejs/vine';
+import type { HttpContext } from '@adonisjs/core/http';
 import {
   Activity,
-  trimmedErrors,
   Invitation,
-  InvitationValidator,
-  invitationErrorMessages,
   InvitationService,
+  InvitationValidator,
   type InvitationEditProps,
   type InvitationIndexProps,
   type Version,
@@ -38,6 +35,7 @@ export default class InvitationsController {
       invitations,
       ...shared,
     };
+    // @ts-expect-error Inertia page name
     return ctx.inertia.render('InvitationsIndex', props);
   }
 
@@ -52,6 +50,7 @@ export default class InvitationsController {
       ...shared,
     };
 
+    // @ts-expect-error Inertia page name
     return ctx.inertia.render('InvitationsEdit', props);
   }
 
@@ -100,7 +99,7 @@ export default class InvitationsController {
         action: {{ '`deleted invitation ${invitation.id}`' }},
       });
     } catch (e) {
-      ctx.session.flash('errorsBag', { other: e.message });
+      ctx.session.flash('inputErrorsBag', { other: e.message });
     }
 
     return ctx.response.redirect({{ '`/${version.locale}/invitation`' }}, false, 303);
@@ -108,28 +107,17 @@ export default class InvitationsController {
 
   public async update(ctx: HttpContext) {
     const version = cms.pagesContextFrom(ctx);
-    let payload;
-    try {
-      // constructing the validator first so we can have a
-      // dynamic getter for the schema property
-      const data = ctx.request.all();
-      vine.messagesProvider = invitationErrorMessages;
-
-      const invitationValidator = new InvitationValidator(ctx);
-      payload = await invitationValidator.schema.validate(data);
-    } catch (e) {
-      const errors = trimmedErrors(e);
-
-      ctx.session.flash('errorsBag', prepend(errors));
-      return ctx.response.redirect().back();
-    }
+    const data = ctx.request.all();
+    const invitationValidator = new InvitationValidator(ctx);
+    const validated = await invitationValidator.validate(data);
+    const payload = validated.bundle;
 
     const id = Number(ctx.params.id);
     const invitation = await Invitation.findOrFail(id);
 
     invitation.updateBundle(payload);
 
-    invitation.isPublished = payload.isPublished;
+    invitation.isPublished = payload.isPublished as boolean;
     await invitation.save();
     if (payload.isPublished) {
       await Activity.create({
@@ -148,13 +136,3 @@ export default class InvitationsController {
     return ctx.response.redirect().back();
   }
 }
-
-// The model store on the client requires that the error messages
-// each have a "bundle" prefix
-const prepend = (plain: Record<string, string[]>): Object => {
-  const result: Record<string, unknown> = {};
-  for (const key in plain) {
-    result[{{ '`bundle.${key}`' }}] = plain[key];
-  }
-  return result;
-};

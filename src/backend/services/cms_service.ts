@@ -8,6 +8,7 @@ import type {
   SharedPageProps,
   LanguageSpecification,
   Bookmark,
+  AppUserInterface,
   UiConfig,
 } from '../../types';
 import { defineConfig } from '../define_config.js';
@@ -172,7 +173,16 @@ export class CmsService {
   public async sharedProps(ctx: HttpContext): Promise<SharedPageProps> {
     const bookmarks = await this.getBookmarks(ctx);
 
+    const user: AppUserInterface = ctx.auth?.use('web')?.user?.appUser ?? {
+      id: 0,
+      name: '',
+      isAdmin: false,
+      isManager: false,
+      role: '',
+    };
+
     return {
+      user,
       config: {
         name: this.#config.name,
         logo: this.#config.logo,
@@ -181,7 +191,6 @@ export class CmsService {
         languages: this.#config.languages,
         subscriptions: this.#config.subscriptions,
       } as UiConfig,
-      user: ctx.auth?.use('web')?.user,
       language: this.getLanguage(ctx.params.locale ?? 'en'),
       bookmarks,
     };

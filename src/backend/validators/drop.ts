@@ -1,6 +1,7 @@
+import vine, { SimpleMessagesProvider } from '@vinejs/vine';
+import { SchemaTypes } from '@vinejs/vine/types';
+import type { FieldSpec } from '../../types';
 import { BundleService } from '../services/bundle_service.js';
-import { FieldSpec } from '@story-cms/kit';
-import vine, { SimpleMessagesProvider, VineValidator } from '@vinejs/vine';
 
 const draft = {
   title: vine.string(),
@@ -22,26 +23,33 @@ const live = {
   isPublished: vine.boolean(),
 };
 
-export class DropValidator {
+export default class DropValidator {
   constructor(
     protected isPublished: boolean,
     protected bundleSpec: FieldSpec[],
   ) {}
+  validate(data: any): Promise<any> {
+    vine.messagesProvider = new SimpleMessagesProvider({
+      'bundle.title.minLength': 'A post must have a title',
+      'bundle.coverImage.required': 'A post must have a cover image',
+      'bundle.releaseAt.required': 'A post must have a release date',
+      'bundle.isPublished.required': 'A post must be published or not',
+    });
 
-  public get schema(): VineValidator<any, Record<string, any> | undefined> {
+    const schema = vine.object({
+      bundle: this.effectiveSchema,
+    });
+
+    return vine.validate({ schema, data: { bundle: data } });
+  }
+
+  protected get effectiveSchema(): SchemaTypes {
     const service = new BundleService(this.bundleSpec);
     const bundle = service.getValidationBuilder(!this.isPublished);
     const schema = {
       ...(this.isPublished ? live : draft),
       ...bundle,
     };
-    return vine.compile(vine.object(schema));
+    return vine.object(schema);
   }
 }
-
-export const errorMessages = new SimpleMessagesProvider({
-  title: 'Title must be a string',
-  description: 'Description must be a string',
-  'title.required': 'A title is required',
-  'description.required': 'A description is required',
-});

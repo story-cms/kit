@@ -8,7 +8,7 @@ export const UserFactory = factory
       email: faker.internet.email(),
       language: '*',
       password: 'secret',
-      role: 'editor',
+      role: 'editor' as const,
     };
   })
   .build();
