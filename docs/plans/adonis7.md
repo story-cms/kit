@@ -6,7 +6,7 @@ npm create adonisjs@latest cms -- --kit=vue
 
 switch to postgres
 
-```
+```bash
 node ace add @adonisjs/mail --transports=mailgun
 node ace add @adonisjs/cache
 npm install pg
@@ -30,12 +30,26 @@ rm database/migrations/*users_table.ts \
   app/validators/user.ts \
   inertia/pages/home.vue \
   inertia/pages/auth/login.vue \
-  inertia/pages/auth/signup.vue \
-  resources/views/emails/create_account.edge \
-  resources/views/emails/forget_password.edge
+  inertia/pages/auth/signup.vue
 ```
 
-DB_HOST= DB_PORT= DB_USER= DB_PASSWORD= DB_DATABASE=
+```
+createdb fresh_desktop
+cp .env.example .env
+node ace generate:key
+edit .env
+node ace migration:run
+```
+
+```
+cp .env.example .env.test
+sed -i '' 's/^SESSION_DRIVER=.*/SESSION_DRIVER=memory/' .env.test
+sed -i '' 's/^APP_KEY=.*/APP_KEY=just-a-local-public-secret/' .env.test
+sed -i '' 's|^DB_CONNECTION=.*|DB_CONNECTION=postgresql://postgres:password@localhost/your_test_db|' .env.test
+edit .env.test
+# remember to set your test db user, password and database
+npm run test
+```
 
 ---
 

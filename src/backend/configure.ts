@@ -165,6 +165,7 @@ export async function configure(command: Configure) {
    */
   const appRoot = fileURLToPath(command.app.appRoot);
   await addMissingEnvVariables(codemods, appRoot, {
+    DB_CONNECTION: 'redacted',
     MAIL_FROM_ADDRESS: 'ops@scoutredeem.co',
     CLOUDINARY_API_KEY: 'redacted',
     CLOUDINARY_SECRET: 'redacted',
