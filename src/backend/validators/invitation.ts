@@ -99,7 +99,7 @@ export class InvitationValidator {
 
   // Kept for backwards compatibility with existing tests/usages.
   public get schema() {
-    return vine.compile(this.effectiveSchema);
+    return vine.create(this.effectiveSchema);
   }
 }
 

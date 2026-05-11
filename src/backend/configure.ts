@@ -130,6 +130,7 @@ export async function configure(command: Configure) {
 
   await codemods.makeUsingStub(stubsRoot, 'inertia/app.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'inertia/css.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'inertia/default_layout.stub', {});
 
   await codemods.makeUsingStub(stubsRoot, 'validators/story_validator.stub', {});
 

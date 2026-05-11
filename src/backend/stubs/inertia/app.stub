@@ -12,7 +12,7 @@ import { createApp, type DefineComponent, h } from 'vue';
 import { resolvePageComponent } from '@adonisjs/inertia/helpers';
 import { createInertiaApp, pinia, router, helpScoutWidget } from '@story-cms/kit/ui';
 
-const appName = import.meta.env.VITE_APP_NAME || 'AdonisJS';
+const appName = import.meta.env.VITE_APP_NAME || 'Journeys Studio';
 
 router.on('navigate', (event) => {
   helpScoutWidget(event.detail.page);

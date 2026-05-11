@@ -39,7 +39,10 @@ export class Analytics {
    * @param language - The language code to filter by (e.g., 'en', 'fr')
    * @returns Object with impressions and clicks counts for all time
    */
-  async getInvitationStats(invitationId: number, language: string): Promise<InvitationStats> {
+  async getInvitationStats(
+    invitationId: number,
+    language: string,
+  ): Promise<InvitationStats> {
     // Create base filter with stream names
     const appsFilter = {
       fieldName: 'streamName',
@@ -106,7 +109,10 @@ export class Analytics {
     };
 
     // We must request the dimensions we are filtering by to ensure accurate event counts
-    const eventParameterDimensions = ['customEvent:invitation_id', 'customEvent:language'];
+    const eventParameterDimensions = [
+      'customEvent:invitation_id',
+      'customEvent:language',
+    ];
 
     const [impressions, clicks] = await Promise.all([
       this.fetchMetricsForAllTime(

@@ -16,6 +16,15 @@ npm install -D tailwindcss@3.4.19 postcss autoprefixer @japa/api-client nock
 npx tailwindcss init -p
 ```
 
+Format:
+
+```
+npm uninstall @adonisjs/prettier-config
+jq 'del(.prettier)' package.json > temp.json && mv temp.json package.json
+curl https://raw.githubusercontent.com/scoutredeem/scaffolding/main/.prettierrc > .prettierrc
+npx prettier --write '**/*.ts'
+```
+
 ```
 npm install 'git+https://github.com/story-cms/kit.git#sco-2053-fix-setup-recipe'
 node ace configure @story-cms/kit
