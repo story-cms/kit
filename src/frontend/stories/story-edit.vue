@@ -29,7 +29,7 @@
           },
         ]"
       >
-        <form class="space-y-8 bg-white py-4">
+        <form class="space-y-8 py-4">
           <StoryEditDetails v-if="currentStoryTab === 'Details'" />
           <StoryEditSections v-if="currentStoryTab === 'Sections'" />
           <StoryEditResources v-if="currentStoryTab === 'Resources'" />

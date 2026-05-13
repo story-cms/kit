@@ -48,6 +48,19 @@ const storyData = {
   createdAt: '2024-01-15T10:30:00Z',
   updatedAt: '2024-01-20T14:45:00Z',
   sections: listModel.sections,
+  resources: [
+    {
+      title: 'Study companion PDF',
+      url: 'https://example.com/guides/john-study.pdf',
+      summary:
+        '# About this resource\n\nA printable **study guide** with discussion questions for small groups.',
+    },
+    {
+      title: 'Sermon series',
+      url: 'https://example.com/series/gospel-of-john',
+      summary: 'Weekly audio and outlines covering *John* chapters 1–12.',
+    },
+  ],
 };
 
 const newStoryData = {
@@ -62,6 +75,7 @@ const newStoryData = {
   createdAt: '2024-01-25T09:00:00Z',
   updatedAt: '2024-01-25T09:00:00Z',
   sections: [],
+  resources: [],
 };
 
 const loadNormalData: StoryHandler = ({ app, story, variant }): void => {

@@ -1,19 +1,19 @@
 <template>
-  <div class="subgrid ml-8 w-full">
+  <div class="subgrid ml-8">
     <ul
       v-for="(_listItem, index) in listItems"
       :key="index"
-      class="relative my-2 w-full list-none rounded-xl border border-gray-200 bg-white p-0"
+      class="relative my-2 list-none rounded-xl border border-gray-200 p-0"
       :draggable="canMutate"
       @dragstart="onDragStart(index)"
       @dragover.prevent
       @drop="onDrop(index)"
       @dragend="onDragEnd"
     >
-      <li>
+      <li class="rounded-xl bg-white">
         <div
           :class="[
-            'flex items-center justify-between gap-3 px-4 py-3',
+            'flex items-center justify-between gap-3 overflow-hidden px-4 py-3',
             { 'border-b border-gray-100': isExpanded(index) },
           ]"
         >
@@ -71,7 +71,7 @@
 
         <ul
           v-if="isExpanded(index)"
-          class="subgrid m-0 w-full list-none gap-y-6 bg-white px-4 py-6"
+          class="subgrid m-0 w-full list-none gap-y-6 px-4 py-6"
         >
           <li
             v-for="(item, itemIndex) in fields"
