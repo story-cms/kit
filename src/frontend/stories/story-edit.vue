@@ -7,6 +7,15 @@
           <ActionButton v-if="isNew" icon="trash" @tap="deleteStory" />
           <LabelButton label="Save" @tap="saveStory" />
         </template>
+        <template #extra-actions>
+          <div class="pb-6">
+            <NavigationPane
+              :tabs="storyEditTabs"
+              :current-tab="currentStoryTab"
+              @change="onStoryTabChange"
+            />
+          </div>
+        </template>
       </ContentHeader>
     </template>
 
@@ -21,55 +30,9 @@
         ]"
       >
         <form class="space-y-8 bg-white py-4">
-          <StringField
-            :field="{
-              name: 'name',
-              label: 'Title',
-              widget: 'string',
-            }"
-            :is-nested="true"
-            class="px-8"
-          />
-          <ImageField
-            :field="{
-              label: 'Cover Image',
-              name: 'coverImage',
-              widget: 'image',
-              description: 'JPG file up to 300K',
-              extensions: ['.jpeg', '.jpg'],
-              maxSize: 300000,
-            }"
-            :is-nested="true"
-            class="px-8"
-          />
-          <NumberField
-            :field="{
-              name: 'chapterLimit',
-              label: 'Chapters',
-              widget: 'number',
-            }"
-            :is-nested="true"
-            class="px-8"
-          />
-          <TagField
-            :field="{
-              name: 'tags',
-              label: 'Tags',
-              widget: 'tags',
-            }"
-            :is-nested="true"
-            class="px-8"
-          />
-          <MarkdownField
-            :field="{
-              name: 'description',
-              label: 'Description',
-              widget: 'markdown',
-              toolbar: [],
-            }"
-            :is-nested="true"
-            class="px-8"
-          />
+          <StoryEditDetails v-if="currentStoryTab === 'Details'" />
+          <StoryEditSections v-if="currentStoryTab === 'Sections'" />
+          <StoryEditResources v-if="currentStoryTab === 'Resources'" />
         </form>
 
         <ContentSidebar>
@@ -93,20 +56,19 @@ import { onMounted, ref } from 'vue';
 import { DateTime } from 'luxon';
 import { router } from '@inertiajs/vue3';
 
-import { SharedPageProps } from '../../types';
+import type { NavigationPaneTab, SharedPageProps } from '../../types';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
 import { useSharedStore, useWidgetsStore, useModelStore } from '../store';
-import MarkdownField from '../fields/markdown-field.vue';
 import { ResponseStatus, StoryEditProps } from '../../types';
 import LabelButton from '../shared/label-button.vue';
 import MetaMetaBox from './components/meta-meta-box.vue';
 import ActionButton from '../shared/action-button.vue';
-import StringField from '../fields/string-field.vue';
-import ImageField from '../fields/image-field.vue';
-import NumberField from '../fields/number-field.vue';
-import TagField from '../fields/tag-field.vue';
 import ContentSidebar from '../shared/content-sidebar.vue';
+import StoryEditDetails from './components/story-edit-details.vue';
+import StoryEditResources from './components/story-edit-resources.vue';
+import StoryEditSections from './components/story-edit-sections.vue';
+import NavigationPane from '../shared/navigation-pane.vue';
 
 const props = defineProps<StoryEditProps & SharedPageProps>();
 const shared = useSharedStore();
@@ -119,6 +81,17 @@ model.setModel(props.story);
 
 const title = ref(props.story.name);
 const savedAt = ref(props.story.updatedAt as unknown as string);
+
+const storyEditTabs: NavigationPaneTab[] = [
+  { label: 'Details', icon: 'book-open' },
+  { label: 'Sections', icon: 'list-bullet' },
+  { label: 'Resources', icon: 'folder' },
+];
+const currentStoryTab = ref('Details');
+
+const onStoryTabChange = (tab: string) => {
+  currentStoryTab.value = tab;
+};
 
 onMounted(() => {
   model.$subscribe(() => {
