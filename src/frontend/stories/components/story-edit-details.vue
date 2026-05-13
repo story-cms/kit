@@ -75,6 +75,20 @@
       :is-nested="true"
       class="px-8"
     />
+    <SelectField
+      :field="{
+        name: 'Visibility',
+        label: 'Visibility',
+        widget: 'select',
+        options: [
+          { label: 'Public', value: 'public' },
+          { label: 'Private', value: 'private' },
+        ],
+        default: 'public',
+      }"
+      :is-nested="true"
+      class="px-8"
+    />
   </div>
 </template>
 
@@ -85,4 +99,5 @@ import ImageField from '../../fields/image-field.vue';
 import NumberField from '../../fields/number-field.vue';
 import TagField from '../../fields/tag-field.vue';
 import PanelField from '../../fields/panel-field.vue';
+import SelectField from '../../fields/select-field.vue';
 </script>
