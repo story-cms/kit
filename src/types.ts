@@ -556,14 +556,27 @@ export type CmsConfig = {
   languages: LanguageSpecification[];
   pagesTracking: string;
   pagesSchemaVersion: number;
+  // any bespoke story or stream templates
+  bespokeTemplates: BundleTemplate[];
+
   streams: StreamSpec[];
+  streamTemplates: BundleTemplate[];
+
   storiesHasEditReview: boolean;
+  // will be deprecated in favour of stories table and template
   stories: StorySpec[];
+  storyTemplates: BundleTemplate[];
 
   subscriptions: Subscription[];
   microcopySource: string;
   hasAppPreview: boolean;
 };
+
+export interface BundleTemplate {
+  id: string;
+  name: string;
+  fields: FieldSpec[];
+}
 
 export interface LanguageSpecification {
   language: string;
