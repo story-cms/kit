@@ -41,17 +41,30 @@
               class="inline-flex h-8 w-8 shrink-0 items-center justify-center"
               @click="onDelete(index)"
             >
-              <Icon name="trash" class="size-4 hover:text-error" />
+              <Icon name="trash" class="size-5 hover:text-error" />
             </button>
             <button
               type="button"
-              class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-gray-500 hover:bg-gray-50"
+              class="inline-flex size-8 items-center justify-center text-gray-500 hover:bg-gray-50"
               @click="toggle(index)"
             >
-              <Icon
-                :name="isExpanded(index) ? 'chevron-down' : 'chevron-right'"
-                class="size-4"
-              />
+              <span>
+                <svg
+                  class="size-5 origin-center transition-transform duration-200 ease-out"
+                  :class="[isExpanded(index) ? 'rotate-180' : '']"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M15 12.5L10 7.5L5 12.5"
+                    stroke="currentColor"
+                    stroke-width="1.66667"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
             </button>
           </div>
         </div>
