@@ -1,11 +1,22 @@
 <template>
   <div class="space-y-8">
-    <SectionPanelField :field="resourcesField" :is-nested="true" />
+    <SectionPanelField
+      :field="resourcesField"
+      :header-icon="tabIcon"
+      :is-nested="true"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import SectionPanelField from '../../fields/section-panel-field.vue';
+
+withDefaults(
+  defineProps<{
+    tabIcon?: string;
+  }>(),
+  { tabIcon: '' },
+);
 
 const resourcesField = {
   label: 'Resource',

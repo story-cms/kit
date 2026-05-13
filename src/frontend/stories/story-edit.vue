@@ -29,10 +29,19 @@
           },
         ]"
       >
-        <form class="space-y-8 py-4">
-          <StoryEditDetails v-if="currentStoryTab === 'Details'" />
-          <StoryEditSections v-if="currentStoryTab === 'Sections'" />
-          <StoryEditResources v-if="currentStoryTab === 'Resources'" />
+        <form class="space-y-8">
+          <StoryEditDetails
+            v-if="currentStoryTab === 'Details'"
+            :tab-icon="currentStoryTabIcon"
+          />
+          <StoryEditSections
+            v-if="currentStoryTab === 'Sections'"
+            :tab-icon="currentStoryTabIcon"
+          />
+          <StoryEditResources
+            v-if="currentStoryTab === 'Resources'"
+            :tab-icon="currentStoryTabIcon"
+          />
         </form>
 
         <ContentSidebar>
@@ -52,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { DateTime } from 'luxon';
 import { router } from '@inertiajs/vue3';
 
@@ -88,6 +97,10 @@ const storyEditTabs: NavigationPaneTab[] = [
   { label: 'Resources', icon: 'folder' },
 ];
 const currentStoryTab = ref('Details');
+
+const currentStoryTabIcon = computed(
+  () => storyEditTabs.find((t) => t.label === currentStoryTab.value)?.icon ?? '',
+);
 
 const onStoryTabChange = (tab: string) => {
   currentStoryTab.value = tab;

@@ -1,5 +1,5 @@
 <template>
-  <div class="subgrid ml-8">
+  <div class="subgrid">
     <ul
       v-for="(_listItem, index) in listItems"
       :key="index"
@@ -26,6 +26,13 @@
             >
               <Icon name="drag" class="h-5 w-5" />
             </button>
+            <span
+              v-if="headerIcon"
+              class="inline-flex shrink-0 items-center justify-center text-gray-400"
+              aria-hidden="true"
+            >
+              <Icon :name="headerIcon" class="h-5 w-5" />
+            </span>
             <button
               type="button"
               class="inline-flex items-center text-left text-sm font-semibold text-gray-800"
@@ -140,6 +147,10 @@ import Icon from '../shared/icon.vue';
 
 const props = defineProps({
   ...commonProps,
+  headerIcon: {
+    type: String,
+    default: '',
+  },
 });
 
 const emit = defineEmits<{

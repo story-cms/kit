@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-8">
+  <div class="space-y-8 rounded-xl bg-white py-3">
     <StringField
       :field="{
         name: 'name',
@@ -100,4 +100,11 @@ import NumberField from '../../fields/number-field.vue';
 import TagField from '../../fields/tag-field.vue';
 import PanelField from '../../fields/panel-field.vue';
 import SelectField from '../../fields/select-field.vue';
+
+withDefaults(
+  defineProps<{
+    tabIcon?: string;
+  }>(),
+  { tabIcon: '' },
+);
 </script>
