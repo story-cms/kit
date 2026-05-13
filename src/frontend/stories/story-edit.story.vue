@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import StoryEdit from './story-edit.vue';
-import { sharedProps, miniSidebar } from '../test/mocks';
+import { listModel, sharedProps, miniSidebar } from '../test/mocks';
 import { useSharedStore } from '../store';
 import type { StoryHandler } from '../shared/helpers';
 
@@ -47,6 +47,7 @@ const storyData = {
     '# The Gospel of John\n\nThis is the fourth gospel in the New Testament...',
   createdAt: '2024-01-15T10:30:00Z',
   updatedAt: '2024-01-20T14:45:00Z',
+  sections: listModel.sections,
 };
 
 const newStoryData = {
@@ -60,6 +61,7 @@ const newStoryData = {
   description: '',
   createdAt: '2024-01-25T09:00:00Z',
   updatedAt: '2024-01-25T09:00:00Z',
+  sections: [],
 };
 
 const loadNormalData: StoryHandler = ({ app, story, variant }): void => {
