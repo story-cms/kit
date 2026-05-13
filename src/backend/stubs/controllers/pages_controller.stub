@@ -87,7 +87,7 @@ export default class PagesController {
         action: {{ '`deleted page ${page.id}`' }},
       });
     } catch (e) {
-      ctx.session.flash('errorsBag', { other: e.message });
+      ctx.session.flash('errorsBag', { other: 'Error while deleting page' });
     }
 
     return ctx.response.redirect({{ '`/${version.locale}/page`' }}, false, 303);

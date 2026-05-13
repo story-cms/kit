@@ -99,7 +99,7 @@ export default class InvitationsController {
         action: {{ '`deleted invitation ${invitation.id}`' }},
       });
     } catch (e) {
-      ctx.session.flash('inputErrorsBag', { other: e.message });
+      ctx.session.flash('inputErrorsBag', { other: 'Error while deleting invitation' });
     }
 
     return ctx.response.redirect({{ '`/${version.locale}/invitation`' }}, false, 303);
