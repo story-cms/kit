@@ -215,8 +215,8 @@ export class UiService {
       .map((key) => ({
         key: key.substring(1),
         // trim to the first 255 characters to avoid column size limit
-        description: data[key]['description'].substring(0, 255),
-        placeholders: data[key]['placeholders'],
+        description: data[key]['description']?.substring(0, 255) ?? '',
+        placeholders: data[key]['placeholders'] ?? {},
       }));
 
     await db.transaction(async (trx) => {
