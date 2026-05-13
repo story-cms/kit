@@ -49,6 +49,32 @@
       :is-nested="true"
       class="px-8"
     />
+    <PanelField
+      :field="{
+        label: 'Content Classification',
+        name: 'contentClassification',
+        widget: 'panel',
+        fields: [
+          {
+            label: 'Story Type',
+            name: 'storyType',
+            widget: 'string',
+          },
+          {
+            label: 'Section Type',
+            name: 'sectionType',
+            widget: 'string',
+          },
+          {
+            label: 'Chapter Type',
+            name: 'chapterType',
+            widget: 'string',
+          },
+        ],
+      }"
+      :is-nested="true"
+      class="px-8"
+    />
   </div>
 </template>
 
@@ -58,4 +84,5 @@ import StringField from '../../fields/string-field.vue';
 import ImageField from '../../fields/image-field.vue';
 import NumberField from '../../fields/number-field.vue';
 import TagField from '../../fields/tag-field.vue';
+import PanelField from '../../fields/panel-field.vue';
 </script>
