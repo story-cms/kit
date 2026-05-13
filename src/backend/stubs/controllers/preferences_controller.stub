@@ -31,7 +31,7 @@ export default class PreferencesController {
       });
       return ctx.response.status(204);
     } catch (e) {
-      return ctx.response.status(400).json({ error: e.message });
+      return ctx.response.status(400).json({ error: 'Error while toggling bookmark' });
     }
   }
 }

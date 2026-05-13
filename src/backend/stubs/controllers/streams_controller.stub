@@ -145,7 +145,7 @@ export default class StreamController {
         action: {{'`deleted drop ${drop.id}`'}},
       });
     } catch (e) {
-      ctx.session.flash('inputErrorsBag', { other: e.message });
+      ctx.session.flash('inputErrorsBag', { other: 'Error while deleting drop' });
     }
 
     return ctx.response.redirect({{'`/${version.locale}/stream`'}}, false, 303);

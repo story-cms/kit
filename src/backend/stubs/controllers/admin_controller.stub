@@ -18,7 +18,7 @@ export default class AdminController {
     } catch (error) {
       return {
         result: 'error',
-        feedback: error.message,
+        feedback: 'could not rebuild indexes',
       };
     }
 
@@ -39,7 +39,7 @@ export default class AdminController {
     } catch (error) {
       return {
         result: 'error',
-        feedback: error.message,
+        feedback: 'could not sync auto increment',
       };
     }
 

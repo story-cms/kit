@@ -135,7 +135,7 @@ export default class DraftsController {
       const service = new IndexService(story, cms);
       await service.buildIndex(draft.version);
     } catch (e) {
-      const errors = e.messages || e.message || 'Error while saving this draft. Sorry!';
+      const errors = 'Error while saving this draft. Sorry!';
       ctx.session.flash('errorsBag', errors);
     }
 
