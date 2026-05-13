@@ -1,0 +1,66 @@
+{{{
+  exports({ to: app.commandsPath('migrate_all.ts') })
+}}}
+import { BaseCommand } from '@adonisjs/core/ace';
+import type { CommandOptions } from '@adonisjs/core/types/ace';
+import { CmsConfig, Config, defineConfig } from '@story-cms/kit';
+
+export default class MigrateAll extends BaseCommand {
+  static commandName = 'migrate:all';
+  static description =
+    'Run database migrations and then migrate the active configuration';
+
+  static options: CommandOptions = { startApp: true };
+
+  async run() {
+    const migration = await this.kernel.exec('migration:run', ['--force']);
+    this.exitCode = migration.exitCode;
+    this.error = migration.error;
+
+    if (migration.error || migration.exitCode) {
+      this.logger.info('Database migration failed, skipping configuration migration');
+      return;
+    }
+
+    await this.migrateConfig();
+  }
+
+  private async migrateConfig() {
+    const active = await Config.query()
+      .where('key', 'cms')
+      .orderBy('version', 'desc')
+      .first();
+
+    if (!active) {
+      this.logger.info('No active configuration found, skipping migration');
+      return;
+    }
+
+    const overrides = active.data as CmsConfig;
+    const newConfig = defineConfig(overrides);
+
+    if (this.isEqual(newConfig, overrides)) {
+      this.logger.info('Configuration is up to date, skipping migration');
+      return;
+    }
+
+    const config = new Config();
+    config.key = 'cms';
+    config.version = active.version + 1;
+    config.data = newConfig;
+    await config.save();
+    this.logger.info('Configuration migrated successfully');
+  }
+
+  private isEqual(a: CmsConfig, b: CmsConfig): boolean {
+    const sortedStringify = (obj: unknown): string =>
+      JSON.stringify(obj, (_key, value) =>
+        value && typeof value === 'object' && !Array.isArray(value)
+          ? Object.fromEntries(
+              Object.entries(value).sort(([x], [y]) => x.localeCompare(y)),
+            )
+          : value,
+      );
+    return sortedStringify(a) === sortedStringify(b);
+  }
+}

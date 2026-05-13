@@ -145,7 +145,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'resources/views/preview.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'resources/views/scripture.stub', {});
 
-  await codemods.makeUsingStub(stubsRoot, 'commands/migrate_config.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'commands/migrate.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/make_user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/fix_database.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/bootstrap.stub', {});
