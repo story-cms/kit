@@ -398,6 +398,13 @@ export interface TabItem {
   count: number;
 }
 
+/** Tabs for `navigation-pane` (icon + label). */
+export interface NavigationPaneTab {
+  label: string;
+  /** Registered `Icon` name; omitted for label-only tabs. */
+  icon?: string;
+}
+
 export interface StatMetric {
   name: string;
   stat: number;

@@ -3219,6 +3219,94 @@
         fill="currentColor"
       />
     </svg>
+    <svg
+      v-if="name === 'book-open'"
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M8 4.66602V13.9993"
+        stroke="currentColor"
+        stroke-width="1.33333"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M1.99998 12C1.82317 12 1.6536 11.9298 1.52858 11.8047C1.40355 11.6797 1.33331 11.5101 1.33331 11.3333V2.66667C1.33331 2.48986 1.40355 2.32029 1.52858 2.19526C1.6536 2.07024 1.82317 2 1.99998 2H5.33331C6.04056 2 6.71883 2.28095 7.21893 2.78105C7.71903 3.28115 7.99998 3.95942 7.99998 4.66667C7.99998 3.95942 8.28093 3.28115 8.78103 2.78105C9.28113 2.28095 9.9594 2 10.6666 2H14C14.1768 2 14.3464 2.07024 14.4714 2.19526C14.5964 2.32029 14.6666 2.48986 14.6666 2.66667V11.3333C14.6666 11.5101 14.5964 11.6797 14.4714 11.8047C14.3464 11.9298 14.1768 12 14 12H9.99998C9.46955 12 8.96084 12.2107 8.58577 12.5858C8.21069 12.9609 7.99998 13.4696 7.99998 14C7.99998 13.4696 7.78927 12.9609 7.41419 12.5858C7.03912 12.2107 6.53041 12 5.99998 12H1.99998Z"
+        stroke="currentColor"
+        stroke-width="1.33333"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+    <svg
+      v-if="name === 'list-bullet'"
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M2 8H2.00667"
+        stroke="currentColor"
+        stroke-width="1.33333"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M2 12H2.00667"
+        stroke="currentColor"
+        stroke-width="1.33333"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M2 4H2.00667"
+        stroke="currentColor"
+        stroke-width="1.33333"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M5.33331 8H14"
+        stroke="currentColor"
+        stroke-width="1.33333"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M5.33331 12H14"
+        stroke="currentColor"
+        stroke-width="1.33333"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M5.33331 4H14"
+        stroke="currentColor"
+        stroke-width="1.33333"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+    <svg
+      v-if="name === 'folder'"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z"
+      />
+    </svg>
   </span>
 </template>
 
