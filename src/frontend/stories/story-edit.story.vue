@@ -94,7 +94,9 @@ const loadNormalData: StoryHandler = ({ app, story, variant }): void => {
 <docs lang="md">
 # Story Edit
 
-A comprehensive page component for creating and editing stories in the CMS.
+Full-page story editor shell: header with navigation, tabbed main form, and a sidebar meta
+panel. It wires `SharedPageProps` into the shared store, loads the Pinia model from
+`story`, and registers media `providers` for upload widgets.
 
 ## Usage
 
@@ -106,36 +108,60 @@ A comprehensive page component for creating and editing stories in the CMS.
   :errors="errors"
   :bookmarks="bookmarks"
   :story="story"
+  :is-new="false"
   :providers="providers"
 />
 ```
 
 ## Props
 
-- `config` - CMS config from sharedProps
-- `user` - User data from sharedProps
-- `language` - Current language from sharedProps
-- `errors` - Error state from sharedProps
-- `bookmarks` - Available bookmarks array
-- `story` - Story data object with fields like name, coverImage, chapterLimit, tags, description
-- `providers` - Media providers for file uploads
+`StoryEdit` expects `StoryEditProps` merged with `SharedPageProps`:
 
-## Features
+| Prop | Description |
+| --- | --- |
+| `config` | CMS UI config (`UiConfig`). |
+| `user` | Signed-in user (`AppUserInterface`). |
+| `language` | Active locale and direction (`LanguageSpecification`). |
+| `errors` | Optional server/validation errors map for the shared store. |
+| `bookmarks` | Optional bookmarks list for layout chrome. |
+| `story` | Story record and **bundle** fields consumed by the model store (see below). |
+| `isNew` | When `true`, shows the delete-story control in the header; still use a real or stub `story.id` for routes in demos. |
+| `providers` | Widget providers (e.g. image upload); passed to `useWidgetsStore().setProviders()`. |
 
-- Form fields for story title, cover image, chapter limit, tags, and description
-- Image upload with file validation
-- Markdown editor for story description
-- Tag management
-- Meta box showing story metadata
-- Save and delete functionality
-- Responsive layout with sidebar
-- Error handling and validation
-- RTL language support
+## Story bundle (model)
 
-## Variants
+On mount, `model.setModel(props.story)` runs. The **Details** tab edits the usual meta
+fields (`name`, `coverImage`, `chapterLimit`, `tags`, `description`). The **Sections** and
+**Resources** tabs render nested `sectionPanel` UIs
+backed by `sections` and `resources` arrays on the same object when those keys are present.
 
-- **Default** - Standard story editing interface
-- **New story** - Interface for creating a new story
-- **With errors** - Shows validation error states with ErrorControl
-- **RTL** - Right-to-left language support testing
+Example shape (Histoire mocks in this file):
+
+- `sections` — list of `{ scripture, commentary }` rows (scripture widget + markdown).
+- `resources` — list of `{ title, url, summary }` rows (strings + markdown).
+
+Saving in this kit story only posts the **Details** payload (`name`, `coverImage`,
+`chapterLimit`, `tags`, `description`); extend `getPayload()` in `story-edit.vue` when
+your app persists nested lists too.
+
+## UI behavior
+
+- **Tabs** — Details, Sections, Resources (`NavigationPane`). The tab icon is passed into
+  the Sections/Resources subtrees as `tab-icon` and shown on each section panel row
+  (`headerIcon` on `SectionPanelField`).
+- **Title** — Header title tracks `name` from the model (falls back to “New Story”).
+- **Sidebar** — `MetaMetaBox` shows story type, chapter type, name, created/updated times;
+  `savedAt` refreshes after a successful save.
+- **Layout** — Two columns with sidebar when not single-column; otherwise a single centered
+  column (from `useSharedStore().isSingleColumn`).
+
+## Histoire variants
+
+| Variant | Purpose |
+| --- | --- |
+| **Default** | Existing story (`is-new: false`) with populated details, `sections` from `listModel`, and sample `resources`. |
+| **New story** | Create flow (`is-new: true`), `id: 0`, empty details and empty `sections` / `resources` arrays. |
+
+Each variant uses `setup-app="loadNormalData"` to set English LTR language and apply the
+shared `miniSidebar` story handler.
 </docs>

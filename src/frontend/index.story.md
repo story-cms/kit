@@ -19,7 +19,7 @@ Following are the widgets that are currently implemented:
 
 [string](#string), [number](#number), [markdown](#markdown), [image](#image),
 [audio](#audio), [boolean](#boolean), [select](#select), [object](#object),
-[panel](#panel), [list](#list), [scripture](#scripture),
+[panel](#panel), [list](#list), [sectionPanel](#sectionpanel), [scripture](#scripture),
 [scriptureReference](#scripturereference), [date](#date), [dateRange](#daterange),
 [region](#region)
 
@@ -112,7 +112,7 @@ Remove the toolbar by passing an empty toolbar array. Example:
   name: 'excerpt',
   widget: 'markdown',
   minimal: true,
-  toobar: []
+  toolbar: []
 },
 ```
 
@@ -138,7 +138,7 @@ the component to the `toolbar` Example:
   name: 'excerpt',
   widget: 'markdown',
   minimal: true,
-  toobar: ['footnote']
+  toolbar: ['footnote']
 },
 ```
 
@@ -491,10 +491,56 @@ example:
     },
     {
       label: 'Passage',
-      name: 'paxssage',
+      name: 'passage',
       widget: 'scripture',
     },
   ]
+}
+```
+
+## sectionPanel
+
+A repeating editor that renders a [SectionPanelField](#). Each item is a **card**: drag
+handle, optional row title, expand/collapse, and optional delete. Nested `fields` render
+inside the expanded body. Use this when editors should skim many groups as a stack of
+panels rather than a single long list.
+
+Specialised keys:
+
+- `fields`: required array of field specs for one row (same idea as [list](#list)).
+- `index`: optional dotted path into one row’s data (e.g. `scripture.reference`) used as
+  the **collapsed row label**. If omitted, the **first** field in `fields` supplies the
+  title string.
+- `isFlexible`: optional boolean; when `true`, row add/remove/reorder stays enabled in
+  translation workflows where list-like widgets are normally read-only.
+
+example (scripture + commentary rows):
+
+```ts
+{
+  label: 'Section',
+  name: 'sections',
+  widget: 'sectionPanel',
+  index: 'scripture.reference',
+  fields: [
+    { label: 'Scripture', name: 'scripture', widget: 'scripture' },
+    { label: 'Commentary', name: 'commentary', widget: 'markdown' },
+  ],
+}
+```
+
+example (title-driven rows, no `index`):
+
+```ts
+{
+  label: 'Resource',
+  name: 'resources',
+  widget: 'sectionPanel',
+  fields: [
+    { label: 'Title', name: 'title', widget: 'string' },
+    { label: 'URL', name: 'url', widget: 'string' },
+    { label: 'Summary', name: 'summary', widget: 'markdown' },
+  ],
 }
 ```
 
