@@ -106,7 +106,6 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'controllers/chapters_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/drafts_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/pages_controller.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'controllers/admin_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/ui_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/analytics_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/preview_controller.stub', {});
@@ -147,7 +146,6 @@ export async function configure(command: Configure) {
 
   await codemods.makeUsingStub(stubsRoot, 'commands/migrate.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/make_user.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'commands/fix_database.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/bootstrap.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/mock.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/rest.stub', {});
