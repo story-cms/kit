@@ -49,7 +49,7 @@ export default class UsersController {
 
   // patch a user's information
   public async update(ctx: HttpContext) {
-    const locale = cms.localeFrom(ctx);
+    const locale = cms.localeFromPath(ctx);
     const id = Number(ctx.params.id);
     const user = await User.findOrFail(id);
 
@@ -70,7 +70,7 @@ export default class UsersController {
 
   // delete a user
   public async destroy(ctx: HttpContext) {
-    const locale = cms.localeFrom(ctx);
+    const locale = cms.localeFromPath(ctx);
     const id = Number(ctx.params.id);
     const user = await User.findOrFail(id);
     try {
@@ -93,7 +93,7 @@ export default class UsersController {
   // create a new user
   public async store(ctx: HttpContext) {
     const payload = await ctx.request.validateUsing(createUserValidator);
-    const locale = cms.localeFrom(ctx);
+    const locale = cms.localeFromPath(ctx);
 
     try {
       const randomString = this.generateRandomString();

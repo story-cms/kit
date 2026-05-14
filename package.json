@@ -17,7 +17,7 @@
     "story:build": "histoire build",
     "story:preview": "histoire preview",
     "test:e2e": "npx playwright test tests/e2e/*.ts",
-    "test": "npx playwright test tests/unit/*.ts",
+    "test": "npx playwright test --config=playwright.unit.config.ts tests/unit/*.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

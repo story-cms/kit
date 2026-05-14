@@ -69,7 +69,6 @@ export const testCmsConfig: CmsConfig = {
         ],
       },
     ],
-  pagesSchemaVersion: 1,
   pagesTracking: 'utm_source=test&utm_medium=test&utm_campaign=test',
   subscriptions: ['story', 'stream', 'language', 'audience', 'invitation', 'page'],
 };

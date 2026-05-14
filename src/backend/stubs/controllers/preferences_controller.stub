@@ -23,7 +23,7 @@ export default class PreferencesController {
     try {
       await service.toggleBookmark(userId, { label, link });
 
-      const version = cms.pagesContextFrom(ctx);
+      const version = cms.versionFromPath(ctx);
       await Activity.create({
         userId: ctx.auth.user?.id,
         action: {{'`updated bookmark ${label} for user ${userId}`'}},

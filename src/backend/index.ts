@@ -23,7 +23,6 @@ export * from './factories/chapter_factory.js';
 export * from './factories/invitation_factory.js';
 export * from './factories/user_factory.js';
 export * from './services/helpers.js';
-export * from './services/admin_service.js';
 export * from './services/ai_service.js';
 export * from './services/analytics_service.js';
 export * from './services/audience_service.js';

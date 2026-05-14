@@ -1,8 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { DraftService } from '../../dist/backend/services/draft_service.js';
-import { CmsService } from '../../dist/backend/services/cms_service.js';
 import { simpleFields, complexFields, nestedFields } from '../mocks.js';
-import type { StorySpec, Version, CmsConfig } from '../../src/types.js';
+import type { StorySpec, StoryVersion, CmsConfig } from '../../src/types.js';
 
 // Manual stub for Chapter.query() pattern
 let mockQueryBuilder: {
@@ -54,11 +53,20 @@ function createMockCmsConfig(sourceLocale: string = 'en'): CmsConfig {
     ],
     streams: [],
     storiesHasEditReview: false,
-    stories: [],
-    pagesSchemaVersion: 1,
+    storyTemplates: [],
+    bespokeTemplates: [],
     pagesTracking: '',
     subscriptions: ['story', 'stream', 'language', 'audience', 'invitation', 'page'],
   };
+}
+
+function createMockCms(sourceLocale: string = 'en') {
+  const config = createMockCmsConfig(sourceLocale);
+  return {
+    get sourceLocale() {
+      return config.languages[0].locale;
+    },
+  } as any;
 }
 
 function createStorySpec(id: number, fields = simpleFields): StorySpec {
@@ -75,13 +83,12 @@ function createStorySpec(id: number, fields = simpleFields): StorySpec {
 }
 
 test.describe('DraftService.getDraftBundle', () => {
-  let mockCms: CmsService;
+  let mockCms: any;
   let storySpec: StorySpec;
 
   test.beforeEach(async () => {
     await setupChapterMock();
-    const config = createMockCmsConfig();
-    mockCms = new CmsService(config);
+    mockCms = createMockCms();
     storySpec = createStorySpec(1);
   });
 
@@ -92,7 +99,7 @@ test.describe('DraftService.getDraftBundle', () => {
   test('returns default bundle for source language', async () => {
     // arrange
     const draftService = new DraftService(storySpec, mockCms);
-    const version: Version = {
+    const version: StoryVersion = {
       apiVersion: 1,
       locale: 'en', // source locale
       storyId: 1,
@@ -131,7 +138,7 @@ test.describe('DraftService.getDraftBundle', () => {
 
     (mockQueryBuilder as any).firstResult = mockChapter;
 
-    const version: Version = {
+    const version: StoryVersion = {
       apiVersion: 1,
       locale: 'es', // translation locale
       storyId: 1,
@@ -162,7 +169,7 @@ test.describe('DraftService.getDraftBundle', () => {
     const draftService = new DraftService(storySpec, mockCms);
     (mockQueryBuilder as any).firstResult = null;
 
-    const version: Version = {
+    const version: StoryVersion = {
       apiVersion: 1,
       locale: 'fr', // translation locale
       storyId: 1,
@@ -222,7 +229,7 @@ test.describe('DraftService.getDraftBundle', () => {
 
     (mockQueryBuilder as any).firstResult = mockChapter;
 
-    const version: Version = {
+    const version: StoryVersion = {
       apiVersion: 1,
       locale: 'es',
       storyId: 1,
@@ -270,7 +277,7 @@ test.describe('DraftService.getDraftBundle', () => {
 
     (mockQueryBuilder as any).firstResult = mockChapter;
 
-    const version: Version = {
+    const version: StoryVersion = {
       apiVersion: 1,
       locale: 'es',
       storyId: 1,
@@ -308,7 +315,7 @@ test.describe('DraftService.getDraftBundle', () => {
 
     (mockQueryBuilder as any).firstResult = mockChapter;
 
-    const version: Version = {
+    const version: StoryVersion = {
       apiVersion: 1,
       locale: 'es',
       storyId: 1,
@@ -341,7 +348,7 @@ test.describe('DraftService.getDraftBundle', () => {
 
     (mockQueryBuilder as any).firstResult = mockChapter;
 
-    const version: Version = {
+    const version: StoryVersion = {
       apiVersion: 1,
       locale: 'es',
       storyId: 1,
@@ -378,7 +385,7 @@ test.describe('DraftService.getDraftBundle', () => {
 
     (mockQueryBuilder as any).firstResult = mockChapter;
 
-    const version: Version = {
+    const version: StoryVersion = {
       apiVersion: 1,
       locale: 'es',
       storyId: 1,
@@ -400,10 +407,10 @@ test.describe('DraftService.getDraftBundle', () => {
 
   test('uses correct source locale from CMS config', async () => {
     // arrange
-    const customCms = new CmsService(createMockCmsConfig('de')); // German as source
+    const customCms = createMockCms('de'); // German as source
     const draftService = new DraftService(storySpec, customCms);
 
-    const version: Version = {
+    const version: StoryVersion = {
       apiVersion: 1,
       locale: 'en', // translation locale
       storyId: 1,

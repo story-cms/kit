@@ -21,6 +21,15 @@ export enum FlagState {
 }
 
 /// ----------------------------------------------------
+///  selectors
+/// ----------------------------------------------------
+
+export interface Version {
+  apiVersion: number;
+  locale: string;
+}
+
+/// ----------------------------------------------------
 ///  fields
 /// ----------------------------------------------------
 
@@ -134,6 +143,23 @@ export interface StreamEditProps {
 ///  stories
 /// ----------------------------------------------------
 
+export interface StoryResource {
+  id: string;
+  title: string;
+  type: string;
+  visibility: string;
+  label?: string;
+  url?: string;
+  description?: string;
+  imageUrl?: string;
+}
+
+export interface StorySection {
+  id: string;
+  title: string;
+  description?: string;
+}
+
 export interface StorySpec {
   id: number;
   name: string;
@@ -157,16 +183,11 @@ export interface StoryIndexItem {
   draftCount: number;
 }
 
-export interface Version {
-  apiVersion: number;
+export interface StoryVersion extends Version {
   storyId: number;
-  locale: string;
 }
 
-export interface Specifier {
-  apiVersion: number;
-  storyId: number;
-  locale: string;
+export interface StorySpecifier extends StoryVersion {
   number: number;
 }
 
@@ -282,11 +303,6 @@ export interface PageItem {
   isPublished?: boolean;
   isDivider?: boolean;
   category?: string;
-}
-
-export interface PageVersion {
-  apiVersion: number;
-  locale: string;
 }
 
 export interface PageBundle {
@@ -494,11 +510,6 @@ export interface InvitationIndexProps {
   invitations: InvitationItem[];
 }
 
-export interface InvitationVersion {
-  apiVersion: number;
-  locale: string;
-}
-
 export interface InvitationForApi {
   id: number;
   startDate: string | null;
@@ -517,17 +528,32 @@ export interface InvitationForApi {
 ///  configuration
 /// ----------------------------------------------------
 
+// trackable settings should not be nested
+// no optional settings in the type definition
+export type CmsConfig = {
+  name: string;
+  logo: string;
+  helpUrl: string;
+  hasAppPreview: boolean;
+  microcopySource: string;
+  languages: LanguageSpecification[];
+  subscriptions: Subscription[];
+
+  pagesTracking: string;
+  // any bespoke story or stream templates
+  bespokeTemplates: BundleTemplate[];
+
+  // will be deprecated in favour of streams table and template
+  streams: StreamSpec[];
+  // streamTemplates: BundleTemplate[];
+
+  storiesHasEditReview: boolean;
+  storyTemplates: BundleTemplate[];
+};
+
 export interface Bookmark {
   label: string;
   link: string;
-}
-
-// deprecated
-export interface CmsMeta {
-  name: string;
-  logo: string;
-  helpUrl?: string;
-  hasAppPreview: boolean;
 }
 
 export interface UiConfig {
@@ -546,31 +572,6 @@ export type Subscription =
   | 'audience'
   | 'invitation'
   | 'page';
-
-// trackable settings should not be nested
-// no optional settings in the type definition
-export type CmsConfig = {
-  name: string;
-  logo: string;
-  helpUrl: string;
-  languages: LanguageSpecification[];
-  pagesTracking: string;
-  pagesSchemaVersion: number;
-  // any bespoke story or stream templates
-  bespokeTemplates: BundleTemplate[];
-
-  streams: StreamSpec[];
-  streamTemplates: BundleTemplate[];
-
-  storiesHasEditReview: boolean;
-  // will be deprecated in favour of stories table and template
-  stories: StorySpec[];
-  storyTemplates: BundleTemplate[];
-
-  subscriptions: Subscription[];
-  microcopySource: string;
-  hasAppPreview: boolean;
-};
 
 export interface BundleTemplate {
   id: string;

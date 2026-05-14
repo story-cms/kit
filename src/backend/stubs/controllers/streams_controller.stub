@@ -84,7 +84,7 @@ export default class StreamController {
   }
 
   public async create(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
     const stream = this.getStream(ctx);
 
     const service = new BundleService(stream.fields);
@@ -134,7 +134,7 @@ export default class StreamController {
   }
 
   public async destroy(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
     const id = Number(ctx.params.id);
     const drop = await Drop.findOrFail(id);
     try {
@@ -152,7 +152,7 @@ export default class StreamController {
   }
 
   public async update(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
 
     const id = Number(ctx.params.id);
     const drop = await Drop.findOrFail(id);

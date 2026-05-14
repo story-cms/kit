@@ -17,16 +17,15 @@ import providers from '#config/providers';
 export default class InvitationsController {
   
   public async get(ctx: HttpContext) {
-    const version: Version = cms.apiContextFrom(ctx).version;
-    const { apiVersion, locale } = version;
-    const service = new InvitationService({ apiVersion, locale });
+    const version = cms.versionFromQuery(ctx);
+    const service = new InvitationService(version);
     const invitations = await service.getInvitationItemsForClient();
 
     return { invitations };
   }
 
   public async index(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
     const service = new InvitationService(version);
     const invitations = await service.getInvitationItems();
 
@@ -55,7 +54,7 @@ export default class InvitationsController {
   }
 
   public async create(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
     const invitation = await Invitation.create({
       locale: version.locale,
       apiVersion: 1,
@@ -88,7 +87,7 @@ export default class InvitationsController {
   }
 
   public async destroy(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
     const id = Number(ctx.params.id);
     const invitation = await Invitation.findOrFail(id);
     try {
@@ -106,7 +105,7 @@ export default class InvitationsController {
   }
 
   public async update(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
     const data = ctx.request.all();
     const invitationValidator = new InvitationValidator(ctx);
     const validated = await invitationValidator.validate(data);

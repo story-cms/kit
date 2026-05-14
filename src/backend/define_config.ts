@@ -5,22 +5,18 @@ import type { CmsConfig } from '../types.js';
  */
 export function defineConfig(config: Partial<CmsConfig>): CmsConfig {
   return {
-    subscriptions: config.subscriptions || [
-      'story',
-      'stream',
-      'language',
-      'audience',
-      'invitation',
-      'page',
-    ],
     name: config.name || 'Journeys Studio',
-    hasAppPreview: config.hasAppPreview === undefined ? false : config.hasAppPreview,
-    helpUrl: config.helpUrl || 'https://journeys.helpscoutdocs.com/',
+
     logo:
       config.logo ||
       'https://res.cloudinary.com/journeys/image/upload/v1756295658/logo_g8k7tf.png',
 
+    helpUrl: config.helpUrl || 'https://journeys.helpscoutdocs.com/',
+
+    hasAppPreview: config.hasAppPreview === undefined ? false : config.hasAppPreview,
+
     microcopySource: config.microcopySource || '',
+
     languages: config.languages || [
       {
         locale: 'en',
@@ -30,15 +26,26 @@ export function defineConfig(config: Partial<CmsConfig>): CmsConfig {
       },
     ],
 
-    storiesHasEditReview:
-      config.storiesHasEditReview === undefined ? false : config.storiesHasEditReview,
-    stories: config.stories || [],
+    subscriptions: config.subscriptions || [
+      'story',
+      'stream',
+      'language',
+      'audience',
+      'invitation',
+      'page',
+    ],
 
-    streams: config.streams || [],
-
-    pagesSchemaVersion: config.pagesSchemaVersion || 1,
     pagesTracking:
       config.pagesTracking ||
       'utm_source=storyapp&utm_medium=referral&utm_campaign=page_menu',
+
+    bespokeTemplates: config.bespokeTemplates || [],
+
+    streams: config.streams || [],
+
+    storiesHasEditReview:
+      config.storiesHasEditReview === undefined ? false : config.storiesHasEditReview,
+
+    storyTemplates: config.storyTemplates || [],
   } satisfies CmsConfig;
 }

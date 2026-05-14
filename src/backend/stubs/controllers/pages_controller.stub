@@ -29,7 +29,7 @@ export default class PagesController {
   }
 
   public async index(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
     const service = new PageService(version, cms);
     const pages = await service.getPageItems();
 
@@ -57,10 +57,9 @@ export default class PagesController {
   }
 
   public async create(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
     const page = await Page.create({
-      locale: version.locale,
-      apiVersion: cms.config.pagesSchemaVersion,
+      ...version,
       order: 1,
       bundle: '{"group":1}',
       updatedBy: ctx.auth.user?.id,
@@ -76,7 +75,7 @@ export default class PagesController {
   }
 
   public async destroy(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
     const id = Number(ctx.params.id);
     const page = await Page.findOrFail(id);
     try {
@@ -94,7 +93,7 @@ export default class PagesController {
   }
 
   public async update(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
     const data = ctx.request.all();
     const pageValidator = new PageValidator(ctx);
     const validated = await pageValidator.validate(data);
@@ -125,7 +124,7 @@ export default class PagesController {
   }
 
   public async sort(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
 
     // use the service to sort the pages in memory
     const service = new PageService(version, cms);

@@ -68,7 +68,7 @@ export default class ChaptersController {
   }
 
   public async get(ctx: HttpContext) {
-    const { version } = cms.apiContextFrom(ctx);
+    const version = cms.versionFromQuery(ctx);
 
     const specifier = {
       ...version,
@@ -81,7 +81,7 @@ export default class ChaptersController {
   }
 
   public async range(ctx: HttpContext) {
-    const { version } = cms.apiContextFrom(ctx);
+    const version = cms.versionFromQuery(ctx);
 
     const page = ctx.request.qs()['page'] || 1;
 
