@@ -146,6 +146,7 @@ export async function configure(command: Configure) {
 
   await codemods.makeUsingStub(stubsRoot, 'commands/migrate.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/make_user.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'commands/seed_stories.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/bootstrap.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/mock.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/rest.stub', {});
@@ -159,6 +160,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/progress_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/model.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/helpers/cms_mock.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'tests/helpers/story_test_helper.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/cms_mock_example.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'ops/Dockerfile.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'ops/compose.stub', { appName: 'todo' });

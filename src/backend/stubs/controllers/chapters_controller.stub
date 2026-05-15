@@ -12,10 +12,12 @@ import {
   PreviewProps,
 } from '@story-cms/kit';
 import cms from '#services/cms';
+import StoryService from '#services/story_service';
 
 export default class ChaptersController {
   public async index(ctx: HttpContext) {
-    const { story, version } = cms.storyContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const { story, version } = await storyService.parsePath(ctx);
     if (story === undefined) return ctx.response.notFound();
 
     const service = new IndexService(story, cms);
@@ -35,7 +37,8 @@ export default class ChaptersController {
   }
 
   public async preview(ctx: HttpContext) {
-    const { story, version } = cms.storyContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const { story, version } = await storyService.parsePath(ctx);
     if (story === undefined) return ctx.response.notFound();
 
     const specifier = {

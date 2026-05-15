@@ -15,10 +15,12 @@ import {
 import cms from '#services/cms';
 import providers from '#config/providers';
 import { storyValidator } from '#validators/story_validator';
+import StoryService from '#services/story_service';
 
 export default class DraftsController {
   public async create(ctx: HttpContext) {
-    const { story, version } = cms.storyContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const { story, version } = await storyService.parsePath(ctx);
     if (story === undefined) return ctx.response.notFound();
 
     const indexService = new IndexService(story, cms);
@@ -49,7 +51,8 @@ export default class DraftsController {
   }
 
   public async edit(ctx: HttpContext) {
-    const { story, version } = cms.storyContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const { story, version } = await storyService.parsePath(ctx);
     if (story === undefined) return ctx.response.notFound();
 
     const specifier = {
@@ -118,7 +121,8 @@ export default class DraftsController {
 
   // Only saving the draft without performing any validation
   public async save(ctx: HttpContext) {
-    const { story, version } = cms.storyContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const { story, version } = await storyService.parsePath(ctx);
     if (!story) return ctx.response.notFound();
 
     try {
@@ -143,7 +147,8 @@ export default class DraftsController {
   }
 
   public async submit(ctx: HttpContext) {
-    const { story, version } = cms.storyContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const { story, version } = await storyService.parsePath(ctx);
     if (story === undefined) return ctx.response.notFound();
 
     const id = Number(ctx.params.id);
@@ -169,7 +174,8 @@ export default class DraftsController {
   }
 
   public async reject(ctx: HttpContext) {
-    const { version, story } = cms.storyContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const { story, version } = await storyService.parsePath(ctx);
     if (story === undefined) return ctx.response.notFound();
 
     const id = Number(ctx.params.id);
@@ -189,7 +195,8 @@ export default class DraftsController {
   }
 
   public async publish(ctx: HttpContext) {
-    const { story } = cms.storyContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const { story } = await storyService.parsePath(ctx);
     if (story === undefined) return ctx.response.notFound();
 
     const id = Number(ctx.params.id);
@@ -231,7 +238,8 @@ export default class DraftsController {
   }
 
   public async delete(ctx: HttpContext) {
-    const { story } = cms.storyContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const { story } = await storyService.parsePath(ctx);
     if (story === undefined) return ctx.response.notFound();
 
     const id = Number(ctx.params.id);

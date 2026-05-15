@@ -9,13 +9,11 @@ import {
   InvitationValidator,
   type InvitationEditProps,
   type InvitationIndexProps,
-  type Version,
 } from '@story-cms/kit';
 import cms from '#services/cms';
 import providers from '#config/providers';
 
 export default class InvitationsController {
-  
   public async get(ctx: HttpContext) {
     const version = cms.versionFromQuery(ctx);
     const service = new InvitationService(version);

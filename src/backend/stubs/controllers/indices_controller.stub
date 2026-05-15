@@ -4,15 +4,17 @@
 import type { HttpContext } from '@adonisjs/core/http';
 import cms from '#services/cms';
 import { IndexService } from '@story-cms/kit';
+import StoryService from '#services/story_service';
 
 export default class IndicesController {
   public async index(ctx: HttpContext) {
-    const { story, version } = cms.apiContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const parsed = await storyService.parseQuery(ctx);
 
-    if (!story) return ctx.response.notFound();
+    if (!parsed) return ctx.response.notFound();
 
-    const service = new IndexService(story, cms);
-    const idx = await service.groupedIndex(version);
+    const service = new IndexService(parsed.story, cms);
+    const idx = await service.groupedIndex(parsed.version);
     return {
       index: idx,
     };

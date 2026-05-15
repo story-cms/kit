@@ -1,24 +1,10 @@
 import { errors, HttpContext } from '@adonisjs/core/http';
-import type { CmsConfig, FieldSpec, StorySpec, StoryVersion } from '../../types';
-import Story from '../models/story';
-import StoryLocalisation from '../models/story_localisation';
+import type { CmsConfig, FieldSpec, StorySpec, StoryVersion } from '../../types.js';
+import Story from '../models/story.js';
+import StoryLocalisation from '../models/story_localisation.js';
 
 export default class StoryService {
   public constructor(protected readonly config: CmsConfig) {}
-
-  public async storyFromPath(ctx: HttpContext): Promise<StorySpec | undefined> {
-    const storyId = Number.parseInt(ctx.params.storyId);
-    const story = await Story.query().where('id', storyId).first();
-    if (!story) return undefined;
-
-    const localisation = await StoryLocalisation.query()
-      .where('storyId', storyId)
-      .where('locale', ctx.params.locale)
-      .first();
-    if (!localisation) return undefined;
-
-    return this.specFromStory(story, localisation);
-  }
 
   public async parsePath(ctx: HttpContext): Promise<{
     story: StorySpec | undefined;
@@ -35,35 +21,67 @@ export default class StoryService {
       locale: ctx.params.locale,
       storyId: story?.id,
     };
+
     return { story, version };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public async parseQuery(_: HttpContext): Promise<{
-    story: StorySpec | undefined;
-    version: StoryVersion;
-  }> {
-    throw new Error('Not implemented');
-    // if (this.#config.stories.length === 0) return undefined;
+  public async parseQuery(ctx: HttpContext): Promise<
+    | {
+        story: StorySpec;
+        version: StoryVersion;
+      }
+    | undefined
+  > {
+    const story = await this.storyFromQuery(ctx);
+    if (!story) return undefined;
 
-    // const defaultStory = this.#config.stories[0];
+    const version = <StoryVersion>{
+      apiVersion: 1,
+      locale: ctx.request.qs()['locale'] || this.config.languages[0].locale,
+      storyId: story.id,
+    };
 
-    // const storyId = ctx.request.qs()['storyId'];
-    // if (storyId !== undefined) {
-    //   const story = this.#config.stories.find((s) => s.id === Number(storyId));
-    //   if (story !== undefined) return story;
-    // }
+    const localisation = await StoryLocalisation.query()
+      .where('storyId', story.id)
+      .where('locale', version.locale)
+      .first();
+    if (!localisation) return undefined;
 
-    // let storylabel = ctx.request.qs()['story'];
-    // if (storylabel !== undefined) {
-    //   storylabel = storylabel.toLowerCase();
-    //   const story = this.#config.stories.find(
-    //     (s) => s.name.toLocaleLowerCase() === storylabel,
-    //   );
-    //   if (story !== undefined) return story;
-    // }
+    const spec = this.specFromStory(story, localisation);
 
-    // return defaultStory;
+    return { story: spec, version };
+  }
+
+  private async storyFromQuery(ctx: HttpContext): Promise<Story | undefined> {
+    const storyId = ctx.request.qs()['storyId'];
+    if (storyId !== undefined) {
+      const story = await Story.query().where('id', storyId).first();
+      if (story !== null) return story;
+    }
+
+    let storylabel = ctx.request.qs()['story'];
+    if (storylabel !== undefined) {
+      storylabel = storylabel.toLowerCase();
+      const story = await Story.query().where('slug', storylabel).first();
+
+      if (story !== null) return story;
+    }
+
+    return undefined;
+  }
+
+  private async storyFromPath(ctx: HttpContext): Promise<StorySpec | undefined> {
+    const storyId = Number.parseInt(ctx.params.storyId);
+    const story = await Story.query().where('id', storyId).first();
+    if (!story) return undefined;
+
+    const localisation = await StoryLocalisation.query()
+      .where('storyId', storyId)
+      .where('locale', ctx.params.locale)
+      .first();
+    if (!localisation) return undefined;
+
+    return this.specFromStory(story, localisation);
   }
 
   protected specFromStory(story: Story, localisation: StoryLocalisation): StorySpec {

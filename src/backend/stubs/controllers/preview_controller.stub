@@ -5,11 +5,15 @@ import type { HttpContext } from '@adonisjs/core/http';
 
 import cms from '#services/cms';
 import { Chapter, Draft } from '@story-cms/kit';
+import StoryService from '#services/story_service';
 
 export default class PreviewController {
   public async get(ctx: HttpContext) {
-    const { story, version } = cms.apiContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const parsed = await storyService.parseQuery(ctx);
+    if (!parsed) return ctx.response.notFound();
 
+    const { story, version } = parsed;
     const specifier = {
       storyId: story?.id,
       apiVersion: story?.schemaVersion,

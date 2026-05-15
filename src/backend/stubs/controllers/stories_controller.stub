@@ -2,8 +2,9 @@
   exports({ to: app.makePath('app/controllers/stories_controller.ts') })
 }}}
 import { HttpContext } from '@adonisjs/core/http';
-import { Index, StorySpec, StoryIndexItem } from '@story-cms/kit';
+import { Index, StoryIndexItem, Chapter } from '@story-cms/kit';
 import cms from '#services/cms';
+import Story from '#models/story';
 
 export default class StoriesController {
   public async index(ctx: HttpContext) {
@@ -32,24 +33,61 @@ export default class StoriesController {
 
   // TODO: move to service
   protected async galleryIndex(locale: string): Promise<StoryIndexItem[]> {
-    const stamp = new Date().toISOString();
     const indices = await Index.query().where('locale', locale);
-    return cms.config.stories.map((row: StorySpec) => {
-      const item: StoryIndexItem = {
-        id: row.id,
-        name: row.name,
-        description: '',
-        coverImage: row.coverImage,
-        chapterLimit: row.chapterLimit,
-        createdAt: stamp,
-        updatedAt: stamp,
-        draftCount: 0,
+
+    const storyModels = await Story.query()
+      .preload('localisations', (localisationsQuery) => {
+        localisationsQuery.where('locale', locale);
+      })
+      .orderBy('order', 'asc');
+
+    return storyModels
+      .filter((story) => story.localisations.length > 0)
+      .map((story) => {
+        const local = story.localisations[0];
+        const index = indices.find((i) => i.storyId === story.id);
+
+        return {
+          id: story.id,
+          name: local.title,
+          description: local.description,
+          coverImage: local.coverImage,
+          chapterLimit: story.chapterLimit,
+          createdAt: story.createdAt.toISO()!,
+          updatedAt: story.updatedAt.toISO()!,
+          draftCount: index?.draftsList.length ?? 0,
+        };
+      });
+  }
+
+  public async home(ctx: HttpContext) {
+    const locale = cms.localeFromQuery(ctx);
+    const chapters = await Chapter.query().where({ locale }).orderBy('number', 'asc');
+
+    const storyModels = await Story.query()
+      .preload('localisations', (localisationsQuery) => {
+        localisationsQuery.where('locale', locale);
+      })
+      .orderBy('order', 'asc');
+
+    const stories = storyModels.map((story: Story) => {
+      const local = story.localisations[0];
+      return {
+        id: story.id,
+        name: local.title,
+        coverImage: local.coverImage,
+        chapterLimit: story.chapterLimit,
+        chapterType: story.chapterType,
+        storyType: story.storyType,
+        description: local.description,
+        chapters: chapters
+          .filter((chapter) => chapter.storyId === story.id)
+          .map((ch: Chapter) => {
+            return { id: ch.number, ...ch.bundle };
+          }),
       };
-      const index = indices.find((i) => i.storyId === row.id);
-      if (index === undefined) return item;
-      const draftCount = index.draftsList.length;
-      item.draftCount = draftCount;
-      return item;
     });
+
+    return { stories };
   }
 }

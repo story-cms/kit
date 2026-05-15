@@ -13,6 +13,7 @@ import {
 } from '@story-cms/kit';
 import { draftOne } from '../mock.js';
 import { setupMockCms } from '#tests/helpers/cms_mock';
+import { seedTestStory } from '#tests/helpers/story_test_helper';
 
 test.group('Draft GET', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction());
@@ -24,6 +25,7 @@ test.group('Draft GET', (group) => {
 
   test('Authenticated user should be able to render draft', async ({ client }) => {
     setupMockCms();
+    await seedTestStory();
     const user = await UserFactory.create();
 
     await DraftFactory.merge({
@@ -38,6 +40,7 @@ test.group('Draft GET', (group) => {
 
   test('If the draft is empty, it should be populated', async ({ assert, client }) => {
     setupMockCms();
+    await seedTestStory();
     const user = await UserFactory.create();
 
     const chapter = await ChapterFactory.merge({
@@ -62,6 +65,8 @@ test.group('Draft GET', (group) => {
   });
 
   test('HTTP error if non existing Chapter is requested', async ({ client }) => {
+    setupMockCms();
+    await seedTestStory();
     const user = await UserFactory.create();
 
     const response = await client.get('/en/story/1/draft/1/edit').loginAs(user);
@@ -88,6 +93,7 @@ test.group('Draft DELETE', (group) => {
     client,
   }) => {
     setupMockCms();
+    await seedTestStory();
     const user = await UserFactory.create();
 
     const draft = await DraftFactory.merge({
@@ -121,6 +127,8 @@ test.group('Draft updating', (group) => {
     assert,
     client,
   }) => {
+    setupMockCms();
+    await seedTestStory();
     const user = await UserFactory.create();
 
     const draft = await DraftFactory.merge({
@@ -162,6 +170,7 @@ test.group('Draft updating', (group) => {
   test('Drafts can be submitted', async ({ assert, client }) => {
     // Set up mock CMS with default test config
     setupMockCms();
+    await seedTestStory();
     const user = await UserFactory.create();
 
     const draft = await DraftFactory.merge({
@@ -198,6 +207,8 @@ test.group('Draft updating', (group) => {
   }).skip();
 
   test('Submitted drafts can be rejected', async ({ assert, client }) => {
+    setupMockCms();
+    await seedTestStory();
     const user = await UserFactory.create();
 
     const draft = await DraftFactory.merge({
@@ -225,6 +236,7 @@ test.group('Draft updating', (group) => {
 
   test('Drafts can be published to new chapters', async ({ assert, client }) => {
     setupMockCms();
+    await seedTestStory();
     const user = await UserFactory.create();
 
     const draft = await DraftFactory.merge({
