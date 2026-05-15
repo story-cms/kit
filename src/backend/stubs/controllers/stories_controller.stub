@@ -2,9 +2,8 @@
   exports({ to: app.makePath('app/controllers/stories_controller.ts') })
 }}}
 import { HttpContext } from '@adonisjs/core/http';
-import { Index, StoryIndexItem, Chapter } from '@story-cms/kit';
+import { Index, StoryIndexItem, Chapter, Story } from '@story-cms/kit';
 import cms from '#services/cms';
-import Story from '#models/story';
 
 export default class StoriesController {
   public async index(ctx: HttpContext) {

@@ -10,9 +10,9 @@ import {
   StoryIndexProps,
   Chapter,
   PreviewProps,
+  StoryService,
 } from '@story-cms/kit';
 import cms from '#services/cms';
-import StoryService from '#services/story_service';
 
 export default class ChaptersController {
   public async index(ctx: HttpContext) {

@@ -4,8 +4,7 @@
 import type { HttpContext } from '@adonisjs/core/http';
 
 import cms from '#services/cms';
-import { Chapter, Draft } from '@story-cms/kit';
-import StoryService from '#services/story_service';
+import { Chapter, Draft, StoryService } from '@story-cms/kit';
 
 export default class PreviewController {
   public async get(ctx: HttpContext) {

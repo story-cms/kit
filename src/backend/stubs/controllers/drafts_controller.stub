@@ -11,11 +11,11 @@ import {
   DraftService,
   IndexService,
   type DraftEditProps,
+  StoryService,
 } from '@story-cms/kit';
 import cms from '#services/cms';
 import providers from '#config/providers';
 import { storyValidator } from '#validators/story_validator';
-import StoryService from '#services/story_service';
 
 export default class DraftsController {
   public async create(ctx: HttpContext) {

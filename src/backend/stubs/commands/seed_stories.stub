@@ -1,10 +1,9 @@
 {{{
   exports({ to: app.commandsPath('seed_stories.ts') })
 }}}
-import Story from '#models/story';
 import { BaseCommand } from '@adonisjs/core/ace';
 import type { CommandOptions } from '@adonisjs/core/types/ace';
-import { StorySpec } from '@story-cms/kit';
+import { StorySpec, Story } from '@story-cms/kit';
 import { DateTime } from 'luxon';
 
 export default class SeedStories extends BaseCommand {
