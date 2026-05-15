@@ -1,8 +1,7 @@
 {{{ 
   exports({ to: app.makePath('tests/helpers/story_test_helper.ts') }) 
 }}}
-import Story from '#models/story';
-import { StoryFactory } from '#database/factories/story_factory';
+import { Story, StoryFactory } from '@story-cms/kit';
 
 export async function seedTestStory(id = 1) {
   const existing = await Story.find(id);

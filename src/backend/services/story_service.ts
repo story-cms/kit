@@ -3,7 +3,7 @@ import type { CmsConfig, FieldSpec, StorySpec, StoryVersion } from '../../types.
 import Story from '../models/story.js';
 import StoryLocalisation from '../models/story_localisation.js';
 
-export default class StoryService {
+export class StoryService {
   public constructor(protected readonly config: CmsConfig) {}
 
   public async parsePath(ctx: HttpContext): Promise<{
