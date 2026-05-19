@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import { BaseModel, column } from '@adonisjs/lucid/orm';
-import type { JSON, StoryResource, StorySection } from '../../types.js';
+import type { JSON, StorySection } from '../../types.js';
 
 const parseJsonColumn = <T>(value: T | string | null | undefined, fallback: T): T => {
   if (value === null || value === undefined) return fallback;
@@ -37,9 +37,9 @@ export default class StoryLocalisation extends BaseModel {
 
   @column({
     prepare: (value) => prepareJsonColumn(value),
-    consume: (value) => parseJsonColumn(value, [] as JSON<StoryResource[]>),
+    consume: (value) => parseJsonColumn(value, [] as JSON<string[]>),
   })
-  declare resources: JSON<StoryResource[]>;
+  declare resources: JSON<string[]>;
 
   @column()
   declare updatedBy: number | null;

@@ -98,7 +98,7 @@ export default class extends BaseSchema {
         .jsonb('resources')
         .notNullable()
         .defaultTo('[]')
-        .comment('serialised list of story resources');
+        .comment('serialised list of resource IDs');
 
       table.integer('updated_by').unsigned().references('users.id');
       table.timestamp('created_at');
