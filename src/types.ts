@@ -29,6 +29,8 @@ export interface Version {
   locale: string;
 }
 
+export type VisibilityType = 'public' | 'guests' | 'leaders';
+
 /// ----------------------------------------------------
 ///  fields
 /// ----------------------------------------------------
@@ -148,32 +150,22 @@ export interface TextBundle {
 }
 
 export interface VideoBundle {
-  videoUrl: string;
-  imageUrl?: string;
+  video: { url: string };
 }
 
 export interface LinkBundle {
   infoUrl: string;
-  imageUrl?: string;
 }
+
+export type ResourceType = 'text' | 'video' | 'info_link';
+export type ResourceBundle = TextBundle | VideoBundle | LinkBundle;
 
 /// ----------------------------------------------------
 ///  stories
 /// ----------------------------------------------------
 
-export interface StoryResource {
-  id: string;
-  title: string;
-  type: string;
-  visibility: string;
-  label?: string;
-  url?: string;
-  description?: string;
-  imageUrl?: string;
-}
-
 export interface StorySection {
-  id: string;
+  id: string; // uuid
   title: string;
   description?: string;
 }

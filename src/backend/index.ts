@@ -17,6 +17,7 @@ export { default as Preference } from './models/preference.js';
 export { default as Config } from './models/config.js';
 export { default as Story } from './models/story.js';
 export { default as StoryLocalisation } from './models/story_localisation.js';
+export { default as Resource } from './models/resource.js';
 export * from './factories/drop_factory.js';
 export * from './factories/draft_factory.js';
 export * from './factories/index_factory.js';

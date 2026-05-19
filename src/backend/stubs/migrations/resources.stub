@@ -1,0 +1,58 @@
+{{{
+  exports({
+    to: app.makePath(migration.folder, migration.fileName)
+  })
+}}}
+import { BaseSchema } from '@adonisjs/lucid/schema';
+
+export default class extends BaseSchema {
+  protected tableName = 'resources';
+
+  async up() {
+    this.schema.createTable(this.tableName, (table) => {
+      // uuid generation supported in Postgres 13 and up
+      table.uuid('id').primary().defaultTo(this.raw('gen_random_uuid()'))
+
+      table
+        .string('locale', 15)
+        .notNullable()
+        .comment('IETF BCP 47 language tag like en-US or zh-Hans');
+
+      table.boolean('is_published').notNullable().defaultTo(false);
+
+      table
+        .string('visibility', 255)
+        .notNullable()
+        .defaultTo('public')
+        .comment('public, guests, leaders');
+
+      table.string('title').notNullable();
+
+      table.text('description').nullable();
+
+      table.string('image_url').nullable().comment('url to the resource image');
+
+      table.string('label').nullable();
+
+      table
+        .string('type', 255)
+        .notNullable()
+        .comment('Text, Video, or InfoLink');
+
+      table
+        .jsonb('bundle')
+        .notNullable()
+        .defaultTo('{}')
+        .comment('serialised type-specific content');
+
+      table.integer('updated_by').unsigned().references('users.id');
+
+      table.timestamp('created_at', { useTz: true });
+      table.timestamp('updated_at', { useTz: true });
+    });
+  }
+
+  async down() {
+    this.schema.dropTable(this.tableName);
+  }
+}
