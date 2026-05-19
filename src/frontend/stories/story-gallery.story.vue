@@ -28,6 +28,7 @@ const sampleStories: StoryIndexItem[] = [
     coverImage:
       'https://res.cloudinary.com/journeys/image/upload/v1756123453/alabaster-co-rlb3upCBLck-unsplash_emiapj.jpg',
     chapterLimit: 42,
+    isPublished: true,
     createdAt: '2024-01-15T10:30:00Z',
     updatedAt: '2024-03-20T14:45:00Z',
     draftCount: 5,
@@ -40,6 +41,7 @@ const sampleStories: StoryIndexItem[] = [
     coverImage:
       'https://res.cloudinary.com/journeys/image/upload/v1756123316/Acts_ggpfgy.webp',
     chapterLimit: 28,
+    isPublished: true,
     createdAt: '2024-02-10T09:15:00Z',
     updatedAt: '2024-03-18T16:20:00Z',
     draftCount: 3,
@@ -52,6 +54,7 @@ const sampleStories: StoryIndexItem[] = [
     coverImage:
       'https://res.cloudinary.com/journeys/image/upload/v1756122407/christ-chaos-header_yqrufy_lzmfjt.jpg',
     chapterLimit: 16,
+    isPublished: false,
     createdAt: '2024-01-25T11:00:00Z',
     updatedAt: '2024-03-15T13:30:00Z',
     draftCount: 2,

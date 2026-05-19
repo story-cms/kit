@@ -34,6 +34,9 @@ export default class Story extends BaseModel {
   @column()
   declare order: number;
 
+  @column()
+  declare isPublished: boolean;
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime;
 

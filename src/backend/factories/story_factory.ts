@@ -14,6 +14,7 @@ export const StoryFactory = factory
       slug: faker.lorem.slug(),
       template: 'devotion',
       order: faker.number.int(10),
+      isPublished: true,
     };
   })
   .relation('localisations', () => StoryLocalisationFactory)

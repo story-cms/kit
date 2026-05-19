@@ -29,6 +29,7 @@ export default class SeedStories extends BaseCommand {
         chapterType: spec.chapterType,
         storyType: spec.storyType,
         chapterLimit: spec.chapterLimit,
+        isPublished: spec.isPublished ?? true,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       });
@@ -58,4 +59,5 @@ type StoryImportSpec = Omit<StorySpec, 'schemaVersion' | 'fields' | 'parts'> & {
   description: string;
   template: string;
   order: number;
+  isPublished?: boolean;
 };

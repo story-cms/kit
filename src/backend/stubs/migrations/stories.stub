@@ -1,0 +1,113 @@
+{{{
+  exports({
+    to: app.makePath(migration.folder, migration.fileName)
+  })
+}}}
+import { BaseSchema } from '@adonisjs/lucid/schema';
+
+export default class extends BaseSchema {
+  protected tableName = 'stories';
+  protected localTableName = 'story_localisations';
+
+  async up() {
+    this.schema.createTable(this.tableName, (table) => {
+      table.increments('id');
+
+      table.boolean('is_published').notNullable().defaultTo(false);
+
+      table
+        .string('slug')
+        .notNullable()
+        .comment('unique handle for referencing the story');
+
+      table.string('tags').nullable().comment('comma-separated list of tags');
+
+      table
+        .integer('chapter_limit')
+        .notNullable()
+        .defaultTo(10)
+        .comment('the maximum number of chapters in the story');
+
+      table
+        .string('story_type', 255)
+        .notNullable()
+        .defaultTo('Story')
+        .comment(
+          'group name for chapters, e.g. story, edition, book, course, journey, guide, module etc.',
+        );
+
+      table
+        .string('chapter_type', 255)
+        .notNullable()
+        .defaultTo('Chapter')
+        .comment(
+          'name of basic structured content type, e.g. chapter, day, devotion, episode, lesson, step etc.',
+        );
+
+      table
+        .string('section_type', 255)
+        .nullable()
+        .comment(
+          'name of content sections type, e.g. part, section, season, phase, level etc.',
+        );
+
+      table
+        .string('visibility', 255)
+        .notNullable()
+        .defaultTo('public')
+        .comment('public, guests, leaders');
+
+      table
+        .string('template')
+        .notNullable()
+        .comment('template identifier for the story content structure');
+
+      table
+        .integer('order')
+        .notNullable()
+        .defaultTo(1)
+        .comment('the sequential order of the story in the collection');
+
+      table.timestamp('created_at');
+      table.timestamp('updated_at');
+    });
+
+    // ---------------------------------------
+    // story_meta
+    // ---------------------------------------
+    this.schema.createTable(this.localTableName, (table) => {
+      table.increments('id');
+
+      table.string('locale', 15).notNullable();
+
+      table.integer('story_id').unsigned().references('stories.id');
+
+      table.string('title').notNullable();
+
+      table.string('cover_image').nullable().comment('url to the cover image');
+
+      table.text('description').nullable();
+
+      table
+        .jsonb('sections')
+        .notNullable()
+        .defaultTo('[]')
+        .comment('serialised list of sections or parts');
+
+      table
+        .jsonb('resources')
+        .notNullable()
+        .defaultTo('[]')
+        .comment('serialised list of story resources');
+
+      table.integer('updated_by').unsigned().references('users.id');
+      table.timestamp('created_at');
+      table.timestamp('updated_at');
+    });
+  }
+
+  async down() {
+    this.schema.dropTable(this.localTableName);
+    this.schema.dropTable(this.tableName);
+  }
+}

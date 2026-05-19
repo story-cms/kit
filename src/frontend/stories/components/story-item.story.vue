@@ -54,6 +54,7 @@ const storyData: StoryIndexItem = {
   coverImage:
     'https://res.cloudinary.com/journeys/image/upload/v1756403499/alabaster-co-rlb3upCBLck-unsplash_nfp13e.jpg',
   chapterLimit: 21,
+  isPublished: true,
   draftCount: 0,
   createdAt: '2024-01-01T00:00:00Z',
   updatedAt: '2024-01-01T00:00:00Z',
@@ -67,6 +68,7 @@ const storyWithDrafts = {
   coverImage:
     'https://res.cloudinary.com/journeys/image/upload/v1756403499/alabaster-co-rlb3upCBLck-unsplash_nfp13e.jpg',
   chapterLimit: 28,
+  isPublished: true,
   draftCount: 5,
   createdAt: '2024-01-01T00:00:00Z',
   updatedAt: '2024-01-01T00:00:00Z',
@@ -80,6 +82,7 @@ const storyWithLongDescription = {
   coverImage:
     'https://res.cloudinary.com/journeys/image/upload/v1756403499/alabaster-co-rlb3upCBLck-unsplash_nfp13e.jpg',
   chapterLimit: 22,
+  isPublished: false,
   draftCount: 3,
   createdAt: '2024-01-01T00:00:00Z',
   updatedAt: '2024-01-01T00:00:00Z',

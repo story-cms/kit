@@ -43,6 +43,7 @@ async function addMigrations(command: Configure, codemods: Codemods) {
     'preferences',
     'invitations',
     'configs',
+    'stories',
   ];
 
   const path = command.app.migrationsPath();

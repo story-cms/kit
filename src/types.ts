@@ -140,6 +140,24 @@ export interface StreamEditProps {
 }
 
 /// ----------------------------------------------------
+///  resources
+/// ----------------------------------------------------
+
+export interface TextBundle {
+  content: string;
+}
+
+export interface VideoBundle {
+  videoUrl: string;
+  imageUrl?: string;
+}
+
+export interface LinkBundle {
+  infoUrl: string;
+  imageUrl?: string;
+}
+
+/// ----------------------------------------------------
 ///  stories
 /// ----------------------------------------------------
 
@@ -178,6 +196,7 @@ export interface StoryIndexItem {
   description: string;
   coverImage: string;
   chapterLimit: number;
+  isPublished: boolean;
   createdAt: string;
   updatedAt: string;
   draftCount: number;
@@ -238,6 +257,7 @@ export type StoryMeta = {
   name: string;
   storyType: string;
   chapterType: string;
+  isPublished: boolean;
   createdAt: string;
   updatedAt: string;
 };

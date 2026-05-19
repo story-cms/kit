@@ -52,6 +52,7 @@ export default class StoriesController {
           description: local.description,
           coverImage: local.coverImage,
           chapterLimit: story.chapterLimit,
+          isPublished: story.isPublished,
           createdAt: story.createdAt.toISO()!,
           updatedAt: story.updatedAt.toISO()!,
           draftCount: index?.draftsList.length ?? 0,
