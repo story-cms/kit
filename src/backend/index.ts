@@ -27,6 +27,7 @@ export * from './factories/story_factory.js';
 export * from './factories/story_localisation_factory.js';
 export * from './factories/invitation_factory.js';
 export * from './factories/user_factory.js';
+export * from './factories/resource_factory.js';
 export * from './services/helpers.js';
 export * from './services/ai_service.js';
 export * from './services/analytics_service.js';
