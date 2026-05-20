@@ -2,6 +2,7 @@ import { DateTime } from 'luxon';
 import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm';
 import type { HasMany } from '@adonisjs/lucid/types/relations';
 import StoryLocalisation from './story_localisation.js';
+import { StoryFunctional } from '../../types.js';
 
 export default class Story extends BaseModel {
   @column({ isPrimary: true })
@@ -45,4 +46,22 @@ export default class Story extends BaseModel {
 
   @hasMany(() => StoryLocalisation)
   declare localisations: HasMany<typeof StoryLocalisation>;
+
+  public get functional(): StoryFunctional {
+    return {
+      id: this.id,
+      tags: this.tags,
+      chapterLimit: this.chapterLimit,
+      storyType: this.storyType,
+      chapterType: this.chapterType,
+      sectionType: this.sectionType,
+      visibility: this.visibility,
+      slug: this.slug,
+      template: this.template,
+      order: this.order,
+      isPublished: this.isPublished,
+      createdAt: this.createdAt.toString(),
+      updatedAt: this.updatedAt.toString(),
+    };
+  }
 }
