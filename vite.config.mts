@@ -1,16 +1,29 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import dts from 'vite-plugin-dts';
+import fs from 'node:fs';
 import path from 'node:path';
+
+const uiTypesEntryPath = path.resolve(__dirname, 'dist/frontend/main.d.ts');
+
+/** Re-export generated declarations at the same path as the JS entry (main.js). */
+function uiTypesEntry() {
+  return {
+    name: 'ui-types-entry',
+    closeBundle() {
+      fs.writeFileSync(uiTypesEntryPath, "export * from './src/frontend/index';\n");
+    },
+  };
+}
 
 // TODO: https://github.com/vitejs/vite/discussions/8483#discussioncomment-13411070
 export default defineConfig({
   plugins: [
     vue(),
     dts({
-      insertTypesEntry: true,
       tsconfigPath: 'tsconfig.frontend.json',
     }),
+    uiTypesEntry(),
   ],
   build: {
     outDir: 'dist/frontend',
