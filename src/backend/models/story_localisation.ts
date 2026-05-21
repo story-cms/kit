@@ -50,3 +50,11 @@ export default class StoryLocalisation extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime;
 }
+
+export const emptyTranslation: Partial<StoryLocalisation> = {
+  title: '',
+  coverImage: '',
+  description: '',
+  sections: [],
+  resources: [],
+};

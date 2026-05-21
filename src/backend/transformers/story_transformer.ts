@@ -1,34 +1,21 @@
 import { BaseTransformer } from '@adonisjs/core/transformers';
 import Story from '../models/story';
-import StoryLocalisation from '../models/story_localisation';
-import { StorySpec } from '../../types';
+import { emptyTranslation } from '../models/story_localisation';
 
 export class StoryTransformer extends BaseTransformer<Story> {
   toObject() {
     return this.omit(this.resource, ['order', 'localisations']);
   }
 
-  asSpec() {
-    const localisation = this.resource.localisations[0] ?? emptyLocalisation;
-    return {
-      ...this.toObject(),
-      name: localisation.title,
-      coverImage: localisation.coverImage,
-      sections: localisation.sections,
-      schemaVersion: 1,
-      fields: this.resource.$sideloaded.fields,
-    } satisfies StorySpec;
-  }
-
   forStoryEdit() {
     const target =
       this.resource.localisations.find(
-        (localisation) => localisation.locale === this.resource.$sideloaded.targetlocale,
-      ) ?? emptyLocalisation;
+        (localisation) => localisation.locale === this.resource.$sideloaded.targetLocale,
+      ) ?? emptyTranslation;
     const source =
       this.resource.localisations.find(
-        (localisation) => localisation.locale === this.resource.$sideloaded.sourcelocale,
-      ) ?? emptyLocalisation;
+        (localisation) => localisation.locale === this.resource.$sideloaded.sourceLocale,
+      ) ?? emptyTranslation;
     return {
       model: {
         ...this.pick(this.resource, [
@@ -65,17 +52,3 @@ export class StoryTransformer extends BaseTransformer<Story> {
     };
   }
 }
-
-const emptyLocalisation: Partial<StoryLocalisation> = {
-  title: '',
-  coverImage: '',
-  description: '',
-  sections: [],
-  resources: [],
-};
-
-//   localisations: this.resource.localisations.map((localisation) => ({
-//   ...this.pick(localisation, ['locale', 'title', 'coverImage', 'description']),
-//   sections: localisation.sections,
-//   resources: localisation.resources,
-// })),
