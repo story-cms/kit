@@ -1,13 +1,26 @@
 import { BaseTransformer } from '@adonisjs/core/transformers';
 import Story from '../models/story';
 import StoryLocalisation from '../models/story_localisation';
+import { StorySpec } from '../../types';
 
 export class StoryTransformer extends BaseTransformer<Story> {
   toObject() {
     return this.omit(this.resource, ['order', 'localisations']);
   }
 
-  async forStoryEdit() {
+  asSpec() {
+    const localisation = this.resource.localisations[0] ?? emptyLocalisation;
+    return {
+      ...this.toObject(),
+      name: localisation.title,
+      coverImage: localisation.coverImage,
+      sections: localisation.sections,
+      schemaVersion: 1,
+      fields: this.resource.$sideloaded.fields,
+    } satisfies StorySpec;
+  }
+
+  forStoryEdit() {
     const target =
       this.resource.localisations.find(
         (localisation) => localisation.locale === this.resource.$sideloaded.targetlocale,
