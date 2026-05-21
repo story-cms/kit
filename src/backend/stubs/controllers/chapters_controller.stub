@@ -21,17 +21,15 @@ export default class ChaptersController {
     if (story === undefined) return ctx.response.notFound();
 
     const service = new IndexService(story, cms);
-
     const addStatus: AddStatus = await service.getAddStatus(version);
     const index = await service.getItems(version);
-    const shared = await cms.sharedProps(ctx);
+    const storyIsBespoke = false;  // TODO: implement this
     const props: StoryIndexProps = {
       index,
       addStatus,
       story,
-      ...shared,
+      canEditStory: !storyIsBespoke,
     };
-
     // @ts-expect-error Inertia page name
     return ctx.inertia.render('StoryIndex', props);
   }
@@ -55,15 +53,12 @@ export default class ChaptersController {
       number: chapter.number,
     });
 
-    const shared = await cms.sharedProps(ctx);
-
     const props: PreviewProps = {
       chapter: chapter.meta,
       bundleView: bundleView,
       title: chapter.index.title,
       bundle: chapter.bundle,
       story,
-      ...shared,
     };
 
     // @ts-expect-error Inertia page name

@@ -2,16 +2,16 @@
   exports({ to: app.makePath('app/controllers/stories_controller.ts') })
 }}}
 import { HttpContext } from '@adonisjs/core/http';
-import { Index, StoryIndexItem, Chapter, Story } from '@story-cms/kit';
+import { Chapter, Story, StoryService } from '@story-cms/kit';
 import cms from '#services/cms';
 
 export default class StoriesController {
   public async index(ctx: HttpContext) {
-    const stories = await this.galleryIndex(ctx.params.locale);
-    const shared = await cms.sharedProps(ctx);
+    const storyService = new StoryService(cms.config);
+    const stories = await storyService.galleryIndex(ctx);
 
     // @ts-expect-error Inertia page name
-    return ctx.inertia.render('StoryGallery', { stories, ...shared });
+    return ctx.inertia.render('StoryGallery', { stories });
   }
 
   public async create(ctx: HttpContext) {
@@ -19,7 +19,12 @@ export default class StoriesController {
   }
 
   public async edit(ctx: HttpContext) {
-    return ctx.response.redirect().back();
+    const storyService = new StoryService(cms.config);
+    const props = await storyService.editProps(ctx);
+    if (!props) return ctx.response.notFound();
+
+    // @ts-expect-error Inertia page name
+    return ctx.inertia.render('story_edit', props);
   }
 
   public async update(ctx: HttpContext) {
@@ -28,36 +33,6 @@ export default class StoriesController {
 
   public async delete(ctx: HttpContext) {
     return ctx.response.redirect().back();
-  }
-
-  // TODO: move to service
-  protected async galleryIndex(locale: string): Promise<StoryIndexItem[]> {
-    const indices = await Index.query().where('locale', locale);
-
-    const storyModels = await Story.query()
-      .preload('localisations', (localisationsQuery) => {
-        localisationsQuery.where('locale', locale);
-      })
-      .orderBy('order', 'asc');
-
-    return storyModels
-      .filter((story) => story.localisations.length > 0)
-      .map((story) => {
-        const local = story.localisations[0];
-        const index = indices.find((i) => i.storyId === story.id);
-
-        return {
-          id: story.id,
-          name: local.title,
-          description: local.description,
-          coverImage: local.coverImage,
-          chapterLimit: story.chapterLimit,
-          isPublished: story.isPublished,
-          createdAt: story.createdAt.toISO()!,
-          updatedAt: story.updatedAt.toISO()!,
-          draftCount: index?.draftsList.length ?? 0,
-        };
-      });
   }
 
   public async home(ctx: HttpContext) {

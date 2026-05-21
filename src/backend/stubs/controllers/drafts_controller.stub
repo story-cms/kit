@@ -10,8 +10,8 @@ import {
   Draft,
   DraftService,
   IndexService,
-  type DraftEditProps,
   StoryService,
+  type DraftEditProps,
 } from '@story-cms/kit';
 import cms from '#services/cms';
 import providers from '#config/providers';
@@ -85,8 +85,6 @@ export default class DraftsController {
     const indexService = new IndexService(story, cms);
     await indexService.buildIndex(version);
 
-    const shared = await cms.sharedProps(ctx);
-
     const data: DraftEditProps = {
       draft: draft.meta,
       bundle: draft!.bundle,
@@ -94,7 +92,6 @@ export default class DraftsController {
       providers,
       story,
       hasEditReview: cms.config.storiesHasEditReview,
-      ...shared,
     };
 
     const isTranslation = version.locale !== cms.sourceLocale;
@@ -115,7 +112,6 @@ export default class DraftsController {
     return ctx.inertia.render('TranslationIndex', {
       ...data,
       source: source?.bundle,
-      ...shared,
     });
   }
 

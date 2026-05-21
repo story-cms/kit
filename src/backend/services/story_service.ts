@@ -1,3 +1,4 @@
+import config from '@adonisjs/core/services/config';
 import { errors, HttpContext } from '@adonisjs/core/http';
 import Index from '../models/index.js';
 import Story from '../models/story.js';
@@ -5,9 +6,11 @@ import { emptyTranslation } from '../models/story_localisation.js';
 import type {
   CmsConfig,
   FieldSpec,
+  StoryEditProps,
   StoryIndexItem,
   StorySpec,
   StoryVersion,
+  Providers,
 } from '../../types.js';
 
 export class StoryService {
@@ -21,6 +24,53 @@ export class StoryService {
     }
 
     return { storyId: Number.parseInt(ctx.params.storyId), locale: ctx.params.locale };
+  }
+
+  public async editProps(ctx: HttpContext): Promise<StoryEditProps | undefined> {
+    const params = this.paramsFromPath(ctx);
+    if (!params) return undefined;
+
+    const sourceLocale = this.config.languages[0].locale;
+    const { storyId, locale } = params;
+
+    const story = await Story.query()
+      .where('id', storyId)
+      .preload('localisations', (localisationsQuery) => {
+        localisationsQuery.whereIn('locale', [locale, sourceLocale]);
+      })
+      .first();
+
+    if (!story) return undefined;
+
+    const hasNoContent = await this.hasNoContent(storyId);
+
+    const target =
+      story.localisations.find((localisation) => localisation.locale === locale) ??
+      emptyTranslation;
+    const source =
+      story.localisations.find((localisation) => localisation.locale === sourceLocale) ??
+      emptyTranslation;
+
+    return {
+      model: {
+        id: story.id,
+        tags: story.tags ?? null,
+        chapterLimit: story.chapterLimit,
+        storyType: story.storyType,
+        chapterType: story.chapterType,
+        sectionType: story.sectionType ?? null,
+        visibility: story.visibility,
+        slug: story.slug,
+        template: story.template,
+        isPublished: story.isPublished,
+        createdAt: story.createdAt.toISO()!,
+        updatedAt: story.updatedAt.toISO()!,
+        ...this.localisationFields(target),
+      },
+      source: this.localisationFields(source),
+      isNew: hasNoContent,
+      providers: config.get<Providers>('providers')!,
+    };
   }
 
   public async parsePath(ctx: HttpContext): Promise<{
@@ -97,6 +147,15 @@ export class StoryService {
     });
   }
 
+  private async hasNoContent(id: number): Promise<boolean> {
+    const index = await Index.query().where('storyId', id).first();
+    if (index === null) return true;
+    if (index.draftsList.length > 0) return false;
+    if (index.publishedList.length > 0) return false;
+
+    return true;
+  }
+
   // TODO: test
   private async storyFromQuery(ctx: HttpContext): Promise<Story | undefined> {
     const storyId = ctx.request.qs()['storyId'];
@@ -147,6 +206,25 @@ export class StoryService {
       schemaVersion: 1,
       fields: this.fieldsFromTemplate(story.template),
       sections: localisation.sections,
+    };
+  }
+
+  private localisationFields(local: {
+    title?: string;
+    coverImage?: string;
+    description?: string;
+    sections?: StoryEditProps['model']['sections'];
+    resources?: string[];
+  }): Pick<
+    StoryEditProps['model'],
+    'title' | 'coverImage' | 'description' | 'sections' | 'resources'
+  > {
+    return {
+      title: local.title ?? '',
+      coverImage: local.coverImage ?? '',
+      description: local.description ?? '',
+      sections: local.sections ?? [],
+      resources: local.resources ?? [],
     };
   }
 

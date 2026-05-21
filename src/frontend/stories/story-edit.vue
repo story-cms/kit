@@ -98,7 +98,7 @@ import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
 import { useSharedStore, useWidgetsStore, useModelStore } from '../store';
 import MarkdownField from '../fields/markdown-field.vue';
-import { ResponseStatus, StoryEditProps } from '../../types';
+import { ResponseStatus, JournaStoryEditProps } from '../../types';
 import LabelButton from '../shared/label-button.vue';
 import MetaMetaBox from './components/meta-meta-box.vue';
 import ActionButton from '../shared/action-button.vue';
@@ -108,7 +108,7 @@ import NumberField from '../fields/number-field.vue';
 import TagField from '../fields/tag-field.vue';
 import ContentSidebar from '../shared/content-sidebar.vue';
 
-const props = defineProps<StoryEditProps & SharedPageProps>();
+const props = defineProps<JournaStoryEditProps & SharedPageProps>();
 const shared = useSharedStore();
 shared.setFromProps(props);
 shared.clearErrors();

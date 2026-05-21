@@ -255,8 +255,39 @@ export type StoryMeta = {
   updatedAt: string;
 };
 
-export interface StoryEditProps {
+export interface JournaStoryEditProps {
   story: StoryMeta;
+  providers: Providers;
+  isNew: boolean;
+}
+
+export interface StoryEditProps {
+  model: {
+    id: number;
+    tags: string | null;
+    chapterLimit: number;
+    storyType: string;
+    chapterType: string;
+    sectionType: string | null;
+    visibility: string;
+    slug: string;
+    template: string;
+    isPublished: boolean;
+    createdAt: string;
+    updatedAt: string;
+    title: string;
+    coverImage: string;
+    description: string;
+    sections: StorySection[];
+    resources: string[];
+  };
+  source: {
+    title: string;
+    coverImage: string;
+    description: string;
+    sections: StorySection[];
+    resources: string[];
+  };
   isNew: boolean;
   providers: Providers;
 }
