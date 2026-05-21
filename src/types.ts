@@ -170,22 +170,6 @@ export interface StorySection {
   description?: string;
 }
 
-export interface StoryFunctional {
-  id: number;
-  tags: string;
-  chapterLimit: number;
-  storyType: string;
-  chapterType: string;
-  sectionType: string;
-  visibility: string;
-  slug: string;
-  template: string;
-  order: number;
-  isPublished: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface StorySpec {
   id: number;
   name: string;
