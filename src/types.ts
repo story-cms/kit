@@ -195,7 +195,8 @@ export interface StorySpec {
   storyType: string;
   schemaVersion: number;
   fields: FieldSpec[];
-  sections?: Array<StorySection>;
+  sections: Array<StorySection>;
+  parts?: Array<Part>;
 }
 
 export interface StoryIndexItem {
