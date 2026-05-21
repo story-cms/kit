@@ -161,7 +161,7 @@ export class StoryService {
     const storyId = ctx.request.qs()['storyId'];
     const locale = ctx.request.qs()['locale'] || this.config.languages[0].locale;
 
-    let query = Story.query().preload('localisations', (localisationsQuery) => {
+    const query = Story.query().preload('localisations', (localisationsQuery) => {
       localisationsQuery.where('locale', locale);
     });
 
