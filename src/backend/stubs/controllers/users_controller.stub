@@ -36,11 +36,9 @@ export default class UsersController {
 
     const userService = new UserService();
     const users = await userService.latest();
-    const shared = await cms.sharedProps(ctx);
 
     const props: UsersProps = {
       users,
-      ...shared,
     };
 
     // @ts-expect-error Inertia page name
@@ -118,7 +116,7 @@ export default class UsersController {
         : requestUrl;
 
       const appName = cms.config.name;
-      
+
       // send email to the user
       await mail.send((message) => {
         message

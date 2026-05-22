@@ -27,10 +27,8 @@ export default class InvitationsController {
     const service = new InvitationService(version);
     const invitations = await service.getInvitationItems();
 
-    const shared = await cms.sharedProps(ctx);
     const props: InvitationIndexProps = {
       invitations,
-      ...shared,
     };
     // @ts-expect-error Inertia page name
     return ctx.inertia.render('InvitationsIndex', props);
@@ -38,13 +36,12 @@ export default class InvitationsController {
 
   public async edit(ctx: HttpContext) {
     const invitation = await Invitation.findOrFail(ctx.params.id);
-    const shared = await cms.sharedProps(ctx);
 
     const props: InvitationEditProps = {
       providers,
+      stats: invitation.stats,
       invitation: invitation.meta,
       bundle: invitation.model,
-      ...shared,
     };
 
     // @ts-expect-error Inertia page name

@@ -25,11 +25,9 @@ export default class AudienceController {
       nextPageToken = null;
     }
 
-    const shared = await cms.sharedProps(ctx);
     const props = {
       audience,
       nextPageToken,
-      ...shared,
     };
 
     // @ts-expect-error Inertia page name
