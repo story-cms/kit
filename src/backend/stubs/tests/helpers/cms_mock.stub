@@ -1,7 +1,7 @@
 {{{ 
   exports({ to: app.makePath('tests/helpers/cms_mock.ts') }) 
 }}}
-import { CmsConfig, CmsService } from '@story-cms/kit';
+import { type CmsConfig, CmsService } from '@story-cms/kit';
 import { setMockCms, resetCms } from '#services/cms';
 
 /**
