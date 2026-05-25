@@ -2,7 +2,7 @@
   exports({ to: app.makePath('app/controllers/stories_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
-import { Index, StorySpec, StoryIndexItem } from '@story-cms/kit';
+import { Index, type StorySpec, type StoryIndexItem } from '@story-cms/kit';
 import cms from '#services/cms';
 
 export default class StoriesController {
