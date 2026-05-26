@@ -1,4 +1,4 @@
-import type { CmsConfig } from '../types.js';
+import type { CmsConfig, FieldSpec } from '../types.js';
 
 /**
  * Define shield configuration
@@ -48,4 +48,79 @@ export function defineConfig(config: Partial<CmsConfig>): CmsConfig {
 
     storyTemplates: config.storyTemplates || [],
   } satisfies CmsConfig;
+}
+
+// -------------------------------------
+// standard content templates
+// -------------------------------------
+
+export interface mediaConfig {
+  collection: string;
+  description: string;
+  extensions: string[];
+  maxSize: number;
+}
+
+export function courseFields(video: mediaConfig, image: mediaConfig): FieldSpec {
+  return {
+    name: 'screens',
+    label: 'Screen',
+    widget: 'list',
+    fields: [
+      {
+        name: 'screenName',
+        label: 'Screen Name',
+        widget: 'string',
+      },
+      {
+        name: 'displayTitle',
+        label: 'Display Title',
+        widget: 'string',
+      },
+      {
+        name: 'heroImage',
+        label: 'Hero Image',
+        widget: 'image',
+        description: image.description,
+        extensions: image.extensions,
+        maxSize: image.maxSize,
+        uploadPreset: image.collection,
+      },
+      {
+        name: 'sessionVideo',
+        label: 'Session Video',
+        widget: 'video',
+        description: video.description,
+        extensions: video.extensions,
+        maxSize: video.maxSize,
+        collectionId: video.collection,
+      },
+      {
+        name: 'bodyText',
+        label: 'Body Text',
+        widget: 'markdown',
+        toolbar: [
+          'bold',
+          'italic',
+          'heading-1',
+          'heading-2',
+          'heading-3',
+          'unordered-list',
+          'ordered-list',
+          'link',
+          'horizontal-rule',
+        ],
+      },
+      {
+        name: 'screenStyle',
+        label: 'Screen Style',
+        widget: 'select',
+        options: [
+          { label: 'Primary', value: 'primary' },
+          { label: 'Secondary', value: 'secondary' },
+        ],
+        default: 'primary',
+      },
+    ],
+  };
 }
