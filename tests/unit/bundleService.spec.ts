@@ -283,7 +283,7 @@ test.describe('Bundle validator', () => {
           },
           window: {
             name: 'dates',
-            label: 'Campaign dates',
+            label: 'Invitation dates',
             widget: 'dateRange',
           },
         },
@@ -300,7 +300,7 @@ test.describe('Bundle validator', () => {
       age: 30,
       notes: '# The Outing\nWe went to the park at *09h00* on a **sunny** day.',
       passage: ['JHN.1.14'],
-      profile: '',
+      profile: 'something',
       address: {
         street: '123 Main St',
         city: 'New York',
@@ -319,7 +319,6 @@ test.describe('Bundle validator', () => {
       schema: vine.object(schema),
       data: validData,
     });
-
     expect(output).toEqual(validData);
 
     const dataWithMissingVerse = {

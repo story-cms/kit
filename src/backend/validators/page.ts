@@ -1,5 +1,6 @@
-import vine, { SimpleMessagesProvider, VineValidator } from '@vinejs/vine';
-import type { HttpContext } from '@adonisjs/core/http';
+import { HttpContext } from '@adonisjs/core/http';
+import vine, { SimpleMessagesProvider } from '@vinejs/vine';
+import { SchemaTypes } from '@vinejs/vine/types';
 
 const draft = {
   title: vine.string().trim().minLength(1),
@@ -21,7 +22,7 @@ const live = {
   isPublished: vine.boolean(),
 };
 
-export class PageValidator {
+export default class PageValidator {
   protected isLink: boolean;
   protected isPublished: boolean;
 
@@ -30,8 +31,24 @@ export class PageValidator {
     this.isPublished = ctx.request.input('isPublished') === true;
   }
 
-  public get schema(): VineValidator<any, Record<string, any> | undefined> {
-    if (!this.isPublished) return vine.compile(vine.object(draft));
+  validate(data: any): Promise<any> {
+    vine.messagesProvider = new SimpleMessagesProvider({
+      'bundle.title.minLength': 'A page must have a title',
+      'bundle.icon.minLength': 'A page must have an icon',
+      'bundle.description.minLength': 'A page must have a description',
+      'bundle.body.minLength': 'A page must have a body',
+      'bundle.body.url': 'A link page must have a valid URL',
+    });
+
+    const schema = vine.object({
+      bundle: this.effectiveSchema,
+    });
+
+    return vine.validate({ schema, data: { bundle: data } });
+  }
+
+  protected get effectiveSchema(): SchemaTypes {
+    if (!this.isPublished) return vine.object(draft);
     if (this.isLink) {
       const liveLinkSchema = {
         ...live,
@@ -40,15 +57,8 @@ export class PageValidator {
           protocols: ['http', 'https'],
         }),
       };
-      return vine.compile(vine.object(liveLinkSchema));
+      return vine.object(liveLinkSchema);
     }
-    return vine.compile(vine.object(live));
+    return vine.object(live);
   }
 }
-
-export const pageErrorMessages = new SimpleMessagesProvider({
-  title: 'Title must be a string',
-  description: 'Description must be a string',
-  'title.required': 'A title is required',
-  'description.required': 'A description is required',
-});

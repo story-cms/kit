@@ -22,7 +22,7 @@
           <button class="nav-icon" @click="goBack">
             <Icon name="reply" />
           </button>
-          <div v-if="include('language')">
+          <div v-if="subscribed('language')">
             <button
               v-if="shared.hasOpenSidebar"
               class="relative flex size-14 items-center justify-center rounded-full transition-all duration-75"
@@ -52,38 +52,41 @@
         <div :class="[shared.hasOpenSidebar ? 'mt-4 flex flex-col px-4' : 'hidden']">
           <section class="grid grid-cols-1">
             <a
-              v-if="include('stream')"
+              v-if="subscribed('stream')"
               :class="classList('stream')"
               :href="`/${locale}/stream`"
               >Streams</a
             >
 
             <a
-              v-if="include('story')"
+              v-if="subscribed('story')"
               :class="classList('story')"
               :href="`/${locale}/story`"
               >Stories</a
             >
 
-            <a v-if="include('page')" :class="classList('page')" :href="`/${locale}/page`"
+            <a
+              v-if="subscribed('page')"
+              :class="classList('page')"
+              :href="`/${locale}/page`"
               >Pages</a
             >
 
             <a
-              v-if="include('campaign')"
-              :class="classList('campaign')"
-              :href="`/${locale}/campaign`"
-              >Campaigns</a
+              v-if="subscribed('invitation')"
+              :class="classList('invitation')"
+              :href="`/${locale}/invitation`"
+              >Invitations</a
             >
 
             <a
-              v-if="include('audience')"
+              v-if="subscribed('audience')"
               :class="classList('audience')"
               :href="`/${locale}/audience`"
               >Audience</a
             >
 
-            <div v-if="include('language')">
+            <div v-if="subscribed('language')">
               <button
                 v-if="locale === 'en'"
                 class="nav-link opacity-50 disabled:cursor-not-allowed"
@@ -129,9 +132,9 @@
               <span>Team</span>
             </a>
             <a
-              v-if="shared.meta.helpUrl"
+              v-if="shared.config.helpUrl"
               :class="classList('support', true)"
-              :href="shared.meta.helpUrl"
+              :href="shared.config.helpUrl"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -165,6 +168,7 @@ import { router } from '@inertiajs/vue3';
 import Icon from '../shared/icon.vue';
 import LanguageSelector from './language-selector.vue';
 import DropUp from './drop-up.vue';
+import type { Subscription } from '../../types';
 
 const shared = useSharedStore();
 
@@ -200,8 +204,8 @@ const newPathFromLocale = (targetLocale: string) => {
 
 const isAdmin = computed(() => shared.user.isAdmin);
 
-const include = (element: string): boolean => {
-  return !shared.exclude.includes(element);
+const subscribed = (element: Subscription): boolean => {
+  return shared.config.subscriptions.includes(element);
 };
 
 const locale = computed(() => {

@@ -5,55 +5,47 @@ import type { CmsConfig } from '../types.js';
  */
 export function defineConfig(config: Partial<CmsConfig>): CmsConfig {
   return {
-    meta: {
-      name: 'Journey CMS',
-      hasAppPreview: false,
-      helpUrl: 'https://journeys.helpscoutdocs.com/',
-      logo: 'https://res.cloudinary.com/journeys/image/upload/v1756295658/logo_g8k7tf.png',
-      mailFromAddress: 'ops@scoutredeem.co',
-      ...config.meta,
-    },
+    name: config.name || 'Journeys Studio',
 
-    languages: {
-      microcopySource: config.languages?.microcopySource || '',
-      languages: config.languages?.languages || [
-        {
-          locale: 'en',
-          language: 'English',
-          languageDirection: 'ltr',
-          bibleVersion: 'de4e12af7f28f599-01',
-        },
-      ],
-    },
+    logo:
+      config.logo ||
+      'https://res.cloudinary.com/journeys/image/upload/v1756295658/logo_g8k7tf.png',
 
-    stories: {
-      hasStories: true,
-      hasEditReview: false,
-      stories: [],
-      ...config.stories,
-    },
+    helpUrl: config.helpUrl || 'https://journeys.helpscoutdocs.com/',
 
-    streams: {
-      hasStreams: true,
-      streams: [],
-      ...config.streams,
-    },
+    hasAppPreview: config.hasAppPreview === undefined ? false : config.hasAppPreview,
 
-    pages: {
-      hasPages: true,
-      schemaVersion: 1,
-      tracking: 'utm_source=storyapp&utm_medium=referral&utm_campaign=page_menu',
-      ...config.pages,
-    },
+    microcopySource: config.microcopySource || '',
 
-    audience: {
-      hasAudience: false,
-      ...config.audience,
-    },
+    languages: config.languages || [
+      {
+        locale: 'en',
+        language: 'English',
+        languageDirection: 'ltr',
+        bibleVersion: 'de4e12af7f28f599-01',
+      },
+    ],
 
-    campaigns: {
-      hasCampaigns: false,
-      ...config.campaigns,
-    },
+    subscriptions: config.subscriptions || [
+      'story',
+      'stream',
+      'language',
+      'audience',
+      'invitation',
+      'page',
+    ],
+
+    pagesTracking:
+      config.pagesTracking ||
+      'utm_source=storyapp&utm_medium=referral&utm_campaign=page_menu',
+
+    bespokeTemplates: config.bespokeTemplates || [],
+
+    streams: config.streams || [],
+
+    storiesHasEditReview:
+      config.storiesHasEditReview === undefined ? false : config.storiesHasEditReview,
+
+    storyTemplates: config.storyTemplates || [],
   } satisfies CmsConfig;
 }

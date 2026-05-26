@@ -1,6 +1,6 @@
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
 import vine from '@vinejs/vine';
-import { StatMetric, CampaignStats } from '../../types';
+import { StatMetric, InvitationStats } from '../../types';
 import { getCredentialsFrom } from './helpers.js';
 
 /**
@@ -34,12 +34,15 @@ export class Analytics {
   }
 
   /**
-   * Fetches campaign statistics for promotion_impression and promotion_cta_tap events
-   * @param campaignId - The campaign ID to filter by
+   * Fetches invitation statistics for promotion_impression and promotion_cta_tap events
+   * @param invitationId - The invitation ID to filter by
    * @param language - The language code to filter by (e.g., 'en', 'fr')
    * @returns Object with impressions and clicks counts for all time
    */
-  async getCampaignStats(campaignId: number, language: string): Promise<CampaignStats> {
+  async getInvitationStats(
+    invitationId: number,
+    language: string,
+  ): Promise<InvitationStats> {
     // Create base filter with stream names
     const appsFilter = {
       fieldName: 'streamName',
@@ -48,11 +51,11 @@ export class Analytics {
       },
     };
 
-    // Create campaign ID filter (Custom Event Scope)
-    const campaignIdFilter = {
-      fieldName: 'customEvent:campaign_id',
+    // Create invitation ID filter (Custom Event Scope)
+    const invitationIdFilter = {
+      fieldName: 'customEvent:invitation_id',
       stringFilter: {
-        value: String(campaignId),
+        value: String(invitationId),
       },
     };
 
@@ -81,32 +84,35 @@ export class Analytics {
       },
     };
 
-    // Combined filter for impressions: stream + event + campaign_id + language
+    // Combined filter for impressions: stream + event + invitation_id + language
     const impressionDimensionFilter = {
       andGroup: {
         expressions: [
           { filter: appsFilter },
           { filter: impressionEventFilter },
-          { filter: campaignIdFilter },
+          { filter: invitationIdFilter },
           { filter: languageFilter },
         ],
       },
     };
 
-    // Combined filter for CTA taps: stream + event + campaign_id + language
+    // Combined filter for CTA taps: stream + event + invitation_id + language
     const ctaTapDimensionFilter = {
       andGroup: {
         expressions: [
           { filter: appsFilter },
           { filter: ctaTapEventFilter },
-          { filter: campaignIdFilter },
+          { filter: invitationIdFilter },
           { filter: languageFilter },
         ],
       },
     };
 
     // We must request the dimensions we are filtering by to ensure accurate event counts
-    const eventParameterDimensions = ['customEvent:campaign_id', 'customEvent:language'];
+    const eventParameterDimensions = [
+      'customEvent:invitation_id',
+      'customEvent:language',
+    ];
 
     const [impressions, clicks] = await Promise.all([
       this.fetchMetricsForAllTime(

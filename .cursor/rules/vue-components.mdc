@@ -1,5 +1,5 @@
 ---
-description: Vue 3 component development patterns and conventions for StoryCMS Kit
+description: Vue 3 component development patterns and conventions for Journeys Studio Kit
 globs: src/frontend/**/*.vue
 alwaysApply: false
 ---

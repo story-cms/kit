@@ -1,12 +1,12 @@
-import type { PageVersion, PageBundle, PageItem } from '../../types';
+import type { Version, PageBundle, PageItem } from '../../types';
 import Page from '../models/page.js';
 import { CmsService } from './cms_service.js';
 
 export class PageService {
-  protected version: PageVersion;
+  protected version: Version;
 
   constructor(
-    version: PageVersion,
+    version: Version,
     protected cms: CmsService,
   ) {
     this.version = version;
@@ -19,9 +19,8 @@ export class PageService {
     const collected: PageItem[] = [];
     let group = 1;
     pages.forEach((page: Page) => {
-      const bundle = page.parsedBundle;
-      if (page.isPublished && bundle.group !== group) {
-        group = bundle.group;
+      if (page.isPublished && page.bundle.group !== group) {
+        group = page.bundle.group;
         collected.push({
           id: maxId + group,
           isDivider: true,
@@ -40,7 +39,7 @@ export class PageService {
       .where('isPublished', true)
       .orderBy('order', 'asc');
 
-    const tracking = this.cms.config.pages.tracking;
+    const tracking = this.cms.config.pagesTracking;
     return pages.map((page) => page.bundleWithTracking(tracking));
   }
 

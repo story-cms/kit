@@ -14,6 +14,7 @@ import {
   createUserValidator,
   updateUserValidator,
   type UsersProps,
+  type UserRole,
 } from '@story-cms/kit';
 import cms from '#services/cms';
 import env from '#start/env';
@@ -35,44 +36,39 @@ export default class UsersController {
 
     const userService = new UserService();
     const users = await userService.latest();
-    const shared = await cms.sharedProps(ctx);
 
     const props: UsersProps = {
       users,
-      ...shared,
     };
 
+    // @ts-expect-error Inertia page name
     return ctx.inertia.render('UsersIndex', props);
   }
 
   // patch a user's information
   public async update(ctx: HttpContext) {
-    const locale = cms.localeFrom(ctx);
+    const locale = cms.localeFromPath(ctx);
     const id = Number(ctx.params.id);
     const user = await User.findOrFail(id);
 
-    try {
-      const payload = await ctx.request.validateUsing(updateUserValidator);
-      user.name = payload.name;
-      user.email = payload.email;
-      user.role = payload.role;
-      user.language = payload.language;
-      user.save();
-      Activity.create({
-        userId: ctx.auth.user?.id,
-        locale: locale,
-        action: {{ '`updated user with id ${user.id}`' }},
-      });
-    } catch (e) {
-      ctx.session.flash('errorsBag', { other: e.message });
-    }
+    const payload = await ctx.request.validateUsing(updateUserValidator);
+    user.name = payload.name;
+    user.email = payload.email;
+    user.role = payload.role as UserRole;
+    user.language = payload.language;
+    user.save();
+    Activity.create({
+      userId: ctx.auth.user?.id,
+      locale: locale,
+      action: {{ '`updated user with id ${user.id}`' }},
+    });
 
     return ctx.response.redirect({{ '`/${locale}/user`' }}, false, 303);
   }
 
   // delete a user
   public async destroy(ctx: HttpContext) {
-    const locale = cms.localeFrom(ctx);
+    const locale = cms.localeFromPath(ctx);
     const id = Number(ctx.params.id);
     const user = await User.findOrFail(id);
     try {
@@ -86,7 +82,7 @@ export default class UsersController {
         action: {{ '`deleted user with id ${user.id}`' }},
       });
     } catch (e) {
-      ctx.session.flash('errorsBag', { other: e.message });
+      ctx.session.flash('inputErrorsBag', { other: 'Failed to delete that user.' });
     }
 
     return ctx.response.redirect({{ '`/${locale}/user`' }}, false, 303);
@@ -95,13 +91,14 @@ export default class UsersController {
   // create a new user
   public async store(ctx: HttpContext) {
     const payload = await ctx.request.validateUsing(createUserValidator);
-    const locale = cms.localeFrom(ctx);
+    const locale = cms.localeFromPath(ctx);
 
     try {
       const randomString = this.generateRandomString();
       const token = string.generateRandom(32);
       const user = await User.create({
         ...payload,
+        role: payload.role as UserRole,
         password: randomString,
         resetToken: token,
         resetTokenCreatedAt: DateTime.now(),
@@ -118,8 +115,8 @@ export default class UsersController {
         ? requestUrl.replace('http://', 'https://')
         : requestUrl;
 
-      const appName = cms.config.meta.name;
-      
+      const appName = cms.config.name;
+
       // send email to the user
       await mail.send((message) => {
         message
@@ -133,8 +130,8 @@ export default class UsersController {
           });
       });
     } catch (e) {
-      ctx.logger.error(e.message);
-      ctx.session.flash('errorsBag', { other: e.message });
+      ctx.logger.error(e);
+      ctx.session.flash('inputErrorsBag', { other: 'Failed to create that user.' });
     }
 
     return ctx.response.redirect({{ '`/${locale}/user`' }}, false, 303);

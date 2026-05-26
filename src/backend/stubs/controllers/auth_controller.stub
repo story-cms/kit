@@ -8,6 +8,8 @@ import cms from '#services/cms';
 export default class AuthController {
   public async index(ctx: HttpContext) {
     const shared = await cms.sharedProps(ctx);
+    // Kit pages are not in the generated Inertia page union yet
+    // @ts-expect-error Inertia page name
     return ctx.inertia.render('Login', shared);
   }
 
@@ -20,7 +22,9 @@ export default class AuthController {
     }
 
     if (email.startsWith('redacted+')) {
-      ctx.session.flash('errorsBag', { credentials: 'Invalid username or password' });
+      ctx.session.flash('inputErrorsBag', {
+        credentials: 'Invalid username or password',
+      });
       ctx.response.redirect().back();
     }
 
@@ -34,7 +38,9 @@ export default class AuthController {
       });
       ctx.response.redirect({{ '`/${user.defaultLanguage()}/dashboard`' }});
     } catch {
-      ctx.session.flash('errorsBag', { credentials: 'Invalid username or password' });
+      ctx.session.flash('inputErrorsBag', {
+        credentials: 'Invalid username or password',
+      });
       ctx.response.redirect().back();
     }
   }

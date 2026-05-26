@@ -2,11 +2,11 @@ import ActionButton from './shared/action-button.vue';
 import AddItemButton from './shared/add-item-button.vue';
 import AnimationField from './fields/animation-field.vue';
 import AppLayout from './shared/app-layout.vue';
-import AudiencesIndex from './audiences/audiences-index.vue';
+import AudienceIndex from './audience/audience-index.vue';
 import AudioField from './fields/audio-field.vue';
 import BooleanField from './fields/boolean-field.vue';
-import CampaignsEdit from './campaign/campaigns-edit.vue';
-import CampaignsIndex from './campaign/campaigns-index.vue';
+import InvitationsEdit from './invitation/invitations-edit.vue';
+import InvitationsIndex from './invitation/invitations-index.vue';
 import ChapterPreview from './stories/chapter-preview.vue';
 import ContentHeader from './shared/content-header.vue';
 import ContextMenu from './shared/context-menu.vue';
@@ -64,19 +64,16 @@ export * from './store/index';
 
 export { commonProps, helpScoutWidget } from './shared/helpers';
 
-// Re-export types for easier access
-export * from '../types';
-
 export {
   ActionButton,
   AddItemButton,
   AnimationField,
   AppLayout,
-  AudiencesIndex,
+  AudienceIndex,
   AudioField,
   BooleanField,
-  CampaignsEdit,
-  CampaignsIndex,
+  InvitationsEdit,
+  InvitationsIndex,
   ChapterPreview,
   ContentHeader,
   ContextMenu,

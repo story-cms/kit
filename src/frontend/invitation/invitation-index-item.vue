@@ -1,0 +1,98 @@
+<template>
+  <div class="flex h-full flex-col space-y-2 rounded-md bg-white px-1 py-4 shadow">
+    <h3 class="text-base/leading-6 p-2 font-bold text-gray-800">
+      <span
+        v-if="isLive"
+        class="mr-2 inline-flex flex-wrap items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs font-medium leading-4 text-green-800"
+        >Live</span
+      ><span>
+        {{ invitationName }}
+      </span>
+    </h3>
+    <div class="w-full grow text-sm font-medium leading-5 text-gray-500">
+      <div class="flex w-full items-center gap-2 px-2">
+        <p class="w-1/6">Start:</p>
+        <p>{{ startDate }}</p>
+      </div>
+      <div class="flex w-full items-center gap-2 px-2">
+        <p class="w-1/6">End:</p>
+        <p>{{ endDate }}</p>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-2 p-2">
+      <div class="flex flex-wrap items-center gap-2">
+        <span
+          v-if="isForAllRegions"
+          class="inline-flex flex-wrap items-center gap-1 rounded-full bg-blue-100 px-2 py-1 text-xs font-medium leading-4 text-blue-800"
+          >All Regions</span
+        >
+        <span
+          v-for="region in parsedRegions?.slice(0, 5)"
+          v-else
+          :key="region"
+          class="inline-flex flex-wrap items-center gap-1 rounded-full bg-blue-100 px-2 py-1 text-xs font-medium leading-4 text-blue-800"
+          >{{ region }}</span
+        >
+      </div>
+      <div
+        v-if="parsedRegions?.length && parsedRegions.length > 5"
+        class="text-xs text-gray-500"
+      >
+        +{{ parsedRegions.length - 5 }} more
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { computed } from 'vue';
+import { formatDate, getInvitationStatus, padZero } from '../shared/helpers';
+import type { InvitationItem } from '../../types';
+
+const props = defineProps<{
+  invitation: InvitationItem;
+}>();
+
+const isForAllRegions = computed(() => {
+  if (props.invitation.regions?.length === 0) return true;
+  return false;
+});
+
+const parsedRegions = computed(() => {
+  return props.invitation.regions?.split(',').map((region) => region.trim());
+});
+
+const startDate = computed(() => {
+  if (!props.invitation.window) return '—';
+  return formatDate(props.invitation.window?.split('|')[0])
+    .split(' ')[0]
+    .replace('-', '/')
+    .replace(',', '');
+});
+
+const endDate = computed(() => {
+  if (!props.invitation.window) return '—';
+  return formatDate(props.invitation.window?.split('|')[1])
+    .split(' ')[0]
+    .replace('-', '/')
+    .replace(',', '');
+});
+
+// check if the invitation is live
+const isLive = computed(() => {
+  const status = getInvitationStatus(
+    props.invitation.isPublished,
+    props.invitation.window ?? '',
+  );
+  return status === 'Live';
+});
+
+const invitationName = computed(() =>
+  props.invitation.name === null ||
+  props.invitation.name === undefined ||
+  props.invitation.name === ''
+    ? `Invitation ${padZero(props.invitation.id)}`
+    : props.invitation.name,
+);
+</script>

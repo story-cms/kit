@@ -1,7 +1,7 @@
 import audioRule from '../validators/audio_rule.js';
 import videoRule from '../validators/video_rule.js';
 import dateRangeRule from '../validators/date_range_rule.js';
-import { FieldSpec } from '@story-cms/kit';
+import type { FieldSpec } from '@story-cms/kit';
 import vine, {
   VineArray,
   VineBoolean,
@@ -137,14 +137,14 @@ export class BundleService {
         return {
           [spec.name]: this.isDraft
             ? vine.string().trim().nullable()
-            : vine.string().trim(),
+            : vine.string().trim().minLength(1),
         };
     }
   };
 
   private scriptureSchema = vine.object({
-    reference: vine.string(),
-    verse: vine.string(),
+    reference: vine.string().trim().minLength(1),
+    verse: vine.string().trim().minLength(1),
   });
 
   private scriptureDraftSchema = vine.object({
@@ -159,7 +159,7 @@ export class BundleService {
 
   private audioSchema = vine
     .object({
-      url: vine.string(),
+      url: vine.string().trim().minLength(1),
       length: vine.number(),
     })
     .use(audioRule());
@@ -173,7 +173,7 @@ export class BundleService {
 
   private videoSchema = vine
     .object({
-      url: vine.string(),
+      url: vine.string().url(),
     })
     .use(videoRule(null));
 

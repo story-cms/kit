@@ -95,7 +95,7 @@
           />
         </template>
         <template #app-preview>
-          <div v-if="shared.meta.hasAppPreview">
+          <div v-if="shared.config.hasAppPreview">
             <MobileAppPreview
               v-if="bundle"
               :bundle="bundle"
@@ -298,7 +298,7 @@ onMounted(async () => {
 
   shared.setSingleColumn(true);
   shared.setShowMetaBox(false);
-  if (shared.meta.hasAppPreview) {
+  if (shared.config.hasAppPreview) {
     shared.setShowAppPreview(false);
   }
 
@@ -319,7 +319,7 @@ onMounted(async () => {
 onUnmounted(() => {
   shared.setSingleColumn(false);
   shared.setShowMetaBox(true);
-  if (shared.meta.hasAppPreview) {
+  if (shared.config.hasAppPreview) {
     shared.setShowAppPreview(true);
   }
 

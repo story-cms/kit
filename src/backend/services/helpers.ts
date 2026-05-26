@@ -1,30 +1,8 @@
-import { AudienceMeta } from '../../types';
-
-export function trimmedErrors(e: any): Record<string, string[]> {
-  let trimmed = e.messages.reduce((acc: Record<string, string[]>, error: any) => {
-    const field = error.field;
-    if (!acc[field]) {
-      acc[field] = [];
-    }
-    acc[field].push(error.message);
-    return acc;
-  }, {});
-
-  // only show the first 25 errors to avoid the cookie size limit
-  if (Object.keys(trimmed).length < 26) return trimmed;
-
-  trimmed = Object.keys(trimmed)
-    .slice(0, 25)
-    .reduce(
-      (acc: Record<string, string[]>, key) => {
-        acc[key] = trimmed[key];
-        return acc;
-      },
-      {} as Record<string, string[]>,
-    );
-
-  return trimmed;
-}
+export {
+  extraAudienceColumns,
+  keyToTitle,
+  standardAudienceKeys,
+} from '../../shared/audience_helpers.js';
 
 // The model store on the client requires that the error messages
 // each have a "bundle" prefix
@@ -50,25 +28,3 @@ export const getCredentialsFrom = (key: string): any => {
     throw new Error(`${key} environment variable is not a valid encoded JSON string.`);
   }
 };
-
-/** Fixed audience table fields; any other keys on row objects are treated as extra columns. */
-const AUDIENCE_META_KEYS = [
-  'uid',
-  'name',
-  'email',
-  'photoURL',
-  'signUpDate',
-  'lastSignInTime',
-] as const satisfies readonly (keyof AudienceMeta)[];
-
-export const standardAudienceKeys = new Set<string>(AUDIENCE_META_KEYS);
-
-export const extraAudienceColumns = (user: AudienceMeta) => {
-  return Object.keys(user).filter((key) => !standardAudienceKeys.has(key));
-};
-
-export const keyToTitle = (key: string) =>
-  key
-    .replace(/([A-Z])/g, ' $1')
-    .trim()
-    .toUpperCase();

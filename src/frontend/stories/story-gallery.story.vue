@@ -2,13 +2,11 @@
   <Story title="Story Gallery" group="stories">
     <Variant title="Default" :setup-app="miniSidebar">
       <StoryGallery
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
-        :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
         :stories="sampleStories"
         :can-add-stories="true"
       />
@@ -30,6 +28,7 @@ const sampleStories: StoryIndexItem[] = [
     coverImage:
       'https://res.cloudinary.com/journeys/image/upload/v1756123453/alabaster-co-rlb3upCBLck-unsplash_emiapj.jpg',
     chapterLimit: 42,
+    isPublished: true,
     createdAt: '2024-01-15T10:30:00Z',
     updatedAt: '2024-03-20T14:45:00Z',
     draftCount: 5,
@@ -42,6 +41,7 @@ const sampleStories: StoryIndexItem[] = [
     coverImage:
       'https://res.cloudinary.com/journeys/image/upload/v1756123316/Acts_ggpfgy.webp',
     chapterLimit: 28,
+    isPublished: true,
     createdAt: '2024-02-10T09:15:00Z',
     updatedAt: '2024-03-18T16:20:00Z',
     draftCount: 3,
@@ -54,6 +54,7 @@ const sampleStories: StoryIndexItem[] = [
     coverImage:
       'https://res.cloudinary.com/journeys/image/upload/v1756122407/christ-chaos-header_yqrufy_lzmfjt.jpg',
     chapterLimit: 16,
+    isPublished: false,
     createdAt: '2024-01-25T11:00:00Z',
     updatedAt: '2024-03-15T13:30:00Z',
     draftCount: 2,
@@ -78,9 +79,8 @@ The Story Gallery component displays a collection of stories in either grid or l
 
 - `bookmarks` - Available bookmarks array
 - `exclude` - Exclude nav bar elements
-- `meta` - CMS metadata
+- `config` - CMS config
 - `user` - Current user information
-- `languages` - Available languages
 - `language` - Current language
 - `errors` - Error state
 
@@ -89,10 +89,8 @@ The Story Gallery component displays a collection of stories in either grid or l
 ```vue
 <StoryGallery
   :bookmarks="bookmarks"
-  :exclude="[]"
-  :meta="meta"
+  :config="config"
   :user="user"
-  :languages="languages"
   :language="language"
   :errors="errors"
 />

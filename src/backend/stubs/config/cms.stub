@@ -59,83 +59,60 @@ const devotionStory: StorySpec = {
   ],
 };
 
-const cmsConfig: CmsConfig = defineConfig({
-  meta: {
-    /**
-     * The name of the app
-     */
-    name: 'Journa CMS',
+const cmsConfig: Partial<CmsConfig> = {
+  /**
+    * The name of the app
+    */
+  name: 'Journeys Studio',
 
-    /**
-     * The logo of the app
-     */
-    logo: 'https://res.cloudinary.com/journeys/image/upload/v1756295658/logo_g8k7tf.png',
+  /**
+    * The logo of the app
+    * upload to Cloudinary and use the public ID
+    */
+  // logo: '',
+  
+  /**
+    * Are we embedding a Flutter preview?
+    */
+  hasAppPreview: false,
 
-    /**
-     * Link to the help documentation
-     */
-    helpUrl: 'https://journeys.helpscoutdocs.com/',
-    
-    /**
-     * Are we embedding a Flutter preview?
-     */
-    hasAppPreview: false,
+  /**
+    * A link to the microcopy source language file
+    * example: 'https://raw.githubusercontent.com/partner/project/main/lib/shared/localization/app_en.arb'
+    */
+  microcopySource: '',
 
-    /**
-     * Contact email for enquiries (from MAIL_FROM_ADDRESS)
-     */
-    mailFromAddress: 'ops@scoutredeem.co',
-  },
+  /**
+    * A list of languages to be used in the app
+    *
+    * https://en.wikipedia.org/wiki/IETF_language_tag
+    * https://r12a.github.io/app-subtags/
+    */
+  languages: [
+    {
+      locale: 'en',
+      language: 'English',
+      languageDirection: 'ltr',
+      bibleVersion: 'de4e12af7f28f599-01',
+    },
+    {
+      locale: 'de',
+      language: 'German | Deutsch',
+      languageDirection: 'ltr',
+      bibleVersion: '3e2eb613d45e131e-01',
+    },
+  ],
 
-  languages: {
-    /**
-     * A link to the microcopy source language file
-     * example: 'https://raw.githubusercontent.com/partner/project/main/lib/shared/localization/app_en.arb'
-     */
-    microcopySource: '',
+  streams: [devotionStream],
 
-    /**
-     * A list of languages to be used in the app
-     *
-     * https://en.wikipedia.org/wiki/IETF_language_tag
-     * https://r12a.github.io/app-subtags/
-     */
-    languages: [
-      {
-        locale: 'en',
-        language: 'English',
-        languageDirection: 'ltr',
-        bibleVersion: 'de4e12af7f28f599-01',
-      },
-      {
-        locale: 'de',
-        language: 'German | Deutsch',
-        languageDirection: 'ltr',
-        bibleVersion: '3e2eb613d45e131e-01',
-      },
-    ],
-  },
+  /**
+    * Flag to enable the content audit feature where drafts are reviewed by a second user
+    */
+  storiesHasEditReview: false,
 
-  streams: {
-    streams: [devotionStream],
-  },
+  stories: [devotionStory],
 
-  stories: {
-    /**
-     * Flag to enable the content audit feature where drafts are reviewed by a second user
-     */
-    hasEditReview: false,
-    stories: [devotionStory],
-  },
-
-  pages: {
-    schemaVersion: 1,
-    tracking: 'utm_source=storyapp&utm_medium=referral&utm_campaign=page_menu',
-  },
-
-  campaigns: {
-    hasCampaigns: false,
-  },
-});
+  pagesTracking: 'utm_source=storyapp&utm_medium=referral&utm_campaign=page_menu',
+};
 
 export default cmsConfig;

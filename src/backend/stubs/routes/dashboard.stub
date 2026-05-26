@@ -7,7 +7,7 @@ const DashboardController = () => import('#controllers/dashboard_controller');
 const AnalyticsController = () => import('#controllers/analytics_controller');
 
 export default () => {
-  router.get('/', [DashboardController, 'index']);
-  router.get(':locale/dashboard', [DashboardController, 'index']);
+  router.get('/', [DashboardController, 'index']).as('dashboard.root');
+  router.get(':locale/dashboard', [DashboardController, 'index']).as('dashboard.index');
   router.get('/analytics', [AnalyticsController, 'index']);
 };

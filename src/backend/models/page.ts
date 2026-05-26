@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import { BaseModel, column } from '@adonisjs/lucid/orm';
-import { PageMeta, PageBundle } from '@story-cms/kit';
+import type { JSON, PageMeta, PageBundle } from '../../types';
 
 export default class Page extends BaseModel {
   @column({ isPrimary: true })
@@ -19,7 +19,7 @@ export default class Page extends BaseModel {
   declare isPublished: boolean;
 
   @column()
-  declare bundle: string;
+  declare bundle: JSON<PageBundle>;
 
   @column()
   declare updatedBy: number;
@@ -32,20 +32,15 @@ export default class Page extends BaseModel {
 
   public get model() {
     return {
-      ...this.parsedBundle,
+      ...this.bundle,
       id: this.id,
       isPublished: this.isPublished,
       type: this.isLink ? 'link' : 'text',
     };
   }
 
-  public get parsedBundle(): PageBundle {
-    const start = typeof this.bundle === 'string' ? JSON.parse(this.bundle) : this.bundle;
-    return start;
-  }
-
   public updateBundle(changes: any) {
-    const old = this.parsedBundle;
+    const old = this.bundle;
     const fresh = <PageBundle>{
       group: this.freshValue(changes, old, 'group', 1),
       title: this.freshValue(changes, old, 'title', ''),
@@ -55,7 +50,7 @@ export default class Page extends BaseModel {
       category: this.freshValue(changes, old, 'category', ''),
     };
 
-    this.bundle = JSON.stringify(fresh);
+    this.bundle = fresh;
   }
 
   protected freshValue(
@@ -71,13 +66,13 @@ export default class Page extends BaseModel {
 
   // does the body contain a url?
   public get isLink(): boolean {
-    const body = this.parsedBundle.body;
+    const body = this.bundle.body;
     if (body === undefined) return false;
     return body.startsWith('http://') || body.startsWith('https://');
   }
 
   public bundleWithTracking(tracking: string): PageBundle {
-    const bundle = this.parsedBundle;
+    const bundle = this.bundle;
     if (!this.isLink) return bundle;
 
     const glue = bundle.body.split('?').length === 1 ? '?' : '&';

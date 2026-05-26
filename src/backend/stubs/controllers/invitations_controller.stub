@@ -1,0 +1,132 @@
+{{{
+  exports({ to: app.makePath('app/controllers/invitations_controller.ts') })
+}}}
+import type { HttpContext } from '@adonisjs/core/http';
+import {
+  Activity,
+  Invitation,
+  InvitationService,
+  InvitationValidator,
+  type InvitationEditProps,
+  type InvitationIndexProps,
+} from '@story-cms/kit';
+import cms from '#services/cms';
+import providers from '#config/providers';
+
+export default class InvitationsController {
+  public async get(ctx: HttpContext) {
+    const version = cms.versionFromQuery(ctx);
+    const service = new InvitationService(version);
+    const invitations = await service.getInvitationItemsForClient();
+
+    return { invitations };
+  }
+
+  public async index(ctx: HttpContext) {
+    const version = cms.versionFromPath(ctx);
+    const service = new InvitationService(version);
+    const invitations = await service.getInvitationItems();
+
+    const props: InvitationIndexProps = {
+      invitations,
+    };
+    // @ts-expect-error Inertia page name
+    return ctx.inertia.render('InvitationsIndex', props);
+  }
+
+  public async edit(ctx: HttpContext) {
+    const invitation = await Invitation.findOrFail(ctx.params.id);
+
+    const props: InvitationEditProps = {
+      providers,
+      stats: invitation.stats,
+      invitation: invitation.meta,
+      bundle: invitation.model,
+    };
+
+    // @ts-expect-error Inertia page name
+    return ctx.inertia.render('InvitationsEdit', props);
+  }
+
+  public async create(ctx: HttpContext) {
+    const version = cms.versionFromPath(ctx);
+    const invitation = await Invitation.create({
+      locale: version.locale,
+      apiVersion: 1,
+      bundle: {
+        name: '',
+        window: '',
+        promoImage: '',
+        videoUrl: '',
+        title: '',
+        message: '',
+        actionLabel: '',
+        actionType: '',
+        actionUrl: '',
+        regions: '',
+      },
+      updatedBy: ctx.auth.user?.id,
+    });
+
+    await Activity.create({
+      userId: ctx.auth.user?.id,
+      locale: version.locale,
+      action: {{ '`created invitation ${invitation.id}`' }},
+    });
+
+    return ctx.response.redirect(
+      {{ '`/${version.locale}/invitation/${invitation.id}/edit`' }},
+      false,
+      303,
+    );
+  }
+
+  public async destroy(ctx: HttpContext) {
+    const version = cms.versionFromPath(ctx);
+    const id = Number(ctx.params.id);
+    const invitation = await Invitation.findOrFail(id);
+    try {
+      await invitation.delete();
+      await Activity.create({
+        userId: ctx.auth.user?.id,
+        locale: version.locale,
+        action: {{ '`deleted invitation ${invitation.id}`' }},
+      });
+    } catch (e) {
+      ctx.session.flash('inputErrorsBag', { other: 'Error while deleting invitation' });
+    }
+
+    return ctx.response.redirect({{ '`/${version.locale}/invitation`' }}, false, 303);
+  }
+
+  public async update(ctx: HttpContext) {
+    const version = cms.versionFromPath(ctx);
+    const data = ctx.request.all();
+    const invitationValidator = new InvitationValidator(ctx);
+    const validated = await invitationValidator.validate(data);
+    const payload = validated.bundle;
+
+    const id = Number(ctx.params.id);
+    const invitation = await Invitation.findOrFail(id);
+
+    invitation.updateBundle(payload);
+
+    invitation.isPublished = payload.isPublished as boolean;
+    await invitation.save();
+    if (payload.isPublished) {
+      await Activity.create({
+        userId: ctx.auth.user?.id,
+        locale: version.locale,
+        action: {{ '`published invitation ${invitation.id}`' }},
+      });
+    } else {
+      await Activity.create({
+        userId: ctx.auth.user?.id,
+        locale: version.locale,
+        action: {{ '`updated invitation ${invitation.id}`' }},
+      });
+    }
+
+    return ctx.response.redirect().back();
+  }
+}

@@ -1,15 +1,17 @@
 import { errors, HttpContext } from '@adonisjs/core/http';
+import config from '@adonisjs/core/services/config';
 import type {
-  StorySpec,
   CmsConfig,
-  PageVersion,
   Version,
   SharedPageProps,
   LanguageSpecification,
   Bookmark,
+  AppUserInterface,
+  UiConfig,
 } from '../../types';
 import { defineConfig } from '../define_config.js';
 import { PreferenceService } from './preference_service.js';
+import Config from '../models/config.js';
 
 export class CmsService {
   #config: CmsConfig;
@@ -27,105 +29,79 @@ export class CmsService {
     return this.#config;
   }
 
-  public storyFrom(ctx: HttpContext): StorySpec | undefined {
-    const storyId = Number.parseInt(ctx.params.storyId);
-    const story = this.#config.stories.stories.find((s) => s.id === storyId);
-    return story;
+  public set config(config: CmsConfig) {
+    this.#config = config;
   }
 
-  public localeFrom(ctx: HttpContext): string {
-    if (!ctx.auth.use('web')?.user?.isAllowed(ctx.params.locale)) {
-      throw errors.E_ROUTE_NOT_FOUND;
-    }
+  async patchConfig(fresh: Partial<CmsConfig>) {
+    // get the active config
+    const active = await Config.query()
+      .where('key', 'cms')
+      .orderBy('version', 'desc')
+      .first();
 
-    return ctx.params.locale || this.#config.languages.languages[0].locale;
+    if (!active) return;
+
+    // mutate the config
+    const newConfig = defineConfig({ ...active.data, ...fresh });
+
+    // persist the config
+    active.data = newConfig;
+    await active.save();
+
+    const trackedConfig = config.get<CmsConfig>('cms') || {};
+
+    // make sure we do not clobber the tracked config
+    this.#config = { ...newConfig, ...trackedConfig };
   }
 
   public get sourceLocale(): string {
-    return this.#config.languages.languages[0].locale;
+    return this.#config.languages[0].locale;
   }
 
   public isTranslation(locale: string | undefined): boolean {
-    return locale !== this.#config.languages.languages[0].locale;
+    return locale !== this.sourceLocale;
   }
 
-  public storyContextFrom(ctx: HttpContext): {
-    story: StorySpec | undefined;
-    version: Version;
-  } {
+  /// ----------------------------------------------------
+  ///  Controller selector helpers
+  /// ----------------------------------------------------
+
+  public localeFromPath(ctx: HttpContext): string {
     if (!ctx.auth.use('web')?.user?.isAllowed(ctx.params.locale)) {
       throw errors.E_ROUTE_NOT_FOUND;
     }
 
-    const story = this.storyFrom(ctx);
-
-    const version = <Version>{
-      apiVersion: 1,
-      locale: ctx.params.locale,
-      storyId: story?.id,
-    };
-    return { story, version };
+    return ctx.params.locale || this.sourceLocale;
   }
 
-  public localeFromApi(ctx: HttpContext): string {
-    return ctx.request.qs()['locale'] || this.#config.languages.languages[0].locale;
+  public localeFromQuery(ctx: HttpContext): string {
+    return ctx.request.qs()['locale'] || this.sourceLocale;
   }
 
-  public storyFromApi(ctx: HttpContext): StorySpec | undefined {
-    if (this.#config.stories.stories.length === 0) return undefined;
-
-    const defaultStory = this.#config.stories.stories[0];
-
-    const storyId = ctx.request.qs()['storyId'];
-    if (storyId !== undefined) {
-      const story = this.#config.stories.stories.find((s) => s.id === Number(storyId));
-      if (story !== undefined) return story;
-    }
-
-    let storylabel = ctx.request.qs()['story'];
-    if (storylabel !== undefined) {
-      storylabel = storylabel.toLowerCase();
-      const story = this.#config.stories.stories.find(
-        (s) => s.name.toLocaleLowerCase() === storylabel,
-      );
-      if (story !== undefined) return story;
-    }
-
-    return defaultStory;
-  }
-
-  public apiContextFrom(ctx: HttpContext): {
-    story: StorySpec | undefined;
-    version: Version;
-  } {
-    const story = this.storyFromApi(ctx);
-    const locale =
-      ctx.request.qs()['locale'] || this.#config.languages.languages[0].locale;
-    const version = <Version>{
-      apiVersion: 1,
-      locale: locale,
-      storyId: story?.id,
-    };
-
-    return { story, version };
-  }
-
-  public pagesContextFrom(ctx: HttpContext): PageVersion {
+  public versionFromPath(ctx: HttpContext): Version {
     if (!ctx.auth.use('web')?.user?.isAllowed(ctx.params.locale)) {
       throw errors.E_ROUTE_NOT_FOUND;
     }
 
     return {
-      apiVersion: this.#config.pages.schemaVersion,
-      locale: ctx.params.locale || 'en',
+      apiVersion: 1,
+      locale: ctx.params.locale || this.sourceLocale,
+    };
+  }
+
+  public versionFromQuery(ctx: HttpContext): Version {
+    return {
+      apiVersion: 1,
+      locale: ctx.request.qs()['locale'] || this.sourceLocale,
     };
   }
 
   protected getLanguage(locale: string | null): LanguageSpecification {
     const found =
-      this.#config.languages.languages.find(
+      this.#config.languages.find(
         (language: LanguageSpecification) => language.locale === locale,
-      ) || this.#config.languages.languages[0];
+      ) || this.#config.languages[0];
     return found as LanguageSpecification;
   }
 
@@ -142,39 +118,27 @@ export class CmsService {
   }
 
   public async sharedProps(ctx: HttpContext): Promise<SharedPageProps> {
-    const exclude: string[] = [];
-    if (!this.#config.stories.hasStories) {
-      exclude.push('story');
-    }
-
-    if (!this.#config.streams.hasStreams) {
-      exclude.push('stream');
-    }
-
-    if (this.#config.languages.languages.length < 1) {
-      exclude.push('language');
-    }
-
-    if (!this.#config.audience.hasAudience) {
-      exclude.push('audience');
-    }
-
-    if (!this.#config.campaigns.hasCampaigns) {
-      exclude.push('campaign');
-    }
-
-    if (!this.#config.pages.hasPages) {
-      exclude.push('page');
-    }
-
     const bookmarks = await this.getBookmarks(ctx);
 
+    const user: AppUserInterface = ctx.auth?.use('web')?.user?.appUser ?? {
+      id: 0,
+      name: '',
+      isAdmin: false,
+      isManager: false,
+      role: '',
+    };
+
     return {
-      meta: this.#config.meta,
-      user: ctx.auth?.use('web')?.user,
+      user,
+      config: {
+        name: this.#config.name,
+        logo: this.#config.logo,
+        helpUrl: this.#config.helpUrl,
+        hasAppPreview: this.#config.hasAppPreview,
+        languages: this.#config.languages,
+        subscriptions: this.#config.subscriptions,
+      } as UiConfig,
       language: this.getLanguage(ctx.params.locale ?? 'en'),
-      languages: this.#config.languages.languages,
-      exclude,
       bookmarks,
     };
   }

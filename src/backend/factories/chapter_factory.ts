@@ -7,7 +7,7 @@ export const ChapterFactory = factory
       apiVersion: 1,
       locale: 'en',
       number: 1,
-      bundle: '{}',
+      bundle: {},
       storyId: 1,
     };
   })

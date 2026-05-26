@@ -1,5 +1,5 @@
 ---
-description: Histoire story patterns and conventions for Vue components in StoryCMS Kit
+description: Histoire story patterns and conventions for Vue components in Journeys Studio Kit
 globs: src/frontend/**/*.story.vue
 alwaysApply: false
 ---
@@ -50,7 +50,7 @@ Use consistent group names for organizing stories:
 - `streams` - Streams and drop management
 - `team` - User management components
 - `auth` - Authentication components
-- `audiences` - Audience management components
+- `audience` - Audience management components
 
 ### Variant Naming
 

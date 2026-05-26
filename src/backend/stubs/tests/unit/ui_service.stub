@@ -9,7 +9,7 @@ import { setupMockCms, createCustomCmsConfig } from '../helpers/cms_mock.js';
 import cms from '#services/cms';
 
 test.group('UiService.pull()', (group) => {
-  group.each.setup(() => testUtils.db().withGlobalTransaction());
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
 
   group.each.teardown(() => {
     nock.cleanAll();
@@ -19,17 +19,15 @@ test.group('UiService.pull()', (group) => {
     // Set up mock CMS with microcopy source URL
     setupMockCms(
       createCustomCmsConfig({
-        languages: {
-          microcopySource: 'https://example.com/api/microcopy.json',
-          languages: [
-            {
-              locale: 'en',
-              language: 'English',
-              languageDirection: 'ltr',
-              bibleVersion: 'test-bible-version',
-            },
-          ],
-        },
+        microcopySource: 'https://example.com/api/microcopy.json',
+        languages: [
+          {
+            locale: 'en',
+            language: 'English',
+            languageDirection: 'ltr',
+            bibleVersion: 'test-bible-version',
+          },
+        ],
       }),
     );
 
@@ -108,7 +106,7 @@ test.group('UiService.pull()', (group) => {
     assert.lengthOf(attributes, 2);
     assert.equal(attributes[0].key, 'button.save');
     assert.equal(attributes[0].description, 'Save button text');
-    assert.deepEqual(attributes[0].placeholders, null);
+    assert.deepEqual(attributes[0].placeholders, {});
     assert.equal(attributes[1].key, 'message.hello');
     assert.equal(attributes[1].description, 'Hello message with name placeholder');
     assert.deepEqual(attributes[1].placeholders, {
@@ -126,17 +124,15 @@ test.group('UiService.pull()', (group) => {
   test('should filter out @@locale from attributes', async ({ assert }) => {
     setupMockCms(
       createCustomCmsConfig({
-        languages: {
-          microcopySource: 'https://example.com/api/microcopy.json',
-          languages: [
-            {
-              locale: 'en',
-              language: 'English',
-              languageDirection: 'ltr',
-              bibleVersion: 'test-bible-version',
-            },
-          ],
-        },
+        microcopySource: 'https://example.com/api/microcopy.json',
+        languages: [
+          {
+            locale: 'en',
+            language: 'English',
+            languageDirection: 'ltr',
+            bibleVersion: 'test-bible-version',
+          },
+        ],
       }),
     );
 
@@ -173,17 +169,15 @@ test.group('UiService.pull()', (group) => {
   test('should handle empty microcopy data', async ({ assert }) => {
     setupMockCms(
       createCustomCmsConfig({
-        languages: {
-          microcopySource: 'https://example.com/api/microcopy.json',
-          languages: [
-            {
-              locale: 'en',
-              language: 'English',
-              languageDirection: 'ltr',
-              bibleVersion: 'test-bible-version',
-            },
-          ],
-        },
+        microcopySource: 'https://example.com/api/microcopy.json',
+        languages: [
+          {
+            locale: 'en',
+            language: 'English',
+            languageDirection: 'ltr',
+            bibleVersion: 'test-bible-version',
+          },
+        ],
       }),
     );
 
@@ -222,17 +216,15 @@ test.group('UiService.pull()', (group) => {
   test('should handle attributes with veruy long descriptions', async ({ assert }) => {
     setupMockCms(
       createCustomCmsConfig({
-        languages: {
-          microcopySource: 'https://example.com/api/microcopy.json',
-          languages: [
-            {
-              locale: 'en',
-              language: 'English',
-              languageDirection: 'ltr',
-              bibleVersion: 'test-bible-version',
-            },
-          ],
-        },
+        microcopySource: 'https://example.com/api/microcopy.json',
+        languages: [
+          {
+            locale: 'en',
+            language: 'English',
+            languageDirection: 'ltr',
+            bibleVersion: 'test-bible-version',
+          },
+        ],
       }),
     );
 
@@ -257,30 +249,28 @@ test.group('UiService.pull()', (group) => {
     const attribute = await UiAttribute.query().where('key', 'test.key').first();
     assert.isNotNull(attribute);
     assert.equal(attribute?.description, 'A'.repeat(255));
-    assert.equal(attribute?.placeholders, null);
+    assert.deepEqual(attribute?.placeholders, {});
     assert.isTrue(scope.isDone());
   });
 
   test('should delete stale items not in the new data', async ({ assert }) => {
     setupMockCms(
       createCustomCmsConfig({
-        languages: {
-          microcopySource: 'https://example.com/api/microcopy.json',
-          languages: [
-            {
-              locale: 'en',
-              language: 'English',
-              languageDirection: 'ltr',
-              bibleVersion: 'test-bible-version',
-            },
-            {
-              locale: 'es',
-              language: 'Spanish',
-              languageDirection: 'ltr',
-              bibleVersion: 'es-bible-version',
-            },
-          ],
-        },
+        microcopySource: 'https://example.com/api/microcopy.json',
+        languages: [
+          {
+            locale: 'en',
+            language: 'English',
+            languageDirection: 'ltr',
+            bibleVersion: 'test-bible-version',
+          },
+          {
+            locale: 'es',
+            language: 'Spanish',
+            languageDirection: 'ltr',
+            bibleVersion: 'es-bible-version',
+          },
+        ],
       }),
     );
 
@@ -349,17 +339,15 @@ test.group('UiService.pull()', (group) => {
   test('should overwrite existing data', async ({ assert }) => {
     setupMockCms(
       createCustomCmsConfig({
-        languages: {
-          microcopySource: 'https://example.com/api/microcopy.json',
-          languages: [
-            {
-              locale: 'en',
-              language: 'English',
-              languageDirection: 'ltr',
-              bibleVersion: 'test-bible-version',
-            },
-          ],
-        },
+        microcopySource: 'https://example.com/api/microcopy.json',
+        languages: [
+          {
+            locale: 'en',
+            language: 'English',
+            languageDirection: 'ltr',
+            bibleVersion: 'test-bible-version',
+          },
+        ],
       }),
     );
 
@@ -477,7 +465,7 @@ test.group('UiService.pull()', (group) => {
       'New save button description',
       'Should have fresh description',
     );
-    assert.deepEqual(attributes[0].placeholders, null);
+    assert.deepEqual(attributes[0].placeholders, {});
 
     assert.equal(attributes[1].key, 'message.hello');
     assert.equal(

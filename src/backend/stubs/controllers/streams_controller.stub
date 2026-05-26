@@ -1,10 +1,10 @@
 {{{
   exports({ to: app.makePath('app/controllers/streams_controller.ts') })
 }}}
-import { HttpContext } from '@adonisjs/core/http';
+import type { HttpContext } from '@adonisjs/core/http';
 import db from '@adonisjs/lucid/services/db';
-import { DateTime } from 'luxon';
 import type {
+  DropMeta,
   StreamEditProps,
   StreamGalleryProps,
   StreamIndexProps,
@@ -17,15 +17,13 @@ import {
   BundleService,
   StreamService,
   DropValidator,
-  trimmedErrors,
-  bundledErrors,
 } from '@story-cms/kit';
 import providers from '#config/providers';
 import cms from '#services/cms';
 
 export default class StreamController {
   public async gallery(ctx: HttpContext) {
-    const streamsFromSpec = cms.config.streams.streams.map((stream: StreamSpec) => ({
+    const streamsFromSpec = cms.config.streams.map((stream: StreamSpec) => ({
       id: stream.id,
       title: stream.title,
       coverImage: stream.coverImage,
@@ -57,12 +55,11 @@ export default class StreamController {
       },
     );
 
-    const shared = await cms.sharedProps(ctx);
     const data = {
       streams,
-      ...shared,
     } as StreamGalleryProps;
 
+    // @ts-expect-error Inertia page name
     return ctx.inertia.render('StreamGallery', data);
   }
 
@@ -74,18 +71,17 @@ export default class StreamController {
       .orderBy('releaseAt', 'desc');
 
     const drops = rows.map((drop) => drop.indexItem);
-    const shared = await cms.sharedProps(ctx);
     const data = {
       stream,
       drops,
-      ...shared,
     } as StreamIndexProps;
 
+    // @ts-expect-error Inertia page name
     return ctx.inertia.render('StreamIndex', data);
   }
 
   public async create(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
     const stream = this.getStream(ctx);
 
     const service = new BundleService(stream.fields);
@@ -110,33 +106,32 @@ export default class StreamController {
 
   public async edit(ctx: HttpContext) {
     const drop = await Drop.findOrFail(ctx.params.id);
-    const stream = cms.config.streams.streams.find(
-      (s: StreamSpec) => s.id === drop.streamId,
-    );
+    const stream = cms.config.streams.find((s: StreamSpec) => s.id === drop.streamId);
     if (!stream) {
       return ctx.response.redirect().back();
     }
 
     const updatedBy = await User.find(drop.updatedBy);
-    const dropMeta = {
-      ...drop.meta,
+    const dropMeta: DropMeta = {
+      id: drop.meta.id,
+      createdAt: drop.meta.createdAt,
+      updatedAt: drop.meta.updatedAt,
       updatedBy: updatedBy?.name ?? 'Unknown',
     };
 
-    const shared = await cms.sharedProps(ctx);
     const props: StreamEditProps = {
       spec: stream,
       providers,
       dropMeta,
       model: drop.model,
-      ...shared,
     };
 
+    // @ts-expect-error Inertia page name
     return ctx.inertia.render('DropEdit', { ...props });
   }
 
   public async destroy(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
     const id = Number(ctx.params.id);
     const drop = await Drop.findOrFail(id);
     try {
@@ -147,45 +142,35 @@ export default class StreamController {
         action: {{'`deleted drop ${drop.id}`'}},
       });
     } catch (e) {
-      ctx.session.flash('errorsBag', { other: e.message });
+      ctx.session.flash('inputErrorsBag', { other: 'Error while deleting drop' });
     }
 
     return ctx.response.redirect({{'`/${version.locale}/stream`'}}, false, 303);
   }
 
   public async update(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
 
     const id = Number(ctx.params.id);
     const drop = await Drop.findOrFail(id);
-    const stream = cms.config.streams.streams.find(
-      (s: StreamSpec) => s.id === drop.streamId,
-    );
+    const stream = cms.config.streams.find((s: StreamSpec) => s.id === drop.streamId);
     if (!stream) {
       return ctx.response.redirect().back();
     }
 
     let payload;
-    try {
-      const data = ctx.request.all();
-      //   vine.messagesProvider = errorMessages;
-      const isPublished = ctx.request.input('isPublished') === true;
+    const data = ctx.request.all();
+    const isPublished = ctx.request.input('isPublished') === true;
 
-      const validator = new DropValidator(isPublished, stream.fields);
-      payload = await validator.schema.validate(data);
-    } catch (e) {
-      const errors = trimmedErrors(e);
-
-      ctx.session.flash('errorsBag', bundledErrors(errors));
-      return ctx.response.redirect().back();
-    }
+    const validator = new DropValidator(isPublished, stream.fields);
+    payload = (await validator.validate(data)).bundle;
 
     const service = new BundleService(stream.fields);
-    drop.bundle = service.updatedBundle(drop.parsedBundle, payload);
+    drop.bundle = service.updatedBundle(drop.bundle, payload);
     drop.isPublished = payload.isPublished;
     drop.title = payload.title;
     drop.coverImage = payload.coverImage ?? '';
-    drop.releaseAt = payload.releaseAt ? DateTime.fromJSDate(payload.releaseAt) : null;
+    drop.releaseAt = payload.releaseAt;
     drop.updatedBy = ctx.auth.user?.id ?? 0;
 
     await drop.save();
@@ -219,7 +204,7 @@ export default class StreamController {
 
   protected getStream(ctx: HttpContext): StreamSpec {
     const streamId = Number(ctx.params.id);
-    const stream = cms.config.streams.streams.find((s: StreamSpec) => s.id === streamId);
+    const stream = cms.config.streams.find((s: StreamSpec) => s.id === streamId);
     if (!stream) {
       ctx.response.internalServerError('Stream not found');
     }

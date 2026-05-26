@@ -1,10 +1,10 @@
-# StoryCMS Kit Project Structure
+# Journeys Studio Kit Project Structure
 
-This document outlines the directory structure and important files in the StoryCMS Kit project, a Vue.js + AdonisJS CMS package.
+This document outlines the directory structure and important files in the Journeys Studio Kit project, a Vue.js + AdonisJS CMS package.
 
 ## Project Overview
 
-StoryCMS Kit is a comprehensive CMS package for AdonisJS that provides:
+Journeys Studio Kit is a comprehensive CMS package for AdonisJS that provides:
 
 - Frontend Vue.js components and UI widgets
 - Backend AdonisJS services, models, and middleware
@@ -59,7 +59,7 @@ storycmskit/
 
 ```
 src/frontend/
-├── audiences/              # Audience management components
+├── audience/               # Audience management components
 ├── auth/                   # Authentication components
 ├── dashboard/              # Dashboard components
 ├── fields/                 # Form field components (core UI)

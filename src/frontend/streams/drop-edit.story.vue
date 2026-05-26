@@ -93,13 +93,11 @@ const combinedProps = {
   model: streamModel,
   providers,
   // SharedPageProps
-  meta: sharedProps.meta,
+  config: sharedProps.config,
   user: sharedProps.user,
   language: sharedProps.language,
-  languages: sharedProps.languages,
   errors: sharedProps.errors,
   bookmarks: sharedProps.bookmarks,
-  exclude: [],
 };
 
 const loadData: StoryHandler = (): void => {
@@ -109,7 +107,7 @@ const loadData: StoryHandler = (): void => {
   // Set up shared store with default props
   shared.setFromProps({
     ...sharedProps,
-    meta: sharedProps.meta,
+    config: sharedProps.config,
   });
 
   shared.clearErrors();
@@ -133,12 +131,11 @@ A comprehensive page component for editing stream content with autosave function
 
 ## Props
 
-- `meta` - Drop metadata (id, timestamps, updated by)
+- `config` - CMS config
 - `spec` - Stream specification with field definitions
 - `model` - Form data model
 - `providers` - Widget providers for file uploads
 - `user` - Current user information
-- `languages` - Available languages
 - `language` - Current language
 - `errors` - Validation errors
 - `stories` - Available stories array
@@ -147,16 +144,14 @@ A comprehensive page component for editing stream content with autosave function
 
 ```vue
 <StreamEdit
-  :meta="dropMeta"
+  :config="config"
   :spec="streamSpec"
   :model="formData"
   :providers="uploadProviders"
   :user="currentUser"
-  :languages="availableLanguages"
   :language="currentLanguage"
   :errors="validationErrors"
   :bookmarks="bookmarks"
-  :exclude="[]"
 />
 ```
 

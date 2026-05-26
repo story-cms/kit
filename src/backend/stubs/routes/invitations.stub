@@ -1,0 +1,16 @@
+{{{
+  exports({ to: app.makePath('start/routes/invitations.ts') })
+}}}
+import router from '@adonisjs/core/services/router';
+
+const InvitationsController = () => import('#controllers/invitations_controller');
+const AnalyticsController = () => import('#controllers/analytics_controller');
+
+export default () => {
+  router.get(':locale/invitation/:id/edit', [InvitationsController, 'edit']);
+  router.get(':locale/invitation/create', [InvitationsController, 'create']);
+  router.post(':locale/invitation/:id', [InvitationsController, 'update']);
+  router.delete(':locale/invitation/:id', [InvitationsController, 'destroy']);
+  router.get(':locale/invitation', [InvitationsController, 'index']);
+  router.get(':locale/invitation/:id/stats', [AnalyticsController, 'invitationStats']);
+};

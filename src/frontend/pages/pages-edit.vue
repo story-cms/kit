@@ -242,12 +242,13 @@ onMounted(() => {
     title.value = model.getField('title', 'Page');
     isPublished.value = Boolean(model.getField('isPublished', false));
   });
-  if (shared.meta.hasAppPreview) {
+  if (shared.config.hasAppPreview) {
     shared.setShowAppPreview(false);
   }
 });
+
 onUnmounted(() => {
-  if (shared.meta.hasAppPreview) {
+  if (shared.config.hasAppPreview) {
     shared.setShowAppPreview(true);
   }
 });

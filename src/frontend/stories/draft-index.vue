@@ -43,7 +43,7 @@
           />
         </template>
         <template #app-preview>
-          <div v-if="shared.meta.hasAppPreview">
+          <div v-if="shared.config.hasAppPreview">
             <MobileAppPreview
               v-if="bundle"
               :bundle="bundle"

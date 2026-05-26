@@ -1,7 +1,10 @@
 import './src/frontend/index.css';
 
 import { defineSetupVue3 } from '@histoire/plugin-vue';
+import { setActivePinia } from 'pinia';
 import { pinia, useWidgetsStore } from './src/frontend/store';
+
+setActivePinia(pinia);
 
 const widgets = useWidgetsStore(pinia);
 widgets.setProviders({

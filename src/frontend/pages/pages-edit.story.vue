@@ -2,13 +2,11 @@
   <Story title="Pages Edit" group="pages">
     <Variant title="With model" :setup-app="miniSidebar">
       <PagesEdit
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
-        :languages="sharedProps.languages"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
         :bundle="pageBundle"
         :page="page"
         :providers="{}"

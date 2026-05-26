@@ -6,7 +6,7 @@ import type {
   IndexItem,
   GroupedIndexItem,
   StorySpec,
-  Version,
+  StoryVersion,
   IndexReadyItem,
 } from '../../types.js';
 import { CmsService } from './cms_service.js';
@@ -22,7 +22,7 @@ export class IndexService {
     this.story = story;
   }
 
-  public async buildIndex(version: Version) {
+  public async buildIndex(version: StoryVersion) {
     const index = await Index.firstOrCreate(version, {
       items: { root: [] },
     });
@@ -50,7 +50,7 @@ export class IndexService {
     await index.save();
   }
 
-  public async getItems(version: Version): Promise<IndexReadyItem[]> {
+  public async getItems(version: StoryVersion): Promise<IndexReadyItem[]> {
     const index = await Index.query().where(version).first();
     if (!index) return [];
 
@@ -66,7 +66,9 @@ export class IndexService {
     });
   }
 
-  public async groupedIndex(version: Version): Promise<IndexItem[] | GroupedIndexItem[]> {
+  public async groupedIndex(
+    version: StoryVersion,
+  ): Promise<IndexItem[] | GroupedIndexItem[]> {
     const index = await Index.query().where(version).firstOrFail();
 
     if (!index) return [];
@@ -108,13 +110,13 @@ export class IndexService {
     return rows[0].$extras.max || 1;
   }
 
-  public async getAddStatus(version: Version): Promise<AddStatus> {
+  public async getAddStatus(version: StoryVersion): Promise<AddStatus> {
     const index = await this.getItems(version);
 
     if (index.length >= this.story.chapterLimit) return AddStatus.Full;
 
     // We have not reached the limit for the number of chapters and we're not a translation
-    if (version.locale === this.cms.config.languages.languages[0].locale) {
+    if (version.locale === this.cms.sourceLocale) {
       return AddStatus.Add;
     }
 
@@ -122,7 +124,7 @@ export class IndexService {
 
     const specifier = {
       apiVersion: version.apiVersion,
-      locale: this.cms.config.languages.languages[0].locale,
+      locale: this.cms.sourceLocale,
       storyId: this.story.id,
       number: number,
     };
@@ -134,7 +136,7 @@ export class IndexService {
     return AddStatus.Add;
   }
 
-  public async getNewChapterNumber(version: Version): Promise<number> {
+  public async getNewChapterNumber(version: StoryVersion): Promise<number> {
     await this.buildIndex(version);
 
     const index = await Index.query().where(version).first();

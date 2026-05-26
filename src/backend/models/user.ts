@@ -1,9 +1,9 @@
-import { DateTime } from 'luxon';
-import { compose } from '@adonisjs/core/helpers';
-import { BaseModel, column, computed } from '@adonisjs/lucid/orm';
-import hash from '@adonisjs/core/services/hash';
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid';
-import type { UserMeta } from '../../types';
+import { compose } from '@adonisjs/core/helpers';
+import hash from '@adonisjs/core/services/hash';
+import { BaseModel, column, computed } from '@adonisjs/lucid/orm';
+import { DateTime } from 'luxon';
+import type { UserMeta, AppUserInterface, UserRole } from '../../types';
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -38,7 +38,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare resetTokenCreatedAt?: DateTime;
 
   @column()
-  declare role: string;
+  declare role: UserRole;
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime;
@@ -76,6 +76,17 @@ export default class User extends compose(BaseModel, AuthFinder) {
     if (parts.length === 1) return parts[0];
     if (parts.length === 2) return `${parts[0]}${parts[1]}`;
     return `${parts[0]}${parts[parts.length - 1]}`;
+  }
+
+  @computed()
+  public get appUser(): AppUserInterface {
+    return {
+      id: this.id,
+      name: this.name,
+      isAdmin: this.isAdmin,
+      isManager: this.isManager,
+      role: this.role,
+    };
   }
 
   @computed()

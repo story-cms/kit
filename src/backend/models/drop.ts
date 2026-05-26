@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import { BaseModel, column } from '@adonisjs/lucid/orm';
-import { DropIndexItem, DropMeta } from '../../types';
+import type { DropIndexItem, DropMeta, JSON } from '../../types';
 
 export default class Drop extends BaseModel {
   @column({ isPrimary: true })
@@ -25,7 +25,7 @@ export default class Drop extends BaseModel {
   declare coverImage: string;
 
   @column()
-  declare bundle: string;
+  declare bundle: JSON<any>;
 
   @column()
   declare updatedBy: number;
@@ -36,11 +36,6 @@ export default class Drop extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime;
 
-  public get parsedBundle(): Record<string, unknown> {
-    const start = typeof this.bundle === 'string' ? JSON.parse(this.bundle) : this.bundle;
-    return start;
-  }
-
   public get model() {
     return {
       id: this.id,
@@ -48,7 +43,7 @@ export default class Drop extends BaseModel {
       title: this.title,
       coverImage: this.coverImage,
       releaseAt: this.releaseAt,
-      ...this.parsedBundle,
+      ...this.bundle,
     };
   }
 

@@ -1,0 +1,534 @@
+{{{ 
+  exports({ to: app.makePath('tests/unit/invitation_service.spec.ts') }) 
+}}}
+import { test } from '@japa/runner';
+import testUtils from '@adonisjs/core/services/test_utils';
+import { DateTime } from 'luxon';
+
+import { InvitationFactory, InvitationService } from '@story-cms/kit';
+
+test.group('Invitation items for the API', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction());
+
+  const englishVersion = {
+    apiVersion: 1,
+    locale: 'en',
+  };
+
+  test('spec: returns list of all active and future scheduled invitations in date order', async ({
+    assert,
+  }) => {
+    // arrange - Create invitations with different window states
+    const now = DateTime.now();
+
+    // Past invitation (should be excluded)
+    const pastStart = now.minus({ days: 5 });
+    const pastEnd = now.minus({ days: 2 });
+
+    // Active invitations (should be included, sorted by start time ascending)
+    const active1Start = now.minus({ days: 3 });
+    const active1End = now.plus({ days: 2 });
+    const active2Start = now.minus({ days: 1 });
+    const active2End = now.plus({ days: 3 });
+    const active3Start = now.minus({ hours: 6 });
+    const active3End = now.plus({ days: 5 });
+
+    // Future invitations (should be included, sorted by start time ascending)
+    const future1Start = now.plus({ days: 1 });
+    const future1End = now.plus({ days: 4 });
+    const future2Start = now.plus({ days: 5 });
+    const future2End = now.plus({ days: 8 });
+    const future3Start = now.plus({ days: 10 });
+    const future3End = now.plus({ days: 13 });
+
+    // Create past invitation
+    await InvitationFactory.merge({
+      id: 1,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Past Invitation',
+        window: {{ '`${pastStart.toISO()}|${pastEnd.toISO()}`' }},
+        title: 'Past',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    // Create active invitations
+    await InvitationFactory.merge({
+      id: 2,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Active Invitation 1',
+        window: {{ '`${active1Start.toISO()}|${active1End.toISO()}`' }},
+        title: 'Active 1',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    await InvitationFactory.merge({
+      id: 3,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Active Invitation 2',
+        window: {{ '`${active2Start.toISO()}|${active2End.toISO()}`' }},
+        title: 'Active 2',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    await InvitationFactory.merge({
+      id: 4,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Active Invitation 3',
+        window: {{ '`${active3Start.toISO()}|${active3End.toISO()}`' }},
+        title: 'Active 3',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    // Create future invitations
+    await InvitationFactory.merge({
+      id: 5,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Future Invitation 1',
+        window: {{ '`${future1Start.toISO()}|${future1End.toISO()}`' }},
+        title: 'Future 1',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    await InvitationFactory.merge({
+      id: 6,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Future Invitation 2',
+        window: {{ '`${future2Start.toISO()}|${future2End.toISO()}`' }},
+        title: 'Future 2',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    await InvitationFactory.merge({
+      id: 7,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Future Invitation 3',
+        window: {{ '`${future3Start.toISO()}|${future3End.toISO()}`' }},
+        title: 'Future 3',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    // act
+    const service = new InvitationService(englishVersion);
+    const items = await service.getInvitationItemsForClient();
+
+    // assert - Should return only active and future invitations
+    assert.equal(items.length, 6, 'Should return 6 invitations (3 active + 3 future)');
+
+    // Verify past invitation is excluded
+    assert.isFalse(
+      items.some((item) => item.name === 'Past Invitation'),
+      'Past invitations should be excluded',
+    );
+
+    // Verify all returned invitations are active or future
+    const allActiveOrFuture = items.every(
+      (item) => item.title.startsWith('Active') || item.title.startsWith('Future'),
+    );
+    assert.isTrue(allActiveOrFuture, 'All invitations should be active or future');
+
+    // Verify date order: active invitations first, sorted by start time ascending
+    assert.equal(items[0].title, 'Active 1', 'First active invitation (earliest start)');
+    assert.equal(items[1].title, 'Active 2', 'Second active invitation');
+    assert.equal(items[2].title, 'Active 3', 'Third active invitation (latest start)');
+
+    // Verify date order: future invitations follow, sorted by start time ascending
+    assert.equal(items[3].title, 'Future 1', 'First future invitation (earliest start)');
+    assert.equal(items[4].title, 'Future 2', 'Second future invitation');
+    assert.equal(items[5].title, 'Future 3', 'Third future invitation (latest start)');
+  });
+
+  test('spec: excludes unpublished invitations from active and future list', async ({
+    assert,
+  }) => {
+    // arrange
+    const now = DateTime.now();
+    const activeStart = now.minus({ days: 1 });
+    const activeEnd = now.plus({ days: 1 });
+    const futureStart = now.plus({ days: 2 });
+    const futureEnd = now.plus({ days: 4 });
+
+    // Published active invitation (should be included)
+    await InvitationFactory.merge({
+      id: 1,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Published Active',
+        window: {{ '`${activeStart.toISO()}|${activeEnd.toISO()}`' }},
+        title: 'Published Active',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    // Unpublished active invitation (should be excluded)
+    await InvitationFactory.merge({
+      id: 2,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Unpublished Active',
+        window: {{ '`${activeStart.toISO()}|${activeEnd.toISO()}`' }},
+        title: 'Unpublished Active',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: false,
+    }).create();
+
+    // Published future invitation (should be included)
+    await InvitationFactory.merge({
+      id: 3,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Published Future',
+        window: {{ '`${futureStart.toISO()}|${futureEnd.toISO()}`' }},
+        title: 'Published Future',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    // Unpublished future invitation (should be excluded)
+    await InvitationFactory.merge({
+      id: 4,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Unpublished Future',
+        window: {{ '`${futureStart.toISO()}|${futureEnd.toISO()}`' }},
+        title: 'Unpublished Future',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: false,
+    }).create();
+
+    // act
+    const service = new InvitationService(englishVersion);
+    const items = await service.getInvitationItemsForClient();
+
+    // assert
+    assert.equal(items.length, 2, 'Only published invitations should be included');
+    assert.equal(items[0].title, 'Published Active');
+    assert.equal(items[1].title, 'Published Future');
+    assert.isFalse(
+      items.some((item) => item.title.includes('Unpublished')),
+      'Unpublished invitations should be excluded',
+    );
+  });
+
+  test('spec: includes invitation that starts exactly at now as active', async ({
+    assert,
+  }) => {
+    // arrange
+    const now = DateTime.now();
+    const start = now;
+    const end = now.plus({ days: 1 });
+
+    await InvitationFactory.merge({
+      id: 1,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Invitation Starting Now',
+        window: {{ '`${start.toISO()}|${end.toISO()}`' }},
+        title: 'Invitation Starting Now',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    // act
+    const service = new InvitationService(englishVersion);
+    const items = await service.getInvitationItemsForClient();
+
+    // assert
+    assert.equal(items.length, 1);
+    assert.equal(items[0].title, 'Invitation Starting Now');
+  });
+
+  test('spec: excludes invitation that ended before now as past', async ({ assert }) => {
+    // arrange
+    const now = DateTime.now();
+    const start = now.minus({ days: 2 });
+    const end = now.minus({ minutes: 1 }); // Ended 1 minute ago
+
+    await InvitationFactory.merge({
+      id: 1,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Just Ended Invitation',
+        window: {{ '`${start.toISO()}|${end.toISO()}`' }},
+        title: 'Just Ended Invitation',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    // act
+    const service = new InvitationService(englishVersion);
+    const items = await service.getInvitationItemsForClient();
+
+    // assert
+    assert.equal(items.length, 0);
+    assert.isFalse(items.some((item) => item.title === 'Just Ended Invitation'));
+  });
+
+  test('spec: includes invitation that starts just after now as future', async ({
+    assert,
+  }) => {
+    // arrange
+    const now = DateTime.now();
+    const start = now.plus({ minutes: 1 }); // Starts 1 minute from now
+    const end = now.plus({ days: 1 });
+
+    await InvitationFactory.merge({
+      id: 1,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Starting Soon Invitation',
+        window: {{ '`${start.toISO()}|${end.toISO()}`' }},
+        title: 'Starting Soon Invitation',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    // act
+    const service = new InvitationService(englishVersion);
+    const items = await service.getInvitationItemsForClient();
+
+    // assert
+    assert.equal(items.length, 1);
+    assert.equal(items[0].title, 'Starting Soon Invitation');
+  });
+
+  test('spec: maintains date order with multiple active and future invitations', async ({
+    assert,
+  }) => {
+    // arrange
+    const now = DateTime.now();
+
+    // Active invitations with different start times
+    const active1Start = now.minus({ days: 5 });
+    const active1End = now.plus({ days: 2 });
+    const active2Start = now.minus({ days: 2 });
+    const active2End = now.plus({ days: 3 });
+    const active3Start = now.minus({ hours: 12 });
+    const active3End = now.plus({ days: 4 });
+
+    // Future invitations with different start times
+    const future1Start = now.plus({ days: 1 });
+    const future1End = now.plus({ days: 3 });
+    const future2Start = now.plus({ days: 5 });
+    const future2End = now.plus({ days: 7 });
+    const future3Start = now.plus({ days: 10 });
+    const future3End = now.plus({ days: 12 });
+
+    // Create invitations in random order
+    const invitationsSeed = [
+      { id: 1, title: 'Active Invitation 1', start: active1Start, end: active1End },
+      { id: 2, title: 'Future Invitation 1', start: future1Start, end: future1End },
+      { id: 3, title: 'Active Invitation 2', start: active2Start, end: active2End },
+      { id: 4, title: 'Future Invitation 2', start: future2Start, end: future2End },
+      { id: 5, title: 'Active Invitation 3', start: active3Start, end: active3End },
+      { id: 6, title: 'Future Invitation 3', start: future3Start, end: future3End },
+    ];
+
+    // Shuffle to test sorting
+    const shuffled = [...invitationsSeed].sort(() => Math.random() - 0.5);
+    for (const invitation of shuffled) {
+      await InvitationFactory.merge({
+        id: invitation.id,
+        locale: 'en',
+        apiVersion: 1,
+        bundle: {
+          name: invitation.title,
+          window: {{ '`${invitation.start.toISO()}|${invitation.end.toISO()}`' }},
+          title: invitation.title,
+          message: 'Message',
+          actionLabel: 'Click',
+          actionType: 'close',
+        },
+        isPublished: true,
+      }).create();
+    }
+
+    // act
+    const service = new InvitationService(englishVersion);
+    const items = await service.getInvitationItemsForClient();
+
+    // assert
+    assert.equal(items.length, 6, 'All 6 invitations should be returned');
+
+    // Verify active invitations come first, sorted by start time ascending
+    assert.equal(items[0].title, 'Active Invitation 1', 'Active 1 (started 5 days ago)');
+    assert.equal(items[1].title, 'Active Invitation 2', 'Active 2 (started 2 days ago)');
+    assert.equal(items[2].title, 'Active Invitation 3', 'Active 3 (started 12 hours ago)');
+
+    // Verify future invitations follow, sorted by start time ascending
+    assert.equal(items[3].title, 'Future Invitation 1', 'Future 1 (starts in 1 day)');
+    assert.equal(items[4].title, 'Future Invitation 2', 'Future 2 (starts in 5 days)');
+    assert.equal(items[5].title, 'Future Invitation 3', 'Future 3 (starts in 10 days)');
+  });
+
+  test('spec: returns empty array when no active or future invitations exist', async ({
+    assert,
+  }) => {
+    // arrange
+    const now = DateTime.now();
+    const pastStart = now.minus({ days: 5 });
+    const pastEnd = now.minus({ days: 2 });
+
+    // Only past invitations
+    await InvitationFactory.merge({
+      id: 1,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Past Invitation',
+        window: {{ '`${pastStart.toISO()}|${pastEnd.toISO()}`' }},
+        title: 'Past Invitation',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    // act
+    const service = new InvitationService(englishVersion);
+    const items = await service.getInvitationItemsForClient();
+
+    // assert
+    assert.equal(
+      items.length,
+      0,
+      'Should return empty array when no active or future invitations',
+    );
+  });
+
+  test('spec: filters by locale and apiVersion', async ({ assert }) => {
+    // arrange
+    const now = DateTime.now();
+    const activeStart = now.minus({ days: 1 });
+    const activeEnd = now.plus({ days: 1 });
+
+    // Invitation matching version and locale (should be included)
+    await InvitationFactory.merge({
+      id: 1,
+      locale: 'en',
+      apiVersion: 1,
+      bundle: {
+        name: 'Matching Invitation',
+        window: {{ '`${activeStart.toISO()}|${activeEnd.toISO()}`' }},
+        title: 'Matching Invitation',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    // Invitation with different locale (should be excluded)
+    await InvitationFactory.merge({
+      id: 2,
+      locale: 'es',
+      apiVersion: 1,
+      bundle: {
+        name: 'Spanish Invitation',
+        window: {{ '`${activeStart.toISO()}|${activeEnd.toISO()}`' }},
+        title: 'Spanish Invitation',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    // Invitation with different apiVersion (should be excluded)
+    await InvitationFactory.merge({
+      id: 3,
+      locale: 'en',
+      apiVersion: 2,
+      bundle: {
+        name: 'Version 2 Invitation',
+        window: {{ '`${activeStart.toISO()}|${activeEnd.toISO()}`' }},
+        title: 'Version 2 Invitation',
+        message: 'Message',
+        actionLabel: 'Click',
+        actionType: 'close',
+      },
+      isPublished: true,
+    }).create();
+
+    // act
+    const service = new InvitationService(englishVersion);
+    const items = await service.getInvitationItemsForClient();
+
+    // assert
+    assert.equal(items.length, 1);
+    assert.equal(items[0].title, 'Matching Invitation');
+    assert.isFalse(items.some((item) => item.title === 'Spanish Invitation'));
+    assert.isFalse(items.some((item) => item.title === 'Version 2 Invitation'));
+  });
+
+});

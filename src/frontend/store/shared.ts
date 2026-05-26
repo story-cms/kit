@@ -6,9 +6,9 @@ import {
   type LanguageSpecification,
   type LanguageTableItem,
   type Bookmark,
-  type CmsMeta,
-  type UserInterface,
+  type AppUserInterface,
   ResponseStatus,
+  UiConfig,
 } from '../../types';
 import standardSidebar from '../shared/sidebar.vue';
 
@@ -19,21 +19,19 @@ const defaultLanguage: LanguageSpecification = {
 };
 
 export const useSharedStore = defineStore('shared', () => {
-  const exclude: Ref<string[]> = ref([]);
-  const meta: Ref<CmsMeta> = ref({} as CmsMeta);
-  const user: Ref<UserInterface> = ref({} as UserInterface);
-  const languages: Ref<LanguageSpecification[]> = ref([] as LanguageSpecification[]);
+  const user: Ref<AppUserInterface> = ref({} as AppUserInterface);
+  const config: Ref<UiConfig> = ref({} as UiConfig);
   const bookmarks: Ref<Bookmark[]> = ref([]);
 
   const setFromProps = (props: SharedPageProps) => {
-    meta.value = props.meta;
+    config.value = props.config;
     user.value = props.user;
-    languages.value = props.languages;
     language.value = props.language;
     errors.value = { ...props.errors };
-    exclude.value = props.exclude;
     bookmarks.value = props.bookmarks ?? [];
   };
+
+  const languages = computed(() => config.value.languages);
 
   // errors
 
@@ -229,8 +227,7 @@ export const useSharedStore = defineStore('shared', () => {
   };
 
   return {
-    exclude,
-    meta,
+    config,
     languages,
     errors,
     user,

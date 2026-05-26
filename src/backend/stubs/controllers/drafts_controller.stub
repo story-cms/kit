@@ -8,20 +8,19 @@ import {
   Activity,
   Chapter,
   Draft,
-  trimmedErrors,
   DraftService,
   IndexService,
-  ChapterValidator,
-  chapterErrorMessages,
+  StoryService,
   type DraftEditProps,
 } from '@story-cms/kit';
 import cms from '#services/cms';
 import providers from '#config/providers';
-import vine from '@vinejs/vine';
+import { storyValidator } from '#validators/story_validator';
 
 export default class DraftsController {
   public async create(ctx: HttpContext) {
-    const { story, version } = cms.storyContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const { story, version } = await storyService.parsePath(ctx);
     if (story === undefined) return ctx.response.notFound();
 
     const indexService = new IndexService(story, cms);
@@ -52,7 +51,8 @@ export default class DraftsController {
   }
 
   public async edit(ctx: HttpContext) {
-    const { story, version } = cms.storyContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const { story, version } = await storyService.parsePath(ctx);
     if (story === undefined) return ctx.response.notFound();
 
     const specifier = {
@@ -85,41 +85,40 @@ export default class DraftsController {
     const indexService = new IndexService(story, cms);
     await indexService.buildIndex(version);
 
-    const shared = await cms.sharedProps(ctx);
-
     const data: DraftEditProps = {
       draft: draft.meta,
       bundle: draft!.bundle,
       lastPublished,
       providers,
       story,
-      hasEditReview: cms.config.stories.hasEditReview,
-      ...shared,
+      hasEditReview: cms.config.storiesHasEditReview,
     };
 
-    const isTranslation = version.locale !== cms.config.languages.languages[0].locale;
+    const isTranslation = version.locale !== cms.sourceLocale;
 
     if (!isTranslation) {
+      // @ts-expect-error Inertia page name
       return ctx.inertia.render('DraftIndex', data);
     }
 
     const source = await Chapter.query()
       .where({
         ...specifier,
-        locale: cms.config.languages.languages[0].locale,
+        locale: cms.sourceLocale,
       })
       .first();
 
+    // @ts-expect-error Inertia page name
     return ctx.inertia.render('TranslationIndex', {
       ...data,
       source: source?.bundle,
-      ...shared,
     });
   }
 
   // Only saving the draft without performing any validation
   public async save(ctx: HttpContext) {
-    const { story, version } = cms.storyContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const { story, version } = await storyService.parsePath(ctx);
     if (!story) return ctx.response.notFound();
 
     try {
@@ -136,7 +135,7 @@ export default class DraftsController {
       const service = new IndexService(story, cms);
       await service.buildIndex(draft.version);
     } catch (e) {
-      const errors = e.messages || e.message || 'Error while saving this draft. Sorry!';
+      const errors = 'Error while saving this draft. Sorry!';
       ctx.session.flash('errorsBag', errors);
     }
 
@@ -144,24 +143,16 @@ export default class DraftsController {
   }
 
   public async submit(ctx: HttpContext) {
-    const { story, version } = cms.storyContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const { story, version } = await storyService.parsePath(ctx);
     if (story === undefined) return ctx.response.notFound();
 
     const id = Number(ctx.params.id);
     const draft = await Draft.findOrFail(id);
 
-    let payload;
-
-    try {
-      const data = ctx.request.all();
-      vine.messagesProvider = chapterErrorMessages;
-      const validator = new ChapterValidator(story);
-      payload = await validator.schema.validate(data);
-    } catch (e) {
-      const errors = trimmedErrors(e);
-      ctx.session.flash('errorsBag', errors);
-      return ctx.response.redirect().back();
-    }
+    const data = ctx.request.all();
+    const validator = storyValidator(story);
+    const payload = await validator.validate(data);
 
     const service = new IndexService(story, cms);
 
@@ -179,7 +170,8 @@ export default class DraftsController {
   }
 
   public async reject(ctx: HttpContext) {
-    const { version, story } = cms.storyContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const { story, version } = await storyService.parsePath(ctx);
     if (story === undefined) return ctx.response.notFound();
 
     const id = Number(ctx.params.id);
@@ -199,25 +191,17 @@ export default class DraftsController {
   }
 
   public async publish(ctx: HttpContext) {
-    const { story } = cms.storyContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const { story } = await storyService.parsePath(ctx);
     if (story === undefined) return ctx.response.notFound();
 
     const id = Number(ctx.params.id);
     const draft = await Draft.findOrFail(id);
 
-    try {
-      const data = ctx.request.all();
-      vine.messagesProvider = chapterErrorMessages;
-      const validator = new ChapterValidator(story);
-      const payload = await validator.schema.validate(data);
-      draft.bundle = JSON.stringify(payload.bundle);
-    } catch (e) {
-      const errors = trimmedErrors(e);
-      ctx.session.flash('errorsBag', errors);
-      return ctx.response.redirect().back();
-    }
-
-    draft.bundle = ctx.request.input('bundle');
+    const data = ctx.request.all();
+    const validator = storyValidator(story);
+    const payload = await validator.validate(data);
+    draft.bundle = JSON.stringify(payload.bundle);
     const version = { ...draft.version };
 
     await db.transaction(async (trx) => {
@@ -250,7 +234,8 @@ export default class DraftsController {
   }
 
   public async delete(ctx: HttpContext) {
-    const { story } = cms.storyContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const { story } = await storyService.parsePath(ctx);
     if (story === undefined) return ctx.response.notFound();
 
     const id = Number(ctx.params.id);

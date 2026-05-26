@@ -2,7 +2,7 @@
   exports({ to: app.configPath('providers.ts') })
 }}}
 import env from '#start/env';
-import { Providers } from '@story-cms/kit';
+import type { Providers } from '@story-cms/kit';
 
 export default {
   s3: {

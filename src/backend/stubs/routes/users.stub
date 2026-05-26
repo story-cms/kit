@@ -6,7 +6,7 @@ import router from '@adonisjs/core/services/router';
 const UsersController = () => import('#controllers/users_controller');
 
 export default () => {
-  router.on('/user').redirect('/:locale/user', {
+  router.on('/user').redirect('users.index', {
     locale: 'en',
   });
   router.get(':locale/user', [UsersController, 'index']);

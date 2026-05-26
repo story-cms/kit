@@ -1,5 +1,5 @@
 import Chapter from '../models/chapter.js';
-import { FieldMap, FieldSpec, StorySpec, Version } from '../../types';
+import type { FieldMap, FieldSpec, StorySpec, StoryVersion, JSON } from '../../types';
 import { BundleService } from './bundle_service.js';
 import { CmsService } from './cms_service.js';
 
@@ -19,9 +19,12 @@ export class DraftService {
     this.story = story;
   }
 
-  public async getDraftBundle(version: Version, number: number): Promise<string | null> {
+  public async getDraftBundle(
+    version: StoryVersion,
+    number: number,
+  ): Promise<JSON<any> | null> {
     // is this the source language?
-    if (version.locale === this.cms.config.languages.languages[0].locale) {
+    if (version.locale === this.cms.sourceLocale) {
       const bundleService = new BundleService(this.story.fields);
       return bundleService.defaultBundle;
     }
@@ -29,7 +32,7 @@ export class DraftService {
     // it's a translation, so we need to get the source bundle
     const specifier = {
       apiVersion: version.apiVersion,
-      locale: this.cms.config.languages.languages[0].locale,
+      locale: this.cms.sourceLocale,
       storyId: this.story.id,
       number: number,
     };

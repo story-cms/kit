@@ -9,12 +9,10 @@
         :last-published="'2021-10-10T14:48:00.000000Z'"
         :providers="{}"
         :errors="sharedProps.errors"
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
-        :languages="sharedProps.languages"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
       />
     </Variant>
   </Story>

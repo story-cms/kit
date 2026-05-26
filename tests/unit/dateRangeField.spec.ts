@@ -64,8 +64,8 @@ test.describe('Date Range Field storage normalization (date-only, no time picker
     });
   });
 
-  test.describe('campaign window visibility (date-only)', () => {
-    test('start at T00:00:00.000Z allows campaign visibility from midnight on that date', () => {
+  test.describe('invitation window visibility (date-only)', () => {
+    test('start at T00:00:00.000Z allows invitation visibility from midnight on that date', () => {
       const startDate = new Date(2025, 2, 10, 12, 0, 0, 0); // User selects March 10
 
       const normalized = normalizeDateForStorage(startDate, false);
@@ -73,7 +73,7 @@ test.describe('Date Range Field storage normalization (date-only, no time picker
       expect(normalized.toISOString()).toBe('2025-03-10T00:00:00.000Z');
     });
 
-    test('end at T23:59:59.999Z includes full campaign window through last day', () => {
+    test('end at T23:59:59.999Z includes full invitation window through last day', () => {
       const endDate = new Date(2025, 2, 20, 9, 0, 0, 0); // User selects March 20
 
       const normalized = normalizeDateForStorage(endDate, false, true);

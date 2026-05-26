@@ -2,16 +2,12 @@
   exports({ to: app.makePath('app/controllers/pages_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
-import vine from '@vinejs/vine';
-
 import {
   Activity,
   Page,
-  trimmedErrors,
   PageService,
   type PageEditProps,
   PageValidator,
-  pageErrorMessages,
 } from '@story-cms/kit';
 import cms from '#services/cms';
 import providers from '#config/providers';
@@ -33,36 +29,33 @@ export default class PagesController {
   }
 
   public async index(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
     const service = new PageService(version, cms);
     const pages = await service.getPageItems();
 
-    const shared = await cms.sharedProps(ctx);
+    // @ts-expect-error Inertia page name
     return ctx.inertia.render('PagesIndex', {
       pages: pages,
-      ...shared,
     });
   }
 
   public async edit(ctx: HttpContext) {
     const page = await Page.findOrFail(ctx.params.id);
 
-    const shared = await cms.sharedProps(ctx);
     const props: PageEditProps = {
       providers: providers,
       page: page.meta,
       bundle: page.model,
-      ...shared,
     };
 
+    // @ts-expect-error Inertia page name
     return ctx.inertia.render('PagesEdit', props);
   }
 
   public async create(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
     const page = await Page.create({
-      locale: version.locale,
-      apiVersion: cms.config.pages.schemaVersion,
+      ...version,
       order: 1,
       bundle: '{"group":1}',
       updatedBy: ctx.auth.user?.id,
@@ -78,7 +71,7 @@ export default class PagesController {
   }
 
   public async destroy(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
     const id = Number(ctx.params.id);
     const page = await Page.findOrFail(id);
     try {
@@ -89,29 +82,18 @@ export default class PagesController {
         action: {{ '`deleted page ${page.id}`' }},
       });
     } catch (e) {
-      ctx.session.flash('errorsBag', { other: e.message });
+      ctx.session.flash('errorsBag', { other: 'Error while deleting page' });
     }
 
     return ctx.response.redirect({{ '`/${version.locale}/page`' }}, false, 303);
   }
 
   public async update(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
-    let payload;
-    try {
-      // constructing the validator first so we can have a
-      // dynamic getter for the schema property
-      const data = ctx.request.all();
-      vine.messagesProvider = pageErrorMessages;
-
-      const pageValidator = new PageValidator(ctx);
-      payload = await pageValidator.schema.validate(data);
-    } catch (e) {
-      const errors = trimmedErrors(e);
-
-      ctx.session.flash('errorsBag', prepend(errors));
-      return ctx.response.redirect().back();
-    }
+    const version = cms.versionFromPath(ctx);
+    const data = ctx.request.all();
+    const pageValidator = new PageValidator(ctx);
+    const validated = await pageValidator.validate(data);
+    const payload = validated.bundle;
 
     const id = Number(ctx.params.id);
     const page = await Page.findOrFail(id);
@@ -138,7 +120,7 @@ export default class PagesController {
   }
 
   public async sort(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
 
     // use the service to sort the pages in memory
     const service = new PageService(version, cms);
@@ -158,13 +140,3 @@ export default class PagesController {
     return ctx.response.redirect().back();
   }
 }
-
-// The model store on the client requires that the error messages
-// each have a "bundle" prefix
-const prepend = (plain: Record<string, string[]>): Object => {
-  const result: Record<string, unknown> = {};
-  for (const key in plain) {
-    result[{{ '`bundle.${key}`' }}] = plain[key];
-  }
-  return result;
-};

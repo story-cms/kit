@@ -1,11 +1,10 @@
 import type {
   FieldSpec,
   LanguageSpecification,
-  LanguageTableItem,
-  CmsMeta,
   SharedPageProps,
   StorySpec,
-  CampaignItem,
+  InvitationItem,
+  UiConfig,
 } from '../../types.ts';
 import { StoryHandler } from '../shared/helpers.js';
 import { useSharedStore } from '../store/shared.js';
@@ -515,6 +514,7 @@ export const story: StorySpec = {
         "Jesus is betrayed by His friends, put on trial and killed. It looks like a disaster. But all is not as it seems...\n\nCovering chapters 18-21 of John's Gospel.",
     },
   ],
+  sections: [],
 };
 
 export const spanish: LanguageSpecification = {
@@ -887,13 +887,20 @@ export const manyLanguageTableItems: LanguageTableItem[] = [
   },
 ];
 
+export const config: UiConfig = {
+  name: 'The Word One to One',
+  logo: 'https://res.cloudinary.com/theword121/image/upload/v1687245360/episodes/viseg2hegowcrapio6pt.svg',
+  helpUrl: 'https://www.theword121.com/',
+  hasAppPreview: false,
+  languages,
+  subscriptions: ['story', 'stream', 'language', 'audience', 'invitation', 'page'],
+};
+
 export const sharedProps: SharedPageProps = {
-  meta,
+  config,
   user,
   language: english,
-  languages,
   errors: {},
-  exclude: [],
   bookmarks: [
     { label: 'John', link: '/en/story/1' },
     { label: 'Acts', link: '/en/story/2' },
@@ -3233,7 +3240,7 @@ export const afsCourseStory = {
   } as StorySpec,
 };
 
-export const mockCampaigns: CampaignItem[] = [
+export const mockInvitations: InvitationItem[] = [
   {
     id: 1,
     name: 'Giving Tuesday',
@@ -3243,7 +3250,7 @@ export const mockCampaigns: CampaignItem[] = [
   },
   {
     id: 2,
-    name: 'Christmas Campaign',
+    name: 'Christmas invitation',
     regions:
       'CX, KE, UG, ZM, UK, US, AU, ZA, CA, IE, NZ, SG, MY, HK, TW, JP, KR, CN, IN, ID, PH, TH, VN, MY, HK, TW, JP, KR, CN, IN, ID, PH, TH, VN',
     window: '2025-12-24T02:58:00.000Z|2025-12-26T02:58:00.000Z',
@@ -3251,14 +3258,14 @@ export const mockCampaigns: CampaignItem[] = [
   },
   {
     id: 3,
-    name: 'New Year Campaign',
+    name: 'New Year invitation',
     regions: 'CX, KE, UG, ZM, GB, US',
     window: '2026-01-01T02:58:00.000Z|2026-01-03T02:58:00.000Z',
     isPublished: true,
   },
   {
     id: 4,
-    name: "Valentine's Day Campaign",
+    name: "Valentine's Day invitation",
     regions:
       'CX, KE, UG, ZM, UK, US, AU, ZA, CA, IE, NZ, SG, MY, HK, TW, JP, KR, CN, IN, ID, PH, TH, VN, MY, HK, TW, JP, KR, CN, IN, ID, PH, TH, VN',
     window: '2026-02-14T02:58:00.000Z|2026-02-15T02:58:00.000Z',
@@ -3266,14 +3273,14 @@ export const mockCampaigns: CampaignItem[] = [
   },
   {
     id: 5,
-    name: 'Easter Campaign',
+    name: 'Easter invitation',
     regions: 'CX, KE, UG, ZM',
     window: '2025-04-18T02:58:00.000Z|2025-04-21T02:58:00.000Z',
     isPublished: true,
   },
   {
     id: 6,
-    name: 'Summer Campaign',
+    name: 'Summer invitation',
     regions: 'CX, KE, UG, ZM',
     window: '2026-06-01T02:58:00.000Z|2026-06-15T02:58:00.000Z',
     isPublished: false,

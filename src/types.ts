@@ -21,6 +21,17 @@ export enum FlagState {
 }
 
 /// ----------------------------------------------------
+///  selectors
+/// ----------------------------------------------------
+
+export interface Version {
+  apiVersion: number;
+  locale: string;
+}
+
+export type VisibilityType = 'public' | 'guests' | 'leaders';
+
+/// ----------------------------------------------------
 ///  fields
 /// ----------------------------------------------------
 
@@ -70,6 +81,12 @@ export interface Video {
 }
 
 export type WidgetPicker = (widget: string) => any;
+
+/**
+ * Type-safe wrapper for JSON columns that preserves the generic parameter
+ * while ensuring JSON-serializable values at runtime.
+ */
+export type JSON<T> = T;
 
 /// ----------------------------------------------------
 ///  streams
@@ -125,8 +142,33 @@ export interface StreamEditProps {
 }
 
 /// ----------------------------------------------------
+///  resources
+/// ----------------------------------------------------
+
+export interface TextBundle {
+  content: string;
+}
+
+export interface VideoBundle {
+  video: { url: string };
+}
+
+export interface LinkBundle {
+  infoUrl: string;
+}
+
+export type ResourceType = 'text' | 'video' | 'info_link';
+export type ResourceBundle = TextBundle | VideoBundle | LinkBundle;
+
+/// ----------------------------------------------------
 ///  stories
 /// ----------------------------------------------------
+
+export interface StorySection {
+  id: string; // uuid
+  title: string;
+  description?: string;
+}
 
 export interface StorySpec {
   id: number;
@@ -137,6 +179,7 @@ export interface StorySpec {
   storyType: string;
   schemaVersion: number;
   fields: FieldSpec[];
+  sections: Array<StorySection>;
   parts?: Array<Part>;
 }
 
@@ -146,21 +189,17 @@ export interface StoryIndexItem {
   description: string;
   coverImage: string;
   chapterLimit: number;
+  isPublished: boolean;
   createdAt: string;
   updatedAt: string;
   draftCount: number;
 }
 
-export interface Version {
-  apiVersion: number;
+export interface StoryVersion extends Version {
   storyId: number;
-  locale: string;
 }
 
-export interface Specifier {
-  apiVersion: number;
-  storyId: number;
-  locale: string;
+export interface StorySpecifier extends StoryVersion {
   number: number;
 }
 
@@ -211,12 +250,44 @@ export type StoryMeta = {
   name: string;
   storyType: string;
   chapterType: string;
+  isPublished: boolean;
   createdAt: string;
   updatedAt: string;
 };
 
-export interface StoryEditProps {
+export interface JournaStoryEditProps {
   story: StoryMeta;
+  providers: Providers;
+  isNew: boolean;
+}
+
+export interface StoryEditProps {
+  model: {
+    id: number;
+    tags: string | null;
+    chapterLimit: number;
+    storyType: string;
+    chapterType: string;
+    sectionType: string | null;
+    visibility: string;
+    slug: string;
+    template: string;
+    isPublished: boolean;
+    createdAt: string;
+    updatedAt: string;
+    title: string;
+    coverImage: string;
+    description: string;
+    sections: StorySection[];
+    resources: string[];
+  };
+  source: {
+    title: string;
+    coverImage: string;
+    description: string;
+    sections: StorySection[];
+    resources: string[];
+  };
   isNew: boolean;
   providers: Providers;
 }
@@ -257,6 +328,10 @@ export interface PreviewProps {
   title: string;
 }
 
+export interface ValidatorType {
+  validate: (data: any) => Promise<any>;
+}
+
 /// ----------------------------------------------------
 ///  pages
 /// ----------------------------------------------------
@@ -274,11 +349,6 @@ export interface PageItem {
   category?: string;
 }
 
-export interface PageVersion {
-  apiVersion: number;
-  locale: string;
-}
-
 export interface PageBundle {
   group: number;
   title: string;
@@ -288,12 +358,10 @@ export interface PageBundle {
 }
 
 export interface SharedPageProps {
-  meta: CmsMeta;
-  user: UserInterface;
+  user: AppUserInterface;
+  config: UiConfig;
   language: LanguageSpecification;
-  languages: LanguageSpecification[];
   errors?: any;
-  exclude: string[];
   bookmarks?: Bookmark[];
 }
 
@@ -316,6 +384,16 @@ export interface PageEditProps {
 /// ----------------------------------------------------
 ///  team
 /// ----------------------------------------------------
+
+export type UserRole = 'admin' | 'editor';
+
+export interface AppUserInterface {
+  id: number;
+  name: string;
+  isAdmin: boolean;
+  isManager: boolean;
+  role: string;
+}
 
 export interface UserInterface {
   id: number;
@@ -406,7 +484,7 @@ export interface DashboardProps {
 }
 
 /// ----------------------------------------------------
-///  audiences
+///  audience
 /// ----------------------------------------------------
 
 export interface AudienceMeta {
@@ -418,40 +496,40 @@ export interface AudienceMeta {
   lastSignInTime: string;
 }
 
-export interface AudiencesProps {
-  audiences: AudienceMeta[];
+export interface AudienceProps {
+  audience: AudienceMeta[];
   nextPageToken?: string | null;
 }
 
 /** JSON body for GET `/:locale/audience/users` (cursor pagination). */
-export interface AudiencesUsersPageResponse {
+export interface AudienceUsersPageResponse {
   users: AudienceMeta[];
   nextPageToken: string | null;
 }
 
 /// ----------------------------------------------------
-///  campaigns
+///  invitations
 /// ----------------------------------------------------
 
-export interface CampaignMeta {
+export interface InvitationMeta {
   id: number;
   createdAt: string;
   updatedAt: string;
 }
 
-export interface CampaignStats {
+export interface InvitationStats {
   impressions: number;
   clicks: number;
 }
 
-export interface CampaignEditProps {
-  campaign: CampaignMeta;
-  stats: CampaignStats;
+export interface InvitationEditProps {
+  invitation: InvitationMeta;
+  stats: InvitationStats;
   bundle: any; // model
   providers: Providers; // widgets
 }
 
-export interface CampaignBundle {
+export interface InvitationBundle {
   name: string;
   regions: string;
   window: string;
@@ -464,7 +542,7 @@ export interface CampaignBundle {
   actionUrl?: string;
 }
 
-export interface CampaignItem {
+export interface InvitationItem {
   id: number;
   name?: string;
   regions?: string;
@@ -472,16 +550,11 @@ export interface CampaignItem {
   isPublished: boolean;
 }
 
-export interface CampaignIndexProps {
-  campaigns: CampaignItem[];
+export interface InvitationIndexProps {
+  invitations: InvitationItem[];
 }
 
-export interface CampaignVersion {
-  apiVersion: number;
-  locale: string;
-}
-
-export interface CampaignForApi {
+export interface InvitationForApi {
   id: number;
   startDate: string | null;
   endDate: string | null;
@@ -499,53 +572,58 @@ export interface CampaignForApi {
 ///  configuration
 /// ----------------------------------------------------
 
+// trackable settings should not be nested
+// no optional settings in the type definition
+export type CmsConfig = {
+  name: string;
+  logo: string;
+  helpUrl: string;
+  hasAppPreview: boolean;
+  microcopySource: string;
+  languages: LanguageSpecification[];
+  subscriptions: Subscription[];
+
+  pagesTracking: string;
+  // any bespoke story or stream templates
+  bespokeTemplates: BundleTemplate[];
+
+  // will be deprecated in favour of streams table and template
+  streams: StreamSpec[];
+  // streamTemplates: BundleTemplate[];
+
+  storiesHasEditReview: boolean;
+  storyTemplates: BundleTemplate[];
+};
+
 export interface Bookmark {
   label: string;
   link: string;
 }
 
-export interface CmsMeta {
+export interface UiConfig {
   name: string;
   logo: string;
-  helpUrl?: string;
+  helpUrl: string;
   hasAppPreview: boolean;
   /** Contact email for enquiries (e.g. from MAIL_FROM_ADDRESS) */
   mailFromAddress?: string;
+  languages: LanguageSpecification[];
+  subscriptions: Subscription[];
 }
 
-export type CmsConfig = {
-  meta: CmsMeta;
+export type Subscription =
+  | 'story'
+  | 'stream'
+  | 'language'
+  | 'audience'
+  | 'invitation'
+  | 'page';
 
-  languages: {
-    languages: LanguageSpecification[];
-    microcopySource: string;
-  };
-
-  streams: {
-    hasStreams?: boolean;
-    streams: StreamSpec[];
-  };
-
-  stories: {
-    hasStories?: boolean;
-    hasEditReview: boolean;
-    stories: StorySpec[];
-  };
-
-  pages: {
-    hasPages?: boolean;
-    schemaVersion: number;
-    tracking: string;
-  };
-
-  audience: {
-    hasAudience?: boolean;
-  };
-
-  campaigns: {
-    hasCampaigns?: boolean;
-  };
-};
+export interface BundleTemplate {
+  id: string;
+  name: string;
+  fields: FieldSpec[];
+}
 
 export interface LanguageSpecification {
   language: string;

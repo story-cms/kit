@@ -1,8 +1,7 @@
 {{{
   exports({ to: app.makePath('app/controllers/create_account_controller.ts') })
 }}}
-import { HttpContext } from '@adonisjs/core/http';
-import cms from '#services/cms';
+import type { HttpContext } from '@adonisjs/core/http';
 import { User, newPasswordValidator } from '@story-cms/kit';
 
 export default class CreateAccountController {
@@ -14,10 +13,9 @@ export default class CreateAccountController {
     }
 
     const email = user.email;
-    const shared = await cms.sharedProps(ctx);
+    // @ts-expect-error Inertia page name
     return ctx.inertia.render('CreateAccount', {
       email,
-      ...shared,
     });
   }
 
@@ -33,7 +31,7 @@ export default class CreateAccountController {
 
     const sameToken = token === user.resetToken;
     if (!sameToken || token === '') {
-      ctx.session.flash('errorsBag', { token: 'Invalid Token' });
+      ctx.session.flash('inputErrorsBag', { token: 'Invalid Token' });
       return ctx.response.redirect().back();
     }
 
@@ -44,6 +42,6 @@ export default class CreateAccountController {
     return ctx.response
       .redirect()
       .withQs({ message: 'registration_success' })
-      .toRoute('/login');
+      .toRoute('auth.index');
   }
 }

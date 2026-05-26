@@ -11,7 +11,7 @@ export class UiService {
   protected sourceLocale = 'en';
 
   constructor(protected cms: CmsService) {
-    this.sourceLocale = cms.config.languages.languages[0].locale;
+    this.sourceLocale = cms.sourceLocale;
   }
 
   public async fillMissing(locale: string): Promise<number> {
@@ -197,7 +197,7 @@ export class UiService {
       Authorization: `Bearer ${token}`,
     };
 
-    const sourcePath = this.cms.config.languages.microcopySource;
+    const sourcePath = this.cms.config.microcopySource;
     const req = await axios.get(sourcePath, { headers });
     const data = req.data as Record<string, any>;
 
@@ -215,8 +215,8 @@ export class UiService {
       .map((key) => ({
         key: key.substring(1),
         // trim to the first 255 characters to avoid column size limit
-        description: data[key]['description'].substring(0, 255),
-        placeholders: data[key]['placeholders'],
+        description: data[key]['description']?.substring(0, 255) ?? '',
+        placeholders: data[key]['placeholders'] ?? {},
       }));
 
     await db.transaction(async (trx) => {
