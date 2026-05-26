@@ -1,6 +1,8 @@
 import type {
   FieldSpec,
   LanguageSpecification,
+  LanguageTableItem,
+  CmsMeta,
   SharedPageProps,
   StorySpec,
   InvitationItem,
