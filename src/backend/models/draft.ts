@@ -1,6 +1,12 @@
 import { DateTime } from 'luxon';
 import { BaseModel, column } from '@adonisjs/lucid/orm';
-import type { IndexItem, Specifier, Version, DraftMeta, JSON } from '../../types';
+import type {
+  IndexItem,
+  StorySpecifier,
+  StoryVersion,
+  DraftMeta,
+  JSON,
+} from '../../types';
 
 export default class Draft extends BaseModel {
   @column({ isPrimary: true })
@@ -44,7 +50,7 @@ export default class Draft extends BaseModel {
     };
   }
 
-  public get specifier(): Specifier {
+  public get specifier(): StorySpecifier {
     return {
       storyId: this.storyId,
       locale: this.locale,
@@ -53,7 +59,7 @@ export default class Draft extends BaseModel {
     };
   }
 
-  public get version(): Version {
+  public get version(): StoryVersion {
     return {
       storyId: this.storyId,
       locale: this.locale,

@@ -1,0 +1,19 @@
+{{{ 
+  exports({ to: app.makePath('tests/helpers/story_test_helper.ts') }) 
+}}}
+import { Story, StoryFactory } from '@story-cms/kit';
+
+export async function seedTestStory(id = 1) {
+  const existing = await Story.find(id);
+  if (existing) return existing;
+
+  return StoryFactory.with('localisations')
+    .merge({
+      id,
+      template: 'test-story',
+      chapterLimit: 10,
+      storyType: 'Story',
+      chapterType: 'Chapter',
+    })
+    .create();
+}

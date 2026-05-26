@@ -62,9 +62,6 @@ export * from './store/index';
 
 export { commonProps, helpScoutWidget } from './shared/helpers';
 
-// Re-export types for easier access
-export * from '../types';
-
 export {
   ActionButton,
   AddItemButton,

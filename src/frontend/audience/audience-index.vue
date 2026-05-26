@@ -96,7 +96,7 @@ import type {
 } from '../../types';
 import { ResponseStatus } from '../../types';
 import { useSharedStore } from '../store';
-import { extraAudienceColumns, keyToTitle } from '../../backend/services/helpers';
+import { extraAudienceColumns, keyToTitle } from '../../shared/audience_helpers';
 
 const props = defineProps<SharedPageProps & AudienceProps>();
 

@@ -506,6 +506,7 @@ export const story: StorySpec = {
         "Jesus is betrayed by His friends, put on trial and killed. It looks like a disaster. But all is not as it seems...\n\nCovering chapters 18-21 of John's Gospel.",
     },
   ],
+  sections: [],
 };
 
 export const spanish: LanguageSpecification = {

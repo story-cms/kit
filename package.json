@@ -7,17 +7,18 @@
     "dev": "histoire dev",
     "todo-lint": "eslint .",
     "clean": "del-cli dist",
+    "types:build": "tsc -p tsconfig.types.json",
     "ui:build": "vite build",
     "backend:build": "tsc -p tsconfig.backend.json",
     "copy:templates": "copyfiles --up 3 \"src/backend/stubs/**/*.stub\" dist/backend/stubs",
-    "build": "npm run ui:build && npm run backend:build",
+    "build": "npm run types:build && npm run ui:build && npm run backend:build",
     "prebuild": "npm run clean",
     "postbuild": "npm run copy:templates",
     "prepare": "npm run build",
     "story:build": "histoire build",
     "story:preview": "histoire preview",
     "test:e2e": "npx playwright test tests/e2e/*.ts",
-    "test": "npx playwright test tests/unit/*.ts",
+    "test": "npx playwright test --config=playwright.unit.config.ts tests/unit/*.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
@@ -26,6 +27,10 @@
     ".": {
       "import": "./dist/backend/index.js",
       "types": "./dist/backend/index.d.ts"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/types.js"
     },
     "./add_meta_noindex_middleware": "./dist/backend/middleware/add_meta_noindex.js",
     "./admin_middleware": "./dist/backend/middleware/admin.js",

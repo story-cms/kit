@@ -1,12 +1,12 @@
-import type { PageVersion, PageBundle, PageItem } from '../../types';
+import type { Version, PageBundle, PageItem } from '../../types';
 import Page from '../models/page.js';
 import { CmsService } from './cms_service.js';
 
 export class PageService {
-  protected version: PageVersion;
+  protected version: Version;
 
   constructor(
-    version: PageVersion,
+    version: Version,
     protected cms: CmsService,
   ) {
     this.version = version;

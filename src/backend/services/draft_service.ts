@@ -1,5 +1,5 @@
 import Chapter from '../models/chapter.js';
-import type { FieldMap, FieldSpec, StorySpec, Version, JSON } from '../../types';
+import type { FieldMap, FieldSpec, StorySpec, StoryVersion, JSON } from '../../types';
 import { BundleService } from './bundle_service.js';
 import { CmsService } from './cms_service.js';
 
@@ -20,7 +20,7 @@ export class DraftService {
   }
 
   public async getDraftBundle(
-    version: Version,
+    version: StoryVersion,
     number: number,
   ): Promise<JSON<any> | null> {
     // is this the source language?

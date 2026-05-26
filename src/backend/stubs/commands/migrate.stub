@@ -23,7 +23,19 @@ export default class MigrateAll extends BaseCommand {
     }
 
     await this.migrateConfig();
+    await this.seedBespokeStories();
   }
+
+  private async seedBespokeStories() {
+    const seeder = await this.kernel.exec('seed:stories', []);
+    this.exitCode = seeder.exitCode;
+    this.error = seeder.error;
+
+    if (seeder.error || seeder.exitCode) {
+      this.logger.info('Story seeding failed');
+    }
+  }
+
 
   private async migrateConfig() {
     const active = await Config.query()

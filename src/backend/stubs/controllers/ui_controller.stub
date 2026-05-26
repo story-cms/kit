@@ -8,7 +8,7 @@ import cms from '#services/cms';
 export default class UisController {
   // render the UI page with the translation
   public async index(ctx: HttpContext) {
-    const locale = cms.localeFrom(ctx);
+    const locale = cms.localeFromPath(ctx);
 
     const service = new UiService(cms);
     const items = await service.items(locale);
@@ -16,14 +16,13 @@ export default class UisController {
       items,
     };
 
-    const shared = await cms.sharedProps(ctx);
     // @ts-expect-error Inertia page name
-    return ctx.inertia.render('UiPage', { ...props, ...shared });
+    return ctx.inertia.render('UiPage', { ...props });
   }
 
   // API endpoint to get the translation for a specific locale
   public async translation(ctx: HttpContext) {
-    const locale = cms.localeFromApi(ctx);
+    const locale = cms.localeFromQuery(ctx);
 
     if (!cms.isTranslation(locale))
       return ctx.response.unprocessableEntity('Cannot download the source language');
@@ -36,7 +35,7 @@ export default class UisController {
 
   // persist a translated item
   public async store(ctx: HttpContext) {
-    const locale = cms.localeFrom(ctx);
+    const locale = cms.localeFromPath(ctx);
 
     if (!cms.isTranslation(locale))
       return ctx.response.unprocessableEntity('Cannot store source language');
@@ -57,7 +56,7 @@ export default class UisController {
   }
 
   public async translateBulk(ctx: HttpContext) {
-    const locale = cms.localeFrom(ctx);
+    const locale = cms.localeFromPath(ctx);
 
     if (!cms.isTranslation(locale)) {
       return ctx.response.unprocessableEntity('Cannot translate source language');
@@ -80,7 +79,7 @@ export default class UisController {
   }
 
   public async suggest(ctx: HttpContext) {
-    const locale = cms.localeFrom(ctx);
+    const locale = cms.localeFromPath(ctx);
 
     if (!cms.isTranslation(locale)) {
       return ctx.response.unprocessableEntity('Cannot suggest translation');
@@ -94,7 +93,7 @@ export default class UisController {
   }
 
   public async flag(ctx: HttpContext) {
-    const locale = cms.localeFrom(ctx);
+    const locale = cms.localeFromPath(ctx);
 
     const service = new UiService(cms);
     try {

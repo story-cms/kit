@@ -10,32 +10,33 @@ import {
   StoryIndexProps,
   Chapter,
   PreviewProps,
+  StoryService,
 } from '@story-cms/kit';
 import cms from '#services/cms';
 
 export default class ChaptersController {
   public async index(ctx: HttpContext) {
-    const { story, version } = cms.storyContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const { story, version } = await storyService.parsePath(ctx);
     if (story === undefined) return ctx.response.notFound();
 
     const service = new IndexService(story, cms);
-
     const addStatus: AddStatus = await service.getAddStatus(version);
     const index = await service.getItems(version);
-    const shared = await cms.sharedProps(ctx);
+    const storyIsBespoke = false;  // TODO: implement this
     const props: StoryIndexProps = {
       index,
       addStatus,
       story,
-      ...shared,
+      canEditStory: !storyIsBespoke,
     };
-
     // @ts-expect-error Inertia page name
     return ctx.inertia.render('StoryIndex', props);
   }
 
   public async preview(ctx: HttpContext) {
-    const { story, version } = cms.storyContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const { story, version } = await storyService.parsePath(ctx);
     if (story === undefined) return ctx.response.notFound();
 
     const specifier = {
@@ -52,15 +53,12 @@ export default class ChaptersController {
       number: chapter.number,
     });
 
-    const shared = await cms.sharedProps(ctx);
-
     const props: PreviewProps = {
       chapter: chapter.meta,
       bundleView: bundleView,
       title: chapter.index.title,
       bundle: chapter.bundle,
       story,
-      ...shared,
     };
 
     // @ts-expect-error Inertia page name
@@ -68,7 +66,7 @@ export default class ChaptersController {
   }
 
   public async get(ctx: HttpContext) {
-    const { version } = cms.apiContextFrom(ctx);
+    const version = cms.versionFromQuery(ctx);
 
     const specifier = {
       ...version,
@@ -81,7 +79,7 @@ export default class ChaptersController {
   }
 
   public async range(ctx: HttpContext) {
-    const { version } = cms.apiContextFrom(ctx);
+    const version = cms.versionFromQuery(ctx);
 
     const page = ctx.request.qs()['page'] || 1;
 
