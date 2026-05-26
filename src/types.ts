@@ -605,8 +605,6 @@ export interface UiConfig {
   logo: string;
   helpUrl: string;
   hasAppPreview: boolean;
-  /** Contact email for enquiries (e.g. from MAIL_FROM_ADDRESS) */
-  mailFromAddress?: string;
   languages: LanguageSpecification[];
   subscriptions: Subscription[];
 }
