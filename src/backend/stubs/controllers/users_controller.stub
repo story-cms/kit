@@ -36,11 +36,9 @@ export default class UsersController {
 
     const userService = new UserService();
     const users = await userService.latest();
-    const shared = await cms.sharedProps(ctx);
 
     const props: UsersProps = {
       users,
-      ...shared,
     };
 
     // @ts-expect-error Inertia page name
@@ -49,7 +47,7 @@ export default class UsersController {
 
   // patch a user's information
   public async update(ctx: HttpContext) {
-    const locale = cms.localeFrom(ctx);
+    const locale = cms.localeFromPath(ctx);
     const id = Number(ctx.params.id);
     const user = await User.findOrFail(id);
 
@@ -70,7 +68,7 @@ export default class UsersController {
 
   // delete a user
   public async destroy(ctx: HttpContext) {
-    const locale = cms.localeFrom(ctx);
+    const locale = cms.localeFromPath(ctx);
     const id = Number(ctx.params.id);
     const user = await User.findOrFail(id);
     try {
@@ -93,7 +91,7 @@ export default class UsersController {
   // create a new user
   public async store(ctx: HttpContext) {
     const payload = await ctx.request.validateUsing(createUserValidator);
-    const locale = cms.localeFrom(ctx);
+    const locale = cms.localeFromPath(ctx);
 
     try {
       const randomString = this.generateRandomString();
@@ -118,7 +116,7 @@ export default class UsersController {
         : requestUrl;
 
       const appName = cms.config.name;
-      
+
       // send email to the user
       await mail.send((message) => {
         message

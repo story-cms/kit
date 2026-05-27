@@ -21,6 +21,17 @@ export enum FlagState {
 }
 
 /// ----------------------------------------------------
+///  selectors
+/// ----------------------------------------------------
+
+export interface Version {
+  apiVersion: number;
+  locale: string;
+}
+
+export type VisibilityType = 'public' | 'guests' | 'leaders';
+
+/// ----------------------------------------------------
 ///  fields
 /// ----------------------------------------------------
 
@@ -131,8 +142,33 @@ export interface StreamEditProps {
 }
 
 /// ----------------------------------------------------
+///  resources
+/// ----------------------------------------------------
+
+export interface TextBundle {
+  content: string;
+}
+
+export interface VideoBundle {
+  video: { url: string };
+}
+
+export interface LinkBundle {
+  infoUrl: string;
+}
+
+export type ResourceType = 'text' | 'video' | 'info_link';
+export type ResourceBundle = TextBundle | VideoBundle | LinkBundle;
+
+/// ----------------------------------------------------
 ///  stories
 /// ----------------------------------------------------
+
+export interface StorySection {
+  id: string; // uuid
+  title: string;
+  description?: string;
+}
 
 export interface StorySpec {
   id: number;
@@ -143,6 +179,7 @@ export interface StorySpec {
   storyType: string;
   schemaVersion: number;
   fields: FieldSpec[];
+  sections: Array<StorySection>;
   parts?: Array<Part>;
 }
 
@@ -152,21 +189,17 @@ export interface StoryIndexItem {
   description: string;
   coverImage: string;
   chapterLimit: number;
+  isPublished: boolean;
   createdAt: string;
   updatedAt: string;
   draftCount: number;
 }
 
-export interface Version {
-  apiVersion: number;
+export interface StoryVersion extends Version {
   storyId: number;
-  locale: string;
 }
 
-export interface Specifier {
-  apiVersion: number;
-  storyId: number;
-  locale: string;
+export interface StorySpecifier extends StoryVersion {
   number: number;
 }
 
@@ -217,12 +250,44 @@ export type StoryMeta = {
   name: string;
   storyType: string;
   chapterType: string;
+  isPublished: boolean;
   createdAt: string;
   updatedAt: string;
 };
 
-export interface StoryEditProps {
+export interface JournaStoryEditProps {
   story: StoryMeta;
+  providers: Providers;
+  isNew: boolean;
+}
+
+export interface StoryEditProps {
+  model: {
+    id: number;
+    tags: string | null;
+    chapterLimit: number;
+    storyType: string;
+    chapterType: string;
+    sectionType: string | null;
+    visibility: string;
+    slug: string;
+    template: string;
+    isPublished: boolean;
+    createdAt: string;
+    updatedAt: string;
+    title: string;
+    coverImage: string;
+    description: string;
+    sections: StorySection[];
+    resources: string[];
+  };
+  source: {
+    title: string;
+    coverImage: string;
+    description: string;
+    sections: StorySection[];
+    resources: string[];
+  };
   isNew: boolean;
   providers: Providers;
 }
@@ -282,11 +347,6 @@ export interface PageItem {
   isPublished?: boolean;
   isDivider?: boolean;
   category?: string;
-}
-
-export interface PageVersion {
-  apiVersion: number;
-  locale: string;
 }
 
 export interface PageBundle {
@@ -501,11 +561,6 @@ export interface InvitationIndexProps {
   invitations: InvitationItem[];
 }
 
-export interface InvitationVersion {
-  apiVersion: number;
-  locale: string;
-}
-
 export interface InvitationForApi {
   id: number;
   startDate: string | null;
@@ -524,17 +579,32 @@ export interface InvitationForApi {
 ///  configuration
 /// ----------------------------------------------------
 
+// trackable settings should not be nested
+// no optional settings in the type definition
+export type CmsConfig = {
+  name: string;
+  logo: string;
+  helpUrl: string;
+  hasAppPreview: boolean;
+  microcopySource: string;
+  languages: LanguageSpecification[];
+  subscriptions: Subscription[];
+
+  pagesTracking: string;
+  // any bespoke story or stream templates
+  bespokeTemplates: BundleTemplate[];
+
+  // will be deprecated in favour of streams table and template
+  streams: StreamSpec[];
+  // streamTemplates: BundleTemplate[];
+
+  storiesHasEditReview: boolean;
+  storyTemplates: BundleTemplate[];
+};
+
 export interface Bookmark {
   label: string;
   link: string;
-}
-
-// deprecated
-export interface CmsMeta {
-  name: string;
-  logo: string;
-  helpUrl?: string;
-  hasAppPreview: boolean;
 }
 
 export interface UiConfig {
@@ -554,23 +624,11 @@ export type Subscription =
   | 'invitation'
   | 'page';
 
-// trackable settings should not be nested
-// no optional settings in the type definition
-export type CmsConfig = {
+export interface BundleTemplate {
+  id: string;
   name: string;
-  logo: string;
-  helpUrl: string;
-  languages: LanguageSpecification[];
-  pagesTracking: string;
-  pagesSchemaVersion: number;
-  streams: StreamSpec[];
-  storiesHasEditReview: boolean;
-  stories: StorySpec[];
-
-  subscriptions: Subscription[];
-  microcopySource: string;
-  hasAppPreview: boolean;
-};
+  fields: FieldSpec[];
+}
 
 export interface LanguageSpecification {
   language: string;

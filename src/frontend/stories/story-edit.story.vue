@@ -42,6 +42,7 @@ const storyData = {
   coverImage:
     'https://res.cloudinary.com/journeys/image/upload/v1756121793/mountain-placeholder_yuflkz.jpg',
   chapterLimit: 21,
+  isPublished: true,
   tags: 'gospel,john,new-testament',
   description:
     '# The Gospel of John\n\nThis is the fourth gospel in the New Testament...',
@@ -70,6 +71,7 @@ const newStoryData = {
   chapterType: 'chapter',
   coverImage: '',
   chapterLimit: 0,
+  isPublished: false,
   tags: '',
   description: '',
   createdAt: '2024-01-25T09:00:00Z',

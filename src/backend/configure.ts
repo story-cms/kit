@@ -43,6 +43,8 @@ async function addMigrations(command: Configure, codemods: Codemods) {
     'preferences',
     'invitations',
     'configs',
+    'stories',
+    'resources',
   ];
 
   const path = command.app.migrationsPath();
@@ -106,7 +108,6 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'controllers/chapters_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/drafts_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/pages_controller.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'controllers/admin_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/ui_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/analytics_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/preview_controller.stub', {});
@@ -145,9 +146,9 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'resources/views/preview.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'resources/views/scripture.stub', {});
 
-  await codemods.makeUsingStub(stubsRoot, 'commands/migrate_config.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'commands/migrate.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/make_user.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'commands/fix_database.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'commands/seed_stories.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/bootstrap.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/mock.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/rest.stub', {});
@@ -161,6 +162,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/progress_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/model.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/helpers/cms_mock.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'tests/helpers/story_test_helper.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/cms_mock_example.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'ops/Dockerfile.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'ops/compose.stub', { appName: 'todo' });

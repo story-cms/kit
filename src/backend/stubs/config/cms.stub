@@ -112,7 +112,6 @@ const cmsConfig: Partial<CmsConfig> = {
 
   stories: [devotionStory],
 
-  pagesSchemaVersion: 1,
   pagesTracking: 'utm_source=storyapp&utm_medium=referral&utm_campaign=page_menu',
 };
 

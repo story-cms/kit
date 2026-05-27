@@ -9,31 +9,26 @@ import {
   InvitationValidator,
   type InvitationEditProps,
   type InvitationIndexProps,
-  type Version,
 } from '@story-cms/kit';
 import cms from '#services/cms';
 import providers from '#config/providers';
 
 export default class InvitationsController {
-  
   public async get(ctx: HttpContext) {
-    const version: Version = cms.apiContextFrom(ctx).version;
-    const { apiVersion, locale } = version;
-    const service = new InvitationService({ apiVersion, locale });
+    const version = cms.versionFromQuery(ctx);
+    const service = new InvitationService(version);
     const invitations = await service.getInvitationItemsForClient();
 
     return { invitations };
   }
 
   public async index(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
     const service = new InvitationService(version);
     const invitations = await service.getInvitationItems();
 
-    const shared = await cms.sharedProps(ctx);
     const props: InvitationIndexProps = {
       invitations,
-      ...shared,
     };
     // @ts-expect-error Inertia page name
     return ctx.inertia.render('InvitationsIndex', props);
@@ -41,13 +36,12 @@ export default class InvitationsController {
 
   public async edit(ctx: HttpContext) {
     const invitation = await Invitation.findOrFail(ctx.params.id);
-    const shared = await cms.sharedProps(ctx);
 
     const props: InvitationEditProps = {
       providers,
+      stats: invitation.stats,
       invitation: invitation.meta,
       bundle: invitation.model,
-      ...shared,
     };
 
     // @ts-expect-error Inertia page name
@@ -55,7 +49,7 @@ export default class InvitationsController {
   }
 
   public async create(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
     const invitation = await Invitation.create({
       locale: version.locale,
       apiVersion: 1,
@@ -88,7 +82,7 @@ export default class InvitationsController {
   }
 
   public async destroy(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
     const id = Number(ctx.params.id);
     const invitation = await Invitation.findOrFail(id);
     try {
@@ -99,14 +93,14 @@ export default class InvitationsController {
         action: {{ '`deleted invitation ${invitation.id}`' }},
       });
     } catch (e) {
-      ctx.session.flash('inputErrorsBag', { other: e.message });
+      ctx.session.flash('inputErrorsBag', { other: 'Error while deleting invitation' });
     }
 
     return ctx.response.redirect({{ '`/${version.locale}/invitation`' }}, false, 303);
   }
 
   public async update(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
     const data = ctx.request.all();
     const invitationValidator = new InvitationValidator(ctx);
     const validated = await invitationValidator.validate(data);

@@ -1,0 +1,63 @@
+{{{
+  exports({ to: app.commandsPath('seed_stories.ts') })
+}}}
+import { BaseCommand } from '@adonisjs/core/ace';
+import type { CommandOptions } from '@adonisjs/core/types/ace';
+import { StorySpec, Story } from '@story-cms/kit';
+import { DateTime } from 'luxon';
+
+export default class SeedStories extends BaseCommand {
+  static commandName = 'seed:stories';
+  static description = 'Move bespoke stories to the database';
+
+  static options: CommandOptions = { startApp: true };
+
+  async run() {
+    this.logger.info('Moving bespoke stories to the database');
+    for (const spec of bespokeStories) {
+      const existingStory = await Story.find(spec.id);
+      if (existingStory) {
+        this.logger.info({{ '`Story ${spec.id} already exists`' }});
+        continue;
+      }
+
+      const story = await Story.create({
+        id: spec.id,
+        slug: spec.slug,
+        order: spec.order,
+        template: spec.template,
+        chapterType: spec.chapterType,
+        storyType: spec.storyType,
+        chapterLimit: spec.chapterLimit,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        isPublished: true,
+        visibility: 'public',
+      });
+
+      await story.related('localisations').create({
+        locale: 'en',
+        title: spec.name,
+        coverImage: spec.coverImage,
+        description: spec.description,
+      });
+
+      this.logger.info({{ '`${spec.name} done.`' }});
+    }
+  }
+}
+
+/// ----------------------------------
+/// paste your static config here
+/// ----------------------------------
+
+const bespokeStories: StoryImportSpec[] = [
+ 
+];
+
+type StoryImportSpec = Omit<StorySpec, 'schemaVersion' | 'fields' | 'parts'> & {
+  slug: string;
+  description: string;
+  template: string;
+  order: number;
+};

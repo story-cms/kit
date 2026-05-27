@@ -10,6 +10,7 @@ import {
   Draft,
   DraftService,
   IndexService,
+  StoryService,
   type DraftEditProps,
 } from '@story-cms/kit';
 import cms from '#services/cms';
@@ -18,7 +19,8 @@ import { storyValidator } from '#validators/story_validator';
 
 export default class DraftsController {
   public async create(ctx: HttpContext) {
-    const { story, version } = cms.storyContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const { story, version } = await storyService.parsePath(ctx);
     if (story === undefined) return ctx.response.notFound();
 
     const indexService = new IndexService(story, cms);
@@ -49,7 +51,8 @@ export default class DraftsController {
   }
 
   public async edit(ctx: HttpContext) {
-    const { story, version } = cms.storyContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const { story, version } = await storyService.parsePath(ctx);
     if (story === undefined) return ctx.response.notFound();
 
     const specifier = {
@@ -82,8 +85,6 @@ export default class DraftsController {
     const indexService = new IndexService(story, cms);
     await indexService.buildIndex(version);
 
-    const shared = await cms.sharedProps(ctx);
-
     const data: DraftEditProps = {
       draft: draft.meta,
       bundle: draft!.bundle,
@@ -91,7 +92,6 @@ export default class DraftsController {
       providers,
       story,
       hasEditReview: cms.config.storiesHasEditReview,
-      ...shared,
     };
 
     const isTranslation = version.locale !== cms.sourceLocale;
@@ -112,13 +112,13 @@ export default class DraftsController {
     return ctx.inertia.render('TranslationIndex', {
       ...data,
       source: source?.bundle,
-      ...shared,
     });
   }
 
   // Only saving the draft without performing any validation
   public async save(ctx: HttpContext) {
-    const { story, version } = cms.storyContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const { story, version } = await storyService.parsePath(ctx);
     if (!story) return ctx.response.notFound();
 
     try {
@@ -135,7 +135,7 @@ export default class DraftsController {
       const service = new IndexService(story, cms);
       await service.buildIndex(draft.version);
     } catch (e) {
-      const errors = e.messages || e.message || 'Error while saving this draft. Sorry!';
+      const errors = 'Error while saving this draft. Sorry!';
       ctx.session.flash('errorsBag', errors);
     }
 
@@ -143,7 +143,8 @@ export default class DraftsController {
   }
 
   public async submit(ctx: HttpContext) {
-    const { story, version } = cms.storyContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const { story, version } = await storyService.parsePath(ctx);
     if (story === undefined) return ctx.response.notFound();
 
     const id = Number(ctx.params.id);
@@ -169,7 +170,8 @@ export default class DraftsController {
   }
 
   public async reject(ctx: HttpContext) {
-    const { version, story } = cms.storyContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const { story, version } = await storyService.parsePath(ctx);
     if (story === undefined) return ctx.response.notFound();
 
     const id = Number(ctx.params.id);
@@ -189,7 +191,8 @@ export default class DraftsController {
   }
 
   public async publish(ctx: HttpContext) {
-    const { story } = cms.storyContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const { story } = await storyService.parsePath(ctx);
     if (story === undefined) return ctx.response.notFound();
 
     const id = Number(ctx.params.id);
@@ -231,7 +234,8 @@ export default class DraftsController {
   }
 
   public async delete(ctx: HttpContext) {
-    const { story } = cms.storyContextFrom(ctx);
+    const storyService = new StoryService(cms.config);
+    const { story } = await storyService.parsePath(ctx);
     if (story === undefined) return ctx.response.notFound();
 
     const id = Number(ctx.params.id);

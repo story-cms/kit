@@ -1,75 +1,70 @@
 {{{ 
   exports({ to: app.makePath('tests/helpers/cms_mock.ts') }) 
 }}}
-import { CmsConfig, CmsService } from '@story-cms/kit';
+import { type CmsConfig, CmsService } from '@story-cms/kit';
 import { setMockCms, resetCms } from '#services/cms';
 
 /**
  * Test CMS configuration for unit tests
  */
 export const testCmsConfig: CmsConfig = {
-    name: 'Test CMS',
-    logo: 'https://example.com/logo.png',
-    helpUrl: 'https://example.com/help',
-    hasAppPreview: false,
-    microcopySource: '',
-    languages: [
-      {
-        locale: 'en',
-        language: 'English',
-        languageDirection: 'ltr',
-        bibleVersion: 'test-bible-version',
-      },
-      {
-        locale: 'es',
-        language: 'Spanish',
-        languageDirection: 'ltr',
-        bibleVersion: 'es-bible-version',
-      },
-      {
-        locale: 'my',
-        language: 'Burmese',
-        languageDirection: 'ltr',
-        bibleVersion: 'my-bible-version',
-      },
-    ],
-    streams: [
-      {
-        id: 1,
-        title: 'Test Stream',
-        coverImage: 'https://example.com/cover.jpg',
-        streamType: 'Channel',
-        dropType: 'Post',
-        schemaVersion: 1,
-        fields: [
-          {
-            name: 'title',
-            label: 'Title',
-            widget: 'string',
-          },
-        ],
-      },
-    ],
+  name: 'Test CMS',
+  logo: 'https://example.com/logo.png',
+  helpUrl: 'https://example.com/help',
+  hasAppPreview: false,
+  microcopySource: '',
+  languages: [
+    {
+      locale: 'en',
+      language: 'English',
+      languageDirection: 'ltr',
+      bibleVersion: 'test-bible-version',
+    },
+    {
+      locale: 'es',
+      language: 'Spanish',
+      languageDirection: 'ltr',
+      bibleVersion: 'es-bible-version',
+    },
+    {
+      locale: 'my',
+      language: 'Burmese',
+      languageDirection: 'ltr',
+      bibleVersion: 'my-bible-version',
+    },
+  ],
+  streams: [
+    {
+      id: 1,
+      title: 'Test Stream',
+      coverImage: 'https://example.com/cover.jpg',
+      streamType: 'Channel',
+      dropType: 'Post',
+      schemaVersion: 1,
+      fields: [
+        {
+          name: 'title',
+          label: 'Title',
+          widget: 'string',
+        },
+      ],
+    },
+  ],
   storiesHasEditReview: false,
-  stories: [
-      {
-        id: 1,
-        name: 'Test Story',
-        coverImage: 'https://example.com/story-cover.jpg',
-        chapterType: 'Lesson',
-        storyType: 'Course',
-        chapterLimit: 5,
-        schemaVersion: 1,
-        fields: [
-          {
-            name: 'title',
-            label: 'Title',
-            widget: 'string',
-          },
-        ],
-      },
-    ],
-  pagesSchemaVersion: 1,
+  bespokeTemplates: [
+    {
+      id: 'test-story',
+      name: 'Test Story',
+      fields: [
+        {
+          name: 'title',
+          label: 'Title',
+          widget: 'string',
+        },
+      ],
+    },
+  ],
+  storyTemplates: [],
   pagesTracking: 'utm_source=test&utm_medium=test&utm_campaign=test',
   subscriptions: ['story', 'stream', 'language', 'audience', 'invitation', 'page'],
 };

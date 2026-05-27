@@ -1,7 +1,7 @@
 {{{
   exports({ to: app.makePath('app/controllers/preferences_controller.ts') })
 }}}
-import { HttpContext } from '@adonisjs/core/http';
+import type { HttpContext } from '@adonisjs/core/http';
 import { Activity, PreferenceService } from '@story-cms/kit';
 import cms from '#services/cms';
 
@@ -23,7 +23,7 @@ export default class PreferencesController {
     try {
       await service.toggleBookmark(userId, { label, link });
 
-      const version = cms.pagesContextFrom(ctx);
+      const version = cms.versionFromPath(ctx);
       await Activity.create({
         userId: ctx.auth.user?.id,
         action: {{'`updated bookmark ${label} for user ${userId}`'}},
@@ -31,7 +31,7 @@ export default class PreferencesController {
       });
       return ctx.response.status(204);
     } catch (e) {
-      return ctx.response.status(400).json({ error: e.message });
+      return ctx.response.status(400).json({ error: 'Error while toggling bookmark' });
     }
   }
 }

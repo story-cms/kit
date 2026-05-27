@@ -1,14 +1,10 @@
 import { DateTime } from 'luxon';
 
-import {
-  type InvitationItem,
-  type InvitationForApi,
-  type InvitationVersion,
-} from '../../types';
+import { type InvitationItem, type InvitationForApi, type Version } from '../../types';
 import Invitation from '../models/invitation.js';
 
 export class InvitationService {
-  constructor(private version: InvitationVersion) {}
+  constructor(private version: Version) {}
 
   public async getInvitationItems(): Promise<InvitationItem[]> {
     const invitations = await this.getInvitationsForVersion();

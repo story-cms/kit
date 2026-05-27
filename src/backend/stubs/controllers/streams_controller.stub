@@ -1,9 +1,10 @@
 {{{
   exports({ to: app.makePath('app/controllers/streams_controller.ts') })
 }}}
-import { HttpContext } from '@adonisjs/core/http';
+import type { HttpContext } from '@adonisjs/core/http';
 import db from '@adonisjs/lucid/services/db';
 import type {
+  DropMeta,
   StreamEditProps,
   StreamGalleryProps,
   StreamIndexProps,
@@ -54,10 +55,8 @@ export default class StreamController {
       },
     );
 
-    const shared = await cms.sharedProps(ctx);
     const data = {
       streams,
-      ...shared,
     } as StreamGalleryProps;
 
     // @ts-expect-error Inertia page name
@@ -72,11 +71,9 @@ export default class StreamController {
       .orderBy('releaseAt', 'desc');
 
     const drops = rows.map((drop) => drop.indexItem);
-    const shared = await cms.sharedProps(ctx);
     const data = {
       stream,
       drops,
-      ...shared,
     } as StreamIndexProps;
 
     // @ts-expect-error Inertia page name
@@ -84,7 +81,7 @@ export default class StreamController {
   }
 
   public async create(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
     const stream = this.getStream(ctx);
 
     const service = new BundleService(stream.fields);
@@ -115,18 +112,18 @@ export default class StreamController {
     }
 
     const updatedBy = await User.find(drop.updatedBy);
-    const dropMeta = {
-      ...drop.meta,
+    const dropMeta: DropMeta = {
+      id: drop.meta.id,
+      createdAt: drop.meta.createdAt,
+      updatedAt: drop.meta.updatedAt,
       updatedBy: updatedBy?.name ?? 'Unknown',
     };
 
-    const shared = await cms.sharedProps(ctx);
     const props: StreamEditProps = {
       spec: stream,
       providers,
       dropMeta,
       model: drop.model,
-      ...shared,
     };
 
     // @ts-expect-error Inertia page name
@@ -134,7 +131,7 @@ export default class StreamController {
   }
 
   public async destroy(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
     const id = Number(ctx.params.id);
     const drop = await Drop.findOrFail(id);
     try {
@@ -145,14 +142,14 @@ export default class StreamController {
         action: {{'`deleted drop ${drop.id}`'}},
       });
     } catch (e) {
-      ctx.session.flash('inputErrorsBag', { other: e.message });
+      ctx.session.flash('inputErrorsBag', { other: 'Error while deleting drop' });
     }
 
     return ctx.response.redirect({{'`/${version.locale}/stream`'}}, false, 303);
   }
 
   public async update(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
 
     const id = Number(ctx.params.id);
     const drop = await Drop.findOrFail(id);

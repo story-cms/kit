@@ -29,27 +29,23 @@ export default class PagesController {
   }
 
   public async index(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
     const service = new PageService(version, cms);
     const pages = await service.getPageItems();
 
-    const shared = await cms.sharedProps(ctx);
     // @ts-expect-error Inertia page name
     return ctx.inertia.render('PagesIndex', {
       pages: pages,
-      ...shared,
     });
   }
 
   public async edit(ctx: HttpContext) {
     const page = await Page.findOrFail(ctx.params.id);
 
-    const shared = await cms.sharedProps(ctx);
     const props: PageEditProps = {
       providers: providers,
       page: page.meta,
       bundle: page.model,
-      ...shared,
     };
 
     // @ts-expect-error Inertia page name
@@ -57,10 +53,9 @@ export default class PagesController {
   }
 
   public async create(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
     const page = await Page.create({
-      locale: version.locale,
-      apiVersion: cms.config.pagesSchemaVersion,
+      ...version,
       order: 1,
       bundle: '{"group":1}',
       updatedBy: ctx.auth.user?.id,
@@ -76,7 +71,7 @@ export default class PagesController {
   }
 
   public async destroy(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
     const id = Number(ctx.params.id);
     const page = await Page.findOrFail(id);
     try {
@@ -87,14 +82,14 @@ export default class PagesController {
         action: {{ '`deleted page ${page.id}`' }},
       });
     } catch (e) {
-      ctx.session.flash('errorsBag', { other: e.message });
+      ctx.session.flash('errorsBag', { other: 'Error while deleting page' });
     }
 
     return ctx.response.redirect({{ '`/${version.locale}/page`' }}, false, 303);
   }
 
   public async update(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
     const data = ctx.request.all();
     const pageValidator = new PageValidator(ctx);
     const validated = await pageValidator.validate(data);
@@ -125,7 +120,7 @@ export default class PagesController {
   }
 
   public async sort(ctx: HttpContext) {
-    const version = cms.pagesContextFrom(ctx);
+    const version = cms.versionFromPath(ctx);
 
     // use the service to sort the pages in memory
     const service = new PageService(version, cms);
