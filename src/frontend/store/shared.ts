@@ -226,6 +226,17 @@ export const useSharedStore = defineStore('shared', () => {
     languageItems.value = languageItems.value.filter((i) => i.locale !== locale);
   };
 
+  const addLanguages = (fresh: LanguageSpecification[]) => {
+    const existing = new Set(config.value.languages?.map((l) => l.locale) ?? []);
+    config.value = {
+      ...config.value,
+      languages: [
+        ...(config.value.languages ?? []),
+        ...fresh.filter((l) => !existing.has(l.locale)),
+      ],
+    };
+  };
+
   return {
     config,
     languages,
@@ -298,5 +309,6 @@ export const useSharedStore = defineStore('shared', () => {
     setSourceLanguageBibleTranslation,
     setLanguageItemBibleTranslation,
     removeLanguageItem,
+    addLanguages,
   };
 });

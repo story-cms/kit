@@ -141,13 +141,13 @@ const addLanguage = () => {
 
 const confirmAddLanguages = () => {
   const languages = [...selectedLanguages.value];
-  addLanguages(languages);
+  submitLanguages(languages);
   showAddModal.value = false;
   emit('add', [...selectedLocales.value]);
   selectedLocales.value = new Set();
 };
 
-const addLanguages = (languages: LanguageSpecification[]) => {
+const submitLanguages = (languages: LanguageSpecification[]) => {
   const payload = languages.map(({ locale, language, languageDirection }) => ({
     locale,
     language,
@@ -160,8 +160,16 @@ const addLanguages = (languages: LanguageSpecification[]) => {
     {
       preserveScroll: true,
       onSuccess: () => {
-        router.reload({ only: ['languages'] });
-        shared.addMessage(ResponseStatus.Confirmation, `Language(s) added successfully`);
+        shared.addLanguages(languages);
+        router.visit(`/${shared.locale}/settings`, {
+          preserveScroll: true,
+          onSuccess: () => {
+            shared.addMessage(
+              ResponseStatus.Confirmation,
+              'Language(s) added successfully',
+            );
+          },
+        });
       },
       onError: (errors) => {
         shared.setErrors(errors);

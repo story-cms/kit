@@ -133,6 +133,13 @@ watch(
   },
   { immediate: true },
 );
+watch(
+  () => props.config,
+  () => {
+    shared.setFromProps(props);
+  },
+  { deep: true },
+);
 
 const handleSourceBibleTranslationChange = (
   bibleVersion: string,
