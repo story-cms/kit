@@ -56,11 +56,15 @@ import UiPage from './ui/ui-page.vue';
 import UsersIndex from './team/users-index.vue';
 import VideoField from './fields/video-field.vue';
 
+import ContentSidebar from './shared/content-sidebar.vue';
+import NavigationPane from './shared/navigation-pane.vue';
+import SectionPanelField from './fields/section-panel-field.vue';
+
 export { createInertiaApp, usePage, useForm, router } from '@inertiajs/vue3';
 
 export * from './store/index';
 
-export { commonProps, helpScoutWidget } from './shared/helpers';
+export { commonProps, helpScoutWidget, formatDate } from './shared/helpers';
 
 export {
   ActionButton,
@@ -70,8 +74,6 @@ export {
   AudienceIndex,
   AudioField,
   BooleanField,
-  InvitationsEdit,
-  InvitationsIndex,
   ChapterPreview,
   ContentHeader,
   ContextMenu,
@@ -81,12 +83,15 @@ export {
   DateRangeField,
   DraftIndex,
   DropDown,
+  DropEdit,
   ForgotPassword,
   Icon,
   IconButton,
   ImageField,
   IndexCard,
   IndexFilter,
+  InvitationsEdit,
+  InvitationsIndex,
   LabelButton,
   ListField,
   ListSwitcher,
@@ -110,7 +115,6 @@ export {
   StoryEdit,
   StoryGallery,
   StoryIndex,
-  DropEdit,
   StreamGallery,
   StreamIndex,
   StringField,
@@ -120,4 +124,10 @@ export {
   UiPage,
   UsersIndex,
   VideoField,
+  // ---------------
+  // TODO: remove once landed
+  // ---------------
+  ContentSidebar,
+  NavigationPane,
+  SectionPanelField,
 };
