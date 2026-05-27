@@ -141,36 +141,19 @@ watch(
   { deep: true },
 );
 
-const handleSourceBibleTranslationChange = (
+const persistBibleTranslation = (
+  languageLocale: string,
   bibleVersion: string,
   bibleVersionName: string,
+  onSuccess: () => void,
 ) => {
-  shared.setSourceLanguageBibleTranslation(bibleVersion, bibleVersionName);
-  shared.addMessage(ResponseStatus.Confirmation, 'Bible translation changed');
-};
-
-const handleTableBibleTranslationChange = (
-  item: LanguageTableItem,
-  bibleVersion: string,
-  bibleVersionName: string,
-) => {
-  console.log(
-    'handleTableBibleTranslationChange',
-    item.locale,
-    bibleVersion,
-    bibleVersionName,
-  );
   router.post(
-    `/${shared.locale}/settings/languages/${item.locale}/bible-translation`,
+    `/${shared.locale}/settings/languages/${languageLocale}/bible-translation`,
     { bibleVersion, bibleVersionName },
     {
       preserveScroll: true,
       onSuccess: () => {
-        shared.setLanguageItemBibleTranslation(
-          item.locale,
-          bibleVersion,
-          bibleVersionName,
-        );
+        onSuccess();
         shared.addMessage(ResponseStatus.Confirmation, 'Bible translation changed');
       },
       onError: (errors) => {
@@ -178,6 +161,28 @@ const handleTableBibleTranslationChange = (
         shared.addMessage(ResponseStatus.Failure, 'Error updating Bible translation');
       },
     },
+  );
+};
+
+const handleSourceBibleTranslationChange = (
+  bibleVersion: string,
+  bibleVersionName: string,
+) => {
+  persistBibleTranslation(
+    shared.sourceLanguage.locale,
+    bibleVersion,
+    bibleVersionName,
+    () => shared.setSourceLanguageBibleTranslation(bibleVersion, bibleVersionName),
+  );
+};
+
+const handleTableBibleTranslationChange = (
+  item: LanguageTableItem,
+  bibleVersion: string,
+  bibleVersionName: string,
+) => {
+  persistBibleTranslation(item.locale, bibleVersion, bibleVersionName, () =>
+    shared.setLanguageItemBibleTranslation(item.locale, bibleVersion, bibleVersionName),
   );
 };
 </script>
