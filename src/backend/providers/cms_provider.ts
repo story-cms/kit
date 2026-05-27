@@ -11,13 +11,15 @@ export default class CmsProvider {
     this.app.container.singleton(CmsService, async (resolver) => {
       // untracked config
       let untrackedConfig: CmsConfig;
-      const persisted = await Config.query()
+      const persistedRow = await Config.query()
         .where('key', 'cms')
         .orderBy('version', 'desc')
         .first();
 
-      if (persisted) {
-        untrackedConfig = defineConfig(persisted.data as CmsConfig);
+      const loadedFromDatabase = persistedRow !== null;
+
+      if (persistedRow) {
+        untrackedConfig = defineConfig(persistedRow.data as CmsConfig);
       } else {
         untrackedConfig = defineConfig({});
         await Config.create({
@@ -27,13 +29,19 @@ export default class CmsProvider {
         });
       }
 
-      // tracked config
+      // tracked config (filesystem) — overlays DB except `languages`, which must stay DB-backed after first seed
       const configService = await resolver.make('config');
-      const trackedConfig = configService.get<any>('cms') as CmsConfig;
+      const trackedConfig =
+        (configService.get<any>('cms') as Partial<CmsConfig> | undefined) ?? {};
+      const trackedRest = { ...trackedConfig };
+      delete trackedRest.languages;
 
       const cmsConfig = {
         ...untrackedConfig,
-        ...trackedConfig,
+        ...trackedRest,
+        languages: loadedFromDatabase
+          ? untrackedConfig.languages
+          : defineConfig({ ...untrackedConfig, ...trackedConfig }).languages,
       };
 
       return new CmsService(cmsConfig);

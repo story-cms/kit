@@ -154,8 +154,6 @@ const addLanguages = (languages: LanguageSpecification[]) => {
     languageDirection,
   }));
 
-  console.log('payload', payload);
-
   router.post(
     `/${shared.locale}/settings/languages/add`,
     { languages: payload },

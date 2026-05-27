@@ -49,10 +49,12 @@ export class CmsService {
     active.data = newConfig;
     await active.save();
 
-    const trackedConfig = config.get<CmsConfig>('cms') || {};
+    const trackedConfig = (config.get<CmsConfig>('cms') || {}) as Partial<CmsConfig>;
+    const trackedRest = { ...trackedConfig };
+    delete trackedRest.languages;
 
-    // make sure we do not clobber the tracked config
-    this.#config = { ...newConfig, ...trackedConfig };
+    // Prefer persisted `languages` over filesystem config (pilot/config/cms.ts also lists languages)
+    this.#config = { ...newConfig, ...trackedRest };
   }
 
   public get sourceLocale(): string {
