@@ -2,13 +2,11 @@
   <Story title="Settings Index" group="settings">
     <Variant title="Index" :setup-app="setupSettings">
       <SettingsIndex
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
-        :languages="sharedProps.languages"
         :errors="sharedProps.errors"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
         :source-language="sourceLanguage"
         :language-items="languageTableItems"
         :providers="settingsProviders"
@@ -17,13 +15,11 @@
     </Variant>
     <Variant title="Require App Update" :setup-app="setupSettings">
       <SettingsIndex
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
-        :languages="sharedProps.languages"
         :errors="sharedProps.errors"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
         :source-language="sourceLanguage"
         :language-items="languageTableItems"
         :providers="settingsProviders"
@@ -32,13 +28,11 @@
     </Variant>
     <Variant title="Empty" :setup-app="setupSettings">
       <SettingsIndex
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
-        :languages="sharedProps.languages"
         :errors="sharedProps.errors"
         :bookmarks="sharedProps.bookmarks"
-        :exclude="[]"
         :source-language="sourceLanguage"
         :language-items="[]"
         :providers="settingsProviders"
