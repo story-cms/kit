@@ -48,7 +48,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import BibleTranslationsModal from './bible-translations-modal.vue';
-import { useSharedStore, useWidgetsStore } from '../../../store';
+import { useSharedStore } from '../../../store';
 import type { StoryHandler } from '../../../shared/helpers';
 import type { LanguageTableItem } from '../../../../types';
 
@@ -113,22 +113,12 @@ const mockTranslationsWithMultiple = [
 
 const setupWithTranslations: StoryHandler = () => {
   const shared = useSharedStore();
-  const widgets = useWidgetsStore();
   shared.setBibleTranslations(mockEnglishTranslations);
-  widgets.setProviders({
-    ...widgets.providers,
-    scripture: { bibleApiKey: 'mock-key-for-story' },
-  });
 };
 
 const setupWithMultipleVersions: StoryHandler = () => {
   const shared = useSharedStore();
-  const widgets = useWidgetsStore();
   shared.setBibleTranslations(mockTranslationsWithMultiple);
-  widgets.setProviders({
-    ...widgets.providers,
-    scripture: { bibleApiKey: 'mock-key-for-story' },
-  });
 };
 
 const onConfirm = (bibleVersion: string, bibleVersionName: string) => {

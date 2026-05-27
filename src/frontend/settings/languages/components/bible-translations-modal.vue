@@ -88,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, computed } from 'vue';
+import { ref, watch, computed } from 'vue';
 import axios, { AxiosError } from 'axios';
 import { useWidgetsStore, useSharedStore } from '../../../store';
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue';
@@ -157,9 +157,11 @@ type APIBibleVersion = {
 };
 
 const getBibleVersions = async (): Promise<Array<APIBibleVersion>> => {
-  const apiKey = widgets.providers.scripture?.bibleApiKey;
+  const apiKey = widgets.providers.scripture?.bibleApiKey?.trim();
   if (!apiKey) {
-    return [];
+    errorMessage.value =
+      'Bible API key is not configured. Set BIBLE_API_KEY in your environment.';
+    throw new Error('Missing Bible API key');
   }
   try {
     const res = await axios.get('https://api.scripture.api.bible/v1/bibles', {
@@ -198,12 +200,16 @@ const currentBibleTranslations = computed(() => {
   );
 });
 
-onMounted(async () => {
+const loadBibleTranslations = async () => {
   if (shared.bibleTranslations.length > 0) {
+    hasError.value = false;
+    errorMessage.value = '';
     return;
   }
+
   isLoading.value = true;
   hasError.value = false;
+  errorMessage.value = '';
   try {
     const versions = await getBibleVersions();
     shared.setBibleTranslations(transformBibleVersions(versions));
@@ -212,5 +218,14 @@ onMounted(async () => {
   } finally {
     isLoading.value = false;
   }
-});
+};
+
+watch(
+  () => props.open,
+  (isOpen) => {
+    if (isOpen) {
+      void loadBibleTranslations();
+    }
+  },
+);
 </script>
