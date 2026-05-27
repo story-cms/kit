@@ -47,10 +47,10 @@
         <ContentSidebar>
           <template #meta-box>
             <MetaMetaBox
-              :story-type="story.storyType"
-              :chapter-type="story.chapterType"
-              :name="story.name"
-              :created-at="story.createdAt"
+              :story-type="props.model.storyType"
+              :chapter-type="props.model.chapterType"
+              :name="props.model.title"
+              :created-at="props.model.createdAt"
               :updated-at="savedAt"
             />
           </template>
@@ -86,10 +86,10 @@ shared.clearErrors();
 useWidgetsStore().setProviders(props.providers);
 
 const model = useModelStore();
-model.setModel(props.story);
+model.setModel(props.model);
 
-const title = ref(props.story.name);
-const savedAt = ref(props.story.updatedAt as unknown as string);
+const title = ref(props.model.title);
+const savedAt = ref(props.model.updatedAt as unknown as string);
 
 const storyEditTabs: NavigationPaneTab[] = [
   { label: 'Details', icon: 'book-open' },
@@ -113,7 +113,7 @@ onMounted(() => {
 });
 
 const deleteStory = () => {
-  router.delete(`/${shared.locale}/story/${props.story.id}`, {
+  router.delete(`/${shared.locale}/story/${props.model.id}`, {
     onSuccess: () => shared.addMessage(ResponseStatus.Confirmation, 'Story deleted'),
     onError: () => shared.addMessage(ResponseStatus.Failure, 'Error deleting story'),
   });
@@ -132,7 +132,7 @@ const getPayload = () => {
 const saveStory = () => {
   shared.clearErrors();
 
-  router.post(`/${shared.locale}/story/${props.story.id}`, getPayload(), {
+  router.post(`/${shared.locale}/story/${props.model.id}`, getPayload(), {
     preserveScroll: true,
 
     onSuccess: () => {
