@@ -51,7 +51,9 @@ export default class UsersController {
     const id = Number(ctx.params.id);
     const user = await User.findOrFail(id);
 
-    const payload = await ctx.request.validateUsing(updateUserValidator);
+    const payload = await ctx.request.validateUsing(updateUserValidator, {
+      meta: { userId: user.id },
+    });
     user.name = payload.name;
     user.email = payload.email;
     user.role = payload.role as UserRole;

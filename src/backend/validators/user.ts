@@ -11,7 +11,12 @@ vine.messagesProvider = new SimpleMessagesProvider({
   'role.enum': 'Invalid role.',
 });
 
-async function unique(value: unknown, options: Options, field: FieldContext) {
+type UniqueOptions = {
+  table: string;
+  column: string;
+};
+
+async function unique(value: unknown, options: UniqueOptions, field: FieldContext) {
   /**
    * We do not want to deal with non-string
    * values. The "string" rule will handle the
@@ -32,10 +37,34 @@ async function unique(value: unknown, options: Options, field: FieldContext) {
   }
 }
 
+async function uniqueExceptSelf(
+  value: unknown,
+  options: UniqueOptions,
+  field: FieldContext,
+) {
+  if (typeof value !== 'string') {
+    return;
+  }
+
+  const userId = field.meta.userId as number;
+
+  const row = await db
+    .from(options.table)
+    .select(options.column)
+    .where(options.column, value)
+    .whereNot('id', userId)
+    .first();
+
+  if (row) {
+    field.report('The {{ field }} field is not unique', 'unique', field);
+  }
+}
+
 /**
  * Converting a function to a VineJS rule
  */
 export const uniqueRule = vine.createRule(unique);
+export const uniqueExceptSelfRule = vine.createRule(uniqueExceptSelf);
 
 const roles = ['admin', 'editor'];
 
@@ -58,23 +87,15 @@ export const createUserValidator = vine.create(
 /**
  * Validates the user's update action
  */
-export const updateUserValidator = vine.create(
+export const updateUserValidator = vine.withMetaData<{ userId: number }>().create(
   vine.object({
     name: vine.string().trim().minLength(1),
     email: vine
       .string()
       .trim()
       .email()
-      .use(uniqueRule({ table: 'users', column: 'email' })),
+      .use(uniqueExceptSelfRule({ table: 'users', column: 'email' })),
     language: vine.string().trim().minLength(1),
     role: vine.enum(roles),
   }),
 );
-
-/**
- * Options accepted by the unique rule
- */
-type Options = {
-  table: string;
-  column: string;
-};
