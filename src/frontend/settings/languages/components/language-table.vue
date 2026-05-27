@@ -235,6 +235,9 @@ const truncate = (s: string | null | undefined, max: number) => {
   return text.length > max ? `${text.slice(0, max)}…` : text;
 };
 
-const hasContent = (item: LanguageTableItem) =>
-  item.translationProgress?.every((progress) => progress.done > 0) ?? false;
+const hasContent = (item: LanguageTableItem) => {
+  const content = item.translationProgress?.find((p) => p.name === 'Content');
+  const ui = item.translationProgress?.find((p) => p.name === 'Interface');
+  return (content?.done ?? 0) > 0 || (ui?.done ?? 0) > 0;
+};
 </script>
