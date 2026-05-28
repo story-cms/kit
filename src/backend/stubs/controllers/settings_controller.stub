@@ -152,7 +152,7 @@ export default class SettingsController {
     const logo = cms.config.logo;
     const appName = cms.config.name;
     const requester = context?.requestedBy ?? ctx.auth.user?.name ?? 'Unknown';
-    const subject = {{ '`Support Request - ${context?.subject}`' }};
+    const subject = {{ '`Support Request: ${context?.subject}`' }};
     const details = context?.details ?? 'No details provided';
     const language = context?.languageSpec;
 
