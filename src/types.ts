@@ -51,6 +51,7 @@ export interface FieldSpec {
   noMarkup?: boolean;
   toolbar?: string[];
   description?: string;
+  placeholderText?: string;
   extensions?: string[];
   maxSize?: number;
   tintColor?: string;

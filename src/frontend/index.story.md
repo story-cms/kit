@@ -27,8 +27,22 @@ Following are the widgets that are currently implemented:
 
 ## string
 
-Suitable for short, single line plain text strings. It has only the common properties and
-renders a [StringField](#)
+Suitable for short, single line plain text strings and renders a [StringField](#). It has
+one optional special property:
+
+- `placeholderText` an optional string displayed as placeholder text in the input when the
+  field is empty
+
+Example:
+
+```ts
+{
+  label: 'Title',
+  name: 'title',
+  widget: 'string',
+  placeholderText: 'Enter a title',
+},
+```
 
 ## number
 
@@ -74,6 +88,8 @@ these optional extra properties:
   minimal height possible.
 - `noMarkup` a boolean value which is `false` by default. `noMarkup` sets the widget to
   not allow any markup and only display the text as plain text.
+- `placeholderText` an optional string displayed as placeholder text in the editor when the
+  field is empty
 - `toolbar` accepts an array of strings
   `['bold', 'italic', 'strikethrough', 'heading', 'heading-smaller', 'heading-bigger', 'heading-1', 'heading-2', 'heading-3', 'code', 'quote', 'unordered-list', 'ordered-list', 'clean-block', 'link', 'image', 'upload-image', 'table', 'horizontal-rule', 'preview', 'side-by-side', 'fullscreen', 'guide','undo', 'redo'`
   representing the formatting buttons to display.
