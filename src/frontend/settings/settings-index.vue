@@ -72,6 +72,8 @@ import {
   type LanguageTableItem,
   type SettingsPageProps,
   type SharedPageProps,
+  type SupportRequest,
+  SUPPORT_CODES,
   ResponseStatus,
 } from '../../types';
 import { useSharedStore, useWidgetsStore } from '../store';
@@ -114,9 +116,25 @@ const handleRemove = (item: LanguageTableItem) => {
   shared.addMessage(ResponseStatus.Confirmation, 'Language removed');
 };
 
-const handleRequestDeletion = (_item: LanguageTableItem) => {
-  console.log('request language deletion', _item.locale);
-  shared.addMessage(ResponseStatus.Confirmation, 'Language deletion requested');
+const handleRequestDeletion = (item: LanguageTableItem) => {
+  const payload = {
+    supportCode: SUPPORT_CODES.REMOVE_LANGUAGE.code,
+    context: {
+      locale: item.locale,
+      requestedBy: { name: shared.user.name },
+      details: SUPPORT_CODES.REMOVE_LANGUAGE.description,
+    },
+  } satisfies SupportRequest;
+  router.post(`/${shared.locale}/settings/support`, payload, {
+    preserveScroll: true,
+    onSuccess: () => {
+      shared.addMessage(ResponseStatus.Confirmation, 'Language deletion requested');
+    },
+    onError: (errors) => {
+      shared.setErrors(errors);
+      shared.addMessage(ResponseStatus.Failure, 'Error requesting language deletion');
+    },
+  });
 };
 
 watch(

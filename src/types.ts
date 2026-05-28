@@ -684,3 +684,36 @@ export interface LanguageListItemProps {
   language: LanguageSpecification;
   status: 'selected' | 'readonly' | 'available';
 }
+
+export interface SupportRequestContext {
+  locale: string;
+  requestedBy: Pick<UserInterface, 'name'>;
+  details: string;
+}
+
+export interface SupportCodeDefinition {
+  code: string;
+  description: string;
+}
+
+export const SUPPORT_CODES = {
+  REMOVE_LANGUAGE: {
+    code: 'REMOVE_LANGUAGE',
+    description: 'Languages requested to remove',
+  },
+  UPDATE_LANGUAGE: {
+    code: 'UPDATE_LANGUAGE',
+    description: 'Languages requested to be added',
+  },
+  UPDATE_CONTENT: {
+    code: 'UPDATE_CONTENT',
+    description: 'Content requested to be updated',
+  },
+} as const satisfies Record<string, SupportCodeDefinition>;
+
+export type SupportCode = (typeof SUPPORT_CODES)[keyof typeof SUPPORT_CODES]['code'];
+
+export interface SupportRequest {
+  supportCode: SupportCode;
+  context: SupportRequestContext;
+}
