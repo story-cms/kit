@@ -20,12 +20,12 @@
         <p><strong>Requested by:</strong> \{\{ requester \}\}</p>
         <p><strong>Support code:</strong> \{\{ supportCode \}\}</p>
         <p><strong>Details:</strong> \{\{ details \}\}</p>
-       {{ @if(language) }}
+        @if(language) 
         <div  style="margin-bottom: 20px; margin-top: 20px; border-bottom: 1px solid #E5E7EB;">
             <p style="font-weight: 400; font-style: normal; letter-spacing: 0;">\{\{ language.name \}\}</p>
             <p style="font-weight: 400; font-style: normal; letter-spacing: 0; color: #6b7280;">\{\{ language.nativeName \}\} (\{\{ language.locale \}\})</p>
           </div>
-     {{ @endif }}
+    @endif 
       </div>
     </div>
   </body>
