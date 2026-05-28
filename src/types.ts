@@ -699,11 +699,11 @@ export interface SupportCodeDefinition {
 export const SUPPORT_CODES = {
   REMOVE_LANGUAGE: {
     code: 'REMOVE_LANGUAGE',
-    description: 'Languages requested to remove',
+    description: 'Language requested to remove',
   },
   UPDATE_LANGUAGE: {
     code: 'UPDATE_LANGUAGE',
-    description: 'Languages requested to be added',
+    description: 'Language requested to be added',
   },
   UPDATE_CONTENT: {
     code: 'UPDATE_CONTENT',
