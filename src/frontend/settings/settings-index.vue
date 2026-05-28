@@ -121,7 +121,7 @@ const handleRequestDeletion = (item: LanguageTableItem) => {
     supportCode: SUPPORT_CODES.REMOVE_LANGUAGE.code,
     context: {
       locale: item.locale,
-      requestedBy: { name: shared.user.name },
+      requestedBy: shared.user.name,
       details: SUPPORT_CODES.REMOVE_LANGUAGE.description,
     },
   } satisfies SupportRequest;

@@ -687,7 +687,7 @@ export interface LanguageListItemProps {
 
 export interface SupportRequestContext {
   locale: string;
-  requestedBy: Pick<UserInterface, 'name'>;
+  requestedBy: string;
   details: string;
 }
 
