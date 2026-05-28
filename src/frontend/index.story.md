@@ -398,10 +398,11 @@ example:
 ## panel
 
 Suitable to group several primitive fields visually together.  
-Has two special properties
+Has these special properties:
 
 - `isRow` Optional boolean to specify that the panel item should be rendered side by side
   and not vertically aligned.
+- `backgroundColor` Optional string value that accepts a Tailwind color. Defaults to `white`
 - `fields` which is a required list with primitive fields that should be grouped together
   visually.  
   Note: The same visual effect can be achieved by wrapping primitive fields in an `object`
@@ -430,6 +431,34 @@ example:
     },
   ],
 },
+```
+
+With a custom background color:
+
+```ts
+{
+  widget: 'panel',
+  backgroundColor: 'indigo-50',
+  fields: [
+    {
+      label: 'Title',
+      name: 'title',
+      widget: 'string',
+    },
+  ],
+},
+```
+
+Note: You will have to whitelist any custom background colors in the project's
+`tailwind.config.cjs` file. For example, for the custom 'indigo-50' value used in the
+example above, you will have to include these variants:
+
+```js
+module.exports = {
+  content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
+  safelist: ['bg-indigo-50', 'indigo-50'], 👈
+  // rest of the Tailwind config
+};
 ```
 
 For horizontal layouts

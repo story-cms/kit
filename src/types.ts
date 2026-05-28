@@ -54,6 +54,7 @@ export interface FieldSpec {
   extensions?: string[];
   maxSize?: number;
   tintColor?: string;
+  backgroundColor?: string;
   labelOrder?: string;
   folder?: string;
   collectionId?: string;

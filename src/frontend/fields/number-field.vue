@@ -16,7 +16,7 @@
         v-model="modelValue"
         type="number"
         :readonly="props.isReadOnly"
-        class="w-24 input-field"
+        class="input-field w-24"
         :class="{
           'border-error': hasError,
           'text-gray-600': props.isReadOnly,
@@ -24,7 +24,7 @@
         }"
         @input="update"
       />
-      <p v-if="hasError" class="text-sm text-error">Please enter a number</p>
+      <p v-if="hasError" class="text-sm text-error">{{ errors[0] }}</p>
     </div>
   </div>
 </template>
