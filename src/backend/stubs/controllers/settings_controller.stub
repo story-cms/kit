@@ -1,0 +1,177 @@
+{{{
+  exports({ to: app.makePath('app/controllers/settings_controller.ts') })
+}}}
+import type { HttpContext } from '@adonisjs/core/http';
+import mail from '@adonisjs/mail/services/main';
+import {
+  User,
+  ProgressService,
+  type LanguageSpecification,
+  type LanguageTableItem,
+  type LanguagesEditProps,
+  type SettingsPageProps,
+  type UserInterface,
+} from '@story-cms/kit';
+
+import cms from '#services/cms';
+import env from '#start/env';
+import providers from '#config/providers';
+
+export default class SettingsController {
+  private defaultUrl(ctx: HttpContext) {
+    return {{ '`/${ctx.auth.user?.defaultLanguage()}/settings`' }};
+  }
+
+  private ensureLocale(ctx: HttpContext) {
+    const defaultUrl = this.defaultUrl(ctx);
+
+    if (!ctx.params.locale) {
+      return ctx.response.redirect(defaultUrl);
+    }
+
+    if (!ctx.auth.user?.isAllowed(ctx.params.locale)) {
+      return ctx.response.redirect(defaultUrl);
+    }
+
+    return null;
+  }
+
+  public async index(ctx: HttpContext) {
+    const redirect = this.ensureLocale(ctx);
+    if (redirect) return redirect;
+
+    cms.localeFromPath(ctx);
+
+    const sourceLanguage =
+      cms.config.languages.find(
+        (lang: LanguageSpecification) => lang.locale === cms.sourceLocale,
+      ) ?? cms.config.languages[0];
+
+    const progressService = new ProgressService(cms);
+    const progressItems = await progressService.progress(ctx.auth.user! as UserInterface);
+    const translationProgressByLocale = Object.fromEntries(
+      (progressItems ?? []).map((item) => [item.locale, item.progress]),
+    );
+
+    const users = await User.query().where('name', '!=', 'redacted');
+
+    const languageItems: LanguageTableItem[] = cms.config.languages
+      .filter(
+        (language: LanguageSpecification) => language.locale !== sourceLanguage.locale,
+      )
+      .map((language: LanguageSpecification) => ({
+        language: language.language,
+        languageDirection: language.languageDirection,
+        locale: language.locale,
+        bibleLabel: language.bibleLabel,
+        bibleVersion: language.bibleVersion,
+        translationProgress: translationProgressByLocale[language.locale] ?? [
+          { name: 'Interface', done: 0, draft: 0, total: 0 },
+          { name: 'Content', done: 0, draft: 0, total: 0 },
+        ],
+        teamMembers: users
+          .filter((user) => user.language === language.locale)
+          .map((user) => user.meta),
+      }));
+
+    const props: SettingsPageProps = {
+      sourceLanguage,
+      languageItems,
+      providers,
+      requireAppUpdate: true,
+    };
+
+    // @ts-expect-error Inertia page name
+    return ctx.inertia.render('SettingsIndex', props);
+  }
+
+  public async editLanguage(ctx: HttpContext) {
+    const redirect = this.ensureLocale(ctx);
+    if (redirect) return redirect;
+
+    cms.localeFromPath(ctx);
+
+    const props: LanguagesEditProps = {
+      addedLanguages: cms.config.languages,
+    };
+
+    // @ts-expect-error Inertia page name
+    return ctx.inertia.render('LanguagesEdit', props);
+  }
+
+  public async addLanguages(ctx: HttpContext) {
+    const redirect = this.ensureLocale(ctx);
+    if (redirect) return redirect;
+
+    cms.localeFromPath(ctx);
+
+    const payload = ctx.request.all() as { languages?: LanguageSpecification[] };
+    const existingLocales = new Set(
+      cms.config.languages.map((lang: LanguageSpecification) => lang.locale),
+    );
+    const toAdd = (payload.languages ?? []).filter(
+      (lang: LanguageSpecification) => !existingLocales.has(lang.locale),
+    );
+
+    if (toAdd.length > 0) {
+      await cms.patchConfig({ languages: [...cms.config.languages, ...toAdd] });
+    }
+
+    return ctx.response.redirect().back();
+  }
+
+  public async updateBibleTranslation(ctx: HttpContext) {
+    cms.localeFromPath(ctx);
+
+    const languageLocale = ctx.params.languageLocale;
+    const { bibleVersion, bibleVersionName } = ctx.request.only([
+      'bibleVersion',
+      'bibleVersionName',
+    ]);
+
+    const language = cms.config.languages.find(
+      (lang: LanguageSpecification) => lang.locale === languageLocale,
+    );
+    if (!language) {
+      return ctx.response.notFound({ error: 'Language not found' });
+    }
+
+    const languages = cms.config.languages.map((lang: LanguageSpecification) =>
+      lang.locale === languageLocale
+        ? { ...lang, bibleVersion, bibleLabel: bibleVersionName }
+        : lang,
+    );
+
+    await cms.patchConfig({ languages });
+
+    return ctx.response.redirect().back();
+  }
+
+  public async support(ctx: HttpContext) {
+    const { supportCode, context } = ctx.request.all();
+    const logo = cms.config.logo;
+    const appName = cms.config.name;
+    const requester = context?.requestedBy ?? ctx.auth.user?.name ?? 'Unknown';
+    const subject = {{ '`Support Request - ${context?.subject}`' }};
+    const details = context?.details ?? 'No details provided';
+    const language = context?.languageSpec;
+
+    await mail.send((message) => {
+      message
+        .from(env.get('MAIL_FROM_ADDRESS', ''))
+        .to(env.get('SUPPORT_EMAIL', ''))
+        .subject(subject)
+        .htmlView('emails/support_request', {
+          appName,
+          requester,
+          subject,
+          supportCode,
+          details,
+          language,
+          logo,
+        });
+    });
+
+    return ctx.response.redirect().back();
+  }
+}
