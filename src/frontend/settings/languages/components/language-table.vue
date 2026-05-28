@@ -146,6 +146,7 @@ import type { LanguageTableItem } from '../../../../types';
 import MemberRow from './member-row.vue';
 import RingBlock from '../../../dashboard/ring-block.vue';
 import LangStrip from './language-strip.vue';
+import { languageDisplayName } from '../../../shared/helpers';
 
 const props = withDefaults(
   defineProps<{
@@ -166,10 +167,15 @@ const emit = defineEmits<{
 }>();
 
 const currentPage = ref(1);
+const sortedItems = computed(() =>
+  [...props.items].sort((a, b) =>
+    languageDisplayName(a.language).localeCompare(languageDisplayName(b.language)),
+  ),
+);
 const paginatedItems = computed(() => {
   const startIndex = (currentPage.value - 1) * props.itemsPerPage;
   const endIndex = startIndex + props.itemsPerPage;
-  return props.items.slice(startIndex, endIndex);
+  return sortedItems.value.slice(startIndex, endIndex);
 });
 
 const handlePageChange = (page: number) => {

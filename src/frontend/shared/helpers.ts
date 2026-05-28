@@ -287,6 +287,36 @@ export const helpScoutWidget = (page: { props: Record<string, unknown> }) => {
   (window as any).Beacon('init', HELPSCOUT_BEACON_ID);
 };
 
+/** Display name from a language label (text before `|` when present). */
+export function languageDisplayName(language: string): string {
+  if (language.includes('|')) {
+    return language.split('|')[0].trim();
+  }
+  return language;
+}
+
+export function isEnglishLanguage(item: LanguageSpecification): boolean {
+  return (
+    item.locale === 'en' ||
+    languageDisplayName(item.language).localeCompare('English', undefined, {
+      sensitivity: 'base',
+    }) === 0
+  );
+}
+
+/** English first, then remaining languages A–Z by display name. */
+export function sortLanguages(
+  languages: LanguageSpecification[],
+): LanguageSpecification[] {
+  return [...languages].sort((a, b) => {
+    if (isEnglishLanguage(a) && !isEnglishLanguage(b)) return -1;
+    if (!isEnglishLanguage(a) && isEnglishLanguage(b)) return 1;
+    return languageDisplayName(a.language).localeCompare(
+      languageDisplayName(b.language),
+    );
+  });
+}
+
 /** Name, native name, and locale from a language specification. */
 export function parseLanguageSpecification(spec: LanguageSpecification): {
   name: string;
@@ -294,11 +324,12 @@ export function parseLanguageSpecification(spec: LanguageSpecification): {
   locale: string;
 } {
   const { language, locale } = spec;
+  const name = languageDisplayName(language);
 
   if (language.includes('|')) {
-    const [name, nativeName] = language.split('|').map((part) => part.trim());
+    const nativeName = language.split('|')[1].trim();
     return { name, nativeName, locale };
   }
 
-  return { name: language, nativeName: language, locale };
+  return { name, nativeName: language, locale };
 }
