@@ -60,6 +60,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { router } from '@inertiajs/vue3';
+import type { RequestPayload } from '@inertiajs/core';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
 import Icon from '../shared/icon.vue';
@@ -70,6 +71,7 @@ import RequestAppUpdateModal from './languages/components/request-app-update-mod
 import RequestFeedbackModal from './languages/components/request-feedback-modal.vue';
 import { parseLanguageSpecification } from '../shared/helpers';
 import {
+  type LanguageSpecification,
   type LanguageTableItem,
   type SettingsPageProps,
   type SharedPageProps,
@@ -94,22 +96,66 @@ const showRequestAppUpdateModal = ref(false);
 const showFeedbackModal = ref(false);
 const feedbackModalVariant = ref<'success' | 'error'>('success');
 
-const handleRequestAppUpdateConfirm = async (reason: string) => {
-  showRequestAppUpdateModal.value = false;
-  try {
-    // TODO: Replace with actual API call
-    await submitAppUpdateRequest(reason);
-    feedbackModalVariant.value = 'success';
-    showFeedbackModal.value = true;
-  } catch {
-    feedbackModalVariant.value = 'error';
-    showFeedbackModal.value = true;
-  }
+const supportCodeForAppUpdateReason = (reason: string) => {
+  if (reason === 'New language') return SUPPORT_CODES.UPDATE_LANGUAGE;
+  if (reason === 'New content') return SUPPORT_CODES.UPDATE_CONTENT;
+  return undefined;
 };
 
-const submitAppUpdateRequest = async (_reason: string): Promise<void> => {
-  console.log('submitAppUpdateRequest', _reason);
-  shared.addMessage(ResponseStatus.Confirmation, 'App update request submitted');
+const buildSupportPayload = (
+  supportCode: (typeof SUPPORT_CODES)[keyof typeof SUPPORT_CODES],
+  languageSpec: LanguageSpecification,
+): SupportRequest => ({
+  supportCode: supportCode.code,
+  context: {
+    languageSpec: parseLanguageSpecification(languageSpec),
+    requestedBy: shared.user.name,
+    details: supportCode.description,
+    subject: supportCode.subject,
+  },
+});
+
+const postSupportRequest = (
+  payload: SupportRequest,
+  options: {
+    onSuccess?: () => void;
+    onError?: () => void;
+  } = {},
+) => {
+  router.post(
+    `/${shared.locale}/settings/support`,
+    payload as unknown as RequestPayload,
+    {
+      preserveScroll: true,
+      onSuccess: options.onSuccess,
+      onError: (errors) => {
+        shared.setErrors(errors);
+        options.onError?.();
+      },
+    },
+  );
+};
+
+const handleRequestAppUpdateConfirm = (reason: string) => {
+  showRequestAppUpdateModal.value = false;
+
+  const supportCode = supportCodeForAppUpdateReason(reason);
+  if (!supportCode) {
+    feedbackModalVariant.value = 'error';
+    showFeedbackModal.value = true;
+    return;
+  }
+
+  postSupportRequest(buildSupportPayload(supportCode, shared.sourceLanguage), {
+    onSuccess: () => {
+      feedbackModalVariant.value = 'success';
+      showFeedbackModal.value = true;
+    },
+    onError: () => {
+      feedbackModalVariant.value = 'error';
+      showFeedbackModal.value = true;
+    },
+  });
 };
 
 const handleRemove = (item: LanguageTableItem) => {
@@ -118,24 +164,11 @@ const handleRemove = (item: LanguageTableItem) => {
 };
 
 const handleRequestDeletion = (item: LanguageTableItem) => {
-  const payload = {
-    supportCode: SUPPORT_CODES.REMOVE_LANGUAGE.code,
-    context: {
-      languageSpec: {
-        ...parseLanguageSpecification(item),
-      },
-      requestedBy: shared.user.name,
-      details: SUPPORT_CODES.REMOVE_LANGUAGE.description,
-      subject: SUPPORT_CODES.REMOVE_LANGUAGE.subject,
-    },
-  } satisfies SupportRequest;
-  router.post(`/${shared.locale}/settings/support`, payload, {
-    preserveScroll: true,
+  postSupportRequest(buildSupportPayload(SUPPORT_CODES.REMOVE_LANGUAGE, item), {
     onSuccess: () => {
       shared.addMessage(ResponseStatus.Confirmation, 'Language deletion requested');
     },
-    onError: (errors) => {
-      shared.setErrors(errors);
+    onError: () => {
       shared.addMessage(ResponseStatus.Failure, 'Error requesting language deletion');
     },
   });
