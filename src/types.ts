@@ -686,27 +686,36 @@ export interface LanguageListItemProps {
 }
 
 export interface SupportRequestContext {
-  locale: string;
+  languageSpec: {
+    name: string;
+    nativeName: string;
+    locale: string;
+  };
   requestedBy: string;
   details: string;
+  subject: string;
 }
 
 export interface SupportCodeDefinition {
   code: string;
   description: string;
+  subject: string;
 }
 
 export const SUPPORT_CODES = {
   REMOVE_LANGUAGE: {
     code: 'REMOVE_LANGUAGE',
+    subject: 'Remove language',
     description: 'Language requested to remove',
   },
   UPDATE_LANGUAGE: {
     code: 'UPDATE_LANGUAGE',
+    subject: 'App update - new language added.',
     description: 'Language requested to be added',
   },
   UPDATE_CONTENT: {
     code: 'UPDATE_CONTENT',
+    subject: 'App update - content added.',
     description: 'Content requested to be updated',
   },
 } as const satisfies Record<string, SupportCodeDefinition>;

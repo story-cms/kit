@@ -1,5 +1,5 @@
 import type { App, PropType } from 'vue';
-import type { FieldSpec } from '../../types';
+import type { FieldSpec, LanguageSpecification } from '../../types';
 import { BibleBooksMap } from './bibleBooks';
 import type { Variant, Story } from 'histoire';
 import { DateTime } from 'luxon';
@@ -286,3 +286,19 @@ export const helpScoutWidget = (page: { props: Record<string, unknown> }) => {
 
   (window as any).Beacon('init', HELPSCOUT_BEACON_ID);
 };
+
+/** Name, native name, and locale from a language specification. */
+export function parseLanguageSpecification(spec: LanguageSpecification): {
+  name: string;
+  nativeName: string;
+  locale: string;
+} {
+  const { language, locale } = spec;
+
+  if (language.includes('|')) {
+    const [name, nativeName] = language.split('|').map((part) => part.trim());
+    return { name, nativeName, locale };
+  }
+
+  return { name: language, nativeName: language, locale };
+}

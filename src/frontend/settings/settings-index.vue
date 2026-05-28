@@ -68,6 +68,7 @@ import SourceLang from './languages/components/source-language.vue';
 import LanguagesTable from './languages/components/language-table.vue';
 import RequestAppUpdateModal from './languages/components/request-app-update-modal.vue';
 import RequestFeedbackModal from './languages/components/request-feedback-modal.vue';
+import { parseLanguageSpecification } from '../shared/helpers';
 import {
   type LanguageTableItem,
   type SettingsPageProps,
@@ -120,9 +121,12 @@ const handleRequestDeletion = (item: LanguageTableItem) => {
   const payload = {
     supportCode: SUPPORT_CODES.REMOVE_LANGUAGE.code,
     context: {
-      locale: item.locale,
+      languageSpec: {
+        ...parseLanguageSpecification(item),
+      },
       requestedBy: shared.user.name,
       details: SUPPORT_CODES.REMOVE_LANGUAGE.description,
+      subject: SUPPORT_CODES.REMOVE_LANGUAGE.subject,
     },
   } satisfies SupportRequest;
   router.post(`/${shared.locale}/settings/support`, payload, {
