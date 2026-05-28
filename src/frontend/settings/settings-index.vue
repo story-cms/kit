@@ -51,7 +51,7 @@
     <RequestFeedbackModal
       :open="showFeedbackModal"
       :variant="feedbackModalVariant"
-      :contact-email="shared.config?.mailFromAddress ?? 'ops@scoutredeem.co'"
+      :contact-email="widgets.providers.supportEmail ?? 'ops@scoutredeem.co'"
       @close="showFeedbackModal = false"
     />
   </AppLayout>

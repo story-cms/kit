@@ -75,6 +75,7 @@ const settingsProviders: Providers = {
     libraryId: '',
     host: '',
   },
+  supportEmail: 'support@example.com',
 };
 
 const mockBibleTranslations = [

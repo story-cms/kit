@@ -605,7 +605,6 @@ export interface UiConfig {
   logo: string;
   helpUrl: string;
   hasAppPreview: boolean;
-  mailFromAddress?: string;
   languages: LanguageSpecification[];
   subscriptions: Subscription[];
 }
@@ -664,6 +663,8 @@ export interface Providers {
     libraryId: string;
     host: string;
   };
+
+  supportEmail?: string;
 }
 /// ----------------------------------------------------
 ///  settings

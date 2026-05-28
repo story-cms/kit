@@ -186,6 +186,7 @@ export async function configure(command: Configure) {
     OPENAI_API_KEY: 'redacted',
     GOOGLE_APPLICATION_CREDENTIALS_JSON: 'redacted',
     FIREBASE_SERVICE_ACCOUNT_KEY_JSON: 'redacted',
+    SUPPORT_EMAIL: 'pending',
   });
 
   /**

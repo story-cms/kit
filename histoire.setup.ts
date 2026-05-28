@@ -29,6 +29,7 @@ widgets.setProviders({
     libraryId: import.meta.env.VITE_BUNNY_LIBRARY_ID,
     host: import.meta.env.VITE_BUNNY_HOST,
   },
+  supportEmail: import.meta.env.VITE_SUPPORT_EMAIL,
 });
 
 export const setupVue3 = defineSetupVue3(({ app }) => {

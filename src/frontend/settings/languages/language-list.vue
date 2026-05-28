@@ -67,7 +67,12 @@
           You’re going to the ends of the earth! We couldn’t find that language in our
           system...yet. If you’d like us to add it, please contact us.
         </p>
-        <PillButton label="Request Language" variant="blue" class="my-8" />
+        <PillButton
+          label="Request Language"
+          variant="blue"
+          class="my-8"
+          @click="handleRequestLanguage"
+        />
       </div>
     </div>
   </div>
@@ -76,6 +81,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import type { LanguageListItemProps } from '../../../types';
+import { useWidgetsStore } from '../../store';
 import LanguageListItem from './components/language-list-item.vue';
 import Icon from '../../shared/icon.vue';
 import PillButton from '../../shared/pill-button.vue';
@@ -87,6 +93,8 @@ const props = defineProps<{
 const emit = defineEmits<{
   update: [locale: string, isSelected: boolean];
 }>();
+
+const widgets = useWidgetsStore();
 
 const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const letterFilter = ref('');
@@ -122,5 +130,17 @@ const filteredItems = computed(() => {
 
 const handleLetterFilter = (letter: string) => {
   letterFilter.value = letterFilter.value === letter ? '' : letter;
+};
+
+const emailAddress = computed(
+  () => widgets.providers.supportEmail ?? 'ops@scoutredeem.co',
+);
+
+console.log(widgets.providers);
+
+const handleRequestLanguage = () => {
+  const subject = `Request new language`;
+  const body = `I would like to request the following language which is missing in Journeys Studio.`;
+  window.location.href = `mailto:${emailAddress.value}?subject=${subject}&body=${body}`;
 };
 </script>
