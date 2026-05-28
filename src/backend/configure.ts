@@ -247,6 +247,13 @@ export async function configure(command: Configure) {
     leadingComment: 'Configuration for the Firebase service account key',
   });
 
+  await codemods.defineEnvValidations({
+    variables: {
+      SUPPORT_EMAIL: `Env.schema.string(),`,
+    },
+    leadingComment: 'Configuration for the support email address',
+  });
+
   /**
    * Register providers
    */
