@@ -685,12 +685,14 @@ export interface LanguageListItemProps {
   status: 'selected' | 'readonly' | 'available';
 }
 
+export interface SupportRequestLanguageSpec {
+  name: string;
+  nativeName: string;
+  locale: string;
+}
+
 export interface SupportRequestContext {
-  languageSpec: {
-    name: string;
-    nativeName: string;
-    locale: string;
-  };
+  languageSpec?: SupportRequestLanguageSpec;
   requestedBy: string;
   details: string;
   subject: string;

@@ -104,11 +104,13 @@ const supportCodeForAppUpdateReason = (reason: string) => {
 
 const buildSupportPayload = (
   supportCode: (typeof SUPPORT_CODES)[keyof typeof SUPPORT_CODES],
-  languageSpec: LanguageSpecification,
+  languageSpec?: LanguageSpecification,
 ): SupportRequest => ({
   supportCode: supportCode.code,
   context: {
-    languageSpec: parseLanguageSpecification(languageSpec),
+    ...(languageSpec && {
+      languageSpec: parseLanguageSpecification(languageSpec),
+    }),
     requestedBy: shared.user.name,
     details: supportCode.description,
     subject: supportCode.subject,
@@ -146,7 +148,7 @@ const handleRequestAppUpdateConfirm = (reason: string) => {
     return;
   }
 
-  postSupportRequest(buildSupportPayload(supportCode, shared.sourceLanguage), {
+  postSupportRequest(buildSupportPayload(supportCode), {
     onSuccess: () => {
       feedbackModalVariant.value = 'success';
       showFeedbackModal.value = true;
