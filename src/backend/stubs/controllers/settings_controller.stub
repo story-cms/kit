@@ -158,8 +158,7 @@ export default class SettingsController {
 
     await mail.send((message) => {
       message
-        .from(env.get('MAIL_FROM_ADDRESS', ''))
-        .to(env.get('SUPPORT_EMAIL', ''))
+        .to(cms.config.supportEmail)
         .subject(subject)
         .htmlView('emails/support_request', {
           appName,

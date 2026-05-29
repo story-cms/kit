@@ -81,7 +81,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import type { LanguageListItemProps } from '../../../types';
-import { useWidgetsStore } from '../../store';
+import { useSharedStore } from '../../store';
 import LanguageListItem from './components/language-list-item.vue';
 import Icon from '../../shared/icon.vue';
 import PillButton from '../../shared/pill-button.vue';
@@ -94,7 +94,7 @@ const emit = defineEmits<{
   update: [locale: string, isSelected: boolean];
 }>();
 
-const widgets = useWidgetsStore();
+const shared = useSharedStore();
 
 const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const letterFilter = ref('');
@@ -132,15 +132,9 @@ const handleLetterFilter = (letter: string) => {
   letterFilter.value = letterFilter.value === letter ? '' : letter;
 };
 
-const emailAddress = computed(
-  () => widgets.providers.supportEmail ?? 'ops@scoutredeem.co',
-);
-
-console.log(widgets.providers);
-
 const handleRequestLanguage = () => {
   const subject = `Request new language`;
   const body = `I would like to request the following language which is missing in Journeys Studio.`;
-  window.location.href = `mailto:${emailAddress.value}?subject=${subject}&body=${body}`;
+  window.location.href = `mailto:${shared.config.supportEmail}?subject=${subject}&body=${body}`;
 };
 </script>

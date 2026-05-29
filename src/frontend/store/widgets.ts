@@ -26,7 +26,6 @@ const defaultProviders: Providers = {
     libraryId: '',
     host: '',
   },
-  supportEmail: '',
 };
 
 export const useWidgetsStore = defineStore('widgets', () => {
