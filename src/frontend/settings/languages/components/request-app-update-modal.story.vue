@@ -22,8 +22,8 @@ import RequestAppUpdateModal from './request-app-update-modal.vue';
 
 const show = ref(true);
 
-const onConfirm = (reason: string) => {
-  alert(`Confirm request: ${reason}`);
+const onConfirm = (reasons: string[]) => {
+  alert(`Confirm request: ${reasons.join(', ')}`);
   show.value = false;
 };
 </script>

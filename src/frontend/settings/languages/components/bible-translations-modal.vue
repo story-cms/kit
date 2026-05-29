@@ -1,5 +1,10 @@
 <template>
-  <LanguageModal :open="open" title="Bible translations available" @close="handleClose">
+  <LanguageModal
+    :open="open"
+    title="Bible translations available"
+    :hide-close-button="true"
+    @close="handleClose"
+  >
     <div class="space-y-4 pb-[130px]">
       <div
         v-if="isLoading || hasError"
@@ -22,30 +27,53 @@
           >No Bible translations available for this language.</span
         >
       </div>
-      <Listbox v-else v-model="selectedBibleVersion" as="div" class="relative">
-        <ListboxButton
-          class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2.5 pl-3 pr-10 text-left text-sm text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-        >
-          <span class="block truncate">
-            {{ selectedBibleVersion?.bibleLabel ?? 'Select translation' }}
-          </span>
-          <span
-            class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+      <Combobox
+        v-else
+        v-model="selectedBibleVersion"
+        by="bibleVersion"
+        nullable
+        as="div"
+        class="relative"
+      >
+        <div class="grid grid-cols-1">
+          <ComboboxInput
+            :class="[
+              'col-start-1 row-start-1 w-full rounded-md border border-gray-300 bg-white py-2.5 pr-10 text-sm text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500',
+              showSearchIcon ? 'pl-10' : 'pl-3',
+            ]"
+            placeholder="Search"
+            :display-value="displayBibleLabel"
+            @change="onComboboxInputChange"
+          />
+          <Icon
+            v-if="showSearchIcon"
+            name="search"
+            class="pointer-events-none col-start-1 row-start-1 ml-3 size-4 self-center text-gray-400"
+            aria-hidden="true"
+          />
+          <ComboboxButton
+            class="col-start-1 row-start-1 flex items-center justify-self-end pr-2"
           >
             <Icon name="chevron-down" class="h-5 w-5 text-gray-400" aria-hidden="true" />
-          </span>
-        </ListboxButton>
+          </ComboboxButton>
+        </div>
 
         <transition
           leave-active-class="transition duration-100 ease-in"
           leave-from-class="opacity-100"
           leave-to-class="opacity-0"
         >
-          <ListboxOptions
-            class="absolute z-10 my-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 pb-8 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+          <ComboboxOptions
+            class="absolute z-10 my-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
           >
-            <ListboxOption
-              v-for="version in currentBibleTranslations"
+            <li
+              v-if="filteredBibleTranslations.length === 0"
+              class="relative cursor-default select-none px-3 py-2 text-sm text-gray-500"
+            >
+              No translations match your search.
+            </li>
+            <ComboboxOption
+              v-for="version in filteredBibleTranslations"
               :key="version.bibleVersion"
               v-slot="{ active, selected }"
               :value="version"
@@ -69,20 +97,22 @@
                   <Icon name="check" class="h-5 w-5" aria-hidden="true" />
                 </span>
               </li>
-            </ListboxOption>
-          </ListboxOptions>
+            </ComboboxOption>
+          </ComboboxOptions>
         </transition>
-      </Listbox>
+      </Combobox>
     </div>
 
     <template #actions>
-      <PillButton label="Cancel" variant="gray" @click="handleClose" />
-      <PillButton
-        label="Confirm selection"
-        variant="green"
-        :disabled="isLoading || hasError || currentBibleTranslations.length === 0"
-        @click="handleConfirm"
-      />
+      <div class="flex w-full justify-end gap-x-4">
+        <PillButton label="Cancel" variant="gray" @click="handleClose" />
+        <PillButton
+          label="Confirm selection"
+          variant="green"
+          :disabled="isLoading || hasError || currentBibleTranslations.length === 0"
+          @click="handleConfirm"
+        />
+      </div>
     </template>
   </LanguageModal>
 </template>
@@ -91,7 +121,13 @@
 import { ref, watch, computed } from 'vue';
 import axios, { AxiosError } from 'axios';
 import { useWidgetsStore, useSharedStore } from '../../../store';
-import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue';
+import {
+  Combobox,
+  ComboboxButton,
+  ComboboxInput,
+  ComboboxOption,
+  ComboboxOptions,
+} from '@headlessui/vue';
 import Icon from '../../../shared/icon.vue';
 import LanguageModal from './language-modal.vue';
 import PillButton from '../../../shared/pill-button.vue';
@@ -103,6 +139,7 @@ const shared = useSharedStore();
 
 type BibleVersion = Omit<LanguageSpecification, 'languageDirection' | 'locale'>;
 const selectedBibleVersion = ref<BibleVersion | null>(null);
+const query = ref('');
 const isLoading = ref(false);
 const hasError = ref(false);
 const errorMessage = ref('');
@@ -117,10 +154,30 @@ const emit = defineEmits<{
   confirm: [bibleVersion: string, bibleVersionName: string];
 }>();
 
+const displayBibleLabel = (version: unknown) =>
+  (version as BibleVersion | null)?.bibleLabel ?? '';
+
+const showSearchIcon = computed(
+  () => query.value !== '' || displayBibleLabel(selectedBibleVersion.value) === '',
+);
+
+const onComboboxInputChange = (event: Event) => {
+  const value = (event.target as HTMLInputElement).value;
+  query.value = value;
+  if (value === '') {
+    selectedBibleVersion.value = null;
+  }
+};
+
+watch(selectedBibleVersion, () => {
+  query.value = '';
+});
+
 watch(
   () => [props.open, props.item] as const,
   ([isOpen, item]) => {
     if (isOpen && item) {
+      query.value = '';
       const filtered = shared.bibleTranslations.filter((v) =>
         languageMatches(item.language, v.language),
       );
@@ -200,6 +257,16 @@ const currentBibleTranslations = computed(() => {
   );
 });
 
+const filteredBibleTranslations = computed(() => {
+  if (query.value === '') {
+    return currentBibleTranslations.value;
+  }
+  const normalizedQuery = query.value.toLowerCase();
+  return currentBibleTranslations.value.filter((version) =>
+    version.bibleLabel?.toLowerCase().includes(normalizedQuery),
+  );
+});
+
 const loadBibleTranslations = async () => {
   if (shared.bibleTranslations.length > 0) {
     hasError.value = false;
@@ -224,6 +291,7 @@ watch(
   () => props.open,
   (isOpen) => {
     if (isOpen) {
+      query.value = '';
       void loadBibleTranslations();
     }
   },

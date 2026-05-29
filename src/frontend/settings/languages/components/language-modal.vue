@@ -9,39 +9,46 @@
     >
       <div class="fixed inset-0 bg-black/30" aria-hidden="true" @click="emit('close')" />
       <div
-        class="relative z-10 w-full max-w-md overflow-hidden rounded-2xl bg-white p-6 shadow-xl"
+        class="relative z-10 w-full max-w-md overflow-hidden rounded-2xl bg-white px-6 py-9 shadow-xl"
         role="document"
         @click.stop
       >
-        <div class="grid grid-cols-[1fr_auto] items-center">
-          <h2
+        <div
+          class="items-center"
+          :class="hideCloseButton ? '' : 'grid grid-cols-[1fr_auto]'"
+        >
+          <span
             v-if="title"
             id="modal-title"
-            class="text-center text-base font-medium text-black"
+            class="text-left font-['Inter']"
+            :class="variantClass"
           >
             {{ title }}
-          </h2>
-          <div class="justify-self-end">
+          </span>
+          <div v-if="!hideCloseButton" class="justify-self-end">
             <button
               type="button"
               class="rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
               aria-label="Close"
               @click="emit('close')"
             >
-              <Icon name="close" class="size-5" />
+              <Icon name="close" class="size-4" />
             </button>
           </div>
         </div>
 
         <div class="mt-6">
           <slot>
-            <p v-if="message" class="text-center text-base font-normal leading-7 text-black">
+            <p
+              v-if="message"
+              class="text-left font-['Inter'] text-base font-normal leading-7 tracking-normal text-black"
+            >
               {{ message }}
             </p>
           </slot>
         </div>
 
-        <div v-if="$slots.actions" class="mt-8 flex justify-center gap-4">
+        <div v-if="$slots.actions" class="flex justify-center gap-4">
           <slot name="actions" />
         </div>
       </div>
@@ -50,14 +57,26 @@
 </template>
 
 <script setup lang="ts">
-import { watch, onUnmounted } from 'vue';
+import { watch, onUnmounted, computed } from 'vue';
 import Icon from '../../../shared/icon.vue';
 
-const props = defineProps<{
-  open: boolean;
-  title?: string;
-  message?: string;
-}>();
+type ModalVariant = 'success' | 'error' | '';
+
+const props = withDefaults(
+  defineProps<{
+    open: boolean;
+    title?: string;
+    message?: string;
+    variant?: ModalVariant;
+    hideCloseButton?: boolean;
+  }>(),
+  {
+    title: '',
+    message: '',
+    variant: '',
+    hideCloseButton: false,
+  },
+);
 
 const emit = defineEmits<{
   (e: 'close'): void;
@@ -75,6 +94,17 @@ watch(
   },
   { immediate: true },
 );
+
+const variantClass = computed(() => {
+  switch (props.variant) {
+    case 'success':
+      return 'text-xs leading-4 font-medium text-green-800 bg-green-200 py-1 px-[18px] rounded-full max-w-fit';
+    case 'error':
+      return 'text-xs leading-4 font-medium text-red-800 bg-red-100 py-1 px-[18px] rounded-full max-w-fit';
+    default:
+      return 'text-sm font-semibold leading-[130%] tracking-normal text-black';
+  }
+});
 
 onUnmounted(() => document.removeEventListener('keydown', handleEscape));
 </script>

@@ -27,14 +27,14 @@ const emit = defineEmits<{
 
 const variantClasses: Record<string, string> = {
   green:
-    'bg-green-500 hover:bg-green-400 disabled:bg-gray-400 disabled:hover:bg-gray-400',
-  blue: 'bg-blue-500 hover:bg-blue-400 disabled:bg-gray-400 disabled:hover:bg-gray-400',
-  gray: 'bg-gray-200 hover:bg-gray-400 disabled:bg-gray-400 disabled:hover:bg-gray-400',
-  red: 'bg-red-500 hover:bg-red-400 disabled:bg-gray-400 disabled:hover:bg-gray-400',
+    'bg-green-500 hover:bg-green-400 disabled:bg-gray-400 disabled:hover:bg-gray-400 text-white',
+  blue: 'bg-blue-500 hover:bg-blue-400 disabled:bg-gray-400 disabled:hover:bg-gray-400 text-white',
+  gray: 'bg-gray-200 hover:bg-gray-400 disabled:bg-gray-400 disabled:hover:bg-gray-400 text-gray-700',
+  red: 'bg-red-500 hover:bg-red-400 disabled:bg-gray-400 disabled:hover:bg-gray-400 text-white',
 };
 
 const buttonClasses = computed(
   () =>
-    `min-w-[128px] rounded-[38px] border px-[15px] py-[9px] text-sm/5 font-medium text-white shadow focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none ${variantClasses[props.variant]}`,
+    `min-w-[128px] rounded-[38px] border px-[15px] py-[9px] text-sm/5 font-medium  shadow focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none ${variantClasses[props.variant]}`,
 );
 </script>

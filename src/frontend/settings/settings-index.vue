@@ -138,25 +138,37 @@ const postSupportRequest = (
   );
 };
 
-const handleRequestAppUpdateConfirm = (reason: string) => {
+const handleRequestAppUpdateConfirm = (reasons: string[]) => {
   showRequestAppUpdateModal.value = false;
 
-  const supportCode = supportCodeForAppUpdateReason(reason);
-  if (!supportCode) {
+  const supportCodes = reasons
+    .map(supportCodeForAppUpdateReason)
+    .filter((code): code is NonNullable<typeof code> => code !== undefined);
+
+  if (supportCodes.length === 0) {
     feedbackModalVariant.value = 'error';
     showFeedbackModal.value = true;
     return;
   }
 
-  postSupportRequest(buildSupportPayload(supportCode), {
-    onSuccess: () => {
-      feedbackModalVariant.value = 'success';
-      showFeedbackModal.value = true;
-    },
-    onError: () => {
-      feedbackModalVariant.value = 'error';
-      showFeedbackModal.value = true;
-    },
+  let completed = 0;
+  let hasError = false;
+
+  supportCodes.forEach((supportCode) => {
+    postSupportRequest(buildSupportPayload(supportCode), {
+      onSuccess: () => {
+        completed += 1;
+        if (completed === supportCodes.length && !hasError) {
+          feedbackModalVariant.value = 'success';
+          showFeedbackModal.value = true;
+        }
+      },
+      onError: () => {
+        hasError = true;
+        feedbackModalVariant.value = 'error';
+        showFeedbackModal.value = true;
+      },
+    });
   });
 };
 

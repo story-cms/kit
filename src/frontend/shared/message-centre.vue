@@ -13,45 +13,63 @@
       leave-from-class="transform translate-y-0 opacity-100"
       leave-to-class="transform -translate-y-2 opacity-0"
     >
-      <div v-if="message" class="text-sm font-medium leading-4">
-        <div v-if="response === 0" class="flex w-full items-center gap-x-6">
-          <Icon
-            class="inline-flex h-6 w-auto items-center text-red-500"
-            :name="'exclamation'"
-          />
+      <div
+        v-if="message"
+        class="flex flex-col items-center text-center text-sm font-medium leading-4"
+      >
+        <div class="flex w-full items-center justify-center gap-x-6">
+          <Icon :name="responseConfig.icon" :class="responseConfig.iconClass" />
           <p class="max-w-full">{{ message }}</p>
         </div>
-        <div v-if="response === 1" class="flex w-full items-center gap-x-6">
-          <Icon class="inline-flex h-6 w-6 items-center text-blue-500" :name="'check'" />
-          <p class="max-w-full">{{ message }}</p>
-        </div>
-        <div v-if="response === 2" class="flex w-full items-center gap-x-6">
-          <Icon
-            class="inline-flex h-6 w-6 items-center text-green-500"
-            :name="'badge-check'"
-          />
-          <p class="max-w-full">{{ message }}</p>
-        </div>
-        <div v-if="response === 3" class="flex w-full items-center gap-x-6">
-          <Icon
-            class="inline-flex h-6 w-6 items-center text-yellow-500"
-            :name="'information-circle'"
-          />
-          <p class="max-w-full">{{ message }}</p>
-        </div>
+        <p
+          v-if="description"
+          class="mt-2 text-center font-['Inter'] text-sm font-normal leading-5"
+        >
+          {{ description }}
+        </p>
       </div>
     </Transition>
   </div>
 </template>
 <script setup lang="ts">
+import { computed } from 'vue';
 import Icon from './icon.vue';
 import { ResponseStatus } from '../../types';
 import { useSharedStore } from '../store';
 
 const shared = useSharedStore();
 
-defineProps<{
+const props = defineProps<{
   response: ResponseStatus;
   message: string;
+  description?: string;
 }>();
+
+const RESPONSE_CONFIG: Record<
+  Exclude<ResponseStatus, ResponseStatus.None>,
+  { icon: string; iconClass: string }
+> = {
+  [ResponseStatus.Failure]: {
+    icon: 'exclamation',
+    iconClass: 'inline-flex h-6 w-6 items-center text-red-500',
+  },
+  [ResponseStatus.Confirmation]: {
+    icon: 'check',
+    iconClass: 'inline-flex h-6 w-6 items-center text-blue-500',
+  },
+  [ResponseStatus.Accomplishment]: {
+    icon: 'badge-check',
+    iconClass: 'inline-flex h-6 w-6 items-center text-green-500',
+  },
+  [ResponseStatus.Neutral]: {
+    icon: 'information-circle',
+    iconClass: 'inline-flex h-6 w-6 items-center text-yellow-500',
+  },
+};
+
+const responseConfig = computed(
+  () =>
+    RESPONSE_CONFIG[props.response as Exclude<ResponseStatus, ResponseStatus.None>] ??
+    RESPONSE_CONFIG[ResponseStatus.Neutral],
+);
 </script>
