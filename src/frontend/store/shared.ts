@@ -106,17 +106,27 @@ export const useSharedStore = defineStore('shared', () => {
 
   // message centre
 
-  const messageCentre = reactive({
-    response: ResponseStatus.None as ResponseStatus,
-    message: '' as string,
+  const messageCentre = reactive<{
+    response: ResponseStatus;
+    message: string;
+    description?: string;
+  }>({
+    response: ResponseStatus.None,
+    message: '',
   });
 
-  const addMessage = (response: ResponseStatus, message: string) => {
+  const addMessage = (
+    response: ResponseStatus,
+    message: string,
+    description?: string,
+  ) => {
     messageCentre.response = response;
     messageCentre.message = message;
+    messageCentre.description = description;
     setTimeout(() => {
       messageCentre.response = ResponseStatus.None;
       messageCentre.message = '';
+      messageCentre.description = undefined;
     }, 2500);
   };
   const hasFeedback = computed(() => messageCentre.response !== ResponseStatus.None);

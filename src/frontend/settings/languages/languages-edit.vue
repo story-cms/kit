@@ -151,6 +151,7 @@ const submitLanguages = (languages: LanguageSpecification[]) => {
             shared.addMessage(
               ResponseStatus.Confirmation,
               'Language(s) added successfully',
+              'Remember, once you’ve translated your content you’ll need to request an app update to make these live for your users.',
             );
           },
         });
