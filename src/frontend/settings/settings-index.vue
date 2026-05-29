@@ -48,6 +48,12 @@
       @confirm="handleRequestAppUpdateConfirm"
     />
 
+    <RequestFeedbackModal
+      :open="showFeedbackModal"
+      :variant="feedbackModalVariant"
+      :contact-email="shared.config.supportEmail ?? 'ops@startjourneys.io'"
+      @close="showFeedbackModal = false"
+    />
   </AppLayout>
 </template>
 
@@ -62,6 +68,7 @@ import PillButton from '../shared/pill-button.vue';
 import SourceLang from './languages/components/source-language.vue';
 import LanguagesTable from './languages/components/language-table.vue';
 import RequestAppUpdateModal from './languages/components/request-app-update-modal.vue';
+import RequestFeedbackModal from './languages/components/request-feedback-modal.vue';
 import { parseLanguageSpecification } from '../shared/helpers';
 import {
   type LanguageSpecification,
@@ -86,6 +93,8 @@ shared.setLanguageItems(props.languageItems ?? []);
 widgets.setProviders(props.providers);
 
 const showRequestAppUpdateModal = ref(false);
+const showFeedbackModal = ref(false);
+const feedbackModalVariant = ref<'success' | 'error'>('success');
 
 const buildAppUpdatePayload = (reasons: string[]): SupportRequest | null => {
   const hasLanguage = reasons.includes('New language');
@@ -101,19 +110,6 @@ const buildAppUpdatePayload = (reasons: string[]): SupportRequest | null => {
     return buildSupportPayload(SUPPORT_CODES.UPDATE_CONTENT);
   }
   return null;
-};
-
-const appUpdateSuccessMessage = (reasons: string[]) => {
-  const hasLanguage = reasons.includes('New language');
-  const hasContent = reasons.includes('New content');
-
-  if (hasLanguage && hasContent) {
-    return 'App update requested for new language and content';
-  }
-  if (hasLanguage) {
-    return 'App update requested for new language';
-  }
-  return 'App update requested for new content';
 };
 
 const buildSupportPayload = (
@@ -157,16 +153,19 @@ const handleRequestAppUpdateConfirm = (reasons: string[]) => {
 
   const payload = buildAppUpdatePayload(reasons);
   if (!payload) {
-    shared.addMessage(ResponseStatus.Failure, 'Error requesting app update');
+    feedbackModalVariant.value = 'error';
+    showFeedbackModal.value = true;
     return;
   }
 
   postSupportRequest(payload, {
     onSuccess: () => {
-      shared.addMessage(ResponseStatus.Confirmation, appUpdateSuccessMessage(reasons));
+      feedbackModalVariant.value = 'success';
+      showFeedbackModal.value = true;
     },
     onError: () => {
-      shared.addMessage(ResponseStatus.Failure, 'Error requesting app update');
+      feedbackModalVariant.value = 'error';
+      showFeedbackModal.value = true;
     },
   });
 };
