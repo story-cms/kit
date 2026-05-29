@@ -723,6 +723,11 @@ export const SUPPORT_CODES = {
     subject: 'App update - content added.',
     description: 'Content requested to be updated',
   },
+  UPDATE_APP: {
+    code: 'UPDATE_APP',
+    subject: 'App update - new language and content.',
+    description: 'App update requested for new language and new content',
+  },
 } as const satisfies Record<string, SupportCodeDefinition>;
 
 export type SupportCode = (typeof SUPPORT_CODES)[keyof typeof SUPPORT_CODES]['code'];
