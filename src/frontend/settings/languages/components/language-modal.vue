@@ -9,7 +9,7 @@
     >
       <div class="fixed inset-0 bg-black/30" aria-hidden="true" @click="emit('close')" />
       <div
-        class="relative z-10 w-full max-w-md overflow-hidden rounded-2xl bg-white px-6 py-9 shadow-xl"
+        class="relative z-10 w-full max-w-xl overflow-hidden rounded-2xl bg-white px-6 py-9 shadow-xl"
         role="document"
         @click.stop
       >
