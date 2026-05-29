@@ -189,7 +189,6 @@ export async function configure(command: Configure) {
     OPENAI_API_KEY: 'redacted',
     GOOGLE_APPLICATION_CREDENTIALS_JSON: 'redacted',
     FIREBASE_SERVICE_ACCOUNT_KEY_JSON: 'redacted',
-    SUPPORT_EMAIL: 'pending',
   });
 
   /**
@@ -245,13 +244,6 @@ export async function configure(command: Configure) {
       FIREBASE_SERVICE_ACCOUNT_KEY_JSON: `Env.schema.string(),`,
     },
     leadingComment: 'Configuration for the Firebase service account key',
-  });
-
-  await codemods.defineEnvValidations({
-    variables: {
-      SUPPORT_EMAIL: `Env.schema.string(),`,
-    },
-    leadingComment: 'Configuration for the support email address',
   });
 
   /**

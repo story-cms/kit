@@ -35,6 +35,4 @@ export default {
     libraryId: env.get('BUNNY_LIBRARY_ID', ''),
     host: env.get('BUNNY_CDN_HOSTNAME', ''),
   },
-  
-  supportEmail: env.get('SUPPORT_EMAIL', ''),
 } as Providers;

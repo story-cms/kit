@@ -14,32 +14,10 @@ import {
 } from '@story-cms/kit';
 
 import cms from '#services/cms';
-import env from '#start/env';
 import providers from '#config/providers';
 
 export default class SettingsController {
-  private defaultUrl(ctx: HttpContext) {
-    return {{ '`/${ctx.auth.user?.defaultLanguage()}/settings`' }};
-  }
-
-  private ensureLocale(ctx: HttpContext) {
-    const defaultUrl = this.defaultUrl(ctx);
-
-    if (!ctx.params.locale) {
-      return ctx.response.redirect(defaultUrl);
-    }
-
-    if (!ctx.auth.user?.isAllowed(ctx.params.locale)) {
-      return ctx.response.redirect(defaultUrl);
-    }
-
-    return null;
-  }
-
   public async index(ctx: HttpContext) {
-    const redirect = this.ensureLocale(ctx);
-    if (redirect) return redirect;
-
     cms.localeFromPath(ctx);
 
     const sourceLanguage =
@@ -86,9 +64,6 @@ export default class SettingsController {
   }
 
   public async editLanguage(ctx: HttpContext) {
-    const redirect = this.ensureLocale(ctx);
-    if (redirect) return redirect;
-
     cms.localeFromPath(ctx);
 
     const props: LanguagesEditProps = {
@@ -100,9 +75,6 @@ export default class SettingsController {
   }
 
   public async addLanguages(ctx: HttpContext) {
-    const redirect = this.ensureLocale(ctx);
-    if (redirect) return redirect;
-
     cms.localeFromPath(ctx);
 
     const payload = ctx.request.all() as { languages?: LanguageSpecification[] };
@@ -158,8 +130,7 @@ export default class SettingsController {
 
     await mail.send((message) => {
       message
-        .from(env.get('MAIL_FROM_ADDRESS', ''))
-        .to(env.get('SUPPORT_EMAIL', ''))
+        .to(cms.config.supportEmail, 'Journey Studio Support')
         .subject(subject)
         .htmlView('emails/support_request', {
           appName,
