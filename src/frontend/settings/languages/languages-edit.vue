@@ -58,14 +58,6 @@
       </ContentHeader>
     </template>
     <LanguageList :items="languageListItems" @update="handleSelectionUpdate" />
-
-    <LanguageAddModal
-      :open="showAddModal"
-      :languages="selectedLanguages"
-      @close="showAddModal = false"
-      @back="showAddModal = false"
-      @add="confirmAddLanguages"
-    />
   </AppLayout>
 </template>
 
@@ -76,7 +68,6 @@ import AppLayout from '../../shared/app-layout.vue';
 import ContentHeader from '../../shared/content-header.vue';
 import PillButton from '../../shared/pill-button.vue';
 import LanguageList from './language-list.vue';
-import LanguageAddModal from './components/language-add-modal.vue';
 import type {
   LanguageListItemProps,
   LanguagesEditProps,
@@ -133,16 +124,9 @@ const removeSelectedLanguage = (locale: string) => {
   selectedLocales.value = next;
 };
 
-const showAddModal = ref(false);
-
 const addLanguage = () => {
-  showAddModal.value = true;
-};
-
-const confirmAddLanguages = () => {
   const languages = [...selectedLanguages.value];
   submitLanguages(languages);
-  showAddModal.value = false;
   emit('add', [...selectedLocales.value]);
   selectedLocales.value = new Set();
 };
