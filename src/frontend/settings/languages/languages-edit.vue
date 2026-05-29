@@ -124,6 +124,9 @@ const removeSelectedLanguage = (locale: string) => {
   selectedLocales.value = next;
 };
 
+const languageAddedMessage = (count: number) =>
+  count === 1 ? 'Your language has been added.' : 'Your languages have been added.';
+
 const addLanguage = () => {
   const languages = [...selectedLanguages.value];
   submitLanguages(languages);
@@ -150,7 +153,7 @@ const submitLanguages = (languages: LanguageSpecification[]) => {
           onSuccess: () => {
             shared.addMessage(
               ResponseStatus.Confirmation,
-              'Language(s) added successfully',
+              languageAddedMessage(languages.length),
               'Remember, once you’ve translated your content you’ll need to request an app update to make these live for your users.',
             );
           },
