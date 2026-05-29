@@ -123,11 +123,14 @@ export const useSharedStore = defineStore('shared', () => {
     messageCentre.response = response;
     messageCentre.message = message;
     messageCentre.description = description;
-    setTimeout(() => {
-      messageCentre.response = ResponseStatus.None;
-      messageCentre.message = '';
-      messageCentre.description = undefined;
-    }, 2500);
+    setTimeout(
+      () => {
+        messageCentre.response = ResponseStatus.None;
+        messageCentre.message = '';
+        messageCentre.description = undefined;
+      },
+      description ? 5000 : 2500,
+    );
   };
   const hasFeedback = computed(() => messageCentre.response !== ResponseStatus.None);
 
