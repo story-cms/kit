@@ -48,6 +48,10 @@ export default class SeedLanguages extends BaseCommand {
 /// paste your static config here
 /// ----------------------------------
 
-const languages: LanguageSpecification[] = [
+const languages: FullLanguageSpec[] = [
 
 ];
+
+type FullLanguageSpec = LanguageSpecification & {
+  bibleLabel: string;
+};
