@@ -171,8 +171,21 @@ const handleRequestAppUpdateConfirm = (reasons: string[]) => {
 };
 
 const handleRemove = (item: LanguageTableItem) => {
-  shared.removeLanguageItem(item.locale);
-  shared.addMessage(ResponseStatus.Confirmation, 'Language removed');
+  router.post(
+    `/${shared.locale}/settings/languages/${item.locale}/remove`,
+    {},
+    {
+      preserveScroll: true,
+      onSuccess: () => {
+        shared.removeLanguageItem(item.locale);
+        shared.addMessage(ResponseStatus.Confirmation, 'Language removed');
+      },
+      onError: (errors) => {
+        shared.setErrors(errors);
+        shared.addMessage(ResponseStatus.Failure, 'Error removing language');
+      },
+    },
+  );
 };
 
 const handleRequestDeletion = (item: LanguageTableItem) => {

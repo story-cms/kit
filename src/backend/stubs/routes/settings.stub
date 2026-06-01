@@ -13,5 +13,9 @@ export default () => {
     SettingsController,
     'updateBibleTranslation',
   ]);
+  router.post(':locale/settings/languages/:languageLocale/remove', [
+    SettingsController,
+    'removeLanguage',
+  ]);
   router.post(':locale/settings/support', [SettingsController, 'support']);
 };

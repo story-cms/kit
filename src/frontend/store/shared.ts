@@ -237,6 +237,10 @@ export const useSharedStore = defineStore('shared', () => {
 
   const removeLanguageItem = (locale: string) => {
     languageItems.value = languageItems.value.filter((i) => i.locale !== locale);
+    config.value = {
+      ...config.value,
+      languages: (config.value.languages ?? []).filter((l) => l.locale !== locale),
+    };
   };
 
   const addLanguages = (fresh: LanguageSpecification[]) => {
