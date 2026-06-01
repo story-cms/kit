@@ -11,7 +11,7 @@
       >
         Please select all that apply.
       </p>
-      <div class="mt-6">
+      <div class="mt-9">
         <fieldset>
           <legend class="sr-only">Reasons</legend>
           <div class="space-y-[1px]">
