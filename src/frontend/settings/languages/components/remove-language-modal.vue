@@ -6,8 +6,10 @@
     @close="emit('close')"
   >
     <template #actions>
-      <PillButton label="Cancel" variant="gray" @click="emit('close')" />
-      <PillButton label="Remove" variant="red" @click="emit('confirm')" />
+      <div class="mt-6 flex w-full justify-end gap-x-4">
+        <PillButton label="Cancel" variant="gray" @click="emit('close')" />
+        <PillButton label="Remove" variant="red" @click="emit('confirm')" />
+      </div>
     </template>
   </LanguageModal>
 </template>
