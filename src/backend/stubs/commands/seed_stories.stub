@@ -1,10 +1,11 @@
 {{{
   exports({ to: app.commandsPath('seed_stories.ts') })
 }}}
+import { DateTime } from 'luxon';
 import { BaseCommand } from '@adonisjs/core/ace';
 import type { CommandOptions } from '@adonisjs/core/types/ace';
-import { StorySpec, Story } from '@story-cms/kit';
-import { DateTime } from 'luxon';
+import db from '@adonisjs/lucid/services/db';
+import { type StorySpec, Story } from '@story-cms/kit';
 
 export default class SeedStories extends BaseCommand {
   static commandName = 'seed:stories';
@@ -14,6 +15,12 @@ export default class SeedStories extends BaseCommand {
 
   async run() {
     this.logger.info('Moving bespoke stories to the database');
+
+    // because we use hardwired story id's
+    // we need to first reset the auto increment on the stories table:
+
+    await this.syncAutoIncrementFor('stories');
+
     for (const spec of bespokeStories) {
       const existingStory = await Story.find(spec.id);
       if (existingStory) {
@@ -44,6 +51,22 @@ export default class SeedStories extends BaseCommand {
 
       this.logger.info({{ '`${spec.name} done.`' }});
     }
+  }
+
+  async syncAutoIncrementFor(table: string) {
+    const maxIdResult = await db.rawQuery({{ '`SELECT (MAX(id) + 1) as nr FROM ${table}`' }});
+    const maxId = maxIdResult.rows[0]['nr'];
+
+    const nextLevelResult = await db.rawQuery(
+      {{ '`SELECT nextval('public.${table}_id_seq') as nr`' }},
+    );
+    const nextLevel = Number.parseInt(nextLevelResult.rows[0]['nr'], 10);
+    const targetLevel = maxId;
+    if (targetLevel === nextLevel) {
+      return;
+    }
+
+    await db.rawQuery({{ '`SELECT SETVAL('public.${table}_id_seq', ?, FALSE)`' }}, [targetLevel]);
   }
 }
 
