@@ -1,9 +1,10 @@
 {{{
   exports({ to: app.commandsPath('seed_languages.ts') })
 }}}
+import { isDeepStrictEqual } from 'node:util';
 import { BaseCommand } from '@adonisjs/core/ace';
 import type { CommandOptions } from '@adonisjs/core/types/ace';
-import { type LanguageSpecification } from '@story-cms/kit';
+import { Config, type LanguageSpecification, defineConfig } from '@story-cms/kit';
 
 import cms from '#services/cms';
 
@@ -16,20 +17,30 @@ export default class SeedLanguages extends BaseCommand {
   async run() {
     this.logger.info('Seeding languages into the database');
 
-    for (const spec of languages) {
-      const existingLanguage = cms.config.languages.find(
-        (language: LanguageSpecification) => language.locale === spec.locale,
-      );
-
-      if (existingLanguage) {
-        this.logger.info({{ '`Language ${spec.locale} already exists`' }});
-        continue;
-      }
-
-      await cms.patchConfig({ languages: [...cms.config.languages, spec] });
-
-      this.logger.info({{ '`${spec.language} done.`' }});
+    // check to see if the languages are already in the database
+    const isDone = await this.isAlreadySeeded();
+    if (isDone) {
+      this.logger.info('Languages already seeded, skipping');
+      return;
     }
+
+    // patch the config
+    await cms.patchConfig({ languages });
+
+    this.logger.info('Languages seeded successfully');
+  }
+
+  async isAlreadySeeded() {
+    const defaultLanguages = defineConfig({}).languages;
+
+    const active = await Config.query()
+      .where('key', 'cms')
+      .orderBy('version', 'desc')
+      .first();
+    const dbLanguages = active?.data?.languages;
+
+    const hasNeverChangedFromDefault = isDeepStrictEqual(defaultLanguages, dbLanguages);
+    return !hasNeverChangedFromDefault;
   }
 }
 
