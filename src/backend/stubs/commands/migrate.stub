@@ -23,7 +23,18 @@ export default class MigrateAll extends BaseCommand {
     }
 
     await this.migrateConfig();
+    await this.seedLanguages();
     await this.seedBespokeStories();
+  }
+
+  private async seedLanguages() {
+    const seeder = await this.kernel.exec('seed:languages', []);
+    this.exitCode = seeder.exitCode;
+    this.error = seeder.error;
+
+    if (seeder.error || seeder.exitCode) {
+      this.logger.info('Language seeding failed');
+    }
   }
 
   private async seedBespokeStories() {
