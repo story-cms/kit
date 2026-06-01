@@ -8,26 +8,35 @@ export default class CmsProvider {
   constructor(protected app: ApplicationService) {}
 
   register() {
-    this.app.container.singleton(CmsService, async () => {
-      let config: CmsConfig;
-      const persistedRow = await Config.query()
+    this.app.container.singleton(CmsService, async (resolver) => {
+      // untracked config
+      let untrackedConfig: CmsConfig;
+      const persisted = await Config.query()
         .where('key', 'cms')
         .orderBy('version', 'desc')
         .first();
 
-      if (persistedRow) {
-        config = defineConfig(persistedRow.data as CmsConfig);
+      if (persisted) {
+        untrackedConfig = defineConfig(persisted.data as CmsConfig);
       } else {
-        config = defineConfig({});
+        untrackedConfig = defineConfig({});
         await Config.create({
           key: 'cms',
           version: 1,
-          data: config,
+          data: untrackedConfig,
         });
       }
 
-      // DB row holds runtime config (notably languages); merge in deploy-time config from config/cms.ts
-      return new CmsService(CmsService.mergeTrackedConfig(config));
+      // tracked config
+      const configService = await resolver.make('config');
+      const trackedConfig = configService.get<any>('cms') as CmsConfig;
+
+      const cmsConfig = {
+        ...untrackedConfig,
+        ...trackedConfig,
+      };
+
+      return new CmsService(cmsConfig);
     });
   }
 }
