@@ -8,43 +8,26 @@ export default class CmsProvider {
   constructor(protected app: ApplicationService) {}
 
   register() {
-    this.app.container.singleton(CmsService, async (resolver) => {
-      // untracked config
-      let untrackedConfig: CmsConfig;
+    this.app.container.singleton(CmsService, async () => {
+      let config: CmsConfig;
       const persistedRow = await Config.query()
         .where('key', 'cms')
         .orderBy('version', 'desc')
         .first();
 
-      const loadedFromDatabase = persistedRow !== null;
-
       if (persistedRow) {
-        untrackedConfig = defineConfig(persistedRow.data as CmsConfig);
+        config = defineConfig(persistedRow.data as CmsConfig);
       } else {
-        untrackedConfig = defineConfig({});
+        config = defineConfig({});
         await Config.create({
           key: 'cms',
           version: 1,
-          data: untrackedConfig,
+          data: config,
         });
       }
 
-      // tracked config (filesystem) — overlays DB except `languages`, which must stay DB-backed after first seed
-      const configService = await resolver.make('config');
-      const trackedConfig =
-        (configService.get<any>('cms') as Partial<CmsConfig> | undefined) ?? {};
-      const trackedRest = { ...trackedConfig };
-      delete trackedRest.languages;
-
-      const cmsConfig = {
-        ...untrackedConfig,
-        ...trackedRest,
-        languages: loadedFromDatabase
-          ? untrackedConfig.languages
-          : defineConfig({ ...untrackedConfig, ...trackedConfig }).languages,
-      };
-
-      return new CmsService(cmsConfig);
+      // DB row holds runtime config (notably languages); merge in deploy-time config from config/cms.ts
+      return new CmsService(CmsService.mergeTrackedConfig(config));
     });
   }
 }

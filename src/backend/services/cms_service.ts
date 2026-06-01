@@ -20,6 +20,26 @@ export class CmsService {
     this.#config = config;
   }
 
+  /**
+   * Combine DB-backed CMS config with deploy-time settings from `config/cms.ts`.
+   *
+   * From the database (`configs` table):
+   * - `languages` — seeded by `seed:languages`, updated in settings via `patchConfig`
+   *
+   * From the filesystem (`config/cms.ts`, version-controlled, deployed with the app):
+   * - `name`, `logo`, `supportEmail`, `hasAppPreview`, `microcopySource`
+   * - `streams`, `bespokeTemplates`, `storyTemplates`
+   * - `pagesTracking`, `subscriptions`, `storiesHasEditReview`
+   * - any other keys defined in `config/cms.ts` (these overlay the DB row)
+   *
+   * Keys present only in the DB row are kept when absent from `config/cms.ts`.
+   * `languages` always come from the DB and are never taken from the filesystem.
+   */
+  public static mergeTrackedConfig(dbConfig: CmsConfig): CmsConfig {
+    const trackedConfig = config.get<Partial<CmsConfig>>('cms') ?? {};
+    return { ...dbConfig, ...trackedConfig, languages: dbConfig.languages };
+  }
+
   public static default(): CmsService {
     const config = defineConfig({});
     return new CmsService(config);
@@ -49,12 +69,8 @@ export class CmsService {
     active.data = newConfig;
     await active.save();
 
-    const trackedConfig = (config.get<CmsConfig>('cms') || {}) as Partial<CmsConfig>;
-    const trackedRest = { ...trackedConfig };
-    delete trackedRest.languages;
-
-    // Prefer persisted `languages` over filesystem config (pilot/config/cms.ts also lists languages)
-    this.#config = { ...newConfig, ...trackedRest };
+    // Persist to DB, then refresh in-memory config (DB languages + filesystem deploy-time settings)
+    this.#config = CmsService.mergeTrackedConfig(newConfig);
   }
 
   public get sourceLocale(): string {
