@@ -32,7 +32,7 @@ const SUPPORT_CODES = {
   REMOVE_LANGUAGE: {
     code: 'REMOVE_LANGUAGE',
     subject: 'Remove language',
-    description: 'language requested to remove',
+    description: 'Language requested to be removed',
   },
   UPDATE_LANGUAGE: {
     code: 'UPDATE_LANGUAGE',
