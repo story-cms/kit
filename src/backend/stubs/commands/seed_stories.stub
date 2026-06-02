@@ -58,7 +58,7 @@ export default class SeedStories extends BaseCommand {
     const maxId = maxIdResult.rows[0]['nr'];
 
     const nextLevelResult = await db.rawQuery(
-      {{ "`SELECT nextval('public.${table}_id_seq') as nr`" }},
+      {{ '`SELECT nextval('public.${table}_id_seq') as nr`' }},
     );
     const nextLevel = Number.parseInt(nextLevelResult.rows[0]['nr'], 10);
     const targetLevel = maxId;
@@ -66,7 +66,7 @@ export default class SeedStories extends BaseCommand {
       return;
     }
 
-    await db.rawQuery({{ "`SELECT SETVAL('public.${table}_id_seq', ?, FALSE)`" }}, [targetLevel]);
+    await db.rawQuery({{ '`SELECT SETVAL('public.${table}_id_seq', ?, FALSE)`' }}, [targetLevel]);
   }
 }
 
