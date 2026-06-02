@@ -177,4 +177,138 @@ test.group('ProgressService', (group) => {
       }
     }
   });
+
+  test('counts content drafts per locale rather than sharing a single total', async ({
+    assert,
+  }) => {
+    // 1. arrange
+    setupMockCms();
+    const service = new ProgressService(cms);
+
+    const user = await User.create({
+      id: 1,
+      name: 'Test User',
+      email: 'test@test.com',
+      password: 'password',
+      language: '*',
+    });
+
+    await Index.createMany([
+      {
+        locale: 'en',
+        apiVersion: 1,
+        publishedList: [1, 2, 3, 4, 5],
+        draftsList: [],
+        issuesList: [],
+        items: { root: [] },
+        storyId: 1,
+      },
+      {
+        // 1 unique draft (3 drafted but not published)
+        locale: 'es',
+        apiVersion: 1,
+        publishedList: [1, 2],
+        draftsList: [2, 3],
+        issuesList: [],
+        items: { root: [] },
+        storyId: 1,
+      },
+      {
+        // 2 unique drafts (6, 7 drafted but not published)
+        locale: 'my',
+        apiVersion: 1,
+        publishedList: [5],
+        draftsList: [5, 6, 7],
+        issuesList: [],
+        items: { root: [] },
+        storyId: 1,
+      },
+    ]);
+
+    // 2. act
+    const result = await service.progress(user as UserInterface);
+
+    // 3. assert
+    // The fix reports each locale's own draft count. The original implementation
+    // shared a single global total (1 + 2 = 3) across every locale, so it would
+    // report draft === 3 for both es and my here.
+    const spanishContent = result
+      .find((p) => p.locale === 'es')
+      ?.progress.find((p) => p.name === 'Content');
+    assert.exists(spanishContent);
+    if (spanishContent) {
+      assert.equal(spanishContent.draft, 1);
+    }
+
+    const burmeseContent = result
+      .find((p) => p.locale === 'my')
+      ?.progress.find((p) => p.name === 'Content');
+    assert.exists(burmeseContent);
+    if (burmeseContent) {
+      assert.equal(burmeseContent.draft, 2);
+    }
+  });
+
+  test('aggregates published and draft counts across multiple index entries for one locale', async ({
+    assert,
+  }) => {
+    // 1. arrange
+    setupMockCms();
+    const service = new ProgressService(cms);
+
+    const user = await User.create({
+      id: 1,
+      name: 'Test User',
+      email: 'test@test.com',
+      password: 'password',
+      language: '*',
+    });
+
+    await Index.createMany([
+      {
+        locale: 'en',
+        apiVersion: 1,
+        publishedList: [1, 2, 3, 4, 5],
+        draftsList: [],
+        issuesList: [],
+        items: { root: [] },
+        storyId: 1,
+      },
+      {
+        // es spread across two stories: done 2, draft 1
+        locale: 'es',
+        apiVersion: 1,
+        publishedList: [1, 2],
+        draftsList: [2, 3],
+        issuesList: [],
+        items: { root: [] },
+        storyId: 1,
+      },
+      {
+        // es spread across two stories: done 3, draft 1
+        locale: 'es',
+        apiVersion: 1,
+        publishedList: [3, 4, 5],
+        draftsList: [6],
+        issuesList: [],
+        items: { root: [] },
+        storyId: 2,
+      },
+    ]);
+
+    // 2. act
+    const result = await service.progress(user as UserInterface);
+
+    // 3. assert
+    // The fix sums both index rows (done 2 + 3 = 5, draft 1 + 1 = 2). The original
+    // implementation overwrote the first row with the second, reporting done === 3.
+    const spanishContent = result
+      .find((p) => p.locale === 'es')
+      ?.progress.find((p) => p.name === 'Content');
+    assert.exists(spanishContent);
+    if (spanishContent) {
+      assert.equal(spanishContent.done, 5);
+      assert.equal(spanishContent.draft, 2);
+    }
+  });
 });

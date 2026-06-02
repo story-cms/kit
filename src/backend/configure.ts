@@ -117,10 +117,12 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'controllers/streams_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/stories_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/users_controller.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'controllers/settings_controller.stub', {});
 
   await codemods.makeUsingStub(stubsRoot, 'inertia/middleware.stub', {});
 
   await codemods.makeUsingStub(stubsRoot, 'routes/users.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'routes/settings.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/auth.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/routes.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/invitations.stub', {});
@@ -135,6 +137,7 @@ export async function configure(command: Configure) {
 
   await codemods.makeUsingStub(stubsRoot, 'mail/forget_password.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'mail/create_account.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'mail/support_request.stub', {});
 
   await codemods.makeUsingStub(stubsRoot, 'inertia/app.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'inertia/css.stub', {});
@@ -149,6 +152,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'commands/migrate.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/make_user.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'commands/seed_stories.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'commands/seed_languages.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/bootstrap.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/mock.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/rest.stub', {});

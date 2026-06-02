@@ -65,7 +65,7 @@
             name: 'promoImage',
             widget: 'image',
             uploadPreset: 'invitations',
-            description: 'JPG file up to 300K',
+            description: 'JPG file up to 300KB',
             extensions: ['.jpg', '.jpeg'],
             maxSize: 300000,
           }"

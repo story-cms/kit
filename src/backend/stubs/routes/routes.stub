@@ -23,6 +23,7 @@ import stories from '#start/routes/stories';
 import streams from '#start/routes/streams';
 import { ui, uiTools } from '#start/routes/ui';
 import users from '#start/routes/users';
+import settings from '#start/routes/settings';
 
 // Public routes
 
@@ -42,6 +43,7 @@ router
     ui();
     streams();
     preferences();
+    settings();
   })
   .use(middleware.auth());
 

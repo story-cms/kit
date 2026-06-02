@@ -118,6 +118,15 @@
           </div>
           <div class="my-7 border-t border-gray-200"></div>
           <section class="grid grid-cols-1">
+            <a
+              v-if="isAdmin"
+              :class="classList('settings', true)"
+              :href="`/${locale}/settings`"
+            >
+              <Icon name="settings" />
+              <span>Settings</span>
+            </a>
+
             <a v-if="isAdmin" :class="classList('user', true)" :href="`/${locale}/user`">
               <Icon name="users" />
               <span>Team</span>
@@ -160,6 +169,7 @@ import Icon from '../shared/icon.vue';
 import LanguageSelector from './language-selector.vue';
 import DropUp from './drop-up.vue';
 import type { Subscription } from '../../types';
+import { sortLanguages } from './helpers';
 
 const shared = useSharedStore();
 
@@ -211,9 +221,9 @@ const toggleMenu = () => {
   shared.setSidebarOpen(!shared.hasOpenSidebar);
 };
 
-const languageOptions = computed(() => {
-  return shared.languages.map((l) => l.language) as string[];
-});
+const languageOptions = computed(() =>
+  sortLanguages(shared.languages).map((l) => l.language),
+);
 
 const classList = (path: string, withGap: boolean = false) => {
   const url = window.location.href?.replace('/drop', '/stream') || '';

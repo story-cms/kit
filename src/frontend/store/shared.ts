@@ -105,18 +105,31 @@ export const useSharedStore = defineStore('shared', () => {
 
   // message centre
 
-  const messageCentre = reactive({
-    response: ResponseStatus.None as ResponseStatus,
-    message: '' as string,
+  const messageCentre = reactive<{
+    response: ResponseStatus;
+    message: string;
+    description?: string;
+  }>({
+    response: ResponseStatus.None,
+    message: '',
   });
 
-  const addMessage = (response: ResponseStatus, message: string) => {
+  const addMessage = (
+    response: ResponseStatus,
+    message: string,
+    description?: string,
+  ) => {
     messageCentre.response = response;
     messageCentre.message = message;
-    setTimeout(() => {
-      messageCentre.response = ResponseStatus.None;
-      messageCentre.message = '';
-    }, 2500);
+    messageCentre.description = description;
+    setTimeout(
+      () => {
+        messageCentre.response = ResponseStatus.None;
+        messageCentre.message = '';
+        messageCentre.description = undefined;
+      },
+      description ? 5000 : 2500,
+    );
   };
   const hasFeedback = computed(() => messageCentre.response !== ResponseStatus.None);
 
@@ -173,6 +186,16 @@ export const useSharedStore = defineStore('shared', () => {
   const sourceSectionWidth = ref(0);
   const setSourceSectionWidth = (value: number) => {
     sourceSectionWidth.value = value;
+  };
+
+  // bible translations
+  const bibleTranslations = ref<
+    Omit<LanguageSpecification, 'languageDirection' | 'locale'>[]
+  >([]);
+  const setBibleTranslations = (
+    value: Omit<LanguageSpecification, 'languageDirection' | 'locale'>[],
+  ) => {
+    bibleTranslations.value = value;
   };
 
   return {
@@ -236,5 +259,8 @@ export const useSharedStore = defineStore('shared', () => {
 
     sourceSectionWidth,
     setSourceSectionWidth,
+
+    bibleTranslations,
+    setBibleTranslations,
   };
 });
