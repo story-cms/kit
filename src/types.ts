@@ -587,6 +587,7 @@ export type CmsConfig = {
   name: string;
   logo: string;
   helpUrl: string;
+  supportEmail: string;
   hasAppPreview: boolean;
   microcopySource: string;
   languages: LanguageSpecification[];
@@ -613,6 +614,7 @@ export interface UiConfig {
   name: string;
   logo: string;
   helpUrl: string;
+  supportEmail: string;
   hasAppPreview: boolean;
   languages: LanguageSpecification[];
   subscriptions: Subscription[];
@@ -637,6 +639,12 @@ export interface LanguageSpecification {
   languageDirection: 'rtl' | 'ltr';
   locale: string;
   bibleVersion?: string;
+  bibleLabel?: string;
+}
+
+export interface LanguageTableItem extends LanguageSpecification {
+  translationProgress?: Omit<Progress, 'lastUpdated'>[];
+  teamMembers?: UserInterface[];
 }
 
 export interface Providers {
@@ -666,4 +674,36 @@ export interface Providers {
     libraryId: string;
     host: string;
   };
+
+  supportEmail?: string;
+}
+/// ----------------------------------------------------
+///  settings
+/// ----------------------------------------------------
+
+export interface SettingsPageProps {
+  sourceLanguage: LanguageSpecification;
+  languageItems: LanguageTableItem[];
+  providers: Providers;
+  requireAppUpdate: boolean;
+}
+
+export interface LanguagesEditProps {
+  addedLanguages: LanguageSpecification[];
+}
+
+export interface LanguageListItemProps {
+  language: LanguageSpecification;
+  status: 'selected' | 'readonly' | 'available';
+}
+
+export type SupportCode =
+  | 'REMOVE_LANGUAGE'
+  | 'UPDATE_LANGUAGE'
+  | 'UPDATE_CONTENT'
+  | 'UPDATE_APP';
+
+export interface SupportRequest {
+  supportCode: SupportCode;
+  removeLanguageCode?: string;
 }

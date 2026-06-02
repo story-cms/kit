@@ -29,6 +29,7 @@
               v-else
               :response="shared.messageCentre.response"
               :message="shared.messageCentre.message"
+              :description="shared.messageCentre.description"
             />
           </header>
           <main ref="main" class="mt-1 h-full">

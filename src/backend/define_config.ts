@@ -13,6 +13,8 @@ export function defineConfig(config: Partial<CmsConfig>): CmsConfig {
 
     helpUrl: config.helpUrl || 'https://journeys.helpscoutdocs.com/',
 
+    supportEmail: config.supportEmail || 'ops@startjourneys.io',
+
     hasAppPreview: config.hasAppPreview === undefined ? false : config.hasAppPreview,
 
     microcopySource: config.microcopySource || '',

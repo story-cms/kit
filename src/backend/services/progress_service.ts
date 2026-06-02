@@ -16,47 +16,48 @@ export class ProgressService {
 
   public async progress(user: UserInterface): Promise<TranslationProgress[]> {
     const translationProgress: TranslationProgress[] = [];
+    const sourceLocale = this.cms.sourceLocale;
 
     const languages = this.cms.config.languages
-      .filter((lang: LanguageSpecification) => lang.locale !== 'en')
+      .filter((lang: LanguageSpecification) => lang.locale !== sourceLocale)
       .sort((a: LanguageSpecification, b: LanguageSpecification) =>
         a.language.localeCompare(b.language),
       );
 
     const index = await Index.all();
-
-    const source = index.filter((item) => item.locale === 'en');
-    const translations = index.filter((item) => item.locale !== 'en');
+    const source = index.filter((item) => item.locale === sourceLocale);
 
     const totalPublishedCount = source.reduce((acc, item) => {
       acc += item.publishedList.length;
       return acc;
     }, 0);
 
-    const draftCount = translations.reduce((acc, item) => {
-      const uniqueDrafts = item.draftsList.filter(
-        (draftId) => !item.publishedList.includes(draftId),
-      );
-      acc += uniqueDrafts.length;
-      return acc;
-    }, 0);
-
     const indexByLocale = index.reduce(
       (acc, item) => {
+        const uniqueDrafts = item.draftsList.filter(
+          (draftId) => !item.publishedList.includes(draftId),
+        );
+        const updatedAt = item.updatedAt.toString();
+        const existing = acc[item.locale];
+
         acc[item.locale] = {
           name: 'Content',
-          done: item.publishedList.length,
-          draft: draftCount,
+          done: (existing?.done ?? 0) + item.publishedList.length,
+          draft: (existing?.draft ?? 0) + uniqueDrafts.length,
           total: totalPublishedCount,
-          lastUpdated: item.updatedAt.toString(),
+          lastUpdated:
+            !existing?.lastUpdated || updatedAt > existing.lastUpdated
+              ? updatedAt
+              : existing.lastUpdated,
         };
+
         return acc;
       },
       {} as Record<string, Progress>,
     );
 
     const rows = await Ui.all();
-    const totalUiCount = rows.filter((row) => row.locale === 'en').length;
+    const totalUiCount = rows.filter((row) => row.locale === sourceLocale).length;
 
     for (const language of languages) {
       const contentProgress = indexByLocale[language.locale] ?? {

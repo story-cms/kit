@@ -1,5 +1,5 @@
 import type { App, PropType } from 'vue';
-import type { FieldSpec } from '../../types';
+import type { FieldSpec, LanguageSpecification } from '../../types';
 import { BibleBooksMap } from './bibleBooks';
 import type { Variant, Story } from 'histoire';
 import { DateTime } from 'luxon';
@@ -33,6 +33,20 @@ export const expandShortcuts = (text: string) => {
 };
 
 export const padZero = (value: number): string => (value > 9 ? `${value}` : `0${value}`);
+
+/**
+ * Match stored language to API language.
+ * Handles stored formats: "Bengali - বাংলা", "Arabic - عربى", "English | American".
+ * API returns: "Bengali", "Arabic, Sudanese Creole", "English".
+ */
+export const languageMatches = (stored: string, api: string): boolean => {
+  const storedBase = stored.split(/\s*-\s*|\s*\|\s*/)[0].trim();
+  return (
+    api === storedBase ||
+    api.startsWith(storedBase + ',') ||
+    api.startsWith(storedBase + ' ')
+  );
+};
 
 export const formatDate = (value: string): string => {
   const d = new Date(value);
@@ -272,3 +286,50 @@ export const helpScoutWidget = (page: { props: Record<string, unknown> }) => {
 
   (window as any).Beacon('init', HELPSCOUT_BEACON_ID);
 };
+
+/** Display name from a language label (text before `|` when present). */
+export function languageDisplayName(language: string): string {
+  if (language.includes('|')) {
+    return language.split('|')[0].trim();
+  }
+  return language;
+}
+
+export function isEnglishLanguage(item: LanguageSpecification): boolean {
+  return (
+    item.locale === 'en' ||
+    languageDisplayName(item.language).localeCompare('English', undefined, {
+      sensitivity: 'base',
+    }) === 0
+  );
+}
+
+/** English first, then remaining languages A–Z by display name. */
+export function sortLanguages(
+  languages: LanguageSpecification[],
+): LanguageSpecification[] {
+  return [...languages].sort((a, b) => {
+    if (isEnglishLanguage(a) && !isEnglishLanguage(b)) return -1;
+    if (!isEnglishLanguage(a) && isEnglishLanguage(b)) return 1;
+    return languageDisplayName(a.language).localeCompare(
+      languageDisplayName(b.language),
+    );
+  });
+}
+
+/** Name, native name, and locale from a language specification. */
+export function parseLanguageSpecification(spec: LanguageSpecification): {
+  name: string;
+  nativeName: string;
+  locale: string;
+} {
+  const { language, locale } = spec;
+  const name = languageDisplayName(language);
+
+  if (language.includes('|')) {
+    const nativeName = language.split('|')[1].trim();
+    return { name, nativeName, locale };
+  }
+
+  return { name, nativeName: language, locale };
+}

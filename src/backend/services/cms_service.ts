@@ -134,6 +134,7 @@ export class CmsService {
         name: this.#config.name,
         logo: this.#config.logo,
         helpUrl: this.#config.helpUrl,
+        supportEmail: this.#config.supportEmail,
         hasAppPreview: this.#config.hasAppPreview,
         languages: this.#config.languages,
         subscriptions: this.#config.subscriptions,

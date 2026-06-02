@@ -1,0 +1,21 @@
+{{{
+  exports({ to: app.makePath('start/routes/settings.ts') })
+}}}
+import router from '@adonisjs/core/services/router';
+
+const SettingsController = () => import('#controllers/settings_controller');
+
+export default () => {
+  router.get(':locale/settings', [SettingsController, 'index']);
+  router.get(':locale/settings/languages/edit', [SettingsController, 'editLanguage']);
+  router.post(':locale/settings/languages/add', [SettingsController, 'addLanguages']);
+  router.post(':locale/settings/languages/:languageLocale/bible-translation', [
+    SettingsController,
+    'updateBibleTranslation',
+  ]);
+  router.post(':locale/settings/languages/:languageLocale/remove', [
+    SettingsController,
+    'removeLanguage',
+  ]);
+  router.post(':locale/settings/support', [SettingsController, 'support']);
+};

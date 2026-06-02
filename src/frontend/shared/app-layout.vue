@@ -29,6 +29,7 @@
               v-else
               :response="shared.messageCentre.response"
               :message="shared.messageCentre.message"
+              :description="shared.messageCentre.description"
             />
           </header>
           <main ref="main" class="mt-1 h-full">
@@ -43,13 +44,34 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, onBeforeMount, watch, nextTick } from 'vue';
+import { usePage } from '@inertiajs/vue3';
 import { useSharedStore } from '../store';
 import MessageCentre from './message-centre.vue';
+import type { SharedPageProps } from '../../types';
 
 const shared = useSharedStore();
+const page = usePage();
+
+watch(
+  () => {
+    const props = page.props;
+    if (!props?.config) return null;
+
+    return {
+      config: props.config,
+      user: props.user,
+      language: props.language,
+      errors: props.errors,
+      bookmarks: props.bookmarks,
+    };
+  },
+  (next) => {
+    if (next) shared.setFromProps(next as SharedPageProps);
+  },
+  { deep: true },
+);
 
 const header = ref<HTMLElement | null>(null);
-const main = ref<HTMLElement | null>(null);
 const layout = ref<HTMLElement | null>(null);
 const container = ref<HTMLElement | null>(null);
 const sentinel = ref<HTMLElement | null>(null);
