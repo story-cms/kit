@@ -200,36 +200,7 @@ export const useSharedStore = defineStore('shared', () => {
   };
 
   // settings page: source language and language table
-  const sourceLanguage = ref<LanguageSpecification>(defaultLanguage);
   const languageItems = ref<LanguageTableItem[]>([]);
-
-  const setLanguageItems = (fresh: LanguageTableItem[]) => {
-    languageItems.value = fresh;
-  };
-
-  const setSourceLanguageBibleTranslation = (
-    bibleVersion: string,
-    bibleLabel: string,
-  ) => {
-    sourceLanguage.value = {
-      ...sourceLanguage.value,
-      bibleVersion,
-      bibleLabel,
-    };
-  };
-
-  const setLanguageItemBibleTranslation = (
-    locale: string,
-    bibleVersion: string,
-    bibleLabel: string,
-  ) => {
-    const idx = languageItems.value.findIndex((i) => i.locale === locale);
-    if (idx >= 0) {
-      languageItems.value = languageItems.value.map((x, i) =>
-        i === idx ? { ...x, bibleVersion, bibleLabel } : x,
-      );
-    }
-  };
 
   const removeLanguageItem = (locale: string) => {
     languageItems.value = languageItems.value.filter((i) => i.locale !== locale);
@@ -315,10 +286,6 @@ export const useSharedStore = defineStore('shared', () => {
     bibleTranslations,
     setBibleTranslations,
 
-    languageItems,
-    setLanguageItems,
-    setSourceLanguageBibleTranslation,
-    setLanguageItemBibleTranslation,
     removeLanguageItem,
     addLanguages,
   };

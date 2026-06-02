@@ -35,7 +35,7 @@
     />
     <div class="mt-14">
       <LanguagesTable
-        :items="shared.languageItems"
+        :items="languageItems"
         @remove="handleRemove"
         @request-deletion="handleRequestDeletion"
         @bible-translation-change="handleTableBibleTranslationChange"
@@ -51,14 +51,14 @@
     <RequestFeedbackModal
       :open="showFeedbackModal"
       :variant="feedbackModalVariant"
-      :contact-email="shared.config.supportEmail ?? 'ops@startjourneys.io'"
+      :contact-email="props.config.supportEmail ?? 'ops@startjourneys.io'"
       @close="showFeedbackModal = false"
     />
   </AppLayout>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
+import { ref, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
 import type { RequestPayload } from '@inertiajs/core';
 import AppLayout from '../shared/app-layout.vue';
@@ -90,8 +90,8 @@ shared.setFromProps(props);
 shared.setCurrentStoryName('');
 
 const sourceLanguage = computed(() => props.sourceLanguage);
+const languageItems = computed(() => props.languageItems ?? []);
 
-shared.setLanguageItems(props.languageItems ?? []);
 widgets.setProviders(props.providers);
 
 const showRequestAppUpdateModal = ref(false);
@@ -201,26 +201,10 @@ const handleRequestDeletion = (item: LanguageTableItem) => {
   });
 };
 
-watch(
-  () => props.languageItems,
-  (next) => {
-    shared.setLanguageItems(next ?? []);
-  },
-  { immediate: true },
-);
-watch(
-  () => props.config,
-  () => {
-    shared.setFromProps(props);
-  },
-  { deep: true },
-);
-
 const persistBibleTranslation = (
   languageLocale: string,
   bibleVersion: string,
   bibleVersionName: string,
-  onSuccess: () => void,
 ) => {
   router.post(
     `/${shared.locale}/settings/languages/${languageLocale}/bible-translation`,
@@ -228,7 +212,6 @@ const persistBibleTranslation = (
     {
       preserveScroll: true,
       onSuccess: () => {
-        onSuccess();
         shared.addMessage(ResponseStatus.Confirmation, 'Bible translation changed');
       },
       onError: (errors) => {
@@ -243,12 +226,7 @@ const handleSourceBibleTranslationChange = (
   bibleVersion: string,
   bibleVersionName: string,
 ) => {
-  persistBibleTranslation(
-    sourceLanguage.value.locale,
-    bibleVersion,
-    bibleVersionName,
-    () => shared.setSourceLanguageBibleTranslation(bibleVersion, bibleVersionName),
-  );
+  persistBibleTranslation(sourceLanguage.value.locale, bibleVersion, bibleVersionName);
 };
 
 const handleTableBibleTranslationChange = (
@@ -256,8 +234,6 @@ const handleTableBibleTranslationChange = (
   bibleVersion: string,
   bibleVersionName: string,
 ) => {
-  persistBibleTranslation(item.locale, bibleVersion, bibleVersionName, () =>
-    shared.setLanguageItemBibleTranslation(item.locale, bibleVersion, bibleVersionName),
-  );
+  persistBibleTranslation(item.locale, bibleVersion, bibleVersionName);
 };
 </script>
