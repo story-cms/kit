@@ -1,63 +1,57 @@
 <template>
   <Teleport to="body">
-    <div
-      v-if="open"
-      class="fixed inset-0 z-50 flex items-center justify-center p-4"
-      role="dialog"
-      aria-modal="true"
-      :aria-labelledby="title ? 'modal-title' : undefined"
-    >
-      <div class="fixed inset-0 bg-black/30" aria-hidden="true" @click="emit('close')" />
-      <div
-        class="relative z-10 w-full max-w-xl overflow-hidden rounded-2xl bg-white px-6 py-9 shadow-xl"
-        role="document"
-        @click.stop
-      >
-        <div
-          class="items-center"
-          :class="hideCloseButton ? '' : 'grid grid-cols-[1fr_auto]'"
+    <Dialog :open="open" class="relative z-50" @close="emit('close')">
+      <div class="fixed inset-0 bg-black/30" aria-hidden="true" />
+      <div class="fixed inset-0 flex items-center justify-center p-4">
+        <DialogPanel
+          class="relative z-10 w-full max-w-xl overflow-hidden rounded-2xl bg-white px-6 py-9 shadow-xl"
         >
-          <span
-            v-if="title"
-            id="modal-title"
-            class="text-left font-['Inter']"
-            :class="variantClass"
+          <div
+            class="items-center"
+            :class="hideCloseButton ? '' : 'grid grid-cols-[1fr_auto]'"
           >
-            {{ title }}
-          </span>
-          <div v-if="!hideCloseButton" class="justify-self-end">
-            <button
-              type="button"
-              class="rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-              aria-label="Close"
-              @click="emit('close')"
+            <DialogTitle
+              v-if="title"
+              class="text-left font-['Inter']"
+              :class="variantClass"
             >
-              <Icon name="close" class="size-4" />
-            </button>
+              {{ title }}
+            </DialogTitle>
+            <div v-if="!hideCloseButton" class="justify-self-end">
+              <button
+                type="button"
+                class="rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                aria-label="Close"
+                @click="emit('close')"
+              >
+                <Icon name="close" class="size-4" />
+              </button>
+            </div>
           </div>
-        </div>
 
-        <div class="mt-6">
-          <slot>
-            <p
-              v-if="message"
-              class="text-left font-['Inter'] text-base font-normal leading-7 tracking-normal text-black"
-            >
-              {{ message }}
-            </p>
-          </slot>
-        </div>
+          <div class="mt-6">
+            <slot>
+              <p
+                v-if="message"
+                class="text-left font-['Inter'] text-base font-normal leading-7 tracking-normal text-black"
+              >
+                {{ message }}
+              </p>
+            </slot>
+          </div>
 
-        <div v-if="$slots.actions" class="flex justify-center gap-4">
-          <slot name="actions" />
-        </div>
+          <div v-if="$slots.actions" class="flex justify-center gap-4">
+            <slot name="actions" />
+          </div>
+        </DialogPanel>
       </div>
-    </div>
+    </Dialog>
   </Teleport>
 </template>
 
 <script setup lang="ts">
-import { watch, onUnmounted, computed } from 'vue';
+import { Dialog, DialogPanel, DialogTitle } from '@headlessui/vue';
+import { computed } from 'vue';
 import Icon from '../../../shared/icon.vue';
 
 type ModalVariant = 'success' | 'error' | '';
@@ -82,19 +76,6 @@ const emit = defineEmits<{
   (e: 'close'): void;
 }>();
 
-const handleEscape = (e: KeyboardEvent) => {
-  if (e.key === 'Escape') emit('close');
-};
-
-watch(
-  () => props.open,
-  (isOpen) => {
-    if (isOpen) document.addEventListener('keydown', handleEscape);
-    else document.removeEventListener('keydown', handleEscape);
-  },
-  { immediate: true },
-);
-
 const variantClass = computed(() => {
   switch (props.variant) {
     case 'success':
@@ -105,6 +86,4 @@ const variantClass = computed(() => {
       return 'text-sm font-semibold leading-[130%] tracking-normal text-black';
   }
 });
-
-onUnmounted(() => document.removeEventListener('keydown', handleEscape));
 </script>
