@@ -179,7 +179,6 @@ const handleRemove = (item: LanguageTableItem) => {
     {
       preserveScroll: true,
       onSuccess: () => {
-        shared.removeLanguageItem(item.locale);
         shared.addMessage(ResponseStatus.Confirmation, 'Language removed');
       },
       onError: (errors) => {

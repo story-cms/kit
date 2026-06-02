@@ -147,7 +147,6 @@ const submitLanguages = (languages: LanguageSpecification[]) => {
     {
       preserveScroll: true,
       onSuccess: () => {
-        shared.addLanguages(languages);
         router.visit(`/${shared.locale}/settings`, {
           preserveScroll: true,
           onSuccess: () => {

@@ -4,7 +4,6 @@ import { computed, ref, reactive, shallowRef } from 'vue';
 import {
   type SharedPageProps,
   type LanguageSpecification,
-  type LanguageTableItem,
   type Bookmark,
   type AppUserInterface,
   ResponseStatus,
@@ -199,28 +198,6 @@ export const useSharedStore = defineStore('shared', () => {
     bibleTranslations.value = value;
   };
 
-  // settings page: source language and language table
-  const languageItems = ref<LanguageTableItem[]>([]);
-
-  const removeLanguageItem = (locale: string) => {
-    languageItems.value = languageItems.value.filter((i) => i.locale !== locale);
-    config.value = {
-      ...config.value,
-      languages: (config.value.languages ?? []).filter((l) => l.locale !== locale),
-    };
-  };
-
-  const addLanguages = (fresh: LanguageSpecification[]) => {
-    const existing = new Set(config.value.languages?.map((l) => l.locale) ?? []);
-    config.value = {
-      ...config.value,
-      languages: [
-        ...(config.value.languages ?? []),
-        ...fresh.filter((l) => !existing.has(l.locale)),
-      ],
-    };
-  };
-
   return {
     config,
     languages,
@@ -285,8 +262,5 @@ export const useSharedStore = defineStore('shared', () => {
 
     bibleTranslations,
     setBibleTranslations,
-
-    removeLanguageItem,
-    addLanguages,
   };
 });
