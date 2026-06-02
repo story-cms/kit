@@ -34,8 +34,13 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
      */
     return {
       ...cmsShared,
+
+      // these errors triggers the router onError callback
       errors: ctx.inertia.always(getTrimmedValidationErrors(ctx)),
+
+      // these messages are received in the router onSuccess callback
       flash: ctx.inertia.always({
+        // resolve as follows: const flashError = (page.props as { flash?: { error?: string } }).flash?.error;
         error: error,
       }),
       // the rest of the shared props are injected by CmsService.sharedProps()

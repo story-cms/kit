@@ -13,6 +13,7 @@ export const testCmsConfig: CmsConfig = {
   helpUrl: 'https://example.com/help',
   hasAppPreview: false,
   microcopySource: '',
+  supportEmail: 'support@example.com',
   languages: [
     {
       locale: 'en',
