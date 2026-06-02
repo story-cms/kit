@@ -2,7 +2,6 @@ import type {
   FieldSpec,
   LanguageSpecification,
   LanguageTableItem,
-  CmsMeta,
   SharedPageProps,
   StorySpec,
   InvitationItem,
@@ -426,14 +425,6 @@ export const scriptureInListModel = {
 
 export const scriptureInListError = {
   'bundle.scriptures.0.scripture': ['required validation failed'],
-};
-
-export const meta: CmsMeta = {
-  name: 'The Word One to One',
-  logo: 'https://res.cloudinary.com/theword121/image/upload/v1687245360/episodes/viseg2hegowcrapio6pt.svg',
-  helpUrl: 'https://www.theword121.com/',
-  hasAppPreview: false,
-  mailFromAddress: 'ops@scoutredeem.co',
 };
 
 export const user = {
@@ -1123,6 +1114,7 @@ export const config: UiConfig = {
   hasAppPreview: false,
   languages,
   subscriptions: ['story', 'stream', 'language', 'audience', 'invitation', 'page'],
+  supportEmail: 'support@startjourneys.io',
 };
 
 export const sharedProps: SharedPageProps = {

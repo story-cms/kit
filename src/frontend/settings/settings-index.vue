@@ -30,7 +30,7 @@
       </ContentHeader>
     </template>
     <SourceLang
-      :spec="shared.sourceLanguage"
+      :spec="sourceLanguage"
       @bible-translation-change="handleSourceBibleTranslationChange"
     />
     <div class="mt-14">
@@ -58,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
 import type { RequestPayload } from '@inertiajs/core';
 import AppLayout from '../shared/app-layout.vue';
@@ -88,7 +88,9 @@ const widgets = useWidgetsStore();
 
 shared.setFromProps(props);
 shared.setCurrentStoryName('');
-shared.setSourceLanguage(props.sourceLanguage);
+
+const sourceLanguage = computed(() => props.sourceLanguage);
+
 shared.setLanguageItems(props.languageItems ?? []);
 widgets.setProviders(props.providers);
 
@@ -200,13 +202,6 @@ const handleRequestDeletion = (item: LanguageTableItem) => {
 };
 
 watch(
-  () => props.sourceLanguage,
-  (next) => {
-    shared.setSourceLanguage(next);
-  },
-  { immediate: true },
-);
-watch(
   () => props.languageItems,
   (next) => {
     shared.setLanguageItems(next ?? []);
@@ -249,7 +244,7 @@ const handleSourceBibleTranslationChange = (
   bibleVersionName: string,
 ) => {
   persistBibleTranslation(
-    shared.sourceLanguage.locale,
+    sourceLanguage.value.locale,
     bibleVersion,
     bibleVersionName,
     () => shared.setSourceLanguageBibleTranslation(bibleVersion, bibleVersionName),

@@ -203,10 +203,6 @@ export const useSharedStore = defineStore('shared', () => {
   const sourceLanguage = ref<LanguageSpecification>(defaultLanguage);
   const languageItems = ref<LanguageTableItem[]>([]);
 
-  const setSourceLanguage = (fresh: LanguageSpecification) => {
-    sourceLanguage.value = fresh;
-  };
-
   const setLanguageItems = (fresh: LanguageTableItem[]) => {
     languageItems.value = fresh;
   };
@@ -319,9 +315,7 @@ export const useSharedStore = defineStore('shared', () => {
     bibleTranslations,
     setBibleTranslations,
 
-    sourceLanguage,
     languageItems,
-    setSourceLanguage,
     setLanguageItems,
     setSourceLanguageBibleTranslation,
     setLanguageItemBibleTranslation,
