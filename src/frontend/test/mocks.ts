@@ -637,8 +637,8 @@ export const languageTableItems: LanguageTableItem[] = [
     locale: 'ar',
     bibleLabel: 'Smith & Van Dyke',
     translationProgress: [
-      { name: 'Interface', done: 25, draft: 0, total: 100 },
-      { name: 'Content', done: 50, draft: 0, total: 200 },
+      { name: 'Interface', done: 100, draft: 0, total: 100 },
+      { name: 'Content', done: 200, draft: 0, total: 200 },
     ],
     teamMembers: [],
   },
@@ -648,7 +648,7 @@ export const languageTableItems: LanguageTableItem[] = [
     locale: 'bn',
     bibleLabel: 'Bangla Bible',
     translationProgress: [
-      { name: 'Interface', done: 25, draft: 0, total: 100 },
+      { name: 'Interface', done: 100, draft: 0, total: 100 },
       { name: 'Content', done: 50, draft: 0, total: 200 },
     ],
     teamMembers: [],

@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-col items-center text-gray-500">
     <template v-if="hasCompleteRings">
-      <div class="relative mx-auto size-20 rounded-full border-[3px] border-teal-500">
+      <div class="relative mx-auto size-[42px] rounded-full border-[3px] border-teal-500">
         <div class="absolute inset-0 flex items-center justify-center">
-          <Icon name="check-large" class="h-auto w-6 text-teal-500" />
+          <Icon name="check-large" class="h-auto w-[14px] text-teal-500" />
         </div>
       </div>
       <p class="mt-2 text-center text-xs font-medium leading-4">All done</p>
@@ -11,7 +11,9 @@
     <template v-else>
       <div class="flex justify-between gap-8">
         <div v-for="item in ringData" :key="item.name" class="flex flex-col items-center">
-          <p class="mb-2 text-center text-sm font-medium leading-4">
+          <p
+            class="mb-2 text-center text-[10px] font-medium leading-[10.07px] tracking-[0em]"
+          >
             {{ item.name }}
           </p>
           <div class="relative flex flex-col items-center justify-center">
@@ -22,7 +24,7 @@
               :width="circleWidth"
             >
               <circle
-                class="fill-transparent stroke-teal-500 stroke-[6px]"
+                class="fill-transparent stroke-teal-500 stroke-[4px]"
                 stroke="currentColor"
                 :r="circleRadius"
                 :cx="center"
@@ -31,7 +33,7 @@
                 stroke-dashoffset="0"
               />
               <circle
-                class="fill-transparent stroke-blue-500 stroke-[6px]"
+                class="fill-transparent stroke-blue-500 stroke-[4px]"
                 stroke="currentColor"
                 :r="circleRadius"
                 :cx="center"
@@ -40,7 +42,7 @@
                 :stroke-dashoffset="`-${item.tealSegment}`"
               />
               <circle
-                class="fill-transparent stroke-gray-200 stroke-[6px]"
+                class="fill-transparent stroke-gray-200 stroke-[4px]"
                 stroke="currentColor"
                 :r="circleRadius"
                 :cx="center"
@@ -50,10 +52,13 @@
               />
             </svg>
             <div class="absolute inset-0 flex items-center justify-center">
-              <div v-if="item.donePercentage === 100 && item.draftPercentage === 0">
-                <Icon name="check" class="h-auto w-4 text-teal-500" />
-              </div>
-              <span v-else class="text-sm font-bold leading-none text-gray-800">
+              <template v-if="item.donePercentage === 100 && item.draftPercentage === 0">
+                <Icon name="check-large" class="h-auto w-[13px] text-teal-500" />
+              </template>
+              <span
+                v-else
+                class="text-center text-[9px] font-normal leading-[9px] tracking-[0em] text-gray-800"
+              >
                 {{ item.label }}
               </span>
             </div>
@@ -75,7 +80,7 @@ const hasCompleteRings = computed(() => {
   return props.progress.every((stat) => stat.done === stat.total);
 });
 
-const circleWidth = 80;
+const circleWidth = 45;
 const center = circleWidth / 2;
 const circleRadius = circleWidth / 2 - 6;
 const circumference = 2 * Math.PI * circleRadius;
