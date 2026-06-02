@@ -688,51 +688,13 @@ export interface LanguageListItemProps {
   status: 'selected' | 'readonly' | 'available';
 }
 
-export interface SupportRequestLanguageSpec {
-  name: string;
-  nativeName: string;
-  locale: string;
-}
-
-export interface SupportRequestContext {
-  languageSpec?: SupportRequestLanguageSpec;
-  requestedBy: string;
-  details: string;
-  subject: string;
-}
-
-export interface SupportCodeDefinition {
-  code: string;
-  description: string;
-  subject: string;
-}
-
-export const SUPPORT_CODES = {
-  REMOVE_LANGUAGE: {
-    code: 'REMOVE_LANGUAGE',
-    subject: 'Remove language',
-    description: 'Language requested to remove',
-  },
-  UPDATE_LANGUAGE: {
-    code: 'UPDATE_LANGUAGE',
-    subject: 'App update - new language added.',
-    description: 'Language requested to be added',
-  },
-  UPDATE_CONTENT: {
-    code: 'UPDATE_CONTENT',
-    subject: 'App update - content added.',
-    description: 'Content requested to be updated',
-  },
-  UPDATE_APP: {
-    code: 'UPDATE_APP',
-    subject: 'App update - new language and content.',
-    description: 'App update requested for new language and new content',
-  },
-} as const satisfies Record<string, SupportCodeDefinition>;
-
-export type SupportCode = (typeof SUPPORT_CODES)[keyof typeof SUPPORT_CODES]['code'];
+export type SupportCode =
+  | 'REMOVE_LANGUAGE'
+  | 'UPDATE_LANGUAGE'
+  | 'UPDATE_CONTENT'
+  | 'UPDATE_APP';
 
 export interface SupportRequest {
   supportCode: SupportCode;
-  context: SupportRequestContext;
+  removeLanguageCode?: string;
 }

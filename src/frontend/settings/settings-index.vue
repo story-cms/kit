@@ -69,14 +69,11 @@ import SourceLang from './languages/components/source-language.vue';
 import LanguagesTable from './languages/components/language-table.vue';
 import RequestAppUpdateModal from './languages/components/request-app-update-modal.vue';
 import RequestFeedbackModal from './languages/components/request-feedback-modal.vue';
-import { parseLanguageSpecification } from '../shared/helpers';
 import {
-  type LanguageSpecification,
   type LanguageTableItem,
   type SettingsPageProps,
   type SharedPageProps,
   type SupportRequest,
-  SUPPORT_CODES,
   ResponseStatus,
 } from '../../types';
 import { useSharedStore, useWidgetsStore } from '../store';
@@ -103,31 +100,16 @@ const buildAppUpdatePayload = (reasons: string[]): SupportRequest | null => {
   const hasContent = reasons.includes('New content');
 
   if (hasLanguage && hasContent) {
-    return buildSupportPayload(SUPPORT_CODES.UPDATE_APP);
+    return { supportCode: 'UPDATE_APP' };
   }
   if (hasLanguage) {
-    return buildSupportPayload(SUPPORT_CODES.UPDATE_LANGUAGE);
+    return { supportCode: 'UPDATE_LANGUAGE' };
   }
   if (hasContent) {
-    return buildSupportPayload(SUPPORT_CODES.UPDATE_CONTENT);
+    return { supportCode: 'UPDATE_CONTENT' };
   }
   return null;
 };
-
-const buildSupportPayload = (
-  supportCode: (typeof SUPPORT_CODES)[keyof typeof SUPPORT_CODES],
-  languageSpec?: LanguageSpecification,
-): SupportRequest => ({
-  supportCode: supportCode.code,
-  context: {
-    ...(languageSpec && {
-      languageSpec: parseLanguageSpecification(languageSpec),
-    }),
-    requestedBy: shared.user.name,
-    details: supportCode.description,
-    subject: supportCode.subject,
-  },
-});
 
 const postSupportRequest = (
   payload: SupportRequest,
@@ -190,14 +172,17 @@ const handleRemove = (item: LanguageTableItem) => {
 };
 
 const handleRequestDeletion = (item: LanguageTableItem) => {
-  postSupportRequest(buildSupportPayload(SUPPORT_CODES.REMOVE_LANGUAGE, item), {
-    onSuccess: () => {
-      shared.addMessage(ResponseStatus.Confirmation, 'Language deletion requested');
+  postSupportRequest(
+    { supportCode: 'REMOVE_LANGUAGE', removeLanguageCode: item.locale },
+    {
+      onSuccess: () => {
+        shared.addMessage(ResponseStatus.Confirmation, 'Language deletion requested');
+      },
+      onError: () => {
+        shared.addMessage(ResponseStatus.Failure, 'Error requesting language deletion');
+      },
     },
-    onError: () => {
-      shared.addMessage(ResponseStatus.Failure, 'Error requesting language deletion');
-    },
-  });
+  );
 };
 
 const persistBibleTranslation = (
