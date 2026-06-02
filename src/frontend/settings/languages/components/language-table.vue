@@ -45,10 +45,10 @@
           >
             <LangStrip :spec="item" />
           </td>
-          <td class="whitespace-nowrap px-3 py-4 text-sm">
+          <td class="whitespace-nowrap px-3 py-4 align-top text-sm">
             <RingBlock :progress="item.translationProgress ?? []" />
           </td>
-          <td class="px-3 py-4 text-sm text-gray-800">
+          <td class="px-3 py-4 align-top text-sm text-gray-800">
             <div v-if="item.teamMembers?.length" class="flex flex-col gap-1">
               <MemberRow
                 v-for="member in item.teamMembers"
