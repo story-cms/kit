@@ -3,6 +3,7 @@ export * from '../types.js';
 export { configure } from './configure.js';
 export { stubsRoot } from './stubs/main.js';
 export * from './define_config.js';
+export { default as StoryDeleteException } from './exceptions/story_delete_exception.js';
 export { default as Activity } from './models/activity.js';
 export { default as Invitation } from './models/invitation.js';
 export { default as Chapter } from './models/chapter.js';
