@@ -54,7 +54,6 @@ export class StoryService {
     return {
       model: {
         id: story.id,
-        tags: story.tags ?? null,
         chapterLimit: story.chapterLimit,
         storyType: story.storyType,
         chapterType: story.chapterType,
@@ -63,8 +62,8 @@ export class StoryService {
         slug: story.slug,
         template: story.template,
         isPublished: story.isPublished,
-        createdAt: story.createdAt.toISO()!,
-        updatedAt: story.updatedAt.toISO()!,
+        createdAt: story.createdAt?.toISO() ?? '',
+        updatedAt: story.updatedAt?.toISO() ?? '',
         ...this.localisationFields(target),
       },
       source: this.localisationFields(source),
@@ -136,12 +135,12 @@ export class StoryService {
       return {
         id: story.id,
         name: local.title,
-        description: local.description,
-        coverImage: local.coverImage,
+        description: local.description ?? '',
+        coverImage: local.coverImage ?? '',
         chapterLimit: story.chapterLimit,
         isPublished: story.isPublished,
-        createdAt: story.createdAt.toISO()!,
-        updatedAt: story.updatedAt.toISO()!,
+        createdAt: story.createdAt?.toISO() ?? '',
+        updatedAt: story.updatedAt?.toISO() ?? '',
         draftCount: index?.draftsList.length ?? 0,
       };
     });
@@ -199,7 +198,7 @@ export class StoryService {
     return {
       id: story.id,
       name: localisation.title,
-      coverImage: localisation.coverImage,
+      coverImage: localisation.coverImage ?? '',
       chapterLimit: story.chapterLimit,
       chapterType: story.chapterType,
       storyType: story.storyType,
@@ -210,19 +209,21 @@ export class StoryService {
   }
 
   private localisationFields(local: {
-    title?: string;
-    coverImage?: string;
-    description?: string;
-    sections?: StoryEditProps['model']['sections'];
-    resources?: string[];
+    title?: string | null;
+    coverImage?: string | null;
+    description?: string | null;
+    tags?: string | null;
+    sections?: StoryEditProps['model']['sections'] | null;
+    resources?: string[] | null;
   }): Pick<
     StoryEditProps['model'],
-    'title' | 'coverImage' | 'description' | 'sections' | 'resources'
+    'title' | 'coverImage' | 'description' | 'tags' | 'sections' | 'resources'
   > {
     return {
       title: local.title ?? '',
       coverImage: local.coverImage ?? '',
       description: local.description ?? '',
+      tags: local.tags ?? '',
       sections: local.sections ?? [],
       resources: local.resources ?? [],
     };
