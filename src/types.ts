@@ -263,11 +263,32 @@ export interface JournaStoryEditProps {
   isNew: boolean;
 }
 
+export interface StoryCreateProps {
+  model: {
+    title: string;
+    coverImage: string;
+    description: string;
+    chapterLimit: number;
+    tags: string | null;
+    storyType: string;
+    chapterType: string;
+    sectionType: string | null;
+    visibility: string;
+    slug: string | null;
+    template: string;
+  };
+  templates: BundleTemplate[];
+  providers: Providers;
+}
+
 export interface StoryEditProps {
   model: {
     id: number;
-    tags: string | null;
+    title: string;
+    coverImage: string;
+    description: string;
     chapterLimit: number;
+    tags: string | null;
     storyType: string;
     chapterType: string;
     sectionType: string | null;
@@ -275,23 +296,17 @@ export interface StoryEditProps {
     slug: string;
     template: string;
     isPublished: boolean;
-    createdAt: string;
-    updatedAt: string;
+    sections: StorySection[];
+    resources: string[];
+  };
+  source?: {
     title: string;
     coverImage: string;
     description: string;
     sections: StorySection[];
     resources: string[];
   };
-  source: {
-    title: string;
-    coverImage: string;
-    description: string;
-    tags: string | null;
-    sections: StorySection[];
-    resources: string[];
-  };
-  isNew: boolean;
+  hasNoContent: boolean;
   providers: Providers;
 }
 

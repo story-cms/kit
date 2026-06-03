@@ -23,6 +23,7 @@ import ImageField from './fields/image-field.vue';
 import IndexCard from './stories/components/index-card.vue';
 import IndexFilter from './shared/index-filter.vue';
 import LabelButton from './shared/label-button.vue';
+import PillButton from './shared/pill-button.vue';
 import LanguagesEdit from './settings/languages/languages-edit.vue';
 import SettingsIndex from './settings/settings-index.vue';
 import ListField from './fields/list-field.vue';
@@ -96,7 +97,6 @@ export {
   InvitationsIndex,
   LabelButton,
   LanguagesEdit,
-  SettingsIndex,
   ListField,
   ListSwitcher,
   Login,
@@ -110,11 +110,13 @@ export {
   PagesIndex,
   PanelField,
   Pagination,
+  PillButton,
   PublicLayout,
   RegionField,
   ResetPassword,
   ScriptureField,
   SelectField,
+  SettingsIndex,
   StatusTag,
   StoryEdit,
   StoryGallery,
