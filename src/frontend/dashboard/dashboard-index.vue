@@ -79,7 +79,7 @@ import axios from 'axios';
 
 import { SharedPageProps, DashboardProps, StatMetric } from '../../types';
 import { useSharedStore } from '../store';
-import { sortLanguages } from '../shared/helpers';
+import { sortLanguagesByDisplayName } from '../shared/helpers';
 
 const props = defineProps<DashboardProps & SharedPageProps>();
 
@@ -106,7 +106,7 @@ const filteredProgress = computed(() => {
       : props.translationProgress.filter((progress) => {
           return !progress.progress.every((stat) => stat.done === stat.total);
         });
-  return sortLanguages(items);
+  return sortLanguagesByDisplayName(items);
 });
 
 const filter = (value: 'To do' | 'All') => {

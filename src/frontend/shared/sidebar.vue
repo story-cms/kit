@@ -38,7 +38,7 @@
               v-if="!shared.hasOpenSidebar"
               :current-locale="locale"
               :current-language="shared.language.language"
-              :languages="shared.languages"
+              :languages="sidebarLanguages"
               :is-read-only="!shared.user.isManager"
               @language-change="onLanguage"
             />
@@ -169,11 +169,14 @@ import Icon from '../shared/icon.vue';
 import LanguageSelector from './language-selector.vue';
 import DropUp from './drop-up.vue';
 import type { Subscription } from '../../types';
+import { sortLanguages } from './helpers';
 
 const shared = useSharedStore();
 
+const sidebarLanguages = computed(() => sortLanguages(shared.languages));
+
 const onLanguage = async (lang: string) => {
-  const newLocale = shared.languages.find((l) => l.language === lang)?.locale;
+  const newLocale = sidebarLanguages.value.find((l) => l.language === lang)?.locale;
   if (!newLocale) return;
   if (newLocale === shared.locale) return;
 
@@ -220,7 +223,9 @@ const toggleMenu = () => {
   shared.setSidebarOpen(!shared.hasOpenSidebar);
 };
 
-const languageOptions = computed(() => shared.languages.map((l) => l.language));
+const languageOptions = computed(() =>
+  sidebarLanguages.value.map((l) => l.language),
+);
 
 const classList = (path: string, withGap: boolean = false) => {
   const url = window.location.href?.replace('/drop', '/stream') || '';
