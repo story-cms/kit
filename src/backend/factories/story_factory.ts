@@ -5,7 +5,6 @@ import { StoryLocalisationFactory } from './story_localisation_factory.js';
 export const StoryFactory = factory
   .define(Story, async ({ faker }) => {
     return {
-      tags: faker.lorem.words(3).split(' ').join(','),
       chapterLimit: 10,
       storyType: 'Story',
       chapterType: 'Chapter',

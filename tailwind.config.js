@@ -7,7 +7,14 @@ export default {
   content: [
     "./src/frontend/**/*.{vue,js,ts,jsx,tsx}",
   ],
-  safelist: ['bg-green-400', 'green-400', 'focus:ring-green-400', 'cursor-default'],
+  safelist: [
+    'bg-green-400',
+    'green-400',
+    'focus:ring-green-400',
+    'cursor-default',
+    'bg-indigo-50',
+    'indigo-50',
+  ],
   theme: {
     extend: {
       colors: {

@@ -51,9 +51,11 @@ export interface FieldSpec {
   noMarkup?: boolean;
   toolbar?: string[];
   description?: string;
+  placeholderText?: string;
   extensions?: string[];
   maxSize?: number;
   tintColor?: string;
+  backgroundColor?: string;
   labelOrder?: string;
   folder?: string;
   collectionId?: string;
@@ -261,11 +263,32 @@ export interface JournaStoryEditProps {
   isNew: boolean;
 }
 
+export interface StoryCreateProps {
+  model: {
+    title: string;
+    coverImage: string;
+    description: string;
+    chapterLimit: number;
+    tags: string | null;
+    storyType: string;
+    chapterType: string;
+    sectionType: string | null;
+    visibility: string;
+    slug: string | null;
+    template: string;
+  };
+  templates: BundleTemplate[];
+  providers: Providers;
+}
+
 export interface StoryEditProps {
   model: {
     id: number;
-    tags: string | null;
+    title: string;
+    coverImage: string;
+    description: string;
     chapterLimit: number;
+    tags: string | null;
     storyType: string;
     chapterType: string;
     sectionType: string | null;
@@ -273,22 +296,17 @@ export interface StoryEditProps {
     slug: string;
     template: string;
     isPublished: boolean;
-    createdAt: string;
-    updatedAt: string;
+    sections: StorySection[];
+    resources: string[];
+  };
+  source?: {
     title: string;
     coverImage: string;
     description: string;
     sections: StorySection[];
     resources: string[];
   };
-  source: {
-    title: string;
-    coverImage: string;
-    description: string;
-    sections: StorySection[];
-    resources: string[];
-  };
-  isNew: boolean;
+  hasNoContent: boolean;
   providers: Providers;
 }
 
@@ -456,6 +474,13 @@ export interface SelectOption {
 export interface TabItem {
   label: string;
   count: number;
+}
+
+/** Tabs for `navigation-pane` (icon + label). */
+export interface NavigationPaneTab {
+  label: string;
+  /** Registered `Icon` name; omitted for label-only tabs. */
+  icon?: string;
 }
 
 export interface StatMetric {

@@ -10,6 +10,7 @@ export const StoryLocalisationFactory = factory
       title: faker.lorem.sentence(),
       coverImage: faker.image.url(),
       description: faker.lorem.paragraph(),
+      tags: faker.lorem.words(3).split(' ').join(','),
       sections: [
         {
           id: faker.string.uuid(),

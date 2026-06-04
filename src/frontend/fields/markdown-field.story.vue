@@ -78,6 +78,12 @@
       <ModelControl :model="objectModel" />
       <LanguageControl />
     </Variant>
+
+    <Variant title="With placeholder" :setup-app="loadData">
+      <MarkdownField
+        :field="{ ...spec, placeholderText: 'Write your notes here…' }"
+      />
+    </Variant>
   </Story>
 </template>
 

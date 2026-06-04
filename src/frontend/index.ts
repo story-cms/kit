@@ -23,6 +23,7 @@ import ImageField from './fields/image-field.vue';
 import IndexCard from './stories/components/index-card.vue';
 import IndexFilter from './shared/index-filter.vue';
 import LabelButton from './shared/label-button.vue';
+import PillButton from './shared/pill-button.vue';
 import LanguagesEdit from './settings/languages/languages-edit.vue';
 import SettingsIndex from './settings/settings-index.vue';
 import ListField from './fields/list-field.vue';
@@ -58,11 +59,15 @@ import UiPage from './ui/ui-page.vue';
 import UsersIndex from './team/users-index.vue';
 import VideoField from './fields/video-field.vue';
 
+import ContentSidebar from './shared/content-sidebar.vue';
+import NavigationPane from './shared/navigation-pane.vue';
+import SectionPanelField from './fields/section-panel-field.vue';
+
 export { createInertiaApp, usePage, useForm, router } from '@inertiajs/vue3';
 
 export * from './store/index';
 
-export { commonProps, helpScoutWidget } from './shared/helpers';
+export { commonProps, helpScoutWidget, formatDate } from './shared/helpers';
 
 export {
   ActionButton,
@@ -72,8 +77,6 @@ export {
   AudienceIndex,
   AudioField,
   BooleanField,
-  InvitationsEdit,
-  InvitationsIndex,
   ChapterPreview,
   ContentHeader,
   ContextMenu,
@@ -83,15 +86,17 @@ export {
   DateRangeField,
   DraftIndex,
   DropDown,
+  DropEdit,
   ForgotPassword,
   Icon,
   IconButton,
   ImageField,
   IndexCard,
   IndexFilter,
+  InvitationsEdit,
+  InvitationsIndex,
   LabelButton,
   LanguagesEdit,
-  SettingsIndex,
   ListField,
   ListSwitcher,
   Login,
@@ -105,16 +110,17 @@ export {
   PagesIndex,
   PanelField,
   Pagination,
+  PillButton,
   PublicLayout,
   RegionField,
   ResetPassword,
   ScriptureField,
   SelectField,
+  SettingsIndex,
   StatusTag,
   StoryEdit,
   StoryGallery,
   StoryIndex,
-  DropEdit,
   StreamGallery,
   StreamIndex,
   StringField,
@@ -124,4 +130,10 @@ export {
   UiPage,
   UsersIndex,
   VideoField,
+  // ---------------
+  // TODO: remove once landed
+  // ---------------
+  ContentSidebar,
+  NavigationPane,
+  SectionPanelField,
 };

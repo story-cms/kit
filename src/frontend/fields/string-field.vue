@@ -20,6 +20,7 @@
         :readonly="props.isReadOnly"
         autocomplete="given-name"
         :value="modelValue"
+        :placeholder="field.placeholderText"
         class="input-field"
         :class="{
           'border-error': hasError,

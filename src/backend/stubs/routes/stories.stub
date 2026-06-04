@@ -11,6 +11,7 @@ export default () => {
   // stories
   router.get(':locale/story', [StoriesController, 'index']);
   router.get(':locale/story/create', [StoriesController, 'create']);
+  router.post(':locale/story', [StoriesController, 'store']);
   router.get(':locale/story/:storyId/edit', [StoriesController, 'edit']);
   router.delete(':locale/story/:storyId', [StoriesController, 'delete']);
   router.post(':locale/story/:storyId', [StoriesController, 'update']);

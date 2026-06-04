@@ -20,6 +20,12 @@
     <Variant title="Readonly" :setup-app="loadData">
       <StringField :field="spec" :is-read-only="true" />
     </Variant>
+
+    <Variant title="With placeholder">
+      <StringField
+        :field="{ ...spec, placeholderText: 'Enter your name' }"
+      />
+    </Variant>
   </Story>
 </template>
 

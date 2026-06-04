@@ -24,10 +24,13 @@ export default class StoryLocalisation extends BaseModel {
   declare title: string;
 
   @column()
-  declare coverImage: string;
+  declare coverImage: string | null;
 
   @column()
-  declare description: string;
+  declare description: string | null;
+
+  @column()
+  declare tags: string | null;
 
   @column({
     prepare: (value) => prepareJsonColumn(value),
@@ -45,16 +48,17 @@ export default class StoryLocalisation extends BaseModel {
   declare updatedBy: number | null;
 
   @column.dateTime({ autoCreate: true })
-  declare createdAt: DateTime;
+  declare createdAt: DateTime | null;
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare updatedAt: DateTime;
+  declare updatedAt: DateTime | null;
 }
 
 export const emptyTranslation: Partial<StoryLocalisation> = {
   title: '',
   coverImage: '',
   description: '',
+  tags: '',
   sections: [],
   resources: [],
 };
