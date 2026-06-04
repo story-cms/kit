@@ -169,7 +169,29 @@ import Icon from '../shared/icon.vue';
 import LanguageSelector from './language-selector.vue';
 import DropUp from './drop-up.vue';
 import type { Subscription } from '../../types';
-import { sortLanguages } from './helpers';
+import { languageDisplayName, type LanguageSortable } from './helpers';
+
+function isEnglishLanguage(item: LanguageSortable): boolean {
+  return (
+    item.locale === 'en' ||
+    languageDisplayName(item.language).localeCompare('English', undefined, {
+      sensitivity: 'base',
+    }) === 0
+  );
+}
+
+/** English first, then remaining languages A–Z by display name. */
+function compareLanguages(a: LanguageSortable, b: LanguageSortable): number {
+  if (isEnglishLanguage(a) && !isEnglishLanguage(b)) return -1;
+  if (!isEnglishLanguage(a) && isEnglishLanguage(b)) return 1;
+  return languageDisplayName(a.language).localeCompare(
+    languageDisplayName(b.language),
+  );
+}
+
+function sortLanguages<T extends LanguageSortable>(languages: T[]): T[] {
+  return [...languages].sort(compareLanguages);
+}
 
 const shared = useSharedStore();
 

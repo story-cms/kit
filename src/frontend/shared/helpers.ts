@@ -300,29 +300,6 @@ export function languageDisplayName(language: string): string {
   return language;
 }
 
-export function isEnglishLanguage(item: LanguageSortable): boolean {
-  return (
-    item.locale === 'en' ||
-    languageDisplayName(item.language).localeCompare('English', undefined, {
-      sensitivity: 'base',
-    }) === 0
-  );
-}
-
-/** Sidebar only: English first, then remaining languages A–Z by display name. */
-export function compareLanguages(a: LanguageSortable, b: LanguageSortable): number {
-  if (isEnglishLanguage(a) && !isEnglishLanguage(b)) return -1;
-  if (!isEnglishLanguage(a) && isEnglishLanguage(b)) return 1;
-  return languageDisplayName(a.language).localeCompare(
-    languageDisplayName(b.language),
-  );
-}
-
-/** Sidebar only: English first, then remaining languages A–Z by display name. */
-export function sortLanguages<T extends LanguageSortable>(languages: T[]): T[] {
-  return [...languages].sort(compareLanguages);
-}
-
 /** A–Z by display name (e.g. add-language list); English is not pinned first. */
 export function compareLanguagesByDisplayName(
   a: LanguageSortable,
