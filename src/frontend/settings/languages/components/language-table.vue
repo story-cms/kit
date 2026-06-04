@@ -1,5 +1,5 @@
 <template>
-  <div class="pb-6">
+  <div class="pb-6 pl-3">
     <h3 class="text-xl font-semibold leading-7 text-black">Active languages</h3>
     <p class="text-sm font-normal leading-5 text-black">
       You can manage your languages here.

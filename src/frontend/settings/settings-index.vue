@@ -29,11 +29,13 @@
         </template>
       </ContentHeader>
     </template>
-    <SourceLang
-      :spec="sourceLanguage"
-      @bible-translation-change="handleSourceBibleTranslationChange"
-    />
-    <div class="mt-14">
+    <div class="mt-5">
+      <SourceLang
+        :spec="sourceLanguage"
+        @bible-translation-change="handleSourceBibleTranslationChange"
+      />
+    </div>
+    <div class="mt-7">
       <LanguagesTable
         :items="languageItems"
         @remove="handleRemove"
