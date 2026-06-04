@@ -30,7 +30,7 @@ export const useSharedStore = defineStore('shared', () => {
     bookmarks.value = props.bookmarks ?? [];
   };
 
-  const languages = computed(() => config.value.languages);
+  const languages = computed(() => config.value.languages ?? []);
 
   // errors
 

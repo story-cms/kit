@@ -141,7 +141,7 @@
                       All Languages
                     </option>
                     <option
-                      v-for="lang in shared.languages"
+                      v-for="lang in sortedLanguages"
                       :key="lang.locale"
                       :value="lang.locale"
                       :selected="lang.locale == form.language"
@@ -180,6 +180,7 @@ import UserRow from './components/user-row.vue';
 import { SharedPageProps, UsersProps, UserMeta } from '../../types';
 import { ResponseStatus } from '../../types';
 import { useSharedStore } from '../store';
+import { sortLanguagesByDisplayName } from '../shared/helpers';
 
 const emptyForm = {
   name: '',
@@ -193,6 +194,10 @@ const props = defineProps<UsersProps & SharedPageProps>();
 const shared = useSharedStore();
 shared.setFromProps(props);
 shared.setCurrentStoryName('');
+
+const sortedLanguages = computed(() =>
+  sortLanguagesByDisplayName(shared.languages),
+);
 
 const focusId = ref(0);
 const roles = ['admin', 'editor'];
