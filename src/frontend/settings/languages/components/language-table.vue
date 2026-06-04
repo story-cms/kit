@@ -88,7 +88,7 @@
                 leave-to-class="opacity-0"
               >
                 <MenuItems
-                  class="absolute right-10 top-3 z-10 flex max-w-[250px] flex-col items-start overflow-hidden rounded-md bg-white shadow focus:outline-none"
+                  class="absolute right-4 top-3 z-10 flex max-w-[250px] flex-col items-start overflow-hidden rounded-md bg-white shadow focus:outline-none"
                 >
                   <MenuItem v-slot="{ active }">
                     <a
@@ -207,9 +207,12 @@ const bibleTranslationsModalItem = computed(
   () => props.items.find((i) => i.locale === bibleTranslationsModalLocale.value) ?? null,
 );
 
+const menuItemTextClass = 'text-sm leading-5 font-normal text-gray-800';
+
 const menuItemClass = (active: boolean, position: 'first' | 'middle' | 'last') => [
+  menuItemTextClass,
   active ? 'bg-gray-100' : 'bg-white',
-  'block w-full whitespace-nowrap px-6 py-2 text-left text-sm font-normal leading-5 text-gray-800',
+  'block w-full whitespace-nowrap px-6 py-2 text-left no-underline',
   position === 'first' ? 'pt-3' : '',
   position === 'last' ? 'pb-3' : '',
 ];
