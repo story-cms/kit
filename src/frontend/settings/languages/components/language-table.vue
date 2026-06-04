@@ -83,7 +83,7 @@
               class="absolute right-10 top-3 z-10 flex max-w-[250px] flex-col items-start overflow-hidden rounded-md bg-white shadow"
             >
               <a
-                href="/{{ item.locale }}/user"
+                :href="`/${item.locale}/user`"
                 class="w-full px-6 py-2 pt-3 text-left text-sm font-normal leading-5 text-gray-800 hover:bg-gray-100"
               >
                 Assign team members
@@ -146,7 +146,7 @@ import type { LanguageTableItem } from '../../../../types';
 import MemberRow from './member-row.vue';
 import RingBlock from '../../../dashboard/ring-block.vue';
 import LangStrip from './language-strip.vue';
-import { languageDisplayName } from '../../../shared/helpers';
+import { sortLanguagesByDisplayName } from '../../../shared/helpers';
 
 const props = withDefaults(
   defineProps<{
@@ -167,11 +167,7 @@ const emit = defineEmits<{
 }>();
 
 const currentPage = ref(1);
-const sortedItems = computed(() =>
-  [...props.items].sort((a, b) =>
-    languageDisplayName(a.language).localeCompare(languageDisplayName(b.language)),
-  ),
-);
+const sortedItems = computed(() => sortLanguagesByDisplayName(props.items));
 const paginatedItems = computed(() => {
   const startIndex = (currentPage.value - 1) * props.itemsPerPage;
   const endIndex = startIndex + props.itemsPerPage;
