@@ -34,13 +34,15 @@ export const expandShortcuts = (text: string) => {
 
 export const padZero = (value: number): string => (value > 9 ? `${value}` : `0${value}`);
 
+const LANGUAGE_LABEL_SEPARATOR = /\s*-\s*|\s*\|\s*/;
+
+export type LanguageSortable = Pick<LanguageSpecification, 'language' | 'locale'>;
+
 /**
  * Match stored language to API language.
  * Handles stored formats: "Bengali - বাংলা", "Arabic - عربى", "English | American".
  * API returns: "Bengali", "Arabic, Sudanese Creole", "English".
  */
-const LANGUAGE_LABEL_SEPARATOR = /\s*-\s*|\s*\|\s*/;
-
 export const languageMatches = (stored: string, api: string): boolean => {
   const storedBase = stored.split(LANGUAGE_LABEL_SEPARATOR)[0].trim();
   return (
@@ -298,7 +300,7 @@ export function languageDisplayName(language: string): string {
   return language;
 }
 
-export function isEnglishLanguage(item: LanguageSpecification): boolean {
+export function isEnglishLanguage(item: LanguageSortable): boolean {
   return (
     item.locale === 'en' ||
     languageDisplayName(item.language).localeCompare('English', undefined, {
@@ -308,16 +310,17 @@ export function isEnglishLanguage(item: LanguageSpecification): boolean {
 }
 
 /** English first, then remaining languages A–Z by display name. */
-export function sortLanguages(
-  languages: LanguageSpecification[],
-): LanguageSpecification[] {
-  return [...languages].sort((a, b) => {
-    if (isEnglishLanguage(a) && !isEnglishLanguage(b)) return -1;
-    if (!isEnglishLanguage(a) && isEnglishLanguage(b)) return 1;
-    return languageDisplayName(a.language).localeCompare(
-      languageDisplayName(b.language),
-    );
-  });
+export function compareLanguages(a: LanguageSortable, b: LanguageSortable): number {
+  if (isEnglishLanguage(a) && !isEnglishLanguage(b)) return -1;
+  if (!isEnglishLanguage(a) && isEnglishLanguage(b)) return 1;
+  return languageDisplayName(a.language).localeCompare(
+    languageDisplayName(b.language),
+  );
+}
+
+/** English first, then remaining languages A–Z by display name. */
+export function sortLanguages<T extends LanguageSortable>(languages: T[]): T[] {
+  return [...languages].sort(compareLanguages);
 }
 
 /** Name, native name, and locale from a language specification. */

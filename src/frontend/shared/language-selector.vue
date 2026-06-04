@@ -25,7 +25,7 @@
       <MenuItems
         class="absolute left-0 z-10 max-h-[calc(100vh-240px)] w-56 origin-top-right overflow-y-auto rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
       >
-        <div v-for="language in sortedLanguages" :key="language.language" class="py-1">
+        <div v-for="language in languages" :key="language.locale" class="py-1">
           <MenuItem v-slot="{ active }">
             <button
               :class="[
@@ -45,20 +45,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import Icon from '../shared/icon.vue';
 import type { LanguageSpecification } from '../../types';
-import { sortLanguages } from './helpers';
 
-const props = defineProps<{
+defineProps<{
   currentLocale: string;
   currentLanguage: string;
   languages: LanguageSpecification[];
   isReadOnly: boolean;
 }>();
-
-const sortedLanguages = computed(() => sortLanguages(props.languages));
 const emit = defineEmits<{
   (e: 'languageChange', language: string): void;
 }>();

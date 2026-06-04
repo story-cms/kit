@@ -10,6 +10,7 @@ import {
   UiConfig,
 } from '../../types';
 import standardSidebar from '../shared/sidebar.vue';
+import { sortLanguages } from '../shared/helpers';
 
 const defaultLanguage: LanguageSpecification = {
   locale: 'en',
@@ -30,7 +31,7 @@ export const useSharedStore = defineStore('shared', () => {
     bookmarks.value = props.bookmarks ?? [];
   };
 
-  const languages = computed(() => config.value.languages);
+  const languages = computed(() => sortLanguages(config.value.languages ?? []));
 
   // errors
 
