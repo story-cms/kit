@@ -38,7 +38,7 @@
               v-if="!shared.hasOpenSidebar"
               :current-locale="locale"
               :current-language="shared.language.language"
-              :languages="shared.languages"
+              :languages="sidebarLanguages"
               :is-read-only="!shared.user.isManager"
               @language-change="onLanguage"
             />
@@ -169,12 +169,36 @@ import Icon from '../shared/icon.vue';
 import LanguageSelector from './language-selector.vue';
 import DropUp from './drop-up.vue';
 import type { Subscription } from '../../types';
-import { sortLanguages } from './helpers';
+import { languageDisplayName, type LanguageSortable } from './helpers';
+
+function isEnglishLanguage(item: LanguageSortable): boolean {
+  return (
+    item.locale === 'en' ||
+    languageDisplayName(item.language).localeCompare('English', undefined, {
+      sensitivity: 'base',
+    }) === 0
+  );
+}
+
+/** English first, then remaining languages A–Z by display name. */
+function compareLanguages(a: LanguageSortable, b: LanguageSortable): number {
+  if (isEnglishLanguage(a) && !isEnglishLanguage(b)) return -1;
+  if (!isEnglishLanguage(a) && isEnglishLanguage(b)) return 1;
+  return languageDisplayName(a.language).localeCompare(
+    languageDisplayName(b.language),
+  );
+}
+
+function sortLanguages<T extends LanguageSortable>(languages: T[]): T[] {
+  return [...languages].sort(compareLanguages);
+}
 
 const shared = useSharedStore();
 
+const sidebarLanguages = computed(() => sortLanguages(shared.languages));
+
 const onLanguage = async (lang: string) => {
-  const newLocale = shared.languages.find((l) => l.language === lang)?.locale;
+  const newLocale = sidebarLanguages.value.find((l) => l.language === lang)?.locale;
   if (!newLocale) return;
   if (newLocale === shared.locale) return;
 
@@ -222,7 +246,7 @@ const toggleMenu = () => {
 };
 
 const languageOptions = computed(() =>
-  sortLanguages(shared.languages).map((l) => l.language),
+  sidebarLanguages.value.map((l) => l.language),
 );
 
 const classList = (path: string, withGap: boolean = false) => {

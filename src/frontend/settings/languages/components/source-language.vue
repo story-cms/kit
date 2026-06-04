@@ -1,21 +1,30 @@
 <template>
-  <div class="grid gap-8 px-6 py-3 sm:grid-cols-[minmax(200px,auto)_1fr_auto]">
-    <div class="pr-8">
-      <LangStrip :spec="spec" />
-    </div>
-    <div class="flex flex-col justify-center">
+  <div class="space-y-6 divide-y divide-gray-300">
+    <div class="px-3">
+      <h3 class="text-xl/7 font-semibold leading-7 text-gray-800">Source Language</h3>
       <p class="text-sm/5 font-normal leading-5 text-gray-500">
-        {{ spec.bibleLabel }}
+        You cannot change your source language. However upon request you can change the
+        Bible translation of your source language by pressing the three dots.
       </p>
     </div>
-    <div class="flex flex-col items-center justify-center px-4">
-      <button
-        type="button"
-        class="cursor-pointer text-gray-400 hover:text-gray-600"
-        @click="showBibleTranslationsModal = true"
-      >
-        <Icon name="dots-vertical" class="size-5" />
-      </button>
+    <div class="grid gap-8 px-6 py-3 sm:grid-cols-[minmax(200px,auto)_1fr_auto]">
+      <div class="pr-8">
+        <LangStrip :spec="spec" />
+      </div>
+      <div class="flex flex-col justify-center">
+        <p class="text-sm/5 font-normal leading-5 text-gray-500">
+          {{ spec.bibleLabel }}
+        </p>
+      </div>
+      <div class="flex flex-col items-center justify-center px-4">
+        <button
+          type="button"
+          class="cursor-pointer text-gray-400 hover:text-gray-600"
+          @click="showBibleTranslationsModal = true"
+        >
+          <Icon name="dots-vertical" class="size-5" />
+        </button>
+      </div>
     </div>
   </div>
 

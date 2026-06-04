@@ -78,6 +78,10 @@ import { ResponseStatus } from '../../../types';
 import { languages as allLanguages } from './languages';
 
 import { useSharedStore } from '../../store';
+import {
+  compareLanguagesByDisplayName,
+  sortLanguagesByDisplayName,
+} from '../../shared/helpers';
 
 const props = defineProps<LanguagesEditProps & SharedPageProps>();
 
@@ -95,7 +99,9 @@ const selectedLocales = ref<Set<string>>(new Set());
 const addedLocales = computed(() => new Set(props.addedLanguages.map((l) => l.locale)));
 
 const selectedLanguages = computed((): LanguageSpecification[] =>
-  allLanguages.filter((language) => selectedLocales.value.has(language.locale)),
+  sortLanguagesByDisplayName(
+    allLanguages.filter((language) => selectedLocales.value.has(language.locale)),
+  ),
 );
 
 const languageListItems = computed((): LanguageListItemProps[] =>
@@ -108,7 +114,7 @@ const languageListItems = computed((): LanguageListItemProps[] =>
         : 'available';
       return { language, status };
     })
-    .sort((a, b) => a.language.language.localeCompare(b.language.language)),
+    .sort((a, b) => compareLanguagesByDisplayName(a.language, b.language)),
 );
 
 const handleSelectionUpdate = (locale: string, isSelected: boolean) => {

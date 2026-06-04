@@ -1,5 +1,5 @@
 <template>
-  <div class="pb-6">
+  <div class="pb-6 pl-3">
     <h3 class="text-xl font-semibold leading-7 text-black">Active languages</h3>
     <p class="text-sm font-normal leading-5 text-black">
       You can manage your languages here.
@@ -146,7 +146,7 @@ import type { LanguageTableItem } from '../../../../types';
 import MemberRow from './member-row.vue';
 import RingBlock from '../../../dashboard/ring-block.vue';
 import LangStrip from './language-strip.vue';
-import { languageDisplayName } from '../../../shared/helpers';
+import { sortLanguagesByDisplayName } from '../../../shared/helpers';
 
 const props = withDefaults(
   defineProps<{
@@ -167,11 +167,7 @@ const emit = defineEmits<{
 }>();
 
 const currentPage = ref(1);
-const sortedItems = computed(() =>
-  [...props.items].sort((a, b) =>
-    languageDisplayName(a.language).localeCompare(languageDisplayName(b.language)),
-  ),
-);
+const sortedItems = computed(() => sortLanguagesByDisplayName(props.items));
 const paginatedItems = computed(() => {
   const startIndex = (currentPage.value - 1) * props.itemsPerPage;
   const endIndex = startIndex + props.itemsPerPage;
