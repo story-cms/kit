@@ -13,6 +13,6 @@ const primary = computed(() => {
 });
 
 const secondary = computed(() => {
-  return [{ label: 'Clicks throughs', value: props.clicks.toString() }];
+  return [{ label: 'Click throughs', value: props.clicks.toString() }];
 });
 </script>
