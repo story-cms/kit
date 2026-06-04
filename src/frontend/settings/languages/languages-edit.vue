@@ -95,7 +95,9 @@ const selectedLocales = ref<Set<string>>(new Set());
 const addedLocales = computed(() => new Set(props.addedLanguages.map((l) => l.locale)));
 
 const selectedLanguages = computed((): LanguageSpecification[] =>
-  allLanguages.filter((language) => selectedLocales.value.has(language.locale)),
+  allLanguages
+    .filter((language) => selectedLocales.value.has(language.locale))
+    .sort((a, b) => a.language.localeCompare(b.language)),
 );
 
 const languageListItems = computed((): LanguageListItemProps[] =>
