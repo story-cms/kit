@@ -9,10 +9,13 @@ import type { InvitationStats as InvitationStatsType } from '../../types';
 const props = defineProps<InvitationStatsType>();
 
 const primary = computed(() => {
-  return [{ label: 'Impressions', value: props.impressions.toString() }];
+  return [{ label: 'Analytics', value: '' }];
 });
 
 const secondary = computed(() => {
-  return [{ label: 'Click throughs', value: props.clicks.toString() }];
+  return [
+    { label: 'Impressions', value: props.impressions.toString() },
+    { label: 'Click throughs', value: props.clicks.toString() },
+  ];
 });
 </script>
