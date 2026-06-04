@@ -25,6 +25,7 @@ export const languages: LanguageSpecification[] = [
   { locale: 'fi', language: 'Finnish - Suomi', languageDirection: 'ltr' },
   { locale: 'fil', language: 'Filipino Pilipino - Pilipino', languageDirection: 'ltr' },
   { locale: 'fr', language: 'French - Français', languageDirection: 'ltr' },
+  { locale: 'fr-ch', language: 'Swiss French - Français suisse', languageDirection: 'ltr' },
   { locale: 'ga', language: 'Irish - Gaeilge', languageDirection: 'ltr' },
   { locale: 'gl', language: 'Galician - Galego', languageDirection: 'ltr' },
   {
@@ -66,6 +67,11 @@ export const languages: LanguageSpecification[] = [
   { locale: 'pl', language: 'Polish - Polski', languageDirection: 'ltr' },
   { locale: 'ps', language: 'Pushto Pashto - پښتو', languageDirection: 'rtl' },
   { locale: 'pt', language: 'Portuguese - Português', languageDirection: 'ltr' },
+  {
+    locale: 'pt-br',
+    language: 'Brazilian Portuguese - Português brasileiro',
+    languageDirection: 'ltr',
+  },
   {
     locale: 'ro',
     language: 'Romanian Moldavian Moldovan - Română',
