@@ -163,12 +163,13 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useSharedStore } from '../store';
-import { router } from '@inertiajs/vue3';
+import { router, usePage } from '@inertiajs/vue3';
 
 import Icon from '../shared/icon.vue';
 import LanguageSelector from './language-selector.vue';
 import DropUp from './drop-up.vue';
 import type { Subscription } from '../../types';
+import { replaceLocaleInPath } from './helpers';
 import { languageDisplayName, type LanguageSortable } from './helpers';
 
 function isEnglishLanguage(item: LanguageSortable): boolean {
@@ -184,9 +185,7 @@ function isEnglishLanguage(item: LanguageSortable): boolean {
 function compareLanguages(a: LanguageSortable, b: LanguageSortable): number {
   if (isEnglishLanguage(a) && !isEnglishLanguage(b)) return -1;
   if (!isEnglishLanguage(a) && isEnglishLanguage(b)) return 1;
-  return languageDisplayName(a.language).localeCompare(
-    languageDisplayName(b.language),
-  );
+  return languageDisplayName(a.language).localeCompare(languageDisplayName(b.language));
 }
 
 function sortLanguages<T extends LanguageSortable>(languages: T[]): T[] {
@@ -194,6 +193,7 @@ function sortLanguages<T extends LanguageSortable>(languages: T[]): T[] {
 }
 
 const shared = useSharedStore();
+const page = usePage();
 
 const sidebarLanguages = computed(() => sortLanguages(shared.languages));
 
@@ -207,24 +207,12 @@ const onLanguage = async (lang: string) => {
 };
 
 const newPathFromLocale = (targetLocale: string) => {
-  // const url = usePage().url;  not working
-  const url = window.location.href || '';
-
-  if (url.includes('/ui')) {
-    return `/${targetLocale}/ui`;
-  }
-
-  if (url.includes('/page')) {
-    return `/${targetLocale}/page`;
-  }
-
-  if (url.includes('/story/')) {
-    const part = url.split('/story/')[1];
-    const storyId = part.split('/')[0];
-    return `/${targetLocale}/story/${storyId}`;
-  }
-
-  return `/${targetLocale}/dashboard`;
+  const pageUrl = page.url || `${window.location.pathname}${window.location.search}`;
+  const [pathname, search = ''] = pageUrl.split('?');
+  const locales = shared.languages.map((l) => l.locale);
+  const swapped =
+    replaceLocaleInPath(pathname, targetLocale, locales) ?? `/${targetLocale}/dashboard`;
+  return search ? `${swapped}?${search}` : swapped;
 };
 
 const isAdmin = computed(() => shared.user.isAdmin);
@@ -245,9 +233,7 @@ const toggleMenu = () => {
   shared.setSidebarOpen(!shared.hasOpenSidebar);
 };
 
-const languageOptions = computed(() =>
-  sidebarLanguages.value.map((l) => l.language),
-);
+const languageOptions = computed(() => sidebarLanguages.value.map((l) => l.language));
 
 const classList = (path: string, withGap: boolean = false) => {
   const url = window.location.href?.replace('/drop', '/stream') || '';

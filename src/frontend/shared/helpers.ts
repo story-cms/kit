@@ -335,3 +335,17 @@ export function parseLanguageSpecification(spec: LanguageSpecification): {
 
   return { name: language, nativeName: language, locale };
 }
+
+/** Swap the locale segment in a pathname, or return null if not localized. */
+export function replaceLocaleInPath(
+  pathname: string,
+  targetLocale: string,
+  knownLocales: string[],
+): string | null {
+  const segments = pathname.split('/').filter(Boolean);
+  if (segments.length === 0 || !knownLocales.includes(segments[0])) {
+    return null;
+  }
+  segments[0] = targetLocale;
+  return `/${segments.join('/')}`;
+}
