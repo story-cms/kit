@@ -2,7 +2,7 @@ import config from '@adonisjs/core/services/config';
 import { errors, HttpContext } from '@adonisjs/core/http';
 import Index from '../models/index.js';
 import Story from '../models/story.js';
-import { emptyTranslation } from '../models/story_localisation.js';
+import StoryLocalisation, { emptyTranslation } from '../models/story_localisation.js';
 import type {
   CmsConfig,
   FieldSpec,
@@ -123,6 +123,11 @@ export class StoryService {
     const locale = ctx.params.locale;
     const indices = await Index.query().where('locale', locale);
 
+    const sourceModels = await StoryLocalisation.query().where(
+      'locale',
+      this.config.languages[0].locale,
+    );
+
     const storyModels = await Story.query()
       .preload('localisations', (localisationsQuery) => {
         localisationsQuery.where('locale', locale);
@@ -132,16 +137,17 @@ export class StoryService {
     return storyModels.map((story) => {
       const local = story.localisations[0] ?? emptyTranslation;
       const index = indices.find((i) => i.storyId === story.id);
+      const source = sourceModels.find((m) => m.storyId === story.id);
 
       return {
         id: story.id,
-        name: local.title,
-        description: local.description,
-        coverImage: local.coverImage,
+        name: local.title || (source?.title ?? ''),
+        description: local.description ?? '',
+        coverImage: local.coverImage || (source?.coverImage ?? ''),
         chapterLimit: story.chapterLimit,
         isPublished: story.isPublished,
-        createdAt: story.createdAt.toISO()!,
-        updatedAt: story.updatedAt.toISO()!,
+        createdAt: story.createdAt?.toISO() ?? '',
+        updatedAt: story.updatedAt?.toISO() ?? '',
         draftCount: index?.draftsList.length ?? 0,
       };
     });
