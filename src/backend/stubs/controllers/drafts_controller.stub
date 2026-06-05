@@ -73,7 +73,10 @@ export default class DraftsController {
 
     if (!draft) {
       if (!chapter) {
-        return ctx.response.notFound();
+        return ctx.response.redirect().toRoute('chapters.index', {
+          locale: version.locale,
+          storyId: story.id,
+        });
       }
       lastPublished = chapter.updatedAt.toString();
       draft = await Draft.create({
