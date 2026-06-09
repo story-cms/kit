@@ -2,10 +2,10 @@
   <Story title="Languages Edit" group="settings">
     <Variant title="Edit" :setup-app="miniSidebar">
       <LanguagesEdit
-        :meta="sharedProps.meta"
+        :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
-        :languages="sharedProps.languages"
+        :languages="sharedProps.config.languages"
         :errors="sharedProps.errors"
         :bookmarks="sharedProps.bookmarks"
         :exclude="[]"
