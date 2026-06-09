@@ -24,14 +24,17 @@
             <div>
               <h3 class="text-sm font-medium leading-5 text-gray-800">Selected</h3>
 
-              <ul class="mt-2 flex flex-wrap gap-4">
+              <ul class="mt-2 flex flex-wrap gap-2">
                 <li
                   v-for="language in selectedLanguages"
                   :key="language.locale"
-                  class="flex items-center justify-between gap-2 rounded-full bg-blue-100 px-[10px] py-1"
+                  class="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-1 text-xs font-medium leading-4 text-blue-800"
                 >
-                  <LangStrip :spec="language" />
-                  <button @click="setLocaleSelected(language.locale, false)">
+                  {{ language.language }}
+                  <button
+                    type="button"
+                    @click="setLocaleSelected(language.locale, false)"
+                  >
                     <svg
                       width="8"
                       height="8"
@@ -66,7 +69,6 @@ import AppLayout from '../../shared/app-layout.vue';
 import ContentHeader from '../../shared/content-header.vue';
 import PillButton from '../../shared/pill-button.vue';
 import LanguageList from './language-list.vue';
-import LangStrip from './components/language-strip.vue';
 import {
   ResponseStatus,
   type LanguageListItemProps,
