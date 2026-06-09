@@ -673,7 +673,7 @@ export interface Providers {
 /// ----------------------------------------------------
 
 export interface SettingsPageProps {
-  sourceLanguage: LanguageSpecification;
+  sourceLanguage: LanguageTableItem;
   languageItems: LanguageTableItem[];
   providers: Providers;
   requireAppUpdate: boolean;

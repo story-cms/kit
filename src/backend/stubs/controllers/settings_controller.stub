@@ -79,7 +79,7 @@ export default class SettingsController {
   public async index(ctx: HttpContext) {
     cms.localeFromPath(ctx);
 
-    const sourceLanguage =
+    const sourceLanguageSpec =
       cms.config.languages.find(
         (lang: LanguageSpecification) => lang.locale === cms.sourceLocale,
       ) ?? cms.config.languages[0];
@@ -90,7 +90,25 @@ export default class SettingsController {
       (progressItems ?? []).map((item) => [item.locale, item.progress]),
     );
 
+    const defaultTranslationProgress = [
+      { name: 'Interface', done: 0, draft: 0, total: 0 },
+      { name: 'Content', done: 0, draft: 0, total: 0 },
+    ];
+
     const users = await User.query().where('name', '!=', 'redacted');
+
+    const sourceLanguage: LanguageTableItem = {
+      language: sourceLanguageSpec.language,
+      languageDirection: sourceLanguageSpec.languageDirection,
+      locale: sourceLanguageSpec.locale,
+      bibleLabel: sourceLanguageSpec.bibleLabel,
+      bibleVersion: sourceLanguageSpec.bibleVersion,
+      translationProgress:
+        translationProgressByLocale[sourceLanguageSpec.locale] ?? defaultTranslationProgress,
+      teamMembers: users
+        .filter((user) => user.language === sourceLanguageSpec.locale)
+        .map((user) => user.meta),
+    };
 
     const languageItems: LanguageTableItem[] = cms.config.languages
       .filter(
@@ -102,10 +120,8 @@ export default class SettingsController {
         locale: language.locale,
         bibleLabel: language.bibleLabel,
         bibleVersion: language.bibleVersion,
-        translationProgress: translationProgressByLocale[language.locale] ?? [
-          { name: 'Interface', done: 0, draft: 0, total: 0 },
-          { name: 'Content', done: 0, draft: 0, total: 0 },
-        ],
+        translationProgress:
+          translationProgressByLocale[language.locale] ?? defaultTranslationProgress,
         teamMembers: users
           .filter((user) => user.language === language.locale)
           .map((user) => user.meta),

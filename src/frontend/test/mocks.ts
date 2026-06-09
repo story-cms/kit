@@ -1059,12 +1059,42 @@ export const languageTableItems: LanguageTableItem[] = [
   },
 ];
 
-export const sourceLanguage: LanguageSpecification = {
+export const sourceLanguage: LanguageTableItem = {
   language: 'English | American',
   locale: 'en',
   languageDirection: 'ltr',
   bibleVersion: 'de4e12af7f28f599-01',
   bibleLabel: '(KJV) King James Version',
+  translationProgress: [
+    { name: 'Interface', done: 100, draft: 0, total: 100 },
+    { name: 'Content', done: 250, draft: 25, total: 300 },
+  ],
+  teamMembers: [
+    {
+      id: 1,
+      name: 'John Doe',
+      initials: 'JD',
+      email: 'john@example.com',
+      isManager: true,
+      isAdmin: true,
+      role: 'editor',
+      language: null,
+      hasPendingInvite: false,
+      isAllowed: isAllowedMock(true),
+    },
+    {
+      id: 2,
+      name: 'Jane Smith',
+      initials: 'JS',
+      email: 'jane.smith@example.com',
+      isManager: false,
+      isAdmin: false,
+      role: 'editor',
+      language: null,
+      hasPendingInvite: false,
+      isAllowed: isAllowedMock(true),
+    },
+  ],
 };
 
 export const manyLanguageTableItems: LanguageTableItem[] = [

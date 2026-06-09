@@ -30,14 +30,9 @@
       </ContentHeader>
     </template>
     <div class="mt-5">
-      <SourceLang
-        :spec="sourceLanguage"
-        @bible-translation-change="handleSourceBibleTranslationChange"
-      />
-    </div>
-    <div class="mt-7">
       <LanguagesTable
         :items="languageItems"
+        :source-language="sourceLanguage"
         @remove="handleRemove"
         @request-deletion="handleRequestDeletion"
         @bible-translation-change="handleTableBibleTranslationChange"
@@ -67,7 +62,6 @@ import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
 import Icon from '../shared/icon.vue';
 import PillButton from '../shared/pill-button.vue';
-import SourceLang from './languages/components/source-language.vue';
 import LanguagesTable from './languages/components/language-table.vue';
 import RequestAppUpdateModal from './languages/components/request-app-update-modal.vue';
 import RequestFeedbackModal from './languages/components/request-feedback-modal.vue';
@@ -206,13 +200,6 @@ const persistBibleTranslation = (
       },
     },
   );
-};
-
-const handleSourceBibleTranslationChange = (
-  bibleVersion: string,
-  bibleVersionName: string,
-) => {
-  persistBibleTranslation(sourceLanguage.value.locale, bibleVersion, bibleVersionName);
 };
 
 const handleTableBibleTranslationChange = (
