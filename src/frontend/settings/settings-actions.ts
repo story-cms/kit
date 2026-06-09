@@ -13,16 +13,6 @@ type PostSettingsOptions = {
 
 export const settingsActions = () => {
   const shared = useSharedStore();
-  const locale = shared.locale;
-
-  const settingsPath = () => `/${locale}/settings`;
-  const languagesEditPath = () => `/${locale}/settings/languages/edit`;
-  const languagesAddPath = () => `/${locale}/settings/languages/add`;
-  const supportPath = () => `/${locale}/settings/support`;
-  const languageRemovePath = (languageLocale: string) =>
-    `/${locale}/settings/languages/${languageLocale}/remove`;
-  const languageBibleTranslationPath = (languageLocale: string) =>
-    `/${locale}/settings/languages/${languageLocale}/bible-translation`;
 
   const postSettings = (
     url: string,
@@ -51,19 +41,5 @@ export const settingsActions = () => {
     });
   };
 
-  const visitSettings = (options: { onSuccess?: () => void } = {}) => {
-    router.visit(settingsPath(), { preserveScroll: true, ...options });
-  };
-
-  return {
-    settingsPath,
-    languagesEditPath,
-    languagesAddPath,
-    supportPath,
-    languageRemovePath,
-    languageBibleTranslationPath,
-    postSettings,
-    visitLanguagesEdit: () => router.visit(languagesEditPath()),
-    visitSettings,
-  };
+  return { postSettings };
 };

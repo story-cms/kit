@@ -61,6 +61,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import { router } from '@inertiajs/vue3';
 import AppLayout from '../../shared/app-layout.vue';
 import ContentHeader from '../../shared/content-header.vue';
 import PillButton from '../../shared/pill-button.vue';
@@ -84,7 +85,7 @@ import {
 const props = defineProps<LanguagesEditProps & SharedPageProps>();
 
 const shared = useSharedStore();
-const { languagesAddPath, postSettings, visitSettings } = settingsActions();
+const { postSettings } = settingsActions();
 
 shared.setFromProps(props);
 shared.setCurrentStoryName('');
@@ -148,12 +149,13 @@ const submitLanguages = (languages: LanguageSpecification[]) => {
   }));
 
   postSettings(
-    languagesAddPath(),
+    `/${shared.locale}/settings/languages/add`,
     { languages: payload },
     {
       failureMessage: 'Error adding languages',
       onSuccess: () => {
-        visitSettings({
+        router.visit(`/${shared.locale}/settings`, {
+          preserveScroll: true,
           onSuccess: () => {
             shared.addMessage(
               ResponseStatus.Confirmation,

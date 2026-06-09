@@ -21,7 +21,7 @@
             </div>
             <button
               class="rounded-full bg-blue-500 p-1 shadow-md hover:bg-blue-700"
-              @click="visitLanguagesEdit"
+              @click="router.visit(`/${shared.locale}/settings/languages/edit`)"
             >
               <Icon name="plus" class="text-white" />
             </button>
@@ -56,6 +56,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import { router } from '@inertiajs/vue3';
 import type { RequestPayload } from '@inertiajs/core';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
@@ -78,13 +79,7 @@ const props = defineProps<SettingsPageProps & SharedPageProps>();
 
 const shared = useSharedStore();
 const widgets = useWidgetsStore();
-const {
-  visitLanguagesEdit,
-  postSettings,
-  supportPath,
-  languageRemovePath,
-  languageBibleTranslationPath,
-} = settingsActions();
+const { postSettings } = settingsActions();
 
 shared.setFromProps(props);
 shared.setCurrentStoryName('');
@@ -121,7 +116,7 @@ const postSupportRequest = (
     onError?: () => void;
   } = {},
 ) => {
-  postSettings(supportPath(), payload as unknown as RequestPayload, options);
+  postSettings(`/${shared.locale}/settings/support`, payload as unknown as RequestPayload, options);
 };
 
 const handleRequestAppUpdateConfirm = (reasons: string[]) => {
@@ -148,7 +143,7 @@ const handleRequestAppUpdateConfirm = (reasons: string[]) => {
 
 const handleRemove = (item: LanguageTableItem) => {
   postSettings(
-    languageRemovePath(item.locale),
+    `/${shared.locale}/settings/languages/${item.locale}/remove`,
     {},
     {
       successMessage: 'Language removed',
@@ -177,7 +172,7 @@ const handleTableBibleTranslationChange = (
   bibleVersionName: string,
 ) => {
   postSettings(
-    languageBibleTranslationPath(item.locale),
+    `/${shared.locale}/settings/languages/${item.locale}/bible-translation`,
     { bibleVersion, bibleVersionName },
     {
       successMessage: 'Bible translation changed',
