@@ -1,25 +1,27 @@
 <template>
   <tr class="relative">
-    <td
-      class="flex flex-col whitespace-nowrap px-3 py-4 text-sm text-gray-800"
-      :class="{ 'gap-2': !isSource }"
-    >
-      <LangStrip :spec="item" />
-      <p
-        v-if="isSource"
-        class="text-xs font-normal uppercase leading-5 tracking-[0em] text-gray-500"
-      >
-        Source language
-      </p>
+    <td class="max-w-0 px-3 py-4 align-top text-sm text-gray-800">
+      <div class="flex min-w-0 flex-col" :class="{ 'gap-2': !isSource }">
+        <div class="min-w-0 [&_p]:truncate">
+          <LangStrip :spec="item" />
+        </div>
+        <p
+          v-if="isSource"
+          class="truncate text-xs font-normal uppercase leading-5 tracking-[0em] text-gray-500"
+        >
+          Source language
+        </p>
+      </div>
     </td>
     <td class="whitespace-nowrap px-3 py-4 align-top text-sm">
       <RingBlock :progress="rowProgress" />
     </td>
-    <td class="px-3 py-4 align-top text-sm text-gray-800">
-      <div v-if="item.teamMembers?.length" class="flex flex-col gap-1">
+    <td class="max-w-0 px-3 py-4 align-top text-sm text-gray-800">
+      <div v-if="item.teamMembers?.length" class="flex min-w-0 flex-col gap-1">
         <MemberRow
           v-for="member in item.teamMembers"
           :key="member.id"
+          class="min-w-0 [&_p]:truncate"
           :name="member.name"
           :email="member.email"
         />
@@ -32,8 +34,10 @@
         </p>
       </div>
     </td>
-    <td class="whitespace-nowrap px-3 py-4 text-sm font-normal leading-5 text-gray-500">
-      {{ truncate(item.bibleLabel, 30) }}
+    <td class="max-w-0 px-3 py-4 align-top text-sm font-normal leading-5 text-gray-500">
+      <p class="truncate" :title="item.bibleLabel ?? undefined">
+        {{ item.bibleLabel ?? '—' }}
+      </p>
     </td>
     <td class="py-4 pl-3 pr-4 text-right sm:pr-6">
       <button
@@ -108,8 +112,4 @@ const rowProgress = computed(() => {
   return props.item.translationProgress ?? [];
 });
 
-const truncate = (s: string | null | undefined, max: number) => {
-  const text = s ?? '—';
-  return text.length > max ? `${text.slice(0, max)}…` : text;
-};
 </script>

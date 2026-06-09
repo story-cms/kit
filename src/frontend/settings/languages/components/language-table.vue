@@ -6,12 +6,19 @@
     </p>
   </div>
   <div class="border-2 border-black/5 sm:rounded-lg">
-    <table class="min-w-full divide-y divide-gray-300">
+    <table class="w-full table-fixed divide-y divide-gray-300">
+      <colgroup>
+        <col class="w-[24%]" />
+        <col class="w-[16%]" />
+        <col class="w-[30%]" />
+        <col class="w-[22%]" />
+        <col class="w-[8%]" />
+      </colgroup>
       <thead class="bg-gray-50 uppercase">
         <tr>
           <th
             scope="col"
-            class="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
+            class="max-w-0 px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
           >
             Active translations
           </th>
@@ -23,17 +30,17 @@
           </th>
           <th
             scope="col"
-            class="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
+            class="max-w-0 px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
           >
             Team members
           </th>
           <th
             scope="col"
-            class="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
+            class="max-w-0 px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
           >
             Bible translation
           </th>
-          <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+          <th scope="col" class="relative w-12 py-3.5 pl-3 pr-4 sm:pr-6">
             <span class="sr-only">Actions</span>
           </th>
         </tr>
@@ -73,9 +80,9 @@
     />
 
     <Pagination
-      v-if="items.length > itemsPerPage"
+      v-if="totalItems > itemsPerPage"
       :current-page="currentPage"
-      :total-items="items.length"
+      :total-items="totalItems"
       :items-per-page="itemsPerPage"
       @page-change="handlePageChange"
     />
@@ -119,20 +126,34 @@ const hasTranslationContent = (item: LanguageTableItem) => {
 
 const currentPage = ref(1);
 const sortedItems = computed(() => sortLanguagesByDisplayName(props.items));
+const totalItems = computed(() => props.items.length + 1);
+
 const paginatedItems = computed(() => {
-  const startIndex = (currentPage.value - 1) * props.itemsPerPage;
-  const endIndex = startIndex + props.itemsPerPage;
-  return sortedItems.value.slice(startIndex, endIndex);
+  const sorted = sortedItems.value;
+
+  if (currentPage.value === 1) {
+    return sorted.slice(0, props.itemsPerPage - 1);
+  }
+
+  const startIndex = props.itemsPerPage - 1 + (currentPage.value - 2) * props.itemsPerPage;
+  return sorted.slice(startIndex, startIndex + props.itemsPerPage);
 });
 
-const displayRows = computed(() => [
-  { item: props.sourceLanguage, isSource: true, deletionMode: undefined },
-  ...paginatedItems.value.map((item) => ({
-    item,
-    isSource: false,
-    deletionMode: hasTranslationContent(item) ? ('request' as const) : ('remove' as const),
-  })),
-]);
+const displayRows = computed(() => {
+  const sourceRow =
+    currentPage.value === 1
+      ? [{ item: props.sourceLanguage, isSource: true, deletionMode: undefined }]
+      : [];
+
+  return [
+    ...sourceRow,
+    ...paginatedItems.value.map((item) => ({
+      item,
+      isSource: false,
+      deletionMode: hasTranslationContent(item) ? ('request' as const) : ('remove' as const),
+    })),
+  ];
+});
 
 const handlePageChange = (page: number) => {
   currentPage.value = page;
