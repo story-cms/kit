@@ -1,8 +1,11 @@
 <template>
-  <div
+  <component
+    :is="isReadOnly ? 'div' : 'label'"
+    :for="isReadOnly ? undefined : language.locale"
     class="grid w-[208px] grid-cols-[1fr_auto] gap-x-1 rounded-md px-2 py-5"
     :class="{
       'cursor-not-allowed bg-gray-100': isReadOnly,
+      'cursor-pointer': !isReadOnly,
       'bg-[#EFF6FF]': isSelected && !isReadOnly,
       'hover:bg-gray-100': isAvailable,
     }"
@@ -58,7 +61,7 @@
         </svg>
       </template>
     </div>
-  </div>
+  </component>
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
