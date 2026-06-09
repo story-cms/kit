@@ -76,16 +76,15 @@ import {
 } from '../../../types';
 import { languages as allLanguages } from './languages';
 import { useSharedStore } from '../../store';
-import { settingsActions } from '../settings-actions';
 import {
   compareLanguagesByDisplayName,
+  postSettings,
   sortLanguagesByDisplayName,
 } from '../../shared/helpers';
 
 const props = defineProps<LanguagesEditProps & SharedPageProps>();
 
 const shared = useSharedStore();
-const { postSettings } = settingsActions();
 
 shared.setFromProps(props);
 shared.setCurrentStoryName('');

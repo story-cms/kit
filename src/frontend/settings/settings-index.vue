@@ -65,7 +65,7 @@ import PillButton from '../shared/pill-button.vue';
 import LanguagesTable from './languages/components/language-table.vue';
 import RequestAppUpdateModal from './languages/components/request-app-update-modal.vue';
 import RequestFeedbackModal from './languages/components/request-feedback-modal.vue';
-import { settingsActions } from './settings-actions';
+import { postSettings } from '../shared/helpers';
 import {
   type LanguageTableItem,
   type SettingsPageProps,
@@ -79,7 +79,6 @@ const props = defineProps<SettingsPageProps & SharedPageProps>();
 
 const shared = useSharedStore();
 const widgets = useWidgetsStore();
-const { postSettings } = settingsActions();
 
 shared.setFromProps(props);
 shared.setCurrentStoryName('');
