@@ -61,11 +61,13 @@
           Change Bible translation
         </button>
         <button
-          v-if="!isSource"
+          v-if="!isSource && deletionMode"
           class="w-full px-6 py-2 pb-3 text-left text-sm font-normal leading-5 text-gray-800 hover:bg-gray-100"
           @click="emit('removeOrRequestDeletion', item)"
         >
-          {{ hasContent(item) ? 'Request language deletion' : 'Remove language' }}
+          {{
+            deletionMode === 'request' ? 'Request language deletion' : 'Remove language'
+          }}
         </button>
       </div>
     </td>
@@ -84,9 +86,10 @@ const props = withDefaults(
   defineProps<{
     item: LanguageTableItem;
     isSource?: boolean;
+    deletionMode?: 'remove' | 'request';
     openActionsLocale: string | null;
   }>(),
-  { isSource: false },
+  { isSource: false, deletionMode: undefined },
 );
 
 const emit = defineEmits<{
@@ -108,11 +111,5 @@ const rowProgress = computed(() => {
 const truncate = (s: string | null | undefined, max: number) => {
   const text = s ?? '—';
   return text.length > max ? `${text.slice(0, max)}…` : text;
-};
-
-const hasContent = (item: LanguageTableItem) => {
-  const content = item.translationProgress?.find((p) => p.name === 'Content');
-  const ui = item.translationProgress?.find((p) => p.name === 'Interface');
-  return (content?.done ?? 0) > 0 || (ui?.done ?? 0) > 0;
 };
 </script>

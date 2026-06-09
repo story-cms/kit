@@ -44,6 +44,7 @@
           :key="row.item.locale"
           :item="row.item"
           :is-source="row.isSource"
+          :deletion-mode="row.deletionMode"
           :open-actions-locale="openActionsLocale"
           @toggle-actions="toggleActions"
           @open-bible-translations="openBibleTranslationsModal"
@@ -110,6 +111,12 @@ const emit = defineEmits<{
   ];
 }>();
 
+const hasTranslationContent = (item: LanguageTableItem) => {
+  const content = item.translationProgress?.find((p) => p.name === 'Content');
+  const ui = item.translationProgress?.find((p) => p.name === 'Interface');
+  return (content?.done ?? 0) > 0 || (ui?.done ?? 0) > 0;
+};
+
 const currentPage = ref(1);
 const sortedItems = computed(() => sortLanguagesByDisplayName(props.items));
 const paginatedItems = computed(() => {
@@ -119,8 +126,12 @@ const paginatedItems = computed(() => {
 });
 
 const displayRows = computed(() => [
-  { item: props.sourceLanguage, isSource: true },
-  ...paginatedItems.value.map((item) => ({ item, isSource: false })),
+  { item: props.sourceLanguage, isSource: true, deletionMode: undefined },
+  ...paginatedItems.value.map((item) => ({
+    item,
+    isSource: false,
+    deletionMode: hasTranslationContent(item) ? ('request' as const) : ('remove' as const),
+  })),
 ]);
 
 const handlePageChange = (page: number) => {
@@ -146,11 +157,8 @@ const toggleActions = (locale: string) => {
 
 const handleRemoveOrRequestDeletion = (item: LanguageTableItem) => {
   openActionsLocale.value = null;
-  const content = item.translationProgress?.find((p) => p.name === 'Content');
-  const ui = item.translationProgress?.find((p) => p.name === 'Interface');
-  const hasContent = (content?.done ?? 0) > 0 || (ui?.done ?? 0) > 0;
 
-  if (hasContent) {
+  if (hasTranslationContent(item)) {
     requestDeletionModalLocale.value = item.locale;
   } else {
     removeModalLocale.value = item.locale;

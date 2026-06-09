@@ -21,7 +21,7 @@
             </div>
             <button
               class="rounded-full bg-blue-500 p-1 shadow-md hover:bg-blue-700"
-              @click="router.visit(`/${shared.locale}/settings/languages/edit`)"
+              @click="visitLanguagesEdit"
             >
               <Icon name="plus" class="text-white" />
             </button>
@@ -56,7 +56,6 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { router } from '@inertiajs/vue3';
 import type { RequestPayload } from '@inertiajs/core';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
@@ -65,6 +64,7 @@ import PillButton from '../shared/pill-button.vue';
 import LanguagesTable from './languages/components/language-table.vue';
 import RequestAppUpdateModal from './languages/components/request-app-update-modal.vue';
 import RequestFeedbackModal from './languages/components/request-feedback-modal.vue';
+import { settingsActions } from './settings-actions';
 import {
   type LanguageTableItem,
   type SettingsPageProps,
@@ -78,6 +78,13 @@ const props = defineProps<SettingsPageProps & SharedPageProps>();
 
 const shared = useSharedStore();
 const widgets = useWidgetsStore();
+const {
+  visitLanguagesEdit,
+  postSettings,
+  supportPath,
+  languageRemovePath,
+  languageBibleTranslationPath,
+} = settingsActions();
 
 shared.setFromProps(props);
 shared.setCurrentStoryName('');
@@ -114,18 +121,7 @@ const postSupportRequest = (
     onError?: () => void;
   } = {},
 ) => {
-  router.post(
-    `/${shared.locale}/settings/support`,
-    payload as unknown as RequestPayload,
-    {
-      preserveScroll: true,
-      onSuccess: options.onSuccess,
-      onError: (errors) => {
-        shared.setErrors(errors);
-        options.onError?.();
-      },
-    },
-  );
+  postSettings(supportPath(), payload as unknown as RequestPayload, options);
 };
 
 const handleRequestAppUpdateConfirm = (reasons: string[]) => {
@@ -151,18 +147,12 @@ const handleRequestAppUpdateConfirm = (reasons: string[]) => {
 };
 
 const handleRemove = (item: LanguageTableItem) => {
-  router.post(
-    `/${shared.locale}/settings/languages/${item.locale}/remove`,
+  postSettings(
+    languageRemovePath(item.locale),
     {},
     {
-      preserveScroll: true,
-      onSuccess: () => {
-        shared.addMessage(ResponseStatus.Confirmation, 'Language removed');
-      },
-      onError: (errors) => {
-        shared.setErrors(errors);
-        shared.addMessage(ResponseStatus.Failure, 'Error removing language');
-      },
+      successMessage: 'Language removed',
+      failureMessage: 'Error removing language',
     },
   );
 };
@@ -181,32 +171,18 @@ const handleRequestDeletion = (item: LanguageTableItem) => {
   );
 };
 
-const persistBibleTranslation = (
-  languageLocale: string,
-  bibleVersion: string,
-  bibleVersionName: string,
-) => {
-  router.post(
-    `/${shared.locale}/settings/languages/${languageLocale}/bible-translation`,
-    { bibleVersion, bibleVersionName },
-    {
-      preserveScroll: true,
-      onSuccess: () => {
-        shared.addMessage(ResponseStatus.Confirmation, 'Bible translation changed');
-      },
-      onError: (errors) => {
-        shared.setErrors(errors);
-        shared.addMessage(ResponseStatus.Failure, 'Error updating Bible translation');
-      },
-    },
-  );
-};
-
 const handleTableBibleTranslationChange = (
   item: LanguageTableItem,
   bibleVersion: string,
   bibleVersionName: string,
 ) => {
-  persistBibleTranslation(item.locale, bibleVersion, bibleVersionName);
+  postSettings(
+    languageBibleTranslationPath(item.locale),
+    { bibleVersion, bibleVersionName },
+    {
+      successMessage: 'Bible translation changed',
+      failureMessage: 'Error updating Bible translation',
+    },
+  );
 };
 </script>

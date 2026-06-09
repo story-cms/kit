@@ -88,6 +88,16 @@ function parseLanguageForSupport(spec: LanguageSpecification): SupportRequestLan
   return { name, nativeName: language, locale };
 }
 
+function findConfiguredLanguage(locale: string): LanguageSpecification | undefined {
+  return cms.config.languages.find(
+    (lang: LanguageSpecification) => lang.locale === locale,
+  );
+}
+
+function patchLanguages(languages: LanguageSpecification[]) {
+  return cms.patchConfig({ languages });
+}
+
 function supportCodeDefinition(code: string): SupportCodeDefinition | undefined {
   return Object.values(SUPPORT_CODES).find((definition) => definition.code === code);
 }
@@ -157,7 +167,7 @@ export default class SettingsController {
     );
 
     if (toAdd.length > 0) {
-      await cms.patchConfig({ languages: [...cms.config.languages, ...toAdd] });
+      await patchLanguages([...cms.config.languages, ...toAdd]);
     }
 
     return ctx.response.redirect().back();
@@ -172,9 +182,7 @@ export default class SettingsController {
       'bibleVersionName',
     ]);
 
-    const language = cms.config.languages.find(
-      (lang: LanguageSpecification) => lang.locale === languageLocale,
-    );
+    const language = findConfiguredLanguage(languageLocale);
     if (!language) {
       return ctx.response.notFound({ error: 'Language not found' });
     }
@@ -185,7 +193,7 @@ export default class SettingsController {
         : lang,
     );
 
-    await cms.patchConfig({ languages });
+    await patchLanguages(languages);
 
     return ctx.response.redirect().back();
   }
@@ -199,9 +207,7 @@ export default class SettingsController {
       return ctx.response.badRequest({ error: 'Cannot remove the source language' });
     }
 
-    const language = cms.config.languages.find(
-      (lang: LanguageSpecification) => lang.locale === languageLocale,
-    );
+    const language = findConfiguredLanguage(languageLocale);
     if (!language) {
       return ctx.response.notFound({ error: 'Language not found' });
     }
@@ -210,7 +216,7 @@ export default class SettingsController {
       (lang: LanguageSpecification) => lang.locale !== languageLocale,
     );
 
-    await cms.patchConfig({ languages });
+    await patchLanguages(languages);
 
     return ctx.response.redirect().back();
   }
@@ -233,9 +239,7 @@ export default class SettingsController {
 
     let language: SupportRequestLanguageSpec | undefined;
     if (supportCode === 'REMOVE_LANGUAGE' && removeLanguageCode) {
-      const languageSpec = cms.config.languages.find(
-        (lang: LanguageSpecification) => lang.locale === removeLanguageCode,
-      );
+      const languageSpec = findConfiguredLanguage(removeLanguageCode);
       if (languageSpec) {
         language = parseLanguageForSupport(languageSpec);
       }

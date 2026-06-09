@@ -28,12 +28,10 @@
                 <li
                   v-for="language in selectedLanguages"
                   :key="language.locale"
-                  class="flex items-center justify-between gap-2 rounded-full bg-blue-100 px-[10px] py-1 text-sm font-medium leading-5"
+                  class="flex items-center justify-between gap-2 rounded-full bg-blue-100 px-[10px] py-1"
                 >
-                  <span class="text-sm font-normal leading-5 text-blue-800">
-                    {{ language.language }}</span
-                  >
-                  <button @click="removeSelectedLanguage(language.locale)">
+                  <LangStrip :spec="language" />
+                  <button @click="setLocaleSelected(language.locale, false)">
                     <svg
                       width="8"
                       height="8"
@@ -57,27 +55,27 @@
         </template>
       </ContentHeader>
     </template>
-    <LanguageList :items="languageListItems" @update="handleSelectionUpdate" />
+    <LanguageList :items="languageListItems" @update="setLocaleSelected" />
   </AppLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { router } from '@inertiajs/vue3';
 import AppLayout from '../../shared/app-layout.vue';
 import ContentHeader from '../../shared/content-header.vue';
 import PillButton from '../../shared/pill-button.vue';
 import LanguageList from './language-list.vue';
-import type {
-  LanguageListItemProps,
-  LanguagesEditProps,
-  LanguageSpecification,
-  SharedPageProps,
+import LangStrip from './components/language-strip.vue';
+import {
+  ResponseStatus,
+  type LanguageListItemProps,
+  type LanguagesEditProps,
+  type LanguageSpecification,
+  type SharedPageProps,
 } from '../../../types';
-import { ResponseStatus } from '../../../types';
 import { languages as allLanguages } from './languages';
-
 import { useSharedStore } from '../../store';
+import { settingsActions } from '../settings-actions';
 import {
   compareLanguagesByDisplayName,
   sortLanguagesByDisplayName,
@@ -86,6 +84,7 @@ import {
 const props = defineProps<LanguagesEditProps & SharedPageProps>();
 
 const shared = useSharedStore();
+const { languagesAddPath, postSettings, visitSettings } = settingsActions();
 
 shared.setFromProps(props);
 shared.setCurrentStoryName('');
@@ -98,35 +97,36 @@ const selectedLocales = ref<Set<string>>(new Set());
 
 const addedLocales = computed(() => new Set(props.addedLanguages.map((l) => l.locale)));
 
-const selectedLanguages = computed((): LanguageSpecification[] =>
-  sortLanguagesByDisplayName(
-    allLanguages.filter((language) => selectedLocales.value.has(language.locale)),
-  ),
-);
+const languageState = computed(() => {
+  const listItems: LanguageListItemProps[] = [];
+  const selected: LanguageSpecification[] = [];
 
-const languageListItems = computed((): LanguageListItemProps[] =>
-  allLanguages
-    .map((language): LanguageListItemProps => {
-      if (addedLocales.value.has(language.locale))
-        return { language, status: 'readonly' };
-      const status = selectedLocales.value.has(language.locale)
+  for (const language of allLanguages) {
+    const status = addedLocales.value.has(language.locale)
+      ? 'readonly'
+      : selectedLocales.value.has(language.locale)
         ? 'selected'
         : 'available';
-      return { language, status };
-    })
-    .sort((a, b) => compareLanguagesByDisplayName(a.language, b.language)),
-);
 
-const handleSelectionUpdate = (locale: string, isSelected: boolean) => {
+    listItems.push({ language, status });
+    if (status === 'selected') selected.push(language);
+  }
+
+  return {
+    listItems: listItems.sort((a, b) =>
+      compareLanguagesByDisplayName(a.language, b.language),
+    ),
+    selectedLanguages: sortLanguagesByDisplayName(selected),
+  };
+});
+
+const languageListItems = computed(() => languageState.value.listItems);
+const selectedLanguages = computed(() => languageState.value.selectedLanguages);
+
+const setLocaleSelected = (locale: string, isSelected: boolean) => {
   const next = new Set(selectedLocales.value);
   if (isSelected) next.add(locale);
   else next.delete(locale);
-  selectedLocales.value = next;
-};
-
-const removeSelectedLanguage = (locale: string) => {
-  const next = new Set(selectedLocales.value);
-  next.delete(locale);
   selectedLocales.value = next;
 };
 
@@ -147,14 +147,13 @@ const submitLanguages = (languages: LanguageSpecification[]) => {
     languageDirection,
   }));
 
-  router.post(
-    `/${shared.locale}/settings/languages/add`,
+  postSettings(
+    languagesAddPath(),
     { languages: payload },
     {
-      preserveScroll: true,
+      failureMessage: 'Error adding languages',
       onSuccess: () => {
-        router.visit(`/${shared.locale}/settings`, {
-          preserveScroll: true,
+        visitSettings({
           onSuccess: () => {
             shared.addMessage(
               ResponseStatus.Confirmation,
@@ -163,10 +162,6 @@ const submitLanguages = (languages: LanguageSpecification[]) => {
             );
           },
         });
-      },
-      onError: (errors) => {
-        shared.setErrors(errors);
-        shared.addMessage(ResponseStatus.Failure, 'Error adding languages');
       },
     },
   );
