@@ -53,19 +53,36 @@ const SUPPORT_CODES = {
 
 type SupportCode = (typeof SUPPORT_CODES)[keyof typeof SUPPORT_CODES]['code'];
 
-function languageDisplayName(language: string): string {
-  return language.split('|')[0].trim();
+const defaultTranslationProgress = [
+  { name: 'Interface', done: 0, draft: 0, total: 0 },
+  { name: 'Content', done: 0, draft: 0, total: 0 },
+];
+
+function toLanguageTableItem(
+  spec: LanguageSpecification,
+  translationProgressByLocale: Record<string, LanguageTableItem['translationProgress']>,
+  users: InstanceType<typeof User>[],
+): LanguageTableItem {
+  return {
+    language: spec.language,
+    languageDirection: spec.languageDirection,
+    locale: spec.locale,
+    bibleLabel: spec.bibleLabel,
+    bibleVersion: spec.bibleVersion,
+    translationProgress:
+      translationProgressByLocale[spec.locale] ?? defaultTranslationProgress,
+    teamMembers: users
+      .filter((user) => user.language === spec.locale)
+      .map((user) => user.meta),
+  };
 }
 
-function parseLanguageForSupport(
-  spec: LanguageSpecification,
-): SupportRequestLanguageSpec {
+function parseLanguageForSupport(spec: LanguageSpecification): SupportRequestLanguageSpec {
   const { language, locale } = spec;
-  const name = languageDisplayName(language);
+  const name = language.split('|')[0].trim();
 
   if (language.includes('|')) {
-    const nativeName = language.split('|')[1].trim();
-    return { name, nativeName, locale };
+    return { name, nativeName: language.split('|')[1].trim(), locale };
   }
 
   return { name, nativeName: language, locale };
@@ -90,42 +107,21 @@ export default class SettingsController {
       (progressItems ?? []).map((item) => [item.locale, item.progress]),
     );
 
-    const defaultTranslationProgress = [
-      { name: 'Interface', done: 0, draft: 0, total: 0 },
-      { name: 'Content', done: 0, draft: 0, total: 0 },
-    ];
-
     const users = await User.query().where('name', '!=', 'redacted');
 
-    const sourceLanguage: LanguageTableItem = {
-      language: sourceLanguageSpec.language,
-      languageDirection: sourceLanguageSpec.languageDirection,
-      locale: sourceLanguageSpec.locale,
-      bibleLabel: sourceLanguageSpec.bibleLabel,
-      bibleVersion: sourceLanguageSpec.bibleVersion,
-      translationProgress:
-        translationProgressByLocale[sourceLanguageSpec.locale] ?? defaultTranslationProgress,
-      teamMembers: users
-        .filter((user) => user.language === sourceLanguageSpec.locale)
-        .map((user) => user.meta),
-    };
+    const sourceLanguage = toLanguageTableItem(
+      sourceLanguageSpec,
+      translationProgressByLocale,
+      users,
+    );
 
     const languageItems: LanguageTableItem[] = cms.config.languages
       .filter(
         (language: LanguageSpecification) => language.locale !== sourceLanguage.locale,
       )
-      .map((language: LanguageSpecification) => ({
-        language: language.language,
-        languageDirection: language.languageDirection,
-        locale: language.locale,
-        bibleLabel: language.bibleLabel,
-        bibleVersion: language.bibleVersion,
-        translationProgress:
-          translationProgressByLocale[language.locale] ?? defaultTranslationProgress,
-        teamMembers: users
-          .filter((user) => user.language === language.locale)
-          .map((user) => user.meta),
-      }));
+      .map((language: LanguageSpecification) =>
+        toLanguageTableItem(language, translationProgressByLocale, users),
+      );
 
     const props: SettingsPageProps = {
       sourceLanguage,

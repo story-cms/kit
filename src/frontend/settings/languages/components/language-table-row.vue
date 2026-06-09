@@ -1,5 +1,5 @@
 <template>
-  <tr class="relative" :class="{ 'bg-gray-50': isSource }">
+  <tr class="relative">
     <td
       class="flex flex-col whitespace-nowrap px-3 py-4 text-sm text-gray-800"
       :class="{ 'gap-2': !isSource }"
