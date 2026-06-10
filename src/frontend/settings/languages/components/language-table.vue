@@ -52,8 +52,6 @@
           :item="row.item"
           :is-source="row.isSource"
           :deletion-mode="row.deletionMode"
-          :open-actions-locale="openActionsLocale"
-          @toggle-actions="toggleActions"
           @open-bible-translations="openBibleTranslationsModal"
           @remove-or-request-deletion="handleRemoveOrRequestDeletion"
         />
@@ -162,7 +160,6 @@ const handlePageChange = (page: number) => {
   currentPage.value = page;
 };
 
-const openActionsLocale = ref<string | null>(null);
 const removeModalLocale = ref<string | null>(null);
 const requestDeletionModalLocale = ref<string | null>(null);
 const bibleTranslationsModalLocale = ref<string | null>(null);
@@ -176,13 +173,7 @@ const bibleTranslationsModalItem = computed(
     ) ?? null,
 );
 
-const toggleActions = (locale: string) => {
-  openActionsLocale.value = openActionsLocale.value === locale ? null : locale;
-};
-
 const handleRemoveOrRequestDeletion = (item: LanguageTableItem) => {
-  openActionsLocale.value = null;
-
   if (hasTranslationContent(item)) {
     requestDeletionModalLocale.value = item.locale;
   } else {
@@ -203,7 +194,6 @@ const confirmRequestDeletion = () => {
 };
 
 const openBibleTranslationsModal = (item: LanguageTableItem) => {
-  openActionsLocale.value = null;
   bibleTranslationsModalLocale.value = item.locale;
 };
 
