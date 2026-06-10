@@ -635,7 +635,7 @@ export interface LanguageSpecification {
 
 export interface LanguageTableItem extends LanguageSpecification {
   translationProgress?: Omit<Progress, 'lastUpdated'>[];
-  teamMembers?: UserInterface[];
+  teamMembers?: UserMeta[];
 }
 
 export interface Providers {

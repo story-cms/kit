@@ -4,11 +4,8 @@
 import type { HttpContext } from '@adonisjs/core/http';
 import mail from '@adonisjs/mail/services/main';
 import {
-  User,
-  ProgressService,
+  LanguageService,
   type LanguageSpecification,
-  type LanguageTableItem,
-  type LanguagesEditProps,
   type SettingsPageProps,
   type UserInterface,
 } from '@story-cms/kit';
@@ -16,122 +13,14 @@ import {
 import cms from '#services/cms';
 import providers from '#config/providers';
 
-interface SupportRequestLanguageSpec {
-  name: string;
-  nativeName: string;
-  locale: string;
-}
-
-interface SupportCodeDefinition {
-  code: string;
-  description: string;
-  subject: string;
-}
-
-const SUPPORT_CODES = {
-  REMOVE_LANGUAGE: {
-    code: 'REMOVE_LANGUAGE',
-    subject: 'Remove language',
-    description: 'Language requested to be removed',
-  },
-  UPDATE_LANGUAGE: {
-    code: 'UPDATE_LANGUAGE',
-    subject: 'App update - new language added.',
-    description: 'Language requested to be added',
-  },
-  UPDATE_CONTENT: {
-    code: 'UPDATE_CONTENT',
-    subject: 'App update - content added.',
-    description: 'Content requested to be updated',
-  },
-  UPDATE_APP: {
-    code: 'UPDATE_APP',
-    subject: 'App update - new language and content.',
-    description: 'App update requested for new language and new content',
-  },
-} as const satisfies Record<string, SupportCodeDefinition>;
-
-type SupportCode = (typeof SUPPORT_CODES)[keyof typeof SUPPORT_CODES]['code'];
-
-const defaultTranslationProgress = [
-  { name: 'Interface', done: 0, draft: 0, total: 0 },
-  { name: 'Content', done: 0, draft: 0, total: 0 },
-];
-
-function toLanguageTableItem(
-  spec: LanguageSpecification,
-  translationProgressByLocale: Record<string, LanguageTableItem['translationProgress']>,
-  users: InstanceType<typeof User>[],
-): LanguageTableItem {
-  return {
-    language: spec.language,
-    languageDirection: spec.languageDirection,
-    locale: spec.locale,
-    bibleLabel: spec.bibleLabel,
-    bibleVersion: spec.bibleVersion,
-    translationProgress:
-      translationProgressByLocale[spec.locale] ?? defaultTranslationProgress,
-    teamMembers: users
-      .filter((user) => user.language === spec.locale)
-      .map((user) => user.meta),
-  };
-}
-
-function parseLanguageForSupport(spec: LanguageSpecification): SupportRequestLanguageSpec {
-  const { language, locale } = spec;
-  const name = language.split('|')[0].trim();
-
-  if (language.includes('|')) {
-    return { name, nativeName: language.split('|')[1].trim(), locale };
-  }
-
-  return { name, nativeName: language, locale };
-}
-
-function findConfiguredLanguage(locale: string): LanguageSpecification | undefined {
-  return cms.config.languages.find(
-    (lang: LanguageSpecification) => lang.locale === locale,
-  );
-}
-
-function patchLanguages(languages: LanguageSpecification[]) {
-  return cms.patchConfig({ languages });
-}
-
-function supportCodeDefinition(code: string): SupportCodeDefinition | undefined {
-  return Object.values(SUPPORT_CODES).find((definition) => definition.code === code);
-}
-
 export default class SettingsController {
   public async index(ctx: HttpContext) {
     cms.localeFromPath(ctx);
 
-    const sourceLanguageSpec =
-      cms.config.languages.find(
-        (lang: LanguageSpecification) => lang.locale === cms.sourceLocale,
-      ) ?? cms.config.languages[0];
-
-    const progressService = new ProgressService(cms);
-    const progressItems = await progressService.progress(ctx.auth.user! as UserInterface);
-    const translationProgressByLocale = Object.fromEntries(
-      (progressItems ?? []).map((item) => [item.locale, item.progress]),
+    const languageService = new LanguageService(cms);
+    const { sourceLanguage, languageItems } = await languageService.settingsIndex(
+      ctx.auth.user! as UserInterface,
     );
-
-    const users = await User.query().where('name', '!=', 'redacted');
-
-    const sourceLanguage = toLanguageTableItem(
-      sourceLanguageSpec,
-      translationProgressByLocale,
-      users,
-    );
-
-    const languageItems: LanguageTableItem[] = cms.config.languages
-      .filter(
-        (language: LanguageSpecification) => language.locale !== sourceLanguage.locale,
-      )
-      .map((language: LanguageSpecification) =>
-        toLanguageTableItem(language, translationProgressByLocale, users),
-      );
 
     const props: SettingsPageProps = {
       sourceLanguage,
@@ -147,9 +36,7 @@ export default class SettingsController {
   public async editLanguage(ctx: HttpContext) {
     cms.localeFromPath(ctx);
 
-    const props: LanguagesEditProps = {
-      addedLanguages: cms.config.languages,
-    };
+    const props = new LanguageService(cms).languagesEdit();
 
     // @ts-expect-error Inertia page name
     return ctx.inertia.render('LanguagesEdit', props);
@@ -159,16 +46,7 @@ export default class SettingsController {
     cms.localeFromPath(ctx);
 
     const payload = ctx.request.all() as { languages?: LanguageSpecification[] };
-    const existingLocales = new Set(
-      cms.config.languages.map((lang: LanguageSpecification) => lang.locale),
-    );
-    const toAdd = (payload.languages ?? []).filter(
-      (lang: LanguageSpecification) => !existingLocales.has(lang.locale),
-    );
-
-    if (toAdd.length > 0) {
-      await patchLanguages([...cms.config.languages, ...toAdd]);
-    }
+    await new LanguageService(cms).addLanguages(payload.languages ?? []);
 
     return ctx.response.redirect().back();
   }
@@ -176,24 +54,23 @@ export default class SettingsController {
   public async updateBibleTranslation(ctx: HttpContext) {
     cms.localeFromPath(ctx);
 
-    const languageLocale = ctx.params.languageLocale;
     const { bibleVersion, bibleVersionName } = ctx.request.only([
       'bibleVersion',
       'bibleVersionName',
     ]);
 
-    const language = findConfiguredLanguage(languageLocale);
-    if (!language) {
-      return ctx.response.notFound({ error: 'Language not found' });
+    try {
+      await new LanguageService(cms).updateBibleTranslation(
+        ctx.params.languageLocale,
+        bibleVersion,
+        bibleVersionName,
+      );
+    } catch (error) {
+      if ((error as Error).message === 'Language not found') {
+        return ctx.response.notFound({ error: 'Language not found' });
+      }
+      throw error;
     }
-
-    const languages = cms.config.languages.map((lang: LanguageSpecification) =>
-      lang.locale === languageLocale
-        ? { ...lang, bibleVersion, bibleLabel: bibleVersionName }
-        : lang,
-    );
-
-    await patchLanguages(languages);
 
     return ctx.response.redirect().back();
   }
@@ -201,22 +78,18 @@ export default class SettingsController {
   public async removeLanguage(ctx: HttpContext) {
     cms.localeFromPath(ctx);
 
-    const languageLocale = ctx.params.languageLocale;
-
-    if (languageLocale === cms.sourceLocale) {
-      return ctx.response.badRequest({ error: 'Cannot remove the source language' });
+    try {
+      await new LanguageService(cms).removeLanguage(ctx.params.languageLocale);
+    } catch (error) {
+      const message = (error as Error).message;
+      if (message === 'Cannot remove the source language') {
+        return ctx.response.badRequest({ error: message });
+      }
+      if (message === 'Language not found') {
+        return ctx.response.notFound({ error: message });
+      }
+      throw error;
     }
-
-    const language = findConfiguredLanguage(languageLocale);
-    if (!language) {
-      return ctx.response.notFound({ error: 'Language not found' });
-    }
-
-    const languages = cms.config.languages.filter(
-      (lang: LanguageSpecification) => lang.locale !== languageLocale,
-    );
-
-    await patchLanguages(languages);
 
     return ctx.response.redirect().back();
   }
@@ -227,40 +100,37 @@ export default class SettingsController {
     const { supportCode, removeLanguageCode } = ctx.request.only([
       'supportCode',
       'removeLanguageCode',
-    ]) as {
-      supportCode?: SupportCode;
-      removeLanguageCode?: string;
-    };
+    ]);
 
-    const definition = supportCode ? supportCodeDefinition(supportCode) : undefined;
-    if (!definition) {
+    if (!supportCode) {
       return ctx.response.badRequest({ error: 'Invalid support code' });
     }
 
-    let language: SupportRequestLanguageSpec | undefined;
-    if (supportCode === 'REMOVE_LANGUAGE' && removeLanguageCode) {
-      const languageSpec = findConfiguredLanguage(removeLanguageCode);
-      if (languageSpec) {
-        language = parseLanguageForSupport(languageSpec);
+    try {
+      const { subject, details, language } = new LanguageService(
+        cms,
+      ).getSupportRequestDetails(supportCode, removeLanguageCode);
+
+      await mail.send((message) => {
+        message
+          .to(cms.config.supportEmail, 'Journey Studio Support')
+          .subject(subject)
+          .htmlView('emails/support_request', {
+            appName: cms.config.name,
+            requester: ctx.auth.user?.name ?? 'Unknown',
+            subject,
+            supportCode,
+            details,
+            language,
+            logo: cms.config.logo,
+          });
+      });
+    } catch (error) {
+      if ((error as Error).message === 'Invalid support code') {
+        return ctx.response.badRequest({ error: 'Invalid support code' });
       }
+      throw error;
     }
-
-    const subject = {{ '`Support request: ${definition.subject}`' }};
-
-    await mail.send((message) => {
-      message
-        .to(cms.config.supportEmail, 'Journey Studio Support')
-        .subject(subject)
-        .htmlView('emails/support_request', {
-          appName: cms.config.name,
-          requester: ctx.auth.user?.name ?? 'Unknown',
-          subject,
-          supportCode,
-          details: definition.description,
-          language,
-          logo: cms.config.logo,
-        });
-    });
 
     return ctx.response.redirect().back();
   }
