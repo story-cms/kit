@@ -11,16 +11,16 @@
           />
         </template>
         <template #extra-actions>
-          <div class="flex items-center justify-between pb-4">
+          <div class="flex justify-between items-center pb-4">
             <div>
-              <h3 class="text-xl/7 font-semibold leading-7 text-gray-800">Languages</h3>
-              <p class="text-sm/5 font-normal leading-5 text-gray-500">
+              <h3 class="font-semibold leading-7 text-gray-800 text-xl/7">Languages</h3>
+              <p class="font-normal leading-5 text-gray-500 text-sm/5">
                 Here you can manage your languages. Press the blue + to add a new
                 language.
               </p>
             </div>
             <button
-              class="rounded-full bg-blue-500 p-1 shadow-md hover:bg-blue-700"
+              class="p-1 bg-blue-500 rounded-full shadow-md hover:bg-blue-700"
               @click="router.visit(`/${shared.locale}/settings/languages/edit`)"
             >
               <Icon name="plus" class="text-white" />
@@ -65,7 +65,7 @@ import PillButton from '../shared/pill-button.vue';
 import LanguagesTable from './languages/components/language-table.vue';
 import RequestAppUpdateModal from './languages/components/request-app-update-modal.vue';
 import RequestFeedbackModal from './languages/components/request-feedback-modal.vue';
-import { postSettings } from '../shared/helpers';
+import { postWithPayload } from '../shared/helpers';
 import {
   type LanguageTableItem,
   type SettingsPageProps,
@@ -108,16 +108,6 @@ const buildAppUpdatePayload = (reasons: string[]): SupportRequest | null => {
   return null;
 };
 
-const postSupportRequest = (
-  payload: SupportRequest,
-  options: {
-    onSuccess?: () => void;
-    onError?: () => void;
-  } = {},
-) => {
-  postSettings(`/${shared.locale}/settings/support`, payload as unknown as RequestPayload, options);
-};
-
 const handleRequestAppUpdateConfirm = (reasons: string[]) => {
   showRequestAppUpdateModal.value = false;
 
@@ -128,7 +118,7 @@ const handleRequestAppUpdateConfirm = (reasons: string[]) => {
     return;
   }
 
-  postSupportRequest(payload, {
+  postWithPayload(`/${shared.locale}/settings/support`, payload as unknown as RequestPayload, {
     onSuccess: () => {
       feedbackModalVariant.value = 'success';
       showFeedbackModal.value = true;
@@ -141,7 +131,7 @@ const handleRequestAppUpdateConfirm = (reasons: string[]) => {
 };
 
 const handleRemove = (item: LanguageTableItem) => {
-  postSettings(
+  postWithPayload(
     `/${shared.locale}/settings/languages/${item.locale}/remove`,
     {},
     {
@@ -152,7 +142,8 @@ const handleRemove = (item: LanguageTableItem) => {
 };
 
 const handleRequestDeletion = (item: LanguageTableItem) => {
-  postSupportRequest(
+  postWithPayload(
+    `/${shared.locale}/settings/support`,
     { supportCode: 'REMOVE_LANGUAGE', removeLanguageCode: item.locale },
     {
       onSuccess: () => {
@@ -170,7 +161,7 @@ const handleTableBibleTranslationChange = (
   bibleVersion: string,
   bibleVersionName: string,
 ) => {
-  postSettings(
+  postWithPayload(
     `/${shared.locale}/settings/languages/${item.locale}/bible-translation`,
     { bibleVersion, bibleVersionName },
     {

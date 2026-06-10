@@ -19,16 +19,16 @@
         <template #extra-actions>
           <div
             v-if="selectedLanguages.length > 0"
-            class="flex items-center justify-between pb-4"
+            class="flex justify-between items-center pb-4"
           >
             <div>
               <h3 class="text-sm font-medium leading-5 text-gray-800">Selected</h3>
 
-              <ul class="mt-2 flex flex-wrap gap-2">
+              <ul class="flex flex-wrap gap-2 mt-2">
                 <li
                   v-for="language in selectedLanguages"
                   :key="language.locale"
-                  class="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-1 text-xs font-medium leading-4 text-blue-800"
+                  class="inline-flex gap-1 items-center px-2 py-1 text-xs font-medium leading-4 text-blue-800 bg-blue-100 rounded-full"
                 >
                   {{ language.language }}
                   <button
@@ -80,7 +80,7 @@ import { languages as allLanguages } from './languages';
 import { useSharedStore } from '../../store';
 import {
   compareLanguagesByDisplayName,
-  postSettings,
+  postWithPayload,
   sortLanguagesByDisplayName,
 } from '../../shared/helpers';
 
@@ -99,31 +99,28 @@ const selectedLocales = ref<Set<string>>(new Set());
 
 const addedLocales = computed(() => new Set(props.addedLanguages.map((l) => l.locale)));
 
-const languageState = computed(() => {
-  const listItems: LanguageListItemProps[] = [];
-  const selected: LanguageSpecification[] = [];
-
-  for (const language of allLanguages) {
-    const status = addedLocales.value.has(language.locale)
+const languageListItems = computed(() => {
+  const listItems: LanguageListItemProps[] = allLanguages.map((language) => ({
+    language,
+    status: addedLocales.value.has(language.locale)
       ? 'readonly'
       : selectedLocales.value.has(language.locale)
         ? 'selected'
-        : 'available';
+        : 'available',
+  }));
 
-    listItems.push({ language, status });
-    if (status === 'selected') selected.push(language);
-  }
-
-  return {
-    listItems: listItems.sort((a, b) =>
-      compareLanguagesByDisplayName(a.language, b.language),
-    ),
-    selectedLanguages: sortLanguagesByDisplayName(selected),
-  };
+  return listItems.sort((a, b) =>
+    compareLanguagesByDisplayName(a.language, b.language),
+  );
 });
 
-const languageListItems = computed(() => languageState.value.listItems);
-const selectedLanguages = computed(() => languageState.value.selectedLanguages);
+const selectedLanguages = computed(() =>
+  sortLanguagesByDisplayName(
+    languageListItems.value
+      .filter((item) => item.status === 'selected')
+      .map((item) => item.language),
+  ),
+);
 
 const setLocaleSelected = (locale: string, isSelected: boolean) => {
   const next = new Set(selectedLocales.value);
@@ -149,7 +146,7 @@ const submitLanguages = (languages: LanguageSpecification[]) => {
     languageDirection,
   }));
 
-  postSettings(
+  postWithPayload(
     `/${shared.locale}/settings/languages/add`,
     { languages: payload },
     {

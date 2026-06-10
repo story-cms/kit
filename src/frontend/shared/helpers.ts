@@ -308,9 +308,7 @@ export function compareLanguagesByDisplayName(
   a: LanguageSortable,
   b: LanguageSortable,
 ): number {
-  return languageDisplayName(a.language).localeCompare(
-    languageDisplayName(b.language),
-  );
+  return languageDisplayName(a.language).localeCompare(languageDisplayName(b.language));
 }
 
 export function sortLanguagesByDisplayName<T extends LanguageSortable>(
@@ -353,7 +351,7 @@ export function replaceLocaleInPath(
   return `/${segments.join('/')}`;
 }
 
-type PostSettingsOptions = {
+type PostOptions = {
   onSuccess?: () => void;
   onError?: () => void;
   successMessage?: string;
@@ -361,10 +359,10 @@ type PostSettingsOptions = {
   failureMessage?: string;
 };
 
-export const postSettings = (
+export const postWithPayload = (
   url: string,
   payload: Record<string, unknown> | object = {},
-  options: PostSettingsOptions = {},
+  options: PostOptions = {},
 ) => {
   const shared = useSharedStore();
 
