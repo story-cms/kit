@@ -207,6 +207,7 @@ const toggle = (index: number) => {
 
 const removedIndices = ref(new Set<number>());
 
+// This does soft remove
 const toggleRemove = (index: number) => {
   if (removedIndices.value.has(index)) {
     removedIndices.value.delete(index);

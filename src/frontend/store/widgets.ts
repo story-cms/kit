@@ -51,6 +51,7 @@ export const useWidgetsStore = defineStore('widgets', () => {
   // track removed items in flexible lists
 
   const removedItems = ref<Record<string, number[]>>({});
+  // This does soft remove
   const toggleRemovedIndex = (path: string, index: number): void => {
     const fresh = { ...removedItems.value };
     fresh[path] = Array.from(removedItems.value[path] || []);
