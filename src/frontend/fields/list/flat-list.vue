@@ -22,7 +22,7 @@
           >
             <span
               v-if="!props.isReadOnly"
-              class="flex h-10 w-10 items-center justify-center"
+              class="flex justify-center items-center w-10 h-10"
             >
               <Icon name="minus" class="size-5" />
             </span>
@@ -35,9 +35,9 @@
           >
             <span
               v-if="!props.isReadOnly"
-              class="flex h-10 w-10 items-center justify-center"
+              class="flex justify-center items-center w-10 h-10"
             >
-              <Icon name="trash" class="h-auto w-auto" />
+              <Icon name="trash" class="w-auto h-auto" />
             </span>
           </button>
         </template>
@@ -59,9 +59,9 @@
       </template>
       <template v-else-if="isRemoved(index)">
         <template v-if="canMutate">
-          <li class="relative flex items-center justify-between">
+          <li class="flex relative justify-between items-center">
             <span
-              class="absolute left-0 right-0 top-1/2 border-t border-gray-300"
+              class="absolute right-0 left-0 top-1/2 border-t border-gray-300"
             ></span>
             <div
               class="z-[1] inline-flex items-center rounded-full border border-gray-300 bg-gray-200 px-4 py-1.5 text-sm font-medium leading-5 text-gray-500 shadow-sm"
@@ -75,10 +75,10 @@
               @click="toggleRemove(index)"
             >
               <span
-                class="pointer-events-none absolute right-full top-1/2 h-px -translate-y-1/2 bg-gray-300"
+                class="absolute top-1/2 right-full h-px bg-gray-300 -translate-y-1/2 pointer-events-none"
                 :style="{ width: `${shared.sourceSectionWidth}px` }"
               ></span>
-              <span class="flex h-10 w-10 items-center justify-center">
+              <span class="flex justify-center items-center w-10 h-10">
                 <Icon name="plus-mini" class="size-5" />
               </span>
             </button>
@@ -86,11 +86,11 @@
         </template>
       </template>
     </ul>
-    <div v-if="canMutate" class="mt-8 flex flex-row items-center gap-4">
+    <div v-if="canMutate" class="flex flex-row gap-4 items-center mt-8">
       <AddItemButton :label="field.label" @add="emit('addSet')" />
       <div v-if="showEmptyListWarning()">
         <div
-          class="flex flex-row items-center rounded-full border bg-white p-2 text-error"
+          class="flex flex-row items-center p-2 bg-white rounded-full border text-error"
         >
           <Icon name="exclamation" class="pr-2" />
           <p class="text-sm">At least one item is required</p>
@@ -169,8 +169,18 @@ const hasSourceItem = (index: number): boolean => {
   return Array.isArray(sourceList) && index < sourceList.length;
 };
 
+// This does soft remove
 const toggleRemove = (index: number) => {
+  const isCurrentlyRemoved = widgets.isInRemovedList(props.fieldPath, index);
   widgets.toggleRemovedIndex(props.fieldPath, index);
+
+  if (!isCurrentlyRemoved) {
+    const list = [
+      ...(model.getField(props.fieldPath, []) as Record<string, unknown>[]),
+    ];
+    list[index] = {};
+    model.setField(props.fieldPath, list);
+  }
 };
 
 const isRemoved = (index: number): boolean => {
