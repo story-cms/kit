@@ -131,7 +131,7 @@
   <div v-else></div>
 </template>
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import type { PropType } from 'vue';
 import type { FieldSpec } from '../../../types';
 import Icon from '../../shared/icon.vue';
@@ -205,14 +205,14 @@ const toggle = (index: number) => {
   widgets.setListToggles(props.fieldPath, fresh);
 };
 
-const removedIndices = ref(new Set<number>());
-
-// This does soft remove
 const toggleRemove = (index: number) => {
-  if (removedIndices.value.has(index)) {
-    removedIndices.value.delete(index);
-  } else {
-    removedIndices.value.add(index);
+  const isCurrentlyRemoved = widgets.isInRemovedList(props.fieldPath, index);
+  widgets.toggleRemovedIndex(props.fieldPath, index);
+
+  if (!isCurrentlyRemoved) {
+    const list = [...(model.getField(props.fieldPath, []) as Record<string, unknown>[])];
+    list[index] = {};
+    model.setField(props.fieldPath, list);
 
     const fresh = toggleState.value;
     if (fresh[index]) {
@@ -223,7 +223,8 @@ const toggleRemove = (index: number) => {
 };
 
 const isRemoved = (index: number): boolean => {
-  return removedIndices.value.has(index);
+  if (props.isReadOnly) return false;
+  return widgets.isInRemovedList(props.fieldPath, index);
 };
 
 const hasSourceItem = (index: number): boolean => {
