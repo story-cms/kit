@@ -65,7 +65,7 @@ import PillButton from '../shared/pill-button.vue';
 import LanguagesTable from './languages/components/language-table.vue';
 import RequestAppUpdateModal from './languages/components/request-app-update-modal.vue';
 import RequestFeedbackModal from './languages/components/request-feedback-modal.vue';
-import { postWithPayload } from '../shared/helpers';
+import { postWithPayload } from '../shared/post-with-payload';
 import {
   type LanguageTableItem,
   type SettingsPageProps,

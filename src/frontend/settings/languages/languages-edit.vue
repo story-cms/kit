@@ -80,9 +80,9 @@ import { languages as allLanguages } from './languages';
 import { useSharedStore } from '../../store';
 import {
   compareLanguagesByDisplayName,
-  postWithPayload,
   sortLanguagesByDisplayName,
 } from '../../shared/helpers';
+import { postWithPayload } from '../../shared/post-with-payload';
 
 const props = defineProps<LanguagesEditProps & SharedPageProps>();
 
