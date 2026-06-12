@@ -40,46 +40,65 @@
       </p>
     </td>
     <td class="py-4 pl-3 pr-4 text-right sm:pr-6">
-      <button
-        type="button"
-        class="cursor-pointer text-gray-400 hover:text-gray-600"
-        @click="emit('toggleActions', item.locale)"
-      >
-        <Icon name="dots-vertical" class="size-5" />
-      </button>
-      <div
-        v-show="openActionsLocale === item.locale"
-        class="absolute right-10 top-3 z-10 flex max-w-[250px] flex-col items-start overflow-hidden rounded-md bg-white shadow"
-      >
-        <a
-          :href="`/${item.locale}/user`"
-          class="w-full px-6 py-2 pt-3 text-left text-sm font-normal leading-5 text-gray-800 hover:bg-gray-100"
+      <Menu as="div" class="inline-block text-left">
+        <MenuButton
+          type="button"
+          class="cursor-pointer text-gray-400 hover:text-gray-600"
         >
-          Assign team members
-        </a>
-        <button
-          class="w-full px-6 py-2 text-left text-sm font-normal leading-5 text-gray-800 hover:bg-gray-100"
-          :class="{ 'pb-3': isSource }"
-          @click="emit('openBibleTranslations', item)"
+          <Icon name="dots-vertical" class="size-5" />
+          <span class="sr-only">Actions for {{ item.language }}</span>
+        </MenuButton>
+        <transition
+          enter-active-class="transition duration-100 ease-out"
+          enter-from-class="opacity-0"
+          enter-to-class="opacity-100"
+          leave-active-class="transition duration-75 ease-in"
+          leave-from-class="opacity-100"
+          leave-to-class="opacity-0"
         >
-          Change Bible translation
-        </button>
-        <button
-          v-if="!isSource && deletionMode"
-          class="w-full px-6 py-2 pb-3 text-left text-sm font-normal leading-5 text-gray-800 hover:bg-gray-100"
-          @click="emit('removeOrRequestDeletion', item)"
-        >
-          {{
-            deletionMode === 'request' ? 'Request language deletion' : 'Remove language'
-          }}
-        </button>
-      </div>
+          <MenuItems
+            class="absolute right-10 top-3 z-10 flex max-w-[250px] flex-col items-start overflow-hidden rounded-md bg-white shadow focus:outline-none"
+          >
+            <MenuItem v-slot="{ active }">
+              <a
+                :href="`/${item.locale}/user`"
+                :class="menuItemClass(active, 'first')"
+              >
+                Assign team members
+              </a>
+            </MenuItem>
+            <MenuItem v-slot="{ active }">
+              <button
+                type="button"
+                :class="menuItemClass(active, isSource ? 'last' : 'middle')"
+                @click="emit('openBibleTranslations', item)"
+              >
+                Change Bible translation
+              </button>
+            </MenuItem>
+            <MenuItem v-if="!isSource && deletionMode" v-slot="{ active }">
+              <button
+                type="button"
+                :class="menuItemClass(active, 'last')"
+                @click="emit('removeOrRequestDeletion', item)"
+              >
+                {{
+                  deletionMode === 'request'
+                    ? 'Request language deletion'
+                    : 'Remove language'
+                }}
+              </button>
+            </MenuItem>
+          </MenuItems>
+        </transition>
+      </Menu>
     </td>
   </tr>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import Icon from '../../../shared/icon.vue';
 import MemberRow from './member-row.vue';
 import RingBlock from '../../../dashboard/ring-block.vue';
@@ -91,16 +110,24 @@ const props = withDefaults(
     item: LanguageTableItem;
     isSource?: boolean;
     deletionMode?: 'remove' | 'request';
-    openActionsLocale: string | null;
   }>(),
   { isSource: false, deletionMode: undefined },
 );
 
 const emit = defineEmits<{
-  toggleActions: [locale: string];
   openBibleTranslations: [item: LanguageTableItem];
   removeOrRequestDeletion: [item: LanguageTableItem];
 }>();
+
+const menuItemTextClass = 'text-sm leading-5 font-normal text-gray-800';
+
+const menuItemClass = (active: boolean, position: 'first' | 'middle' | 'last') => [
+  menuItemTextClass,
+  active ? 'bg-gray-100' : 'bg-white',
+  'block w-full whitespace-nowrap px-6 py-2 text-left no-underline',
+  position === 'first' ? 'pt-3' : '',
+  position === 'last' ? 'pb-3' : '',
+];
 
 const rowProgress = computed(() => {
   if (props.isSource) {

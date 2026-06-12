@@ -169,8 +169,18 @@ const hasSourceItem = (index: number): boolean => {
   return Array.isArray(sourceList) && index < sourceList.length;
 };
 
+// This does soft remove
 const toggleRemove = (index: number) => {
+  const isCurrentlyRemoved = widgets.isInRemovedList(props.fieldPath, index);
   widgets.toggleRemovedIndex(props.fieldPath, index);
+
+  if (!isCurrentlyRemoved) {
+    const list = [
+      ...(model.getField(props.fieldPath, []) as Record<string, unknown>[]),
+    ];
+    list[index] = {};
+    model.setField(props.fieldPath, list);
+  }
 };
 
 const isRemoved = (index: number): boolean => {
