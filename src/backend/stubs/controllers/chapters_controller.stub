@@ -5,11 +5,11 @@ import type { HttpContext } from '@adonisjs/core/http';
 import edge from 'edge.js';
 import { marked } from 'marked';
 import {
-  IndexService,
+  type StoryIndexProps,
+  type PreviewProps,
   AddStatus,
-  StoryIndexProps,
+  IndexService,
   Chapter,
-  PreviewProps,
   StoryService,
 } from '@story-cms/kit';
 import cms from '#services/cms';
