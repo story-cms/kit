@@ -281,6 +281,21 @@ export interface StoryCreateProps {
   providers: Providers;
 }
 
+export type ResourceFormat = 'url' | 'video' | 'pdf' | 'article';
+
+export type ResourceVisibility = 'public' | 'guest' | 'leader';
+
+export interface Resource {
+  id: string;
+  title: string;
+  resourceType: ResourceFormat;
+  imageUrl?: string;
+  url?: string;
+  label: string;
+  visibility: ResourceVisibility;
+  description?: string;
+}
+
 export interface StoryEditProps {
   model: {
     id: number;
@@ -297,15 +312,16 @@ export interface StoryEditProps {
     template: string;
     isPublished: boolean;
     sections: StorySection[];
-    resources: string[];
+    resources: Resource[];
   };
   source?: {
     title: string;
     coverImage: string;
     description: string;
     sections: StorySection[];
-    resources: string[];
+    resources: Resource[];
   };
+  availableResources: Resource[];
   hasNoContent: boolean;
   providers: Providers;
 }

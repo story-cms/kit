@@ -168,6 +168,7 @@ export class StoryService {
         ...this.localisationFields(target),
       },
       ...sourceSection,
+      availableResources: [],
       hasNoContent,
       providers: config.get<Providers>('providers')!,
     };
@@ -326,7 +327,7 @@ export class StoryService {
       description: local.description ?? '',
       tags: local.tags ?? null,
       sections: local.sections ?? [],
-      resources: local.resources ?? [],
+      resources: (local.resources ?? []) as unknown as StoryEditProps['model']['resources'],
     };
   }
 

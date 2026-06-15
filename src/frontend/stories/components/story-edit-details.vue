@@ -2,7 +2,7 @@
   <div class="space-y-8 rounded-xl bg-white py-3">
     <StringField
       :field="{
-        name: 'name',
+        name: 'title',
         label: 'Title',
         widget: 'string',
       }"

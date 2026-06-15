@@ -64,6 +64,10 @@ export default defineConfig({
         title: 'Stories',
       },
       {
+        id: 'resources',
+        title: 'Resources',
+      },
+      {
         id: 'streams',
         title: 'Streams',
       },
