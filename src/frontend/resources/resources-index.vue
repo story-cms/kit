@@ -10,7 +10,14 @@
         <template #actions>
           <div class="flex items-center gap-x-6">
             <ListSwitcher :is-list="isList" @toggle="isList = !isList" />
-            <IconButton icon="plus" @tap="createResource" />
+            <button
+              type="button"
+              class="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+              @click="createResource"
+            >
+              <Plus class="size-4" aria-hidden="true" />
+              Create Resource
+            </button>
           </div>
         </template>
         <template #extra-actions>
@@ -210,7 +217,6 @@ import type {
 import { useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
-import IconButton from '../shared/icon-button.vue';
 import ListSwitcher from '../shared/list-switcher.vue';
 import ResourceIndexItemCard from './resource-index-item.vue';
 
