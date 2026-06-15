@@ -73,7 +73,10 @@ export default class DraftsController {
 
     if (!draft) {
       if (!chapter) {
-        return ctx.response.notFound();
+        return ctx.response.redirect().toRoute('chapters.index', {
+          locale: version.locale,
+          storyId: story.id,
+        });
       }
       lastPublished = chapter.updatedAt.toString();
       draft = await Draft.create({
@@ -135,8 +138,8 @@ export default class DraftsController {
       const service = new IndexService(story, cms);
       await service.buildIndex(draft.version);
     } catch (e) {
-      const errors = 'Error while saving this draft. Sorry!';
-      ctx.session.flash('errorsBag', errors);
+      const errors = ['Error while saving this draft. Sorry!'];
+      ctx.session.flash('inputErrorsBag', { other: errors });
     }
 
     return ctx.response.redirect().back();

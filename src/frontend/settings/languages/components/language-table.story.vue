@@ -3,16 +3,18 @@
     <Variant title="Default">
       <LangTable
         :items="languageTableItems"
+        :source-language="sourceLanguage"
         @remove="onRemove"
         @request-deletion="onRequestDeletion"
       />
     </Variant>
     <Variant title="Empty">
-      <LangTable :items="[]" />
+      <LangTable :items="[]" :source-language="sourceLanguage" />
     </Variant>
     <Variant title="With pagination">
       <LangTable
         :items="manyLanguageTableItems"
+        :source-language="sourceLanguage"
         :items-per-page="5"
         @remove="onRemove"
         @request-deletion="onRequestDeletion"
@@ -23,7 +25,11 @@
 
 <script setup lang="ts">
 import LangTable from './language-table.vue';
-import { languageTableItems, manyLanguageTableItems } from '../../../test/mocks';
+import {
+  languageTableItems,
+  manyLanguageTableItems,
+  sourceLanguage,
+} from '../../../test/mocks';
 import type { LanguageTableItem } from '../../../../types';
 
 const onRemove = (item: LanguageTableItem) => {

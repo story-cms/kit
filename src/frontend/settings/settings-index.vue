@@ -11,16 +11,16 @@
           />
         </template>
         <template #extra-actions>
-          <div class="flex items-center justify-between pb-4">
+          <div class="flex justify-between items-center pb-4">
             <div>
-              <h3 class="text-xl/7 font-semibold leading-7 text-gray-800">Languages</h3>
-              <p class="text-sm/5 font-normal leading-5 text-gray-500">
+              <h3 class="font-semibold leading-7 text-gray-800 text-xl/7">Languages</h3>
+              <p class="font-normal leading-5 text-gray-500 text-sm/5">
                 Here you can manage your languages. Press the blue + to add a new
                 language.
               </p>
             </div>
             <button
-              class="rounded-full bg-blue-500 p-1 shadow-md hover:bg-blue-700"
+              class="p-1 bg-blue-500 rounded-full shadow-md hover:bg-blue-700"
               @click="router.visit(`/${shared.locale}/settings/languages/edit`)"
             >
               <Icon name="plus" class="text-white" />
@@ -29,13 +29,10 @@
         </template>
       </ContentHeader>
     </template>
-    <SourceLang
-      :spec="sourceLanguage"
-      @bible-translation-change="handleSourceBibleTranslationChange"
-    />
-    <div class="mt-14">
+    <div class="mt-5">
       <LanguagesTable
         :items="languageItems"
+        :source-language="sourceLanguage"
         @remove="handleRemove"
         @request-deletion="handleRequestDeletion"
         @bible-translation-change="handleTableBibleTranslationChange"
@@ -65,10 +62,10 @@ import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
 import Icon from '../shared/icon.vue';
 import PillButton from '../shared/pill-button.vue';
-import SourceLang from './languages/components/source-language.vue';
 import LanguagesTable from './languages/components/language-table.vue';
 import RequestAppUpdateModal from './languages/components/request-app-update-modal.vue';
 import RequestFeedbackModal from './languages/components/request-feedback-modal.vue';
+import { postWithPayload } from '../shared/post-with-payload';
 import {
   type LanguageTableItem,
   type SettingsPageProps,
@@ -111,27 +108,6 @@ const buildAppUpdatePayload = (reasons: string[]): SupportRequest | null => {
   return null;
 };
 
-const postSupportRequest = (
-  payload: SupportRequest,
-  options: {
-    onSuccess?: () => void;
-    onError?: () => void;
-  } = {},
-) => {
-  router.post(
-    `/${shared.locale}/settings/support`,
-    payload as unknown as RequestPayload,
-    {
-      preserveScroll: true,
-      onSuccess: options.onSuccess,
-      onError: (errors) => {
-        shared.setErrors(errors);
-        options.onError?.();
-      },
-    },
-  );
-};
-
 const handleRequestAppUpdateConfirm = (reasons: string[]) => {
   showRequestAppUpdateModal.value = false;
 
@@ -142,7 +118,7 @@ const handleRequestAppUpdateConfirm = (reasons: string[]) => {
     return;
   }
 
-  postSupportRequest(payload, {
+  postWithPayload(`/${shared.locale}/settings/support`, payload as unknown as RequestPayload, {
     onSuccess: () => {
       feedbackModalVariant.value = 'success';
       showFeedbackModal.value = true;
@@ -155,24 +131,19 @@ const handleRequestAppUpdateConfirm = (reasons: string[]) => {
 };
 
 const handleRemove = (item: LanguageTableItem) => {
-  router.post(
+  postWithPayload(
     `/${shared.locale}/settings/languages/${item.locale}/remove`,
     {},
     {
-      preserveScroll: true,
-      onSuccess: () => {
-        shared.addMessage(ResponseStatus.Confirmation, 'Language removed');
-      },
-      onError: (errors) => {
-        shared.setErrors(errors);
-        shared.addMessage(ResponseStatus.Failure, 'Error removing language');
-      },
+      successMessage: 'Language removed',
+      failureMessage: 'Error removing language',
     },
   );
 };
 
 const handleRequestDeletion = (item: LanguageTableItem) => {
-  postSupportRequest(
+  postWithPayload(
+    `/${shared.locale}/settings/support`,
     { supportCode: 'REMOVE_LANGUAGE', removeLanguageCode: item.locale },
     {
       onSuccess: () => {
@@ -185,39 +156,18 @@ const handleRequestDeletion = (item: LanguageTableItem) => {
   );
 };
 
-const persistBibleTranslation = (
-  languageLocale: string,
-  bibleVersion: string,
-  bibleVersionName: string,
-) => {
-  router.post(
-    `/${shared.locale}/settings/languages/${languageLocale}/bible-translation`,
-    { bibleVersion, bibleVersionName },
-    {
-      preserveScroll: true,
-      onSuccess: () => {
-        shared.addMessage(ResponseStatus.Confirmation, 'Bible translation changed');
-      },
-      onError: (errors) => {
-        shared.setErrors(errors);
-        shared.addMessage(ResponseStatus.Failure, 'Error updating Bible translation');
-      },
-    },
-  );
-};
-
-const handleSourceBibleTranslationChange = (
-  bibleVersion: string,
-  bibleVersionName: string,
-) => {
-  persistBibleTranslation(sourceLanguage.value.locale, bibleVersion, bibleVersionName);
-};
-
 const handleTableBibleTranslationChange = (
   item: LanguageTableItem,
   bibleVersion: string,
   bibleVersionName: string,
 ) => {
-  persistBibleTranslation(item.locale, bibleVersion, bibleVersionName);
+  postWithPayload(
+    `/${shared.locale}/settings/languages/${item.locale}/bible-translation`,
+    { bibleVersion, bibleVersionName },
+    {
+      successMessage: 'Bible translation changed',
+      failureMessage: 'Error updating Bible translation',
+    },
+  );
 };
 </script>

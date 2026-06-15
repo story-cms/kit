@@ -64,13 +64,13 @@ test.group('Draft GET', (group) => {
     assert.equal(draft!.bundle['title'], JSON.parse(chapter.bundle)['title']);
   });
 
-  test('HTTP error if non existing Chapter is requested', async ({ client }) => {
+  test('Redirects to story if non existing Chapter is requested', async ({ client }) => {
     setupMockCms();
     await seedTestStory();
     const user = await UserFactory.create();
 
     const response = await client.get('/en/story/1/draft/1/edit').loginAs(user);
-    response.assertStatus(404);
+    response.assertRedirectsTo('/en/story/1');
   });
 });
 

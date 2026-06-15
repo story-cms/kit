@@ -1,5 +1,5 @@
 import type { App, PropType } from 'vue';
-import type { FieldSpec, LanguageSpecification } from '../../types';
+import { type FieldSpec, type LanguageSpecification } from '../../types';
 import { BibleBooksMap } from './bibleBooks';
 import type { Variant, Story } from 'histoire';
 import { DateTime } from 'luxon';
@@ -34,13 +34,17 @@ export const expandShortcuts = (text: string) => {
 
 export const padZero = (value: number): string => (value > 9 ? `${value}` : `0${value}`);
 
+const LANGUAGE_LABEL_SEPARATOR = /\s*-\s*|\s*\|\s*/;
+
+export type LanguageSortable = Pick<LanguageSpecification, 'language' | 'locale'>;
+
 /**
  * Match stored language to API language.
  * Handles stored formats: "Bengali - বাংলা", "Arabic - عربى", "English | American".
  * API returns: "Bengali", "Arabic, Sudanese Creole", "English".
  */
 export const languageMatches = (stored: string, api: string): boolean => {
-  const storedBase = stored.split(/\s*-\s*|\s*\|\s*/)[0].trim();
+  const storedBase = stored.split(LANGUAGE_LABEL_SEPARATOR)[0].trim();
   return (
     api === storedBase ||
     api.startsWith(storedBase + ',') ||
@@ -287,34 +291,27 @@ export const helpScoutWidget = (page: { props: Record<string, unknown> }) => {
   (window as any).Beacon('init', HELPSCOUT_BEACON_ID);
 };
 
-/** Display name from a language label (text before `|` when present). */
+/** Display name from a language label (text before `|` or `-` when present). */
 export function languageDisplayName(language: string): string {
-  if (language.includes('|')) {
-    return language.split('|')[0].trim();
+  const parts = language.split(LANGUAGE_LABEL_SEPARATOR);
+  if (parts.length >= 2) {
+    return parts[0].trim();
   }
   return language;
 }
 
-export function isEnglishLanguage(item: LanguageSpecification): boolean {
-  return (
-    item.locale === 'en' ||
-    languageDisplayName(item.language).localeCompare('English', undefined, {
-      sensitivity: 'base',
-    }) === 0
-  );
+/** A–Z by display name (e.g. add-language list); English is not pinned first. */
+export function compareLanguagesByDisplayName(
+  a: LanguageSortable,
+  b: LanguageSortable,
+): number {
+  return languageDisplayName(a.language).localeCompare(languageDisplayName(b.language));
 }
 
-/** English first, then remaining languages A–Z by display name. */
-export function sortLanguages(
-  languages: LanguageSpecification[],
-): LanguageSpecification[] {
-  return [...languages].sort((a, b) => {
-    if (isEnglishLanguage(a) && !isEnglishLanguage(b)) return -1;
-    if (!isEnglishLanguage(a) && isEnglishLanguage(b)) return 1;
-    return languageDisplayName(a.language).localeCompare(
-      languageDisplayName(b.language),
-    );
-  });
+export function sortLanguagesByDisplayName<T extends LanguageSortable>(
+  languages: T[],
+): T[] {
+  return [...languages].sort(compareLanguagesByDisplayName);
 }
 
 /** Name, native name, and locale from a language specification. */
@@ -324,12 +321,30 @@ export function parseLanguageSpecification(spec: LanguageSpecification): {
   locale: string;
 } {
   const { language, locale } = spec;
-  const name = languageDisplayName(language);
+  const parts = language.split(LANGUAGE_LABEL_SEPARATOR).map((part) => part.trim());
 
-  if (language.includes('|')) {
-    const nativeName = language.split('|')[1].trim();
-    return { name, nativeName, locale };
+  if (parts.length >= 2) {
+    return {
+      name: parts[0],
+      nativeName: parts.slice(1).join(' - '),
+      locale,
+    };
   }
 
-  return { name, nativeName: language, locale };
+  return { name: language, nativeName: language, locale };
 }
+
+/** Swap the locale segment in a pathname, or return null if not localized. */
+export function replaceLocaleInPath(
+  pathname: string,
+  targetLocale: string,
+  knownLocales: string[],
+): string | null {
+  const segments = pathname.split('/').filter(Boolean);
+  if (segments.length === 0 || !knownLocales.includes(segments[0])) {
+    return null;
+  }
+  segments[0] = targetLocale;
+  return `/${segments.join('/')}`;
+}
+
