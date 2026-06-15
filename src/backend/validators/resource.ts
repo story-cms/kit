@@ -45,7 +45,7 @@ export class ResourceValidator {
     this.resourceType = ctx.request.input('type') ?? 'info_link';
   }
 
-  validate(data: Record<string, unknown>): Promise<{ bundle: Record<string, unknown> }> {
+  validate(data: Record<string, unknown>): Promise<any> {
     vine.messagesProvider = resourceErrorMessages;
 
     const schema = vine.object({

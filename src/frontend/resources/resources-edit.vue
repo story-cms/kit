@@ -195,6 +195,7 @@ import { router } from '@inertiajs/vue3';
 import {
   type ResourceEditProps,
   type ResourceType,
+  type VisibilityType,
   ResponseStatus,
   type SharedPageProps,
 } from '../../types';
@@ -211,6 +212,19 @@ import DraftActions from '../shared/draft-actions.vue';
 import ContentSidebar from '../shared/content-sidebar.vue';
 
 const props = defineProps<ResourceEditProps & SharedPageProps>();
+
+type RequestPayload = {
+  title: string;
+  type: ResourceType;
+  imageUrl: string;
+  description: string;
+  label: string;
+  visibility: VisibilityType;
+  isPublished: boolean;
+  content?: string;
+  infoUrl?: string;
+  video?: { url: string | null };
+};
 
 const { bundle, resource, isNew } = toRefs(props);
 const model = useModelStore();
@@ -240,7 +254,7 @@ const setType = (type: ResourceType) => {
   model.setField('type', type);
 };
 
-const getPayload = () => ({ ...model.model } as Record<string, unknown>);
+const getPayload = (): RequestPayload => ({ ...model.model } as RequestPayload);
 
 const save = () => {
   shared.clearErrors();
