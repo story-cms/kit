@@ -21,18 +21,22 @@
       />
     </div>
 
-    <div class="flex flex-1 flex-col p-5">
-      <h3 class="mb-2 line-clamp-2 text-base font-semibold text-gray-900">
-        {{ resource.title }}
-      </h3>
+    <div class="grid min-h-0 flex-1 grid-rows-[1fr_auto] p-5">
+      <div class="mb-2 min-h-0">
+        <h3 class="mb-2 line-clamp-2 text-base font-semibold text-gray-900">
+          {{ resource.title }}
+        </h3>
 
-      <p v-if="resource.description" class="line-clamp-2 text-sm text-gray-500">
-        {{ resource.description }}
-      </p>
+        <p
+          v-if="resource.description"
+          class="line-clamp-2 min-h-10 text-sm leading-5 text-gray-500"
+        >
+          {{ resource.description }}
+        </p>
+        <div v-else class="min-h-10" aria-hidden="true" />
+      </div>
 
-      <div
-        class="mt-2 flex items-center justify-between gap-3 border-t border-gray-100 pt-3"
-      >
+      <div class="flex items-center justify-between gap-3 border-t border-gray-100 pt-3">
         <div v-if="resource.label" class="flex min-w-0 items-center gap-2">
           <Tag class="size-3 shrink-0 text-gray-400" aria-hidden="true" />
           <span class="truncate text-xs text-gray-500">{{ resource.label }}</span>

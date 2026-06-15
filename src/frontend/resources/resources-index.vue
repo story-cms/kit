@@ -115,6 +115,7 @@
         <ResourceIndexItemCard
           v-for="resource in filteredResources"
           :key="resource.id"
+          class="h-full"
           :resource="resource"
           view-mode="grid"
           @edit="editResource"

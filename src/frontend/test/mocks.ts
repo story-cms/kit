@@ -557,7 +557,6 @@ const languages: LanguageSpecification[] = [
   german,
 ];
 
-
 export const languageTableItems: LanguageTableItem[] = [
   {
     language: 'Spanish',
@@ -1704,7 +1703,15 @@ export const config: UiConfig = {
   helpUrl: 'https://www.theword121.com/',
   hasAppPreview: false,
   languages,
-  subscriptions: ['story', 'stream', 'language', 'audience', 'invitation', 'page', 'resource'],
+  subscriptions: [
+    'story',
+    'stream',
+    'language',
+    'audience',
+    'invitation',
+    'page',
+    'resource',
+  ],
   supportEmail: 'support@startjourneys.io',
 };
 
@@ -4412,16 +4419,61 @@ export const availableResources: Resource[] = [
     visibility: 'public',
     description: 'Analysis of major parables in the Gospels',
   },
+  {
+    id: 'r13',
+    title:
+      'Archaeological Discoveries and Their Impact on New Testament Historical Studies: A Case study of the Gospel of Luke and Acts while referencing the Gospel of John and ignoring the Gospel of Matthew',
+    type: 'video',
+    imageUrl: 'https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=400',
+    label: 'Supplementary Videos',
+    visibility: 'public',
+    description:
+      'This resource surveys major archaeological sites across Israel and Jordan, explaining how pottery, inscriptions, and settlement layers inform our reading of first-century Palestine. It connects excavation reports to Gospel narratives, early church history, and the social world behind Paul’s letters. Scholars and students alike will find maps, timelines, and curated reading lists for deeper study.',
+  },
+  {
+    id: 'r14',
+    title: 'A Critical Introduction to the Synoptic Problem and Gospel Source Criticism',
+    type: 'text',
+    url: 'https://example.com/synoptic-problem',
+    label: 'Academic Reading',
+    visibility: 'guests',
+    description:
+      'An extended essay introducing the Synoptic Problem, comparing the Two-Source, Farrer, and Augustinian hypotheses with clear diagrams and sample pericope tables. The article walks through form criticism, redaction criticism, and narrative criticism as methods for understanding how Matthew, Mark, and Luke relate to one another. Discussion questions at the end help small groups evaluate strengths and weaknesses of each scholarly position.',
+  },
+  {
+    id: 'r15',
+    title:
+      'Patristic Writings on Scripture, Tradition, and the Formation of the Biblical Canon',
+    type: 'info_link',
+    url: 'https://example.com/patristic-canon',
+    label: 'Reference Materials',
+    visibility: 'leaders',
+    description:
+      'A curated anthology of excerpts from Ignatius, Irenaeus, Tertullian, and Athanasius on the authority of Scripture and the rule of faith. Each selection includes a short introduction, glossary of key terms, and cross-references to relevant ecumenical councils. Leaders can use the accompanying discussion guide to explore how the early church discerned orthodox teaching amid diverse texts and communities.',
+  },
 ];
 
-export const mockIndexResources: ResourceIndexItem[] = availableResources.map((resource, index) => ({
-  ...resource,
-  createdAt: `2024-0${Math.min(index + 1, 9)}-15`,
-  updatedAt: `2024-0${Math.min(index + 1, 9)}-${15 + (index % 14)}`,
-}));
+const shuffle = <T>(items: T[]): T[] => {
+  const copy = [...items];
+
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+
+  return copy;
+};
+
+export const mockIndexResources: ResourceIndexItem[] = shuffle(
+  availableResources.map((resource, index) => ({
+    ...resource,
+    createdAt: `2024-0${Math.min(index + 1, 9)}-15`,
+    updatedAt: `2024-0${Math.min(index + 1, 9)}-${15 + (index % 14)}`,
+  })),
+);
 
 const attachedStoryResourceIds = ['r1', 'r6', 'r8', 'r3', 'r7', 'r11', 'r4', 'r10'];
 
-export const sampleAttachedResources: Resource[] = availableResources.filter(
-  (resource) => attachedStoryResourceIds.includes(resource.id),
+export const sampleAttachedResources: Resource[] = availableResources.filter((resource) =>
+  attachedStoryResourceIds.includes(resource.id),
 );
