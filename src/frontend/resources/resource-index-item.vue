@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="viewMode === 'grid'"
-    class="group overflow-hidden rounded-xl border border-gray-200 bg-white transition-shadow hover:shadow-lg"
+    class="group flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white transition-shadow hover:shadow-lg"
   >
     <div v-if="resource.imageUrl" class="h-48 overflow-hidden bg-gray-100">
       <img
@@ -21,92 +21,100 @@
       />
     </div>
 
-    <div class="p-5">
-      <div class="mb-2 flex items-start justify-between">
-        <h3 class="line-clamp-2 flex-1 text-base font-semibold text-gray-900">
-          {{ resource.title }}
-        </h3>
-        <Menu as="div" class="relative">
-          <MenuButton
-            class="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
-          >
-            <MoreVertical class="size-4" aria-hidden="true" />
-          </MenuButton>
-          <transition
-            enter-active-class="transition duration-100 ease-out"
-            enter-from-class="scale-95 opacity-0"
-            enter-to-class="scale-100 opacity-100"
-            leave-active-class="transition duration-75 ease-in"
-            leave-from-class="scale-100 opacity-100"
-            leave-to-class="scale-95 opacity-0"
-          >
-            <MenuItems
-              class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-lg border border-gray-200 bg-white py-1 shadow-lg focus:outline-none"
-            >
-              <MenuItem v-slot="{ active }">
-                <button
-                  type="button"
-                  :class="[
-                    active ? 'bg-gray-50' : '',
-                    'flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-gray-700',
-                  ]"
-                  @click="emit('edit', resource.id)"
-                >
-                  <SquarePen class="size-4" aria-hidden="true" />
-                  Edit
-                </button>
-              </MenuItem>
-              <MenuItem v-if="resource.url" v-slot="{ active }">
-                <button
-                  type="button"
-                  :class="[
-                    active ? 'bg-gray-50' : '',
-                    'flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-gray-700',
-                  ]"
-                  @click="emit('preview', resource)"
-                >
-                  <Eye class="size-4" aria-hidden="true" />
-                  Preview
-                </button>
-              </MenuItem>
-              <MenuItem v-slot="{ active }">
-                <button
-                  type="button"
-                  :class="[
-                    active ? 'bg-red-50' : '',
-                    'flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-red-600',
-                  ]"
-                  @click="emit('delete', resource.id)"
-                >
-                  <Trash2 class="size-4" aria-hidden="true" />
-                  Delete
-                </button>
-              </MenuItem>
-            </MenuItems>
-          </transition>
-        </Menu>
-      </div>
+    <div class="flex flex-1 flex-col p-5">
+      <h3 class="mb-2 line-clamp-2 text-base font-semibold text-gray-900">
+        {{ resource.title }}
+      </h3>
 
-      <p v-if="resource.description" class="mb-3 line-clamp-2 text-sm text-gray-500">
+      <p v-if="resource.description" class="line-clamp-2 text-sm text-gray-500">
         {{ resource.description }}
       </p>
 
-      <div class="flex flex-wrap items-center gap-2">
-        <ResourceTypeBadge :type="resource.type" />
-        <span
-          v-if="resource.visibility !== 'public'"
-          class="rounded bg-gray-100 px-2 py-1 text-xs font-medium capitalize text-gray-700"
-        >
-          {{ resource.visibility }}
-        </span>
-      </div>
-
       <div
-        v-if="resource.label"
-        class="mt-3 flex items-center gap-2 border-t border-gray-100 pt-3"
+        class="mt-2 flex items-center justify-between gap-3 border-t border-gray-100 pt-3"
       >
-        <Tag class="size-3 text-gray-400" aria-hidden="true" />
-        <span class="text-xs text-gray-500">{{ resource.label }}</span>
+        <div v-if="resource.label" class="flex min-w-0 items-center gap-2">
+          <Tag class="size-3 shrink-0 text-gray-400" aria-hidden="true" />
+          <span class="truncate text-xs text-gray-500">{{ resource.label }}</span>
+        </div>
+
+        <div
+          class="flex shrink-0 items-center gap-2"
+          :class="{ 'ml-auto': !resource.label }"
+        >
+          <span
+            v-if="resource.url"
+            class="inline-flex items-center gap-1 rounded bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700"
+          >
+            <ExternalLink class="size-3" aria-hidden="true" />
+          </span>
+          <ResourceTypeBadge :type="resource.type" />
+          <span
+            v-if="resource.visibility !== 'public'"
+            class="rounded bg-gray-100 px-2 py-0.5 text-xs font-medium capitalize text-gray-700"
+          >
+            {{ resource.visibility }}
+          </span>
+          <Menu as="div" class="relative">
+            <MenuButton
+              class="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+            >
+              <MoreVertical class="size-4" aria-hidden="true" />
+            </MenuButton>
+            <transition
+              enter-active-class="transition duration-100 ease-out"
+              enter-from-class="scale-95 opacity-0"
+              enter-to-class="scale-100 opacity-100"
+              leave-active-class="transition duration-75 ease-in"
+              leave-from-class="scale-100 opacity-100"
+              leave-to-class="scale-95 opacity-0"
+            >
+              <MenuItems
+                class="absolute bottom-full right-0 z-10 mb-2 w-48 origin-bottom-right rounded-lg border border-gray-200 bg-white py-1 shadow-lg focus:outline-none"
+              >
+                <MenuItem v-slot="{ active }">
+                  <button
+                    type="button"
+                    :class="[
+                      active ? 'bg-gray-50' : '',
+                      'flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-gray-700',
+                    ]"
+                    @click="emit('edit', resource.id)"
+                  >
+                    <SquarePen class="size-4" aria-hidden="true" />
+                    Edit
+                  </button>
+                </MenuItem>
+                <MenuItem v-if="resource.url" v-slot="{ active }">
+                  <button
+                    type="button"
+                    :class="[
+                      active ? 'bg-gray-50' : '',
+                      'flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-gray-700',
+                    ]"
+                    @click="emit('preview', resource)"
+                  >
+                    <Eye class="size-4" aria-hidden="true" />
+                    Preview
+                  </button>
+                </MenuItem>
+                <MenuItem v-slot="{ active }">
+                  <button
+                    type="button"
+                    :class="[
+                      active ? 'bg-red-50' : '',
+                      'flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-red-600',
+                    ]"
+                    @click="emit('delete', resource.id)"
+                  >
+                    <Trash2 class="size-4" aria-hidden="true" />
+                    Delete
+                  </button>
+                </MenuItem>
+              </MenuItems>
+            </transition>
+          </Menu>
+        </div>
       </div>
     </div>
   </div>
