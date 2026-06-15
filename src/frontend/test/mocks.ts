@@ -4,6 +4,7 @@ import type {
   LanguageTableItem,
   SharedPageProps,
   Resource,
+  ResourceIndexItem,
   StorySpec,
   InvitationItem,
   UiConfig,
@@ -1703,7 +1704,7 @@ export const config: UiConfig = {
   helpUrl: 'https://www.theword121.com/',
   hasAppPreview: false,
   languages,
-  subscriptions: ['story', 'stream', 'language', 'audience', 'invitation', 'page'],
+  subscriptions: ['story', 'stream', 'language', 'audience', 'invitation', 'page', 'resource'],
   supportEmail: 'support@startjourneys.io',
 };
 
@@ -4412,6 +4413,12 @@ export const availableResources: Resource[] = [
     description: 'Analysis of major parables in the Gospels',
   },
 ];
+
+export const mockIndexResources: ResourceIndexItem[] = availableResources.map((resource, index) => ({
+  ...resource,
+  createdAt: `2024-0${Math.min(index + 1, 9)}-15`,
+  updatedAt: `2024-0${Math.min(index + 1, 9)}-${15 + (index % 14)}`,
+}));
 
 const attachedStoryResourceIds = ['r1', 'r6', 'r8', 'r3', 'r7', 'r11', 'r4', 'r10'];
 

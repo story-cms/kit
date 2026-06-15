@@ -35,6 +35,7 @@ export function defineConfig(config: Partial<CmsConfig>): CmsConfig {
       'audience',
       'invitation',
       'page',
+      'resource',
     ],
 
     pagesTracking:

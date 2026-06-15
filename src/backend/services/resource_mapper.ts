@@ -1,4 +1,11 @@
-import type { Resource, ResourceBundle, ResourceType, VisibilityType } from '../../types.js';
+import { DateTime } from 'luxon';
+import type {
+  Resource,
+  ResourceBundle,
+  ResourceIndexItem,
+  ResourceType,
+  VisibilityType,
+} from '../../types.js';
 
 export type ResourceRow = {
   id: string;
@@ -10,6 +17,8 @@ export type ResourceRow = {
   description: string | null;
   isPublished: boolean;
   bundle: unknown;
+  createdAt?: DateTime | string;
+  updatedAt?: DateTime | string;
 };
 
 export const extractResourceUrl = (
@@ -26,6 +35,12 @@ export const extractResourceUrl = (
   }
 };
 
+const formatResourceDate = (value: DateTime | string | undefined): string => {
+  if (!value) return '';
+  if (typeof value === 'string') return value.split('T')[0];
+  return value.toISODate() ?? value.toISO()?.split('T')[0] ?? '';
+};
+
 export const toResourceDto = (model: ResourceRow): Resource => {
   const bundle = model.bundle as ResourceBundle;
 
@@ -39,5 +54,13 @@ export const toResourceDto = (model: ResourceRow): Resource => {
     visibility: model.visibility as VisibilityType,
     description: model.description,
     isPublished: model.isPublished,
+  };
+};
+
+export const toResourceIndexItem = (model: ResourceRow): ResourceIndexItem => {
+  return {
+    ...toResourceDto(model),
+    createdAt: formatResourceDate(model.createdAt),
+    updatedAt: formatResourceDate(model.updatedAt),
   };
 };

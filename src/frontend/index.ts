@@ -42,6 +42,8 @@ import PanelField from './fields/panel-field.vue';
 import PublicLayout from './shared/public-layout.vue';
 import RegionField from './fields/region-field.vue';
 import ResetPassword from './auth/reset-password.vue';
+import ResourcesEdit from './resources/resources-edit.vue';
+import ResourcesIndex from './resources/resources-index.vue';
 import ScriptureField from './fields/scripture-field.vue';
 import SelectField from './fields/select-field.vue';
 import StatusTag from './shared/status-tag.vue';
@@ -114,6 +116,8 @@ export {
   PublicLayout,
   RegionField,
   ResetPassword,
+  ResourcesEdit,
+  ResourcesIndex,
   ScriptureField,
   SelectField,
   SettingsIndex,

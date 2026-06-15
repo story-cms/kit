@@ -293,6 +293,22 @@ export interface Resource {
   isPublished?: boolean;
 }
 
+export interface ResourceIndexItem extends Resource {
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ResourceIndexProps {
+  resources: ResourceIndexItem[];
+}
+
+export interface ResourceEditProps {
+  providers: Providers;
+  resource: ResourceIndexItem;
+  bundle: Record<string, unknown>;
+  isNew: boolean;
+}
+
 export interface StoryEditProps {
   model: {
     id: number;
@@ -655,7 +671,8 @@ export type Subscription =
   | 'language'
   | 'audience'
   | 'invitation'
-  | 'page';
+  | 'page'
+  | 'resource';
 
 export interface BundleTemplate {
   id: string;
