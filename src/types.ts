@@ -281,19 +281,16 @@ export interface StoryCreateProps {
   providers: Providers;
 }
 
-export type ResourceFormat = 'url' | 'video' | 'pdf' | 'article';
-
-export type ResourceVisibility = 'public' | 'guest' | 'leader';
-
 export interface Resource {
   id: string;
   title: string;
-  resourceType: ResourceFormat;
-  imageUrl?: string;
+  type: ResourceType;
+  imageUrl?: string | null;
   url?: string;
-  label: string;
-  visibility: ResourceVisibility;
-  description?: string;
+  label: string | null;
+  visibility: VisibilityType;
+  description?: string | null;
+  isPublished?: boolean;
 }
 
 export interface StoryEditProps {

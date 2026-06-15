@@ -84,17 +84,10 @@ const moveResourceWithinLabel = (
   resourcesInLabel.splice(dragIndex, 1);
   resourcesInLabel.splice(hoverIndex, 0, draggedResource);
 
-  const all = attachedResources.value;
-  const insertIndex = all.findIndex(
-    (resource) => (resource.label || 'Uncategorized') === label,
+  const updatedGroups = { ...groups, [label]: resourcesInLabel };
+  attachedResources.value = labels.value.flatMap(
+    (groupLabel) => updatedGroups[groupLabel] ?? [],
   );
-  if (insertIndex < 0) return;
-
-  attachedResources.value = [
-    ...all.slice(0, insertIndex),
-    ...resourcesInLabel,
-    ...all.slice(insertIndex + (groups[label]?.length ?? 0)),
-  ];
 };
 
 const draggingLabelIndex = ref<number | null>(null);

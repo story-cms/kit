@@ -18,9 +18,13 @@ import type {
 } from '../../types.js';
 import Draft from '../models/draft.js';
 import { slugify } from './helpers.js';
+import { ResourceService } from './resource_service.js';
 
 export class StoryService {
-  public constructor(protected readonly config: CmsConfig) {}
+  public constructor(
+    protected readonly config: CmsConfig,
+    protected readonly resourceService = new ResourceService(),
+  ) {}
 
   public paramsFromPath(
     ctx: HttpContext,
@@ -141,14 +145,21 @@ export class StoryService {
       story.localisations.find((localisation) => localisation.locale === locale) ??
       emptyTranslation;
 
+    const availableResources = await this.resourceService.listByLocale(locale);
+    const targetResources = await this.resourceService.hydrate(target.resources ?? []);
+
     let sourceSection = {};
     if (locale !== sourceLocale) {
       const source =
         story.localisations.find(
           (localisation) => localisation.locale === sourceLocale,
         ) ?? emptyTranslation;
+      const sourceResources = await this.resourceService.hydrate(source.resources ?? []);
       sourceSection = {
-        source: this.localisationFields(source),
+        source: {
+          ...this.localisationFields(source),
+          resources: sourceResources,
+        },
       };
 
       target.coverImage = source.coverImage;
@@ -166,12 +177,21 @@ export class StoryService {
         template: story.template,
         isPublished: story.isPublished,
         ...this.localisationFields(target),
+        resources: targetResources,
       },
       ...sourceSection,
-      availableResources: [],
+      availableResources,
       hasNoContent,
       providers: config.get<Providers>('providers')!,
     };
+  }
+
+  public async updateResources(
+    storyId: number,
+    locale: string,
+    resourceIds: string[],
+  ): Promise<void> {
+    await this.resourceService.updateStoryResources(storyId, locale, resourceIds);
   }
 
   public async parsePath(ctx: HttpContext): Promise<{
@@ -322,10 +342,9 @@ export class StoryService {
     description?: string | null;
     tags?: string | null;
     sections?: StoryEditProps['model']['sections'] | null;
-    resources?: string[] | null;
   }): Pick<
     StoryEditProps['model'],
-    'title' | 'coverImage' | 'description' | 'tags' | 'sections' | 'resources'
+    'title' | 'coverImage' | 'description' | 'tags' | 'sections'
   > {
     return {
       title: local.title ?? '',
@@ -333,7 +352,6 @@ export class StoryService {
       description: local.description ?? '',
       tags: local.tags ?? null,
       sections: local.sections ?? [],
-      resources: (local.resources ?? []) as unknown as StoryEditProps['model']['resources'],
     };
   }
 

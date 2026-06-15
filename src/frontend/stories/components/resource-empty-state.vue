@@ -3,7 +3,7 @@
     <FolderOpen class="mx-auto mb-4 size-12 text-gray-400" aria-hidden="true" />
     <h3 class="mb-2 text-lg font-medium text-gray-900">No resources attached yet</h3>
     <p class="mb-4 text-sm text-gray-500">
-      Search for resources above or create new ones to attach to this course
+      Search for resources above or create new ones to attach to this story
     </p>
     <button
       type="button"

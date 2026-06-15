@@ -1,17 +1,28 @@
-import type { Resource, ResourceFormat } from '../../../types';
+import type { Resource, ResourceType } from '../../../types';
 
-export const resourceTypeColor = (type: ResourceFormat): string => {
+export const resourceTypeColor = (type: ResourceType): string => {
   switch (type) {
     case 'video':
       return 'bg-violet-100 text-violet-700';
-    case 'article':
+    case 'text':
       return 'bg-blue-100 text-blue-700';
-    case 'pdf':
-      return 'bg-green-100 text-green-700';
-    case 'url':
+    case 'info_link':
       return 'bg-orange-100 text-orange-700';
     default:
       return 'bg-gray-100 text-gray-700';
+  }
+};
+
+export const resourceTypeLabel = (type: ResourceType): string => {
+  switch (type) {
+    case 'video':
+      return 'Video';
+    case 'text':
+      return 'Text';
+    case 'info_link':
+      return 'Info Link';
+    default:
+      return type;
   }
 };
 
@@ -41,3 +52,5 @@ export const orderedLabels = (resources: Resource[]): string[] => {
 
   return ordered;
 };
+
+export const resourceIds = (resources: Resource[]): string[] => resources.map((r) => r.id);

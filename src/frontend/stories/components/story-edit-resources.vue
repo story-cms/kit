@@ -42,6 +42,7 @@ const attachedResources = computed({
 });
 
 const attachResource = (resource: Resource) => {
+  if (attachedResources.value.some((attached) => attached.id === resource.id)) return;
   attachedResources.value = [...attachedResources.value, resource];
 };
 </script>

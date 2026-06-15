@@ -57,14 +57,14 @@
               <h4 class="truncate text-sm font-medium text-gray-900">
                 {{ libraryItem.title }}
               </h4>
-              <ResourceTypeBadge :type="libraryItem.resourceType" />
+              <ResourceTypeBadge :type="libraryItem.type" />
             </div>
             <p v-if="libraryItem.description" class="mt-1 truncate text-xs text-gray-500">
               {{ libraryItem.description }}
             </p>
             <div class="mt-1 flex items-center gap-2">
               <Tag class="size-3 text-gray-400" aria-hidden="true" />
-              <span class="text-xs text-gray-500">{{ libraryItem.label }}</span>
+              <span class="text-xs text-gray-500">{{ libraryItem.label ?? 'Uncategorized' }}</span>
             </div>
           </div>
           <button
@@ -120,7 +120,7 @@ const filteredAvailableResources = computed(() =>
 
       return (
         resource.title.toLowerCase().includes(query) ||
-        resource.label.toLowerCase().includes(query) ||
+        (resource.label ?? '').toLowerCase().includes(query) ||
         resource.description?.toLowerCase().includes(query)
       );
     }),

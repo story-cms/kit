@@ -18,7 +18,7 @@
         <h4 class="truncate text-sm font-medium text-gray-900">
           {{ item.title }}
         </h4>
-        <ResourceTypeBadge :type="item.resourceType" />
+        <ResourceTypeBadge :type="item.type" />
         <span
           v-if="item.visibility !== 'public'"
           class="shrink-0 rounded bg-gray-100 px-2 py-0.5 text-xs font-medium capitalize text-gray-700"

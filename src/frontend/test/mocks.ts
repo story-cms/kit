@@ -4306,7 +4306,7 @@ export const availableResources: Resource[] = [
   {
     id: 'r1',
     title: 'Introduction to Biblical Archaeology',
-    resourceType: 'video',
+    type: 'video',
     imageUrl: 'https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=400',
     label: 'Supplementary Videos',
     visibility: 'public',
@@ -4315,7 +4315,7 @@ export const availableResources: Resource[] = [
   {
     id: 'r2',
     title: 'The Historical Jesus: Scholarly Perspectives',
-    resourceType: 'article',
+    type: 'text',
     url: 'https://example.com/historical-jesus',
     label: 'Academic Reading',
     visibility: 'public',
@@ -4324,7 +4324,7 @@ export const availableResources: Resource[] = [
   {
     id: 'r3',
     title: 'Understanding the Gospels',
-    resourceType: 'pdf',
+    type: 'text',
     url: 'https://example.com/gospels.pdf',
     label: 'Supplementary Reading',
     visibility: 'public',
@@ -4333,7 +4333,7 @@ export const availableResources: Resource[] = [
   {
     id: 'r4',
     title: 'Early Church History Timeline',
-    resourceType: 'url',
+    type: 'info_link',
     url: 'https://example.com/timeline',
     label: 'Reference Materials',
     visibility: 'public',
@@ -4342,7 +4342,7 @@ export const availableResources: Resource[] = [
   {
     id: 'r5',
     title: 'Hebrew Language Basics',
-    resourceType: 'video',
+    type: 'video',
     imageUrl: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400',
     label: 'Language Resources',
     visibility: 'public',
@@ -4351,7 +4351,7 @@ export const availableResources: Resource[] = [
   {
     id: 'r6',
     title: 'Old Testament Survey',
-    resourceType: 'video',
+    type: 'video',
     imageUrl: 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=400',
     label: 'Supplementary Videos',
     visibility: 'public',
@@ -4360,16 +4360,16 @@ export const availableResources: Resource[] = [
   {
     id: 'r7',
     title: 'The Sermon on the Mount Study Guide',
-    resourceType: 'pdf',
+    type: 'text',
     url: 'https://example.com/sermon-mount.pdf',
     label: 'Study Guides',
-    visibility: 'leader',
+    visibility: 'leaders',
     description: 'In-depth study guide for Matthew 5-7',
   },
   {
     id: 'r8',
     title: 'Church History Documentary Series',
-    resourceType: 'video',
+    type: 'video',
     imageUrl: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400',
     label: 'Supplementary Videos',
     visibility: 'public',
@@ -4378,7 +4378,7 @@ export const availableResources: Resource[] = [
   {
     id: 'r9',
     title: 'Biblical Greek Resources',
-    resourceType: 'url',
+    type: 'info_link',
     url: 'https://example.com/greek',
     label: 'Language Resources',
     visibility: 'public',
@@ -4387,7 +4387,7 @@ export const availableResources: Resource[] = [
   {
     id: 'r10',
     title: 'Theological Dictionary',
-    resourceType: 'url',
+    type: 'info_link',
     url: 'https://example.com/dictionary',
     label: 'Reference Materials',
     visibility: 'public',
@@ -4396,16 +4396,16 @@ export const availableResources: Resource[] = [
   {
     id: 'r11',
     title: 'Leader Discussion Guide',
-    resourceType: 'pdf',
+    type: 'text',
     url: 'https://example.com/leader-guide.pdf',
     label: 'Study Guides',
-    visibility: 'leader',
+    visibility: 'leaders',
     description: 'Facilitator notes and discussion questions',
   },
   {
     id: 'r12',
     title: 'Parables of Jesus Explained',
-    resourceType: 'article',
+    type: 'text',
     url: 'https://example.com/parables',
     label: 'Academic Reading',
     visibility: 'public',

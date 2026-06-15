@@ -47,6 +47,7 @@ export * from './services/user_service.js';
 export * from './services/stream_service.js';
 export * from './services/preference_service.js';
 export * from './services/story_service.js';
+export * from './services/resource_service.js';
 export * from './validators/auth.js';
 export * from './validators/invitation.js';
 export * from './validators/bundle.js';
