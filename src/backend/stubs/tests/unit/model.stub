@@ -20,7 +20,7 @@ import {
 } from '@story-cms/kit';
 
 test.group('User', (group) => {
-  group.each.setup(() => testUtils.db().withGlobalTransaction());
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
 
   test('users are persisted', async ({ assert }) => {
     const user = await UserFactory.create();
@@ -106,7 +106,7 @@ test.group('User', (group) => {
 });
 
 test.group('Chapter', (group) => {
-  group.each.setup(() => testUtils.db().withGlobalTransaction());
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
 
   test('chapters are persisted', async ({ assert }) => {
     const user = await UserFactory.create();
@@ -124,7 +124,7 @@ test.group('Chapter', (group) => {
 });
 
 test.group('Index', (group) => {
-  group.each.setup(() => testUtils.db().withGlobalTransaction());
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
 
   test('index has list and publicList', async ({ assert }) => {
     const index = new Index().fill({
@@ -188,7 +188,7 @@ test.group('Index', (group) => {
 });
 
 test.group('Draft', (group) => {
-  group.each.setup(() => testUtils.db().withGlobalTransaction());
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
 
   test('it can give an index item', async ({ assert }) => {
     const draft = await Draft.create({
@@ -246,7 +246,7 @@ test.group('Draft', (group) => {
 });
 
 test.group('Page', (group) => {
-  group.each.setup(() => testUtils.db().withGlobalTransaction());
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
 
   test('it identifies the type', async ({ assert }) => {
     const page = await PageFactory.merge({
@@ -317,7 +317,7 @@ test.group('Page', (group) => {
 });
 
 test.group('Invitation', (group) => {
-  group.each.setup(() => testUtils.db().withGlobalTransaction());
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
 
   test('invitations are persisted', async ({ assert }) => {
     const invitation = await InvitationFactory.create();

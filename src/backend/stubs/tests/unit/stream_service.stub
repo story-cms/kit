@@ -9,7 +9,7 @@ import { setupMockCms, createCustomCmsConfig } from '#tests/helpers/cms_mock';
 import cms from '#services/cms';
 
 test.group('StreamService', (group) => {
-  group.each.setup(() => testUtils.db().withGlobalTransaction());
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
 
   test('constructor finds stream from CMS config', async ({ assert }) => {
     // arrange

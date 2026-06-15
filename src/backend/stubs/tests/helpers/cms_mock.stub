@@ -11,6 +11,7 @@ export const testCmsConfig: CmsConfig = {
   name: 'Test CMS',
   logo: 'https://example.com/logo.png',
   helpUrl: 'https://example.com/help',
+  supportEmail: 'support@example.com',
   hasAppPreview: false,
   microcopySource: '',
   languages: [
