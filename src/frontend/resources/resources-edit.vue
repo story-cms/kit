@@ -1,33 +1,11 @@
 <template>
   <AppLayout>
     <template #header>
-      <ContentHeader :title="headerTitle">
-        <template #description>
-          <div class="text-xs font-medium uppercase tracking-wide text-gray-500">
-            {{ isNew ? 'New Resource' : 'Edit Resource' }}
-          </div>
-        </template>
+      <ContentHeader dir="ltr" :title="title">
         <template #actions>
           <div class="flex items-center gap-3">
             <DraftActions v-if="!isNew" @delete="deleteResource" />
-            <BooleanField
-              :field="{
-                name: 'isPublished',
-                label: 'Published',
-                widget: 'boolean',
-                default: false,
-                tintColor: 'green-400',
-                labelOrder: 'start',
-              }"
-              :is-nested="true"
-            />
-            <button
-              type="button"
-              class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
-              @click="cancel"
-            >
-              Cancel
-            </button>
+
             <button
               type="button"
               class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
@@ -42,16 +20,16 @@
 
     <div
       :class="[
-        'relative mx-auto max-w-5xl px-3',
+        'relative grid',
         {
-          'grid grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn && !isNew,
-          'grid-cols-1': shared.isSingleColumn || isNew,
+          'grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn && !isNew,
+          'mx-auto max-w-4xl grid-cols-1': shared.isSingleColumn || isNew,
         },
       ]"
     >
       <form
         :dir="shared.isRtl ? 'rtl' : 'ltr'"
-        class="space-y-6 rounded-xl border border-gray-200 bg-white p-8"
+        class="space-y-8 bg-white py-4"
         @submit.prevent="save"
       >
         <StringField
@@ -59,18 +37,22 @@
             name: 'title',
             label: 'Title',
             widget: 'string',
+            placeholderText: 'Enter resource title',
           }"
           :is-nested="true"
+          class="px-8"
         />
 
-        <div>
-          <label class="mb-2 block text-sm font-medium text-gray-700">Resource Type</label>
+        <div class="px-8">
+          <label class="mb-2 block text-sm font-medium text-gray-700"
+            >Resource Type</label
+          >
           <div class="grid grid-cols-3 gap-3">
             <button
               v-for="typeOption in resourceTypes"
               :key="typeOption.value"
               type="button"
-              class="flex items-center justify-center gap-2 rounded-lg border-2 px-4 py-3 capitalize transition-colors"
+              class="flex items-center justify-center gap-2 rounded-lg border-2 px-4 py-3 transition-colors"
               :class="
                 selectedType === typeOption.value
                   ? 'border-blue-500 bg-blue-50 text-blue-700'
@@ -78,6 +60,7 @@
               "
               @click="setType(typeOption.value)"
             >
+              <component :is="typeOption.icon" class="size-4" aria-hidden="true" />
               {{ typeOption.label }}
             </button>
           </div>
@@ -94,6 +77,7 @@
             maxSize: 5000000,
           }"
           :is-nested="true"
+          class="px-8"
         />
 
         <VideoField
@@ -104,6 +88,7 @@
             widget: 'video',
           }"
           :is-nested="true"
+          class="px-8"
         />
 
         <StringField
@@ -112,8 +97,10 @@
             name: 'infoUrl',
             label: 'URL',
             widget: 'string',
+            placeholderText: 'https://...',
           }"
           :is-nested="true"
+          class="px-8"
         />
 
         <MarkdownField
@@ -136,23 +123,28 @@
             ],
           }"
           :is-nested="true"
+          class="px-8"
         />
 
-        <StringField
+        <MarkdownField
           :field="{
             name: 'description',
             label: 'Description',
-            widget: 'string',
+            widget: 'markdown',
+            noMarkup: true,
+            placeholderText: 'Brief description of this resource...',
           }"
           :is-nested="true"
+          class="px-8"
         />
 
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div class="grid grid-cols-1 gap-6 px-8 md:grid-cols-2">
           <StringField
             :field="{
               name: 'label',
               label: 'Label',
               widget: 'string',
+              placeholderText: 'e.g., Supplementary Reading',
             }"
             :is-nested="true"
           />
@@ -177,12 +169,13 @@
 
       <ContentSidebar v-if="!isNew">
         <template #meta-box>
-          <div class="rounded-lg border border-gray-200 bg-white p-4 text-sm text-gray-600">
-            <p><span class="font-medium text-gray-900">Created:</span> {{ resource.createdAt }}</p>
-            <p class="mt-2">
-              <span class="font-medium text-gray-900">Updated:</span> {{ resource.updatedAt }}
-            </p>
-          </div>
+          <ResourceMetaBox
+            :id="resource.id"
+            :created-at="resource.createdAt"
+            :saved-at="savedAt"
+            :updated-at="resource.updatedAt"
+            :published-at="publishedAt"
+          />
         </template>
       </ContentSidebar>
     </div>
@@ -190,8 +183,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, toRefs } from 'vue';
+import { computed, onMounted, ref, toRefs, watch } from 'vue';
+import { DateTime } from 'luxon';
 import { router } from '@inertiajs/vue3';
+import { ExternalLink, FileText, Video } from '@lucide/vue';
+import type { Component } from 'vue';
 import {
   type ResourceEditProps,
   type ResourceType,
@@ -202,14 +198,15 @@ import {
 import { useModelStore, useSharedStore, useWidgetsStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
+import DraftActions from '../shared/draft-actions.vue';
 import StringField from '../fields/string-field.vue';
 import ImageField from '../fields/image-field.vue';
 import SelectField from '../fields/select-field.vue';
 import MarkdownField from '../fields/markdown-field.vue';
 import BooleanField from '../fields/boolean-field.vue';
 import VideoField from '../fields/video-field.vue';
-import DraftActions from '../shared/draft-actions.vue';
 import ContentSidebar from '../shared/content-sidebar.vue';
+import ResourceMetaBox from './resource-meta-box.vue';
 
 const props = defineProps<ResourceEditProps & SharedPageProps>();
 
@@ -226,6 +223,8 @@ type RequestPayload = {
   video?: { url: string | null };
 };
 
+let isRevertingPublished = false;
+
 const { bundle, resource, isNew } = toRefs(props);
 const model = useModelStore();
 const shared = useSharedStore();
@@ -235,26 +234,33 @@ shared.setFromProps(props);
 shared.clearErrors();
 useWidgetsStore().setProviders(props.providers);
 
-const selectedType = ref<ResourceType>(model.getField('type', 'info_link') as ResourceType);
-const title = ref(model.getField('title', '') as string);
+const selectedType = ref<ResourceType>(
+  model.getField('type', 'info_link') as ResourceType,
+);
+const title = ref(
+  isNew.value
+    ? 'Create New Resource'
+    : (model.getField('title', 'Edit Resource') as string),
+);
+const isPublished = ref(Boolean(model.getField('isPublished', false)));
+const savedAt = ref(resource.value.updatedAt);
 
-const resourceTypes = [
-  { value: 'info_link' as ResourceType, label: 'Info Link' },
-  { value: 'video' as ResourceType, label: 'Video' },
-  { value: 'text' as ResourceType, label: 'Text' },
+const resourceTypes: { value: ResourceType; label: string; icon: Component }[] = [
+  { value: 'info_link', label: 'Info Link', icon: ExternalLink },
+  { value: 'video', label: 'Video', icon: Video },
+  { value: 'text', label: 'Text', icon: FileText },
 ];
 
-const headerTitle = computed(() => {
-  if (isNew.value) return 'Create New Resource';
-  return title.value || 'Edit Resource';
-});
+const publishedAt = computed(() =>
+  isPublished.value ? (resource.value.updatedAt as string) : 'unpublished',
+);
 
 const setType = (type: ResourceType) => {
   selectedType.value = type;
   model.setField('type', type);
 };
 
-const getPayload = (): RequestPayload => ({ ...model.model } as RequestPayload);
+const getPayload = (): RequestPayload => ({ ...model.model }) as RequestPayload;
 
 const save = () => {
   shared.clearErrors();
@@ -272,10 +278,13 @@ const save = () => {
   router.post(`/${shared.locale}/resource/${resource.value.id}`, getPayload(), {
     preserveScroll: true,
     onSuccess: () => {
+      savedAt.value = DateTime.now().toISO() ?? '';
       shared.addMessage(ResponseStatus.Accomplishment, 'Resource saved');
     },
     onError: (errors) => {
       shared.setErrors(errors);
+      isRevertingPublished = true;
+      isPublished.value = false;
       model.setField('isPublished', false);
       shared.addMessage(ResponseStatus.Failure, 'Error saving resource');
     },
@@ -293,10 +302,35 @@ const deleteResource = () => {
   });
 };
 
+watch(
+  () => shared.errors,
+  (newErrors) => {
+    if (newErrors && Object.keys(newErrors).length > 0) {
+      isRevertingPublished = true;
+      isPublished.value = false;
+      model.setField('isPublished', false);
+    }
+  },
+  { deep: true },
+);
+
 onMounted(() => {
   model.$subscribe(() => {
+    if (isRevertingPublished) {
+      isRevertingPublished = false;
+      return;
+    }
+
     selectedType.value = model.getField('type', 'info_link') as ResourceType;
-    title.value = model.getField('title', '') as string;
+
+    if (isNew.value) {
+      title.value = 'Create New Resource';
+    } else {
+      title.value =
+        (model.getField('title', 'Edit Resource') as string) || 'Edit Resource';
+    }
+
+    isPublished.value = Boolean(model.getField('isPublished', false));
   });
 });
 </script>
