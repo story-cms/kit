@@ -128,39 +128,31 @@
         v-else-if="filteredResources.length > 0 && isList"
         class="overflow-x-auto rounded-xl border border-gray-200 bg-white"
       >
-        <table class="w-full min-w-[720px] table-fixed">
-          <colgroup>
-            <col />
-            <col class="w-20" />
-            <col class="w-28" />
-            <col class="w-24" />
-            <col class="w-28" />
-            <col class="w-32" />
-          </colgroup>
+        <table class="w-full min-w-[720px] table-auto">
           <thead class="border-b border-gray-200 bg-gray-50">
             <tr>
               <th
-                class="max-w-0 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                class="max-w-[400px] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
               >
                 Resource
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
               >
                 Type
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
               >
                 Label
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
               >
                 Visibility
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
               >
                 Updated
               </th>

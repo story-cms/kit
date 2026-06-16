@@ -124,10 +124,12 @@
   </div>
 
   <tr v-else class="transition-colors hover:bg-gray-50">
-    <td class="max-w-0 px-6 py-4">
-      <div class="flex items-center gap-3">
-        <ResourceThumbnail :item="resource" />
-        <div class="min-w-0">
+    <td class="max-w-[400px] px-6 py-4">
+      <div class="flex min-w-0 items-center gap-3">
+        <div class="shrink-0">
+          <ResourceThumbnail :item="resource" />
+        </div>
+        <div class="min-w-0 flex-1">
           <h4 class="truncate text-sm font-medium text-gray-900">{{ resource.title }}</h4>
           <p v-if="resource.description" class="truncate text-xs text-gray-500">
             {{ resource.description }}
