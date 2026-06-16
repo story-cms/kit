@@ -4,7 +4,7 @@
       <ContentHeader dir="ltr" :title="title">
         <template #actions>
           <div class="flex items-center gap-3">
-            <DraftActions v-if="!isNew" @delete="deleteResource" />
+            <DraftActions :can-delete="!!resource.id" @delete="deleteResource" />
             <BooleanField
               :field="{
                 name: 'isPublished',
@@ -25,8 +25,8 @@
       :class="[
         'relative grid',
         {
-          'grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn && !isNew,
-          'mx-auto max-w-4xl grid-cols-1': shared.isSingleColumn || isNew,
+          'grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn,
+          'mx-auto max-w-4xl grid-cols-1': shared.isSingleColumn,
         },
       ]"
     >
@@ -166,7 +166,7 @@
         </div>
       </form>
 
-      <ContentSidebar v-if="!isNew">
+      <ContentSidebar>
         <template #meta-box>
           <ResourceMetaBox
             :id="resource.id"
@@ -225,7 +225,7 @@ type RequestPayload = {
 
 let isRevertingPublished = false;
 
-const { bundle, resource, isNew } = toRefs(props);
+const { bundle, resource } = toRefs(props);
 const model = useModelStore();
 const shared = useSharedStore();
 
@@ -240,9 +240,9 @@ const selectedType = ref<ResourceType>(
   model.getField('type', 'info_link') as ResourceType,
 );
 const title = ref(
-  isNew.value
-    ? 'Create New Resource'
-    : (model.getField('title', 'Edit Resource') as string),
+  resource.value.id
+    ? (model.getField('title', 'Edit Resource') as string)
+    : 'Create New Resource',
 );
 const isPublished = ref(Boolean(model.getField('isPublished', false)));
 const savedAt = ref(resource.value.updatedAt);
@@ -267,7 +267,7 @@ const getPayload = (): RequestPayload => ({ ...model.model }) as RequestPayload;
 const save = debounce(1000, () => {
   shared.clearErrors();
 
-  if (isNew.value) {
+  if (!resource.value.id) {
     router.post(`/${shared.locale}/resource`, getPayload(), {
       onError: (errors) => {
         shared.setErrors(errors);
@@ -324,12 +324,9 @@ onMounted(() => {
     save();
     selectedType.value = model.getField('type', 'info_link') as ResourceType;
 
-    if (isNew.value) {
-      title.value = 'Create New Resource';
-    } else {
-      title.value =
-        (model.getField('title', 'Edit Resource') as string) || 'Edit Resource';
-    }
+    const modelTitle = model.getField('title', '') as string;
+    title.value =
+      modelTitle || (resource.value.id ? 'Edit Resource' : 'Create New Resource');
 
     isPublished.value = Boolean(model.getField('isPublished', false));
   });

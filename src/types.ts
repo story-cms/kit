@@ -306,7 +306,6 @@ export interface ResourceEditProps {
   providers: Providers;
   resource: ResourceIndexItem;
   bundle: Record<string, unknown>;
-  isNew: boolean;
 }
 
 export interface StoryEditProps {

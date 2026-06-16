@@ -4504,14 +4504,12 @@ const toEditResource = (
   updatedAt: string,
   bundle: Record<string, unknown>,
 ): ResourceEditProps => ({
-  isNew: false,
   providers: mockResourceProviders,
   resource: { ...resource, createdAt, updatedAt },
   bundle,
 });
 
 export const mockNewResourceEdit: ResourceEditProps = {
-  isNew: true,
   providers: mockResourceProviders,
   resource: {
     id: '',
