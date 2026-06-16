@@ -126,13 +126,21 @@
 
       <div
         v-else-if="filteredResources.length > 0 && isList"
-        class="overflow-hidden rounded-xl border border-gray-200 bg-white"
+        class="overflow-x-auto rounded-xl border border-gray-200 bg-white"
       >
-        <table class="w-full">
+        <table class="w-full min-w-[720px] table-fixed">
+          <colgroup>
+            <col />
+            <col class="w-20" />
+            <col class="w-28" />
+            <col class="w-24" />
+            <col class="w-28" />
+            <col class="w-32" />
+          </colgroup>
           <thead class="border-b border-gray-200 bg-gray-50">
             <tr>
               <th
-                class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                class="max-w-0 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
               >
                 Resource
               </th>
@@ -157,7 +165,7 @@
                 Updated
               </th>
               <th
-                class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500"
+                class="whitespace-nowrap px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500"
               >
                 Actions
               </th>

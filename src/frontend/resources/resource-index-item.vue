@@ -124,7 +124,7 @@
   </div>
 
   <tr v-else class="transition-colors hover:bg-gray-50">
-    <td class="px-6 py-4">
+    <td class="max-w-0 px-6 py-4">
       <div class="flex items-center gap-3">
         <ResourceThumbnail :item="resource" />
         <div class="min-w-0">
