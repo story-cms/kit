@@ -5,14 +5,17 @@
         <template #actions>
           <div class="flex items-center gap-3">
             <DraftActions v-if="!isNew" @delete="deleteResource" />
-
-            <button
-              type="button"
-              class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
-              @click="save"
-            >
-              {{ isNew ? 'Create Resource' : 'Save Changes' }}
-            </button>
+            <BooleanField
+              :field="{
+                name: 'isPublished',
+                label: 'Published',
+                widget: 'boolean',
+                default: false,
+                tintColor: 'green-400',
+                labelOrder: 'start',
+              }"
+              :is-nested="true"
+            />
           </div>
         </template>
       </ContentHeader>
@@ -27,11 +30,7 @@
         },
       ]"
     >
-      <form
-        :dir="shared.isRtl ? 'rtl' : 'ltr'"
-        class="space-y-8 bg-white py-4"
-        @submit.prevent="save"
-      >
+      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8 bg-white py-4">
         <StringField
           :field="{
             name: 'title',
@@ -198,6 +197,7 @@ import {
 import { useModelStore, useSharedStore, useWidgetsStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
+import { debounce } from '../shared/helpers';
 import DraftActions from '../shared/draft-actions.vue';
 import StringField from '../fields/string-field.vue';
 import ImageField from '../fields/image-field.vue';
@@ -231,7 +231,9 @@ const shared = useSharedStore();
 
 model.setModel(bundle.value);
 shared.setFromProps(props);
-shared.clearErrors();
+if (Object.keys(props.errors ?? {}).length === 0) {
+  shared.clearErrors();
+}
 useWidgetsStore().setProviders(props.providers);
 
 const selectedType = ref<ResourceType>(
@@ -262,13 +264,16 @@ const setType = (type: ResourceType) => {
 
 const getPayload = (): RequestPayload => ({ ...model.model }) as RequestPayload;
 
-const save = () => {
+const save = debounce(1000, () => {
   shared.clearErrors();
 
   if (isNew.value) {
     router.post(`/${shared.locale}/resource`, getPayload(), {
       onError: (errors) => {
         shared.setErrors(errors);
+        isRevertingPublished = true;
+        isPublished.value = false;
+        model.setField('isPublished', false);
         shared.addMessage(ResponseStatus.Failure, 'Error creating resource');
       },
     });
@@ -279,7 +284,6 @@ const save = () => {
     preserveScroll: true,
     onSuccess: () => {
       savedAt.value = DateTime.now().toISO() ?? '';
-      shared.addMessage(ResponseStatus.Accomplishment, 'Resource saved');
     },
     onError: (errors) => {
       shared.setErrors(errors);
@@ -289,11 +293,7 @@ const save = () => {
       shared.addMessage(ResponseStatus.Failure, 'Error saving resource');
     },
   });
-};
-
-const cancel = () => {
-  router.visit(`/${shared.locale}/resource`);
-};
+});
 
 const deleteResource = () => {
   router.delete(`/${shared.locale}/resource/${resource.value.id}`, {
@@ -321,6 +321,7 @@ onMounted(() => {
       return;
     }
 
+    save();
     selectedType.value = model.getField('type', 'info_link') as ResourceType;
 
     if (isNew.value) {

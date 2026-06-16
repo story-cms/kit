@@ -44,12 +44,12 @@
       />
     </Variant>
 
-    <Variant title="With errors" :setup-app="loadWithErrors">
+    <Variant title="With errors" :setup-app="miniSidebar">
       <ResourcesEdit
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
-        :errors="sharedProps.errors"
+        :errors="mockResourceEditErrors"
         :bookmarks="sharedProps.bookmarks"
         v-bind="mockNewResourceEdit"
       />
@@ -68,11 +68,4 @@ import {
   mockEditInfoLinkResource,
   mockResourceEditErrors,
 } from '../test/mocks';
-import { useSharedStore } from '../store';
-import type { StoryHandler } from '../shared/helpers';
-
-const loadWithErrors: StoryHandler = ({ variant }): void => {
-  miniSidebar({ variant });
-  useSharedStore().errors = mockResourceEditErrors;
-};
 </script>

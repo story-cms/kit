@@ -4588,8 +4588,8 @@ export const mockEditInfoLinkResource: ResourceEditProps = toEditResource(
   },
 );
 
-export const mockResourceEditErrors: Record<string, string> = {
-  title: 'A resource must have a title',
-  label: 'A resource must have a label',
-  infoUrl: 'Info link resources must have a valid URL',
+export const mockResourceEditErrors: Record<string, string[]> = {
+  'bundle.title': ['A resource must have a title'],
+  'bundle.label': ['A resource must have a label'],
+  'bundle.infoUrl': ['Info link resources must have a valid URL'],
 };
