@@ -1,6 +1,9 @@
 import { test, expect } from '@playwright/test';
 
-import { replaceLocaleInPath } from '../../src/frontend/shared/helpers';
+import {
+  normalizePathForLanguageSwitch,
+  replaceLocaleInPath,
+} from '../../src/frontend/shared/helpers';
 
 const locales = ['en', 'fr', 'ar'];
 
@@ -79,5 +82,31 @@ test.describe('replaceLocaleInPath', () => {
 
   test('returns null when first segment is not a known locale', () => {
     expect(replaceLocaleInPath('/xx/story', 'fr', locales)).toBeNull();
+  });
+});
+
+test.describe('normalizePathForLanguageSwitch', () => {
+  test('redirects chapter preview to story index', () => {
+    expect(normalizePathForLanguageSwitch('/en/story/1/chapter/3')).toBe('/en/story/1');
+  });
+
+  test('leaves draft edit paths unchanged', () => {
+    expect(normalizePathForLanguageSwitch('/en/story/1/draft/2/edit')).toBe(
+      '/en/story/1/draft/2/edit',
+    );
+  });
+
+  test('leaves story index unchanged', () => {
+    expect(normalizePathForLanguageSwitch('/en/story/1')).toBe('/en/story/1');
+  });
+
+  test('leaves non-story paths unchanged', () => {
+    expect(normalizePathForLanguageSwitch('/en/dashboard')).toBe('/en/dashboard');
+  });
+
+  test('combined with replaceLocaleInPath redirects chapter to translated story index', () => {
+    const pathname = '/en/story/1/chapter/3';
+    const normalized = normalizePathForLanguageSwitch(pathname);
+    expect(replaceLocaleInPath(normalized, 'fr', locales)).toBe('/fr/story/1');
   });
 });

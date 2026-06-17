@@ -22,7 +22,7 @@
           <button class="nav-icon" @click="goBack">
             <Icon name="reply" />
           </button>
-          <div v-if="subscribed('language')">
+          <div>
             <button
               v-if="shared.hasOpenSidebar"
               class="relative flex size-14 items-center justify-center rounded-full transition-all duration-75"
@@ -169,7 +169,7 @@ import Icon from '../shared/icon.vue';
 import LanguageSelector from './language-selector.vue';
 import DropUp from './drop-up.vue';
 import type { Subscription } from '../../types';
-import { replaceLocaleInPath } from './helpers';
+import { normalizePathForLanguageSwitch, replaceLocaleInPath } from './helpers';
 import { languageDisplayName, type LanguageSortable } from './helpers';
 
 function isEnglishLanguage(item: LanguageSortable): boolean {
@@ -210,8 +210,10 @@ const newPathFromLocale = (targetLocale: string) => {
   const pageUrl = page.url || `${window.location.pathname}${window.location.search}`;
   const [pathname, search = ''] = pageUrl.split('?');
   const locales = shared.languages.map((l) => l.locale);
+  const normalized = normalizePathForLanguageSwitch(pathname);
   const swapped =
-    replaceLocaleInPath(pathname, targetLocale, locales) ?? `/${targetLocale}/dashboard`;
+    replaceLocaleInPath(normalized, targetLocale, locales) ??
+    `/${targetLocale}/dashboard`;
   return search ? `${swapped}?${search}` : swapped;
 };
 
