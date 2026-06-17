@@ -19,7 +19,7 @@ const baseResource = {
 
 test.describe('Resource Validator', () => {
   test.describe('Unpublished resources', () => {
-    test('requires label when unpublished', async () => {
+    test('allows empty label when unpublished', async () => {
       const data = {
         title: 'Test Resource',
         type: 'info_link' as const,
@@ -31,39 +31,51 @@ test.describe('Resource Validator', () => {
       const ctx = createMockHttpContext(data);
       const validator = new ResourceValidator(ctx);
 
-      await expect(validator.validate(data)).rejects.toThrow();
+      const result = (await validator.validate(data)).bundle;
+      expect(result.label).toBe('');
     });
 
-    test('requires content for text type when unpublished', async () => {
+    test('allows missing content for text type when unpublished', async () => {
       const data = {
-        ...baseResource,
+        title: 'Draft Text',
         type: 'text' as const,
         isPublished: false,
-        content: '',
-      };
-      const ctx = createMockHttpContext(data);
-      const validator = new ResourceValidator(ctx);
-
-      await expect(validator.validate(data)).rejects.toThrow();
-    });
-
-    test('accepts complete unpublished info link resource', async () => {
-      const data = {
-        ...baseResource,
-        type: 'info_link' as const,
-        isPublished: false,
-        infoUrl: 'https://example.com/page',
       };
       const ctx = createMockHttpContext(data);
       const validator = new ResourceValidator(ctx);
 
       const result = (await validator.validate(data)).bundle;
       expect(result.isPublished).toBe(false);
-      expect(result.infoUrl).toBe('https://example.com/page');
+    });
+
+    test('allows incomplete unpublished info link resource', async () => {
+      const data = {
+        title: 'Draft Link',
+        type: 'info_link' as const,
+        isPublished: false,
+      };
+      const ctx = createMockHttpContext(data);
+      const validator = new ResourceValidator(ctx);
+
+      const result = (await validator.validate(data)).bundle;
+      expect(result.isPublished).toBe(false);
+    });
+
+    test('allows missing video when unpublished', async () => {
+      const data = {
+        title: 'Draft Video',
+        type: 'video' as const,
+        isPublished: false,
+      };
+      const ctx = createMockHttpContext(data);
+      const validator = new ResourceValidator(ctx);
+
+      const result = (await validator.validate(data)).bundle;
+      expect(result.isPublished).toBe(false);
     });
   });
 
-  test.describe('Validation', () => {
+  test.describe('Published resources', () => {
     test('requires title', async () => {
       const data = {
         ...baseResource,

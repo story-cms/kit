@@ -28,6 +28,13 @@ export default class StoriesController {
   }
 
   public async update(ctx: HttpContext) {
+    const storyService = new StoryService(cms.config);
+    const params = storyService.paramsFromPath(ctx);
+    if (!params) return ctx.response.notFound();
+
+    const resourceIds = ctx.request.input('resourceIds', []);
+    await storyService.updateResources(params.storyId, params.locale, resourceIds);
+
     return ctx.response.redirect().back();
   }
 

@@ -1,0 +1,138 @@
+{{{ 
+  exports({ to: app.makePath('tests/unit/resource_service.spec.ts') }) 
+}}}
+import { test } from '@japa/runner';
+import testUtils from '@adonisjs/core/services/test_utils';
+
+import {
+  ResourceFactory,
+  ResourceService,
+  StoryFactory,
+  StoryLocalisation,
+} from '@story-cms/kit';
+
+test.group('Resource service', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction());
+
+  test('listByLocale returns resources ordered by title', async ({ assert }) => {
+    await ResourceFactory.merge({
+      locale: 'en',
+      title: 'Zebra Resource',
+    }).create();
+
+    await ResourceFactory.merge({
+      locale: 'en',
+      title: 'Alpha Resource',
+    }).create();
+
+    await ResourceFactory.merge({
+      locale: 'es',
+      title: 'Spanish Resource',
+    }).create();
+
+    const service = new ResourceService();
+    const items = await service.listByLocale('en');
+
+    assert.lengthOf(items, 2);
+    assert.equal(items[0].title, 'Alpha Resource');
+    assert.equal(items[1].title, 'Zebra Resource');
+  });
+
+  test('hydrate preserves requested id order', async ({ assert }) => {
+    const first = await ResourceFactory.merge({ locale: 'en', title: 'First' }).create();
+    const second = await ResourceFactory.merge({ locale: 'en', title: 'Second' }).create();
+
+    const service = new ResourceService();
+    const items = await service.hydrate([second.id, first.id]);
+
+    assert.lengthOf(items, 2);
+    assert.equal(items[0].id, second.id);
+    assert.equal(items[1].id, first.id);
+  });
+
+  test('hydrate skips missing ids', async ({ assert }) => {
+    const resource = await ResourceFactory.merge({ locale: 'en' }).create();
+
+    const service = new ResourceService();
+    const items = await service.hydrate([resource.id, '00000000-0000-0000-0000-000000000000']);
+
+    assert.lengthOf(items, 1);
+    assert.equal(items[0].id, resource.id);
+  });
+
+  test('updateStoryResources persists ordered resource ids on localisation', async ({
+    assert,
+  }) => {
+    const story = await StoryFactory.with('localisations').create();
+    const localisation = story.localisations[0];
+
+    const first = await ResourceFactory.merge({ locale: localisation.locale }).create();
+    const second = await ResourceFactory.merge({ locale: localisation.locale }).create();
+
+    const service = new ResourceService();
+    await service.updateStoryResources(story.id, localisation.locale, [
+      second.id,
+      first.id,
+    ]);
+
+    await localisation.refresh();
+    assert.deepEqual(localisation.resources, [second.id, first.id]);
+  });
+
+  test('updateStoryResources does nothing when localisation is missing', async ({
+    assert,
+  }) => {
+    const story = await StoryFactory.create();
+    const resource = await ResourceFactory.merge({ locale: 'en' }).create();
+
+    const service = new ResourceService();
+    await service.updateStoryResources(story.id, 'en', [resource.id]);
+
+    const localisation = await StoryLocalisation.query()
+      .where('storyId', story.id)
+      .where('locale', 'en')
+      .first();
+
+    assert.isNull(localisation);
+  });
+
+  test('create and update persist type-specific bundle fields', async ({ assert }) => {
+    const service = new ResourceService();
+
+    const created = await service.create(
+      'en',
+      {
+        title: 'Guide',
+        type: 'info_link',
+        label: 'Reading',
+        visibility: 'public',
+        isPublished: false,
+        infoUrl: 'https://example.com/guide',
+      },
+      null,
+    );
+
+    assert.equal(created.title, 'Guide');
+    assert.equal(created.type, 'info_link');
+    assert.isFalse(created.isPublished);
+    assert.equal(created.bundle.infoUrl, 'https://example.com/guide');
+
+    const updated = await service.update(
+      created.id,
+      {
+        title: 'Updated Guide',
+        type: 'info_link',
+        label: 'Reading',
+        visibility: 'guests',
+        isPublished: true,
+        infoUrl: 'https://example.com/updated',
+      },
+      null,
+    );
+
+    assert.equal(updated.title, 'Updated Guide');
+    assert.equal(updated.visibility, 'guests');
+    assert.isTrue(updated.isPublished);
+    assert.equal(updated.bundle.infoUrl, 'https://example.com/updated');
+  });
+});

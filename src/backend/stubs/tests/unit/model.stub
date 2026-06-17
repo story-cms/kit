@@ -17,6 +17,7 @@ import {
   IndexFactory,
   DraftFactory,
   PageFactory,
+  ResourceFactory,
 } from '@story-cms/kit';
 
 test.group('User', (group) => {
@@ -645,5 +646,38 @@ test.group('Invitation', (group) => {
     // We just verify they are DateTime instances
     assert.isTrue(start instanceof DateTime);
     assert.isTrue(end instanceof DateTime);
+  });
+});
+
+test.group('Resource', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction());
+
+  test('resources are persisted', async ({ assert }) => {
+    const resource = await ResourceFactory.create();
+    assert.isTrue(resource.$isPersisted);
+
+    const resources = await ResourceFactory.createMany(3);
+    assert.lengthOf(resources, 3);
+  });
+
+  test('text bundle is stored in json column', async ({ assert }) => {
+    const resource = await ResourceFactory.apply('text').create();
+
+    assert.equal(resource.type, 'text');
+    assert.include(resource.bundle.content, 'Lorem ipsum');
+  });
+
+  test('video bundle stores url', async ({ assert }) => {
+    const resource = await ResourceFactory.apply('video').create();
+
+    assert.equal(resource.type, 'video');
+    assert.equal(resource.bundle.video.url, 'https://example.com/video.mp4');
+  });
+
+  test('info link bundle stores url', async ({ assert }) => {
+    const resource = await ResourceFactory.apply('info_link').create();
+
+    assert.equal(resource.type, 'info_link');
+    assert.equal(resource.bundle.infoUrl, 'https://example.com/info');
   });
 });

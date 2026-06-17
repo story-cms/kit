@@ -298,14 +298,20 @@ export interface ResourceIndexItem extends Resource {
   updatedAt: string;
 }
 
+export interface ResourceMeta {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface ResourceIndexProps {
   resources: ResourceIndexItem[];
 }
 
 export interface ResourceEditProps {
   providers: Providers;
-  resource: ResourceIndexItem;
-  bundle: Record<string, unknown>;
+  resource: ResourceMeta;
+  bundle: any;
 }
 
 export interface StoryEditProps {

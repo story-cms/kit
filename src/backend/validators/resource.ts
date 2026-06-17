@@ -3,6 +3,23 @@ import vine, { SimpleMessagesProvider } from '@vinejs/vine';
 import type { SchemaTypes } from '@vinejs/vine/types';
 import videoRule from './video_rule.js';
 
+const draft = {
+  title: vine.string().optional(),
+  type: vine.enum(['text', 'video', 'info_link'] as const).optional(),
+  imageUrl: vine.string().optional(),
+  description: vine.string().optional(),
+  label: vine.string().optional(),
+  visibility: vine.enum(['public', 'guests', 'leaders'] as const).optional(),
+  isPublished: vine.boolean(),
+  content: vine.string().optional(),
+  infoUrl: vine.string().optional(),
+  video: vine
+    .object({
+      url: vine.string().nullable().optional(),
+    })
+    .optional(),
+};
+
 const base = {
   title: vine.string().trim().minLength(1),
   type: vine.enum(['text', 'video', 'info_link'] as const),
@@ -28,9 +45,11 @@ const videoSchema = vine
 
 export class ResourceValidator {
   protected resourceType: string;
+  protected isPublished: boolean;
 
   constructor(protected ctx: HttpContext) {
     this.resourceType = ctx.request.input('type') ?? 'info_link';
+    this.isPublished = ctx.request.input('isPublished') === true;
   }
 
   validate(data: Record<string, unknown>): Promise<any> {
@@ -44,6 +63,10 @@ export class ResourceValidator {
   }
 
   protected get effectiveSchema(): SchemaTypes {
+    if (!this.isPublished) {
+      return vine.object(draft);
+    }
+
     if (this.resourceType === 'text') {
       return vine.object({
         ...base,
