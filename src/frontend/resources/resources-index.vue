@@ -201,6 +201,12 @@
         </button>
       </div>
     </section>
+
+    <RemoveResourceModal
+      :open="deleteModalResourceId !== null"
+      @close="deleteModalResourceId = null"
+      @confirm="confirmDeleteResource"
+    />
   </AppLayout>
 </template>
 
@@ -220,6 +226,7 @@ import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
 import ListSwitcher from '../shared/list-switcher.vue';
 import ResourceIndexItemCard from './resource-index-item.vue';
+import RemoveResourceModal from './remove-resource-modal.vue';
 
 type FilterType = 'all' | ResourceType;
 type FilterVisibility = 'all' | VisibilityType;
@@ -236,6 +243,7 @@ const showFilters = ref(false);
 const filterType = ref<FilterType>('all');
 const filterVisibility = ref<FilterVisibility>('all');
 const selectedLabel = ref('all');
+const deleteModalResourceId = ref<string | null>(null);
 
 const allLabels = computed(() => {
   const labels = new Set<string>();
@@ -288,11 +296,20 @@ const previewResource = (resource: ResourceIndexItem) => {
 };
 
 const deleteResource = (id: string) => {
-  if (!confirm('Are you sure you want to delete this resource?')) return;
+  deleteModalResourceId.value = id;
+};
+
+const confirmDeleteResource = () => {
+  const id = deleteModalResourceId.value;
+  if (!id) return;
 
   router.delete(`/${shared.locale}/resource/${id}`, {
     onSuccess: () => {
       items.value = items.value.filter((item) => item.id !== id);
+      deleteModalResourceId.value = null;
+    },
+    onError: () => {
+      deleteModalResourceId.value = null;
     },
   });
 };
