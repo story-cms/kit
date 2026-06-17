@@ -22,7 +22,7 @@
           <button class="nav-icon" @click="goBack">
             <Icon name="reply" />
           </button>
-          <div>
+          <div v-if="subscribed('language')">
             <button
               v-if="shared.hasOpenSidebar"
               class="relative flex size-14 items-center justify-center rounded-full transition-all duration-75"
@@ -86,7 +86,7 @@
               >Audience</a
             >
 
-            <div v-if="subscribed('language')">
+            <div v-if="subscribed('ui')">
               <button
                 v-if="locale === 'en'"
                 class="nav-link opacity-50 disabled:cursor-not-allowed"
