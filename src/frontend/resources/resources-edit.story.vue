@@ -11,17 +11,6 @@
       />
     </Variant>
 
-    <Variant title="Edit video" :setup-app="miniSidebar">
-      <ResourcesEdit
-        :config="sharedProps.config"
-        :user="sharedProps.user"
-        :language="sharedProps.language"
-        :errors="sharedProps.errors"
-        :bookmarks="sharedProps.bookmarks"
-        v-bind="mockEditVideoResource"
-      />
-    </Variant>
-
     <Variant title="Edit text" :setup-app="miniSidebar">
       <ResourcesEdit
         :config="sharedProps.config"

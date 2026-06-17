@@ -4,32 +4,27 @@
       <ContentHeader dir="ltr" :title="title">
         <template #actions>
           <div class="flex items-center gap-3">
-            <DraftActions :can-delete="!!resource.id" @delete="deleteResource" />
-            <BooleanField
-              :field="{
-                name: 'isPublished',
-                label: 'Published',
-                widget: 'boolean',
-                default: false,
-                tintColor: 'green-400',
-                labelOrder: 'start',
-              }"
-              :is-nested="true"
+            <PillButton label="Cancel" variant="gray" @click="cancel" />
+            <PillButton
+              v-if="!resource.id"
+              label="Create Resource"
+              variant="blue"
+              :disabled="isSaving"
+              @click="save"
+            />
+            <PillButton
+              v-else
+              label="Save Changes"
+              variant="blue"
+              :disabled="isSaving"
+              @click="save"
             />
           </div>
         </template>
       </ContentHeader>
     </template>
 
-    <div
-      :class="[
-        'relative grid',
-        {
-          'grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn,
-          'mx-auto max-w-4xl grid-cols-1': shared.isSingleColumn,
-        },
-      ]"
-    >
+    <div class="relative mx-auto max-w-4xl">
       <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8 bg-white py-4">
         <StringField
           :field="{
@@ -165,25 +160,12 @@
           />
         </div>
       </form>
-
-      <ContentSidebar>
-        <template #meta-box>
-          <ResourceMetaBox
-            :id="resource.id"
-            :created-at="resource.createdAt"
-            :saved-at="savedAt"
-            :updated-at="resource.updatedAt"
-            :published-at="publishedAt"
-          />
-        </template>
-      </ContentSidebar>
     </div>
   </AppLayout>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, toRefs, watch } from 'vue';
-import { DateTime } from 'luxon';
+import { onMounted, ref, toRefs } from 'vue';
 import { router } from '@inertiajs/vue3';
 import { ExternalLink, FileText, Video } from '@lucide/vue';
 import type { Component } from 'vue';
@@ -197,16 +179,13 @@ import {
 import { useModelStore, useSharedStore, useWidgetsStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
-import { debounce } from '../shared/helpers';
-import DraftActions from '../shared/draft-actions.vue';
+
+import PillButton from '../shared/pill-button.vue';
 import StringField from '../fields/string-field.vue';
 import ImageField from '../fields/image-field.vue';
 import SelectField from '../fields/select-field.vue';
 import MarkdownField from '../fields/markdown-field.vue';
-import BooleanField from '../fields/boolean-field.vue';
 import VideoField from '../fields/video-field.vue';
-import ContentSidebar from '../shared/content-sidebar.vue';
-import ResourceMetaBox from './resource-meta-box.vue';
 
 const props = defineProps<ResourceEditProps & SharedPageProps>();
 
@@ -222,8 +201,6 @@ type RequestPayload = {
   infoUrl?: string;
   video?: { url: string | null };
 };
-
-let isRevertingPublished = false;
 
 const { bundle, resource } = toRefs(props);
 const model = useModelStore();
@@ -244,8 +221,7 @@ const title = ref(
     ? (model.getField('title', 'Edit Resource') as string)
     : 'Create New Resource',
 );
-const isPublished = ref(Boolean(model.getField('isPublished', false)));
-const savedAt = ref(resource.value.updatedAt);
+const isSaving = ref(false);
 
 const resourceTypes: { value: ResourceType; label: string; icon: Component }[] = [
   { value: 'info_link', label: 'Info Link', icon: ExternalLink },
@@ -253,82 +229,57 @@ const resourceTypes: { value: ResourceType; label: string; icon: Component }[] =
   { value: 'text', label: 'Text', icon: FileText },
 ];
 
-const publishedAt = computed(() =>
-  isPublished.value ? (resource.value.updatedAt as string) : 'unpublished',
-);
-
 const setType = (type: ResourceType) => {
   selectedType.value = type;
   model.setField('type', type);
 };
 
-const getPayload = (): RequestPayload => ({ ...model.model }) as RequestPayload;
+const getPayload = (): RequestPayload =>
+  ({ ...model.model, isPublished: true }) as RequestPayload;
 
-const save = debounce(1000, () => {
+const cancel = () => {
+  router.visit(`/${shared.locale}/resource`);
+};
+
+const save = () => {
   shared.clearErrors();
+  isSaving.value = true;
+  model.setField('isPublished', true);
+
+  const onFinish = () => {
+    isSaving.value = false;
+  };
+
+  const onError = (errors: Record<string, string>) => {
+    shared.setErrors(errors);
+    shared.addMessage(
+      ResponseStatus.Failure,
+      resource.value.id ? 'Error saving resource' : 'Error creating resource',
+    );
+  };
 
   if (!resource.value.id) {
     router.post(`/${shared.locale}/resource`, getPayload(), {
-      onError: (errors) => {
-        shared.setErrors(errors);
-        isRevertingPublished = true;
-        isPublished.value = false;
-        model.setField('isPublished', false);
-        shared.addMessage(ResponseStatus.Failure, 'Error creating resource');
-      },
+      onError,
+      onFinish,
     });
     return;
   }
 
   router.post(`/${shared.locale}/resource/${resource.value.id}`, getPayload(), {
     preserveScroll: true,
-    onSuccess: () => {
-      savedAt.value = DateTime.now().toISO() ?? '';
-    },
-    onError: (errors) => {
-      shared.setErrors(errors);
-      isRevertingPublished = true;
-      isPublished.value = false;
-      model.setField('isPublished', false);
-      shared.addMessage(ResponseStatus.Failure, 'Error saving resource');
-    },
-  });
-});
-
-const deleteResource = () => {
-  router.delete(`/${shared.locale}/resource/${resource.value.id}`, {
-    onSuccess: () => shared.addMessage(ResponseStatus.Confirmation, 'Resource deleted'),
-    onError: () => shared.addMessage(ResponseStatus.Failure, 'Error deleting resource'),
+    onError,
+    onFinish,
   });
 };
 
-watch(
-  () => shared.errors,
-  (newErrors) => {
-    if (newErrors && Object.keys(newErrors).length > 0) {
-      isRevertingPublished = true;
-      isPublished.value = false;
-      model.setField('isPublished', false);
-    }
-  },
-  { deep: true },
-);
-
 onMounted(() => {
   model.$subscribe(() => {
-    if (isRevertingPublished) {
-      isRevertingPublished = false;
-      return;
-    }
-
-    save();
     selectedType.value = model.getField('type', 'info_link') as ResourceType;
 
     const modelTitle = model.getField('title', '') as string;
     title.value =
       modelTitle || (resource.value.id ? 'Edit Resource' : 'Create New Resource');
-
-    isPublished.value = Boolean(model.getField('isPublished', false));
   });
 });
 </script>
