@@ -7,7 +7,7 @@ import { marked } from 'marked';
 import {
   type StoryIndexProps,
   type PreviewProps,
-  AddStatus,
+  type AddStatus,
   IndexService,
   Chapter,
   StoryService,
