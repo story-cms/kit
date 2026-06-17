@@ -14,7 +14,7 @@ import cms from '#services/cms';
 import { setupMockCms, testCmsConfig } from '#tests/helpers/cms_mock';
 
 test.group('LanguageService', (group) => {
-  group.each.setup(() => testUtils.db().withGlobalTransaction());
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
 
   const createConfigRecord = async () => {
     return Config.create({

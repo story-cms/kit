@@ -3,7 +3,7 @@
 }}}
 import { BaseCommand } from '@adonisjs/core/ace';
 import type { CommandOptions } from '@adonisjs/core/types/ace';
-import { CmsConfig, Config, defineConfig } from '@story-cms/kit';
+import { type CmsConfig, Config, defineConfig } from '@story-cms/kit';
 
 export default class MigrateAll extends BaseCommand {
   static commandName = 'migrate:all';
