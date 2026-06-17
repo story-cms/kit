@@ -44,6 +44,7 @@ import ResetPassword from './auth/reset-password.vue';
 import ScriptureField from './fields/scripture-field.vue';
 import SelectField from './fields/select-field.vue';
 import StatusTag from './shared/status-tag.vue';
+import StudioButton from './shared/studio-button.vue';
 import StoryEdit from './stories/story-edit.vue';
 import StoryGallery from './stories/story-gallery.vue';
 import StoryIndex from './stories/story-index.vue';
@@ -111,6 +112,7 @@ export {
   ScriptureField,
   SelectField,
   StatusTag,
+  StudioButton,
   StoryEdit,
   StoryGallery,
   StoryIndex,

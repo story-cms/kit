@@ -10,6 +10,11 @@ export default {
   safelist: ['bg-green-400', 'green-400', 'focus:ring-green-400', 'cursor-default'],
   theme: {
     extend: {
+      fontFamily: {
+        inter: ['Inter', 'sans-serif'],
+        dmsans: ['DM Sans', 'sans-serif'],
+        amiri: ['Amiri', 'serif'],
+      },
       colors: {
         tertiary: '#649ABB',
         accent: {
@@ -36,6 +41,8 @@ export default {
         indigo: colors.indigo,
         app_gray: '#F9FAFB',
         app_green: '#16A34A',
+        studio_forest_green: '#102F35',
+        studio_lime: '#D7FE96',
       },
     },
   },
