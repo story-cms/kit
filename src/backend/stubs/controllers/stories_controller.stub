@@ -2,10 +2,24 @@
   exports({ to: app.makePath('app/controllers/stories_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
-import { Chapter, Story, StoryService } from '@story-cms/kit';
+import db from '@adonisjs/lucid/services/db';
+import {
+  Chapter,
+  Index,
+  Story,
+  StoryLocalisation,
+  StoryDeleteException,
+  StoryService,
+} from '@story-cms/kit';
 import cms from '#services/cms';
+import { StoryCreateValidator, StoryUpdateValidator } from '#validators/story';
 
 export default class StoriesController {
+  /**
+   * Show the gallery of stories
+   * @param ctx HttpContext
+   * @returns Inertia page name
+   */
   public async index(ctx: HttpContext) {
     const storyService = new StoryService(cms.config);
     const stories = await storyService.galleryIndex(ctx);
@@ -14,34 +28,186 @@ export default class StoriesController {
     return ctx.inertia.render('StoryGallery', { stories });
   }
 
+  /**
+   * Show the form for creating a new story
+   * @param ctx HttpContext
+   * @returns Inertia page name
+   */
   public async create(ctx: HttpContext) {
-    return ctx.response.redirect().back();
+    const storyService = new StoryService(cms.config);
+    const props = await storyService.createProps(ctx);
+    if (!props) return ctx.response.notFound();
+
+    // @ts-expect-error Inertia page name
+    return ctx.inertia.render('StoryCreate', props);
   }
 
+  /**
+   * Show the form for editing an existing story
+   * @param ctx HttpContext
+   * @returns Inertia page name
+   */
   public async edit(ctx: HttpContext) {
     const storyService = new StoryService(cms.config);
     const props = await storyService.editProps(ctx);
     if (!props) return ctx.response.notFound();
 
     // @ts-expect-error Inertia page name
-    return ctx.inertia.render('story_edit', props);
+    return ctx.inertia.render('StoryEdit', props);
   }
 
+  /**
+   * Create a new story
+   * @param ctx HttpContext
+   * @returns Inertia page name
+   */
+  public async store(ctx: HttpContext) {
+    const locale = cms.localeFromPath(ctx);
+    const validator = new StoryCreateValidator();
+    const validated = await validator.validate(ctx.request.body());
+    const payload = validated.bundle;
+
+    const storyService = new StoryService(cms.config);
+    const slug = await storyService.uniqueSlug(payload.title);
+
+    await db.transaction(async (trx) => {
+      const story = new Story().fill({
+        chapterLimit: payload.chapterLimit,
+        storyType: payload.storyType,
+        chapterType: payload.chapterType,
+        sectionType: payload.sectionType,
+        visibility: payload.visibility,
+        template: payload.template,
+        slug,
+        isPublished: false,
+      });
+      story.useTransaction(trx);
+      await story.save();
+
+      const local = new StoryLocalisation().fill({
+        storyId: story.id,
+        locale: locale,
+        title: payload.title,
+        coverImage: payload.coverImage,
+        description: payload.description,
+        tags: payload.tags,
+        sections: [],
+        resources: [],
+      });
+      local.useTransaction(trx);
+      await local.save();
+
+      const index = new Index().fill({
+        storyId: story.id,
+        apiVersion: 1,
+        locale: locale,
+      });
+
+      index.useTransaction(trx);
+      await index.save();
+    });
+
+    return ctx.response.redirect(`/${locale}/story`, false, 303);
+  }
+
+  /**
+   * Update an existing story
+   * @param ctx HttpContext
+   * @returns Inertia page name
+   */
   public async update(ctx: HttpContext) {
     const storyService = new StoryService(cms.config);
-    const params = storyService.paramsFromPath(ctx);
-    if (!params) return ctx.response.notFound();
+    const { version } = await storyService.parsePath(ctx);
+    const validator = new StoryUpdateValidator(ctx);
+    const validated = await validator.validate(ctx.request.body());
+    const payload = validated.bundle;
 
-    const resourceIds = ctx.request.input('resourceIds', []);
-    await storyService.updateResources(params.storyId, params.locale, resourceIds);
+    const story = await Story.findOrFail(version.storyId);
+
+    if (payload.isPublished) {
+      const messages = await storyService.blockingPublishMessages(story);
+      if (messages.length > 0) {
+        ctx.session.flash('errorsBag', { other: messages.join(' | ') });
+        return ctx.response.redirect().back();
+      }
+    }
+
+    const sections = await storyService.prepSections(version, payload.sections);
+
+    await db.transaction(async (trx) => {
+      // update the story if it's the source locale
+      if (version.locale === cms.config.languages[0].locale) {
+        story.merge({
+          isPublished: payload.isPublished,
+          chapterLimit: Number(payload.chapterLimit),
+          storyType: payload.storyType,
+          chapterType: payload.chapterType,
+          sectionType: payload.sectionType,
+          visibility: payload.visibility,
+        });
+        story.useTransaction(trx);
+        await story.save();
+      }
+
+      const localisationData = {
+        title: payload.title,
+        coverImage: payload.coverImage ?? '',
+        description: payload.description ?? '',
+        tags: payload.tags,
+        sections: sections,
+        resources: payload.resources ?? [],
+      };
+
+      const local = await StoryLocalisation.query()
+        .where('story_id', version.storyId)
+        .where('locale', version.locale)
+        .first();
+
+      if (local) {
+        local.merge(localisationData);
+        local.useTransaction(trx);
+        await local.save();
+      } else {
+        const created = new StoryLocalisation().fill({
+          storyId: version.storyId,
+          locale: version.locale,
+          ...localisationData,
+        });
+        created.useTransaction(trx);
+        await created.save();
+      }
+    });
 
     return ctx.response.redirect().back();
   }
 
+  /**
+   * Delete an existing story
+   * @param ctx HttpContext
+   * @returns Inertia page name
+   */
   public async delete(ctx: HttpContext) {
-    return ctx.response.redirect().back();
+    const storyService = new StoryService(cms.config);
+    const { version } = await storyService.parsePath(ctx);
+    try {
+      await storyService.delete(version.storyId);
+    } catch (error) {
+      const message =
+        error instanceof StoryDeleteException
+          ? error.reasons
+          : 'Failed to delete that story.';
+      ctx.session.flash('inputErrorsBag', { other: message });
+      return ctx.response.redirect().back();
+    }
+
+    return ctx.response.redirect(`/${version.locale}/story`, false, 303);
   }
 
+  /**
+   * Returns all the stories and their chapters for a client
+   * @param ctx HttpContext
+   * @returns JSON response
+   */
   public async home(ctx: HttpContext) {
     const locale = cms.localeFromQuery(ctx);
     const chapters = await Chapter.query().where({ locale }).orderBy('number', 'asc');

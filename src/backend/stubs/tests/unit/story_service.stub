@@ -8,9 +8,18 @@ import type { HttpContext } from '@adonisjs/core/http';
 import {
   ResourceFactory,
   StoryFactory,
+  StoryLocalisation,
   StoryService,
+  type PostedSection,
+  type StorySection,
+  type StoryVersion,
 } from '@story-cms/kit';
 import { testCmsConfig } from '#tests/helpers/cms_mock';
+
+const sourceLocale = testCmsConfig.languages[0].locale;
+const translationLocale = testCmsConfig.languages[1].locale;
+
+const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 function createMockHttpContext(params: {
   storyId: number;
@@ -26,6 +35,10 @@ function createMockHttpContext(params: {
       }),
     },
   } as HttpContext;
+}
+
+function versionFor(storyId: number, locale: string): StoryVersion {
+  return { apiVersion: 1, locale, storyId };
 }
 
 test.group('Story service', (group) => {
@@ -88,5 +101,168 @@ test.group('Story service', (group) => {
     );
 
     assert.isUndefined(props);
+  });
+});
+
+test.group('StoryService.prepSections', (group) => {
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
+
+  const service = new StoryService(testCmsConfig);
+
+  test('returns an empty array when sections are omitted', async ({ assert }) => {
+    const result = await service.prepSections(versionFor(1, sourceLocale));
+
+    assert.deepEqual(result, []);
+  });
+
+  test('returns an empty array when sections are an empty array on the source locale', async ({
+    assert,
+  }) => {
+    const result = await service.prepSections(versionFor(1, sourceLocale), []);
+
+    assert.deepEqual(result, []);
+  });
+
+  test('normalises source-locale sections with stable ids and descriptions', async ({
+    assert,
+  }) => {
+    const posted: PostedSection[] = [
+      { id: 'existing-id', title: 'Part One', description: 'First part' },
+      { id: '  ', title: 'Part Two' },
+      { id: '', title: 'Part Three', description: undefined },
+      { title: 'Part Four' },
+    ];
+
+    const result = await service.prepSections(versionFor(1, sourceLocale), posted);
+
+    assert.lengthOf(result, 4);
+    assert.equal(result[0].id, 'existing-id');
+    assert.equal(result[0].title, 'Part One');
+    assert.equal(result[0].description, 'First part');
+    assert.match(result[1].id, uuidPattern);
+    assert.equal(result[1].title, 'Part Two');
+    assert.equal(result[1].description, '');
+    assert.match(result[2].id, uuidPattern);
+    assert.equal(result[2].title, 'Part Three');
+    assert.equal(result[2].description, '');
+    assert.match(result[3].id, uuidPattern);
+    assert.equal(result[3].title, 'Part Four');
+    assert.equal(result[3].description, '');
+  });
+
+  // ---------------------------
+  // translations
+  // ---------------------------
+
+  test('returns an empty array for a translation when the source localisation is missing', async ({
+    assert,
+  }) => {
+    const story = await StoryFactory.merge({ id: 90 }).create();
+
+    const result = await service.prepSections(versionFor(story.id, translationLocale), [
+      { id: 'ignored', title: 'Translated title' },
+    ]);
+
+    assert.deepEqual(result, []);
+  });
+
+  test('returns an empty array for a translation when the source has no sections', async ({
+    assert,
+  }) => {
+    const story = await StoryFactory.with('localisations').merge({ id: 91 }).create();
+    const sourceLocal = await StoryLocalisation.query()
+      .where('storyId', story.id)
+      .where('locale', sourceLocale)
+      .firstOrFail();
+    sourceLocal.sections = [];
+    await sourceLocal.save();
+
+    const result = await service.prepSections(versionFor(story.id, translationLocale), [
+      { id: 'ignored', title: 'Translated title' },
+    ]);
+
+    assert.deepEqual(result, []);
+  });
+
+  test('maps posted translation sections onto source section ids by index', async ({
+    assert,
+  }) => {
+    const story = await StoryFactory.with('localisations').merge({ id: 92 }).create();
+    const sourceSections: StorySection[] = [
+      { id: 'section-a', title: 'Intro', description: 'Source intro' },
+      { id: 'section-b', title: 'Deep dive', description: 'Source body' },
+    ];
+
+    const sourceLocal = await StoryLocalisation.query()
+      .where('storyId', story.id)
+      .where('locale', sourceLocale)
+      .firstOrFail();
+    sourceLocal.sections = sourceSections;
+    await sourceLocal.save();
+
+    const posted: StorySection[] = [
+      { id: 'client-id-a', title: 'Introducción', description: 'ES intro' },
+      { id: 'client-id-b', title: 'Profundizar', description: 'ES body' },
+    ];
+
+    const result = await service.prepSections(
+      versionFor(story.id, translationLocale),
+      posted,
+    );
+
+    assert.deepEqual(result, [
+      { id: 'section-a', title: 'Introducción', description: 'ES intro' },
+      { id: 'section-b', title: 'Profundizar', description: 'ES body' },
+    ]);
+  });
+
+  test('keeps every source section when a translation post omits trailing sections', async ({
+    assert,
+  }) => {
+    const story = await StoryFactory.with('localisations').merge({ id: 93 }).create();
+    const sourceSections: StorySection[] = [
+      { id: 'section-a', title: 'Intro', description: 'Source intro' },
+      { id: 'section-b', title: 'Deep dive', description: 'Source body' },
+    ];
+
+    const sourceLocal = await StoryLocalisation.query()
+      .where('storyId', story.id)
+      .where('locale', sourceLocale)
+      .firstOrFail();
+    sourceLocal.sections = sourceSections;
+    await sourceLocal.save();
+
+    const result = await service.prepSections(versionFor(story.id, translationLocale), [
+      { id: 'client-id-a', title: 'Solo intro', description: 'Solo ES' },
+    ]);
+
+    assert.deepEqual(result, [
+      { id: 'section-a', title: 'Solo intro', description: 'Solo ES' },
+      { id: 'section-b', title: '', description: '' },
+    ]);
+  });
+
+  test('ignores extra posted sections beyond the source section count', async ({
+    assert,
+  }) => {
+    const story = await StoryFactory.with('localisations').merge({ id: 94 }).create();
+
+    const sourceLocal = await StoryLocalisation.query()
+      .where('storyId', story.id)
+      .where('locale', sourceLocale)
+      .firstOrFail();
+    sourceLocal.sections = [
+      { id: 'section-a', title: 'Intro', description: 'Source intro' },
+    ];
+    await sourceLocal.save();
+
+    const result = await service.prepSections(versionFor(story.id, translationLocale), [
+      { id: 'section-a', title: 'Introducción', description: 'ES intro' },
+      { id: 'section-b', title: 'Extra', description: 'Should be dropped' },
+    ]);
+
+    assert.deepEqual(result, [
+      { id: 'section-a', title: 'Introducción', description: 'ES intro' },
+    ]);
   });
 });
