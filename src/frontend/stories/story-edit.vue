@@ -3,8 +3,15 @@
     <template #header>
       <ContentHeader :title="title || 'New Story'">
         <template #actions>
-          <ActionButton icon="info" @tap="shared.setShowMetaBox(!shared.showMetaBox)" />
-          <LabelButton label="Save" @tap="saveStory" />
+          <ActionButton v-if="props.hasNoContent" icon="trash" @tap="deleteStory" />
+          <PillButton label="Save" variant="green" @click="saveStory" />
+
+          <PillButton
+            v-if="!isPublished"
+            label="Publish"
+            variant="green"
+            @click="publishStory"
+          />
         </template>
         <template #extra-actions>
           <div class="pb-6">
@@ -19,22 +26,15 @@
     </template>
 
     <section>
-      <div
-        :class="[
-          'relative grid',
-          {
-            'grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn,
-            'mx-auto max-w-4xl grid-cols-1': shared.isSingleColumn,
-          },
-        ]"
-      >
+      <div class="relative grid grid-cols-[1fr_375px] gap-x-4">
         <form class="space-y-8">
           <StoryEditDetails
             v-if="currentStoryTab === 'Details'"
-            :tab-icon="currentStoryTabIcon"
+            :is-translation="shared.isTranslation"
           />
           <StoryEditSections
-            v-if="currentStoryTab === 'Sections'"
+            v-if="currentStoryTab === `${sectionType ?? 'Section'}s`"
+            :section-type="sectionType"
             :tab-icon="currentStoryTabIcon"
           />
           <StoryEditResources
@@ -44,96 +44,137 @@
             @create="createResource"
           />
         </form>
-
-        <ContentSidebar>
-          <template #meta-box>
-            <MetaMetaBox
-              :story-type="model.storyType"
-              :chapter-type="model.chapterType"
-              :created-at="createdAt"
-              :updated-at="savedAt"
-            />
-          </template>
-        </ContentSidebar>
       </div>
     </section>
   </AppLayout>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, toRefs } from 'vue';
-import { DateTime } from 'luxon';
+import { computed, ref } from 'vue';
 import { router } from '@inertiajs/vue3';
 
 import type { NavigationPaneTab, Resource, SharedPageProps, StoryEditProps } from '../../types';
+import { ResponseStatus } from '../../types';
+import { useSharedStore, useWidgetsStore, useModelStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
 import ContentHeader from '../shared/content-header.vue';
-import { useSharedStore, useWidgetsStore, useModelStore } from '../store';
-import { ResponseStatus } from '../../types';
-import LabelButton from '../shared/label-button.vue';
-import MetaMetaBox from './components/meta-meta-box.vue';
+import PillButton from '../shared/pill-button.vue';
 import ActionButton from '../shared/action-button.vue';
-import ContentSidebar from '../shared/content-sidebar.vue';
-import StoryEditDetails from './components/story-edit-details.vue';
-import StoryEditResources from './components/story-edit-resources.vue';
-import StoryEditSections from './components/story-edit-sections.vue';
 import NavigationPane from '../shared/navigation-pane.vue';
+import StoryEditDetails from './components/story-edit-details.vue';
+import StoryEditSections from './components/story-edit-sections.vue';
+import StoryEditResources from './components/story-edit-resources.vue';
 import { resourceIds } from './components/resource-utils';
 
 const props = defineProps<StoryEditProps & SharedPageProps>();
-const { model, availableResources } = toRefs(props);
-
 const shared = useSharedStore();
 shared.setFromProps(props);
 shared.clearErrors();
 useWidgetsStore().setProviders(props.providers);
 
-const storyModel = useModelStore();
-storyModel.setModel(model.value);
+const model = useModelStore();
+model.setModel(props.model);
 
-const title = ref(model.value.title);
-const savedAt = ref(DateTime.now().toISO() ?? '');
-const createdAt = ref(DateTime.now().toISO() ?? '');
-const attachedResources = ref<Resource[]>([...(model.value.resources ?? [])]);
+const attachedResources = ref<Resource[]>([...(props.model.resources ?? [])]);
+const availableResources = props.availableResources ?? [];
 
-const storyEditTabs: NavigationPaneTab[] = [
-  { label: 'Details', icon: 'book-open' },
-  { label: 'Sections', icon: 'list-bullet' },
-  { label: 'Resources', icon: 'folder' },
-];
+const isPublished = computed(() => props.model.isPublished);
+
+if (shared.isTranslation) {
+  model.setSource(props.source ?? {});
+}
+
+const title = ref(props.model.title);
+const sectionType = ref<string | null>(props.model.sectionType || 'Section');
+
+model.$subscribe(() => {
+  title.value = model.getField('title', 'New Story');
+  sectionType.value = model.getField('sectionType', 'Section');
+});
+
+const storyEditTabs = computed(
+  () =>
+    [
+      { label: 'Details', icon: 'book-open' },
+      { label: `${sectionType.value ?? 'Section'}s`, icon: 'list-bullet' },
+      { label: 'Resources', icon: 'folder' },
+    ] as NavigationPaneTab[],
+);
 const currentStoryTab = ref('Details');
 
 const currentStoryTabIcon = computed(
-  () => storyEditTabs.find((t) => t.label === currentStoryTab.value)?.icon ?? '',
+  () => storyEditTabs.value.find((t) => t.label === currentStoryTab.value)?.icon ?? '',
 );
 
 const onStoryTabChange = (tab: string) => {
   currentStoryTab.value = tab;
 };
 
-onMounted(() => {
-  storyModel.$subscribe(() => {
-    title.value = storyModel.getField('title', 'New Story') as string;
-  });
-});
-
 const createResource = () => {
   router.visit(`/${shared.locale}/resource/create`);
 };
 
-const getPayload = () => ({
-  resourceIds: resourceIds(attachedResources.value),
-});
+const deleteStory = () => {
+  router.delete(`/${shared.locale}/story/${props.model.id}`, {
+    onError: (errors) => shared.addMessage(ResponseStatus.Failure, errors.other),
+  });
+};
+
+const getPayload = (forPublish: boolean = false) => {
+  const askingIsPublished = forPublish ? true : model.getField('isPublished', false);
+  return {
+    title: model.getField('title', ''),
+    coverImage: model.getField('coverImage', ''),
+    chapterLimit: model.getField('chapterLimit', 0),
+    storyType: model.getField('storyType', ''),
+    chapterType: model.getField('chapterType', ''),
+    sectionType: model.getField('sectionType', ''),
+    tags: model.getField('tags', ''),
+    description: model.getField('description', ''),
+    visibility: model.getField('visibility', ''),
+    sections: model.getField('sections', []),
+    resources: resourceIds(attachedResources.value),
+    isPublished: askingIsPublished,
+  };
+};
+
+const publishStory = () => {
+  if (isPublished.value) return;
+
+  shared.clearErrors();
+  router.post(`/${shared.locale}/story/${props.model.id}`, getPayload(true), {
+    preserveScroll: true,
+
+    onSuccess: (page) => {
+      const flashError = (page.props as { flash?: { error?: string } }).flash?.error;
+      if (flashError) {
+        shared.addMessage(ResponseStatus.Failure, flashError);
+        return;
+      }
+      shared.addMessage(ResponseStatus.Confirmation, 'Story published successfully!');
+    },
+
+    onError: (errors) => {
+      shared.setErrors(errors);
+      shared.addMessage(ResponseStatus.Failure, 'Error publishing story');
+    },
+  });
+};
 
 const saveStory = () => {
   shared.clearErrors();
-
-  router.post(`/${shared.locale}/story/${model.value.id}`, getPayload(), {
+  router.post(`/${shared.locale}/story/${props.model.id}`, getPayload(), {
     preserveScroll: true,
-    onSuccess: () => {
-      savedAt.value = DateTime.now().toISO() ?? '';
+
+    onSuccess: (page) => {
+      const flashError = (page.props as { flash?: { error?: string } }).flash?.error;
+      if (flashError) {
+        shared.addMessage(ResponseStatus.Failure, flashError);
+        return;
+      }
       shared.addMessage(ResponseStatus.Confirmation, 'Story saved successfully');
     },
+
     onError: (errors) => {
       shared.setErrors(errors);
       shared.addMessage(ResponseStatus.Failure, 'Error saving story');

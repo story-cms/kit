@@ -47,6 +47,7 @@ import ResourcesIndex from './resources/resources-index.vue';
 import ScriptureField from './fields/scripture-field.vue';
 import SelectField from './fields/select-field.vue';
 import StatusTag from './shared/status-tag.vue';
+import StoryCreate from './stories/story-create.vue';
 import StoryEdit from './stories/story-edit.vue';
 import StoryEditResources from './stories/components/story-edit-resources.vue';
 import StoryGallery from './stories/story-gallery.vue';
@@ -124,6 +125,7 @@ export {
   SelectField,
   SettingsIndex,
   StatusTag,
+  StoryCreate,
   StoryEdit,
   StoryEditResources,
   StoryGallery,
