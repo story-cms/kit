@@ -233,16 +233,16 @@ export class StoryService {
     };
   }
 
-  private resourceIds(local: { resources?: string[] }): string[] {
+  private resourceIds(local: { resources?: string[] | null }): string[] {
     return local.resources ?? [];
   }
 
   private localisationFields(local: {
-    title?: string;
+    title?: string | null;
     coverImage?: string | null;
     description?: string | null;
     tags?: string | null;
-    sections?: StoryEditProps['model']['sections'];
+    sections?: StoryEditProps['model']['sections'] | null;
   }): Pick<
     StoryEditProps['model'],
     'title' | 'coverImage' | 'description' | 'tags' | 'sections'
