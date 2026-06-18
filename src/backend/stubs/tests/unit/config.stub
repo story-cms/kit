@@ -7,7 +7,7 @@ import { Config } from '@story-cms/kit';
 import cmsConfig from '#config/cms';
 
 test.group('Config', (group) => {
-  group.each.setup(() => testUtils.db().withGlobalTransaction());
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
 
   test('can store cms config in configs table', async ({ assert }) => {
     const config = new Config();

@@ -334,6 +334,19 @@ export function parseLanguageSpecification(spec: LanguageSpecification): {
   return { name: language, nativeName: language, locale };
 }
 
+/** Redirect chapter preview paths to the story index before switching locale. */
+export function normalizePathForLanguageSwitch(pathname: string): string {
+  const segments = pathname.split('/').filter(Boolean);
+  if (
+    segments.length >= 5 &&
+    segments[1] === 'story' &&
+    segments[3] === 'chapter'
+  ) {
+    return `/${segments.slice(0, 3).join('/')}`;
+  }
+  return pathname;
+}
+
 /** Swap the locale segment in a pathname, or return null if not localized. */
 export function replaceLocaleInPath(
   pathname: string,

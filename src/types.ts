@@ -675,8 +675,9 @@ export type Subscription =
   | 'language'
   | 'audience'
   | 'invitation'
-  | 'page'
-  | 'resource';
+  | 'resource'
+  | 'ui'
+  | 'page';
 
 export interface BundleTemplate {
   id: string;
