@@ -4513,12 +4513,6 @@ export const mockNewResourceEdit: ResourceEditProps = {
   providers: mockResourceProviders,
   resource: {
     id: '',
-    title: '',
-    type: 'info_link',
-    imageUrl: null,
-    label: null,
-    visibility: 'public',
-    description: null,
     createdAt: '',
     updatedAt: '',
   },
