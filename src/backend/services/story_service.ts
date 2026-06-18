@@ -3,6 +3,7 @@ import { errors, type HttpContext } from '@adonisjs/core/http';
 import Index from '../models/index.js';
 import Story from '../models/story.js';
 import StoryLocalisation, { emptyTranslation } from '../models/story_localisation.js';
+import { ResourceService } from './resource_service.js';
 import type {
   CmsConfig,
   FieldSpec,
@@ -51,10 +52,14 @@ export class StoryService {
       story.localisations.find((localisation) => localisation.locale === sourceLocale) ??
       emptyTranslation;
 
+    const resourceService = new ResourceService();
+    const availableResources = await resourceService.listByLocale(locale);
+    const targetFields = this.localisationFields(target);
+    const sourceFields = this.localisationFields(source);
+
     return {
       model: {
         id: story.id,
-        tags: story.tags ?? null,
         chapterLimit: story.chapterLimit,
         storyType: story.storyType,
         chapterType: story.chapterType,
@@ -63,14 +68,25 @@ export class StoryService {
         slug: story.slug,
         template: story.template,
         isPublished: story.isPublished,
-        createdAt: story.createdAt.toISO()!,
-        updatedAt: story.updatedAt.toISO()!,
-        ...this.localisationFields(target),
+        ...targetFields,
+        resources: await resourceService.hydrate(this.resourceIds(target)),
       },
-      source: this.localisationFields(source),
-      isNew: hasNoContent,
+      source: {
+        ...sourceFields,
+        resources: await resourceService.hydrate(this.resourceIds(source)),
+      },
+      availableResources,
+      hasNoContent,
       providers: configService.get<Providers>('providers')!,
     };
+  }
+
+  public async updateResources(
+    storyId: number,
+    locale: string,
+    resourceIds: string[],
+  ): Promise<void> {
+    await new ResourceService().updateStoryResources(storyId, locale, resourceIds);
   }
 
   public async parsePath(ctx: HttpContext): Promise<{
@@ -207,7 +223,7 @@ export class StoryService {
     return {
       id: story.id,
       name: localisation.title,
-      coverImage: localisation.coverImage,
+      coverImage: localisation.coverImage ?? '',
       chapterLimit: story.chapterLimit,
       chapterType: story.chapterType,
       storyType: story.storyType,
@@ -217,22 +233,26 @@ export class StoryService {
     };
   }
 
+  private resourceIds(local: { resources?: string[] }): string[] {
+    return local.resources ?? [];
+  }
+
   private localisationFields(local: {
     title?: string;
-    coverImage?: string;
-    description?: string;
+    coverImage?: string | null;
+    description?: string | null;
+    tags?: string | null;
     sections?: StoryEditProps['model']['sections'];
-    resources?: string[];
   }): Pick<
     StoryEditProps['model'],
-    'title' | 'coverImage' | 'description' | 'sections' | 'resources'
+    'title' | 'coverImage' | 'description' | 'tags' | 'sections'
   > {
     return {
       title: local.title ?? '',
       coverImage: local.coverImage ?? '',
       description: local.description ?? '',
+      tags: local.tags ?? null,
       sections: local.sections ?? [],
-      resources: local.resources ?? [],
     };
   }
 

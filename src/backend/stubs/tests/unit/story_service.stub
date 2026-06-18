@@ -1,0 +1,92 @@
+{{{ 
+  exports({ to: app.makePath('tests/unit/story_service.spec.ts') }) 
+}}}
+import { test } from '@japa/runner';
+import testUtils from '@adonisjs/core/services/test_utils';
+import type { HttpContext } from '@adonisjs/core/http';
+
+import {
+  ResourceFactory,
+  StoryFactory,
+  StoryService,
+} from '@story-cms/kit';
+import { testCmsConfig } from '#tests/helpers/cms_mock';
+
+function createMockHttpContext(params: {
+  storyId: number;
+  locale: string;
+}): HttpContext {
+  return {
+    params,
+    auth: {
+      use: () => ({
+        user: {
+          isAllowed: () => true,
+        },
+      }),
+    },
+  } as HttpContext;
+}
+
+test.group('Story service', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction());
+
+  test('updateResources persists ordered resource ids on localisation', async ({ assert }) => {
+    const story = await StoryFactory.with('localisations').create();
+    const localisation = story.localisations[0];
+
+    const first = await ResourceFactory.merge({ locale: localisation.locale }).create();
+    const second = await ResourceFactory.merge({ locale: localisation.locale }).create();
+
+    const service = new StoryService(testCmsConfig);
+    await service.updateResources(story.id, localisation.locale, [second.id, first.id]);
+
+    await localisation.refresh();
+    assert.deepEqual(localisation.resources, [second.id, first.id]);
+  });
+
+  test('editProps hydrates attached resources and lists available resources', async ({
+    assert,
+  }) => {
+    const story = await StoryFactory.with('localisations').create();
+    const localisation = story.localisations[0];
+
+    const first = await ResourceFactory.merge({
+      locale: localisation.locale,
+      title: 'Alpha Resource',
+    }).create();
+    const second = await ResourceFactory.merge({
+      locale: localisation.locale,
+      title: 'Beta Resource',
+    }).create();
+    await ResourceFactory.merge({ locale: 'es', title: 'Spanish Resource' }).create();
+
+    localisation.resources = [second.id, first.id];
+    localisation.tags = 'gospel,john';
+    await localisation.save();
+
+    const service = new StoryService(testCmsConfig);
+    const props = await service.editProps(
+      createMockHttpContext({ storyId: story.id, locale: localisation.locale }),
+    );
+
+    assert.isDefined(props);
+    assert.lengthOf(props!.availableResources, 2);
+    assert.equal(props!.availableResources[0].title, 'Alpha Resource');
+    assert.equal(props!.availableResources[1].title, 'Beta Resource');
+    assert.lengthOf(props!.model.resources, 2);
+    assert.equal(props!.model.resources[0].id, second.id);
+    assert.equal(props!.model.resources[1].id, first.id);
+    assert.equal(props!.model.tags, 'gospel,john');
+    assert.isBoolean(props!.hasNoContent);
+  });
+
+  test('editProps returns undefined when story is missing', async ({ assert }) => {
+    const service = new StoryService(testCmsConfig);
+    const props = await service.editProps(
+      createMockHttpContext({ storyId: 99999, locale: 'en' }),
+    );
+
+    assert.isUndefined(props);
+  });
+});
