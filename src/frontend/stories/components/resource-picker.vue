@@ -28,7 +28,7 @@
 
     <div
       v-if="showSearchPanel"
-      class="max-h-96 overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-lg"
+      class="max-h-96 overflow-hidden overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-lg"
     >
       <div
         class="sticky top-0 flex items-center justify-between border-b border-gray-200 bg-gray-50 px-4 py-2"
@@ -49,12 +49,12 @@
         <div
           v-for="libraryItem in filteredAvailableResources"
           :key="libraryItem.id"
-          class="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-gray-50"
+          class="flex min-w-0 items-center gap-3 overflow-hidden px-4 py-3 transition-colors hover:bg-gray-50"
         >
           <ResourceThumbnail :item="libraryItem" />
-          <div class="min-w-0 flex-1 border border-red-500">
-            <div class="flex items-center gap-2">
-              <h4 class="truncate text-sm font-medium text-gray-900">
+          <div class="min-w-0 flex-1">
+            <div class="flex min-w-0 items-center gap-2 overflow-hidden">
+              <h4 class="min-w-0 truncate text-sm font-medium text-gray-900">
                 {{ libraryItem.title }}
               </h4>
               <ResourceTypeBadge :type="libraryItem.type" />
@@ -62,9 +62,9 @@
             <p v-if="libraryItem.description" class="mt-1 truncate text-xs text-gray-500">
               {{ libraryItem.description }}
             </p>
-            <div class="mt-1 flex items-center gap-2">
-              <Tag class="size-3 text-gray-400" aria-hidden="true" />
-              <span class="text-xs text-gray-500">{{
+            <div class="mt-1 flex min-w-0 items-center gap-2">
+              <Tag class="size-3 shrink-0 text-gray-400" aria-hidden="true" />
+              <span class="truncate text-xs text-gray-500">{{
                 libraryItem.label ?? 'Uncategorized'
               }}</span>
             </div>

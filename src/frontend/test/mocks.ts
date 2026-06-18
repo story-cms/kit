@@ -4329,7 +4329,8 @@ export const availableResources: Resource[] = [
     url: 'https://example.com/historical-jesus',
     label: 'Academic Reading',
     visibility: 'public',
-    description: 'Academic article examining historical evidence for Jesus',
+    description:
+      'Academic article examining historical evidence for Jesus. It is a text that provides a comprehensive overview of the historical Jesus. It is a text that provides a comprehensive overview of the historical Jesus. It is a text that provides a comprehensive overview of the historical Jesus. ',
   },
   {
     id: 'r3',
