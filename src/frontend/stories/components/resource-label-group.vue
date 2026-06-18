@@ -1,17 +1,21 @@
 <template>
   <section
     class="overflow-hidden rounded-xl border border-gray-200 bg-white transition-opacity"
-    :class="{ 'opacity-50': draggingLabelIndex === labelIndex }"
-    @dragover.prevent="emit('label-dragover', labelIndex)"
-    @drop.prevent="emit('label-dragend')"
+    :class="{ 'opacity-50': !readOnly && draggingLabelIndex === labelIndex }"
+    @dragover.prevent="onLabelDragOver"
+    @drop.prevent="onLabelDrop"
   >
     <div
       class="flex items-center gap-3 border-b border-gray-200 bg-gray-50 px-4 py-3"
-      draggable="true"
-      @dragstart="emit('label-dragstart', labelIndex)"
-      @dragend="emit('label-dragend')"
+      :draggable="!readOnly"
+      @dragstart="onLabelDragStart"
+      @dragend="onLabelDragEnd"
     >
-      <GripVertical class="size-4 cursor-move text-gray-400" aria-hidden="true" />
+      <GripVertical
+        v-if="!readOnly"
+        class="size-4 cursor-move text-gray-400"
+        aria-hidden="true"
+      />
       <Tag class="size-4 text-blue-600" aria-hidden="true" />
       <span class="font-medium text-gray-900">{{ label }}</span>
       <span class="text-xs text-gray-500">({{ resources.length }})</span>
@@ -23,8 +27,11 @@
         :key="attachedItem.id"
         :item="attachedItem"
         :is-dragging="
-          draggingResource?.label === label && draggingResource?.index === resourceIndex
+          !readOnly &&
+          draggingResource?.label === label &&
+          draggingResource?.index === resourceIndex
         "
+        :read-only="readOnly"
         @remove="emit('remove', attachedItem.id)"
         @dragstart="emit('resource-dragstart', label, resourceIndex)"
         @dragover.prevent="emit('resource-dragover', label, resourceIndex)"
@@ -40,12 +47,13 @@ import { GripVertical, Tag } from '@lucide/vue';
 import ResourceAttachedItem from './resource-attached-item.vue';
 import type { Resource } from '../../../types';
 
-defineProps<{
+const props = defineProps<{
   label: string;
   resources: Resource[];
   labelIndex: number;
   draggingLabelIndex: number | null;
   draggingResource: { label: string; index: number } | null;
+  readOnly?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -57,4 +65,20 @@ const emit = defineEmits<{
   'resource-dragend': [];
   remove: [resourceId: string];
 }>();
+
+const onLabelDragStart = () => {
+  if (!props.readOnly) emit('label-dragstart', props.labelIndex);
+};
+
+const onLabelDragOver = () => {
+  if (!props.readOnly) emit('label-dragover', props.labelIndex);
+};
+
+const onLabelDrop = () => {
+  if (!props.readOnly) emit('label-dragend');
+};
+
+const onLabelDragEnd = () => {
+  if (!props.readOnly) emit('label-dragend');
+};
 </script>

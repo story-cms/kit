@@ -56,5 +56,10 @@ export { default as DropValidator } from './validators/drop.js';
 export { default as PageValidator } from './validators/page.js';
 export * from './validators/user.js';
 export { ResourceValidator } from './validators/resource.js';
+export {
+  StoryCreateValidator,
+  StoryUpdateValidator,
+  storyErrorMessages,
+} from './validators/story.js';
 export { default as audioRule } from './validators/audio_rule.js';
 export { default as videoRule } from './validators/video_rule.js';

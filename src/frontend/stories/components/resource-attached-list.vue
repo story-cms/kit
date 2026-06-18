@@ -5,7 +5,7 @@
         <span class="font-medium">{{ resources.length }}</span>
         resource{{ resources.length !== 1 ? 's' : '' }} attached
       </p>
-      <p class="text-xs text-gray-500">Drag to reorder labels and resources</p>
+      <p v-if="!readOnly" class="text-xs text-gray-500">Drag to reorder labels and resources</p>
     </div>
 
     <ResourceLabelGroup
@@ -14,8 +14,9 @@
       :label="label"
       :resources="groupedByLabel[label] ?? []"
       :label-index="labelIndex"
-      :dragging-label-index="draggingLabelIndex"
-      :dragging-resource="draggingResource"
+      :dragging-label-index="readOnly ? null : draggingLabelIndex"
+      :dragging-resource="readOnly ? null : draggingResource"
+      :read-only="readOnly"
       @label-dragstart="onLabelDragStart"
       @label-dragover="onLabelDragOver"
       @label-dragend="onDragEnd"
@@ -35,6 +36,7 @@ import type { Resource } from '../../../types';
 
 const props = defineProps<{
   resources: Resource[];
+  readOnly?: boolean;
 }>();
 
 const emit = defineEmits<{

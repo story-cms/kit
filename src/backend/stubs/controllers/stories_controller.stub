@@ -4,15 +4,15 @@
 import type { HttpContext } from '@adonisjs/core/http';
 import db from '@adonisjs/lucid/services/db';
 import {
-  Chapter,
   Index,
   Story,
   StoryLocalisation,
   StoryDeleteException,
   StoryService,
+  StoryCreateValidator,
+  StoryUpdateValidator,
 } from '@story-cms/kit';
 import cms from '#services/cms';
-import { StoryCreateValidator, StoryUpdateValidator } from '#validators/story';
 
 export default class StoriesController {
   /**
@@ -210,32 +210,7 @@ export default class StoriesController {
    */
   public async home(ctx: HttpContext) {
     const locale = cms.localeFromQuery(ctx);
-    const chapters = await Chapter.query().where({ locale }).orderBy('number', 'asc');
-
-    const storyModels = await Story.query()
-      .preload('localisations', (localisationsQuery) => {
-        localisationsQuery.where('locale', locale);
-      })
-      .orderBy('order', 'asc');
-
-    const stories = storyModels.map((story: Story) => {
-      const local = story.localisations[0];
-      return {
-        id: story.id,
-        name: local.title,
-        coverImage: local.coverImage,
-        chapterLimit: story.chapterLimit,
-        chapterType: story.chapterType,
-        storyType: story.storyType,
-        description: local.description,
-        chapters: chapters
-          .filter((chapter) => chapter.storyId === story.id)
-          .map((ch: Chapter) => {
-            return { id: ch.number, ...ch.bundle };
-          }),
-      };
-    });
-
-    return { stories };
+    const storyService = new StoryService(cms.config);
+    return storyService.homeStories(locale);
   }
 }

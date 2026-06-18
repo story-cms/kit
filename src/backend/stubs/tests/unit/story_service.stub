@@ -102,6 +102,33 @@ test.group('Story service', (group) => {
 
     assert.isUndefined(props);
   });
+
+  test('homeStories hydrates attached resources for each story', async ({ assert }) => {
+    const story = await StoryFactory.with('localisations').create();
+    const localisation = story.localisations[0];
+
+    const first = await ResourceFactory.merge({
+      locale: localisation.locale,
+      title: 'First Resource',
+    }).create();
+    const second = await ResourceFactory.merge({
+      locale: localisation.locale,
+      title: 'Second Resource',
+    }).create();
+
+    localisation.resources = [second.id, first.id];
+    await localisation.save();
+
+    const service = new StoryService(testCmsConfig);
+    const { stories } = await service.homeStories(localisation.locale);
+
+    const result = stories.find((item) => item.id === story.id);
+    assert.isDefined(result);
+    assert.lengthOf(result!.resources, 2);
+    assert.equal(result!.resources[0].id, second.id);
+    assert.equal(result!.resources[1].id, first.id);
+    assert.equal(result!.resources[0].title, 'Second Resource');
+  });
 });
 
 test.group('StoryService.prepSections', (group) => {

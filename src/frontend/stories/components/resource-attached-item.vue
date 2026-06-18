@@ -1,14 +1,18 @@
 <template>
   <div
-    class="flex min-w-0 items-center gap-3 overflow-hidden px-4 py-3 transition-colors hover:bg-gray-50"
-    :class="{ 'opacity-50': isDragging }"
-    draggable="true"
-    @dragstart="emit('dragstart')"
-    @dragover.prevent="emit('dragover')"
-    @drop.prevent="emit('drop')"
-    @dragend="emit('dragend')"
+    class="flex min-w-0 items-center gap-3 overflow-hidden px-4 py-3 transition-colors"
+    :class="[
+      readOnly ? '' : 'hover:bg-gray-50',
+      { 'opacity-50': isDragging },
+    ]"
+    :draggable="!readOnly"
+    @dragstart="onDragStart"
+    @dragover.prevent="onDragOver"
+    @drop.prevent="onDrop"
+    @dragend="onDragEnd"
   >
     <GripVertical
+      v-if="!readOnly"
       class="size-4 shrink-0 cursor-move text-gray-400"
       aria-hidden="true"
     />
@@ -34,6 +38,7 @@
       </p>
     </div>
     <button
+      v-if="!readOnly"
       type="button"
       class="shrink-0 rounded p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
       aria-label="Remove resource"
@@ -50,9 +55,10 @@ import ResourceThumbnail from './resource-thumbnail.vue';
 import ResourceTypeBadge from './resource-type-badge.vue';
 import type { Resource } from '../../../types';
 
-defineProps<{
+const props = defineProps<{
   item: Resource;
   isDragging?: boolean;
+  readOnly?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -62,4 +68,20 @@ const emit = defineEmits<{
   drop: [];
   dragend: [];
 }>();
+
+const onDragStart = () => {
+  if (!props.readOnly) emit('dragstart');
+};
+
+const onDragOver = () => {
+  if (!props.readOnly) emit('dragover');
+};
+
+const onDrop = () => {
+  if (!props.readOnly) emit('drop');
+};
+
+const onDragEnd = () => {
+  if (!props.readOnly) emit('dragend');
+};
 </script>

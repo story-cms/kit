@@ -20,6 +20,7 @@ import type {
   StorySpec,
   StoryVersion,
   Providers,
+  Resource,
 } from '../../types.js';
 
 export type PostedSection = {
@@ -402,4 +403,53 @@ export class StoryService {
 
     return template.fields;
   }
+
+  public async homeStories(locale: string): Promise<{ stories: HomeStory[] }> {
+    const chapters = await Chapter.query().where({ locale }).orderBy('number', 'asc');
+
+    const storyModels = await Story.query()
+      .preload('localisations', (localisationsQuery) => {
+        localisationsQuery.where('locale', locale);
+      })
+      .orderBy('order', 'asc');
+
+    const resourceService = new ResourceService();
+
+    const stories = await Promise.all(
+      storyModels.map(async (story) => {
+        const local = story.localisations[0];
+        const resources = local
+          ? await resourceService.hydrate(this.resourceIds(local))
+          : [];
+
+        return {
+          id: story.id,
+          name: local?.title ?? '',
+          coverImage: local?.coverImage ?? '',
+          chapterLimit: story.chapterLimit,
+          chapterType: story.chapterType,
+          storyType: story.storyType,
+          description: local?.description ?? '',
+          chapters: chapters
+            .filter((chapter) => chapter.storyId === story.id)
+            .map((chapter) => ({ id: chapter.number, ...chapter.bundle })),
+          resources,
+        };
+      }),
+    );
+
+    return { stories };
+  }
+}
+
+export interface HomeStory {
+  id: number;
+  name: string;
+  coverImage: string;
+  chapterLimit: number;
+  chapterType: string;
+  storyType: string;
+  description: string;
+  chapters: Array<{ id: number } & Record<string, unknown>>;
+  resources: Resource[];
 }

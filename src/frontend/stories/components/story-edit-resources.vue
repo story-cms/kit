@@ -1,5 +1,8 @@
 <template>
-  <div class="grid min-w-0 grid-cols-[minmax(0,1fr)] overflow-x-clip">
+  <div
+    class="grid min-w-0 overflow-x-clip"
+    :class="isTranslation ? 'grid-cols-2 gap-x-4' : 'grid-cols-[minmax(0,1fr)]'"
+  >
     <div class="min-w-0 space-y-6">
       <ResourcePicker
         ref="resourcePicker"
@@ -16,6 +19,16 @@
 
       <ResourceAttachedList v-else v-model:resources="attachedResources" />
     </div>
+
+    <div v-if="isTranslation" class="min-w-0 space-y-4">
+      <h3 class="text-sm font-medium text-gray-700">Source locale resources</h3>
+      <ResourceAttachedList
+        v-if="sourceResources.length > 0"
+        :resources="sourceResources"
+        read-only
+      />
+      <p v-else class="text-sm text-gray-500">No resources attached in source locale</p>
+    </div>
   </div>
 </template>
 
@@ -26,10 +39,18 @@ import ResourceEmptyState from './resource-empty-state.vue';
 import ResourcePicker from './resource-picker.vue';
 import type { Resource } from '../../../types';
 
-const props = defineProps<{
-  resources: Resource[];
-  availableResources: Resource[];
-}>();
+const props = withDefaults(
+  defineProps<{
+    resources: Resource[];
+    availableResources: Resource[];
+    isTranslation?: boolean;
+    sourceResources?: Resource[];
+  }>(),
+  {
+    isTranslation: false,
+    sourceResources: () => [],
+  },
+);
 
 const emit = defineEmits<{
   'update:resources': [resources: Resource[]];

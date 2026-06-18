@@ -41,6 +41,8 @@
             v-if="currentStoryTab === 'Resources'"
             v-model:resources="attachedResources"
             :available-resources="availableResources"
+            :is-translation="shared.isTranslation"
+            :source-resources="props.source?.resources ?? []"
             @create="createResource"
           />
         </form>
