@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-6">
+  <div class="min-w-0 space-y-6">
     <ResourcePicker
       ref="resourcePicker"
       :available-resources="availableResources"

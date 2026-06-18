@@ -26,8 +26,8 @@
     </template>
 
     <section>
-      <div class="relative grid grid-cols-[1fr_375px] gap-x-4">
-        <form class="space-y-8">
+      <div class="relative grid min-w-0 grid-cols-[1fr_375px] gap-x-4">
+        <form class="min-w-0 space-y-8">
           <StoryEditDetails
             v-if="currentStoryTab === 'Details'"
             :is-translation="shared.isTranslation"

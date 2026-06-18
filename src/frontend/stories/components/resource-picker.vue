@@ -1,7 +1,7 @@
 <template>
-  <div class="space-y-6">
-    <div class="flex items-center gap-3">
-      <div class="relative flex-1">
+  <div class="min-w-0 w-full space-y-6">
+    <div class="flex min-w-0 items-center gap-3">
+      <div class="relative min-w-0 flex-1">
         <Search
           class="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-gray-400"
           aria-hidden="true"
@@ -28,7 +28,7 @@
 
     <div
       v-if="showSearchPanel"
-      class="max-h-96 overflow-hidden overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-lg"
+      class="max-h-96 w-full overflow-x-hidden overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-lg"
     >
       <div
         class="sticky top-0 flex items-center justify-between border-b border-gray-200 bg-gray-50 px-4 py-2"
@@ -59,7 +59,10 @@
               </h4>
               <ResourceTypeBadge :type="libraryItem.type" />
             </div>
-            <p v-if="libraryItem.description" class="mt-1 truncate text-xs text-gray-500">
+            <p
+              v-if="libraryItem.description"
+              class="mt-1 min-w-0 truncate text-xs text-gray-500"
+            >
               {{ libraryItem.description }}
             </p>
             <div class="mt-1 flex min-w-0 items-center gap-2">
