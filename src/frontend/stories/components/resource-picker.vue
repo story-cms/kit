@@ -45,14 +45,14 @@
           <X class="size-4" />
         </button>
       </div>
-      <div class="divide-y divide-gray-100">
+      <div class="w-full divide-y divide-gray-100">
         <div
           v-for="libraryItem in filteredAvailableResources"
           :key="libraryItem.id"
           class="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-gray-50"
         >
           <ResourceThumbnail :item="libraryItem" />
-          <div class="min-w-0 flex-1">
+          <div class="min-w-0 flex-1 border border-red-500">
             <div class="flex items-center gap-2">
               <h4 class="truncate text-sm font-medium text-gray-900">
                 {{ libraryItem.title }}
