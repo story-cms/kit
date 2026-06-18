@@ -257,6 +257,9 @@ const save = () => {
 
   if (!resource.value.id) {
     router.post(`/${shared.locale}/resource`, getPayload(), {
+      onSuccess: () => {
+        shared.addMessage(ResponseStatus.Confirmation, 'Resource created successfully');
+      },
       onError,
       onFinish,
     });

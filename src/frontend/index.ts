@@ -48,6 +48,7 @@ import ScriptureField from './fields/scripture-field.vue';
 import SelectField from './fields/select-field.vue';
 import StatusTag from './shared/status-tag.vue';
 import StoryEdit from './stories/story-edit.vue';
+import StoryEditResources from './stories/components/story-edit-resources.vue';
 import StoryGallery from './stories/story-gallery.vue';
 import StoryIndex from './stories/story-index.vue';
 import DropEdit from './streams/drop-edit.vue';
@@ -70,6 +71,7 @@ export { createInertiaApp, usePage, useForm, router } from '@inertiajs/vue3';
 export * from './store/index';
 
 export { commonProps, helpScoutWidget, formatDate } from './shared/helpers';
+export { resourceIds } from './stories/components/resource-utils';
 
 export {
   ActionButton,
@@ -123,6 +125,7 @@ export {
   SettingsIndex,
   StatusTag,
   StoryEdit,
+  StoryEditResources,
   StoryGallery,
   StoryIndex,
   StreamGallery,

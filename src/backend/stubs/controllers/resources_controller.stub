@@ -8,19 +8,12 @@ import {
   ResourceValidator,
   type ResourceEditProps,
   type ResourceIndexProps,
-  type ResourceIndexItem,
 } from '@story-cms/kit';
 import cms from '#services/cms';
 import providers from '#config/providers';
 
-const emptyResource = (): ResourceIndexItem => ({
+const emptyResource = (): ResourceEditProps['resource'] => ({
   id: '',
-  title: '',
-  type: 'info_link',
-  imageUrl: null,
-  label: null,
-  visibility: 'public',
-  description: null,
   createdAt: '',
   updatedAt: '',
 });
@@ -67,7 +60,11 @@ export default class ResourcesController {
 
     const props: ResourceEditProps = {
       providers,
-      resource: service.toIndexItem(model),
+      resource: {
+        id: model.id,
+        createdAt: service.toIndexItem(model).createdAt,
+        updatedAt: service.toIndexItem(model).updatedAt,
+      },
       bundle: service.modelToBundle(model),
     };
     // @ts-expect-error Inertia page name
