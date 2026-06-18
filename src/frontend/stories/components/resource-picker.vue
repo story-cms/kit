@@ -64,7 +64,9 @@
             </p>
             <div class="mt-1 flex items-center gap-2">
               <Tag class="size-3 text-gray-400" aria-hidden="true" />
-              <span class="text-xs text-gray-500">{{ libraryItem.label ?? 'Uncategorized' }}</span>
+              <span class="text-xs text-gray-500">{{
+                libraryItem.label ?? 'Uncategorized'
+              }}</span>
             </div>
           </div>
           <button
