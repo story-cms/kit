@@ -1,19 +1,21 @@
 <template>
-  <div class="min-w-0 space-y-6">
-    <ResourcePicker
-      ref="resourcePicker"
-      :available-resources="availableResources"
-      :attached-resources="attachedResources"
-      @attach="attachResource"
-      @create="emit('create')"
-    />
+  <div class="grid min-w-0 grid-cols-[minmax(0,1fr)] overflow-x-clip">
+    <div class="min-w-0 space-y-6">
+      <ResourcePicker
+        ref="resourcePicker"
+        :available-resources="availableResources"
+        :attached-resources="attachedResources"
+        @attach="attachResource"
+        @create="emit('create')"
+      />
 
-    <ResourceEmptyState
-      v-if="attachedResources.length === 0"
-      @browse="resourcePicker?.openSearch()"
-    />
+      <ResourceEmptyState
+        v-if="attachedResources.length === 0"
+        @browse="resourcePicker?.openSearch()"
+      />
 
-    <ResourceAttachedList v-else v-model:resources="attachedResources" />
+      <ResourceAttachedList v-else v-model:resources="attachedResources" />
+    </div>
   </div>
 </template>
 

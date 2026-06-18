@@ -52,16 +52,16 @@
           class="flex min-w-0 items-center gap-3 overflow-hidden px-4 py-3 transition-colors hover:bg-gray-50"
         >
           <ResourceThumbnail :item="libraryItem" />
-          <div class="min-w-0 flex-1">
+          <div class="min-w-0 flex-1 basis-0 overflow-hidden">
             <div class="flex min-w-0 items-center gap-2 overflow-hidden">
-              <h4 class="min-w-0 truncate text-sm font-medium text-gray-900">
+              <h4 class="min-w-0 shrink truncate text-sm font-medium text-gray-900">
                 {{ libraryItem.title }}
               </h4>
               <ResourceTypeBadge :type="libraryItem.type" />
             </div>
             <p
               v-if="libraryItem.description"
-              class="mt-1 min-w-0 truncate text-xs text-gray-500"
+              class="mt-1 block min-w-0 overflow-hidden text-ellipsis whitespace-nowrap text-xs text-gray-500"
             >
               {{ libraryItem.description }}
             </p>
