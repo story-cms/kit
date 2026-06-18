@@ -21,7 +21,6 @@ const emptyResource = (): ResourceIndexItem => ({
   label: null,
   visibility: 'public',
   description: null,
-  isPublished: false,
   createdAt: '',
   updatedAt: '',
 });
@@ -50,7 +49,6 @@ export default class ResourcesController {
         description: '',
         label: '',
         visibility: 'public',
-        isPublished: false,
         infoUrl: '',
       },
     };
@@ -109,19 +107,11 @@ export default class ResourcesController {
     const service = new ResourceService();
     const resource = await service.update(ctx.params.id, payload as any, ctx.auth.user?.id);
 
-    if (payload.isPublished) {
-      await Activity.create({
-        userId: ctx.auth.user?.id,
-        locale: version.locale,
-        action: {{ '`published resource ${resource.id}`' }},
-      });
-    } else {
-      await Activity.create({
-        userId: ctx.auth.user?.id,
-        locale: version.locale,
-        action: {{ '`updated resource ${resource.id}`' }},
-      });
-    }
+    await Activity.create({
+      userId: ctx.auth.user?.id,
+      locale: version.locale,
+      action: {{ '`updated resource ${resource.id}`' }},
+    });
 
     return ctx.response.redirect().back();
   }

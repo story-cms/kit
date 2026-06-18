@@ -4519,7 +4519,6 @@ export const mockNewResourceEdit: ResourceEditProps = {
     label: null,
     visibility: 'public',
     description: null,
-    isPublished: false,
     createdAt: '',
     updatedAt: '',
   },
@@ -4530,7 +4529,6 @@ export const mockNewResourceEdit: ResourceEditProps = {
     description: '',
     label: '',
     visibility: 'public',
-    isPublished: false,
     infoUrl: '',
   },
 };
@@ -4546,7 +4544,6 @@ export const mockEditVideoResource: ResourceEditProps = toEditResource(
     description: availableResources[0].description ?? '',
     label: availableResources[0].label ?? '',
     visibility: availableResources[0].visibility,
-    isPublished: true,
     video: { url: 'https://example.com/intro-archaeology.mp4' },
   },
 );
@@ -4564,7 +4561,6 @@ export const mockEditTextResource: ResourceEditProps = toEditResource(
     description: mockTextResource.description ?? '',
     label: mockTextResource.label ?? '',
     visibility: mockTextResource.visibility,
-    isPublished: false,
     content:
       '## Overview\n\nThis article introduces the Synoptic Problem and compares major scholarly hypotheses.\n\n- Two-Source hypothesis\n- Farrer hypothesis\n- Augustinian hypothesis',
   },
@@ -4581,7 +4577,6 @@ export const mockEditInfoLinkResource: ResourceEditProps = toEditResource(
     description: availableResources[3].description ?? '',
     label: availableResources[3].label ?? '',
     visibility: availableResources[3].visibility,
-    isPublished: true,
     infoUrl: availableResources[3].url ?? 'https://example.com/timeline',
   },
 );

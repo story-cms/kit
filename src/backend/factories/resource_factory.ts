@@ -6,7 +6,6 @@ export const ResourceFactory = factory
   .define(Resource, async ({ faker }) => {
     return {
       locale: 'en',
-      isPublished: true,
       visibility: 'public',
       title: faker.lorem.sentence(),
       description: faker.lorem.paragraph(),

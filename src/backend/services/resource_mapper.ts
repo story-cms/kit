@@ -15,7 +15,6 @@ export type ResourceRow = {
   label: string | null;
   visibility: string;
   description: string | null;
-  isPublished: boolean;
   bundle: unknown;
   createdAt?: DateTime | string;
   updatedAt?: DateTime | string;
@@ -53,7 +52,6 @@ export const toResourceDto = (model: ResourceRow): Resource => {
     label: model.label,
     visibility: model.visibility as VisibilityType,
     description: model.description,
-    isPublished: model.isPublished,
   };
 };
 

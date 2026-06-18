@@ -14,67 +14,9 @@ const baseResource = {
   title: 'Test Resource',
   label: 'Reading',
   visibility: 'public' as const,
-  isPublished: true,
 };
 
 test.describe('Resource Validator', () => {
-  test.describe('Unpublished resources', () => {
-    test('allows empty label when unpublished', async () => {
-      const data = {
-        title: 'Test Resource',
-        type: 'info_link' as const,
-        label: '',
-        visibility: 'public' as const,
-        isPublished: false,
-        infoUrl: 'https://example.com',
-      };
-      const ctx = createMockHttpContext(data);
-      const validator = new ResourceValidator(ctx);
-
-      const result = (await validator.validate(data)).bundle;
-      expect(result.label).toBe('');
-    });
-
-    test('allows missing content for text type when unpublished', async () => {
-      const data = {
-        title: 'Draft Text',
-        type: 'text' as const,
-        isPublished: false,
-      };
-      const ctx = createMockHttpContext(data);
-      const validator = new ResourceValidator(ctx);
-
-      const result = (await validator.validate(data)).bundle;
-      expect(result.isPublished).toBe(false);
-    });
-
-    test('allows incomplete unpublished info link resource', async () => {
-      const data = {
-        title: 'Draft Link',
-        type: 'info_link' as const,
-        isPublished: false,
-      };
-      const ctx = createMockHttpContext(data);
-      const validator = new ResourceValidator(ctx);
-
-      const result = (await validator.validate(data)).bundle;
-      expect(result.isPublished).toBe(false);
-    });
-
-    test('allows missing video when unpublished', async () => {
-      const data = {
-        title: 'Draft Video',
-        type: 'video' as const,
-        isPublished: false,
-      };
-      const ctx = createMockHttpContext(data);
-      const validator = new ResourceValidator(ctx);
-
-      const result = (await validator.validate(data)).bundle;
-      expect(result.isPublished).toBe(false);
-    });
-  });
-
   test.describe('Published resources', () => {
     test('requires title', async () => {
       const data = {

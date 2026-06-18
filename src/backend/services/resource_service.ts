@@ -21,7 +21,6 @@ export interface ResourcePayload {
   description?: string | null;
   label?: string | null;
   visibility: VisibilityType;
-  isPublished: boolean;
   content?: string;
   infoUrl?: string;
   video?: { url: string | null };
@@ -47,7 +46,6 @@ const bundleToModel = (model: ResourceModel): Record<string, unknown> => {
     description: model.description ?? '',
     label: model.label ?? '',
     visibility: model.visibility,
-    isPublished: model.isPublished,
   };
 
   switch (model.type) {
@@ -117,7 +115,6 @@ export class ResourceService {
       description: payload.description ?? null,
       label: payload.label ?? null,
       visibility: payload.visibility,
-      isPublished: payload.isPublished,
       bundle: buildBundle(payload),
       updatedBy: userId ?? null,
     });
@@ -136,7 +133,6 @@ export class ResourceService {
     model.description = payload.description ?? null;
     model.label = payload.label ?? null;
     model.visibility = payload.visibility;
-    model.isPublished = payload.isPublished;
     model.bundle = buildBundle(payload);
     model.updatedBy = userId ?? null;
 

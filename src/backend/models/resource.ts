@@ -18,9 +18,6 @@ export default class Resource extends BaseModel {
   declare locale: string;
 
   @column()
-  declare isPublished: boolean;
-
-  @column()
   declare visibility: string;
 
   @column()

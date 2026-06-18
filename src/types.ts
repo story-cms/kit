@@ -290,7 +290,6 @@ export interface Resource {
   label: string | null;
   visibility: VisibilityType;
   description?: string | null;
-  isPublished?: boolean;
 }
 
 export interface ResourceIndexItem extends Resource {

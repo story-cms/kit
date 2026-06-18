@@ -28,7 +28,6 @@ test.describe('Resource mapper', () => {
       label: 'Reading',
       visibility: 'guests',
       description: 'A description',
-      isPublished: true,
       bundle: { infoUrl: 'https://example.com/link' },
     });
 
@@ -41,7 +40,6 @@ test.describe('Resource mapper', () => {
       label: 'Reading',
       visibility: 'guests',
       description: 'A description',
-      isPublished: true,
     });
   });
 
@@ -54,7 +52,6 @@ test.describe('Resource mapper', () => {
       label: null,
       visibility: 'public',
       description: null,
-      isPublished: false,
       bundle: { content: 'Body text' },
     });
 
@@ -73,7 +70,6 @@ test.describe('Resource mapper', () => {
       label: 'Videos',
       visibility: 'public',
       description: null,
-      isPublished: true,
       bundle: { video: { url: 'https://example.com/v.mp4' } },
       createdAt: DateTime.fromISO('2024-01-15T10:00:00.000Z'),
       updatedAt: DateTime.fromISO('2024-03-01T12:00:00.000Z'),
@@ -93,7 +89,6 @@ test.describe('Resource mapper', () => {
       label: 'Links',
       visibility: 'guests',
       description: 'A link',
-      isPublished: false,
       bundle: { infoUrl: 'https://example.com' },
       createdAt: '2024-02-10T08:00:00.000Z',
       updatedAt: '2024-02-12T08:00:00.000Z',

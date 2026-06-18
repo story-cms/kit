@@ -196,7 +196,6 @@ type RequestPayload = {
   description: string;
   label: string;
   visibility: VisibilityType;
-  isPublished: boolean;
   content?: string;
   infoUrl?: string;
   video?: { url: string | null };
@@ -234,8 +233,7 @@ const setType = (type: ResourceType) => {
   model.setField('type', type);
 };
 
-const getPayload = (): RequestPayload =>
-  ({ ...model.model, isPublished: true }) as RequestPayload;
+const getPayload = (): RequestPayload => model.model as RequestPayload;
 
 const cancel = () => {
   router.visit(`/${shared.locale}/resource`);
@@ -244,7 +242,6 @@ const cancel = () => {
 const save = () => {
   shared.clearErrors();
   isSaving.value = true;
-  model.setField('isPublished', true);
 
   const onFinish = () => {
     isSaving.value = false;
