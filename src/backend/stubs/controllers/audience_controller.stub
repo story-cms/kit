@@ -2,7 +2,7 @@
   exports({ to: app.makePath('app/controllers/audience_controller.ts') })
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
-import { AudienceMeta, AudienceService } from '@story-cms/kit';
+import { type AudienceMeta, AudienceService } from '@story-cms/kit';
 import cms from '#services/cms';
 
 /**

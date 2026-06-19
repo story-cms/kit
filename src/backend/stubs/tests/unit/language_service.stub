@@ -1,0 +1,168 @@
+{{{ 
+  exports({ to: app.makePath('tests/unit/language_service.spec.ts') }) 
+}}}
+import testUtils from '@adonisjs/core/services/test_utils';
+import { test } from '@japa/runner';
+import {
+  Config,
+  User,
+  LanguageService,
+  type CmsConfig,
+  type LanguageSpecification,
+} from '@story-cms/kit';
+import cms from '#services/cms';
+import { setupMockCms, testCmsConfig } from '#tests/helpers/cms_mock';
+
+test.group('LanguageService', (group) => {
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
+
+  const createConfigRecord = async () => {
+    return Config.create({
+      key: 'cms',
+      version: 1,
+      data: structuredClone(testCmsConfig) as unknown as Record<string, unknown>,
+    });
+  };
+
+  test('addLanguages skips duplicate locales', async ({ assert }) => {
+    await createConfigRecord();
+    setupMockCms(testCmsConfig);
+
+    const service = new LanguageService(cms);
+    await service.addLanguages([
+      { locale: 'es', language: 'Spanish', languageDirection: 'ltr' },
+      { locale: 'fr', language: 'French', languageDirection: 'ltr' },
+    ]);
+
+    assert.lengthOf(cms.config.languages, 4);
+    assert.isTrue(
+      cms.config.languages.some((lang: LanguageSpecification) => lang.locale === 'fr'),
+    );
+    assert.equal(
+      cms.config.languages.filter((lang: LanguageSpecification) => lang.locale === 'es')
+        .length,
+      1,
+    );
+  });
+
+  test('updateBibleTranslation updates one language and leaves others untouched', async ({
+    assert,
+  }) => {
+    const config = await createConfigRecord();
+    setupMockCms(testCmsConfig);
+
+    const service = new LanguageService(cms);
+    await service.updateBibleTranslation('es', 'new-es-version', 'Nueva Biblia');
+
+    await config.refresh();
+    const data = config.data as CmsConfig;
+
+    const spanish = data.languages.find((lang) => lang.locale === 'es');
+    assert.equal(spanish?.bibleVersion, 'new-es-version');
+    assert.equal(spanish?.bibleLabel, 'Nueva Biblia');
+
+    const english = data.languages.find((lang) => lang.locale === 'en');
+    assert.equal(english?.bibleVersion, 'test-bible-version');
+  });
+
+  test('updateBibleTranslation throws for unknown locale', async ({ assert }) => {
+    await createConfigRecord();
+    setupMockCms(testCmsConfig);
+
+    const service = new LanguageService(cms);
+
+    await assert.rejects(
+      () => service.updateBibleTranslation('xx', 'some-version', 'Some Version'),
+      /Language not found/,
+    );
+  });
+
+  test('removeLanguage rejects source locale', async ({ assert }) => {
+    await createConfigRecord();
+    setupMockCms(testCmsConfig);
+
+    const service = new LanguageService(cms);
+
+    await assert.rejects(
+      () => service.removeLanguage('en'),
+      /Cannot remove the source language/,
+    );
+    assert.lengthOf(cms.config.languages, 3);
+  });
+
+  test('removeLanguage throws for unknown locale', async ({ assert }) => {
+    await createConfigRecord();
+    setupMockCms(testCmsConfig);
+
+    const service = new LanguageService(cms);
+
+    await assert.rejects(() => service.removeLanguage('xx'), /Language not found/);
+    assert.lengthOf(cms.config.languages, 3);
+  });
+
+  test('removeLanguage deletes a non-source language', async ({ assert }) => {
+    const config = await createConfigRecord();
+    setupMockCms(testCmsConfig);
+
+    const service = new LanguageService(cms);
+    await service.removeLanguage('es');
+
+    await config.refresh();
+    const data = config.data as CmsConfig;
+    assert.isUndefined(data.languages.find((lang) => lang.locale === 'es'));
+  });
+
+  test('settingsIndex returns source language and non-source items', async ({
+    assert,
+  }) => {
+    await createConfigRecord();
+    setupMockCms(testCmsConfig);
+
+    await User.create({
+      name: 'Spanish Editor',
+      email: 'es@test.com',
+      password: 'password',
+      language: 'es',
+    });
+
+    const service = new LanguageService(cms);
+    const user = await User.create({
+      name: 'Admin',
+      email: 'admin@test.com',
+      password: 'password',
+      language: '*',
+    });
+
+    const { sourceLanguage, languageItems } = await service.settingsIndex(user);
+
+    assert.equal(sourceLanguage.locale, 'en');
+    assert.lengthOf(languageItems, 2);
+    assert.isTrue(languageItems.every((item) => item.locale !== 'en'));
+
+    const spanish = languageItems.find((item) => item.locale === 'es');
+    assert.isDefined(spanish);
+    assert.lengthOf(spanish!.teamMembers ?? [], 1);
+    assert.equal(spanish!.teamMembers![0].name, 'Spanish Editor');
+  });
+
+  test('languagesEdit returns configured languages', async ({ assert }) => {
+    setupMockCms(testCmsConfig);
+
+    const service = new LanguageService(cms);
+    const props = service.languagesEdit();
+
+    assert.lengthOf(props.addedLanguages, 3);
+    assert.equal(props.addedLanguages[0].locale, 'en');
+  });
+
+  test('getSupportRequestDetails throws for unknown support code', async ({ assert }) => {
+    setupMockCms(testCmsConfig);
+
+    const service = new LanguageService(cms);
+
+    await assert.rejects(
+      () => service.getSupportRequestDetails('UNKNOWN_CODE' as 'REMOVE_LANGUAGE'),
+      /Invalid support code/,
+    );
+  });
+});

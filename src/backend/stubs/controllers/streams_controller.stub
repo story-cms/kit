@@ -163,7 +163,8 @@ export default class StreamController {
     const isPublished = ctx.request.input('isPublished') === true;
 
     const validator = new DropValidator(isPublished, stream.fields);
-    payload = (await validator.validate(data)).bundle;
+    const valid = await validator.validate(data);
+    payload = valid.bundle;
 
     const service = new BundleService(stream.fields);
     drop.bundle = service.updatedBundle(drop.bundle, payload);

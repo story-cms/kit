@@ -3,7 +3,7 @@
 }}}
 import { BaseCommand } from '@adonisjs/core/ace';
 import type { CommandOptions } from '@adonisjs/core/types/ace';
-import { CmsConfig, Config, defineConfig } from '@story-cms/kit';
+import { type CmsConfig, Config, defineConfig } from '@story-cms/kit';
 
 export default class MigrateAll extends BaseCommand {
   static commandName = 'migrate:all';
@@ -49,14 +49,17 @@ export default class MigrateAll extends BaseCommand {
 
 
   private async migrateConfig() {
-    const active = await Config.query()
+    let active = await Config.query()
       .where('key', 'cms')
       .orderBy('version', 'desc')
       .first();
 
     if (!active) {
-      this.logger.info('No active configuration found, skipping migration');
-      return;
+      active = await Config.create({
+        key: 'cms',
+        version: 1,
+        data: defineConfig({}),
+      });
     }
 
     const overrides = active.data as CmsConfig;

@@ -6,8 +6,9 @@ import {
   Activity,
   Page,
   PageService,
-  type PageEditProps,
   PageValidator,
+  type PageEditProps,
+  type PageBundle,
 } from '@story-cms/kit';
 import cms from '#services/cms';
 import providers from '#config/providers';
@@ -54,10 +55,12 @@ export default class PagesController {
 
   public async create(ctx: HttpContext) {
     const version = cms.versionFromPath(ctx);
+    const service = new PageService(version, cms);
+    const defaults = await service.getCreateDefaults();
     const page = await Page.create({
       ...version,
-      order: 1,
-      bundle: '{"group":1}',
+      order: defaults.order,
+      bundle: { group: defaults.group } as PageBundle,
       updatedBy: ctx.auth.user?.id,
     });
 

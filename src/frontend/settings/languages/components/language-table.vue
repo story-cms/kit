@@ -6,103 +6,55 @@
     </p>
   </div>
   <div class="border-2 border-black/5 sm:rounded-lg">
-    <table class="min-w-full divide-y divide-gray-300">
-      <thead class="bg-gray-50 uppercase">
+    <table class="w-full divide-y divide-gray-300 table-fixed">
+      <colgroup>
+        <col class="w-[24%]" />
+        <col class="w-[16%]" />
+        <col class="w-[30%]" />
+        <col class="w-[22%]" />
+        <col class="w-[8%]" />
+      </colgroup>
+      <thead class="uppercase bg-gray-50">
         <tr>
           <th
             scope="col"
-            class="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
+            class="px-3 py-3 max-w-0 text-xs font-medium tracking-wide text-left text-gray-500 uppercase"
           >
             Active translations
           </th>
           <th
             scope="col"
-            class="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
+            class="px-3 py-3 text-xs font-medium tracking-wide text-left text-gray-500 uppercase"
           >
             Translation progress
           </th>
           <th
             scope="col"
-            class="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
+            class="px-3 py-3 max-w-0 text-xs font-medium tracking-wide text-left text-gray-500 uppercase"
           >
             Team members
           </th>
           <th
             scope="col"
-            class="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
+            class="px-3 py-3 max-w-0 text-xs font-medium tracking-wide text-left text-gray-500 uppercase"
           >
             Bible translation
           </th>
-          <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+          <th scope="col" class="relative py-3.5 pr-4 pl-3 w-12 sm:pr-6">
             <span class="sr-only">Actions</span>
           </th>
         </tr>
       </thead>
-      <tbody class="divide-y divide-gray-200 bg-white">
-        <tr v-for="item in paginatedItems" :key="item.locale" class="relative">
-          <td
-            class="flex flex-col gap-2 whitespace-nowrap px-3 py-4 text-sm text-gray-800"
-          >
-            <LangStrip :spec="item" />
-          </td>
-          <td class="whitespace-nowrap px-3 py-4 align-top text-sm">
-            <RingBlock :progress="item.translationProgress ?? []" />
-          </td>
-          <td class="px-3 py-4 align-top text-sm text-gray-800">
-            <div v-if="item.teamMembers?.length" class="flex flex-col gap-1">
-              <MemberRow
-                v-for="member in item.teamMembers"
-                :key="member.id"
-                :name="member.name"
-                :email="member.email"
-              />
-            </div>
-            <div v-else class="flex flex-col text-xs font-medium leading-4">
-              <p class="text-black">No team members yet</p>
-              <p class="text-gray-500">
-                Press the three dots to <br />
-                assign team members.
-              </p>
-            </div>
-          </td>
-          <td
-            class="whitespace-nowrap px-3 py-4 text-sm font-normal leading-5 text-gray-500"
-          >
-            {{ truncate(item.bibleLabel, 30) }}
-          </td>
-          <td class="py-4 pl-3 pr-4 text-right sm:pr-6">
-            <button
-              type="button"
-              class="cursor-pointer text-gray-400 hover:text-gray-600"
-              @click="toggleActions(item.locale)"
-            >
-              <Icon name="dots-vertical" class="size-5" />
-            </button>
-            <div
-              v-show="openActionsLocale === item.locale"
-              class="absolute right-10 top-3 z-10 flex max-w-[250px] flex-col items-start overflow-hidden rounded-md bg-white shadow"
-            >
-              <a
-                href="/{{ item.locale }}/user"
-                class="w-full px-6 py-2 pt-3 text-left text-sm font-normal leading-5 text-gray-800 hover:bg-gray-100"
-              >
-                Assign team members
-              </a>
-              <button
-                class="w-full px-6 py-2 text-left text-sm font-normal leading-5 text-gray-800 hover:bg-gray-100"
-                @click="openBibleTranslationsModal(item)"
-              >
-                Change Bible translation
-              </button>
-              <button
-                class="w-full px-6 py-2 pb-3 text-left text-sm font-normal leading-5 text-gray-800 hover:bg-gray-100"
-                @click="handleRemoveOrRequestDeletion(item)"
-              >
-                {{ hasContent(item) ? 'Request language deletion' : 'Remove language' }}
-              </button>
-            </div>
-          </td>
-        </tr>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <LanguageTableRow
+          v-for="row in displayRows"
+          :key="row.item.locale"
+          :item="row.item"
+          :is-source="row.isSource"
+          :deletion-mode="row.deletionMode"
+          @open-bible-translations="openBibleTranslationsModal"
+          @remove-or-request-deletion="handleRemoveOrRequestDeletion"
+        />
       </tbody>
     </table>
 
@@ -126,9 +78,9 @@
     />
 
     <Pagination
-      v-if="items.length > itemsPerPage"
+      v-if="totalItems > itemsPerPage"
       :current-page="currentPage"
-      :total-items="items.length"
+      :total-items="totalItems"
       :items-per-page="itemsPerPage"
       @page-change="handlePageChange"
     />
@@ -137,20 +89,18 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import Icon from '../../../shared/icon.vue';
 import Pagination from '../../../shared/pagination.vue';
 import RemoveLanguageModal from './remove-language-modal.vue';
 import RequestDeletionModal from './request-deletion-modal.vue';
 import BibleTranslationsModal from './bible-translations-modal.vue';
+import LanguageTableRow from './language-table-row.vue';
 import type { LanguageTableItem } from '../../../../types';
-import MemberRow from './member-row.vue';
-import RingBlock from '../../../dashboard/ring-block.vue';
-import LangStrip from './language-strip.vue';
 import { sortLanguagesByDisplayName } from '../../../shared/helpers';
 
 const props = withDefaults(
   defineProps<{
     items: LanguageTableItem[];
+    sourceLanguage: LanguageTableItem;
     itemsPerPage?: number;
   }>(),
   { itemsPerPage: 10 },
@@ -166,34 +116,65 @@ const emit = defineEmits<{
   ];
 }>();
 
+const hasTranslationContent = (item: LanguageTableItem) => {
+  const content = item.translationProgress?.find((p) => p.name === 'Content');
+  const ui = item.translationProgress?.find((p) => p.name === 'Interface');
+  return (content?.done ?? 0) > 0 || (ui?.done ?? 0) > 0;
+};
+
 const currentPage = ref(1);
 const sortedItems = computed(() => sortLanguagesByDisplayName(props.items));
+const totalItems = computed(() => props.items.length + 1);
+
 const paginatedItems = computed(() => {
-  const startIndex = (currentPage.value - 1) * props.itemsPerPage;
-  const endIndex = startIndex + props.itemsPerPage;
-  return sortedItems.value.slice(startIndex, endIndex);
+  const sorted = sortedItems.value;
+
+  if (currentPage.value === 1) {
+    return sorted.slice(0, props.itemsPerPage - 1);
+  }
+
+  const startIndex =
+    props.itemsPerPage - 1 + (currentPage.value - 2) * props.itemsPerPage;
+  return sorted.slice(startIndex, startIndex + props.itemsPerPage);
+});
+
+const displayRows = computed(() => {
+  const sourceRow =
+    currentPage.value === 1
+      ? [{ item: props.sourceLanguage, isSource: true, deletionMode: undefined }]
+      : [];
+
+  return [
+    ...sourceRow,
+    ...paginatedItems.value.map((item) => ({
+      item,
+      isSource: false,
+      deletionMode: hasTranslationContent(item)
+        ? ('request' as const)
+        : ('remove' as const),
+    })),
+  ];
 });
 
 const handlePageChange = (page: number) => {
   currentPage.value = page;
 };
 
-const openActionsLocale = ref<string | null>(null);
 const removeModalLocale = ref<string | null>(null);
 const requestDeletionModalLocale = ref<string | null>(null);
 const bibleTranslationsModalLocale = ref<string | null>(null);
 
+const allLanguageItems = computed(() => [props.sourceLanguage, ...props.items]);
+
 const bibleTranslationsModalItem = computed(
-  () => props.items.find((i) => i.locale === bibleTranslationsModalLocale.value) ?? null,
+  () =>
+    allLanguageItems.value.find(
+      (item) => item.locale === bibleTranslationsModalLocale.value,
+    ) ?? null,
 );
 
-const toggleActions = (locale: string) => {
-  openActionsLocale.value = openActionsLocale.value === locale ? null : locale;
-};
-
 const handleRemoveOrRequestDeletion = (item: LanguageTableItem) => {
-  openActionsLocale.value = null;
-  if (hasContent(item)) {
+  if (hasTranslationContent(item)) {
     requestDeletionModalLocale.value = item.locale;
   } else {
     removeModalLocale.value = item.locale;
@@ -213,7 +194,6 @@ const confirmRequestDeletion = () => {
 };
 
 const openBibleTranslationsModal = (item: LanguageTableItem) => {
-  openActionsLocale.value = null;
   bibleTranslationsModalLocale.value = item.locale;
 };
 
@@ -230,16 +210,5 @@ const handleBibleTranslationConfirm = (
     emit('bibleTranslationChange', item, bibleVersion, bibleVersionName);
   }
   closeBibleTranslationsModal();
-};
-
-const truncate = (s: string | null | undefined, max: number) => {
-  const text = s ?? '—';
-  return text.length > max ? `${text.slice(0, max)}…` : text;
-};
-
-const hasContent = (item: LanguageTableItem) => {
-  const content = item.translationProgress?.find((p) => p.name === 'Content');
-  const ui = item.translationProgress?.find((p) => p.name === 'Interface');
-  return (content?.done ?? 0) > 0 || (ui?.done ?? 0) > 0;
 };
 </script>

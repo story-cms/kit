@@ -1,5 +1,5 @@
 import type { App, PropType } from 'vue';
-import type { FieldSpec, LanguageSpecification } from '../../types';
+import { type FieldSpec, type LanguageSpecification } from '../../types';
 import { BibleBooksMap } from './bibleBooks';
 import type { Variant, Story } from 'histoire';
 import { DateTime } from 'luxon';
@@ -305,9 +305,7 @@ export function compareLanguagesByDisplayName(
   a: LanguageSortable,
   b: LanguageSortable,
 ): number {
-  return languageDisplayName(a.language).localeCompare(
-    languageDisplayName(b.language),
-  );
+  return languageDisplayName(a.language).localeCompare(languageDisplayName(b.language));
 }
 
 export function sortLanguagesByDisplayName<T extends LanguageSortable>(
@@ -335,3 +333,31 @@ export function parseLanguageSpecification(spec: LanguageSpecification): {
 
   return { name: language, nativeName: language, locale };
 }
+
+/** Redirect chapter preview paths to the story index before switching locale. */
+export function normalizePathForLanguageSwitch(pathname: string): string {
+  const segments = pathname.split('/').filter(Boolean);
+  if (
+    segments.length >= 5 &&
+    segments[1] === 'story' &&
+    segments[3] === 'chapter'
+  ) {
+    return `/${segments.slice(0, 3).join('/')}`;
+  }
+  return pathname;
+}
+
+/** Swap the locale segment in a pathname, or return null if not localized. */
+export function replaceLocaleInPath(
+  pathname: string,
+  targetLocale: string,
+  knownLocales: string[],
+): string | null {
+  const segments = pathname.split('/').filter(Boolean);
+  if (segments.length === 0 || !knownLocales.includes(segments[0])) {
+    return null;
+  }
+  segments[0] = targetLocale;
+  return `/${segments.join('/')}`;
+}
+

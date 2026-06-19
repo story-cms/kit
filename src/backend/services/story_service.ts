@@ -2,6 +2,7 @@ import config from '@adonisjs/core/services/config';
 import { errors, HttpContext } from '@adonisjs/core/http';
 import db from '@adonisjs/lucid/services/db';
 import StoryDeleteException from '../exceptions/story_delete_exception.js';
+import Draft from '../models/draft.js';
 import Chapter from '../models/chapter.js';
 import Index from '../models/index.js';
 import Story from '../models/story.js';
@@ -16,7 +17,6 @@ import type {
   Providers,
   StoryCreateProps,
 } from '../../types.js';
-import Draft from '../models/draft.js';
 import { slugify } from './helpers.js';
 
 export class StoryService {
@@ -223,6 +223,11 @@ export class StoryService {
     const locale = ctx.params.locale;
     const indices = await Index.query().where('locale', locale);
 
+    const sourceModels = await StoryLocalisation.query().where(
+      'locale',
+      this.config.languages[0].locale,
+    );
+
     const storyModels = await Story.query()
       .preload('localisations', (localisationsQuery) => {
         localisationsQuery.where('locale', locale);
@@ -232,12 +237,13 @@ export class StoryService {
     return storyModels.map((story) => {
       const local = story.localisations[0] ?? emptyTranslation;
       const index = indices.find((i) => i.storyId === story.id);
+      const source = sourceModels.find((m) => m.storyId === story.id);
 
       return {
         id: story.id,
-        name: local.title,
+        name: local.title || (source?.title ?? ''),
         description: local.description ?? '',
-        coverImage: local.coverImage ?? '',
+        coverImage: local.coverImage || (source?.coverImage ?? ''),
         chapterLimit: story.chapterLimit,
         isPublished: story.isPublished,
         createdAt: story.createdAt?.toISO() ?? '',
@@ -256,29 +262,31 @@ export class StoryService {
     return true;
   }
 
-  // TODO: test
   private async storyFromQuery(ctx: HttpContext): Promise<Story | undefined> {
-    const storyId = ctx.request.qs()['storyId'];
-    const locale = ctx.request.qs()['locale'] || this.config.languages[0].locale;
+    const qs = ctx.request.qs();
+    const storyId = qs['storyId'];
+    const storySlug = qs['story'];
+    const locale = qs['locale'] || this.config.languages[0].locale;
 
-    const query = Story.query().preload('localisations', (localisationsQuery) => {
-      localisationsQuery.where('locale', locale);
-    });
+    const baseQuery = () =>
+      Story.query()
+        .orderBy('id', 'asc')
+        .preload('localisations', (localisationsQuery) => {
+          localisationsQuery.where('locale', locale);
+        });
 
     if (storyId !== undefined) {
-      const story = await query.where('id', storyId).first();
-      if (story !== null) return story;
+      const story = await baseQuery().where('id', storyId).first();
+      return story ?? undefined;
     }
 
-    let storylabel = ctx.request.qs()['story'];
-    if (storylabel !== undefined) {
-      storylabel = storylabel.toLowerCase();
-      const story = await query.where('slug', storylabel).first();
-
-      if (story !== null) return story;
+    if (storySlug !== undefined) {
+      const story = await baseQuery().where('slug', storySlug.toLowerCase()).first();
+      return story ?? undefined;
     }
 
-    return undefined;
+    const story = await baseQuery().first();
+    return story ?? undefined;
   }
 
   private async storyFromPath(ctx: HttpContext): Promise<StorySpec | undefined> {
