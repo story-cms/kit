@@ -283,29 +283,31 @@ export class StoryService {
     return true;
   }
 
-  // TODO: test
   private async storyFromQuery(ctx: HttpContext): Promise<Story | undefined> {
-    const storyId = ctx.request.qs()['storyId'];
-    const locale = ctx.request.qs()['locale'] || this.config.languages[0].locale;
+    const qs = ctx.request.qs();
+    const storyId = qs['storyId'];
+    const storySlug = qs['story'];
+    const locale = qs['locale'] || this.config.languages[0].locale;
 
-    const query = Story.query().preload('localisations', (localisationsQuery) => {
-      localisationsQuery.where('locale', locale);
-    });
+    const baseQuery = () =>
+      Story.query()
+        .orderBy('id', 'asc')
+        .preload('localisations', (localisationsQuery) => {
+          localisationsQuery.where('locale', locale);
+        });
 
     if (storyId !== undefined) {
-      const story = await query.where('id', storyId).first();
-      if (story !== null) return story;
+      const story = await baseQuery().where('id', storyId).first();
+      return story ?? undefined;
     }
 
-    let storylabel = ctx.request.qs()['story'];
-    if (storylabel !== undefined) {
-      storylabel = storylabel.toLowerCase();
-      const story = await query.where('slug', storylabel).first();
-
-      if (story !== null) return story;
+    if (storySlug !== undefined) {
+      const story = await baseQuery().where('slug', storySlug.toLowerCase()).first();
+      return story ?? undefined;
     }
 
-    return undefined;
+    const story = await baseQuery().first();
+    return story ?? undefined;
   }
 
   private async storyFromPath(ctx: HttpContext): Promise<StorySpec | undefined> {

@@ -7,7 +7,7 @@ import { marked } from 'marked';
 import {
   type StoryIndexProps,
   type PreviewProps,
-  AddStatus,
+  type AddStatus,
   IndexService,
   Chapter,
   StoryService,
@@ -23,7 +23,7 @@ export default class ChaptersController {
     const service = new IndexService(story, cms);
     const addStatus: AddStatus = await service.getAddStatus(version);
     const index = await service.getItems(version);
-    const storyIsBespoke = false;  // TODO: implement this
+    const storyIsBespoke = true; // TODO: implement this
     const props: StoryIndexProps = {
       index,
       addStatus,
@@ -66,10 +66,12 @@ export default class ChaptersController {
   }
 
   public async get(ctx: HttpContext) {
-    const version = cms.versionFromQuery(ctx);
+    const storyService = new StoryService(cms.config);
+    const requested = await storyService.parseQuery(ctx);
+    if (requested === undefined) return ctx.response.notFound();
 
     const specifier = {
-      ...version,
+      ...requested.version,
       number: Number(ctx.params.number),
     };
 
@@ -79,13 +81,15 @@ export default class ChaptersController {
   }
 
   public async range(ctx: HttpContext) {
-    const version = cms.versionFromQuery(ctx);
+    const storyService = new StoryService(cms.config);
+    const requested = await storyService.parseQuery(ctx);
+    if (requested === undefined) return ctx.response.notFound();
 
     const page = ctx.request.qs()['page'] || 1;
 
     const chapters = await Chapter.query()
       .whereBetween('number', [ctx.params.from, ctx.params.to])
-      .where(version)
+      .where(requested.version)
       .orderBy('number', 'asc')
       .paginate(page, 20);
 

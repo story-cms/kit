@@ -16,7 +16,7 @@ import { setupMockCms } from '#tests/helpers/cms_mock';
 import { seedTestStory } from '#tests/helpers/story_test_helper';
 
 test.group('Draft GET', (group) => {
-  group.each.setup(() => testUtils.db().withGlobalTransaction());
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
 
   test('Non authenticated should be redirected to login screen', async ({ client }) => {
     const response = await client.get('/en/story/1/draft/1/edit');
@@ -75,7 +75,7 @@ test.group('Draft GET', (group) => {
 });
 
 test.group('Draft DELETE', (group) => {
-  group.each.setup(() => testUtils.db().withGlobalTransaction());
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
 
   test('Non authenticated should be redirected to login screen', async ({ client }) => {
     const draft = await DraftFactory.merge({
@@ -121,7 +121,7 @@ test.group('Draft DELETE', (group) => {
 });
 
 test.group('Draft updating', (group) => {
-  group.each.setup(() => testUtils.db().withGlobalTransaction());
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
 
   test('Drafts can be saved without validation or change of status', async ({
     assert,

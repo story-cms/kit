@@ -43,7 +43,6 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
         // resolve as follows: const flashError = (page.props as { flash?: { error?: string } }).flash?.error;
         error: error,
       }),
-      // the rest of the shared props are injected by CmsService.sharedProps()
     };
   }
 
@@ -61,6 +60,9 @@ declare module '@adonisjs/inertia/types' {
   type MiddlewareSharedProps = InferSharedProps<InertiaMiddleware>;
   export interface SharedProps extends MiddlewareSharedProps {}
 }
+
+// this fails for actual big error bags
+// we should refactor: https://linear.app/scoutredeem/issue/SCO-2597/error-reporting
 
 const getTrimmedValidationErrors = (ctx: HttpContext) => {
   const errorBag = ctx.session?.flashMessages.get('inputErrorsBag') ?? {};
