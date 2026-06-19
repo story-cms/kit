@@ -25,7 +25,11 @@ export const languages: LanguageSpecification[] = [
   { locale: 'fi', language: 'Finnish - Suomi', languageDirection: 'ltr' },
   { locale: 'fil', language: 'Filipino Pilipino - Pilipino', languageDirection: 'ltr' },
   { locale: 'fr', language: 'French - Français', languageDirection: 'ltr' },
-  { locale: 'fr-ch', language: 'Swiss French - Français suisse', languageDirection: 'ltr' },
+  {
+    locale: 'fr-ch',
+    language: 'Swiss French - Français suisse',
+    languageDirection: 'ltr',
+  },
   { locale: 'ga', language: 'Irish - Gaeilge', languageDirection: 'ltr' },
   { locale: 'gl', language: 'Galician - Galego', languageDirection: 'ltr' },
   {
@@ -95,6 +99,15 @@ export const languages: LanguageSpecification[] = [
   { locale: 'ur', language: 'Urdu - اردو', languageDirection: 'rtl' },
   { locale: 'uz', language: 'Uzbek - Oʻzbek', languageDirection: 'ltr' },
   { locale: 'vi', language: 'Vietnamese - Tiếng Việt', languageDirection: 'ltr' },
-  { locale: 'zh', language: 'Chinese - 中文', languageDirection: 'ltr' },
+  {
+    locale: 'zh-cn',
+    language: 'Chinese Simplified - 简体中文',
+    languageDirection: 'ltr',
+  },
+  {
+    locale: 'zh-tw',
+    language: 'Chinese Traditional - 繁體中文',
+    languageDirection: 'ltr',
+  },
   { locale: 'zu', language: 'Zulu - isiZulu', languageDirection: 'ltr' },
 ];
