@@ -107,7 +107,7 @@ export default class StoriesController {
       await index.save();
     });
 
-    return ctx.response.redirect(`/${locale}/story`, false, 303);
+    return ctx.response.redirect({{ '`/${locale}/story`' }}, false, 303);
   }
 
   /**
@@ -200,7 +200,7 @@ export default class StoriesController {
       return ctx.response.redirect().back();
     }
 
-    return ctx.response.redirect(`/${version.locale}/story`, false, 303);
+    return ctx.response.redirect({{ '`/${version.locale}/story`' }}, false, 303);
   }
 
   /**
