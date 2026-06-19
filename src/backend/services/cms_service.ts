@@ -136,6 +136,7 @@ export class CmsService {
         helpUrl: this.#config.helpUrl,
         supportEmail: this.#config.supportEmail,
         hasAppPreview: this.#config.hasAppPreview,
+        videoCollectionId: this.#config.videoCollectionId,
         languages: this.#config.languages,
         subscriptions: this.#config.subscriptions,
       } as UiConfig,

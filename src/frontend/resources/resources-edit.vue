@@ -80,6 +80,10 @@
             label: 'Video',
             name: 'video',
             widget: 'video',
+            description: 'MP4 and MOV files up to 500MB',
+            extensions: ['.mp4', '.mov'],
+            collectionId: config.videoCollectionId,
+            maxSize: 500662310,
           }"
           :is-nested="true"
           class="px-8"
@@ -231,6 +235,16 @@ const resourceTypes: { value: ResourceType; label: string; icon: Component }[] =
 const setType = (type: ResourceType) => {
   selectedType.value = type;
   model.setField('type', type);
+
+  if (type === 'video' && !model.isPopulated('video')) {
+    model.setField('video', { url: null });
+  }
+  if (type === 'text' && !model.isPopulated('content')) {
+    model.setField('content', '');
+  }
+  if (type === 'info_link' && !model.isPopulated('infoUrl')) {
+    model.setField('infoUrl', '');
+  }
 };
 
 const getPayload = (): RequestPayload => model.model as RequestPayload;

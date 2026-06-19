@@ -1704,6 +1704,7 @@ export const config: UiConfig = {
   logo: 'https://res.cloudinary.com/theword121/image/upload/v1687245360/episodes/viseg2hegowcrapio6pt.svg',
   helpUrl: 'https://www.theword121.com/',
   hasAppPreview: false,
+  videoCollectionId: 'temporary-id',
   languages,
   subscriptions: [
     'story',
@@ -4497,6 +4498,11 @@ export const mockResourceProviders: Providers = {
     defaultPreset: 'session_thumbnail',
   },
   scripture: { bibleApiKey: 'tmp' },
+  bunny: {
+    accessKey: 'redacted',
+    libraryId: '2ef0214d-b18',
+    host: 'vz-2ef0214d-b18.b-cdn.net',
+  },
 };
 
 const toEditResource = (
@@ -4525,6 +4531,8 @@ export const mockNewResourceEdit: ResourceEditProps = {
     label: '',
     visibility: 'public',
     infoUrl: '',
+    video: { url: null },
+    content: '',
   },
 };
 

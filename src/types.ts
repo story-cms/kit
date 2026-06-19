@@ -639,6 +639,7 @@ export type CmsConfig = {
   supportEmail: string;
   hasAppPreview: boolean;
   microcopySource: string;
+  videoCollectionId: string;
   languages: LanguageSpecification[];
   subscriptions: Subscription[];
 
@@ -665,6 +666,7 @@ export interface UiConfig {
   helpUrl: string;
   supportEmail: string;
   hasAppPreview: boolean;
+  videoCollectionId: string;
   languages: LanguageSpecification[];
   subscriptions: Subscription[];
 }

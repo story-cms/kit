@@ -43,6 +43,8 @@ export default class ResourcesController {
         label: '',
         visibility: 'public',
         infoUrl: '',
+        video: { url: null },
+        content: '',
       },
     };
     // @ts-expect-error Inertia page name

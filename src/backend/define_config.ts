@@ -19,6 +19,8 @@ export function defineConfig(config: Partial<CmsConfig>): CmsConfig {
 
     microcopySource: config.microcopySource || '',
 
+    videoCollectionId: config.videoCollectionId || '',
+
     languages: config.languages || [
       {
         locale: 'en',
