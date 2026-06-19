@@ -20,6 +20,9 @@
         <slot name="actions"></slot>
       </div>
     </div>
+    <div class="mt-6">
+      <slot name="controls"></slot>
+    </div>
   </header>
 </template>
 
