@@ -12,6 +12,23 @@ export class PageService {
     this.version = version;
   }
 
+  public async getCreateDefaults(): Promise<{ order: number; group: number }> {
+    const lastPage = await Page.query()
+      .where(this.version)
+      .orderBy('order', 'desc')
+      .orderBy('id', 'desc')
+      .first();
+
+    if (!lastPage) {
+      return { order: 1, group: 1 };
+    }
+
+    return {
+      order: lastPage.order + 1,
+      group: lastPage.bundle.group ?? 1,
+    };
+  }
+
   public async getPageItems(): Promise<PageItem[]> {
     const pages = await Page.query().where(this.version).orderBy('order', 'asc');
     const maxId = pages.reduce((max, page) => Math.max(max, page.id), 0);
