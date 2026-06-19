@@ -263,7 +263,7 @@ export interface JournaStoryEditProps {
   isNew: boolean;
 }
 
-export interface StoryCreateProps {
+export type StoryCreateProps = {
   model: {
     title: string;
     coverImage: string;
@@ -279,9 +279,9 @@ export interface StoryCreateProps {
   };
   templates: BundleTemplate[];
   providers: Providers;
-}
+};
 
-export interface StoryEditProps {
+export type StoryEditProps = {
   model: {
     id: number;
     title: string;
@@ -308,7 +308,7 @@ export interface StoryEditProps {
   };
   hasNoContent: boolean;
   providers: Providers;
-}
+};
 
 export interface StoryIndexProps {
   index: IndexReadyItem[];

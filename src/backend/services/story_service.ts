@@ -1,6 +1,7 @@
 import config from '@adonisjs/core/services/config';
 import { errors, HttpContext } from '@adonisjs/core/http';
 import db from '@adonisjs/lucid/services/db';
+import { randomUUID } from 'crypto';
 import StoryDeleteException from '../exceptions/story_delete_exception.js';
 import Draft from '../models/draft.js';
 import Chapter from '../models/chapter.js';
@@ -16,6 +17,7 @@ import type {
   StoryVersion,
   Providers,
   StoryCreateProps,
+  StorySection,
 } from '../../types.js';
 import { slugify } from './helpers.js';
 
@@ -253,6 +255,42 @@ export class StoryService {
     });
   }
 
+  public async prepSections(
+    version: StoryVersion,
+    sections?: PostedSection[],
+  ): Promise<StorySection[]> {
+    if (!sections) return [];
+    const sourceLocale = this.config.languages[0].locale;
+    if (version.locale === sourceLocale) return this.sourceSections(sections);
+
+    const sourceLocalisation = await StoryLocalisation.query()
+      .where('storyId', version.storyId)
+      .where('locale', sourceLocale)
+      .first();
+
+    const source = sourceLocalisation?.sections ?? [];
+    if (!source.length) return [];
+
+    return source.map((section, index) => {
+      const posted = sections[index];
+      return {
+        id: section.id,
+        title: posted?.title ?? '',
+        description: posted?.description ?? '',
+      };
+    });
+  }
+
+  sourceSections(sections: PostedSection[]): StorySection[] {
+    return sections.map((section) => {
+      return {
+        id: section.id?.trim() ? section.id : randomUUID(),
+        title: section.title,
+        description: section.description ?? '',
+      };
+    });
+  }
+
   private async hasNoContent(id: number): Promise<boolean> {
     const index = await Index.query().where('storyId', id).first();
     if (index === null) return true;
@@ -346,3 +384,9 @@ export class StoryService {
     return template.fields;
   }
 }
+
+export type PostedSection = {
+  id?: string;
+  title: string;
+  description?: string;
+};
