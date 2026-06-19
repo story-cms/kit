@@ -20,8 +20,6 @@ export default class extends BaseSchema {
         .notNullable()
         .comment('unique handle for referencing the story');
 
-      table.string('tags').nullable().comment('comma-separated list of tags');
-
       table
         .integer('chapter_limit')
         .notNullable()
@@ -73,7 +71,7 @@ export default class extends BaseSchema {
     });
 
     // ---------------------------------------
-    // story_meta
+    // story_localisations
     // ---------------------------------------
     this.schema.createTable(this.localTableName, (table) => {
       table.increments('id');
@@ -87,6 +85,8 @@ export default class extends BaseSchema {
       table.string('cover_image').nullable().comment('url to the cover image');
 
       table.text('description').nullable();
+
+      table.string('tags').nullable().comment('comma-separated list of tags');
 
       table
         .jsonb('sections')

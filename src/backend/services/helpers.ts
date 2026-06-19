@@ -4,16 +4,6 @@ export {
   standardAudienceKeys,
 } from '../../shared/audience_helpers.js';
 
-// The model store on the client requires that the error messages
-// each have a "bundle" prefix
-export const bundledErrors = (plain: Record<string, string[]>): object => {
-  const result: Record<string, unknown> = {};
-  for (const key in plain) {
-    result[`bundle.${key}`] = plain[key];
-  }
-  return result;
-};
-
 export const getCredentialsFrom = (key: string): any => {
   const credentialsBase64 = process.env[key] || '';
   if (!credentialsBase64) {
@@ -27,4 +17,16 @@ export const getCredentialsFrom = (key: string): any => {
   } catch {
     throw new Error(`${key} environment variable is not a valid encoded JSON string.`);
   }
+};
+
+export const slugify = (text: string): string => {
+  return text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '');
 };

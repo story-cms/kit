@@ -195,6 +195,8 @@ const metaChapter = computed(
   () => `${padZero(props.draft.number)} of ${padZero(props.story.chapterLimit)}`,
 );
 
+// TODO: this might leak memory, because pinia does not auto-unsubscribe
+// outside an effect scope like inside onMounted or outside setup
 onMounted(() => {
   model.$subscribe(() => {
     if (isSettingErrors) {

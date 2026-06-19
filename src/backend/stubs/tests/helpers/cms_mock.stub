@@ -14,6 +14,7 @@ export const testCmsConfig: CmsConfig = {
   supportEmail: 'support@example.com',
   hasAppPreview: false,
   microcopySource: '',
+  supportEmail: 'support@example.com',
   languages: [
     {
       locale: 'en',

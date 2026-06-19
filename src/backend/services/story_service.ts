@@ -1,5 +1,10 @@
-import configService from '@adonisjs/core/services/config';
-import { errors, type HttpContext } from '@adonisjs/core/http';
+import config from '@adonisjs/core/services/config';
+import { errors, HttpContext } from '@adonisjs/core/http';
+import db from '@adonisjs/lucid/services/db';
+import { randomUUID } from 'crypto';
+import StoryDeleteException from '../exceptions/story_delete_exception.js';
+import Draft from '../models/draft.js';
+import Chapter from '../models/chapter.js';
 import Index from '../models/index.js';
 import Story from '../models/story.js';
 import StoryLocalisation, { emptyTranslation } from '../models/story_localisation.js';
@@ -11,7 +16,10 @@ import type {
   StorySpec,
   StoryVersion,
   Providers,
+  StoryCreateProps,
+  StorySection,
 } from '../../types.js';
+import { slugify } from './helpers.js';
 
 export class StoryService {
   public constructor(protected readonly config: CmsConfig) {}
@@ -24,6 +32,93 @@ export class StoryService {
     }
 
     return { storyId: Number.parseInt(ctx.params.storyId), locale: ctx.params.locale };
+  }
+
+  public async blockingPublishMessages(story: Story): Promise<string[]> {
+    // return ['Story not found.', 'Story is published.', 'Story has content.'];
+    const collected: string[] = [];
+    // source language chapter count
+    const sourceChapters = await Chapter.query()
+      .where('storyId', story.id)
+      .where('locale', this.config.languages[0].locale);
+    const missingChapters = story.chapterLimit - (sourceChapters?.length ?? 0);
+    if (missingChapters > 0)
+      collected.push(
+        `You need to add ${missingChapters} more ${story.chapterType}s to your ${story.storyType}.`,
+      );
+
+    return collected;
+  }
+
+  async blockingDeleteMessages(storyId: number): Promise<string[]> {
+    // return ['Story not found.', 'Story is published.', 'Story has content.'];
+    const collected: string[] = [];
+    const story = await Story.query().where('id', storyId).first();
+    if (!story) collected.push('Story not found.');
+    if (story?.isPublished) collected.push('Story is published.');
+
+    const chapters = await Chapter.query().where('storyId', storyId);
+    if (chapters.length > 0) collected.push('Story has published chapters.');
+
+    return collected;
+  }
+
+  public async delete(storyId: number) {
+    const messages = await this.blockingDeleteMessages(storyId);
+    if (messages.length > 0) throw new StoryDeleteException(messages);
+    // cascade delete drafts, chapters and index
+    await db.transaction(async (trx) => {
+      await Draft.query({ client: trx }).where('storyId', storyId).delete();
+      await Chapter.query({ client: trx }).where('storyId', storyId).delete();
+      await Index.query({ client: trx }).where('storyId', storyId).delete();
+      await StoryLocalisation.query({ client: trx }).where('storyId', storyId).delete();
+      await Story.query({ client: trx }).where('id', storyId).delete();
+    });
+  }
+
+  public async createProps(ctx: HttpContext): Promise<StoryCreateProps | undefined> {
+    // ready?
+    if (!this.config.storyTemplates.length) return undefined;
+    const params = this.paramsFromPath(ctx);
+    if (params?.locale !== this.config.languages[0].locale) return undefined;
+
+    // set
+    const template = this.config.storyTemplates[0].id;
+
+    const firstLocalisation = await StoryLocalisation.query()
+      .where('locale', this.config.languages[0].locale)
+      .first();
+
+    const target = firstLocalisation
+      ? {
+          ...emptyTranslation,
+          coverImage: firstLocalisation?.coverImage,
+        }
+      : emptyTranslation;
+
+    // go!
+    return {
+      model: {
+        chapterLimit: 10,
+        storyType: 'Story',
+        chapterType: 'Chapter',
+        sectionType: null,
+        visibility: 'public',
+        slug: null,
+        template,
+        ...this.localisationFields(target),
+      },
+      templates: this.config.storyTemplates,
+      providers: config.get<Providers>('providers')!,
+    };
+  }
+
+  public async uniqueSlug(title: string): Promise<string> {
+    const slug = slugify(title);
+    const story = await Story.query().where('slug', slug).first();
+    if (story)
+      return this.uniqueSlug(title + '-' + Math.random().toString(36).substring(2, 15));
+    return slug;
   }
 
   public async editProps(ctx: HttpContext): Promise<StoryEditProps | undefined> {
@@ -47,14 +142,23 @@ export class StoryService {
     const target =
       story.localisations.find((localisation) => localisation.locale === locale) ??
       emptyTranslation;
-    const source =
-      story.localisations.find((localisation) => localisation.locale === sourceLocale) ??
-      emptyTranslation;
+
+    let sourceSection = {};
+    if (locale !== sourceLocale) {
+      const source =
+        story.localisations.find(
+          (localisation) => localisation.locale === sourceLocale,
+        ) ?? emptyTranslation;
+      sourceSection = {
+        source: this.localisationFields(source),
+      };
+
+      target.coverImage = source.coverImage;
+    }
 
     return {
       model: {
         id: story.id,
-        tags: story.tags ?? null,
         chapterLimit: story.chapterLimit,
         storyType: story.storyType,
         chapterType: story.chapterType,
@@ -63,13 +167,11 @@ export class StoryService {
         slug: story.slug,
         template: story.template,
         isPublished: story.isPublished,
-        createdAt: story.createdAt.toISO()!,
-        updatedAt: story.updatedAt.toISO()!,
         ...this.localisationFields(target),
       },
-      source: this.localisationFields(source),
-      isNew: hasNoContent,
-      providers: configService.get<Providers>('providers')!,
+      ...sourceSection,
+      hasNoContent,
+      providers: config.get<Providers>('providers')!,
     };
   }
 
@@ -153,6 +255,42 @@ export class StoryService {
     });
   }
 
+  public async prepSections(
+    version: StoryVersion,
+    sections?: PostedSection[],
+  ): Promise<StorySection[]> {
+    if (!sections) return [];
+    const sourceLocale = this.config.languages[0].locale;
+    if (version.locale === sourceLocale) return this.sourceSections(sections);
+
+    const sourceLocalisation = await StoryLocalisation.query()
+      .where('storyId', version.storyId)
+      .where('locale', sourceLocale)
+      .first();
+
+    const source = sourceLocalisation?.sections ?? [];
+    if (!source.length) return [];
+
+    return source.map((section, index) => {
+      const posted = sections[index];
+      return {
+        id: section.id,
+        title: posted?.title ?? '',
+        description: posted?.description ?? '',
+      };
+    });
+  }
+
+  sourceSections(sections: PostedSection[]): StorySection[] {
+    return sections.map((section) => {
+      return {
+        id: section.id?.trim() ? section.id : randomUUID(),
+        title: section.title,
+        description: section.description ?? '',
+      };
+    });
+  }
+
   private async hasNoContent(id: number): Promise<boolean> {
     const index = await Index.query().where('storyId', id).first();
     if (index === null) return true;
@@ -202,12 +340,12 @@ export class StoryService {
     return this.specFrom(story);
   }
 
-  protected specFrom(story: Story): StorySpec {
+  public specFrom(story: Story): StorySpec {
     const localisation = story.localisations[0] ?? emptyTranslation;
     return {
       id: story.id,
       name: localisation.title,
-      coverImage: localisation.coverImage,
+      coverImage: localisation.coverImage ?? '',
       chapterLimit: story.chapterLimit,
       chapterType: story.chapterType,
       storyType: story.storyType,
@@ -218,19 +356,21 @@ export class StoryService {
   }
 
   private localisationFields(local: {
-    title?: string;
-    coverImage?: string;
-    description?: string;
-    sections?: StoryEditProps['model']['sections'];
-    resources?: string[];
+    title?: string | null;
+    coverImage?: string | null;
+    description?: string | null;
+    tags?: string | null;
+    sections?: StoryEditProps['model']['sections'] | null;
+    resources?: string[] | null;
   }): Pick<
     StoryEditProps['model'],
-    'title' | 'coverImage' | 'description' | 'sections' | 'resources'
+    'title' | 'coverImage' | 'description' | 'tags' | 'sections' | 'resources'
   > {
     return {
       title: local.title ?? '',
       coverImage: local.coverImage ?? '',
       description: local.description ?? '',
+      tags: local.tags ?? null,
       sections: local.sections ?? [],
       resources: local.resources ?? [],
     };
@@ -244,3 +384,9 @@ export class StoryService {
     return template.fields;
   }
 }
+
+export type PostedSection = {
+  id?: string;
+  title: string;
+  description?: string;
+};

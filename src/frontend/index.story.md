@@ -19,7 +19,7 @@ Following are the widgets that are currently implemented:
 
 [string](#string), [number](#number), [markdown](#markdown), [image](#image),
 [audio](#audio), [boolean](#boolean), [select](#select), [object](#object),
-[panel](#panel), [list](#list), [scripture](#scripture),
+[panel](#panel), [list](#list), [sectionPanel](#sectionpanel), [scripture](#scripture),
 [scriptureReference](#scripturereference), [date](#date), [dateRange](#daterange),
 [region](#region)
 
@@ -27,8 +27,22 @@ Following are the widgets that are currently implemented:
 
 ## string
 
-Suitable for short, single line plain text strings. It has only the common properties and
-renders a [StringField](#)
+Suitable for short, single line plain text strings and renders a [StringField](#). It has
+one optional special property:
+
+- `placeholderText` an optional string displayed as placeholder text in the input when the
+  field is empty
+
+Example:
+
+```ts
+{
+  label: 'Title',
+  name: 'title',
+  widget: 'string',
+  placeholderText: 'Enter a title',
+},
+```
 
 ## number
 
@@ -74,6 +88,8 @@ these optional extra properties:
   minimal height possible.
 - `noMarkup` a boolean value which is `false` by default. `noMarkup` sets the widget to
   not allow any markup and only display the text as plain text.
+- `placeholderText` an optional string displayed as placeholder text in the editor when the
+  field is empty
 - `toolbar` accepts an array of strings
   `['bold', 'italic', 'strikethrough', 'heading', 'heading-smaller', 'heading-bigger', 'heading-1', 'heading-2', 'heading-3', 'code', 'quote', 'unordered-list', 'ordered-list', 'clean-block', 'link', 'image', 'upload-image', 'table', 'horizontal-rule', 'preview', 'side-by-side', 'fullscreen', 'guide','undo', 'redo'`
   representing the formatting buttons to display.
@@ -112,7 +128,7 @@ Remove the toolbar by passing an empty toolbar array. Example:
   name: 'excerpt',
   widget: 'markdown',
   minimal: true,
-  toobar: []
+  toolbar: []
 },
 ```
 
@@ -138,7 +154,7 @@ the component to the `toolbar` Example:
   name: 'excerpt',
   widget: 'markdown',
   minimal: true,
-  toobar: ['footnote']
+  toolbar: ['footnote']
 },
 ```
 
@@ -398,10 +414,11 @@ example:
 ## panel
 
 Suitable to group several primitive fields visually together.  
-Has two special properties
+Has these special properties:
 
 - `isRow` Optional boolean to specify that the panel item should be rendered side by side
   and not vertically aligned.
+- `backgroundColor` Optional string value that accepts a Tailwind color. Defaults to `white`
 - `fields` which is a required list with primitive fields that should be grouped together
   visually.  
   Note: The same visual effect can be achieved by wrapping primitive fields in an `object`
@@ -430,6 +447,34 @@ example:
     },
   ],
 },
+```
+
+With a custom background color:
+
+```ts
+{
+  widget: 'panel',
+  backgroundColor: 'indigo-50',
+  fields: [
+    {
+      label: 'Title',
+      name: 'title',
+      widget: 'string',
+    },
+  ],
+},
+```
+
+Note: You will have to whitelist any custom background colors in the project's
+`tailwind.config.cjs` file. For example, for the custom 'indigo-50' value used in the
+example above, you will have to include these variants:
+
+```js
+module.exports = {
+  content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
+  safelist: ['bg-indigo-50', 'indigo-50'], 👈
+  // rest of the Tailwind config
+};
 ```
 
 For horizontal layouts
@@ -491,10 +536,56 @@ example:
     },
     {
       label: 'Passage',
-      name: 'paxssage',
+      name: 'passage',
       widget: 'scripture',
     },
   ]
+}
+```
+
+## sectionPanel
+
+A repeating editor that renders a [SectionPanelField](#). Each item is a **card**: drag
+handle, optional row title, expand/collapse, and optional delete. Nested `fields` render
+inside the expanded body. Use this when editors should skim many groups as a stack of
+panels rather than a single long list.
+
+Specialised keys:
+
+- `fields`: required array of field specs for one row (same idea as [list](#list)).
+- `index`: optional dotted path into one row’s data (e.g. `scripture.reference`) used as
+  the **collapsed row label**. If omitted, the **first** field in `fields` supplies the
+  title string.
+- `isFlexible`: optional boolean; when `true`, row add/remove/reorder stays enabled in
+  translation workflows where list-like widgets are normally read-only.
+
+example (scripture + commentary rows):
+
+```ts
+{
+  label: 'Section',
+  name: 'sections',
+  widget: 'sectionPanel',
+  index: 'scripture.reference',
+  fields: [
+    { label: 'Scripture', name: 'scripture', widget: 'scripture' },
+    { label: 'Commentary', name: 'commentary', widget: 'markdown' },
+  ],
+}
+```
+
+example (title-driven rows, no `index`):
+
+```ts
+{
+  label: 'Resource',
+  name: 'resources',
+  widget: 'sectionPanel',
+  fields: [
+    { label: 'Title', name: 'title', widget: 'string' },
+    { label: 'URL', name: 'url', widget: 'string' },
+    { label: 'Summary', name: 'summary', widget: 'markdown' },
+  ],
 }
 ```
 
