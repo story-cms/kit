@@ -49,14 +49,17 @@ export default class MigrateAll extends BaseCommand {
 
 
   private async migrateConfig() {
-    const active = await Config.query()
+    let active = await Config.query()
       .where('key', 'cms')
       .orderBy('version', 'desc')
       .first();
 
     if (!active) {
-      this.logger.info('No active configuration found, skipping migration');
-      return;
+      active = await Config.create({
+        key: 'cms',
+        version: 1,
+        data: defineConfig({}),
+      });
     }
 
     const overrides = active.data as CmsConfig;
