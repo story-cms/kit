@@ -1,35 +1,27 @@
 <template>
   <AppLayout>
     <template #header>
-      <ContentHeader title="Settings">
+      <GlassHeader title="Settings" subtitle="Add new languages">
         <template #actions>
-          <PillButton
-            label="Request App Update"
-            variant="green"
+          <StudioButton
+            label="Add language"
+            variant="outline"
+            @click="router.visit(`/${shared.locale}/settings/languages/edit`)"
+          />
+          <StudioButton
+            label="Request content update"
             :disabled="!props.requireAppUpdate"
             @click="showRequestAppUpdateModal = true"
-          />
+          >
+            <Plus class="size-6" />
+          </StudioButton>
         </template>
-        <template #extra-actions>
-          <div class="flex justify-between items-center pb-4">
-            <div>
-              <h3 class="font-semibold leading-7 text-gray-800 text-xl/7">Languages</h3>
-              <p class="font-normal leading-5 text-gray-500 text-sm/5">
-                Here you can manage your languages. Press the blue + to add a new
-                language.
-              </p>
-            </div>
-            <button
-              class="p-1 bg-blue-500 rounded-full shadow-md hover:bg-blue-700"
-              @click="router.visit(`/${shared.locale}/settings/languages/edit`)"
-            >
-              <Icon name="plus" class="text-white" />
-            </button>
-          </div>
+        <template #controls>
+          <Controls />
         </template>
-      </ContentHeader>
+      </GlassHeader>
     </template>
-    <div class="mt-5">
+    <div>
       <LanguagesTable
         :items="languageItems"
         :source-language="sourceLanguage"
@@ -58,10 +50,11 @@
 import { ref, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
 import type { RequestPayload } from '@inertiajs/core';
+import { Plus } from '@lucide/vue';
 import AppLayout from '../shared/app-layout.vue';
-import ContentHeader from '../shared/content-header.vue';
-import Icon from '../shared/icon.vue';
-import PillButton from '../shared/pill-button.vue';
+import GlassHeader from '../shared/glass-header.vue';
+import StudioButton from '../shared/studio-button.vue';
+import Controls from './languages/components/controls.vue';
 import LanguagesTable from './languages/components/language-table.vue';
 import RequestAppUpdateModal from './languages/components/request-app-update-modal.vue';
 import RequestFeedbackModal from './languages/components/request-feedback-modal.vue';
