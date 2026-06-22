@@ -678,6 +678,7 @@ export type Subscription =
   | 'audience'
   | 'invitation'
   | 'resource'
+  | 'settings'
   | 'ui'
   | 'page';
 

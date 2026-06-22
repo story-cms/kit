@@ -83,6 +83,65 @@ test.group('Page service', (group) => {
     assert.equal(items[1].isDivider, true);
   });
 
+  test('appended page with inherited group does not add extra divider', async ({ assert }) => {
+    await PageFactory.merge({
+      id: 1,
+      order: 1,
+      bundle: { title: 'Title for Page 1', group: 1 },
+    }).create();
+
+    await PageFactory.merge({
+      id: 2,
+      order: 2,
+      bundle: { title: 'Title for Page 2', group: 2 },
+    }).create();
+
+    const p3 = await PageFactory.merge({
+      id: 3,
+      order: 3,
+      bundle: { title: 'Title for Page 3', group: 2 },
+    }).create();
+
+    const service = new PageService(
+      {
+        apiVersion: p3.apiVersion,
+        locale: p3.locale,
+      },
+      cms,
+    );
+    const items = await service.getPageItems();
+
+    assert.equal(items.length, 4);
+    assert.equal(items.filter((item) => item.isDivider).length, 1);
+  });
+
+  test('getCreateDefaults returns baseline values when no pages exist', async ({ assert }) => {
+    const service = new PageService({ apiVersion: 1, locale: 'en' }, cms);
+
+    const defaults = await service.getCreateDefaults();
+
+    assert.deepEqual(defaults, { order: 1, group: 1 });
+  });
+
+  test('getCreateDefaults inherits order and group from last page', async ({ assert }) => {
+    const lastPage = await PageFactory.merge({
+      id: 5,
+      order: 7,
+      bundle: { title: 'Title for Page 5', group: 3 },
+    }).create();
+
+    const service = new PageService(
+      {
+        apiVersion: lastPage.apiVersion,
+        locale: lastPage.locale,
+      },
+      cms,
+    );
+    const defaults = await service.getCreateDefaults();
+
+    assert.deepEqual(defaults, { order: 8, group: 3 });
+  });
+
   test('can sort pages', async ({ assert }) => {
     // arrange
     const p2 = await PageFactory.merge({

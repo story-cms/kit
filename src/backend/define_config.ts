@@ -21,6 +21,12 @@ export function defineConfig(config: Partial<CmsConfig>): CmsConfig {
 
     videoCollectionId: config.videoCollectionId || '',
 
+    /**
+     * A list of languages to be used in the app
+     *
+     * https://en.wikipedia.org/wiki/IETF_language_tag
+     * https://r12a.github.io/app-subtags/
+     */
     languages: config.languages || [
       {
         locale: 'en',

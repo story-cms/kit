@@ -55,10 +55,12 @@ export default class PagesController {
 
   public async create(ctx: HttpContext) {
     const version = cms.versionFromPath(ctx);
+    const service = new PageService(version, cms);
+    const defaults = await service.getCreateDefaults();
     const page = await Page.create({
       ...version,
-      order: 1,
-      bundle: { group: 1 } as PageBundle,
+      order: defaults.order,
+      bundle: { group: defaults.group } as PageBundle,
       updatedBy: ctx.auth.user?.id,
     });
 

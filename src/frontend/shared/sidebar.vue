@@ -126,7 +126,7 @@
           <div class="my-7 border-t border-gray-200"></div>
           <section class="grid grid-cols-1">
             <a
-              v-if="isAdmin"
+              v-if="isAdmin && subscribed('settings')"
               :class="classList('settings', true)"
               :href="`/${locale}/settings`"
             >

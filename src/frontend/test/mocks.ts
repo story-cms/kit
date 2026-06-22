@@ -658,6 +658,28 @@ export const languageTableItems: LanguageTableItem[] = [
     teamMembers: [],
   },
   {
+    language: 'Chinese Simplified - 简体中文',
+    languageDirection: 'ltr',
+    locale: 'zh-cn',
+    bibleLabel: 'Chinese Union Version (Simplified)',
+    translationProgress: [
+      { name: 'Interface', done: 0, draft: 0, total: 100 },
+      { name: 'Content', done: 0, draft: 0, total: 200 },
+    ],
+    teamMembers: [],
+  },
+  {
+    language: 'Chinese Traditional - 繁體中文',
+    languageDirection: 'ltr',
+    locale: 'zh-tw',
+    bibleLabel: 'Chinese Union Version (Traditional)',
+    translationProgress: [
+      { name: 'Interface', done: 0, draft: 0, total: 100 },
+      { name: 'Content', done: 0, draft: 0, total: 200 },
+    ],
+    teamMembers: [],
+  },
+  {
     language: 'Portuguese',
     languageDirection: 'ltr',
     locale: 'pt',
