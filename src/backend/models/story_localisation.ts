@@ -48,7 +48,7 @@ export default class StoryLocalisation extends BaseModel {
   declare updatedBy: number | null;
 
   @column.dateTime({ autoCreate: true })
-  declare createdAt: DateTime | null;
+  declare createdAt: DateTime;
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null;

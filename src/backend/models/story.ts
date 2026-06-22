@@ -35,7 +35,7 @@ export default class Story extends BaseModel {
   declare isPublished: boolean;
 
   @column.dateTime({ autoCreate: true })
-  declare createdAt: DateTime | null;
+  declare createdAt: DateTime;
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null;
