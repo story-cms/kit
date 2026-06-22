@@ -28,10 +28,10 @@
 import { ref } from 'vue';
 import StoryEditResources from './story-edit-resources.vue';
 import { availableResources, sampleAttachedResources } from '../../test/mocks';
-import type { Resource } from '../../../types';
+import type { ResourceItem } from '../../../types';
 
-const attachedResources = ref<Resource[]>([...sampleAttachedResources]);
-const emptyResources = ref<Resource[]>([]);
+const attachedResources = ref<ResourceItem[]>([...sampleAttachedResources]);
+const emptyResources = ref<ResourceItem[]>([]);
 </script>
 
 <docs lang="md">

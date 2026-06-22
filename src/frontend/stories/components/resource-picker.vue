@@ -1,5 +1,5 @@
 <template>
-  <div class="min-w-0 w-full space-y-6">
+  <div class="w-full min-w-0 space-y-6">
     <div class="flex min-w-0 items-center gap-3">
       <div class="relative min-w-0 flex-1">
         <Search
@@ -28,7 +28,7 @@
 
     <div
       v-if="showSearchPanel"
-      class="max-h-96 w-full overflow-x-hidden overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-lg"
+      class="max-h-96 w-full overflow-y-auto overflow-x-hidden rounded-xl border border-gray-200 bg-white shadow-lg"
     >
       <div
         class="sticky top-0 flex items-center justify-between border-b border-gray-200 bg-gray-50 px-4 py-2"
@@ -96,15 +96,15 @@ import { computed, ref } from 'vue';
 import { Plus, Search, Tag, X } from '@lucide/vue';
 import ResourceThumbnail from './resource-thumbnail.vue';
 import ResourceTypeBadge from './resource-type-badge.vue';
-import type { Resource } from '../../../types';
+import type { ResourceItem } from '../../../types';
 
 const props = defineProps<{
-  availableResources: Resource[];
-  attachedResources: Resource[];
+  availableResources: ResourceItem[];
+  attachedResources: ResourceItem[];
 }>();
 
 const emit = defineEmits<{
-  attach: [resource: Resource];
+  attach: [resource: ResourceItem];
   create: [];
 }>();
 
@@ -137,7 +137,7 @@ const showSearchPanel = computed(
     (searchQuery.value.length > 0 || filteredAvailableResources.value.length > 0),
 );
 
-const attach = (resource: Resource) => {
+const attach = (resource: ResourceItem) => {
   emit('attach', resource);
   searchQuery.value = '';
   showSearch.value = false;

@@ -1,4 +1,4 @@
-import type { Resource, ResourceType } from '../../../types';
+import type { ResourceItem, ResourceType } from '../../../types';
 
 export const resourceTypeColor = (type: ResourceType): string => {
   switch (type) {
@@ -26,8 +26,10 @@ export const resourceTypeLabel = (type: ResourceType): string => {
   }
 };
 
-export const groupResourcesByLabel = (resources: Resource[]): Record<string, Resource[]> => {
-  const groups: Record<string, Resource[]> = {};
+export const groupResourcesByLabel = (
+  resources: ResourceItem[],
+): Record<string, ResourceItem[]> => {
+  const groups: Record<string, ResourceItem[]> = {};
 
   for (const resource of resources) {
     const label = resource.label || 'Uncategorized';
@@ -38,7 +40,7 @@ export const groupResourcesByLabel = (resources: Resource[]): Record<string, Res
   return groups;
 };
 
-export const orderedLabels = (resources: Resource[]): string[] => {
+export const orderedLabels = (resources: ResourceItem[]): string[] => {
   const seen = new Set<string>();
   const ordered: string[] = [];
 
@@ -53,4 +55,5 @@ export const orderedLabels = (resources: Resource[]): string[] => {
   return ordered;
 };
 
-export const resourceIds = (resources: Resource[]): string[] => resources.map((r) => r.id);
+export const resourceIds = (resources: ResourceItem[]): string[] =>
+  resources.map((r) => r.id);

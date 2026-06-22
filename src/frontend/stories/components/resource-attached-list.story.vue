@@ -1,5 +1,9 @@
 <template>
-  <Story title="Resource Attached List" group="resources" :layout="{ type: 'grid', width: 800 }">
+  <Story
+    title="Resource Attached List"
+    group="resources"
+    :layout="{ type: 'grid', width: 800 }"
+  >
     <Variant title="Default">
       <ResourceAttachedList v-model:resources="attachedResources" />
     </Variant>
@@ -14,13 +18,11 @@
 import { ref } from 'vue';
 import ResourceAttachedList from './resource-attached-list.vue';
 import { sampleAttachedResources } from '../../test/mocks';
-import type { Resource } from '../../../types';
+import type { ResourceItem } from '../../../types';
 
-const attachedResources = ref<Resource[]>([...sampleAttachedResources]);
+const attachedResources = ref<ResourceItem[]>([...sampleAttachedResources]);
 
-const singleLabelResources = ref<Resource[]>(
-  sampleAttachedResources.filter(
-    (resource) => resource.label === 'Supplementary Videos',
-  ),
+const singleLabelResources = ref<ResourceItem[]>(
+  sampleAttachedResources.filter((resource) => resource.label === 'Supplementary Videos'),
 );
 </script>

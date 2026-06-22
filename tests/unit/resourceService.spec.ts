@@ -1,6 +1,10 @@
 import { test, expect } from '@playwright/test';
 import { DateTime } from 'luxon';
-import { extractResourceUrl, toResourceDto, toResourceIndexItem } from '../../src/backend/services/resource_mapper.js';
+import {
+  extractResourceUrl,
+  toResourceItem,
+  toResourceIndexItem,
+} from '../../src/backend/services/resource_mapper.js';
 import type { LinkBundle, TextBundle, VideoBundle } from '../../src/types.js';
 
 test.describe('Resource mapper', () => {
@@ -20,7 +24,7 @@ test.describe('Resource mapper', () => {
   });
 
   test('toResourceDto maps model fields to Resource DTO', () => {
-    const dto = toResourceDto({
+    const dto = toResourceItem({
       id: 'abc-123',
       title: 'Test Resource',
       type: 'info_link',
@@ -44,7 +48,7 @@ test.describe('Resource mapper', () => {
   });
 
   test('toResourceDto handles nullable label and description', () => {
-    const dto = toResourceDto({
+    const dto = toResourceItem({
       id: 'abc-456',
       title: 'Text Resource',
       type: 'text',

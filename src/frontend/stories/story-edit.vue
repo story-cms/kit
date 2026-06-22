@@ -55,7 +55,12 @@
 import { computed, ref } from 'vue';
 import { router } from '@inertiajs/vue3';
 
-import type { NavigationPaneTab, Resource, SharedPageProps, StoryEditProps } from '../../types';
+import type {
+  NavigationPaneTab,
+  ResourceItem,
+  SharedPageProps,
+  StoryEditProps,
+} from '../../types';
 import { ResponseStatus } from '../../types';
 import { useSharedStore, useWidgetsStore, useModelStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
@@ -77,7 +82,7 @@ useWidgetsStore().setProviders(props.providers);
 const model = useModelStore();
 model.setModel(props.model);
 
-const attachedResources = ref<Resource[]>([...(props.model.resources ?? [])]);
+const attachedResources = ref<ResourceItem[]>([...(props.model.resources ?? [])]);
 const availableResources = props.availableResources ?? [];
 
 const isPublished = computed(() => props.model.isPublished);

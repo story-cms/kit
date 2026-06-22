@@ -45,11 +45,11 @@
 <script setup lang="ts">
 import { GripVertical, Tag } from '@lucide/vue';
 import ResourceAttachedItem from './resource-attached-item.vue';
-import type { Resource } from '../../../types';
+import type { ResourceItem } from '../../../types';
 
 const props = defineProps<{
   label: string;
-  resources: Resource[];
+  resources: ResourceItem[];
   labelIndex: number;
   draggingLabelIndex: number | null;
   draggingResource: { label: string; index: number } | null;

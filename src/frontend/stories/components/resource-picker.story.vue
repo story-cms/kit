@@ -24,11 +24,11 @@
 import { ref } from 'vue';
 import ResourcePicker from './resource-picker.vue';
 import { availableResources } from '../../test/mocks';
-import type { Resource } from '../../../types';
+import type { ResourceItem } from '../../../types';
 
-const attachedResources = ref<Resource[]>([]);
+const attachedResources = ref<ResourceItem[]>([]);
 
-const onAttach = (resource: Resource) => {
+const onAttach = (resource: ResourceItem) => {
   attachedResources.value = [...attachedResources.value, resource];
 };
 

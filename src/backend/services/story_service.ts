@@ -20,7 +20,7 @@ import type {
   StorySpec,
   StoryVersion,
   Providers,
-  Resource,
+  ResourceItem,
 } from '../../types.js';
 
 export type PostedSection = {
@@ -451,5 +451,5 @@ export interface HomeStory {
   storyType: string;
   description: string;
   chapters: Array<{ id: number } & Record<string, unknown>>;
-  resources: Resource[];
+  resources: ResourceItem[];
 }

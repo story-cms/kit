@@ -16,10 +16,10 @@
 <script setup lang="ts">
 import { ExternalLink, FileText, Video } from '@lucide/vue';
 import type { Component } from 'vue';
-import type { Resource, ResourceType } from '../../../types';
+import type { ResourceItem, ResourceType } from '../../../types';
 
 defineProps<{
-  item: Resource;
+  item: ResourceItem;
 }>();
 
 const iconFor = (type: ResourceType): Component => {

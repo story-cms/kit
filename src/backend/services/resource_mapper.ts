@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon';
 import type {
-  Resource,
   ResourceBundle,
   ResourceIndexItem,
+  ResourceItem,
   ResourceType,
   VisibilityType,
 } from '../../types.js';
@@ -16,8 +16,8 @@ export type ResourceRow = {
   visibility: string;
   description: string | null;
   bundle: unknown;
-  createdAt?: DateTime | string;
-  updatedAt?: DateTime | string;
+  createdAt?: DateTime | string | null;
+  updatedAt?: DateTime | string | null;
 };
 
 export const extractResourceUrl = (
@@ -34,13 +34,15 @@ export const extractResourceUrl = (
   }
 };
 
-const formatResourceDate = (value: DateTime | string | undefined): string => {
+const formatResourceDate = (
+  value: DateTime | string | undefined | null,
+): string => {
   if (!value) return '';
   if (typeof value === 'string') return value.split('T')[0];
   return value.toISODate() ?? value.toISO()?.split('T')[0] ?? '';
 };
 
-export const toResourceDto = (model: ResourceRow): Resource => {
+export const toResourceItem = (model: ResourceRow): ResourceItem => {
   const bundle = model.bundle as ResourceBundle;
 
   return {
@@ -57,7 +59,7 @@ export const toResourceDto = (model: ResourceRow): Resource => {
 
 export const toResourceIndexItem = (model: ResourceRow): ResourceIndexItem => {
   return {
-    ...toResourceDto(model),
+    ...toResourceItem(model),
     createdAt: formatResourceDate(model.createdAt),
     updatedAt: formatResourceDate(model.updatedAt),
   };

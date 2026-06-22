@@ -1,9 +1,8 @@
 import ResourceModel from '../models/resource.js';
 import StoryLocalisation from '../models/story_localisation.js';
-import { toResourceDto, toResourceIndexItem } from './resource_mapper.js';
 import type {
   LinkBundle,
-  Resource,
+  ResourceItem,
   ResourceBundle,
   ResourceIndexItem,
   ResourceType,
@@ -11,8 +10,17 @@ import type {
   VideoBundle,
   VisibilityType,
 } from '../../types.js';
+import {
+  toResourceIndexItem,
+  toResourceItem,
+} from './resource_mapper.js';
 
-export { extractResourceUrl, toResourceDto, toResourceIndexItem } from './resource_mapper.js';
+export type { ResourceRow } from './resource_mapper.js';
+export {
+  extractResourceUrl,
+  toResourceIndexItem,
+  toResourceItem,
+} from './resource_mapper.js';
 
 export interface ResourcePayload {
   title: string;
@@ -64,8 +72,8 @@ const bundleToModel = (model: ResourceModel): Record<string, unknown> => {
 };
 
 export class ResourceService {
-  public toDto(model: ResourceModel): Resource {
-    return toResourceDto(model);
+  public toDto(model: ResourceModel): ResourceItem {
+    return toResourceItem(model);
   }
 
   public toIndexItem(model: ResourceModel): ResourceIndexItem {
@@ -76,13 +84,17 @@ export class ResourceService {
     return bundleToModel(model);
   }
 
-  public async listByLocale(locale: string): Promise<Resource[]> {
-    const models = await ResourceModel.query().where('locale', locale).orderBy('title', 'asc');
+  public async listByLocale(locale: string): Promise<ResourceItem[]> {
+    const models = await ResourceModel.query()
+      .where('locale', locale)
+      .orderBy('title', 'asc');
     return models.map((model) => this.toDto(model));
   }
 
   public async listIndexItems(locale: string): Promise<ResourceIndexItem[]> {
-    const models = await ResourceModel.query().where('locale', locale).orderBy('title', 'asc');
+    const models = await ResourceModel.query()
+      .where('locale', locale)
+      .orderBy('title', 'asc');
     return models.map((model) => this.toIndexItem(model));
   }
 
@@ -90,7 +102,7 @@ export class ResourceService {
     return ResourceModel.findOrFail(id);
   }
 
-  public async hydrate(ids: string[]): Promise<Resource[]> {
+  public async hydrate(ids: string[]): Promise<ResourceItem[]> {
     if (ids.length === 0) return [];
 
     const models = await ResourceModel.query().whereIn('id', ids);

@@ -1,10 +1,7 @@
 <template>
   <div
     class="flex min-w-0 items-center gap-3 overflow-hidden px-4 py-3 transition-colors"
-    :class="[
-      readOnly ? '' : 'hover:bg-gray-50',
-      { 'opacity-50': isDragging },
-    ]"
+    :class="[readOnly ? '' : 'hover:bg-gray-50', { 'opacity-50': isDragging }]"
     :draggable="!readOnly"
     @dragstart="onDragStart"
     @dragover.prevent="onDragOver"
@@ -53,10 +50,10 @@
 import { GripVertical, X } from '@lucide/vue';
 import ResourceThumbnail from './resource-thumbnail.vue';
 import ResourceTypeBadge from './resource-type-badge.vue';
-import type { Resource } from '../../../types';
+import type { ResourceItem } from '../../../types';
 
 const props = defineProps<{
-  item: Resource;
+  item: ResourceItem;
   isDragging?: boolean;
   readOnly?: boolean;
 }>();

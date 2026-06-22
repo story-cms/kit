@@ -162,6 +162,38 @@ export interface LinkBundle {
 export type ResourceType = 'text' | 'video' | 'info_link';
 export type ResourceBundle = TextBundle | VideoBundle | LinkBundle;
 
+export interface ResourceItem {
+  id: string;
+  title: string;
+  type: ResourceType;
+  imageUrl?: string | null;
+  url?: string;
+  label: string | null;
+  visibility: VisibilityType;
+  description?: string | null;
+}
+
+export interface ResourceIndexItem extends ResourceItem {
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ResourceMeta {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ResourceIndexProps {
+  resources: ResourceIndexItem[];
+}
+
+export interface ResourceEditProps {
+  providers: Providers;
+  resource: ResourceMeta;
+  bundle: any;
+}
+
 /// ----------------------------------------------------
 ///  stories
 /// ----------------------------------------------------
@@ -281,38 +313,6 @@ export interface StoryCreateProps {
   providers: Providers;
 }
 
-export interface Resource {
-  id: string;
-  title: string;
-  type: ResourceType;
-  imageUrl?: string | null;
-  url?: string;
-  label: string | null;
-  visibility: VisibilityType;
-  description?: string | null;
-}
-
-export interface ResourceIndexItem extends Resource {
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface ResourceMeta {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface ResourceIndexProps {
-  resources: ResourceIndexItem[];
-}
-
-export interface ResourceEditProps {
-  providers: Providers;
-  resource: ResourceMeta;
-  bundle: any;
-}
-
 export interface StoryEditProps {
   model: {
     id: number;
@@ -329,16 +329,16 @@ export interface StoryEditProps {
     template: string;
     isPublished: boolean;
     sections: StorySection[];
-    resources: Resource[];
+    resources: ResourceItem[];
   };
   source?: {
     title: string;
     coverImage: string;
     description: string;
     sections: StorySection[];
-    resources: Resource[];
+    resources: ResourceItem[];
   };
-  availableResources: Resource[];
+  availableResources: ResourceItem[];
   hasNoContent: boolean;
   providers: Providers;
 }

@@ -37,14 +37,14 @@ import { computed, ref } from 'vue';
 import ResourceAttachedList from './resource-attached-list.vue';
 import ResourceEmptyState from './resource-empty-state.vue';
 import ResourcePicker from './resource-picker.vue';
-import type { Resource } from '../../../types';
+import type { ResourceItem } from '../../../types';
 
 const props = withDefaults(
   defineProps<{
-    resources: Resource[];
-    availableResources: Resource[];
+    resources: ResourceItem[];
+    availableResources: ResourceItem[];
     isTranslation?: boolean;
-    sourceResources?: Resource[];
+    sourceResources?: ResourceItem[];
   }>(),
   {
     isTranslation: false,
@@ -53,7 +53,7 @@ const props = withDefaults(
 );
 
 const emit = defineEmits<{
-  'update:resources': [resources: Resource[]];
+  'update:resources': [resources: ResourceItem[]];
   create: [];
 }>();
 
@@ -61,10 +61,10 @@ const resourcePicker = ref<InstanceType<typeof ResourcePicker> | null>(null);
 
 const attachedResources = computed({
   get: () => props.resources,
-  set: (value: Resource[]) => emit('update:resources', value),
+  set: (value: ResourceItem[]) => emit('update:resources', value),
 });
 
-const attachResource = (resource: Resource) => {
+const attachResource = (resource: ResourceItem) => {
   if (attachedResources.value.some((attached) => attached.id === resource.id)) return;
   attachedResources.value = [...attachedResources.value, resource];
 };

@@ -5,7 +5,9 @@
         <span class="font-medium">{{ resources.length }}</span>
         resource{{ resources.length !== 1 ? 's' : '' }} attached
       </p>
-      <p v-if="!readOnly" class="text-xs text-gray-500">Drag to reorder labels and resources</p>
+      <p v-if="!readOnly" class="text-xs text-gray-500">
+        Drag to reorder labels and resources
+      </p>
     </div>
 
     <ResourceLabelGroup
@@ -32,20 +34,20 @@
 import { computed, ref } from 'vue';
 import ResourceLabelGroup from './resource-label-group.vue';
 import { groupResourcesByLabel, orderedLabels } from './resource-utils';
-import type { Resource } from '../../../types';
+import type { ResourceItem } from '../../../types';
 
 const props = defineProps<{
-  resources: Resource[];
+  resources: ResourceItem[];
   readOnly?: boolean;
 }>();
 
 const emit = defineEmits<{
-  'update:resources': [resources: Resource[]];
+  'update:resources': [resources: ResourceItem[]];
 }>();
 
 const attachedResources = computed({
   get: () => props.resources,
-  set: (value: Resource[]) => emit('update:resources', value),
+  set: (value: ResourceItem[]) => emit('update:resources', value),
 });
 
 const groupedByLabel = computed(() => groupResourcesByLabel(attachedResources.value));

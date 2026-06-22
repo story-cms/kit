@@ -3,7 +3,7 @@ import type {
   LanguageSpecification,
   LanguageTableItem,
   SharedPageProps,
-  Resource,
+  ResourceItem,
   ResourceEditProps,
   ResourceIndexItem,
   Providers,
@@ -4335,7 +4335,7 @@ export const mockInvitations: InvitationItem[] = [
   },
 ];
 
-export const availableResources: Resource[] = [
+export const availableResources: ResourceItem[] = [
   {
     id: 'r1',
     title: 'Introduction to Biblical Archaeology',
@@ -4500,8 +4500,8 @@ export const mockIndexResources: ResourceIndexItem[] = shuffle(
 
 const attachedStoryResourceIds = ['r1', 'r6', 'r8', 'r3', 'r7', 'r11', 'r4', 'r10'];
 
-export const sampleAttachedResources: Resource[] = availableResources.filter((resource) =>
-  attachedStoryResourceIds.includes(resource.id),
+export const sampleAttachedResources: ResourceItem[] = availableResources.filter(
+  (resource) => attachedStoryResourceIds.includes(resource.id),
 );
 
 export const mockResourceProviders: Providers = {
@@ -4528,7 +4528,7 @@ export const mockResourceProviders: Providers = {
 };
 
 const toEditResource = (
-  resource: Resource,
+  resource: ResourceItem,
   createdAt: string,
   updatedAt: string,
   bundle: Record<string, unknown>,
