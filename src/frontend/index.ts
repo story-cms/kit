@@ -23,6 +23,7 @@ import ImageField from './fields/image-field.vue';
 import IndexCard from './stories/components/index-card.vue';
 import IndexFilter from './shared/index-filter.vue';
 import LabelButton from './shared/label-button.vue';
+import PillButton from './shared/pill-button.vue';
 import LanguagesEdit from './settings/languages/languages-edit.vue';
 import SettingsIndex from './settings/settings-index.vue';
 import ListField from './fields/list-field.vue';
@@ -41,10 +42,14 @@ import PanelField from './fields/panel-field.vue';
 import PublicLayout from './shared/public-layout.vue';
 import RegionField from './fields/region-field.vue';
 import ResetPassword from './auth/reset-password.vue';
+import ResourcesEdit from './resources/resources-edit.vue';
+import ResourcesIndex from './resources/resources-index.vue';
 import ScriptureField from './fields/scripture-field.vue';
 import SelectField from './fields/select-field.vue';
 import StatusTag from './shared/status-tag.vue';
+import StoryCreate from './stories/story-create.vue';
 import StoryEdit from './stories/story-edit.vue';
+import StoryEditResources from './stories/components/story-edit-resources.vue';
 import StoryGallery from './stories/story-gallery.vue';
 import StoryIndex from './stories/story-index.vue';
 import DropEdit from './streams/drop-edit.vue';
@@ -58,11 +63,16 @@ import UiPage from './ui/ui-page.vue';
 import UsersIndex from './team/users-index.vue';
 import VideoField from './fields/video-field.vue';
 
+import ContentSidebar from './shared/content-sidebar.vue';
+import NavigationPane from './shared/navigation-pane.vue';
+import SectionPanelField from './fields/section-panel-field.vue';
+
 export { createInertiaApp, usePage, useForm, router } from '@inertiajs/vue3';
 
 export * from './store/index';
 
-export { commonProps, helpScoutWidget } from './shared/helpers';
+export { commonProps, helpScoutWidget, formatDate } from './shared/helpers';
+export { resourceIds } from './stories/components/resource-utils';
 
 export {
   ActionButton,
@@ -72,8 +82,6 @@ export {
   AudienceIndex,
   AudioField,
   BooleanField,
-  InvitationsEdit,
-  InvitationsIndex,
   ChapterPreview,
   ContentHeader,
   ContextMenu,
@@ -83,15 +91,17 @@ export {
   DateRangeField,
   DraftIndex,
   DropDown,
+  DropEdit,
   ForgotPassword,
   Icon,
   IconButton,
   ImageField,
   IndexCard,
   IndexFilter,
+  InvitationsEdit,
+  InvitationsIndex,
   LabelButton,
   LanguagesEdit,
-  SettingsIndex,
   ListField,
   ListSwitcher,
   Login,
@@ -105,16 +115,21 @@ export {
   PagesIndex,
   PanelField,
   Pagination,
+  PillButton,
   PublicLayout,
   RegionField,
   ResetPassword,
+  ResourcesEdit,
+  ResourcesIndex,
   ScriptureField,
   SelectField,
+  SettingsIndex,
   StatusTag,
+  StoryCreate,
   StoryEdit,
+  StoryEditResources,
   StoryGallery,
   StoryIndex,
-  DropEdit,
   StreamGallery,
   StreamIndex,
   StringField,
@@ -124,4 +139,10 @@ export {
   UiPage,
   UsersIndex,
   VideoField,
+  // ---------------
+  // TODO: remove once landed
+  // ---------------
+  ContentSidebar,
+  NavigationPane,
+  SectionPanelField,
 };

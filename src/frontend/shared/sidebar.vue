@@ -73,6 +73,13 @@
             >
 
             <a
+              v-if="subscribed('resource')"
+              :class="classList('resource')"
+              :href="`/${locale}/resource`"
+              >Resources</a
+            >
+
+            <a
               v-if="subscribed('invitation')"
               :class="classList('invitation')"
               :href="`/${locale}/invitation`"

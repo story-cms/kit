@@ -31,6 +31,11 @@
       <PanelField :field="noLabel" />
       <ModelControl :model="panelModel" />
     </Variant>
+
+    <Variant title="Background Color" :setup-app="loadData">
+      <PanelField :field="withBackgroundColor" />
+      <ModelControl :model="panelModel" />
+    </Variant>
   </Story>
 </template>
 
@@ -84,6 +89,11 @@ const spec = {
 const noLabel = {
   ...spec,
   label: '',
+};
+
+const withBackgroundColor = {
+  ...spec,
+  backgroundColor: 'indigo-50',
 };
 
 const isRowWithNoLabel = {

@@ -138,6 +138,7 @@ onMounted(async () => {
     spellChecker: false,
     nativeSpellcheck: false,
     status: false,
+    placeholder: field.value.placeholderText,
     // @ts-expect-error toolbar is not typed
     toolbar: toolbar.value,
   });

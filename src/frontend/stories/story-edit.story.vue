@@ -7,21 +7,23 @@
         :language="sharedProps.language"
         :errors="{}"
         :bookmarks="sharedProps.bookmarks"
-        :story="storyData"
-        :is-new="false"
+        :model="storyModel"
+        :available-resources="availableResources"
+        :has-no-content="false"
         :providers="{}"
       />
     </Variant>
 
-    <Variant title="New story" :setup-app="loadNormalData">
+    <Variant title="Empty resources" :setup-app="loadNormalData">
       <StoryEdit
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
         :errors="{}"
         :bookmarks="sharedProps.bookmarks"
-        :story="newStoryData"
-        :is-new="true"
+        :model="emptyResourcesModel"
+        :available-resources="availableResources"
+        :has-no-content="false"
         :providers="{}"
       />
     </Variant>
@@ -30,13 +32,20 @@
 
 <script setup lang="ts">
 import StoryEdit from './story-edit.vue';
-import { sharedProps, miniSidebar } from '../test/mocks';
+import {
+  availableResources,
+  listModel,
+  sampleAttachedResources,
+  sharedProps,
+  miniSidebar,
+} from '../test/mocks';
 import { useSharedStore } from '../store';
 import type { StoryHandler } from '../shared/helpers';
+import type { StoryEditProps } from '../../types';
 
-const storyData = {
+const storyModel: StoryEditProps['model'] = {
   id: 1,
-  name: 'The Gospel of John',
+  title: 'The Gospel of John',
   storyType: 'gospel',
   chapterType: 'chapter',
   coverImage:
@@ -46,22 +55,18 @@ const storyData = {
   tags: 'gospel,john,new-testament',
   description:
     '# The Gospel of John\n\nThis is the fourth gospel in the New Testament...',
-  createdAt: '2024-01-15T10:30:00Z',
-  updatedAt: '2024-01-20T14:45:00Z',
+  sectionType: null,
+  visibility: 'public',
+  slug: 'gospel-of-john',
+  template: 'devotion',
+  sections: listModel.sections,
+  resources: sampleAttachedResources,
 };
 
-const newStoryData = {
-  id: 0,
-  name: '',
-  storyType: 'story',
-  chapterType: 'chapter',
-  coverImage: '',
-  chapterLimit: 0,
-  isPublished: false,
-  tags: '',
-  description: '',
-  createdAt: '2024-01-25T09:00:00Z',
-  updatedAt: '2024-01-25T09:00:00Z',
+const emptyResourcesModel: StoryEditProps['model'] = {
+  ...storyModel,
+  title: 'Untitled Story',
+  resources: [],
 };
 
 const loadNormalData: StoryHandler = ({ app, story, variant }): void => {
@@ -72,7 +77,6 @@ const loadNormalData: StoryHandler = ({ app, story, variant }): void => {
     languageDirection: 'ltr',
   });
 
-  // Also call miniSidebar to close sidebar
   miniSidebar({ app, story, variant });
 };
 </script>
@@ -80,7 +84,8 @@ const loadNormalData: StoryHandler = ({ app, story, variant }): void => {
 <docs lang="md">
 # Story Edit
 
-A comprehensive page component for creating and editing stories in the CMS.
+Full-page story editor with tabbed navigation for Details, Sections, and Resources.
+Saving posts attached resource IDs to the story localisation.
 
 ## Usage
 
@@ -91,37 +96,10 @@ A comprehensive page component for creating and editing stories in the CMS.
   :language="language"
   :errors="errors"
   :bookmarks="bookmarks"
-  :story="story"
+  :model="model"
+  :available-resources="availableResources"
+  :has-no-content="hasNoContent"
   :providers="providers"
 />
 ```
-
-## Props
-
-- `config` - CMS config from sharedProps
-- `user` - User data from sharedProps
-- `language` - Current language from sharedProps
-- `errors` - Error state from sharedProps
-- `bookmarks` - Available bookmarks array
-- `story` - Story data object with fields like name, coverImage, chapterLimit, tags, description
-- `providers` - Media providers for file uploads
-
-## Features
-
-- Form fields for story title, cover image, chapter limit, tags, and description
-- Image upload with file validation
-- Markdown editor for story description
-- Tag management
-- Meta box showing story metadata
-- Save and delete functionality
-- Responsive layout with sidebar
-- Error handling and validation
-- RTL language support
-
-## Variants
-
-- **Default** - Standard story editing interface
-- **New story** - Interface for creating a new story
-- **With errors** - Shows validation error states with ErrorControl
-- **RTL** - Right-to-left language support testing
 </docs>

@@ -92,6 +92,12 @@ const cmsConfig: Partial<CmsConfig> = {
   microcopySource: '',
 
   /**
+    * Bunny collection ID for resource video uploads
+    * example: videoUploadConfig.collection
+    */
+  // videoCollectionId: '',
+
+  /**
     * A list of languages to be used in the app
     *
     * https://en.wikipedia.org/wiki/IETF_language_tag

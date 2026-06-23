@@ -1,7 +1,8 @@
 <template>
   <div
     :class="[
-      'subgrid bg-white',
+      'subgrid',
+      panelBackgroundClass,
       {
         'p-8 pt-2': !field.isRow,
       },
@@ -63,6 +64,12 @@ const store = useWidgetsStore();
 
 const field = computed(() => props.field as FieldSpec);
 const fields = field.value.fields as FieldSpec[];
+
+const backgroundColor = computed(() => {
+  return field.value.backgroundColor ? field.value.backgroundColor : 'white';
+});
+
+const panelBackgroundClass = computed(() => `bg-${backgroundColor.value}`);
 
 const childRootPath = computed(() => props.rootPath);
 

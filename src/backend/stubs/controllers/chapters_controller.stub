@@ -23,7 +23,7 @@ export default class ChaptersController {
     const service = new IndexService(story, cms);
     const addStatus: AddStatus = await service.getAddStatus(version);
     const index = await service.getItems(version);
-    const storyIsBespoke = true; // TODO: implement this
+    const storyIsBespoke = false; // TODO: implement this
     const props: StoryIndexProps = {
       index,
       addStatus,

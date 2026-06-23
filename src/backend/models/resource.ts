@@ -18,9 +18,6 @@ export default class Resource extends BaseModel {
   declare locale: string;
 
   @column()
-  declare isPublished: boolean;
-
-  @column()
   declare visibility: string;
 
   @column()
@@ -51,5 +48,5 @@ export default class Resource extends BaseModel {
   declare createdAt: DateTime;
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare updatedAt: DateTime;
+  declare updatedAt: DateTime | null;
 }

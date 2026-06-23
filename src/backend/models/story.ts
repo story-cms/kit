@@ -8,9 +8,6 @@ export default class Story extends BaseModel {
   declare id: number;
 
   @column()
-  declare tags: string;
-
-  @column()
   declare chapterLimit: number;
 
   @column()
@@ -20,7 +17,7 @@ export default class Story extends BaseModel {
   declare chapterType: string;
 
   @column()
-  declare sectionType: string;
+  declare sectionType: string | null;
 
   @column()
   declare visibility: string;
@@ -41,7 +38,7 @@ export default class Story extends BaseModel {
   declare createdAt: DateTime;
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare updatedAt: DateTime;
+  declare updatedAt: DateTime | null;
 
   @hasMany(() => StoryLocalisation)
   declare localisations: HasMany<typeof StoryLocalisation>;

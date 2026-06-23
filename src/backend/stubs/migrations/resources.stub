@@ -18,8 +18,6 @@ export default class extends BaseSchema {
         .notNullable()
         .comment('IETF BCP 47 language tag like en-US or zh-Hans');
 
-      table.boolean('is_published').notNullable().defaultTo(false);
-
       table
         .string('visibility', 255)
         .notNullable()

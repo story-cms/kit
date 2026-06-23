@@ -3,6 +3,7 @@ export * from '../types.js';
 export { configure } from './configure.js';
 export { stubsRoot } from './stubs/main.js';
 export * from './define_config.js';
+export { default as StoryDeleteException } from './exceptions/story_delete_exception.js';
 export { default as Activity } from './models/activity.js';
 export { default as Invitation } from './models/invitation.js';
 export { default as Chapter } from './models/chapter.js';
@@ -46,12 +47,20 @@ export * from './services/user_service.js';
 export * from './services/stream_service.js';
 export * from './services/preference_service.js';
 export * from './services/story_service.js';
+export * from './services/resource_service.js';
 export * from './validators/auth.js';
 export * from './validators/invitation.js';
 export * from './validators/bundle.js';
 export * from './validators/chapter.js';
+export * from './validators/course.js';
 export { default as DropValidator } from './validators/drop.js';
 export { default as PageValidator } from './validators/page.js';
 export * from './validators/user.js';
+export { ResourceValidator } from './validators/resource.js';
+export {
+  StoryCreateValidator,
+  StoryUpdateValidator,
+  storyErrorMessages,
+} from './validators/story.js';
 export { default as audioRule } from './validators/audio_rule.js';
 export { default as videoRule } from './validators/video_rule.js';

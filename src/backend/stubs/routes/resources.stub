@@ -1,0 +1,15 @@
+{{{
+  exports({ to: app.makePath('start/routes/resources.ts') })
+}}}
+import router from '@adonisjs/core/services/router';
+
+const ResourcesController = () => import('#controllers/resources_controller');
+
+export default () => {
+  router.get(':locale/resource', [ResourcesController, 'index']);
+  router.get(':locale/resource/create', [ResourcesController, 'create']);
+  router.get(':locale/resource/:id/edit', [ResourcesController, 'edit']);
+  router.post(':locale/resource', [ResourcesController, 'store']);
+  router.post(':locale/resource/:id', [ResourcesController, 'update']);
+  router.delete(':locale/resource/:id', [ResourcesController, 'destroy']);
+};

@@ -52,6 +52,7 @@
     "@aws-sdk/lib-storage": "^3.965.0",
     "@headlessui/vue": "^1.7.23",
     "@inertiajs/vue3": "^2.3.7",
+    "@lucide/vue": "^1.18.0",
     "@poppinss/utils": "^6.10.1",
     "@rive-app/canvas": "^2.33.3",
     "@types/luxon": "^3.7.1",

@@ -3,6 +3,10 @@ import type {
   LanguageSpecification,
   LanguageTableItem,
   SharedPageProps,
+  ResourceItem,
+  ResourceEditProps,
+  ResourceIndexItem,
+  Providers,
   StorySpec,
   InvitationItem,
   UiConfig,
@@ -554,7 +558,6 @@ const languages: LanguageSpecification[] = [
   ganda,
   german,
 ];
-
 
 export const languageTableItems: LanguageTableItem[] = [
   {
@@ -1723,8 +1726,17 @@ export const config: UiConfig = {
   logo: 'https://res.cloudinary.com/theword121/image/upload/v1687245360/episodes/viseg2hegowcrapio6pt.svg',
   helpUrl: 'https://www.theword121.com/',
   hasAppPreview: false,
+  videoCollectionId: 'temporary-id',
   languages,
-  subscriptions: ['story', 'stream', 'language', 'audience', 'invitation', 'page'],
+  subscriptions: [
+    'story',
+    'stream',
+    'language',
+    'audience',
+    'invitation',
+    'page',
+    'resource',
+  ],
   supportEmail: 'support@startjourneys.io',
 };
 
@@ -4322,3 +4334,280 @@ export const mockInvitations: InvitationItem[] = [
     isPublished: false,
   },
 ];
+
+export const availableResources: ResourceItem[] = [
+  {
+    id: 'r1',
+    title: 'Introduction to Biblical Archaeology',
+    type: 'video',
+    imageUrl: 'https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=400',
+    label: 'Supplementary Videos',
+    visibility: 'public',
+    description: 'A comprehensive overview of archaeological findings in the Holy Land',
+  },
+  {
+    id: 'r2',
+    title: 'The Historical Jesus: Scholarly Perspectives',
+    type: 'text',
+    url: 'https://example.com/historical-jesus',
+    label: 'Academic Reading',
+    visibility: 'public',
+    description:
+      'Academic article examining historical evidence for Jesus. It is a text that provides a comprehensive overview of the historical Jesus. It is a text that provides a comprehensive overview of the historical Jesus. It is a text that provides a comprehensive overview of the historical Jesus. ',
+  },
+  {
+    id: 'r3',
+    title: 'Understanding the Gospels',
+    type: 'text',
+    url: 'https://example.com/gospels.pdf',
+    label: 'Supplementary Reading',
+    visibility: 'public',
+    description: 'A detailed guide to the four Gospels and their contexts',
+  },
+  {
+    id: 'r4',
+    title: 'Early Church History Timeline',
+    type: 'info_link',
+    url: 'https://example.com/timeline',
+    label: 'Reference Materials',
+    visibility: 'public',
+    description: 'Interactive timeline of the first 500 years of Christianity',
+  },
+  {
+    id: 'r5',
+    title: 'Hebrew Language Basics',
+    type: 'video',
+    imageUrl: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400',
+    label: 'Language Resources',
+    visibility: 'public',
+    description: 'Learn the basics of Biblical Hebrew',
+  },
+  {
+    id: 'r6',
+    title: 'Old Testament Survey',
+    type: 'video',
+    imageUrl: 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=400',
+    label: 'Supplementary Videos',
+    visibility: 'public',
+    description: 'Comprehensive overview of Old Testament books and themes',
+  },
+  {
+    id: 'r7',
+    title: 'The Sermon on the Mount Study Guide',
+    type: 'text',
+    url: 'https://example.com/sermon-mount.pdf',
+    label: 'Study Guides',
+    visibility: 'leaders',
+    description: 'In-depth study guide for Matthew 5-7',
+  },
+  {
+    id: 'r8',
+    title: 'Church History Documentary Series',
+    type: 'video',
+    imageUrl: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400',
+    label: 'Supplementary Videos',
+    visibility: 'public',
+    description: '10-part series on the history of Christianity',
+  },
+  {
+    id: 'r9',
+    title: 'Biblical Greek Resources',
+    type: 'info_link',
+    url: 'https://example.com/greek',
+    label: 'Language Resources',
+    visibility: 'public',
+    description: 'Collection of tools for learning Biblical Greek',
+  },
+  {
+    id: 'r10',
+    title: 'Theological Dictionary',
+    type: 'info_link',
+    url: 'https://example.com/dictionary',
+    label: 'Reference Materials',
+    visibility: 'public',
+    description: 'Comprehensive theological terms and definitions',
+  },
+  {
+    id: 'r11',
+    title: 'Leader Discussion Guide',
+    type: 'text',
+    url: 'https://example.com/leader-guide.pdf',
+    label: 'Study Guides',
+    visibility: 'leaders',
+    description: 'Facilitator notes and discussion questions',
+  },
+  {
+    id: 'r12',
+    title: 'Parables of Jesus Explained',
+    type: 'text',
+    url: 'https://example.com/parables',
+    label: 'Academic Reading',
+    visibility: 'public',
+    description: 'Analysis of major parables in the Gospels',
+  },
+  {
+    id: 'r13',
+    title:
+      'Archaeological Discoveries and Their Impact on New Testament Historical Studies: A Case study of the Gospel of Luke and Acts while referencing the Gospel of John and ignoring the Gospel of Matthew',
+    type: 'video',
+    imageUrl: 'https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=400',
+    label: 'Supplementary Videos',
+    visibility: 'public',
+    description:
+      'This resource surveys major archaeological sites across Israel and Jordan, explaining how pottery, inscriptions, and settlement layers inform our reading of first-century Palestine. It connects excavation reports to Gospel narratives, early church history, and the social world behind Paul’s letters. Scholars and students alike will find maps, timelines, and curated reading lists for deeper study.',
+  },
+  {
+    id: 'r14',
+    title: 'A Critical Introduction to the Synoptic Problem and Gospel Source Criticism',
+    type: 'text',
+    url: 'https://example.com/synoptic-problem',
+    label: 'Academic Reading',
+    visibility: 'guests',
+    description:
+      'An extended essay introducing the Synoptic Problem, comparing the Two-Source, Farrer, and Augustinian hypotheses with clear diagrams and sample pericope tables. The article walks through form criticism, redaction criticism, and narrative criticism as methods for understanding how Matthew, Mark, and Luke relate to one another. Discussion questions at the end help small groups evaluate strengths and weaknesses of each scholarly position.',
+  },
+  {
+    id: 'r15',
+    title:
+      'Patristic Writings on Scripture, Tradition, and the Formation of the Biblical Canon',
+    type: 'info_link',
+    url: 'https://example.com/patristic-canon',
+    label: 'Reference Materials',
+    visibility: 'leaders',
+    description:
+      'A curated anthology of excerpts from Ignatius, Irenaeus, Tertullian, and Athanasius on the authority of Scripture and the rule of faith. Each selection includes a short introduction, glossary of key terms, and cross-references to relevant ecumenical councils. Leaders can use the accompanying discussion guide to explore how the early church discerned orthodox teaching amid diverse texts and communities.',
+  },
+];
+
+const shuffle = <T>(items: T[]): T[] => {
+  const copy = [...items];
+
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+
+  return copy;
+};
+
+export const mockIndexResources: ResourceIndexItem[] = shuffle(
+  availableResources.map((resource, index) => ({
+    ...resource,
+    createdAt: `2024-0${Math.min(index + 1, 9)}-15`,
+    updatedAt: `2024-0${Math.min(index + 1, 9)}-${15 + (index % 14)}`,
+  })),
+);
+
+const attachedStoryResourceIds = ['r1', 'r6', 'r8', 'r3', 'r7', 'r11', 'r4', 'r10'];
+
+export const sampleAttachedResources: ResourceItem[] = availableResources.filter(
+  (resource) => attachedStoryResourceIds.includes(resource.id),
+);
+
+export const mockResourceProviders: Providers = {
+  s3: {
+    accessKeyId: '',
+    accessKey: '',
+    bucket: '',
+    region: '',
+    endpoint: '',
+    customDomain: '',
+  },
+  cloudinary: {
+    apiKey: 'redacted',
+    secret: 'redacted',
+    cloudName: 'almassira',
+    defaultPreset: 'session_thumbnail',
+  },
+  scripture: { bibleApiKey: 'tmp' },
+  bunny: {
+    accessKey: 'redacted',
+    libraryId: '2ef0214d-b18',
+    host: 'vz-2ef0214d-b18.b-cdn.net',
+  },
+};
+
+const toEditResource = (
+  resource: ResourceItem,
+  createdAt: string,
+  updatedAt: string,
+  bundle: Record<string, unknown>,
+): ResourceEditProps => ({
+  providers: mockResourceProviders,
+  resource: { ...resource, createdAt, updatedAt },
+  bundle,
+});
+
+export const mockNewResourceEdit: ResourceEditProps = {
+  providers: mockResourceProviders,
+  resource: {
+    id: '',
+    createdAt: '',
+    updatedAt: '',
+  },
+  bundle: {
+    title: '',
+    type: 'info_link',
+    imageUrl: '',
+    description: '',
+    label: '',
+    visibility: 'public',
+    infoUrl: '',
+    video: { url: null },
+    content: '',
+  },
+};
+
+export const mockEditVideoResource: ResourceEditProps = toEditResource(
+  availableResources[0],
+  '2024-01-15',
+  '2024-01-15',
+  {
+    title: availableResources[0].title,
+    type: 'video',
+    imageUrl: availableResources[0].imageUrl ?? '',
+    description: availableResources[0].description ?? '',
+    label: availableResources[0].label ?? '',
+    visibility: availableResources[0].visibility,
+    video: { url: 'https://example.com/intro-archaeology.mp4' },
+  },
+);
+
+const mockTextResource = availableResources.find((r) => r.id === 'r13')!;
+
+export const mockEditTextResource: ResourceEditProps = toEditResource(
+  mockTextResource,
+  '2024-02-10',
+  '2024-03-01',
+  {
+    title: mockTextResource.title,
+    type: 'text',
+    imageUrl: mockTextResource.imageUrl ?? '',
+    description: mockTextResource.description ?? '',
+    label: mockTextResource.label ?? '',
+    visibility: mockTextResource.visibility,
+    content:
+      '## Overview\n\nThis article introduces the Synoptic Problem and compares major scholarly hypotheses.\n\n- Two-Source hypothesis\n- Farrer hypothesis\n- Augustinian hypothesis',
+  },
+);
+
+export const mockEditInfoLinkResource: ResourceEditProps = toEditResource(
+  availableResources[3],
+  '2024-02-05',
+  '2024-02-15',
+  {
+    title: availableResources[3].title,
+    type: 'info_link',
+    imageUrl: '',
+    description: availableResources[3].description ?? '',
+    label: availableResources[3].label ?? '',
+    visibility: availableResources[3].visibility,
+    infoUrl: availableResources[3].url ?? 'https://example.com/timeline',
+  },
+);
+
+export const mockResourceEditErrors: Record<string, string[]> = {
+  'bundle.title': ['A resource must have a title'],
+  'bundle.label': ['A resource must have a label'],
+  'bundle.infoUrl': ['Info link resources must have a valid URL'],
+};
