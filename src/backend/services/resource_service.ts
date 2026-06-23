@@ -12,8 +12,6 @@ import type {
 } from '../../types.js';
 import { toResourceIndexItem, toResourceItem } from './resource_mapper.js';
 
-export type { ResourceRow } from './resource_mapper.js';
-
 const buildBundle = (payload: ResourcePayload): ResourceBundle => {
   switch (payload.type) {
     case 'text':
@@ -130,7 +128,9 @@ export class ResourceService {
       );
 
       for (const localisation of localisations) {
-        localisation.resources = localisation.resources.filter((resourceId) => resourceId !== id);
+        localisation.resources = localisation.resources.filter(
+          (resourceId) => resourceId !== id,
+        );
         localisation.useTransaction(trx);
         await localisation.save();
       }
