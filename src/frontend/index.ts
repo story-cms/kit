@@ -65,6 +65,9 @@ export * from './store/index';
 
 export { commonProps, helpScoutWidget } from './shared/helpers';
 
+// Todo: remove this once we have a proper way to import components
+import LanguageTable from './settings/languages/components/language-table.vue';
+
 export {
   ActionButton,
   AddItemButton,
@@ -126,4 +129,6 @@ export {
   UiPage,
   UsersIndex,
   VideoField,
+  // Todo: remove this once we have a proper way to import components
+  LanguageTable,
 };
