@@ -3,6 +3,7 @@
     v-if="item.imageUrl"
     :src="item.imageUrl"
     :alt="item.title"
+    draggable="false"
     class="size-12 shrink-0 rounded object-cover"
   />
   <div

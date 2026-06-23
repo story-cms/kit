@@ -7,14 +7,6 @@
       />
     </Variant>
 
-    <Variant title="Translation mode">
-      <StoryEditResources
-        v-model:resources="attachedResources"
-        :available-resources="availableResources"
-        is-translation
-        :source-resources="sampleAttachedResources"
-      />
-    </Variant>
     <Variant title="Empty">
       <StoryEditResources
         v-model:resources="emptyResources"
