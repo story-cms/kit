@@ -617,6 +617,8 @@ export type Subscription =
   | 'language'
   | 'audience'
   | 'invitation'
+  | 'settings'
+  | 'ui'
   | 'page';
 
 export interface BundleTemplate {

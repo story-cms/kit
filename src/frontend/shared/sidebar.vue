@@ -86,7 +86,7 @@
               >Audience</a
             >
 
-            <div v-if="subscribed('language')">
+            <div v-if="subscribed('ui')">
               <button
                 v-if="locale === 'en'"
                 class="nav-link opacity-50 disabled:cursor-not-allowed"
@@ -119,7 +119,7 @@
           <div class="my-7 border-t border-gray-200"></div>
           <section class="grid grid-cols-1">
             <a
-              v-if="isAdmin"
+              v-if="isAdmin && subscribed('settings')"
               :class="classList('settings', true)"
               :href="`/${locale}/settings`"
             >
@@ -169,7 +169,7 @@ import Icon from '../shared/icon.vue';
 import LanguageSelector from './language-selector.vue';
 import DropUp from './drop-up.vue';
 import type { Subscription } from '../../types';
-import { replaceLocaleInPath } from './helpers';
+import { normalizePathForLanguageSwitch, replaceLocaleInPath } from './helpers';
 import { languageDisplayName, type LanguageSortable } from './helpers';
 
 function isEnglishLanguage(item: LanguageSortable): boolean {
@@ -210,8 +210,10 @@ const newPathFromLocale = (targetLocale: string) => {
   const pageUrl = page.url || `${window.location.pathname}${window.location.search}`;
   const [pathname, search = ''] = pageUrl.split('?');
   const locales = shared.languages.map((l) => l.locale);
+  const normalized = normalizePathForLanguageSwitch(pathname);
   const swapped =
-    replaceLocaleInPath(pathname, targetLocale, locales) ?? `/${targetLocale}/dashboard`;
+    replaceLocaleInPath(normalized, targetLocale, locales) ??
+    `/${targetLocale}/dashboard`;
   return search ? `${swapped}?${search}` : swapped;
 };
 
