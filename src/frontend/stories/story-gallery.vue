@@ -92,7 +92,8 @@ const sortedStories = computed(() => {
   });
 });
 
-// hidden for now
+const canAddStories = computed(() => shared.config.subscriptions.includes('multi-story'));
+
 const addStory = () => {
   router.get(`/${shared.locale}/story/create`);
 };

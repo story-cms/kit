@@ -2,13 +2,23 @@
   <Story title="Story Gallery" group="stories">
     <Variant title="Default" :setup-app="miniSidebar">
       <StoryGallery
+        :config="configWithMultiStory"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :errors="sharedProps.errors"
+        :bookmarks="sharedProps.bookmarks"
+        :stories="sampleStories"
+      />
+    </Variant>
+
+    <Variant title="Without multi-story" :setup-app="miniSidebar">
+      <StoryGallery
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
         :bookmarks="sharedProps.bookmarks"
         :stories="sampleStories"
-        :can-add-stories="true"
       />
     </Variant>
   </Story>
@@ -17,7 +27,12 @@
 <script setup lang="ts">
 import StoryGallery from './story-gallery.vue';
 import { sharedProps, miniSidebar } from '../test/mocks';
-import type { StoryIndexItem } from '../../types';
+import type { StoryIndexItem, Subscription, UiConfig } from '../../types';
+
+const configWithMultiStory: UiConfig = {
+  ...sharedProps.config,
+  subscriptions: [...sharedProps.config.subscriptions, 'multi-story'] as Subscription[],
+};
 
 const sampleStories: StoryIndexItem[] = [
   {
@@ -71,7 +86,7 @@ The Story Gallery component displays a collection of stories in either grid or l
 
 - **Grid/List View Toggle**: Switch between grid and list layouts
 - **Sorting**: Sort by creation date or last updated date
-- **Add Story**: Quick access to create new stories
+- **Add Story**: Quick access to create new stories (requires `multi-story` subscription)
 - **Responsive Design**: Adapts to different screen sizes
 - **RTL Support**: Right-to-left language support
 
@@ -100,6 +115,6 @@ The Story Gallery component displays a collection of stories in either grid or l
 
 - Click the list/grid toggle to switch view modes
 - Use sort buttons to change the order of stories
-- Click the plus button to create a new story
+- Click the plus button to create a new story (when `multi-story` is in `config.subscriptions`)
 - Click on individual story items to view/edit them
 </docs>
