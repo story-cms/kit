@@ -177,28 +177,15 @@
         </table>
       </div>
 
-      <div
-        v-else
-        class="rounded-xl border-2 border-dashed border-gray-300 bg-white p-12 text-center"
-      >
-        <FolderOpen class="mx-auto mb-4 size-16 text-gray-400" aria-hidden="true" />
+      <div v-else>
         <h3 class="mb-2 text-lg font-medium text-gray-900">No resources found</h3>
-        <p class="mb-4 text-sm text-gray-500">
+        <p class="text-sm text-gray-500">
           {{
             hasActiveFilters
               ? 'Try adjusting your search or filters'
               : 'Get started by creating your first resource'
           }}
         </p>
-        <button
-          v-if="!hasActiveFilters"
-          type="button"
-          class="inline-flex items-center gap-2 rounded-lg bg-blue-50 px-4 py-2 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-100"
-          @click="createResource"
-        >
-          <Plus class="size-4" aria-hidden="true" />
-          Create Resource
-        </button>
       </div>
     </section>
 
@@ -213,7 +200,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { router } from '@inertiajs/vue3';
-import { FolderOpen, Plus, Search, SlidersHorizontal } from '@lucide/vue';
+import { Plus, Search, SlidersHorizontal } from '@lucide/vue';
 import type {
   ResourceIndexItem,
   ResourceIndexProps,
