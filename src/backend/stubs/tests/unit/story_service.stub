@@ -44,20 +44,6 @@ function versionFor(storyId: number, locale: string): StoryVersion {
 test.group('Story service', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction());
 
-  test('updateResources persists ordered resource ids on localisation', async ({ assert }) => {
-    const story = await StoryFactory.with('localisations').create();
-    const localisation = story.localisations[0];
-
-    const first = await ResourceFactory.merge({ locale: localisation.locale }).create();
-    const second = await ResourceFactory.merge({ locale: localisation.locale }).create();
-
-    const service = new StoryService(testCmsConfig);
-    await service.updateResources(story.id, localisation.locale, [second.id, first.id]);
-
-    await localisation.refresh();
-    assert.deepEqual(localisation.resources, [second.id, first.id]);
-  });
-
   test('editProps hydrates attached resources and lists available resources', async ({
     assert,
   }) => {

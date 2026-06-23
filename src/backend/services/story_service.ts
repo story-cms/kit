@@ -168,7 +168,7 @@ export class StoryService {
         template: story.template,
         isPublished: story.isPublished,
         ...targetFields,
-        resources: await resourceService.hydrate(this.resourceIds(target)),
+        resources: await resourceService.hydrate(target.resources ?? []),
       },
       availableResources,
       hasNoContent,
@@ -178,19 +178,11 @@ export class StoryService {
     if (locale !== sourceLocale) {
       props.source = {
         ...sourceFields,
-        resources: await resourceService.hydrate(this.resourceIds(source)),
+        resources: await resourceService.hydrate(source.resources ?? []),
       };
     }
 
     return props;
-  }
-
-  public async updateResources(
-    storyId: number,
-    locale: string,
-    resourceIds: string[],
-  ): Promise<void> {
-    await new ResourceService().updateStoryResources(storyId, locale, resourceIds);
   }
 
   public async prepSections(
@@ -373,10 +365,6 @@ export class StoryService {
     };
   }
 
-  private resourceIds(local: { resources?: string[] | null }): string[] {
-    return local.resources ?? [];
-  }
-
   private localisationFields(local: {
     title?: string | null;
     coverImage?: string | null;
@@ -419,7 +407,7 @@ export class StoryService {
       storyModels.map(async (story) => {
         const local = story.localisations[0];
         const resources = local
-          ? await resourceService.hydrate(this.resourceIds(local))
+          ? await resourceService.hydrate(local.resources ?? [])
           : [];
 
         return {
@@ -442,7 +430,7 @@ export class StoryService {
   }
 }
 
-export interface HomeStory {
+interface HomeStory {
   id: number;
   name: string;
   coverImage: string;
