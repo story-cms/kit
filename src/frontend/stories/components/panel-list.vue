@@ -104,8 +104,8 @@
             </div>
 
             <component
-              v-else
               :is="widgets.picker(item.widget)"
+              v-else
               :field="item"
               :is-read-only="false"
               :root-path="`${fieldPath}.${index.toString()}`"
