@@ -19,7 +19,7 @@ const screenSchema = vine.object({
   screenStyle: vine.string().optional(),
 });
 
-export default class CourseValidator implements ValidatorType {
+export class CourseValidator implements ValidatorType {
   validate(data: any): Promise<any> {
     vine.messagesProvider = new SimpleMessagesProvider({
       'bundle.title.required': 'The chapter must have a title',
