@@ -152,7 +152,7 @@ export class StoryService {
     }
 
     const resourceService = new ResourceService();
-    const availableResources = await resourceService.listByLocale(locale);
+    const availableResources = await resourceService.listForLocale(locale);
     const targetFields = this.localisationFields(target);
     const sourceFields = this.localisationFields(source);
 

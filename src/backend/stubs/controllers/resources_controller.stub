@@ -4,6 +4,7 @@
 import type { HttpContext } from '@adonisjs/core/http';
 import {
   Activity,
+  Resource,
   ResourceService,
   ResourceValidator,
   type ResourceEditProps,
@@ -54,7 +55,7 @@ export default class ResourcesController {
   public async edit(ctx: HttpContext) {
     const version = cms.versionFromPath(ctx);
     const service = new ResourceService();
-    const model = await service.findOrFail(ctx.params.id);
+    const model = await Resource.findOrFail(ctx.params.id);
 
     if (model.locale !== version.locale) {
       return ctx.response.notFound('Resource not found');
@@ -120,7 +121,7 @@ export default class ResourcesController {
     const service = new ResourceService();
 
     try {
-      const model = await service.findOrFail(ctx.params.id);
+      const model = await Resource.findOrFail(ctx.params.id);
       await service.delete(model.id);
       await Activity.create({
         userId: ctx.auth.user?.id,

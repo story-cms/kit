@@ -14,7 +14,7 @@ import {
 test.group('Resource service', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction());
 
-  test('listByLocale returns resources ordered by title', async ({ assert }) => {
+  test('listForLocale returns resources ordered by title', async ({ assert }) => {
     await ResourceFactory.merge({
       locale: 'en',
       title: 'Zebra Resource',
@@ -31,7 +31,7 @@ test.group('Resource service', (group) => {
     }).create();
 
     const service = new ResourceService();
-    const items = await service.listByLocale('en');
+    const items = await service.listForLocale('en');
 
     assert.lengthOf(items, 2);
     assert.equal(items[0].title, 'Alpha Resource');

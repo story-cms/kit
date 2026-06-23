@@ -1,4 +1,4 @@
-import ResourceModel from '../models/resource.js';
+import Resource from '../models/resource.js';
 import StoryLocalisation from '../models/story_localisation.js';
 import type {
   LinkBundle,
@@ -10,17 +10,9 @@ import type {
   VideoBundle,
   VisibilityType,
 } from '../../types.js';
-import {
-  toResourceIndexItem,
-  toResourceItem,
-} from './resource_mapper.js';
+import { toResourceIndexItem, toResourceItem } from './resource_mapper.js';
 
 export type { ResourceRow } from './resource_mapper.js';
-export {
-  extractResourceUrl,
-  toResourceIndexItem,
-  toResourceItem,
-} from './resource_mapper.js';
 
 export interface ResourcePayload {
   title: string;
@@ -45,72 +37,60 @@ const buildBundle = (payload: ResourcePayload): ResourceBundle => {
   }
 };
 
-const bundleToModel = (model: ResourceModel): Record<string, unknown> => {
-  const bundle = model.bundle as ResourceBundle;
-  const base = {
-    title: model.title,
-    type: model.type,
-    imageUrl: model.imageUrl ?? '',
-    description: model.description ?? '',
-    label: model.label ?? '',
-    visibility: model.visibility,
-  };
-
-  switch (model.type) {
-    case 'text':
-      return { ...base, content: 'content' in bundle ? bundle.content : '' };
-    case 'video':
-      return {
-        ...base,
-        video: 'video' in bundle ? bundle.video : { url: null },
-      };
-    case 'info_link':
-      return { ...base, infoUrl: 'infoUrl' in bundle ? bundle.infoUrl : '' };
-    default:
-      return base;
-  }
-};
-
 export class ResourceService {
-  public toDto(model: ResourceModel): ResourceItem {
+  public toResourceItem(model: Resource): ResourceItem {
     return toResourceItem(model);
   }
 
-  public toIndexItem(model: ResourceModel): ResourceIndexItem {
+  public toIndexItem(model: Resource): ResourceIndexItem {
     return toResourceIndexItem(model);
   }
 
-  public modelToBundle(model: ResourceModel): Record<string, unknown> {
-    return bundleToModel(model);
+  public modelToBundle(model: Resource): Record<string, unknown> {
+    const bundle = model.bundle as ResourceBundle;
+    const base = {
+      title: model.title,
+      type: model.type,
+      imageUrl: model.imageUrl ?? '',
+      description: model.description ?? '',
+      label: model.label ?? '',
+      visibility: model.visibility,
+    };
+
+    switch (model.type) {
+      case 'text':
+        return { ...base, content: 'content' in bundle ? bundle.content : '' };
+      case 'video':
+        return {
+          ...base,
+          video: 'video' in bundle ? bundle.video : { url: null },
+        };
+      case 'info_link':
+        return { ...base, infoUrl: 'infoUrl' in bundle ? bundle.infoUrl : '' };
+      default:
+        return base;
+    }
   }
 
-  public async listByLocale(locale: string): Promise<ResourceItem[]> {
-    const models = await ResourceModel.query()
-      .where('locale', locale)
-      .orderBy('title', 'asc');
-    return models.map((model) => this.toDto(model));
+  public async listForLocale(locale: string): Promise<ResourceItem[]> {
+    const models = await Resource.query().where('locale', locale).orderBy('title', 'asc');
+    return models.map((model) => this.toResourceItem(model));
   }
 
   public async listIndexItems(locale: string): Promise<ResourceIndexItem[]> {
-    const models = await ResourceModel.query()
-      .where('locale', locale)
-      .orderBy('title', 'asc');
+    const models = await Resource.query().where('locale', locale).orderBy('title', 'asc');
     return models.map((model) => this.toIndexItem(model));
-  }
-
-  public async findOrFail(id: string): Promise<ResourceModel> {
-    return ResourceModel.findOrFail(id);
   }
 
   public async hydrate(ids: string[]): Promise<ResourceItem[]> {
     if (ids.length === 0) return [];
 
-    const models = await ResourceModel.query().whereIn('id', ids);
+    const models = await Resource.query().whereIn('id', ids);
     const byId = new Map(models.map((model) => [model.id, model]));
 
     return ids.flatMap((id) => {
       const model = byId.get(id);
-      return model ? [this.toDto(model)] : [];
+      return model ? [this.toResourceItem(model)] : [];
     });
   }
 
@@ -118,8 +98,8 @@ export class ResourceService {
     locale: string,
     payload: ResourcePayload,
     userId?: number,
-  ): Promise<ResourceModel> {
-    return ResourceModel.create({
+  ): Promise<Resource> {
+    return Resource.create({
       locale,
       title: payload.title,
       type: payload.type,
@@ -136,8 +116,8 @@ export class ResourceService {
     id: string,
     payload: ResourcePayload,
     userId?: number,
-  ): Promise<ResourceModel> {
-    const model = await this.findOrFail(id);
+  ): Promise<Resource> {
+    const model = await Resource.findOrFail(id);
 
     model.title = payload.title;
     model.type = payload.type;
@@ -153,7 +133,7 @@ export class ResourceService {
   }
 
   public async delete(id: string): Promise<void> {
-    const model = await this.findOrFail(id);
+    const model = await Resource.findOrFail(id);
     await model.delete();
   }
 

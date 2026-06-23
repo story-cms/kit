@@ -15,7 +15,6 @@ export const testCmsConfig: CmsConfig = {
   hasAppPreview: false,
   microcopySource: '',
   videoCollectionId: '',
-  supportEmail: 'support@example.com',
   languages: [
     {
       locale: 'en',
