@@ -46,12 +46,6 @@
           class="flex shrink-0 items-center gap-2"
           :class="{ 'ml-auto': !resource.label }"
         >
-          <span
-            v-if="resource.url"
-            class="inline-flex items-center gap-1 rounded bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700"
-          >
-            <ExternalLink class="size-3" aria-hidden="true" />
-          </span>
           <ResourceTypeBadge :type="resource.type" />
           <span
             v-if="resource.visibility !== 'public'"
