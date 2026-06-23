@@ -82,7 +82,9 @@
                   </select>
                 </div>
                 <div>
-                  <label class="mb-2 block text-xs font-medium text-gray-700">Label</label>
+                  <label class="mb-2 block text-xs font-medium text-gray-700"
+                    >Label</label
+                  >
                   <select
                     v-model="selectedLabel"
                     class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-transparent focus:ring-2 focus:ring-blue-500"
@@ -201,12 +203,13 @@
 import { computed, ref } from 'vue';
 import { router } from '@inertiajs/vue3';
 import { Plus, Search, SlidersHorizontal } from '@lucide/vue';
-import type {
-  ResourceIndexItem,
-  ResourceIndexProps,
-  ResourceType,
-  SharedPageProps,
-  VisibilityType,
+import {
+  ResponseStatus,
+  type ResourceIndexItem,
+  type ResourceIndexProps,
+  type ResourceType,
+  type SharedPageProps,
+  type VisibilityType,
 } from '../../types';
 import { useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
@@ -294,9 +297,11 @@ const confirmDeleteResource = () => {
     onSuccess: () => {
       items.value = items.value.filter((item) => item.id !== id);
       deleteModalResourceId.value = null;
+      shared.addMessage(ResponseStatus.Confirmation, 'Resource deleted');
     },
     onError: () => {
       deleteModalResourceId.value = null;
+      shared.addMessage(ResponseStatus.Failure, 'Error deleting that resource');
     },
   });
 };
