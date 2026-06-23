@@ -1,3 +1,4 @@
+import db from '@adonisjs/lucid/services/db';
 import Resource from '../models/resource.js';
 import StoryLocalisation from '../models/story_localisation.js';
 import type {
@@ -133,9 +134,23 @@ export class ResourceService {
   }
 
   public async delete(id: string): Promise<void> {
-    // TODO: detach from all story locales before deleting
     const model = await Resource.findOrFail(id);
-    await model.delete();
+
+    await db.transaction(async (trx) => {
+      const localisations = await StoryLocalisation.query({ client: trx }).whereRaw(
+        'resources @> ?::jsonb',
+        [JSON.stringify([id])],
+      );
+
+      for (const localisation of localisations) {
+        localisation.resources = localisation.resources.filter((resourceId) => resourceId !== id);
+        localisation.useTransaction(trx);
+        await localisation.save();
+      }
+
+      model.useTransaction(trx);
+      await model.delete();
+    });
   }
 
   public async updateStoryResources(

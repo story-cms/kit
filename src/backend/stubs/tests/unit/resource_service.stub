@@ -5,6 +5,7 @@ import { test } from '@japa/runner';
 import testUtils from '@adonisjs/core/services/test_utils';
 
 import {
+  Resource,
   ResourceFactory,
   ResourceService,
   StoryFactory,
@@ -94,6 +95,34 @@ test.group('Resource service', (group) => {
       .first();
 
     assert.isNull(localisation);
+  });
+
+  test('delete detaches resource from all story localisations', async ({ assert }) => {
+    const resource = await ResourceFactory.merge({ locale: 'en' }).create();
+    const other = await ResourceFactory.merge({ locale: 'en' }).create();
+
+    const story = await StoryFactory.with('localisations').create();
+    const localisation = story.localisations[0];
+    localisation.resources = [resource.id, other.id];
+    await localisation.save();
+
+    const secondStory = await StoryFactory.with('localisations').create();
+    const secondLocalisation = secondStory.localisations[0];
+    secondLocalisation.locale = 'de';
+    secondLocalisation.resources = [resource.id];
+    await secondLocalisation.save();
+
+    const service = new ResourceService();
+    await service.delete(resource.id);
+
+    await localisation.refresh();
+    assert.deepEqual(localisation.resources, [other.id]);
+
+    await secondLocalisation.refresh();
+    assert.deepEqual(secondLocalisation.resources, []);
+
+    const deleted = await Resource.find(resource.id);
+    assert.isNull(deleted);
   });
 
   test('create and update persist type-specific bundle fields', async ({ assert }) => {
