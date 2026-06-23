@@ -129,7 +129,7 @@ export default class ResourcesController {
         action: {{ '`deleted resource ${model.id}`' }},
       });
     } catch (e) {
-      ctx.session.flash('errorsBag', { other: 'Error while deleting resource' });
+      ctx.session.flash('inputErrorsBag', { other: 'Error while deleting resource' });
     }
 
     return ctx.response.redirect({{ '`/${version.locale}/resource`' }}, false, 303);

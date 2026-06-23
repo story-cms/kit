@@ -133,6 +133,7 @@ export class ResourceService {
   }
 
   public async delete(id: string): Promise<void> {
+    // TODO: detach from all story locales before deleting
     const model = await Resource.findOrFail(id);
     await model.delete();
   }
