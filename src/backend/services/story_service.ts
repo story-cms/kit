@@ -147,14 +147,13 @@ export class StoryService {
       story.localisations.find((localisation) => localisation.locale === sourceLocale) ??
       emptyTranslation;
 
-    if (locale !== sourceLocale) {
+    if (locale !== sourceLocale && !target.coverImage) {
       target.coverImage = source.coverImage;
     }
 
     const resourceService = new ResourceService();
     const availableResources = await resourceService.listForLocale(locale);
     const targetFields = this.localisationFields(target);
-    const sourceFields = this.localisationFields(source);
 
     const props: StoryEditProps = {
       model: {
@@ -176,6 +175,7 @@ export class StoryService {
     };
 
     if (locale !== sourceLocale) {
+      const sourceFields = this.localisationFields(source);
       props.source = {
         ...sourceFields,
         resources: await resourceService.hydrate(source.resources ?? []),
