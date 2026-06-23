@@ -176,7 +176,7 @@ import type { Component } from 'vue';
 import {
   type ResourceEditProps,
   type ResourceType,
-  type VisibilityType,
+  type ResourcePayload,
   ResponseStatus,
   type SharedPageProps,
 } from '../../types';
@@ -192,18 +192,6 @@ import MarkdownField from '../fields/markdown-field.vue';
 import VideoField from '../fields/video-field.vue';
 
 const props = defineProps<ResourceEditProps & SharedPageProps>();
-
-type RequestPayload = {
-  title: string;
-  type: ResourceType;
-  imageUrl: string;
-  description: string;
-  label: string;
-  visibility: VisibilityType;
-  content?: string;
-  infoUrl?: string;
-  video?: { url: string | null };
-};
 
 const { bundle, resource } = toRefs(props);
 const model = useModelStore();
@@ -247,7 +235,7 @@ const setType = (type: ResourceType) => {
   }
 };
 
-const getPayload = (): RequestPayload => model.model as RequestPayload;
+const getPayload = (): ResourcePayload => model.model as ResourcePayload;
 
 const cancel = () => {
   router.visit(`/${shared.locale}/resource`);

@@ -194,6 +194,18 @@ export interface ResourceEditProps {
   bundle: any;
 }
 
+export type ResourcePayload = {
+  title: string;
+  type: ResourceType;
+  imageUrl?: string | null;
+  description?: string | null;
+  label?: string | null;
+  visibility: VisibilityType;
+  content?: string;
+  infoUrl?: string;
+  video?: { url: string | null };
+};
+
 /// ----------------------------------------------------
 ///  stories
 /// ----------------------------------------------------
@@ -673,6 +685,7 @@ export interface UiConfig {
 
 export type Subscription =
   | 'story'
+  | 'multi-story' // user can create stories
   | 'stream'
   | 'language'
   | 'audience'

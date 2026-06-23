@@ -5,26 +5,13 @@ import type {
   ResourceItem,
   ResourceBundle,
   ResourceIndexItem,
-  ResourceType,
+  ResourcePayload,
   TextBundle,
   VideoBundle,
-  VisibilityType,
 } from '../../types.js';
 import { toResourceIndexItem, toResourceItem } from './resource_mapper.js';
 
 export type { ResourceRow } from './resource_mapper.js';
-
-export interface ResourcePayload {
-  title: string;
-  type: ResourceType;
-  imageUrl?: string | null;
-  description?: string | null;
-  label?: string | null;
-  visibility: VisibilityType;
-  content?: string;
-  infoUrl?: string;
-  video?: { url: string | null };
-}
 
 const buildBundle = (payload: ResourcePayload): ResourceBundle => {
   switch (payload.type) {
