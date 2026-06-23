@@ -13,6 +13,13 @@ const draft = {
   sectionType: vine.string().optional(),
   visibility: vine.string().trim().minLength(1),
   isPublished: vine.boolean(),
+  sections: vine.array(
+    vine.object({
+      id: vine.string().optional(),
+      title: vine.string().trim().minLength(1),
+      description: vine.string().optional(),
+    }),
+  ),
   resources: vine.array(vine.string()).optional(),
 };
 
