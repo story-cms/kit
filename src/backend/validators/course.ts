@@ -1,5 +1,5 @@
 import vine, { SimpleMessagesProvider } from '@vinejs/vine';
-import { videoRule } from '..';
+import videoRule from '../validators/video_rule.js';
 import type { ValidatorType } from '../../types';
 
 vine.convertEmptyStringsToNull = true;
