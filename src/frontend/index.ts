@@ -67,6 +67,14 @@ export { commonProps, helpScoutWidget } from './shared/helpers';
 
 // Todo: remove this once we have a proper way to import components
 import LanguageTable from './settings/languages/components/language-table.vue';
+import RequestAppUpdateModal from './settings/languages/components/request-app-update-modal.vue';
+import RequestFeedbackModal from './settings/languages/components/request-feedback-modal.vue';
+import RemoveLanguageModal from './settings/languages/components/remove-language-modal.vue';
+import RequestDeletionModal from './settings/languages/components/request-deletion-modal.vue';
+import BibleTranslationsModal from './settings/languages/components/bible-translations-modal.vue';
+import LanguageTableRow from './settings/languages/components/language-table-row.vue';
+import LangStrip from './settings/languages/components/language-strip.vue';
+import MemberRow from './settings/languages/components/member-row.vue';
 
 export {
   ActionButton,
@@ -131,4 +139,12 @@ export {
   VideoField,
   // Todo: remove this once we have a proper way to import components
   LanguageTable,
+  RequestAppUpdateModal,
+  RequestFeedbackModal,
+  RemoveLanguageModal,
+  RequestDeletionModal,
+  BibleTranslationsModal,
+  LanguageTableRow,
+  LangStrip,
+  MemberRow,
 };
