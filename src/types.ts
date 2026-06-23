@@ -352,7 +352,6 @@ export interface StoryIndexProps {
 
 export interface StoryGalleryProps {
   stories: StoryIndexItem[];
-  canAddStories?: boolean;
 }
 
 export interface DraftEditProps {
@@ -673,6 +672,7 @@ export interface UiConfig {
 
 export type Subscription =
   | 'story'
+  | 'multi-story'
   | 'stream'
   | 'language'
   | 'audience'
