@@ -34,8 +34,8 @@
         :read-only="readOnly"
         @remove="emit('remove', attachedItem.id)"
         @dragstart="emit('resource-dragstart', label, resourceIndex)"
-        @dragover.prevent="emit('resource-dragover', label, resourceIndex)"
-        @drop.prevent="emit('resource-dragend')"
+        @dragover="emit('resource-dragover', label, resourceIndex)"
+        @drop="emit('resource-dragend')"
         @dragend="emit('resource-dragend')"
       />
     </div>
