@@ -101,7 +101,7 @@ export default class ResourcesController {
     let redirectTarget = returnTo ?? {{ '`/${version.locale}/resource`' }};
     if (returnTo) {
       const separator = returnTo.includes('?') ? '&' : '?';
-      redirectTarget = `${returnTo}${separator}attachResource=${resource.id}`;
+      redirectTarget = {{ '`${returnTo}${separator}attachResource=${resource.id}`' }};
     }
 
     return ctx.response.redirect(redirectTarget, false, 303);
