@@ -31,7 +31,7 @@ test.describe('Resource Validator', () => {
       await expect(validator.validate(data)).rejects.toThrow();
     });
 
-    test('requires label', async () => {
+    test('accepts resource without label', async () => {
       const data = {
         ...baseResource,
         label: '',
@@ -41,7 +41,22 @@ test.describe('Resource Validator', () => {
       const ctx = createMockHttpContext(data);
       const validator = new ResourceValidator(ctx);
 
-      await expect(validator.validate(data)).rejects.toThrow();
+      const result = (await validator.validate(data)).bundle;
+      expect(result.label).toBe('');
+    });
+
+    test('accepts resource with whitespace-only label', async () => {
+      const data = {
+        ...baseResource,
+        label: '   ',
+        type: 'url_link' as const,
+        url: 'https://example.com',
+      };
+      const ctx = createMockHttpContext(data);
+      const validator = new ResourceValidator(ctx);
+
+      const result = (await validator.validate(data)).bundle;
+      expect(result.label).toBe('');
     });
 
     test.describe('Text type', () => {

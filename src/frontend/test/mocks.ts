@@ -4608,6 +4608,5 @@ export const mockEditUrlLinkResource: ResourceEditProps = toEditResource(
 
 export const mockResourceEditErrors: Record<string, string[]> = {
   'bundle.title': ['A resource must have a title'],
-  'bundle.label': ['A resource must have a label'],
   'bundle.url': ['URL link resources must have a valid URL'],
 };

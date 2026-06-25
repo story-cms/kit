@@ -109,7 +109,7 @@
 
         <ImageField
           :field="{
-            label: 'Cover Image (Optional)',
+            label: 'Thumbnail Image (Optional)',
             name: 'imageUrl',
             widget: 'image',
             uploadPreset: 'resources',
@@ -120,15 +120,21 @@
           :is-nested="true"
         />
 
-        <StringField
-          :field="{
-            name: 'label',
-            label: 'Label',
-            widget: 'string',
-            placeholderText: 'e.g., Supplementary Reading',
-          }"
-          :is-nested="true"
-        />
+        <div>
+          <StringField
+            :field="{
+              name: 'label',
+              label: 'Label (Optional)',
+              widget: 'string',
+              placeholderText: 'e.g., Supplementary Reading',
+            }"
+            :is-nested="true"
+          />
+          <p class="mt-1 text-sm text-gray-500">
+            Organise resources on the Story listing. Resources without a label appear together in
+            one block.
+          </p>
+        </div>
 
         <RichListbox
           v-model="visibility"
@@ -294,7 +300,9 @@ const save = () => {
     shared.setErrors(errors);
     shared.addMessage(
       ResponseStatus.Failure,
-      resource.value.id ? 'Error saving resource' : 'Error creating resource',
+      Object.keys(errors).length > 0
+        ? 'Some required fields are missing'
+        : 'Something went wrong. Please try again.',
     );
   };
 

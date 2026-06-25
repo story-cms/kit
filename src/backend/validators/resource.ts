@@ -8,7 +8,7 @@ const base = {
   type: vine.enum(['text', 'video', 'url_link'] as const),
   imageUrl: vine.string().optional(),
   description: vine.string().optional(),
-  label: vine.string().trim().minLength(1),
+  label: vine.string().trim().optional(),
   visibility: vine.enum(['public', 'guests', 'leaders'] as const),
   content: vine.string().optional(),
   url: vine.string().optional(),
@@ -59,10 +59,14 @@ export class ResourceValidator {
 
     return vine.object({
       ...base,
-      url: vine.string().url({
-        require_protocol: true,
-        protocols: ['http', 'https'],
-      }),
+      url: vine
+        .string()
+        .trim()
+        .minLength(1)
+        .url({
+          require_protocol: true,
+          protocols: ['http', 'https'],
+        }),
     });
   }
 
@@ -72,9 +76,9 @@ export class ResourceValidator {
 }
 
 export const resourceErrorMessages = new SimpleMessagesProvider({
-  'bundle.title.minLength': 'A resource must have a title',
-  'bundle.label.minLength': 'A resource must have a label',
-  'bundle.content.minLength': 'Text resources must have content',
-  'bundle.url.url': 'URL link resources must have a valid URL',
-  'bundle.video': 'Video resources must have a video',
+  'bundle.title.minLength': 'Please enter a title',
+  'bundle.content.minLength': 'Please add article content',
+  'bundle.url.minLength': 'Please enter a URL',
+  'bundle.url.url': 'Please enter a valid URL',
+  'bundle.video': 'Please upload a video',
 });
