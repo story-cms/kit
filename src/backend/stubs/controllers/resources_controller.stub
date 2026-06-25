@@ -45,7 +45,7 @@ export default class ResourcesController {
       resource: emptyResource(),
       bundle: {
         title: '',
-        type: 'url_link',
+        type: 'url',
         imageUrl: '',
         description: '',
         label: '',

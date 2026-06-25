@@ -58,7 +58,7 @@
                     <option value="all">All Types</option>
                     <option value="text">Text</option>
                     <option value="video">Video</option>
-                    <option value="url_link">URL Link</option>
+                    <option value="url">URL</option>
                   </select>
                 </div>
                 <div>
@@ -258,9 +258,11 @@ const filteredResources = computed(() => {
         resource.description?.toLowerCase().includes(query) ||
         resource.label?.toLowerCase().includes(query);
 
-      const matchesType = filterType.value === 'all' || resource.type === filterType.value;
+      const matchesType =
+        filterType.value === 'all' || resource.type === filterType.value;
       const matchesVisibility =
-        filterVisibility.value === 'all' || resource.visibility === filterVisibility.value;
+        filterVisibility.value === 'all' ||
+        resource.visibility === filterVisibility.value;
       const matchesLabel =
         selectedLabel.value === 'all' || resource.label === selectedLabel.value;
 

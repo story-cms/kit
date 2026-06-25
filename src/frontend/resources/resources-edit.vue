@@ -56,7 +56,7 @@
         </div>
 
         <StringField
-          v-if="selectedType === 'url_link'"
+          v-if="selectedType === 'url'"
           :field="{
             name: 'url',
             label: 'URL',
@@ -183,9 +183,7 @@ if (Object.keys(props.errors ?? {}).length === 0) {
 }
 useWidgetsStore().setProviders(props.providers);
 
-const selectedType = ref<ResourceType>(
-  model.getField('type', 'url_link') as ResourceType,
-);
+const selectedType = ref<ResourceType>(model.getField('type', 'url') as ResourceType);
 const visibility = ref<VisibilityType>(
   model.getField('visibility', 'public') as VisibilityType,
 );
@@ -214,8 +212,8 @@ const resourceTypes: {
   icon: Component;
 }[] = [
   {
-    value: 'url_link',
-    label: 'URL Link',
+    value: 'url',
+    label: 'URL',
     description: 'Link to an external website or resource',
     icon: ExternalLink,
   },
@@ -264,7 +262,7 @@ const setType = (type: string) => {
   selectedType.value = resourceType;
   model.setField('type', resourceType);
 
-  if (resourceType !== 'url_link') {
+  if (resourceType !== 'url') {
     model.setField('url', '');
   } else if (!model.isPopulated('url')) {
     model.setField('url', '');
@@ -335,7 +333,7 @@ const save = () => {
 
 onMounted(() => {
   model.$subscribe(() => {
-    selectedType.value = model.getField('type', 'url_link') as ResourceType;
+    selectedType.value = model.getField('type', 'url') as ResourceType;
     visibility.value = model.getField('visibility', 'public') as VisibilityType;
   });
 });

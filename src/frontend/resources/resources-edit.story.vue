@@ -22,7 +22,7 @@
       />
     </Variant>
 
-    <Variant title="Edit URL link" :setup-app="miniSidebar">
+    <Variant title="Edit URL" :setup-app="miniSidebar">
       <ResourcesEdit
         :config="sharedProps.config"
         :user="sharedProps.user"

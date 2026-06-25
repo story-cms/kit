@@ -22,7 +22,7 @@ test.describe('Resource Validator', () => {
       const data = {
         ...baseResource,
         title: '',
-        type: 'url_link' as const,
+        type: 'url' as const,
         url: 'https://example.com',
       };
       const ctx = createMockHttpContext(data);
@@ -35,7 +35,7 @@ test.describe('Resource Validator', () => {
       const data = {
         ...baseResource,
         label: '',
-        type: 'url_link' as const,
+        type: 'url' as const,
         url: 'https://example.com',
       };
       const ctx = createMockHttpContext(data);
@@ -49,7 +49,7 @@ test.describe('Resource Validator', () => {
       const data = {
         ...baseResource,
         label: '   ',
-        type: 'url_link' as const,
+        type: 'url' as const,
         url: 'https://example.com',
       };
       const ctx = createMockHttpContext(data);
@@ -86,11 +86,11 @@ test.describe('Resource Validator', () => {
       });
     });
 
-    test.describe('URL link type', () => {
+    test.describe('URL type', () => {
       test('rejects invalid URL', async () => {
         const data = {
           ...baseResource,
-          type: 'url_link' as const,
+          type: 'url' as const,
           url: 'not-a-url',
         };
         const ctx = createMockHttpContext(data);
@@ -102,7 +102,7 @@ test.describe('Resource Validator', () => {
       test('rejects URL without protocol', async () => {
         const data = {
           ...baseResource,
-          type: 'url_link' as const,
+          type: 'url' as const,
           url: 'example.com/page',
         };
         const ctx = createMockHttpContext(data);
@@ -111,10 +111,10 @@ test.describe('Resource Validator', () => {
         await expect(validator.validate(data)).rejects.toThrow();
       });
 
-      test('accepts valid URL link resource', async () => {
+      test('accepts valid URL resource', async () => {
         const data = {
           ...baseResource,
-          type: 'url_link' as const,
+          type: 'url' as const,
           url: 'https://example.com/page',
         };
         const ctx = createMockHttpContext(data);

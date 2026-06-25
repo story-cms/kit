@@ -5,7 +5,7 @@ import videoRule from './video_rule.js';
 
 const base = {
   title: vine.string().trim().minLength(1),
-  type: vine.enum(['text', 'video', 'url_link'] as const),
+  type: vine.enum(['text', 'video', 'url'] as const),
   imageUrl: vine.string().optional(),
   description: vine.string().optional(),
   label: vine.string().trim().optional(),
@@ -29,7 +29,7 @@ export class ResourceValidator {
   protected resourceType: string;
 
   constructor(protected ctx: HttpContext) {
-    this.resourceType = ctx.request.input('type') ?? 'url_link';
+    this.resourceType = ctx.request.input('type') ?? 'url';
   }
 
   validate(data: Record<string, unknown>): Promise<any> {

@@ -224,7 +224,7 @@ const iconFor = (type: ResourceType): Component => {
   switch (type) {
     case 'video':
       return Video;
-    case 'url_link':
+    case 'url':
       return ExternalLink;
     case 'text':
     default:

@@ -4367,7 +4367,7 @@ export const availableResources: ResourceItem[] = [
   {
     id: 'r4',
     title: 'Early Church History Timeline',
-    type: 'url_link',
+    type: 'url',
     url: 'https://example.com/timeline',
     label: 'Reference Materials',
     visibility: 'public',
@@ -4412,7 +4412,7 @@ export const availableResources: ResourceItem[] = [
   {
     id: 'r9',
     title: 'Biblical Greek Resources',
-    type: 'url_link',
+    type: 'url',
     url: 'https://example.com/greek',
     label: 'Language Resources',
     visibility: 'public',
@@ -4421,7 +4421,7 @@ export const availableResources: ResourceItem[] = [
   {
     id: 'r10',
     title: 'Theological Dictionary',
-    type: 'url_link',
+    type: 'url',
     url: 'https://example.com/dictionary',
     label: 'Reference Materials',
     visibility: 'public',
@@ -4470,7 +4470,7 @@ export const availableResources: ResourceItem[] = [
     id: 'r15',
     title:
       'Patristic Writings on Scripture, Tradition, and the Formation of the Biblical Canon',
-    type: 'url_link',
+    type: 'url',
     url: 'https://example.com/patristic-canon',
     label: 'Reference Materials',
     visibility: 'leaders',
@@ -4547,7 +4547,7 @@ export const mockNewResourceEdit: ResourceEditProps = {
   },
   bundle: {
     title: '',
-    type: 'url_link',
+    type: 'url',
     imageUrl: '',
     description: '',
     label: '',
@@ -4597,7 +4597,7 @@ export const mockEditUrlLinkResource: ResourceEditProps = toEditResource(
   '2024-02-15',
   {
     title: availableResources[3].title,
-    type: 'url_link',
+    type: 'url',
     imageUrl: '',
     description: availableResources[3].description ?? '',
     label: availableResources[3].label ?? '',
@@ -4608,5 +4608,5 @@ export const mockEditUrlLinkResource: ResourceEditProps = toEditResource(
 
 export const mockResourceEditErrors: Record<string, string[]> = {
   'bundle.title': ['A resource must have a title'],
-  'bundle.url': ['URL link resources must have a valid URL'],
+  'bundle.url': ['URL resources must have a valid URL'],
 };

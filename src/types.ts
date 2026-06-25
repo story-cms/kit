@@ -159,7 +159,7 @@ export interface LinkBundle {
   url: string;
 }
 
-export type ResourceType = 'text' | 'video' | 'url_link';
+export type ResourceType = 'text' | 'video' | 'url';
 export type ResourceBundle = TextBundle | VideoBundle | LinkBundle;
 
 export interface ResourceItem {
