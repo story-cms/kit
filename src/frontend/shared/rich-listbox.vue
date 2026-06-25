@@ -1,5 +1,6 @@
 <template>
   <Listbox
+    v-slot="{ open }"
     :model-value="modelValue"
     :disabled="isReadOnly"
     as="div"
@@ -8,7 +9,7 @@
     <div class="relative">
       <ListboxLabel
         v-if="label"
-        class="mb-2 block text-sm font-medium text-gray-700"
+        class="input-label mb-2 block"
         :class="{ 'text-gray-600': isReadOnly }"
       >
         {{ label }}
@@ -34,7 +35,8 @@
         >
           <Icon
             v-if="!isReadOnly"
-            class="size-5 text-gray-400"
+            class="size-5 text-gray-400 transition-transform duration-100"
+            :class="{ 'rotate-180': open }"
             aria-hidden="true"
             name="chevron-down"
           />
@@ -47,7 +49,7 @@
         leave-to-class="opacity-0"
       >
         <ListboxOptions
-          class="control-rounded absolute z-10 mt-1 max-h-60 w-full overflow-auto bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+          class="control-rounded absolute z-30 mt-1 max-h-60 w-full overflow-auto border border-gray-200 bg-white py-1 text-base shadow-lg focus:outline-none sm:text-sm"
         >
           <ListboxOption
             v-for="option in options"
@@ -69,11 +71,7 @@
                   aria-hidden="true"
                 />
                 <div class="min-w-0">
-                  <p
-                    :class="[
-                      selected ? 'font-medium text-gray-900' : 'font-medium text-gray-900',
-                    ]"
-                  >
+                  <p class="font-medium text-gray-900">
                     {{ option.label }}
                   </p>
                   <p class="text-sm text-gray-500">{{ option.description }}</p>

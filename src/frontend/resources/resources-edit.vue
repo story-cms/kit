@@ -1,30 +1,28 @@
 <template>
   <AppLayout>
     <template #header>
-      <ContentHeader dir="ltr" :title="title">
+      <GlassHeader :title="headerTitle" :subtitle="headerSubtitle">
         <template #actions>
-          <div class="flex items-center gap-3">
-            <PillButton label="Cancel" variant="gray" @click="cancel" />
-            <PillButton
-              v-if="!resource.id"
-              label="Create Resource"
-              variant="blue"
-              :disabled="isSaving"
-              @click="save"
-            />
-            <PillButton
-              v-else
-              label="Save Changes"
-              variant="blue"
-              :disabled="isSaving"
-              @click="save"
-            />
-          </div>
+          <StudioButton label="Cancel" variant="outline" @click="cancel" />
+          <StudioButton
+            v-if="!resource.id"
+            label="Create Resource"
+            :disabled="isSaving"
+            variant="primary"
+            @click="save"
+          />
+          <StudioButton
+            v-else
+            label="Save Changes"
+            :disabled="isSaving"
+            variant="blue"
+            @click="save"
+          />
         </template>
-      </ContentHeader>
+      </GlassHeader>
     </template>
 
-    <div class="relative mx-auto max-w-4xl">
+    <div class="relative mt-3">
       <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="form-panel">
         <StringField
           :field="{
@@ -86,15 +84,20 @@
           v-if="selectedType === 'text'"
           :field="{
             name: 'content',
-            label: 'Content',
+            label: 'Article Content',
             widget: 'markdown',
+            placeholderText: 'Write your article content here...',
             toolbar: [
-              'heading',
+              'heading-1',
+              'heading-2',
               'bold',
               'italic',
-              'ordered-list',
+              'underline',
+              'strikethrough',
               'unordered-list',
+              'ordered-list',
               'quote',
+              'horizontal-rule',
               'link',
               '|',
               'undo',
@@ -106,7 +109,7 @@
 
         <ImageField
           :field="{
-            label: 'Thumbnail Image (Optional)',
+            label: 'Cover Image (Optional)',
             name: 'imageUrl',
             widget: 'image',
             uploadPreset: 'resources',
@@ -139,7 +142,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, toRefs } from 'vue';
+import { computed, onMounted, ref, toRefs } from 'vue';
 import { router } from '@inertiajs/vue3';
 import { Crown, ExternalLink, FileText, Globe, User, Video } from '@lucide/vue';
 import type { Component } from 'vue';
@@ -153,9 +156,9 @@ import {
 } from '../../types';
 import { useModelStore, useSharedStore, useWidgetsStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
-import ContentHeader from '../shared/content-header.vue';
+import GlassHeader from '../shared/glass-header.vue';
+import StudioButton from '../shared/studio-button.vue';
 import RichListbox from '../shared/rich-listbox.vue';
-import PillButton from '../shared/pill-button.vue';
 import StringField from '../fields/string-field.vue';
 import ImageField from '../fields/image-field.vue';
 import MarkdownField from '../fields/markdown-field.vue';
@@ -180,12 +183,16 @@ const selectedType = ref<ResourceType>(
 const visibility = ref<VisibilityType>(
   model.getField('visibility', 'public') as VisibilityType,
 );
-const title = ref(
-  resource.value.id
-    ? (model.getField('title', 'Edit Resource') as string)
-    : 'Create New Resource',
-);
 const isSaving = ref(false);
+
+const headerTitle = computed(() =>
+  resource.value.id ? 'Edit Resource' : 'Add Resource',
+);
+const headerSubtitle = computed(() => {
+  if (!resource.value.id) return 'Create Resource';
+  const payload = model.model as ResourcePayload;
+  return payload.title || 'Edit Resource';
+});
 
 const resourceTypes: {
   value: ResourceType;
@@ -244,14 +251,22 @@ const setType = (type: string) => {
   selectedType.value = resourceType;
   model.setField('type', resourceType);
 
-  if (resourceType === 'video' && !model.isPopulated('video')) {
+  if (resourceType !== 'url_link') {
+    model.setField('url', '');
+  } else if (!model.isPopulated('url')) {
+    model.setField('url', '');
+  }
+
+  if (resourceType !== 'video') {
+    model.setField('video', { url: null });
+  } else if (!model.isPopulated('video')) {
     model.setField('video', { url: null });
   }
-  if (resourceType === 'text' && !model.isPopulated('content')) {
+
+  if (resourceType !== 'text') {
     model.setField('content', '');
-  }
-  if (resourceType === 'url_link' && !model.isPopulated('url')) {
-    model.setField('url', '');
+  } else if (!model.isPopulated('content')) {
+    model.setField('content', '');
   }
 };
 
@@ -305,10 +320,6 @@ onMounted(() => {
   model.$subscribe(() => {
     selectedType.value = model.getField('type', 'url_link') as ResourceType;
     visibility.value = model.getField('visibility', 'public') as VisibilityType;
-
-    const modelTitle = model.getField('title', '') as string;
-    title.value =
-      modelTitle || (resource.value.id ? 'Edit Resource' : 'Create New Resource');
   });
 });
 </script>
