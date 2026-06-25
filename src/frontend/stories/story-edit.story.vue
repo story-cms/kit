@@ -83,6 +83,20 @@
         :providers="{}"
       />
     </Variant>
+
+    <Variant title="Validation errors on tabs" :setup-app="loadNormalData">
+      <StoryEdit
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :errors="validationErrors"
+        :bookmarks="sharedProps.bookmarks"
+        :model="validationErrorModel"
+        :available-resources="availableResources"
+        :has-no-content="false"
+        :providers="{}"
+      />
+    </Variant>
   </Story>
 </template>
 
@@ -154,6 +168,31 @@ const deletableUnpublishedModel: StoryEditProps['model'] = {
   isPublished: false,
 };
 
+const sectionsWithValidationErrors: StorySection[] = [
+  {
+    id: 'section-1',
+    title: 'Introduction',
+    description: 'Opening section of the gospel.',
+  },
+  {
+    id: 'section-2',
+    title: '',
+    description: 'Section missing a title.',
+  },
+];
+
+const validationErrorModel: StoryEditProps['model'] = {
+  ...storyModel,
+  isPublished: false,
+  coverImage: '',
+  sections: sectionsWithValidationErrors,
+};
+
+const validationErrors = {
+  'bundle.coverImage': ['The cover image field must have at least 1 character'],
+  'bundle.sections.1.title': ['The title field must have at least 1 character'],
+};
+
 const loadNormalData: StoryHandler = ({ app, story, variant }): void => {
   const shared = useSharedStore();
   shared.setLanguage({
@@ -185,6 +224,7 @@ Saving posts attached resource IDs to the story localisation.
 - **Save and publish** — unpublished story with content; shows Save Changes (`secondary`) and Publish (`green`)
 - **Delete and save** — empty story, published; shows Delete (`red`) and Save Changes (`secondary`)
 - **Delete, save and publish** — empty story, unpublished; shows Delete (`red`), Save Changes (`secondary`), and Publish (`green`)
+- **Validation errors on tabs** — failed publish validation; Details and Sections tabs show error indicators and inline field messages
 
 ## Usage
 

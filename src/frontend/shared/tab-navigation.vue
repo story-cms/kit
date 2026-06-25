@@ -6,6 +6,7 @@
         :key="tab.label"
         :label="tab.label"
         :is-active="tab.current"
+        :has-error="tab.hasError"
         :aria-current="tab.current ? 'page' : undefined"
         @click="emit('change', tab.label)"
       >

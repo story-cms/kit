@@ -12,6 +12,10 @@
     <Variant title="Settings style">
       <TabNavigation :tabs="settingsTabs" :current-tab="currentTab" @change="changeTab" />
     </Variant>
+
+    <Variant title="With errors">
+      <TabNavigation :tabs="tabsWithErrors" :current-tab="currentTab" @change="changeTab" />
+    </Variant>
   </Story>
 </template>
 
@@ -42,5 +46,11 @@ const settingsTabs: NavigationPaneTab[] = [
   { label: 'Account', icon: 'user' },
   { label: 'Team', icon: 'users' },
   { label: 'Languages', icon: 'translate' },
+];
+
+const tabsWithErrors: NavigationPaneTab[] = [
+  { label: 'Details', icon: 'book-open', hasError: true },
+  { label: 'Sections', icon: 'list-bullet', hasError: true },
+  { label: 'Resources', icon: 'folder' },
 ];
 </script>

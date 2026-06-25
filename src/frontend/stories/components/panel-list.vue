@@ -42,6 +42,9 @@
             </button>
           </div>
           <div class="flex items-center justify-center gap-x-3">
+            <div v-if="itemHasError(index)" class="text-error">
+              <Icon name="exclamation" class="size-5" aria-hidden="true" />
+            </div>
             <button
               v-if="!shared.isTranslation"
               type="button"
@@ -144,6 +147,15 @@
           <span class="ml-2">Add {{ sectionType }}</span>
         </div>
       </button>
+
+      <div v-if="showEmptyListWarning()">
+        <div
+          class="mt-2 flex flex-row items-center rounded-full border bg-white p-2 text-error"
+        >
+          <Icon name="exclamation" class="pr-2" />
+          <p class="text-sm">At least one item is required</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -208,6 +220,44 @@ const syncExpanded = () => {
 };
 
 watch(listItems, syncExpanded, { deep: true, immediate: true });
+
+const itemHasError = (index: number): boolean => {
+  if (shared.isTranslation) return false;
+  const needle = `bundle.${fieldPath.value}.${index}`;
+  return Object.keys(shared.errors).some((key) => key.startsWith(needle));
+};
+
+const showEmptyListWarning = (): boolean => {
+  if (shared.isTranslation) return false;
+  if (listItems.value.length > 0) return false;
+
+  const needle = `bundle.${fieldPath.value}`;
+  return Object.keys(shared.errors).some((key) => key.startsWith(needle));
+};
+
+const expandErroredSections = () => {
+  if (shared.isTranslation) return;
+
+  const count = listItems.value.length;
+  if (count === 0) return;
+
+  const fresh = [...expanded.value];
+  while (fresh.length < count) fresh.push(true);
+
+  let changed = false;
+  for (let index = 0; index < count; index++) {
+    if (itemHasError(index) && !fresh[index]) {
+      fresh[index] = true;
+      changed = true;
+    }
+  }
+
+  if (changed) {
+    expanded.value = fresh;
+  }
+};
+
+watch(() => shared.errors, expandErroredSections, { deep: true, immediate: true });
 
 const isExpanded = (index: number): boolean => expanded.value[index] ?? true;
 

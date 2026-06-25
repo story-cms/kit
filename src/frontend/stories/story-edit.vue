@@ -59,7 +59,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import { storeToRefs } from 'pinia';
 import { router } from '@inertiajs/vue3';
 import { Trash2 } from '@lucide/vue';
 
@@ -79,6 +80,10 @@ import StoryEditDetails from './components/story-edit-details.vue';
 import StoryEditSections from './components/story-edit-sections.vue';
 import StoryEditResources from './components/story-edit-resources.vue';
 import { resourceIds } from './components/resource-utils';
+import {
+  firstStoryEditTabWithError,
+  storyEditTabHasError,
+} from './story-edit-tab-errors';
 
 const resolveStoryTab = (value: string | null, tabs: NavigationPaneTab[]): string => {
   if (!value) return 'Details';
@@ -88,6 +93,7 @@ const resolveStoryTab = (value: string | null, tabs: NavigationPaneTab[]): strin
 
 const props = defineProps<StoryEditProps & SharedPageProps>();
 const shared = useSharedStore();
+const { errors } = storeToRefs(shared);
 shared.setFromProps(props);
 if (Object.keys(props.errors ?? {}).length === 0) {
   shared.clearErrors();
@@ -125,13 +131,26 @@ model.$subscribe(() => {
 
 const headerSubtitle = computed(() => title.value?.trim() || 'Edit Story');
 
+const sectionTabLabel = computed(() => `${sectionType.value ?? 'Section'}s`);
+
 const storyEditTabs = computed(
-  () =>
-    [
-      { label: 'Details', icon: 'book-open' },
-      { label: `${sectionType.value ?? 'Section'}s`, icon: 'list-bullet' },
-      { label: 'Resources', icon: 'folder' },
-    ] as NavigationPaneTab[],
+  (): NavigationPaneTab[] => [
+    {
+      label: 'Details',
+      icon: 'book-open',
+      hasError: storyEditTabHasError('details', errors.value),
+    },
+    {
+      label: sectionTabLabel.value,
+      icon: 'list-bullet',
+      hasError: storyEditTabHasError('sections', errors.value),
+    },
+    {
+      label: 'Resources',
+      icon: 'folder',
+      hasError: storyEditTabHasError('resources', errors.value),
+    },
+  ],
 );
 
 const initialSectionType = props.model.sectionType || 'Section';
@@ -152,6 +171,24 @@ const currentStoryTabIcon = computed(
 const onStoryTabChange = (tab: string) => {
   currentStoryTab.value = tab;
 };
+
+const focusFirstErroredTab = () => {
+  const tab = firstStoryEditTabWithError(errors.value, sectionTabLabel.value);
+  if (tab) {
+    currentStoryTab.value = tab;
+  }
+};
+
+const validationFailureMessage = (validationErrors: Record<string, string | string[]>) =>
+  Object.keys(validationErrors).length > 0
+    ? 'Some required fields are missing'
+    : 'Something went wrong. Please try again.';
+
+onMounted(() => {
+  if (Object.keys(props.errors ?? {}).length > 0) {
+    focusFirstErroredTab();
+  }
+});
 
 const createResource = () => {
   const params = new URLSearchParams(window.location.search);
@@ -203,9 +240,10 @@ const publishStory = () => {
       shared.addMessage(ResponseStatus.Confirmation, 'Story published successfully!');
     },
 
-    onError: (errors) => {
-      shared.setErrors(errors);
-      shared.addMessage(ResponseStatus.Failure, 'Error publishing story');
+    onError: (validationErrors) => {
+      shared.setErrors(validationErrors);
+      focusFirstErroredTab();
+      shared.addMessage(ResponseStatus.Failure, validationFailureMessage(validationErrors));
     },
 
     onFinish: () => {
@@ -230,9 +268,10 @@ const saveStory = () => {
       shared.addMessage(ResponseStatus.Confirmation, 'Story saved successfully');
     },
 
-    onError: (errors) => {
-      shared.setErrors(errors);
-      shared.addMessage(ResponseStatus.Failure, 'Error saving story');
+    onError: (validationErrors) => {
+      shared.setErrors(validationErrors);
+      focusFirstErroredTab();
+      shared.addMessage(ResponseStatus.Failure, validationFailureMessage(validationErrors));
     },
 
     onFinish: () => {
