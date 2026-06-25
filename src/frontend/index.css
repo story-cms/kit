@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 @layer base {
-  @import url('https://fonts.googleapis.com/css2?family=Amiri&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
 
   :root {
     --primary-color: #39ccfb;
@@ -18,6 +18,52 @@
   }
   .input-field {
     @apply block w-full rounded-md border border-gray-300 px-3 py-3 text-sm font-normal leading-5 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm;
+  }
+
+  .form-panel {
+    @apply space-y-6 rounded-[14px] border border-gray-200 bg-white p-8;
+  }
+
+  .control-rounded {
+    @apply rounded-[10px];
+  }
+
+  .form-panel .input-field,
+  .form-panel .border-dashed {
+    @apply rounded-[10px];
+  }
+
+  .form-panel .input-field {
+    @apply px-4 py-2.5 focus:border-blue-500 focus:ring-blue-500;
+  }
+
+  .form-panel .input-label {
+    @apply text-gray-700;
+  }
+
+  .form-panel .EasyMDEContainer {
+    @apply overflow-hidden rounded-[10px];
+  }
+
+  .form-panel .editor-toolbar {
+    @apply rounded-t-[10px] border border-b-0 border-gray-300;
+    background-color: #f9fafb !important;
+  }
+
+  .form-panel .editor-toolbar + .CodeMirror {
+    @apply rounded-b-[10px] border border-gray-300;
+  }
+
+  .form-panel .no-markup .editor-toolbar {
+    @apply hidden;
+  }
+
+  .form-panel .no-markup .CodeMirror {
+    @apply rounded-[10px] border border-gray-300;
+  }
+
+  .form-panel .no-markup .CodeMirror-scroll {
+    @apply min-h-[90px];
   }
   .icon {
     @apply flex h-4 w-4 items-center justify-center text-black;

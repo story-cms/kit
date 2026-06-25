@@ -1,31 +1,29 @@
 <template>
   <AppLayout>
     <template #header>
-      <ContentHeader dir="ltr" :title="title">
+      <GlassHeader :title="headerTitle" :subtitle="headerSubtitle">
         <template #actions>
-          <div class="flex items-center gap-3">
-            <PillButton label="Cancel" variant="gray" @click="cancel" />
-            <PillButton
-              v-if="!resource.id"
-              label="Create Resource"
-              variant="blue"
-              :disabled="isSaving"
-              @click="save"
-            />
-            <PillButton
-              v-else
-              label="Save Changes"
-              variant="blue"
-              :disabled="isSaving"
-              @click="save"
-            />
-          </div>
+          <StudioButton label="Cancel" variant="outline" @click="cancel" />
+          <StudioButton
+            v-if="!resource.id"
+            label="Create Resource"
+            :disabled="isSaving"
+            variant="primary"
+            @click="save"
+          />
+          <StudioButton
+            v-else
+            label="Save Changes"
+            :disabled="isSaving"
+            variant="blue"
+            @click="save"
+          />
         </template>
-      </ContentHeader>
+      </GlassHeader>
     </template>
 
-    <div class="relative mx-auto max-w-4xl">
-      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8 bg-white py-4">
+    <div class="relative mt-3">
+      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="form-panel">
         <StringField
           :field="{
             name: 'title',
@@ -34,44 +32,38 @@
             placeholderText: 'Enter resource title',
           }"
           :is-nested="true"
-          class="px-8"
         />
 
-        <div class="px-8">
-          <label class="mb-2 block text-sm font-medium text-gray-700"
-            >Resource Type</label
-          >
-          <div class="grid grid-cols-3 gap-3">
-            <button
-              v-for="typeOption in resourceTypes"
-              :key="typeOption.value"
-              type="button"
-              class="flex items-center justify-center gap-2 rounded-lg border-2 px-4 py-3 transition-colors"
-              :class="
-                selectedType === typeOption.value
-                  ? 'border-blue-500 bg-blue-50 text-blue-700'
-                  : 'border-gray-300 hover:border-gray-400'
-              "
-              @click="setType(typeOption.value)"
-            >
-              <component :is="typeOption.icon" class="size-4" aria-hidden="true" />
-              {{ typeOption.label }}
-            </button>
-          </div>
-        </div>
-
-        <ImageField
+        <MarkdownField
           :field="{
-            label: 'Thumbnail Image (Optional)',
-            name: 'imageUrl',
-            widget: 'image',
-            uploadPreset: 'resources',
-            description: 'JPG or PNG up to 5MB',
-            extensions: ['.jpg', '.jpeg', '.png', '.webp'],
-            maxSize: 5000000,
+            name: 'description',
+            label: 'Description',
+            widget: 'markdown',
+            noMarkup: true,
+            minimal: true,
+            placeholderText: 'Brief description of this resource...',
           }"
           :is-nested="true"
-          class="px-8"
+        />
+
+        <div>
+          <RichListbox
+            v-model="selectedType"
+            label="Resource Type"
+            :options="resourceTypes"
+            @update:model-value="setType"
+          />
+        </div>
+
+        <StringField
+          v-if="selectedType === 'url_link'"
+          :field="{
+            name: 'url',
+            label: 'URL',
+            widget: 'string',
+            placeholderText: 'https://...',
+          }"
+          :is-nested="true"
         />
 
         <VideoField
@@ -86,34 +78,26 @@
             maxSize: 500662310,
           }"
           :is-nested="true"
-          class="px-8"
-        />
-
-        <StringField
-          v-if="selectedType === 'info_link'"
-          :field="{
-            name: 'infoUrl',
-            label: 'URL',
-            widget: 'string',
-            placeholderText: 'https://...',
-          }"
-          :is-nested="true"
-          class="px-8"
         />
 
         <MarkdownField
           v-if="selectedType === 'text'"
           :field="{
             name: 'content',
-            label: 'Content',
+            label: 'Article Content',
             widget: 'markdown',
+            placeholderText: 'Write your article content here...',
             toolbar: [
-              'heading',
+              'heading-1',
+              'heading-2',
               'bold',
               'italic',
-              'ordered-list',
+              'underline',
+              'strikethrough',
               'unordered-list',
+              'ordered-list',
               'quote',
+              'horizontal-rule',
               'link',
               '|',
               'undo',
@@ -121,57 +105,52 @@
             ],
           }"
           :is-nested="true"
-          class="px-8"
         />
 
-        <MarkdownField
+        <ImageField
           :field="{
-            name: 'description',
-            label: 'Description',
-            widget: 'markdown',
-            noMarkup: true,
-            placeholderText: 'Brief description of this resource...',
+            label: 'Thumbnail Image (Optional)',
+            name: 'imageUrl',
+            widget: 'image',
+            uploadPreset: 'resources',
+            description: 'PNG, JPG, GIF up to 10MB',
+            extensions: ['.jpg', '.jpeg', '.png', '.gif', '.webp'],
+            maxSize: 10_000_000,
           }"
           :is-nested="true"
-          class="px-8"
         />
 
-        <div class="grid grid-cols-1 gap-6 px-8 md:grid-cols-2">
+        <div>
           <StringField
             :field="{
               name: 'label',
-              label: 'Label',
+              label: 'Label (Optional)',
               widget: 'string',
               placeholderText: 'e.g., Supplementary Reading',
             }"
             :is-nested="true"
           />
-
-          <SelectField
-            :field="{
-              label: 'Visibility',
-              name: 'visibility',
-              widget: 'select',
-              options: [
-                { label: 'Public', value: 'public' },
-                { label: 'Guests', value: 'guests' },
-                { label: 'Leaders', value: 'leaders' },
-              ],
-              default: 'public',
-            }"
-            :is-free="true"
-            :is-nested="true"
-          />
+          <p class="mt-1 text-sm text-gray-500">
+            Organise resources on the Story listing. Resources without a label appear together in
+            one block.
+          </p>
         </div>
+
+        <RichListbox
+          v-model="visibility"
+          label="Visibility"
+          :options="visibilityOptions"
+          @update:model-value="setVisibility"
+        />
       </form>
     </div>
   </AppLayout>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, toRefs } from 'vue';
+import { computed, onMounted, ref, toRefs } from 'vue';
 import { router } from '@inertiajs/vue3';
-import { ExternalLink, FileText, Video } from '@lucide/vue';
+import { Crown, ExternalLink, FileText, Globe, User, Video } from '@lucide/vue';
 import type { Component } from 'vue';
 import {
   type ResourceEditProps,
@@ -179,15 +158,15 @@ import {
   type ResourcePayload,
   ResponseStatus,
   type SharedPageProps,
+  type VisibilityType,
 } from '../../types';
 import { useModelStore, useSharedStore, useWidgetsStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
-import ContentHeader from '../shared/content-header.vue';
-
-import PillButton from '../shared/pill-button.vue';
+import GlassHeader from '../shared/glass-header.vue';
+import StudioButton from '../shared/studio-button.vue';
+import RichListbox from '../shared/rich-listbox.vue';
 import StringField from '../fields/string-field.vue';
 import ImageField from '../fields/image-field.vue';
-import SelectField from '../fields/select-field.vue';
 import MarkdownField from '../fields/markdown-field.vue';
 import VideoField from '../fields/video-field.vue';
 
@@ -205,34 +184,102 @@ if (Object.keys(props.errors ?? {}).length === 0) {
 useWidgetsStore().setProviders(props.providers);
 
 const selectedType = ref<ResourceType>(
-  model.getField('type', 'info_link') as ResourceType,
+  model.getField('type', 'url_link') as ResourceType,
 );
-const title = ref(
-  resource.value.id
-    ? (model.getField('title', 'Edit Resource') as string)
-    : 'Create New Resource',
+const visibility = ref<VisibilityType>(
+  model.getField('visibility', 'public') as VisibilityType,
 );
 const isSaving = ref(false);
 
-const resourceTypes: { value: ResourceType; label: string; icon: Component }[] = [
-  { value: 'info_link', label: 'Info Link', icon: ExternalLink },
-  { value: 'video', label: 'Video', icon: Video },
-  { value: 'text', label: 'Text', icon: FileText },
+const headerTitle = computed(() =>
+  resource.value.id ? 'Edit Resource' : 'Add Resource',
+);
+const headerSubtitle = computed(() => {
+  const title = ((model.model as ResourcePayload).title ?? '').trim();
+  if (!resource.value.id) return title || 'Create Resource';
+  return title || 'Edit Resource';
+});
+
+const resourceTypes: {
+  value: ResourceType;
+  label: string;
+  description: string;
+  icon: Component;
+}[] = [
+  {
+    value: 'url_link',
+    label: 'URL Link',
+    description: 'Link to an external website or resource',
+    icon: ExternalLink,
+  },
+  {
+    value: 'video',
+    label: 'Video',
+    description: 'Upload a video file',
+    icon: Video,
+  },
+  {
+    value: 'text',
+    label: 'Article',
+    description: 'Write a rich-text article',
+    icon: FileText,
+  },
 ];
 
-const setType = (type: ResourceType) => {
-  selectedType.value = type;
-  model.setField('type', type);
+const visibilityOptions: {
+  value: VisibilityType;
+  label: string;
+  description: string;
+  icon: Component;
+}[] = [
+  {
+    value: 'public',
+    label: 'Public',
+    description: 'Visible to all users',
+    icon: Globe,
+  },
+  {
+    value: 'guests',
+    label: 'Guest',
+    description: 'Visible to logged-in guests',
+    icon: User,
+  },
+  {
+    value: 'leaders',
+    label: 'Leader',
+    description: 'Restricted to group leaders only',
+    icon: Crown,
+  },
+];
 
-  if (type === 'video' && !model.isPopulated('video')) {
+const setType = (type: string) => {
+  const resourceType = type as ResourceType;
+  selectedType.value = resourceType;
+  model.setField('type', resourceType);
+
+  if (resourceType !== 'url_link') {
+    model.setField('url', '');
+  } else if (!model.isPopulated('url')) {
+    model.setField('url', '');
+  }
+
+  if (resourceType !== 'video') {
+    model.setField('video', { url: null });
+  } else if (!model.isPopulated('video')) {
     model.setField('video', { url: null });
   }
-  if (type === 'text' && !model.isPopulated('content')) {
+
+  if (resourceType !== 'text') {
+    model.setField('content', '');
+  } else if (!model.isPopulated('content')) {
     model.setField('content', '');
   }
-  if (type === 'info_link' && !model.isPopulated('infoUrl')) {
-    model.setField('infoUrl', '');
-  }
+};
+
+const setVisibility = (value: string) => {
+  const visibilityValue = value as VisibilityType;
+  visibility.value = visibilityValue;
+  model.setField('visibility', visibilityValue);
 };
 
 const getPayload = (): ResourcePayload => model.model as ResourcePayload;
@@ -253,7 +300,9 @@ const save = () => {
     shared.setErrors(errors);
     shared.addMessage(
       ResponseStatus.Failure,
-      resource.value.id ? 'Error saving resource' : 'Error creating resource',
+      Object.keys(errors).length > 0
+        ? 'Some required fields are missing'
+        : 'Something went wrong. Please try again.',
     );
   };
 
@@ -277,11 +326,8 @@ const save = () => {
 
 onMounted(() => {
   model.$subscribe(() => {
-    selectedType.value = model.getField('type', 'info_link') as ResourceType;
-
-    const modelTitle = model.getField('title', '') as string;
-    title.value =
-      modelTitle || (resource.value.id ? 'Edit Resource' : 'Create New Resource');
+    selectedType.value = model.getField('type', 'url_link') as ResourceType;
+    visibility.value = model.getField('visibility', 'public') as VisibilityType;
   });
 });
 </script>

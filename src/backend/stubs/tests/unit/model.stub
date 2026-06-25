@@ -674,10 +674,10 @@ test.group('Resource', (group) => {
     assert.equal(resource.bundle.video.url, 'https://example.com/video.mp4');
   });
 
-  test('info link bundle stores url', async ({ assert }) => {
-    const resource = await ResourceFactory.apply('info_link').create();
+  test('URL link bundle stores url', async ({ assert }) => {
+    const resource = await ResourceFactory.apply('url_link').create();
 
-    assert.equal(resource.type, 'info_link');
-    assert.equal(resource.bundle.infoUrl, 'https://example.com/info');
+    assert.equal(resource.type, 'url_link');
+    assert.equal(resource.bundle.url, 'https://example.com/info');
   });
 });

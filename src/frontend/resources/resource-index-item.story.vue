@@ -20,7 +20,7 @@
       />
     </Variant>
 
-    <Variant title="Grid / Info link">
+    <Variant title="Grid / URL link">
       <ResourceIndexItem
         :resource="resource('r4')"
         view-mode="grid"

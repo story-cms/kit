@@ -132,32 +132,32 @@ test.group('Resource service', (group) => {
       'en',
       {
         title: 'Guide',
-        type: 'info_link',
+        type: 'url_link',
         label: 'Reading',
         visibility: 'public',
-        infoUrl: 'https://example.com/guide',
+        url: 'https://example.com/guide',
       },
       null,
     );
 
     assert.equal(created.title, 'Guide');
-    assert.equal(created.type, 'info_link');
-    assert.equal(created.bundle.infoUrl, 'https://example.com/guide');
+    assert.equal(created.type, 'url_link');
+    assert.equal(created.bundle.url, 'https://example.com/guide');
 
     const updated = await service.update(
       created.id,
       {
         title: 'Updated Guide',
-        type: 'info_link',
+        type: 'url_link',
         label: 'Reading',
         visibility: 'guests',
-        infoUrl: 'https://example.com/updated',
+        url: 'https://example.com/updated',
       },
       null,
     );
 
     assert.equal(updated.title, 'Updated Guide');
     assert.equal(updated.visibility, 'guests');
-    assert.equal(updated.bundle.infoUrl, 'https://example.com/updated');
+    assert.equal(updated.bundle.url, 'https://example.com/updated');
   });
 });

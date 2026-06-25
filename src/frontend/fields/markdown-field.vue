@@ -8,7 +8,7 @@
   >
     <label
       for="first-name"
-      class="block text-sm font-medium text-gray-700"
+      class="input-label block"
       :class="{ 'text-gray-600': props.isReadOnly }"
       >{{ field.label }}</label
     >
@@ -133,7 +133,7 @@ onMounted(async () => {
   const easymdeModule = await import('easymde');
   const EasyMDE = easymdeModule.default;
   mde = new EasyMDE({
-    minHeight: field.value.minimal ? 'auto' : '300px',
+    minHeight: field.value.minimal ? '70px' : '300px',
     element: textArea.value,
     spellChecker: false,
     nativeSpellcheck: false,

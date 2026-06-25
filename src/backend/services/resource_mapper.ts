@@ -27,8 +27,8 @@ export const extractResourceUrl = (
   switch (type) {
     case 'video':
       return 'video' in bundle ? bundle.video.url : undefined;
-    case 'info_link':
-      return 'infoUrl' in bundle ? bundle.infoUrl : undefined;
+    case 'url_link':
+      return 'url' in bundle ? bundle.url : undefined;
     default:
       return undefined;
   }

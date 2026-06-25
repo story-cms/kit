@@ -60,9 +60,9 @@ A toggle button component that switches between list and grid view modes.
 
 ## Behavior
 
-- Shows a grid icon when in list view (clicking will switch to grid)
-- Shows a list icon when in grid view (clicking will switch to list)
-- Emits a toggle event when clicked to allow parent component to handle state changes
+- Shows grid and list icons side by side in a segmented control
+- Highlights the active view with a gray background
+- Emits `toggle` when switching to the other view mode
 
 ## Accessibility
 
