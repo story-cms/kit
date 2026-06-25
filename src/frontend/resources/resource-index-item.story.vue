@@ -1,11 +1,14 @@
 <template>
-  <Story title="Resource Index Item" group="resources" :layout="{ type: 'grid', width: 900 }">
+  <Story
+    title="Resource Index Item"
+    group="resources"
+    :layout="{ type: 'grid', width: 900 }"
+  >
     <Variant title="Grid / Video">
       <ResourceIndexItem
         :resource="resource('r1')"
         view-mode="grid"
         @edit="onEdit"
-        @preview="onPreview"
         @delete="onDelete"
       />
     </Variant>
@@ -15,17 +18,15 @@
         :resource="resource('r2')"
         view-mode="grid"
         @edit="onEdit"
-        @preview="onPreview"
         @delete="onDelete"
       />
     </Variant>
 
-    <Variant title="Grid / URL link">
+    <Variant title="Grid / URL">
       <ResourceIndexItem
         :resource="resource('r4')"
         view-mode="grid"
         @edit="onEdit"
-        @preview="onPreview"
         @delete="onDelete"
       />
     </Variant>
@@ -35,7 +36,6 @@
         :resource="videoWithoutImage"
         view-mode="grid"
         @edit="onEdit"
-        @preview="onPreview"
         @delete="onDelete"
       />
     </Variant>
@@ -45,7 +45,6 @@
         :resource="resource('r7')"
         view-mode="grid"
         @edit="onEdit"
-        @preview="onPreview"
         @delete="onDelete"
       />
     </Variant>
@@ -55,7 +54,15 @@
         :resource="withoutDescription"
         view-mode="grid"
         @edit="onEdit"
-        @preview="onPreview"
+        @delete="onDelete"
+      />
+    </Variant>
+
+    <Variant title="Grid / Very long label">
+      <ResourceIndexItem
+        :resource="withVeryLongLabel"
+        view-mode="grid"
+        @edit="onEdit"
         @delete="onDelete"
       />
     </Variant>
@@ -65,22 +72,34 @@
         <table class="w-full min-w-[720px] table-auto">
           <thead class="border-b border-gray-200 bg-gray-50">
             <tr>
-              <th class="max-w-[400px] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="max-w-[400px] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Resource
               </th>
-              <th class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                Type
-              </th>
-              <th class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Label
               </th>
-              <th class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
+                Type
+              </th>
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Visibility
               </th>
-              <th class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Updated
               </th>
-              <th class="whitespace-nowrap px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="whitespace-nowrap px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Actions
               </th>
             </tr>
@@ -90,7 +109,6 @@
               :resource="resource('r1')"
               view-mode="list"
               @edit="onEdit"
-              @preview="onPreview"
               @delete="onDelete"
             />
           </tbody>
@@ -103,22 +121,34 @@
         <table class="w-full min-w-[720px] table-auto">
           <thead class="border-b border-gray-200 bg-gray-50">
             <tr>
-              <th class="max-w-[400px] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="max-w-[400px] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Resource
               </th>
-              <th class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                Type
-              </th>
-              <th class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Label
               </th>
-              <th class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
+                Type
+              </th>
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Visibility
               </th>
-              <th class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Updated
               </th>
-              <th class="whitespace-nowrap px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="whitespace-nowrap px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Actions
               </th>
             </tr>
@@ -128,7 +158,6 @@
               :resource="resource('r2')"
               view-mode="list"
               @edit="onEdit"
-              @preview="onPreview"
               @delete="onDelete"
             />
           </tbody>
@@ -141,22 +170,34 @@
         <table class="w-full min-w-[720px] table-auto">
           <thead class="border-b border-gray-200 bg-gray-50">
             <tr>
-              <th class="max-w-[400px] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="max-w-[400px] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Resource
               </th>
-              <th class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                Type
-              </th>
-              <th class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Label
               </th>
-              <th class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
+                Type
+              </th>
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Visibility
               </th>
-              <th class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Updated
               </th>
-              <th class="whitespace-nowrap px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="whitespace-nowrap px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Actions
               </th>
             </tr>
@@ -166,7 +207,6 @@
               :resource="resource('r7')"
               view-mode="list"
               @edit="onEdit"
-              @preview="onPreview"
               @delete="onDelete"
             />
           </tbody>
@@ -194,12 +234,15 @@ const withoutDescription: ResourceIndexItemType = {
   description: null,
 };
 
-const onEdit = (id: string) => {
-  alert(`Edit resource ${id}`);
+const withVeryLongLabel: ResourceIndexItemType = {
+  ...resource('r4'),
+  label:
+    'This is an intentionally very long label to verify truncation behavior in the grid footer metadata row',
+  visibility: 'guests',
 };
 
-const onPreview = (item: ResourceIndexItemType) => {
-  alert(`Preview "${item.title}"`);
+const onEdit = (id: string) => {
+  alert(`Edit resource ${id}`);
 };
 
 const onDelete = (id: string) => {

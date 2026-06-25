@@ -30,8 +30,8 @@ export const ResourceFactory = factory
       video: { url: 'https://example.com/video.mp4' },
     } satisfies VideoBundle;
   })
-  .state('url_link', (resource) => {
-    resource.type = 'url_link';
+  .state('url', (resource) => {
+    resource.type = 'url';
     resource.label = 'Learn more';
     resource.bundle = {
       url: 'https://example.com/info',

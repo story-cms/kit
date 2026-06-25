@@ -3,7 +3,11 @@
     <template #header>
       <GlassHeader title="Resource Library" subtitle="Manage Resources">
         <template #actions>
-          <StudioButton label="Create Resource" variant="primary" @click="createResource">
+          <StudioButton
+            label="Create Resource"
+            variant="secondary"
+            @click="createResource"
+          >
             <Plus class="size-4" aria-hidden="true" />
           </StudioButton>
         </template>
@@ -54,7 +58,7 @@
                     <option value="all">All Types</option>
                     <option value="text">Text</option>
                     <option value="video">Video</option>
-                    <option value="url_link">URL Link</option>
+                    <option value="url">URL</option>
                   </select>
                 </div>
                 <div>
@@ -111,7 +115,6 @@
           :resource="resource"
           view-mode="grid"
           @edit="editResource"
-          @preview="previewResource"
           @delete="deleteResource"
         />
       </div>
@@ -131,12 +134,12 @@
               <th
                 class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
               >
-                Type
+                Label
               </th>
               <th
                 class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
               >
-                Label
+                Type
               </th>
               <th
                 class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
@@ -162,7 +165,6 @@
               :resource="resource"
               view-mode="list"
               @edit="editResource"
-              @preview="previewResource"
               @delete="deleteResource"
             />
           </tbody>
@@ -217,7 +219,10 @@ const shared = useSharedStore();
 shared.setFromProps(props);
 shared.setCurrentStoryName('');
 
-const items = ref<ResourceIndexItem[]>([...props.resources]);
+const sortByRecentlyUpdated = (a: ResourceIndexItem, b: ResourceIndexItem): number =>
+  b.updatedAt.localeCompare(a.updatedAt);
+
+const items = ref<ResourceIndexItem[]>([...props.resources].sort(sortByRecentlyUpdated));
 const searchQuery = ref('');
 const isList = ref(false);
 const showFilters = ref(false);
@@ -245,21 +250,25 @@ const hasActiveFilters = computed(
 const filteredResources = computed(() => {
   const query = searchQuery.value.toLowerCase();
 
-  return items.value.filter((resource) => {
-    const matchesSearch =
-      !query ||
-      resource.title.toLowerCase().includes(query) ||
-      resource.description?.toLowerCase().includes(query) ||
-      resource.label?.toLowerCase().includes(query);
+  return items.value
+    .filter((resource) => {
+      const matchesSearch =
+        !query ||
+        resource.title.toLowerCase().includes(query) ||
+        resource.description?.toLowerCase().includes(query) ||
+        resource.label?.toLowerCase().includes(query);
 
-    const matchesType = filterType.value === 'all' || resource.type === filterType.value;
-    const matchesVisibility =
-      filterVisibility.value === 'all' || resource.visibility === filterVisibility.value;
-    const matchesLabel =
-      selectedLabel.value === 'all' || resource.label === selectedLabel.value;
+      const matchesType =
+        filterType.value === 'all' || resource.type === filterType.value;
+      const matchesVisibility =
+        filterVisibility.value === 'all' ||
+        resource.visibility === filterVisibility.value;
+      const matchesLabel =
+        selectedLabel.value === 'all' || resource.label === selectedLabel.value;
 
-    return matchesSearch && matchesType && matchesVisibility && matchesLabel;
-  });
+      return matchesSearch && matchesType && matchesVisibility && matchesLabel;
+    })
+    .sort(sortByRecentlyUpdated);
 });
 
 const createResource = () => {
@@ -268,12 +277,6 @@ const createResource = () => {
 
 const editResource = (id: string) => {
   router.visit(`/${shared.locale}/resource/${id}/edit`);
-};
-
-const previewResource = (resource: ResourceIndexItem) => {
-  if (resource.url) {
-    window.open(resource.url, '_blank', 'noopener,noreferrer');
-  }
 };
 
 const deleteResource = (id: string) => {

@@ -17,7 +17,7 @@
     @apply mb-1 text-sm font-medium leading-5 text-gray-900;
   }
   .input-field {
-    @apply block w-full rounded-md border border-gray-300 px-3 py-3 text-sm font-normal leading-5 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm;
+    @apply block w-full rounded-md border border-gray-300 px-3 py-3 text-sm font-normal leading-5 text-gray-900 shadow-sm placeholder:text-sm placeholder:font-normal placeholder:leading-5 placeholder:text-gray-400 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm;
   }
 
   .form-panel {
@@ -100,6 +100,19 @@
 }
 
 /* Overide CodeMirror styles */
+.form-panel .cm-s-easymde .CodeMirror {
+  @apply text-sm font-normal leading-5;
+  font-family: inherit;
+}
+
+.cm-s-easymde .CodeMirror-placeholder {
+  color: #9ca3af !important;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 400;
+  opacity: 1 !important;
+}
+
 .cm-s-ar .CodeMirror-rtl {
   font-family: 'Amiri', serif;
   font-size: 20px;

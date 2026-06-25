@@ -6,7 +6,7 @@ export const resourceTypeColor = (type: ResourceType): string => {
       return 'bg-violet-100 text-violet-700';
     case 'text':
       return 'bg-blue-100 text-blue-700';
-    case 'url_link':
+    case 'url':
       return 'bg-orange-100 text-orange-700';
     default:
       return 'bg-gray-100 text-gray-700';
@@ -19,8 +19,8 @@ export const resourceTypeLabel = (type: ResourceType): string => {
       return 'Video';
     case 'text':
       return 'Text';
-    case 'url_link':
-      return 'URL Link';
+    case 'url':
+      return 'URL';
     default:
       return type;
   }

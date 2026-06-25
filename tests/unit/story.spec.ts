@@ -13,6 +13,15 @@ function createMockHttpContext(inputs: Record<string, unknown>): HttpContext {
   } as HttpContext;
 }
 
+function withoutKey<T extends Record<string, unknown>, K extends keyof T>(
+  obj: T,
+  key: K,
+): Omit<T, K> {
+  const rest = { ...obj };
+  delete rest[key];
+  return rest;
+}
+
 const validCreateData = {
   title: 'Gospel of John',
   description: 'A study through John',
@@ -79,6 +88,15 @@ test.describe('Story Validator', () => {
       expect(result.bundle.title).toBe('Gospel of John');
       expect(result.bundle.template).toBe('course');
     });
+
+    test('accepts create without description', async () => {
+      const validator = new StoryCreateValidator();
+      const data = withoutKey(validCreateData, 'description');
+      const result = await validator.validate(data);
+
+      expect(result.bundle.title).toBe('Gospel of John');
+      expect(result.bundle.description).toBeUndefined();
+    });
   });
 
   test.describe('StoryUpdateValidator', () => {
@@ -112,6 +130,16 @@ test.describe('Story Validator', () => {
 
         expect(result.bundle.title).toBe('Gospel of John');
         expect(result.bundle.resources).toBeUndefined();
+      });
+
+      test('accepts draft without description', async () => {
+        const data = withoutKey(validDraftUpdateData, 'description');
+        const ctx = createMockHttpContext(data);
+        const validator = new StoryUpdateValidator(ctx);
+        const result = await validator.validate(data);
+
+        expect(result.bundle.title).toBe('Gospel of John');
+        expect(result.bundle.description).toBeUndefined();
       });
     });
 
@@ -147,6 +175,16 @@ test.describe('Story Validator', () => {
           '00000000-0000-0000-0000-000000000001',
         ]);
         expect(result.bundle.sections).toHaveLength(1);
+      });
+
+      test('accepts publish without description', async () => {
+        const data = withoutKey(validPublishUpdateData, 'description');
+        const ctx = createMockHttpContext(data);
+        const validator = new StoryUpdateValidator(ctx);
+        const result = await validator.validate(data);
+
+        expect(result.bundle.title).toBe('Gospel of John');
+        expect(result.bundle.description).toBeUndefined();
       });
     });
   });

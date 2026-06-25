@@ -1,19 +1,11 @@
 <template>
   <Story title="Rich Listbox" group="shared" :layout="{ type: 'grid', width: 480 }">
     <Variant title="Default">
-      <RichListbox
-        v-model="selected"
-        label="Resource Type"
-        :options="resourceTypes"
-      />
+      <RichListbox v-model="selected" label="Resource Type" :options="resourceTypes" />
     </Variant>
 
     <Variant title="Pre-selected">
-      <RichListbox
-        v-model="visibility"
-        label="Visibility"
-        :options="visibilityOptions"
-      />
+      <RichListbox v-model="visibility" label="Visibility" :options="visibilityOptions" />
     </Variant>
 
     <Variant title="Read only">
@@ -32,13 +24,13 @@ import { ref } from 'vue';
 import { Crown, ExternalLink, FileText, Globe, User, Video } from '@lucide/vue';
 import RichListbox from './rich-listbox.vue';
 
-const selected = ref('url_link');
+const selected = ref('url');
 const visibility = ref('public');
 
 const resourceTypes = [
   {
-    value: 'url_link',
-    label: 'URL Link',
+    value: 'url',
+    label: 'URL',
     description: 'Link to an external website or resource',
     icon: ExternalLink,
   },

@@ -35,7 +35,7 @@ export default class extends BaseSchema {
       table
         .string('type', 255)
         .notNullable()
-        .comment('Text, Video, or UrlLink');
+        .comment('Text, Video, or Url');
 
       table
         .jsonb('bundle')

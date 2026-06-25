@@ -8,14 +8,14 @@
             v-if="!resource.id"
             label="Create Resource"
             :disabled="isSaving"
-            variant="primary"
+            variant="secondary"
             @click="save"
           />
           <StudioButton
             v-else
             label="Save Changes"
             :disabled="isSaving"
-            variant="blue"
+            variant="secondary"
             @click="save"
           />
         </template>
@@ -56,7 +56,7 @@
         </div>
 
         <StringField
-          v-if="selectedType === 'url_link'"
+          v-if="selectedType === 'url'"
           :field="{
             name: 'url',
             label: 'URL',
@@ -131,8 +131,8 @@
             :is-nested="true"
           />
           <p class="mt-1 text-sm text-gray-500">
-            Organise resources on the Story listing. Resources without a label appear together in
-            one block.
+            Organise resources on the Story listing. Resources without a label appear
+            together in one block.
           </p>
         </div>
 
@@ -183,13 +183,18 @@ if (Object.keys(props.errors ?? {}).length === 0) {
 }
 useWidgetsStore().setProviders(props.providers);
 
-const selectedType = ref<ResourceType>(
-  model.getField('type', 'url_link') as ResourceType,
-);
+const selectedType = ref<ResourceType>(model.getField('type', 'url') as ResourceType);
 const visibility = ref<VisibilityType>(
   model.getField('visibility', 'public') as VisibilityType,
 );
 const isSaving = ref(false);
+
+const isSafeReturnPath = (value: string): boolean => /^\/(?!\/)/.test(value);
+const returnTo = (() => {
+  const value = new URLSearchParams(window.location.search).get('returnTo')?.trim();
+  if (!value || !isSafeReturnPath(value)) return null;
+  return value;
+})();
 
 const headerTitle = computed(() =>
   resource.value.id ? 'Edit Resource' : 'Add Resource',
@@ -207,8 +212,8 @@ const resourceTypes: {
   icon: Component;
 }[] = [
   {
-    value: 'url_link',
-    label: 'URL Link',
+    value: 'url',
+    label: 'URL',
     description: 'Link to an external website or resource',
     icon: ExternalLink,
   },
@@ -257,7 +262,7 @@ const setType = (type: string) => {
   selectedType.value = resourceType;
   model.setField('type', resourceType);
 
-  if (resourceType !== 'url_link') {
+  if (resourceType !== 'url') {
     model.setField('url', '');
   } else if (!model.isPopulated('url')) {
     model.setField('url', '');
@@ -285,7 +290,7 @@ const setVisibility = (value: string) => {
 const getPayload = (): ResourcePayload => model.model as ResourcePayload;
 
 const cancel = () => {
-  router.visit(`/${shared.locale}/resource`);
+  router.visit(returnTo ?? `/${shared.locale}/resource`);
 };
 
 const save = () => {
@@ -306,8 +311,10 @@ const save = () => {
     );
   };
 
+  const payload = returnTo ? { ...getPayload(), _returnTo: returnTo } : getPayload();
+
   if (!resource.value.id) {
-    router.post(`/${shared.locale}/resource`, getPayload(), {
+    router.post(`/${shared.locale}/resource`, payload, {
       onSuccess: () => {
         shared.addMessage(ResponseStatus.Confirmation, 'Resource created successfully');
       },
@@ -317,7 +324,7 @@ const save = () => {
     return;
   }
 
-  router.post(`/${shared.locale}/resource/${resource.value.id}`, getPayload(), {
+  router.post(`/${shared.locale}/resource/${resource.value.id}`, payload, {
     preserveScroll: true,
     onError,
     onFinish,
@@ -326,7 +333,7 @@ const save = () => {
 
 onMounted(() => {
   model.$subscribe(() => {
-    selectedType.value = model.getField('type', 'url_link') as ResourceType;
+    selectedType.value = model.getField('type', 'url') as ResourceType;
     visibility.value = model.getField('visibility', 'public') as VisibilityType;
   });
 });
