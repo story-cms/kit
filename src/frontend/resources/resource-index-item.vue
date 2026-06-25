@@ -178,7 +178,7 @@
       </span>
     </td>
     <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-      {{ resource.updatedAt }}
+      {{ formatListDate(resource.updatedAt) }}
     </td>
     <td class="whitespace-nowrap px-6 py-4 text-right">
       <div class="flex items-center justify-end gap-2">
@@ -221,6 +221,7 @@ import {
   Trash2,
   Video,
 } from '@lucide/vue';
+import { DateTime } from 'luxon';
 import type { Component } from 'vue';
 import type { ResourceIndexItem, ResourceType } from '../../types';
 import ResourceThumbnail from '../stories/components/resource-thumbnail.vue';
@@ -236,6 +237,11 @@ const emit = defineEmits<{
   preview: [resource: ResourceIndexItem];
   delete: [id: string];
 }>();
+
+const formatListDate = (value: string): string => {
+  const parsed = DateTime.fromISO(value);
+  return parsed.isValid ? parsed.toFormat('dd-MM-yyyy') : value;
+};
 
 const iconFor = (type: ResourceType): Component => {
   switch (type) {
