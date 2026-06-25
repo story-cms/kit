@@ -1,6 +1,6 @@
 <template>
   <header
-    class="mt-4 box-border w-full rounded-xl border border-white bg-white bg-white/50 px-4 py-6 shadow-[0_4px_50px_rgba(16,47,53,0.05)] backdrop-blur-[20px]"
+    class="box-border w-full rounded-xl border border-white bg-white bg-white/50 px-4 py-6 shadow-[0_4px_50px_rgba(16,47,53,0.05)] backdrop-blur-[20px]"
   >
     <div class="flex items-center justify-between gap-4">
       <div class="font-dmsans min-w-0 flex-1">
