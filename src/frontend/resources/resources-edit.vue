@@ -117,24 +117,22 @@
           :is-nested="true"
         />
 
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <StringField
-            :field="{
-              name: 'label',
-              label: 'Label',
-              widget: 'string',
-              placeholderText: 'e.g., Supplementary Reading',
-            }"
-            :is-nested="true"
-          />
+        <StringField
+          :field="{
+            name: 'label',
+            label: 'Label',
+            widget: 'string',
+            placeholderText: 'e.g., Supplementary Reading',
+          }"
+          :is-nested="true"
+        />
 
-          <RichListbox
-            v-model="visibility"
-            label="Visibility"
-            :options="visibilityOptions"
-            @update:model-value="setVisibility"
-          />
-        </div>
+        <RichListbox
+          v-model="visibility"
+          label="Visibility"
+          :options="visibilityOptions"
+          @update:model-value="setVisibility"
+        />
       </form>
     </div>
   </AppLayout>
