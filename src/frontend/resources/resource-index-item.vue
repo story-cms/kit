@@ -61,8 +61,8 @@
         >
           <ResourceTypeBadge :type="resource.type" />
           <span
-            v-if="resource.visibility !== 'public'"
-            class="rounded bg-gray-100 px-2 py-0.5 text-xs font-medium capitalize text-gray-700"
+            class="rounded px-2 py-0.5 text-xs font-medium capitalize"
+            :class="visibilityBadgeClasses(resource.visibility)"
           >
             {{ resource.visibility }}
           </span>
@@ -155,11 +155,7 @@
     <td class="whitespace-nowrap px-6 py-4">
       <span
         class="rounded px-2 py-1 text-xs font-medium capitalize"
-        :class="
-          resource.visibility === 'public'
-            ? 'bg-green-100 text-green-700'
-            : 'bg-gray-100 text-gray-700'
-        "
+        :class="visibilityBadgeClasses(resource.visibility)"
       >
         {{ resource.visibility }}
       </span>
@@ -201,7 +197,7 @@ import {
 } from '@lucide/vue';
 import { DateTime } from 'luxon';
 import type { Component } from 'vue';
-import type { ResourceIndexItem, ResourceType } from '../../types';
+import type { ResourceIndexItem, ResourceType, VisibilityType } from '../../types';
 import ResourceThumbnail from '../stories/components/resource-thumbnail.vue';
 import ResourceTypeBadge from '../stories/components/resource-type-badge.vue';
 
@@ -219,6 +215,11 @@ const formatListDate = (value: string): string => {
   const parsed = DateTime.fromISO(value);
   return parsed.isValid ? parsed.toFormat('dd-MM-yyyy') : value;
 };
+
+const visibilityBadgeClasses = (visibility: VisibilityType): string =>
+  visibility === 'public'
+    ? 'bg-green-100 text-green-700'
+    : 'bg-gray-100 text-gray-700';
 
 const iconFor = (type: ResourceType): Component => {
   switch (type) {
