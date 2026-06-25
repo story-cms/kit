@@ -90,14 +90,26 @@
 import StoryEdit from './story-edit.vue';
 import {
   availableResources,
-  listModel,
   sampleAttachedResources,
   sharedProps,
   miniSidebar,
 } from '../test/mocks';
 import { useSharedStore } from '../store';
 import type { StoryHandler } from '../shared/helpers';
-import type { StoryEditProps } from '../../types';
+import type { StoryEditProps, StorySection } from '../../types';
+
+const sampleStorySections: StorySection[] = [
+  {
+    id: 'section-1',
+    title: 'Introduction',
+    description: 'Opening section of the gospel.',
+  },
+  {
+    id: 'section-2',
+    title: 'The Word',
+    description: 'In the beginning was the Word.',
+  },
+];
 
 const storyModel: StoryEditProps['model'] = {
   id: 1,
@@ -115,7 +127,7 @@ const storyModel: StoryEditProps['model'] = {
   visibility: 'public',
   slug: 'gospel-of-john',
   template: 'devotion',
-  sections: listModel.sections,
+  sections: sampleStorySections,
   resources: sampleAttachedResources,
 };
 
