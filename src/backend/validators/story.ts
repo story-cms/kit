@@ -47,7 +47,7 @@ const live = {
 const createSchema = {
   title: vine.string().trim().minLength(1),
   coverImage: vine.string().optional(),
-  description: vine.string().trim().minLength(1),
+  description: vine.string().trim().optional(),
   chapterLimit: vine.number().min(1),
   tags: vine.string().optional(),
   storyType: vine.string().trim().minLength(1),
@@ -98,7 +98,6 @@ export class StoryUpdateValidator {
 export const storyErrorMessages = new SimpleMessagesProvider({
   'bundle.title.minLength': 'Your story must have a title',
   'bundle.coverImage.minLength': 'Your story must have a cover image',
-  'bundle.description.minLength': 'Your story must have a description',
   'bundle.chapterLimit.number': 'The chapter limit must be a number',
   'bundle.chapterLimit.min': 'The chapter limit must be a number greater than 0',
   'bundle.storyType.minLength': 'How about "Story"? We need to call it something.',

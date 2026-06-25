@@ -79,6 +79,15 @@ test.describe('Story Validator', () => {
       expect(result.bundle.title).toBe('Gospel of John');
       expect(result.bundle.template).toBe('course');
     });
+
+    test('accepts create without description', async () => {
+      const validator = new StoryCreateValidator();
+      const { description: _description, ...data } = validCreateData;
+      const result = await validator.validate(data);
+
+      expect(result.bundle.title).toBe('Gospel of John');
+      expect(result.bundle.description).toBeUndefined();
+    });
   });
 
   test.describe('StoryUpdateValidator', () => {
@@ -112,6 +121,16 @@ test.describe('Story Validator', () => {
 
         expect(result.bundle.title).toBe('Gospel of John');
         expect(result.bundle.resources).toBeUndefined();
+      });
+
+      test('accepts draft without description', async () => {
+        const { description: _description, ...data } = validDraftUpdateData;
+        const ctx = createMockHttpContext(data);
+        const validator = new StoryUpdateValidator(ctx);
+        const result = await validator.validate(data);
+
+        expect(result.bundle.title).toBe('Gospel of John');
+        expect(result.bundle.description).toBeUndefined();
       });
     });
 
@@ -147,6 +166,16 @@ test.describe('Story Validator', () => {
           '00000000-0000-0000-0000-000000000001',
         ]);
         expect(result.bundle.sections).toHaveLength(1);
+      });
+
+      test('accepts publish without description', async () => {
+        const { description: _description, ...data } = validPublishUpdateData;
+        const ctx = createMockHttpContext(data);
+        const validator = new StoryUpdateValidator(ctx);
+        const result = await validator.validate(data);
+
+        expect(result.bundle.title).toBe('Gospel of John');
+        expect(result.bundle.description).toBeUndefined();
       });
     });
   });
