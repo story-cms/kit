@@ -13,9 +13,9 @@ test.describe('Resource mapper', () => {
     expect(extractResourceUrl('video', bundle)).toBe('https://example.com/v.mp4');
   });
 
-  test('extractResourceUrl returns info link url from bundle', () => {
-    const bundle: LinkBundle = { infoUrl: 'https://example.com/info' };
-    expect(extractResourceUrl('info_link', bundle)).toBe('https://example.com/info');
+  test('extractResourceUrl returns URL link url from bundle', () => {
+    const bundle: LinkBundle = { url: 'https://example.com/info' };
+    expect(extractResourceUrl('url_link', bundle)).toBe('https://example.com/info');
   });
 
   test('extractResourceUrl returns undefined for text type', () => {
@@ -27,18 +27,18 @@ test.describe('Resource mapper', () => {
     const dto = toResourceItem({
       id: 'abc-123',
       title: 'Test Resource',
-      type: 'info_link',
+      type: 'url_link',
       imageUrl: 'https://example.com/img.jpg',
       label: 'Reading',
       visibility: 'guests',
       description: 'A description',
-      bundle: { infoUrl: 'https://example.com/link' },
+      bundle: { url: 'https://example.com/link' },
     });
 
     expect(dto).toEqual({
       id: 'abc-123',
       title: 'Test Resource',
-      type: 'info_link',
+      type: 'url_link',
       imageUrl: 'https://example.com/img.jpg',
       url: 'https://example.com/link',
       label: 'Reading',
@@ -88,12 +88,12 @@ test.describe('Resource mapper', () => {
     const item = toResourceIndexItem({
       id: 'abc-999',
       title: 'Link Resource',
-      type: 'info_link',
+      type: 'url_link',
       imageUrl: null,
       label: 'Links',
       visibility: 'guests',
       description: 'A link',
-      bundle: { infoUrl: 'https://example.com' },
+      bundle: { url: 'https://example.com' },
       createdAt: '2024-02-10T08:00:00.000Z',
       updatedAt: '2024-02-12T08:00:00.000Z',
     });

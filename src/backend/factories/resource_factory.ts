@@ -30,11 +30,11 @@ export const ResourceFactory = factory
       video: { url: 'https://example.com/video.mp4' },
     } satisfies VideoBundle;
   })
-  .state('info_link', (resource) => {
-    resource.type = 'info_link';
+  .state('url_link', (resource) => {
+    resource.type = 'url_link';
     resource.label = 'Learn more';
     resource.bundle = {
-      infoUrl: 'https://example.com/info',
+      url: 'https://example.com/info',
     } satisfies LinkBundle;
   })
   .build();

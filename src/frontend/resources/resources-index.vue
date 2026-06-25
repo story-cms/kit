@@ -64,7 +64,7 @@
                     <option value="all">All Types</option>
                     <option value="text">Text</option>
                     <option value="video">Video</option>
-                    <option value="info_link">Info Link</option>
+                    <option value="url_link">URL Link</option>
                   </select>
                 </div>
                 <div>

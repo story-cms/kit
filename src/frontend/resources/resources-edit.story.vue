@@ -22,14 +22,14 @@
       />
     </Variant>
 
-    <Variant title="Edit info link" :setup-app="miniSidebar">
+    <Variant title="Edit URL link" :setup-app="miniSidebar">
       <ResourcesEdit
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
         :errors="sharedProps.errors"
         :bookmarks="sharedProps.bookmarks"
-        v-bind="mockEditInfoLinkResource"
+        v-bind="mockEditUrlLinkResource"
       />
     </Variant>
 
@@ -65,7 +65,7 @@ import {
   mockNewResourceEdit,
   mockEditVideoResource,
   mockEditTextResource,
-  mockEditInfoLinkResource,
+  mockEditUrlLinkResource,
   mockResourceEditErrors,
 } from '../test/mocks';
 </script>

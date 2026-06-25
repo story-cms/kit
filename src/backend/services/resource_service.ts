@@ -18,8 +18,8 @@ const buildBundle = (payload: ResourcePayload): ResourceBundle => {
       return { content: payload.content ?? '' } satisfies TextBundle;
     case 'video':
       return { video: { url: payload.video?.url ?? '' } } satisfies VideoBundle;
-    case 'info_link':
-      return { infoUrl: payload.infoUrl ?? '' } satisfies LinkBundle;
+    case 'url_link':
+      return { url: payload.url ?? '' } satisfies LinkBundle;
   }
 };
 
@@ -51,8 +51,8 @@ export class ResourceService {
           ...base,
           video: 'video' in bundle ? bundle.video : { url: null },
         };
-      case 'info_link':
-        return { ...base, infoUrl: 'infoUrl' in bundle ? bundle.infoUrl : '' };
+      case 'url_link':
+        return { ...base, url: 'url' in bundle ? bundle.url : '' };
       default:
         return base;
     }

@@ -156,10 +156,10 @@ export interface VideoBundle {
 }
 
 export interface LinkBundle {
-  infoUrl: string;
+  url: string;
 }
 
-export type ResourceType = 'text' | 'video' | 'info_link';
+export type ResourceType = 'text' | 'video' | 'url_link';
 export type ResourceBundle = TextBundle | VideoBundle | LinkBundle;
 
 export interface ResourceItem {
@@ -202,7 +202,7 @@ export type ResourcePayload = {
   label?: string | null;
   visibility: VisibilityType;
   content?: string;
-  infoUrl?: string;
+  url?: string;
   video?: { url: string | null };
 };
 

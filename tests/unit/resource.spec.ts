@@ -22,8 +22,8 @@ test.describe('Resource Validator', () => {
       const data = {
         ...baseResource,
         title: '',
-        type: 'info_link' as const,
-        infoUrl: 'https://example.com',
+        type: 'url_link' as const,
+        url: 'https://example.com',
       };
       const ctx = createMockHttpContext(data);
       const validator = new ResourceValidator(ctx);
@@ -35,8 +35,8 @@ test.describe('Resource Validator', () => {
       const data = {
         ...baseResource,
         label: '',
-        type: 'info_link' as const,
-        infoUrl: 'https://example.com',
+        type: 'url_link' as const,
+        url: 'https://example.com',
       };
       const ctx = createMockHttpContext(data);
       const validator = new ResourceValidator(ctx);
@@ -71,12 +71,12 @@ test.describe('Resource Validator', () => {
       });
     });
 
-    test.describe('Info link type', () => {
+    test.describe('URL link type', () => {
       test('rejects invalid URL', async () => {
         const data = {
           ...baseResource,
-          type: 'info_link' as const,
-          infoUrl: 'not-a-url',
+          type: 'url_link' as const,
+          url: 'not-a-url',
         };
         const ctx = createMockHttpContext(data);
         const validator = new ResourceValidator(ctx);
@@ -87,8 +87,8 @@ test.describe('Resource Validator', () => {
       test('rejects URL without protocol', async () => {
         const data = {
           ...baseResource,
-          type: 'info_link' as const,
-          infoUrl: 'example.com/page',
+          type: 'url_link' as const,
+          url: 'example.com/page',
         };
         const ctx = createMockHttpContext(data);
         const validator = new ResourceValidator(ctx);
@@ -96,17 +96,17 @@ test.describe('Resource Validator', () => {
         await expect(validator.validate(data)).rejects.toThrow();
       });
 
-      test('accepts valid info link resource', async () => {
+      test('accepts valid URL link resource', async () => {
         const data = {
           ...baseResource,
-          type: 'info_link' as const,
-          infoUrl: 'https://example.com/page',
+          type: 'url_link' as const,
+          url: 'https://example.com/page',
         };
         const ctx = createMockHttpContext(data);
         const validator = new ResourceValidator(ctx);
 
         const result = (await validator.validate(data)).bundle;
-        expect(result.infoUrl).toBe('https://example.com/page');
+        expect(result.url).toBe('https://example.com/page');
       });
     });
 
@@ -178,7 +178,7 @@ test.describe('Resource Validator', () => {
         ...baseResource,
         type: 'text' as const,
         content: '',
-        infoUrl: 'https://example.com',
+        url: 'https://example.com',
         video: { url: 'https://example.com/video.mp4' },
       };
       const ctx = createMockHttpContext(data);

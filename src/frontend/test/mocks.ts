@@ -4367,7 +4367,7 @@ export const availableResources: ResourceItem[] = [
   {
     id: 'r4',
     title: 'Early Church History Timeline',
-    type: 'info_link',
+    type: 'url_link',
     url: 'https://example.com/timeline',
     label: 'Reference Materials',
     visibility: 'public',
@@ -4412,7 +4412,7 @@ export const availableResources: ResourceItem[] = [
   {
     id: 'r9',
     title: 'Biblical Greek Resources',
-    type: 'info_link',
+    type: 'url_link',
     url: 'https://example.com/greek',
     label: 'Language Resources',
     visibility: 'public',
@@ -4421,7 +4421,7 @@ export const availableResources: ResourceItem[] = [
   {
     id: 'r10',
     title: 'Theological Dictionary',
-    type: 'info_link',
+    type: 'url_link',
     url: 'https://example.com/dictionary',
     label: 'Reference Materials',
     visibility: 'public',
@@ -4470,7 +4470,7 @@ export const availableResources: ResourceItem[] = [
     id: 'r15',
     title:
       'Patristic Writings on Scripture, Tradition, and the Formation of the Biblical Canon',
-    type: 'info_link',
+    type: 'url_link',
     url: 'https://example.com/patristic-canon',
     label: 'Reference Materials',
     visibility: 'leaders',
@@ -4547,12 +4547,12 @@ export const mockNewResourceEdit: ResourceEditProps = {
   },
   bundle: {
     title: '',
-    type: 'info_link',
+    type: 'url_link',
     imageUrl: '',
     description: '',
     label: '',
     visibility: 'public',
-    infoUrl: '',
+    url: '',
     video: { url: null },
     content: '',
   },
@@ -4591,23 +4591,23 @@ export const mockEditTextResource: ResourceEditProps = toEditResource(
   },
 );
 
-export const mockEditInfoLinkResource: ResourceEditProps = toEditResource(
+export const mockEditUrlLinkResource: ResourceEditProps = toEditResource(
   availableResources[3],
   '2024-02-05',
   '2024-02-15',
   {
     title: availableResources[3].title,
-    type: 'info_link',
+    type: 'url_link',
     imageUrl: '',
     description: availableResources[3].description ?? '',
     label: availableResources[3].label ?? '',
     visibility: availableResources[3].visibility,
-    infoUrl: availableResources[3].url ?? 'https://example.com/timeline',
+    url: availableResources[3].url ?? 'https://example.com/timeline',
   },
 );
 
 export const mockResourceEditErrors: Record<string, string[]> = {
   'bundle.title': ['A resource must have a title'],
   'bundle.label': ['A resource must have a label'],
-  'bundle.infoUrl': ['Info link resources must have a valid URL'],
+  'bundle.url': ['URL link resources must have a valid URL'],
 };

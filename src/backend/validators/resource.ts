@@ -5,13 +5,13 @@ import videoRule from './video_rule.js';
 
 const base = {
   title: vine.string().trim().minLength(1),
-  type: vine.enum(['text', 'video', 'info_link'] as const),
+  type: vine.enum(['text', 'video', 'url_link'] as const),
   imageUrl: vine.string().optional(),
   description: vine.string().optional(),
   label: vine.string().trim().minLength(1),
   visibility: vine.enum(['public', 'guests', 'leaders'] as const),
   content: vine.string().optional(),
-  infoUrl: vine.string().optional(),
+  url: vine.string().optional(),
   video: vine
     .object({
       url: vine.string().nullable().optional(),
@@ -29,7 +29,7 @@ export class ResourceValidator {
   protected resourceType: string;
 
   constructor(protected ctx: HttpContext) {
-    this.resourceType = ctx.request.input('type') ?? 'info_link';
+    this.resourceType = ctx.request.input('type') ?? 'url_link';
   }
 
   validate(data: Record<string, unknown>): Promise<any> {
@@ -59,7 +59,7 @@ export class ResourceValidator {
 
     return vine.object({
       ...base,
-      infoUrl: vine.string().url({
+      url: vine.string().url({
         require_protocol: true,
         protocols: ['http', 'https'],
       }),
@@ -75,6 +75,6 @@ export const resourceErrorMessages = new SimpleMessagesProvider({
   'bundle.title.minLength': 'A resource must have a title',
   'bundle.label.minLength': 'A resource must have a label',
   'bundle.content.minLength': 'Text resources must have content',
-  'bundle.infoUrl.url': 'Info link resources must have a valid URL',
+  'bundle.url.url': 'URL link resources must have a valid URL',
   'bundle.video': 'Video resources must have a video',
 });
