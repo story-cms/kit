@@ -1,6 +1,6 @@
 <template>
   <Story title="Story Edit" group="stories">
-    <Variant title="Default" :setup-app="loadNormalData">
+    <Variant title="Save changes" :setup-app="loadNormalData">
       <StoryEdit
         :config="sharedProps.config"
         :user="sharedProps.user"
@@ -14,6 +14,48 @@
       />
     </Variant>
 
+    <Variant title="Save and publish" :setup-app="loadNormalData">
+      <StoryEdit
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :errors="{}"
+        :bookmarks="sharedProps.bookmarks"
+        :model="unpublishedModel"
+        :available-resources="availableResources"
+        :has-no-content="false"
+        :providers="{}"
+      />
+    </Variant>
+
+    <Variant title="Delete and save" :setup-app="loadNormalData">
+      <StoryEdit
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :errors="{}"
+        :bookmarks="sharedProps.bookmarks"
+        :model="deletableModel"
+        :available-resources="availableResources"
+        :has-no-content="true"
+        :providers="{}"
+      />
+    </Variant>
+
+    <Variant title="Delete, save and publish" :setup-app="loadNormalData">
+      <StoryEdit
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :errors="{}"
+        :bookmarks="sharedProps.bookmarks"
+        :model="deletableUnpublishedModel"
+        :available-resources="availableResources"
+        :has-no-content="true"
+        :providers="{}"
+      />
+    </Variant>
+
     <Variant title="Empty resources" :setup-app="loadNormalData">
       <StoryEdit
         :config="sharedProps.config"
@@ -22,6 +64,20 @@
         :errors="{}"
         :bookmarks="sharedProps.bookmarks"
         :model="emptyResourcesModel"
+        :available-resources="availableResources"
+        :has-no-content="false"
+        :providers="{}"
+      />
+    </Variant>
+
+    <Variant title="Resources tab" :setup-app="loadResourcesTab">
+      <StoryEdit
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :errors="{}"
+        :bookmarks="sharedProps.bookmarks"
+        :model="storyModel"
         :available-resources="availableResources"
         :has-no-content="false"
         :providers="{}"
@@ -69,6 +125,23 @@ const emptyResourcesModel: StoryEditProps['model'] = {
   resources: [],
 };
 
+const unpublishedModel: StoryEditProps['model'] = {
+  ...storyModel,
+  isPublished: false,
+};
+
+const deletableModel: StoryEditProps['model'] = {
+  ...storyModel,
+  title: 'Untitled Story',
+  resources: [],
+  isPublished: true,
+};
+
+const deletableUnpublishedModel: StoryEditProps['model'] = {
+  ...deletableModel,
+  isPublished: false,
+};
+
 const loadNormalData: StoryHandler = ({ app, story, variant }): void => {
   const shared = useSharedStore();
   shared.setLanguage({
@@ -79,6 +152,13 @@ const loadNormalData: StoryHandler = ({ app, story, variant }): void => {
 
   miniSidebar({ app, story, variant });
 };
+
+const loadResourcesTab: StoryHandler = (context): void => {
+  const url = new URL(window.location.href);
+  url.searchParams.set('tab', 'Resources');
+  window.history.replaceState({}, '', url.toString());
+  loadNormalData(context);
+};
 </script>
 
 <docs lang="md">
@@ -86,6 +166,13 @@ const loadNormalData: StoryHandler = ({ app, story, variant }): void => {
 
 Full-page story editor with tabbed navigation for Details, Sections, and Resources.
 Saving posts attached resource IDs to the story localisation.
+
+## Variants
+
+- **Save changes** — published story with content; shows Save Changes only
+- **Save and publish** — unpublished story with content; shows Save Changes and Publish
+- **Delete and save** — empty story, published; shows Delete and Save Changes
+- **Delete, save and publish** — empty story, unpublished; shows all three header actions
 
 ## Usage
 

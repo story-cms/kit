@@ -1,17 +1,15 @@
 <template>
-  <div class="grid min-w-0 grid-cols-[minmax(0,1fr)] overflow-x-clip">
-    <div class="min-w-0 space-y-6">
-      <ResourcePicker
-        :available-resources="availableResources"
-        :attached-resources="attachedResources"
-        @attach="attachResource"
-        @create="emit('create')"
-      />
+  <div class="min-w-0 space-y-6 overflow-x-clip">
+    <ResourcePicker
+      :available-resources="availableResources"
+      :attached-resources="attachedResources"
+      @attach="attachResource"
+      @create="emit('create')"
+    />
 
-      <ResourceEmptyState v-if="attachedResources.length === 0" />
+    <ResourceEmptyState v-if="attachedResources.length === 0" />
 
-      <ResourceAttachedList v-else v-model:resources="attachedResources" />
-    </div>
+    <ResourceAttachedList v-else v-model:resources="attachedResources" />
   </div>
 </template>
 

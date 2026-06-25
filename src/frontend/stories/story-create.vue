@@ -1,50 +1,58 @@
 <template>
   <AppLayout>
     <template #header>
-      <ContentHeader :title="title || 'New Story'">
+      <GlassHeader title="Add Story" :subtitle="headerSubtitle">
         <template #actions>
-          <PillButton label="Create" variant="green" @click="createStory" />
+          <StudioButton
+            label="Create Story"
+            variant="secondary"
+            :disabled="isSaving"
+            @click="createStory"
+          />
         </template>
-      </ContentHeader>
+      </GlassHeader>
     </template>
 
-    <section>
-      <div class="relative grid mx-auto max-w-4xl grid-cols-1">
-        <form class="space-y-8">
-          <StoryEditDetails :is-translation="false" :templates="props.templates" />
-        </form>
-      </div>
-    </section>
+    <div class="relative mt-3">
+      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="form-panel">
+        <StoryEditDetails :is-translation="false" :templates="props.templates" />
+      </form>
+    </div>
   </AppLayout>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { router } from '@inertiajs/vue3';
 
 import type { SharedPageProps, StoryCreateProps } from '../../types';
 import { ResponseStatus } from '../../types';
 import { useSharedStore, useWidgetsStore, useModelStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
-import ContentHeader from '../shared/content-header.vue';
-import PillButton from '../shared/pill-button.vue';
+import GlassHeader from '../shared/glass-header.vue';
+import StudioButton from '../shared/studio-button.vue';
 import StoryEditDetails from './components/story-edit-details.vue';
 
 const props = defineProps<StoryCreateProps & SharedPageProps>();
 
 const shared = useSharedStore();
 shared.setFromProps(props);
-shared.clearErrors();
+if (Object.keys(props.errors ?? {}).length === 0) {
+  shared.clearErrors();
+}
 useWidgetsStore().setProviders(props.providers);
 
 const model = useModelStore();
 model.setModel(props.model);
 
 const title = ref(props.model.title);
+const isSaving = ref(false);
 
 model.$subscribe(() => {
   title.value = model.getField('title', 'New Story');
 });
+
+const headerSubtitle = computed(() => title.value?.trim() || 'Create Story');
 
 const getPayload = () => {
   return {
@@ -63,6 +71,7 @@ const getPayload = () => {
 
 const createStory = () => {
   shared.clearErrors();
+  isSaving.value = true;
 
   router.post(`/${shared.locale}/story`, getPayload(), {
     preserveScroll: true,
@@ -74,6 +83,10 @@ const createStory = () => {
     onError: (errors) => {
       shared.setErrors(errors);
       shared.addMessage(ResponseStatus.Failure, 'Error creating story');
+    },
+
+    onFinish: () => {
+      isSaving.value = false;
     },
   });
 };

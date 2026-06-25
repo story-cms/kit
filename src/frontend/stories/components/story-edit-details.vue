@@ -1,30 +1,30 @@
 <template>
-  <div class="space-y-8 rounded-xl bg-white py-3">
-    <div v-if="isTranslation" class="grid grid-cols-2 gap-x-4 px-8">
+  <div class="space-y-6">
+    <div v-if="isTranslation" class="grid grid-cols-2 gap-x-4">
       <StringField :field="titleField" :is-nested="true" />
       <StringField :field="titleField" :is-nested="true" :is-read-only="true" />
     </div>
-    <StringField v-else :field="titleField" :is-nested="true" class="px-8" />
+    <StringField v-else :field="titleField" :is-nested="true" />
 
-    <div v-if="isTranslation" class="grid grid-cols-2 gap-x-4 px-8">
+    <div v-if="isTranslation" class="grid grid-cols-2 gap-x-4">
       <ImageField :field="coverImageField" :is-nested="true" />
       <ImageField :field="coverImageField" :is-nested="true" :is-read-only="true" />
     </div>
-    <ImageField v-else :field="coverImageField" :is-nested="true" class="px-8" />
+    <ImageField v-else :field="coverImageField" :is-nested="true" />
 
-    <div v-if="isTranslation" class="grid grid-cols-2 gap-x-4 px-8">
+    <div v-if="isTranslation" class="grid grid-cols-2 gap-x-4">
       <MarkdownField :field="descriptionField" :is-nested="true" />
       <MarkdownField :field="descriptionField" :is-nested="true" :is-read-only="true" />
     </div>
-    <MarkdownField v-else :field="descriptionField" :is-nested="true" class="px-8" />
+    <MarkdownField v-else :field="descriptionField" :is-nested="true" />
 
-    <div v-if="isTranslation" class="grid grid-cols-2 gap-x-4 px-8">
+    <div v-if="isTranslation" class="grid grid-cols-2 gap-x-4">
       <TagField :field="tagsField" :is-nested="true" />
       <TagField :field="tagsField" :is-nested="true" :is-read-only="true" />
     </div>
-    <TagField v-else :field="tagsField" :is-nested="true" class="px-8" />
+    <TagField v-else :field="tagsField" :is-nested="true" />
 
-    <section v-if="!isTranslation" class="space-y-8">
+    <section v-if="!isTranslation" class="space-y-6">
       <StringField
         :field="{
           name: 'chapterLimit',
@@ -33,7 +33,6 @@
           placeholderText: 'e.g., 12',
         }"
         :is-nested="true"
-        class="px-8"
       />
       <PanelField
         :field="{
@@ -63,22 +62,13 @@
           ],
         }"
         :is-nested="true"
-        class="px-8 mx-8 rounded-lg"
+        class="rounded-lg"
       />
-      <SelectField
-        :field="{
-          name: 'visibility',
-          label: 'Visibility',
-          widget: 'select',
-          options: [
-            { label: 'Public', value: 'public' },
-            { label: 'Guests', value: 'guests' },
-            { label: 'Leader', value: 'leaders' },
-          ],
-          default: 'public',
-        }"
-        :is-nested="true"
-        class="px-8"
+      <RichListbox
+        v-model="visibility"
+        label="Visibility"
+        :options="visibilityOptions"
+        @update:model-value="setVisibility"
       />
       <SelectField
         v-if="showTemplateField"
@@ -90,23 +80,25 @@
           default: templateOptions[0].value,
         }"
         :is-nested="true"
-        class="px-8"
       />
     </section>
-    <div class="pb-64" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import { Crown, Globe, User } from '@lucide/vue';
+import type { Component } from 'vue';
 
-import type { BundleTemplate, FieldSpec } from '../../../types';
+import type { BundleTemplate, FieldSpec, VisibilityType } from '../../../types';
+import { useModelStore } from '../../store';
 import MarkdownField from '../../fields/markdown-field.vue';
 import StringField from '../../fields/string-field.vue';
 import ImageField from '../../fields/image-field.vue';
 import TagField from '../../fields/tag-field.vue';
 import PanelField from '../../fields/panel-field.vue';
 import SelectField from '../../fields/select-field.vue';
+import RichListbox from '../../shared/rich-listbox.vue';
 
 const props = withDefaults(
   defineProps<{
@@ -115,6 +107,50 @@ const props = withDefaults(
   }>(),
   { isTranslation: false, templates: (): BundleTemplate[] => [] },
 );
+
+const model = useModelStore();
+
+const visibility = ref<VisibilityType>(
+  model.getField('visibility', 'public') as VisibilityType,
+);
+
+const visibilityOptions: {
+  value: VisibilityType;
+  label: string;
+  description: string;
+  icon: Component;
+}[] = [
+  {
+    value: 'public',
+    label: 'Public',
+    description: 'Visible to all users',
+    icon: Globe,
+  },
+  {
+    value: 'guests',
+    label: 'Guest',
+    description: 'Visible to logged-in guests',
+    icon: User,
+  },
+  {
+    value: 'leaders',
+    label: 'Leader',
+    description: 'Restricted to group leaders only',
+    icon: Crown,
+  },
+];
+
+const setVisibility = (value: string) => {
+  const visibilityValue = value as VisibilityType;
+  visibility.value = visibilityValue;
+  model.setField('visibility', visibilityValue);
+};
+
+onMounted(() => {
+  model.$subscribe(() => {
+    visibility.value = model.getField('visibility', 'public') as VisibilityType;
+  });
+});
 
 const showTemplateField = computed(() => props.templates.length > 1);
 
@@ -146,6 +182,7 @@ const descriptionField: FieldSpec = {
   label: 'Description/Blurb',
   widget: 'markdown',
   noMarkup: true,
+  minimal: true,
   toolbar: [],
   placeholderText: 'Brief overview of this course...',
 };
