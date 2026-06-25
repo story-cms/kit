@@ -71,6 +71,12 @@ import StoryEditSections from './components/story-edit-sections.vue';
 import StoryEditResources from './components/story-edit-resources.vue';
 import { resourceIds } from './components/resource-utils';
 
+const resolveStoryTab = (value: string | null, tabs: NavigationPaneTab[]): string => {
+  if (!value) return 'Details';
+  const match = tabs.find((tab) => tab.label.toLowerCase() === value.toLowerCase());
+  return match?.label ?? 'Details';
+};
+
 const props = defineProps<StoryEditProps & SharedPageProps>();
 const shared = useSharedStore();
 shared.setFromProps(props);
@@ -82,6 +88,14 @@ model.setModel(props.model);
 
 const attachedResources = ref<ResourceItem[]>([...(props.model.resources ?? [])]);
 const availableResources = props.availableResources ?? [];
+
+const attachResourceId = new URLSearchParams(window.location.search).get('attachResource');
+if (attachResourceId) {
+  const resource = availableResources.find((item) => item.id === attachResourceId);
+  if (resource && !attachedResources.value.some((item) => item.id === attachResourceId)) {
+    attachedResources.value = [...attachedResources.value, resource];
+  }
+}
 
 const isPublished = computed(() => props.model.isPublished);
 
@@ -105,7 +119,17 @@ const storyEditTabs = computed(
       { label: 'Resources', icon: 'folder' },
     ] as NavigationPaneTab[],
 );
-const currentStoryTab = ref('Details');
+
+const initialSectionType = props.model.sectionType || 'Section';
+const initialTabs = [
+  { label: 'Details', icon: 'book-open' },
+  { label: `${initialSectionType}s`, icon: 'list-bullet' },
+  { label: 'Resources', icon: 'folder' },
+] as NavigationPaneTab[];
+
+const currentStoryTab = ref(
+  resolveStoryTab(new URLSearchParams(window.location.search).get('tab'), initialTabs),
+);
 
 const currentStoryTabIcon = computed(
   () => storyEditTabs.value.find((t) => t.label === currentStoryTab.value)?.icon ?? '',
@@ -116,7 +140,9 @@ const onStoryTabChange = (tab: string) => {
 };
 
 const createResource = () => {
-  const returnTo = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+  const params = new URLSearchParams(window.location.search);
+  params.set('tab', 'Resources');
+  const returnTo = `${window.location.pathname}?${params.toString()}`;
   const encodedReturnTo = encodeURIComponent(returnTo);
   router.visit(`/${shared.locale}/resource/create?returnTo=${encodedReturnTo}`);
 };

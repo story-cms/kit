@@ -98,7 +98,13 @@ export default class ResourcesController {
       action: {{ '`created resource ${resource.id}`' }},
     });
 
-    return ctx.response.redirect(returnTo ?? {{ '`/${version.locale}/resource`' }}, false, 303);
+    let redirectTarget = returnTo ?? {{ '`/${version.locale}/resource`' }};
+    if (returnTo) {
+      const separator = returnTo.includes('?') ? '&' : '?';
+      redirectTarget = `${returnTo}${separator}attachResource=${resource.id}`;
+    }
+
+    return ctx.response.redirect(redirectTarget, false, 303);
   }
 
   public async update(ctx: HttpContext) {
