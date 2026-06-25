@@ -9,7 +9,6 @@
         :resource="resource('r1')"
         view-mode="grid"
         @edit="onEdit"
-        @preview="onPreview"
         @delete="onDelete"
       />
     </Variant>
@@ -19,7 +18,6 @@
         :resource="resource('r2')"
         view-mode="grid"
         @edit="onEdit"
-        @preview="onPreview"
         @delete="onDelete"
       />
     </Variant>
@@ -29,7 +27,6 @@
         :resource="resource('r4')"
         view-mode="grid"
         @edit="onEdit"
-        @preview="onPreview"
         @delete="onDelete"
       />
     </Variant>
@@ -39,7 +36,6 @@
         :resource="videoWithoutImage"
         view-mode="grid"
         @edit="onEdit"
-        @preview="onPreview"
         @delete="onDelete"
       />
     </Variant>
@@ -49,7 +45,6 @@
         :resource="resource('r7')"
         view-mode="grid"
         @edit="onEdit"
-        @preview="onPreview"
         @delete="onDelete"
       />
     </Variant>
@@ -59,7 +54,6 @@
         :resource="withoutDescription"
         view-mode="grid"
         @edit="onEdit"
-        @preview="onPreview"
         @delete="onDelete"
       />
     </Variant>
@@ -69,7 +63,6 @@
         :resource="withVeryLongLabel"
         view-mode="grid"
         @edit="onEdit"
-        @preview="onPreview"
         @delete="onDelete"
       />
     </Variant>
@@ -116,7 +109,6 @@
               :resource="resource('r1')"
               view-mode="list"
               @edit="onEdit"
-              @preview="onPreview"
               @delete="onDelete"
             />
           </tbody>
@@ -166,7 +158,6 @@
               :resource="resource('r2')"
               view-mode="list"
               @edit="onEdit"
-              @preview="onPreview"
               @delete="onDelete"
             />
           </tbody>
@@ -216,7 +207,6 @@
               :resource="resource('r7')"
               view-mode="list"
               @edit="onEdit"
-              @preview="onPreview"
               @delete="onDelete"
             />
           </tbody>
@@ -253,10 +243,6 @@ const withVeryLongLabel: ResourceIndexItemType = {
 
 const onEdit = (id: string) => {
   alert(`Edit resource ${id}`);
-};
-
-const onPreview = (item: ResourceIndexItemType) => {
-  alert(`Preview "${item.title}"`);
 };
 
 const onDelete = (id: string) => {

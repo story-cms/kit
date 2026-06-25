@@ -96,19 +96,6 @@
                     Edit
                   </button>
                 </MenuItem>
-                <MenuItem v-if="resource.url" v-slot="{ active }">
-                  <button
-                    type="button"
-                    :class="[
-                      active ? 'bg-gray-50' : '',
-                      'flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-gray-700',
-                    ]"
-                    @click="emit('preview', resource)"
-                  >
-                    <Eye class="size-4" aria-hidden="true" />
-                    Preview
-                  </button>
-                </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <button
                     type="button"
@@ -190,14 +177,6 @@
           <SquarePen class="size-4" aria-hidden="true" />
         </button>
         <button
-          v-if="resource.url"
-          type="button"
-          class="rounded p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
-          @click="emit('preview', resource)"
-        >
-          <Eye class="size-4" aria-hidden="true" />
-        </button>
-        <button
           type="button"
           class="rounded p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
           @click="emit('delete', resource.id)"
@@ -213,7 +192,6 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import {
   ExternalLink,
-  Eye,
   FileText,
   MoreVertical,
   SquarePen,
@@ -234,7 +212,6 @@ defineProps<{
 
 const emit = defineEmits<{
   edit: [id: string];
-  preview: [resource: ResourceIndexItem];
   delete: [id: string];
 }>();
 

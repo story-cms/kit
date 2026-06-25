@@ -115,7 +115,6 @@
           :resource="resource"
           view-mode="grid"
           @edit="editResource"
-          @preview="previewResource"
           @delete="deleteResource"
         />
       </div>
@@ -166,7 +165,6 @@
               :resource="resource"
               view-mode="list"
               @edit="editResource"
-              @preview="previewResource"
               @delete="deleteResource"
             />
           </tbody>
@@ -277,12 +275,6 @@ const createResource = () => {
 
 const editResource = (id: string) => {
   router.visit(`/${shared.locale}/resource/${id}/edit`);
-};
-
-const previewResource = (resource: ResourceIndexItem) => {
-  if (resource.url) {
-    window.open(resource.url, '_blank', 'noopener,noreferrer');
-  }
 };
 
 const deleteResource = (id: string) => {
