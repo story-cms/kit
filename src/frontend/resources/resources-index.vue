@@ -3,7 +3,11 @@
     <template #header>
       <GlassHeader title="Resource Library" subtitle="Manage Resources">
         <template #actions>
-          <StudioButton label="Create Resource" variant="primary" @click="createResource">
+          <StudioButton
+            label="Create Resource"
+            variant="secondary"
+            @click="createResource"
+          >
             <Plus class="size-4" aria-hidden="true" />
           </StudioButton>
         </template>
@@ -131,12 +135,12 @@
               <th
                 class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
               >
-                Type
+                Label
               </th>
               <th
                 class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
               >
-                Label
+                Type
               </th>
               <th
                 class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"

@@ -116,7 +116,9 @@ const onStoryTabChange = (tab: string) => {
 };
 
 const createResource = () => {
-  router.visit(`/${shared.locale}/resource/create`);
+  const returnTo = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+  const encodedReturnTo = encodeURIComponent(returnTo);
+  router.visit(`/${shared.locale}/resource/create?returnTo=${encodedReturnTo}`);
 };
 
 const deleteStory = () => {

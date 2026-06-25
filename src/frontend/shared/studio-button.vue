@@ -17,7 +17,7 @@ import { computed } from 'vue';
 const props = withDefaults(
   defineProps<{
     label: string;
-    variant?: 'outline' | 'primary' | 'blue';
+    variant?: 'outline' | 'primary' | 'secondary';
     disabled?: boolean;
   }>(),
   {
@@ -35,7 +35,7 @@ const variantClasses = computed(() => {
     return 'border border-studio_forest_green bg-transparent text-studio_forest_green hover:bg-studio_forest_green/5';
   }
 
-  if (props.variant === 'blue') {
+  if (props.variant === 'secondary') {
     return 'text-white bg-blue-600 hover:bg-blue-700';
   }
 

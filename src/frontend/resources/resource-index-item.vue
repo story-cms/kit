@@ -3,41 +3,60 @@
     v-if="viewMode === 'grid'"
     class="group flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white transition-shadow hover:shadow-lg"
   >
-    <div v-if="resource.imageUrl" class="h-48 overflow-hidden bg-gray-100">
-      <img
-        :src="resource.imageUrl"
-        :alt="resource.title"
-        class="size-full object-cover transition-transform duration-300 group-hover:scale-105"
-      />
-    </div>
-    <div
-      v-else
-      class="flex h-48 items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200"
-    >
-      <component
-        :is="iconFor(resource.type)"
-        class="size-8 text-gray-400"
-        aria-hidden="true"
-      />
-    </div>
-
-    <div class="grid min-h-0 flex-1 grid-rows-[1fr_auto] p-5">
-      <div class="mb-2 min-h-0">
-        <h3 class="mb-2 line-clamp-2 text-base font-semibold text-gray-900">
-          {{ resource.title }}
-        </h3>
-
-        <p
-          v-if="resource.description"
-          class="line-clamp-2 min-h-10 text-sm leading-5 text-gray-500"
+    <div class="group/edit flex min-h-0 flex-1 flex-col">
+      <button
+        v-if="resource.imageUrl"
+        type="button"
+        class="h-48 overflow-hidden bg-gray-100 text-left"
+        @click="emit('edit', resource.id)"
+      >
+        <img
+          :src="resource.imageUrl"
+          :alt="resource.title"
+          class="size-full object-cover transition duration-300 group-hover/edit:scale-105 group-hover/edit:opacity-90"
+        />
+      </button>
+      <div
+        v-else
+        class="h-48"
+      >
+        <button
+          type="button"
+          class="flex size-full items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200"
+          @click="emit('edit', resource.id)"
         >
-          {{ resource.description }}
-        </p>
-        <div v-else class="min-h-10" aria-hidden="true" />
+          <component
+            :is="iconFor(resource.type)"
+            class="size-8 text-gray-400 transition-opacity group-hover/edit:opacity-70"
+            aria-hidden="true"
+          />
+        </button>
       </div>
 
-      <div class="flex items-center justify-between gap-3 border-t border-gray-100 pt-3">
-        <div v-if="resource.label" class="flex min-w-0 items-center gap-2">
+      <div class="min-h-0 flex-1 px-5 pt-5">
+        <button
+          type="button"
+          class="mb-2 line-clamp-2 text-left text-base font-semibold text-gray-900 transition-opacity group-hover/edit:opacity-70"
+          @click="emit('edit', resource.id)"
+        >
+          {{ resource.title }}
+        </button>
+
+        <button
+          v-if="resource.description"
+          type="button"
+          class="line-clamp-2 min-h-10 text-left text-sm leading-5 text-gray-500 transition-opacity group-hover/edit:opacity-70"
+          @click="emit('edit', resource.id)"
+        >
+          {{ resource.description }}
+        </button>
+        <div v-else class="min-h-10" aria-hidden="true" />
+      </div>
+    </div>
+
+    <div class="px-5 pb-5">
+      <div class="flex min-w-0 items-center justify-between gap-3 border-t border-gray-100 pt-3">
+        <div v-if="resource.label" class="flex min-w-0 flex-1 items-center gap-2 overflow-hidden">
           <Tag class="size-3 shrink-0 text-gray-400" aria-hidden="true" />
           <span class="truncate text-xs text-gray-500">{{ resource.label }}</span>
         </div>
@@ -119,23 +138,38 @@
 
   <tr v-else class="transition-colors hover:bg-gray-50">
     <td class="max-w-[400px] px-6 py-4">
-      <div class="flex min-w-0 items-center gap-3">
-        <div class="shrink-0">
+      <div class="group/edit flex min-w-0 items-center gap-3">
+        <button
+          type="button"
+          class="shrink-0 rounded transition-opacity group-hover/edit:opacity-70"
+          @click="emit('edit', resource.id)"
+        >
           <ResourceThumbnail :item="resource" />
-        </div>
+        </button>
         <div class="min-w-0 flex-1">
-          <h4 class="truncate text-sm font-medium text-gray-900">{{ resource.title }}</h4>
-          <p v-if="resource.description" class="truncate text-xs text-gray-500">
+          <button
+            type="button"
+            class="block w-full truncate text-left text-sm font-medium text-gray-900 transition-opacity group-hover/edit:opacity-70"
+            @click="emit('edit', resource.id)"
+          >
+            {{ resource.title }}
+          </button>
+          <button
+            v-if="resource.description"
+            type="button"
+            class="block w-full truncate text-left text-xs text-gray-500 transition-opacity group-hover/edit:opacity-70"
+            @click="emit('edit', resource.id)"
+          >
             {{ resource.description }}
-          </p>
+          </button>
         </div>
       </div>
     </td>
-    <td class="whitespace-nowrap px-6 py-4">
-      <ResourceTypeBadge :type="resource.type" />
-    </td>
     <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
       {{ resource.label || '—' }}
+    </td>
+    <td class="whitespace-nowrap px-6 py-4">
+      <ResourceTypeBadge :type="resource.type" />
     </td>
     <td class="whitespace-nowrap px-6 py-4">
       <span

@@ -1,5 +1,9 @@
 <template>
-  <Story title="Resource Index Item" group="resources" :layout="{ type: 'grid', width: 900 }">
+  <Story
+    title="Resource Index Item"
+    group="resources"
+    :layout="{ type: 'grid', width: 900 }"
+  >
     <Variant title="Grid / Video">
       <ResourceIndexItem
         :resource="resource('r1')"
@@ -60,27 +64,49 @@
       />
     </Variant>
 
+    <Variant title="Grid / Very long label">
+      <ResourceIndexItem
+        :resource="withVeryLongLabel"
+        view-mode="grid"
+        @edit="onEdit"
+        @preview="onPreview"
+        @delete="onDelete"
+      />
+    </Variant>
+
     <Variant title="List / Video">
       <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white">
         <table class="w-full min-w-[720px] table-auto">
           <thead class="border-b border-gray-200 bg-gray-50">
             <tr>
-              <th class="max-w-[400px] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="max-w-[400px] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Resource
               </th>
-              <th class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                Type
-              </th>
-              <th class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Label
               </th>
-              <th class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
+                Type
+              </th>
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Visibility
               </th>
-              <th class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Updated
               </th>
-              <th class="whitespace-nowrap px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="whitespace-nowrap px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Actions
               </th>
             </tr>
@@ -103,22 +129,34 @@
         <table class="w-full min-w-[720px] table-auto">
           <thead class="border-b border-gray-200 bg-gray-50">
             <tr>
-              <th class="max-w-[400px] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="max-w-[400px] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Resource
               </th>
-              <th class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                Type
-              </th>
-              <th class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Label
               </th>
-              <th class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
+                Type
+              </th>
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Visibility
               </th>
-              <th class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Updated
               </th>
-              <th class="whitespace-nowrap px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="whitespace-nowrap px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Actions
               </th>
             </tr>
@@ -141,22 +179,34 @@
         <table class="w-full min-w-[720px] table-auto">
           <thead class="border-b border-gray-200 bg-gray-50">
             <tr>
-              <th class="max-w-[400px] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="max-w-[400px] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Resource
               </th>
-              <th class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                Type
-              </th>
-              <th class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Label
               </th>
-              <th class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
+                Type
+              </th>
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Visibility
               </th>
-              <th class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Updated
               </th>
-              <th class="whitespace-nowrap px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th
+                class="whitespace-nowrap px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
                 Actions
               </th>
             </tr>
@@ -192,6 +242,13 @@ const videoWithoutImage: ResourceIndexItemType = {
 const withoutDescription: ResourceIndexItemType = {
   ...resource('r1'),
   description: null,
+};
+
+const withVeryLongLabel: ResourceIndexItemType = {
+  ...resource('r4'),
+  label:
+    'This is an intentionally very long label to verify truncation behavior in the grid footer metadata row',
+  visibility: 'guests',
 };
 
 const onEdit = (id: string) => {
