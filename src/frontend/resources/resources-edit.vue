@@ -7,7 +7,7 @@
           <StudioButton
             v-if="!resource.id"
             label="Create Resource"
-            :disabled="isSaving"
+            :disabled="isSaving || !canCreate"
             variant="secondary"
             @click="save"
           />
@@ -188,6 +188,23 @@ const visibility = ref<VisibilityType>(
   model.getField('visibility', 'public') as VisibilityType,
 );
 const isSaving = ref(false);
+
+const hasText = (value: unknown): boolean =>
+  typeof value === 'string' && value.trim().length > 0;
+
+const canCreate = computed(() => {
+  const payload = model.model as ResourcePayload;
+
+  return (
+    hasText(payload.title) ||
+    hasText(payload.description) ||
+    hasText(payload.url) ||
+    hasText(payload.content) ||
+    hasText(payload.video?.url ?? '') ||
+    hasText(payload.imageUrl) ||
+    hasText(payload.label)
+  );
+});
 
 const isSafeReturnPath = (value: string): boolean => /^\/(?!\/)/.test(value);
 const returnTo = (() => {

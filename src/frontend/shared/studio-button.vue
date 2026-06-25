@@ -14,10 +14,19 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
+export type StudioButtonVariant =
+  | 'primary'
+  | 'outline'
+  | 'secondary'
+  | 'green'
+  | 'blue'
+  | 'gray'
+  | 'red';
+
 const props = withDefaults(
   defineProps<{
     label: string;
-    variant?: 'outline' | 'primary' | 'secondary';
+    variant?: StudioButtonVariant;
     disabled?: boolean;
   }>(),
   {
@@ -30,15 +39,16 @@ const emit = defineEmits<{
   (e: 'click'): void;
 }>();
 
-const variantClasses = computed(() => {
-  if (props.variant === 'outline') {
-    return 'border border-studio_forest_green bg-transparent text-studio_forest_green hover:bg-studio_forest_green/5';
-  }
+const variantClassMap: Record<StudioButtonVariant, string> = {
+  primary: 'bg-studio_forest_green text-studio_lime hover:bg-studio_forest_green/90',
+  outline:
+    'border border-studio_forest_green bg-transparent text-studio_forest_green hover:bg-studio_forest_green/5',
+  secondary: 'bg-blue-600 text-white hover:bg-blue-700',
+  green: 'bg-green-500 text-white hover:bg-green-400',
+  blue: 'bg-blue-500 text-white hover:bg-blue-400',
+  gray: 'bg-gray-200 text-gray-700 hover:bg-gray-300',
+  red: 'bg-red-500 text-white hover:bg-red-400',
+};
 
-  if (props.variant === 'secondary') {
-    return 'text-white bg-blue-600 hover:bg-blue-700';
-  }
-
-  return 'bg-studio_forest_green text-studio_lime hover:bg-studio_forest_green/90';
-});
+const variantClasses = computed(() => variantClassMap[props.variant]);
 </script>

@@ -6,7 +6,7 @@
           <StudioButton
             v-if="props.hasNoContent"
             label="Delete"
-            variant="outline"
+            variant="red"
             :disabled="isSaving"
             @click="deleteStory"
           >
@@ -21,7 +21,7 @@
           <StudioButton
             v-if="!isPublished"
             label="Publish"
-            variant="secondary"
+            variant="green"
             :disabled="isSaving"
             @click="publishStory"
           />

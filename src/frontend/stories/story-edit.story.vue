@@ -169,10 +169,10 @@ Saving posts attached resource IDs to the story localisation.
 
 ## Variants
 
-- **Save changes** — published story with content; shows Save Changes only
-- **Save and publish** — unpublished story with content; shows Save Changes and Publish
-- **Delete and save** — empty story, published; shows Delete and Save Changes
-- **Delete, save and publish** — empty story, unpublished; shows all three header actions
+- **Save changes** — published story with content; shows Save Changes only (`secondary`)
+- **Save and publish** — unpublished story with content; shows Save Changes (`secondary`) and Publish (`green`)
+- **Delete and save** — empty story, published; shows Delete (`red`) and Save Changes (`secondary`)
+- **Delete, save and publish** — empty story, unpublished; shows Delete (`red`), Save Changes (`secondary`), and Publish (`green`)
 
 ## Usage
 
