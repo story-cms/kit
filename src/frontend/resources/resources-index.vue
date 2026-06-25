@@ -1,27 +1,14 @@
 <template>
   <AppLayout>
     <template #header>
-      <ContentHeader title="Manage Resources">
-        <template #description>
-          <div class="text-xs font-medium uppercase tracking-wide text-gray-500">
-            Resource Library
-          </div>
-        </template>
+      <GlassHeader title="Resource Library" subtitle="Manage Resources">
         <template #actions>
-          <div class="flex items-center gap-x-6">
-            <ListSwitcher :is-list="isList" @toggle="isList = !isList" />
-            <button
-              type="button"
-              class="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
-              @click="createResource"
-            >
-              <Plus class="size-4" aria-hidden="true" />
-              Create Resource
-            </button>
-          </div>
+          <StudioButton label="Create Resource" variant="primary" @click="createResource">
+            <Plus class="size-4" aria-hidden="true" />
+          </StudioButton>
         </template>
-        <template #extra-actions>
-          <div class="flex flex-col gap-4 pb-4">
+        <template #controls>
+          <div class="flex flex-col gap-4">
             <div class="flex items-center gap-3">
               <div class="relative flex-1">
                 <Search
@@ -35,19 +22,22 @@
                   class="w-full rounded-lg border border-gray-300 py-2.5 pl-11 pr-4 focus:border-transparent focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-              <button
-                type="button"
-                class="flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors"
-                :class="
-                  showFilters
-                    ? 'border-blue-200 bg-blue-50 text-blue-600'
-                    : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
-                "
-                @click="showFilters = !showFilters"
-              >
-                <SlidersHorizontal class="size-4" aria-hidden="true" />
-                Filters
-              </button>
+              <div class="flex shrink-0 items-center gap-2">
+                <button
+                  type="button"
+                  class="flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors"
+                  :class="
+                    showFilters
+                      ? 'border-blue-200 bg-blue-50 text-blue-600'
+                      : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+                  "
+                  @click="showFilters = !showFilters"
+                >
+                  <SlidersHorizontal class="size-4" aria-hidden="true" />
+                  Filters
+                </button>
+                <ListSwitcher :is-list="isList" @toggle="isList = !isList" />
+              </div>
             </div>
 
             <div
@@ -99,10 +89,10 @@
             </div>
           </div>
         </template>
-      </ContentHeader>
+      </GlassHeader>
     </template>
 
-    <section class="px-3">
+    <section class="mt-3 px-3">
       <div class="mb-4 flex items-center justify-between">
         <p class="text-sm text-gray-600">
           <span class="font-medium">{{ filteredResources.length }}</span>
@@ -213,7 +203,8 @@ import {
 } from '../../types';
 import { useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
-import ContentHeader from '../shared/content-header.vue';
+import GlassHeader from '../shared/glass-header.vue';
+import StudioButton from '../shared/studio-button.vue';
 import ListSwitcher from '../shared/list-switcher.vue';
 import ResourceIndexItemCard from './resource-index-item.vue';
 import RemoveResourceModal from './remove-resource-modal.vue';
