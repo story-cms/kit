@@ -1,6 +1,6 @@
 <template>
   <Story title="Story Edit" group="stories">
-    <Variant title="Default" :setup-app="loadNormalData">
+    <Variant title="Save changes" :setup-app="loadNormalData">
       <StoryEdit
         :config="sharedProps.config"
         :user="sharedProps.user"
@@ -10,6 +10,48 @@
         :model="storyModel"
         :available-resources="availableResources"
         :has-no-content="false"
+        :providers="{}"
+      />
+    </Variant>
+
+    <Variant title="Save and publish" :setup-app="loadNormalData">
+      <StoryEdit
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :errors="{}"
+        :bookmarks="sharedProps.bookmarks"
+        :model="unpublishedModel"
+        :available-resources="availableResources"
+        :has-no-content="false"
+        :providers="{}"
+      />
+    </Variant>
+
+    <Variant title="Delete and save" :setup-app="loadNormalData">
+      <StoryEdit
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :errors="{}"
+        :bookmarks="sharedProps.bookmarks"
+        :model="deletableModel"
+        :available-resources="availableResources"
+        :has-no-content="true"
+        :providers="{}"
+      />
+    </Variant>
+
+    <Variant title="Delete, save and publish" :setup-app="loadNormalData">
+      <StoryEdit
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :errors="{}"
+        :bookmarks="sharedProps.bookmarks"
+        :model="deletableUnpublishedModel"
+        :available-resources="availableResources"
+        :has-no-content="true"
         :providers="{}"
       />
     </Variant>
@@ -27,6 +69,34 @@
         :providers="{}"
       />
     </Variant>
+
+    <Variant title="Resources tab" :setup-app="loadResourcesTab">
+      <StoryEdit
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :errors="{}"
+        :bookmarks="sharedProps.bookmarks"
+        :model="storyModel"
+        :available-resources="availableResources"
+        :has-no-content="false"
+        :providers="{}"
+      />
+    </Variant>
+
+    <Variant title="Validation errors on tabs" :setup-app="loadNormalData">
+      <StoryEdit
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :errors="validationErrors"
+        :bookmarks="sharedProps.bookmarks"
+        :model="validationErrorModel"
+        :available-resources="availableResources"
+        :has-no-content="false"
+        :providers="{}"
+      />
+    </Variant>
   </Story>
 </template>
 
@@ -34,14 +104,26 @@
 import StoryEdit from './story-edit.vue';
 import {
   availableResources,
-  listModel,
   sampleAttachedResources,
   sharedProps,
   miniSidebar,
 } from '../test/mocks';
 import { useSharedStore } from '../store';
 import type { StoryHandler } from '../shared/helpers';
-import type { StoryEditProps } from '../../types';
+import type { StoryEditProps, StorySection } from '../../types';
+
+const sampleStorySections: StorySection[] = [
+  {
+    id: 'section-1',
+    title: 'Introduction',
+    description: 'Opening section of the gospel.',
+  },
+  {
+    id: 'section-2',
+    title: 'The Word',
+    description: 'In the beginning was the Word.',
+  },
+];
 
 const storyModel: StoryEditProps['model'] = {
   id: 1,
@@ -59,7 +141,7 @@ const storyModel: StoryEditProps['model'] = {
   visibility: 'public',
   slug: 'gospel-of-john',
   template: 'devotion',
-  sections: listModel.sections,
+  sections: sampleStorySections,
   resources: sampleAttachedResources,
 };
 
@@ -67,6 +149,48 @@ const emptyResourcesModel: StoryEditProps['model'] = {
   ...storyModel,
   title: 'Untitled Story',
   resources: [],
+};
+
+const unpublishedModel: StoryEditProps['model'] = {
+  ...storyModel,
+  isPublished: false,
+};
+
+const deletableModel: StoryEditProps['model'] = {
+  ...storyModel,
+  title: 'Untitled Story',
+  resources: [],
+  isPublished: true,
+};
+
+const deletableUnpublishedModel: StoryEditProps['model'] = {
+  ...deletableModel,
+  isPublished: false,
+};
+
+const sectionsWithValidationErrors: StorySection[] = [
+  {
+    id: 'section-1',
+    title: 'Introduction',
+    description: 'Opening section of the gospel.',
+  },
+  {
+    id: 'section-2',
+    title: '',
+    description: 'Section missing a title.',
+  },
+];
+
+const validationErrorModel: StoryEditProps['model'] = {
+  ...storyModel,
+  isPublished: false,
+  coverImage: '',
+  sections: sectionsWithValidationErrors,
+};
+
+const validationErrors = {
+  'bundle.coverImage': ['The cover image field must have at least 1 character'],
+  'bundle.sections.1.title': ['The title field must have at least 1 character'],
 };
 
 const loadNormalData: StoryHandler = ({ app, story, variant }): void => {
@@ -79,6 +203,13 @@ const loadNormalData: StoryHandler = ({ app, story, variant }): void => {
 
   miniSidebar({ app, story, variant });
 };
+
+const loadResourcesTab: StoryHandler = (context): void => {
+  const url = new URL(window.location.href);
+  url.searchParams.set('tab', 'Resources');
+  window.history.replaceState({}, '', url.toString());
+  loadNormalData(context);
+};
 </script>
 
 <docs lang="md">
@@ -86,6 +217,14 @@ const loadNormalData: StoryHandler = ({ app, story, variant }): void => {
 
 Full-page story editor with tabbed navigation for Details, Sections, and Resources.
 Saving posts attached resource IDs to the story localisation.
+
+## Variants
+
+- **Save changes** — published story with content; shows Save Changes only (`secondary`)
+- **Save and publish** — unpublished story with content; shows Save Changes (`secondary`) and Publish (`green`)
+- **Delete and save** — empty story, published; shows Delete (`red`) and Save Changes (`secondary`)
+- **Delete, save and publish** — empty story, unpublished; shows Delete (`red`), Save Changes (`secondary`), and Publish (`green`)
+- **Validation errors on tabs** — failed publish validation; Details and Sections tabs show error indicators and inline field messages
 
 ## Usage
 

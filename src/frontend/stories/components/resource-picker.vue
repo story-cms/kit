@@ -1,17 +1,17 @@
 <template>
   <div class="w-full min-w-0 space-y-6">
     <div class="flex min-w-0 items-center gap-3">
-      <div class="relative min-w-0 flex-1">
+      <div class="relative min-w-0 flex-1 pl-[2px]">
         <Search
-          class="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-gray-400"
+          class="absolute left-3 top-1/2 size-5 -translate-y-1/2 text-gray-400"
           aria-hidden="true"
         />
         <input
           ref="searchInput"
           v-model="searchQuery"
           type="text"
-          class="w-full rounded-lg border border-gray-300 py-2.5 pl-10 pr-4 text-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Search resources to attach..."
+          class="w-full rounded-lg border border-gray-300 py-2.5 pl-11 pr-4 focus:border-transparent focus:ring-2 focus:ring-blue-500"
           @focus="showSearch = true"
           @input="showSearch = true"
         />

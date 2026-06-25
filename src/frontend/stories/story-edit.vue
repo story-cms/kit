@@ -1,57 +1,68 @@
 <template>
   <AppLayout>
     <template #header>
-      <ContentHeader :title="title || 'New Story'">
+      <GlassHeader title="Edit Story" :subtitle="headerSubtitle">
         <template #actions>
-          <ActionButton v-if="props.hasNoContent" icon="trash" @tap="deleteStory" />
-          <PillButton label="Save" variant="green" @click="saveStory" />
-
-          <PillButton
+          <StudioButton
+            v-if="props.hasNoContent"
+            label="Delete"
+            variant="red"
+            :disabled="isSaving"
+            @click="deleteStory"
+          >
+            <Trash2 class="size-4" aria-hidden="true" />
+          </StudioButton>
+          <StudioButton
+            label="Save Changes"
+            variant="secondary"
+            :disabled="isSaving"
+            @click="saveStory"
+          />
+          <StudioButton
             v-if="!isPublished"
             label="Publish"
             variant="green"
+            :disabled="isSaving"
             @click="publishStory"
           />
         </template>
-        <template #extra-actions>
-          <div class="pb-6">
-            <NavigationPane
-              :tabs="storyEditTabs"
-              :current-tab="currentStoryTab"
-              @change="onStoryTabChange"
-            />
-          </div>
+        <template #controls>
+          <TabNavigation
+            :tabs="storyEditTabs"
+            :current-tab="currentStoryTab"
+            @change="onStoryTabChange"
+          />
         </template>
-      </ContentHeader>
+      </GlassHeader>
     </template>
 
-    <section>
-      <div class="relative grid grid-cols-[1fr_375px] gap-x-4">
-        <form class="space-y-8">
-          <StoryEditDetails
-            v-if="currentStoryTab === 'Details'"
-            :is-translation="shared.isTranslation"
-          />
-          <StoryEditSections
-            v-if="currentStoryTab === `${sectionType ?? 'Section'}s`"
-            :section-type="sectionType"
-            :tab-icon="currentStoryTabIcon"
-          />
-          <StoryEditResources
-            v-if="currentStoryTab === 'Resources'"
-            v-model:resources="attachedResources"
-            :available-resources="availableResources"
-            @create="createResource"
-          />
-        </form>
-      </div>
-    </section>
+    <div class="relative mt-3">
+      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="form-panel">
+        <StoryEditDetails
+          v-if="currentStoryTab === 'Details'"
+          :is-translation="shared.isTranslation"
+        />
+        <StoryEditSections
+          v-if="currentStoryTab === `${sectionType ?? 'Section'}s`"
+          :section-type="sectionType"
+          :tab-icon="currentStoryTabIcon"
+        />
+        <StoryEditResources
+          v-if="currentStoryTab === 'Resources'"
+          v-model:resources="attachedResources"
+          :available-resources="availableResources"
+          @create="createResource"
+        />
+      </form>
+    </div>
   </AppLayout>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import { storeToRefs } from 'pinia';
 import { router } from '@inertiajs/vue3';
+import { Trash2 } from '@lucide/vue';
 
 import type {
   NavigationPaneTab,
@@ -62,14 +73,17 @@ import type {
 import { ResponseStatus } from '../../types';
 import { useSharedStore, useWidgetsStore, useModelStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
-import ContentHeader from '../shared/content-header.vue';
-import PillButton from '../shared/pill-button.vue';
-import ActionButton from '../shared/action-button.vue';
-import NavigationPane from '../shared/navigation-pane.vue';
+import GlassHeader from '../shared/glass-header.vue';
+import StudioButton from '../shared/studio-button.vue';
+import TabNavigation from '../shared/tab-navigation.vue';
 import StoryEditDetails from './components/story-edit-details.vue';
 import StoryEditSections from './components/story-edit-sections.vue';
 import StoryEditResources from './components/story-edit-resources.vue';
 import { resourceIds } from './components/resource-utils';
+import {
+  firstStoryEditTabWithError,
+  storyEditTabHasError,
+} from './story-edit-tab-errors';
 
 const resolveStoryTab = (value: string | null, tabs: NavigationPaneTab[]): string => {
   if (!value) return 'Details';
@@ -79,8 +93,11 @@ const resolveStoryTab = (value: string | null, tabs: NavigationPaneTab[]): strin
 
 const props = defineProps<StoryEditProps & SharedPageProps>();
 const shared = useSharedStore();
+const { errors } = storeToRefs(shared);
 shared.setFromProps(props);
-shared.clearErrors();
+if (Object.keys(props.errors ?? {}).length === 0) {
+  shared.clearErrors();
+}
 useWidgetsStore().setProviders(props.providers);
 
 const model = useModelStore();
@@ -88,6 +105,7 @@ model.setModel(props.model);
 
 const attachedResources = ref<ResourceItem[]>([...(props.model.resources ?? [])]);
 const availableResources = props.availableResources ?? [];
+const isSaving = ref(false);
 
 const attachResourceId = new URLSearchParams(window.location.search).get('attachResource');
 if (attachResourceId) {
@@ -111,13 +129,28 @@ model.$subscribe(() => {
   sectionType.value = model.getField('sectionType', 'Section');
 });
 
+const headerSubtitle = computed(() => title.value?.trim() || 'Edit Story');
+
+const sectionTabLabel = computed(() => `${sectionType.value ?? 'Section'}s`);
+
 const storyEditTabs = computed(
-  () =>
-    [
-      { label: 'Details', icon: 'book-open' },
-      { label: `${sectionType.value ?? 'Section'}s`, icon: 'list-bullet' },
-      { label: 'Resources', icon: 'folder' },
-    ] as NavigationPaneTab[],
+  (): NavigationPaneTab[] => [
+    {
+      label: 'Details',
+      icon: 'book-open',
+      hasError: storyEditTabHasError('details', errors.value),
+    },
+    {
+      label: sectionTabLabel.value,
+      icon: 'list-bullet',
+      hasError: storyEditTabHasError('sections', errors.value),
+    },
+    {
+      label: 'Resources',
+      icon: 'folder',
+      hasError: storyEditTabHasError('resources', errors.value),
+    },
+  ],
 );
 
 const initialSectionType = props.model.sectionType || 'Section';
@@ -138,6 +171,24 @@ const currentStoryTabIcon = computed(
 const onStoryTabChange = (tab: string) => {
   currentStoryTab.value = tab;
 };
+
+const focusFirstErroredTab = () => {
+  const tab = firstStoryEditTabWithError(errors.value, sectionTabLabel.value);
+  if (tab) {
+    currentStoryTab.value = tab;
+  }
+};
+
+const validationFailureMessage = (validationErrors: Record<string, string | string[]>) =>
+  Object.keys(validationErrors).length > 0
+    ? 'Some required fields are missing'
+    : 'Something went wrong. Please try again.';
+
+onMounted(() => {
+  if (Object.keys(props.errors ?? {}).length > 0) {
+    focusFirstErroredTab();
+  }
+});
 
 const createResource = () => {
   const params = new URLSearchParams(window.location.search);
@@ -175,6 +226,8 @@ const publishStory = () => {
   if (isPublished.value) return;
 
   shared.clearErrors();
+  isSaving.value = true;
+
   router.post(`/${shared.locale}/story/${props.model.id}`, getPayload(true), {
     preserveScroll: true,
 
@@ -187,15 +240,22 @@ const publishStory = () => {
       shared.addMessage(ResponseStatus.Confirmation, 'Story published successfully!');
     },
 
-    onError: (errors) => {
-      shared.setErrors(errors);
-      shared.addMessage(ResponseStatus.Failure, 'Error publishing story');
+    onError: (validationErrors) => {
+      shared.setErrors(validationErrors);
+      focusFirstErroredTab();
+      shared.addMessage(ResponseStatus.Failure, validationFailureMessage(validationErrors));
+    },
+
+    onFinish: () => {
+      isSaving.value = false;
     },
   });
 };
 
 const saveStory = () => {
   shared.clearErrors();
+  isSaving.value = true;
+
   router.post(`/${shared.locale}/story/${props.model.id}`, getPayload(), {
     preserveScroll: true,
 
@@ -208,9 +268,14 @@ const saveStory = () => {
       shared.addMessage(ResponseStatus.Confirmation, 'Story saved successfully');
     },
 
-    onError: (errors) => {
-      shared.setErrors(errors);
-      shared.addMessage(ResponseStatus.Failure, 'Error saving story');
+    onError: (validationErrors) => {
+      shared.setErrors(validationErrors);
+      focusFirstErroredTab();
+      shared.addMessage(ResponseStatus.Failure, validationFailureMessage(validationErrors));
+    },
+
+    onFinish: () => {
+      isSaving.value = false;
     },
   });
 };

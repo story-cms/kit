@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-8">
+  <div class="space-y-6">
     <PanelList
       :field="sectionsField"
       :is-nested="true"
@@ -38,6 +38,8 @@ const sectionsField = {
       label: 'Description',
       name: 'description',
       widget: 'markdown',
+      noMarkup: true,
+      minimal: true,
       toolbar: [],
     },
   ],

@@ -525,6 +525,8 @@ export interface NavigationPaneTab {
   label: string;
   /** Registered `Icon` name; omitted for label-only tabs. */
   icon?: string;
+  /** When true, tab shows validation error styling. */
+  hasError?: boolean;
 }
 
 export interface StatMetric {
