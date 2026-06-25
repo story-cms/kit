@@ -13,6 +13,15 @@ function createMockHttpContext(inputs: Record<string, unknown>): HttpContext {
   } as HttpContext;
 }
 
+function withoutKey<T extends Record<string, unknown>, K extends keyof T>(
+  obj: T,
+  key: K,
+): Omit<T, K> {
+  const rest = { ...obj };
+  delete rest[key];
+  return rest;
+}
+
 const validCreateData = {
   title: 'Gospel of John',
   description: 'A study through John',
@@ -82,7 +91,7 @@ test.describe('Story Validator', () => {
 
     test('accepts create without description', async () => {
       const validator = new StoryCreateValidator();
-      const { description: _description, ...data } = validCreateData;
+      const data = withoutKey(validCreateData, 'description');
       const result = await validator.validate(data);
 
       expect(result.bundle.title).toBe('Gospel of John');
@@ -124,7 +133,7 @@ test.describe('Story Validator', () => {
       });
 
       test('accepts draft without description', async () => {
-        const { description: _description, ...data } = validDraftUpdateData;
+        const data = withoutKey(validDraftUpdateData, 'description');
         const ctx = createMockHttpContext(data);
         const validator = new StoryUpdateValidator(ctx);
         const result = await validator.validate(data);
@@ -169,7 +178,7 @@ test.describe('Story Validator', () => {
       });
 
       test('accepts publish without description', async () => {
-        const { description: _description, ...data } = validPublishUpdateData;
+        const data = withoutKey(validPublishUpdateData, 'description');
         const ctx = createMockHttpContext(data);
         const validator = new StoryUpdateValidator(ctx);
         const result = await validator.validate(data);
