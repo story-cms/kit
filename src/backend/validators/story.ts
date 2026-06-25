@@ -5,7 +5,7 @@ import type { SchemaTypes } from '@vinejs/vine/types';
 const draft = {
   title: vine.string().trim().minLength(1),
   coverImage: vine.string().optional(),
-  description: vine.string().trim().minLength(1),
+  description: vine.string().trim().optional(),
   chapterLimit: vine.number().min(1),
   tags: vine.string().optional(),
   storyType: vine.string().trim().minLength(1),
@@ -26,7 +26,7 @@ const draft = {
 const live = {
   title: vine.string().trim().minLength(1),
   coverImage: vine.string().trim().minLength(1),
-  description: vine.string().trim().minLength(1),
+  description: vine.string().trim().optional(),
   chapterLimit: vine.number().min(1),
   tags: vine.string().optional(),
   storyType: vine.string().trim().minLength(1),
