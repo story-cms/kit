@@ -38,6 +38,8 @@ const sectionsField = {
       label: 'Description',
       name: 'description',
       widget: 'markdown',
+      noMarkup: true,
+      minimal: true,
       toolbar: [],
     },
   ],

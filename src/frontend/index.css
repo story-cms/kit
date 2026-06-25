@@ -42,7 +42,7 @@
   }
 
   .form-panel .EasyMDEContainer {
-    @apply overflow-hidden rounded-[10px];
+    @apply rounded-[10px];
   }
 
   .form-panel .editor-toolbar {
