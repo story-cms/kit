@@ -189,9 +189,9 @@ const headerTitle = computed(() =>
   resource.value.id ? 'Edit Resource' : 'Add Resource',
 );
 const headerSubtitle = computed(() => {
-  if (!resource.value.id) return 'Create Resource';
-  const payload = model.model as ResourcePayload;
-  return payload.title || 'Edit Resource';
+  const title = ((model.model as ResourcePayload).title ?? '').trim();
+  if (!resource.value.id) return title || 'Create Resource';
+  return title || 'Edit Resource';
 });
 
 const resourceTypes: {
