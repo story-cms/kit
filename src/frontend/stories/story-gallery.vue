@@ -100,10 +100,6 @@ const canAddStories = computed(
     shared.locale === sourceLocale.value,
 );
 
-console.log('sourceLocale', sourceLocale.value);
-console.log('shared.locale', shared.locale);
-console.log('canAddStories', canAddStories.value);
-
 const addStory = () => {
   router.get(`/${shared.locale}/story/create`);
 };
