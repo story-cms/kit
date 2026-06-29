@@ -334,6 +334,76 @@ export function parseLanguageSpecification(spec: LanguageSpecification): {
   return { name: language, nativeName: language, locale };
 }
 
+/** Return the logical parent path for sidebar back navigation, or null to fall back to browser history. */
+export function parentPathForBack(pathname: string): string | null {
+  const segments = pathname.split('/').filter(Boolean);
+  if (segments.length === 0) return null;
+
+  const locale = segments[0];
+  const section = segments[1];
+
+  if (section === 'dashboard' && segments.length === 2) return null;
+
+  if (section === 'story') {
+    if (segments.length === 2) return `/${locale}/dashboard`;
+    if (segments[2] === 'create') return `/${locale}/story`;
+    if (segments.length === 3) return `/${locale}/story`;
+    if (segments.length === 4 && segments[3] === 'edit') {
+      return `/${locale}/story/${segments[2]}`;
+    }
+    if (segments[3] === 'draft' || segments[3] === 'chapter') {
+      return `/${locale}/story/${segments[2]}`;
+    }
+  }
+
+  if (section === 'page') {
+    if (segments.length === 2) return `/${locale}/dashboard`;
+    if (segments[2] === 'create') return `/${locale}/page`;
+    if (segments.length === 4 && segments[3] === 'edit') return `/${locale}/page`;
+  }
+
+  if (section === 'resource') {
+    if (segments.length === 2) return `/${locale}/dashboard`;
+    if (segments[2] === 'create') return `/${locale}/resource`;
+    if (segments.length === 4 && segments[3] === 'edit') return `/${locale}/resource`;
+  }
+
+  if (section === 'stream') {
+    if (segments.length === 2) return `/${locale}/dashboard`;
+    if (segments.length === 3) return `/${locale}/stream`;
+    if (segments[3] === 'drop' && segments[4] === 'create') {
+      return `/${locale}/stream/${segments[2]}`;
+    }
+  }
+
+  if (section === 'invitation') {
+    if (segments.length === 2) return `/${locale}/dashboard`;
+    if (segments[2] === 'create') return `/${locale}/invitation`;
+    if (segments[3] === 'edit' || segments[3] === 'stats') {
+      return `/${locale}/invitation`;
+    }
+  }
+
+  if (section === 'settings') {
+    if (segments.length === 2) return `/${locale}/dashboard`;
+    if (segments[2] === 'languages' && segments[3] === 'edit') {
+      return `/${locale}/settings`;
+    }
+  }
+
+  if (section === 'audience') {
+    if (segments.length === 2) return `/${locale}/dashboard`;
+    if (segments[2] === 'users' || segments[2] === 'export') {
+      return `/${locale}/audience`;
+    }
+  }
+
+  if (section === 'user' && segments.length === 2) return `/${locale}/dashboard`;
+  if (section === 'ui' && segments.length === 2) return `/${locale}/dashboard`;
+
+  return null;
+}
+
 /** Redirect chapter preview paths to the story index before switching locale. */
 export function normalizePathForLanguageSwitch(pathname: string): string {
   const segments = pathname.split('/').filter(Boolean);
