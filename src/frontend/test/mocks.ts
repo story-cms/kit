@@ -4495,6 +4495,8 @@ export const mockIndexResources: ResourceIndexItem[] = shuffle(
     ...resource,
     createdAt: `2024-0${Math.min(index + 1, 9)}-15`,
     updatedAt: `2024-0${Math.min(index + 1, 9)}-${15 + (index % 14)}`,
+    usedInCount:
+      resource.id === 'r1' ? 2 : resource.id === 'r4' ? 1 : resource.id === 'r6' ? 3 : 0,
   })),
 );
 
@@ -4532,11 +4534,18 @@ const toEditResource = (
   createdAt: string,
   updatedAt: string,
   bundle: Record<string, unknown>,
+  usedInStories: ResourceEditProps['usedInStories'] = [],
 ): ResourceEditProps => ({
   providers: mockResourceProviders,
   resource: { ...resource, createdAt, updatedAt },
+  usedInStories,
   bundle,
 });
+
+export const mockUsedInStories: ResourceEditProps['usedInStories'] = [
+  { storyId: 1, title: 'Biblical Foundations' },
+  { storyId: 2, title: 'The Gospel of John' },
+];
 
 export const mockNewResourceEdit: ResourceEditProps = {
   providers: mockResourceProviders,
@@ -4545,6 +4554,7 @@ export const mockNewResourceEdit: ResourceEditProps = {
     createdAt: '',
     updatedAt: '',
   },
+  usedInStories: [],
   bundle: {
     title: '',
     type: 'url',
@@ -4589,7 +4599,13 @@ export const mockEditTextResource: ResourceEditProps = toEditResource(
     content:
       '## Overview\n\nThis article introduces the Synoptic Problem and compares major scholarly hypotheses.\n\n- Two-Source hypothesis\n- Farrer hypothesis\n- Augustinian hypothesis',
   },
+  mockUsedInStories,
 );
+
+export const mockEditTextResourceWithUsages: ResourceEditProps = {
+  ...mockEditTextResource,
+  usedInStories: mockUsedInStories,
+};
 
 export const mockEditUrlLinkResource: ResourceEditProps = toEditResource(
   availableResources[3],
@@ -4605,6 +4621,11 @@ export const mockEditUrlLinkResource: ResourceEditProps = toEditResource(
     url: availableResources[3].url ?? 'https://example.com/timeline',
   },
 );
+
+export const mockEditUrlLinkResourceEmptyUsages: ResourceEditProps = {
+  ...mockEditUrlLinkResource,
+  usedInStories: [],
+};
 
 export const mockResourceEditErrors: Record<string, string[]> = {
   'bundle.title': ['A resource must have a title'],

@@ -22,6 +22,28 @@
       />
     </Variant>
 
+    <Variant title="With story usages" :setup-app="miniSidebar">
+      <ResourcesEdit
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :errors="sharedProps.errors"
+        :bookmarks="sharedProps.bookmarks"
+        v-bind="mockEditTextResourceWithUsages"
+      />
+    </Variant>
+
+    <Variant title="Empty usages" :setup-app="miniSidebar">
+      <ResourcesEdit
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :errors="sharedProps.errors"
+        :bookmarks="sharedProps.bookmarks"
+        v-bind="mockEditUrlLinkResourceEmptyUsages"
+      />
+    </Variant>
+
     <Variant title="Edit URL" :setup-app="miniSidebar">
       <ResourcesEdit
         :config="sharedProps.config"
@@ -66,6 +88,8 @@ import {
   mockEditVideoResource,
   mockEditTextResource,
   mockEditUrlLinkResource,
+  mockEditTextResourceWithUsages,
+  mockEditUrlLinkResourceEmptyUsages,
   mockResourceEditErrors,
 } from '../test/mocks';
 </script>

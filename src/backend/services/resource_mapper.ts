@@ -62,5 +62,6 @@ export const toResourceIndexItem = (model: ResourceRow): ResourceIndexItem => {
     ...toResourceItem(model),
     createdAt: formatResourceDate(model.createdAt),
     updatedAt: formatResourceDate(model.updatedAt),
+    usedInCount: 0,
   };
 };

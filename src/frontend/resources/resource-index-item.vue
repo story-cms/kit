@@ -59,6 +59,14 @@
           class="flex shrink-0 items-center gap-2"
           :class="{ 'ml-auto': !resource.label }"
         >
+          <span
+            v-if="resource.usedInCount > 0"
+            class="inline-flex shrink-0 items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700"
+            :title="usedInTitle(resource.usedInCount)"
+          >
+            <Link2 class="size-3" aria-hidden="true" />
+            {{ resource.usedInCount }}
+          </span>
           <ResourceTypeBadge :type="resource.type" />
           <span
             class="rounded px-2 py-0.5 text-xs font-medium capitalize"
@@ -189,6 +197,7 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import {
   ExternalLink,
   FileText,
+  Link2,
   MoreVertical,
   SquarePen,
   Tag,
@@ -210,6 +219,9 @@ const emit = defineEmits<{
   edit: [id: string];
   delete: [id: string];
 }>();
+
+const usedInTitle = (count: number): string =>
+  count === 1 ? 'Attached to 1 story' : `Attached to ${count} stories`;
 
 const formatListDate = (value: string): string => {
   const parsed = DateTime.fromISO(value);

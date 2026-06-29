@@ -34,23 +34,35 @@
         {{ item.description }}
       </p>
     </div>
-    <button
-      v-if="!readOnly"
-      type="button"
-      class="shrink-0 rounded p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
-      aria-label="Remove resource"
-      @click="emit('remove')"
-    >
-      <X class="size-4" />
-    </button>
+    <div class="flex shrink-0 items-center gap-1">
+      <button
+        type="button"
+        class="rounded p-1.5 text-gray-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+        aria-label="Edit resource"
+        @click="editResource"
+      >
+        <SquarePen class="size-4" aria-hidden="true" />
+      </button>
+      <button
+        v-if="!readOnly"
+        type="button"
+        class="rounded p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
+        aria-label="Remove resource"
+        @click="emit('remove')"
+      >
+        <X class="size-4" aria-hidden="true" />
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { GripVertical, X } from '@lucide/vue';
+import { router } from '@inertiajs/vue3';
+import { GripVertical, SquarePen, X } from '@lucide/vue';
 import ResourceThumbnail from './resource-thumbnail.vue';
 import ResourceTypeBadge from './resource-type-badge.vue';
 import type { ResourceItem } from '../../../types';
+import { useSharedStore } from '../../store';
 
 const props = defineProps<{
   item: ResourceItem;
@@ -65,6 +77,17 @@ const emit = defineEmits<{
   drop: [];
   dragend: [];
 }>();
+
+const shared = useSharedStore();
+
+const editResource = () => {
+  const params = new URLSearchParams(window.location.search);
+  params.set('tab', 'Resources');
+  const returnTo = `${window.location.pathname}?${params.toString()}`;
+  router.visit(
+    `/${shared.locale}/resource/${props.item.id}/edit?returnTo=${encodeURIComponent(returnTo)}`,
+  );
+};
 
 const onDragStart = () => {
   if (!props.readOnly) emit('dragstart');

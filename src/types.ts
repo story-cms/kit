@@ -176,6 +176,7 @@ export interface ResourceItem {
 export interface ResourceIndexItem extends ResourceItem {
   createdAt: string;
   updatedAt: string;
+  usedInCount: number;
 }
 
 export interface ResourceMeta {
@@ -188,10 +189,16 @@ export interface ResourceIndexProps {
   resources: ResourceIndexItem[];
 }
 
+export interface ResourceStoryUsage {
+  storyId: number;
+  title: string;
+}
+
 export interface ResourceEditProps {
   providers: Providers;
   resource: ResourceMeta;
   bundle: any;
+  usedInStories: ResourceStoryUsage[];
 }
 
 export type ResourcePayload = {

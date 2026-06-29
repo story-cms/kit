@@ -7,6 +7,7 @@ import type {
   ResourceBundle,
   ResourceIndexItem,
   ResourcePayload,
+  ResourceStoryUsage,
   TextBundle,
   VideoBundle,
 } from '../../types.js';
@@ -63,9 +64,30 @@ export class ResourceService {
     return models.map((model) => this.toResourceItem(model));
   }
 
+  public async countStoryUsagesByLocale(locale: string): Promise<Map<string, number>> {
+    const localisations = await StoryLocalisation.query()
+      .where('locale', locale)
+      .select('resources');
+
+    const counts = new Map<string, number>();
+
+    for (const localisation of localisations) {
+      for (const resourceId of localisation.resources) {
+        counts.set(resourceId, (counts.get(resourceId) ?? 0) + 1);
+      }
+    }
+
+    return counts;
+  }
+
   public async listIndexItems(locale: string): Promise<ResourceIndexItem[]> {
     const models = await Resource.query().where('locale', locale).orderBy('title', 'asc');
-    return models.map((model) => this.toIndexItem(model));
+    const usageCounts = await this.countStoryUsagesByLocale(locale);
+
+    return models.map((model) => ({
+      ...this.toIndexItem(model),
+      usedInCount: usageCounts.get(model.id) ?? 0,
+    }));
   }
 
   public async hydrate(ids: string[]): Promise<ResourceItem[]> {
@@ -138,6 +160,21 @@ export class ResourceService {
       model.useTransaction(trx);
       await model.delete();
     });
+  }
+
+  public async listStoryUsages(
+    resourceId: string,
+    locale: string,
+  ): Promise<ResourceStoryUsage[]> {
+    const localisations = await StoryLocalisation.query()
+      .where('locale', locale)
+      .whereRaw('resources @> ?::jsonb', [JSON.stringify([resourceId])])
+      .orderBy('title', 'asc');
+
+    return localisations.map((localisation) => ({
+      storyId: localisation.storyId,
+      title: localisation.title,
+    }));
   }
 
   public async updateStoryResources(
