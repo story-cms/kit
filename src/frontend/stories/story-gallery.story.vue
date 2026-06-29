@@ -21,12 +21,23 @@
         :stories="sampleStories"
       />
     </Variant>
+
+    <Variant title="Translation locale" :setup-app="miniSidebar">
+      <StoryGallery
+        :config="configWithMultiStory"
+        :user="sharedProps.user"
+        :language="german"
+        :errors="sharedProps.errors"
+        :bookmarks="sharedProps.bookmarks"
+        :stories="sampleStories"
+      />
+    </Variant>
   </Story>
 </template>
 
 <script setup lang="ts">
 import StoryGallery from './story-gallery.vue';
-import { sharedProps, miniSidebar } from '../test/mocks';
+import { german, sharedProps, miniSidebar } from '../test/mocks';
 import type { StoryIndexItem, Subscription, UiConfig } from '../../types';
 
 const configWithMultiStory: UiConfig = {
@@ -86,7 +97,7 @@ The Story Gallery component displays a collection of stories in either grid or l
 
 - **Grid/List View Toggle**: Switch between grid and list layouts
 - **Sorting**: Sort by creation date or last updated date
-- **Add Story**: Quick access to create new stories (requires `multi-story` subscription)
+- **Add Story**: Quick access to create new stories (requires `multi-story` subscription and the source locale)
 - **Responsive Design**: Adapts to different screen sizes
 - **RTL Support**: Right-to-left language support
 
@@ -115,6 +126,7 @@ The Story Gallery component displays a collection of stories in either grid or l
 
 - Click the list/grid toggle to switch view modes
 - Use sort buttons to change the order of stories
-- Click the plus button to create a new story (when `multi-story` is in `config.subscriptions`)
+- Click the plus button to create a new story (when `multi-story` is in `config.subscriptions` and you are on the source locale)
+- On translation locales the plus button is hidden (see the **Translation locale** variant)
 - Click on individual story items to view/edit them
 </docs>

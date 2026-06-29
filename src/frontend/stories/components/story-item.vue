@@ -17,7 +17,7 @@
     </div>
 
     <img
-      :src="story.coverImage"
+      :src="imgUrl"
       :alt="story.name"
       class="object-cover"
       :class="{ 'size-[116px]': isList, 'size-64': !isList }"
@@ -62,16 +62,26 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import { StoryIndexItem } from '../../../types';
 import { useSharedStore } from '../../store';
 import BookmarkAction from '../../shared/bookmark-action.vue';
 
 const shared = useSharedStore();
 
-const props = defineProps<{
-  story: StoryIndexItem;
-  isList: boolean;
-}>();
+const props = withDefaults(
+  defineProps<{
+    story: StoryIndexItem;
+    isList: boolean;
+    placeholderImage?: string;
+  }>(),
+  {
+    placeholderImage:
+      'https://res.cloudinary.com/redeem/image/upload/v1752849347/story-cms-ui/placeholder_bafmfz.jpg',
+  },
+);
+
+const imgUrl = computed(() => props.story.coverImage || props.placeholderImage);
 
 const truncateText = (
   text: string,

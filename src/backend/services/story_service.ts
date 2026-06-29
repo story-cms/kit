@@ -87,16 +87,7 @@ export class StoryService {
 
     const template = this.config.storyTemplates[0].id;
 
-    const firstLocalisation = await StoryLocalisation.query()
-      .where('locale', this.config.languages[0].locale)
-      .first();
-
-    const target = firstLocalisation
-      ? {
-          ...emptyTranslation,
-          coverImage: firstLocalisation?.coverImage,
-        }
-      : emptyTranslation;
+    const target = { ...emptyTranslation };
 
     return {
       model: {
@@ -142,10 +133,10 @@ export class StoryService {
 
     const target =
       story.localisations.find((localisation) => localisation.locale === locale) ??
-      emptyTranslation;
+      { ...emptyTranslation };
     const source =
       story.localisations.find((localisation) => localisation.locale === sourceLocale) ??
-      emptyTranslation;
+      { ...emptyTranslation };
 
     if (locale !== sourceLocale && !target.coverImage) {
       target.coverImage = source.coverImage;
@@ -287,15 +278,15 @@ export class StoryService {
       .orderBy('order', 'asc');
 
     return storyModels.map((story) => {
-      const local = story.localisations[0] ?? emptyTranslation;
+      const local = story.localisations[0];
       const index = indices.find((i) => i.storyId === story.id);
       const source = sourceModels.find((m) => m.storyId === story.id);
 
       return {
         id: story.id,
-        name: local.title || (source?.title ?? ''),
-        description: local.description ?? '',
-        coverImage: local.coverImage || (source?.coverImage ?? ''),
+        name: local?.title || (source?.title ?? ''),
+        description: local?.description ?? source?.description ?? '',
+        coverImage: local?.coverImage || (source?.coverImage ?? ''),
         chapterLimit: story.chapterLimit,
         isPublished: story.isPublished,
         createdAt: story.createdAt?.toISO() ?? '',
@@ -355,17 +346,17 @@ export class StoryService {
   }
 
   protected specFrom(story: Story): StorySpec {
-    const localisation = story.localisations[0] ?? emptyTranslation;
+    const localisation = story.localisations[0];
     return {
       id: story.id,
-      name: localisation.title,
-      coverImage: localisation.coverImage ?? '',
+      name: localisation?.title ?? '',
+      coverImage: localisation?.coverImage ?? '',
       chapterLimit: story.chapterLimit,
       chapterType: story.chapterType,
       storyType: story.storyType,
       schemaVersion: 1,
       fields: this.fieldsFromTemplate(story.template),
-      sections: localisation.sections,
+      sections: localisation?.sections ?? [],
     };
   }
 
