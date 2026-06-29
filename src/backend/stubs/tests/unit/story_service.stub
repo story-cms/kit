@@ -11,6 +11,7 @@ import {
   StoryLocalisation,
   StoryLocalisationFactory,
   StoryService,
+  emptyTranslation,
   type PostedSection,
   type StorySection,
   type StoryVersion,
@@ -28,6 +29,19 @@ function createMockHttpContext(params: {
 }): HttpContext {
   return {
     params,
+    auth: {
+      use: () => ({
+        user: {
+          isAllowed: () => true,
+        },
+      }),
+    },
+  } as HttpContext;
+}
+
+function createGalleryHttpContext(locale: string): HttpContext {
+  return {
+    params: { locale },
     auth: {
       use: () => ({
         user: {
@@ -154,6 +168,60 @@ test.group('Story service', (group) => {
     assert.isDefined(props);
     assert.equal(props!.model.coverImage, 'https://example.com/en-cover.jpg');
     assert.equal(props!.source!.coverImage, 'https://example.com/en-cover.jpg');
+  });
+
+  test('editProps does not mutate emptyTranslation singleton', async ({ assert }) => {
+    const story = await StoryFactory.with('localisations').create();
+    const sourceLocal = await StoryLocalisation.query()
+      .where('storyId', story.id)
+      .where('locale', sourceLocale)
+      .firstOrFail();
+    sourceLocal.coverImage = 'https://example.com/story-cover.jpg';
+    sourceLocal.tags = 'gospel,john';
+    await sourceLocal.save();
+
+    const service = new StoryService(testCmsConfig);
+    await service.editProps(
+      createMockHttpContext({ storyId: story.id, locale: translationLocale }),
+    );
+
+    assert.equal(emptyTranslation.coverImage, '');
+    assert.equal(emptyTranslation.tags, '');
+  });
+
+  test('galleryIndex does not leak cover image across stories without translation rows', async ({
+    assert,
+  }) => {
+    const storyA = await StoryFactory.with('localisations').merge({ order: 1 }).create();
+    const storyB = await StoryFactory.with('localisations').merge({ order: 2 }).create();
+
+    const sourceA = await StoryLocalisation.query()
+      .where('storyId', storyA.id)
+      .where('locale', sourceLocale)
+      .firstOrFail();
+    sourceA.coverImage = 'https://example.com/cover-a.jpg';
+    await sourceA.save();
+
+    const sourceB = await StoryLocalisation.query()
+      .where('storyId', storyB.id)
+      .where('locale', sourceLocale)
+      .firstOrFail();
+    sourceB.coverImage = 'https://example.com/cover-b.jpg';
+    await sourceB.save();
+
+    const service = new StoryService(testCmsConfig);
+    await service.editProps(
+      createMockHttpContext({ storyId: storyA.id, locale: translationLocale }),
+    );
+
+    const stories = await service.galleryIndex(createGalleryHttpContext(translationLocale));
+    const galleryA = stories.find((item) => item.id === storyA.id);
+    const galleryB = stories.find((item) => item.id === storyB.id);
+
+    assert.isDefined(galleryA);
+    assert.isDefined(galleryB);
+    assert.equal(galleryA!.coverImage, 'https://example.com/cover-a.jpg');
+    assert.equal(galleryB!.coverImage, 'https://example.com/cover-b.jpg');
   });
 
   test('homeStories hydrates attached resources for each story', async ({ assert }) => {
