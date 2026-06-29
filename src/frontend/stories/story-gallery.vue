@@ -92,15 +92,17 @@ const sortedStories = computed(() => {
   });
 });
 
-const sourceLocale = computed(
-  () => shared.config.languages[0]?.locale ?? shared.locale,
-);
+const sourceLocale = computed(() => shared.config.languages[0]?.locale ?? shared.locale);
 
 const canAddStories = computed(
   () =>
     shared.config.subscriptions.includes('multi-story') &&
     shared.locale === sourceLocale.value,
 );
+
+console.log('sourceLocale', sourceLocale.value);
+console.log('shared.locale', shared.locale);
+console.log('canAddStories', canAddStories.value);
 
 const addStory = () => {
   router.get(`/${shared.locale}/story/create`);
