@@ -97,6 +97,37 @@ test.group('Resource service', (group) => {
     assert.isNull(localisation);
   });
 
+  test('listStoryUsages returns stories in locale ordered by title', async ({ assert }) => {
+    const resource = await ResourceFactory.merge({ locale: 'en' }).create();
+
+    const alphaStory = await StoryFactory.with('localisations').create();
+    const alphaLocalisation = alphaStory.localisations[0];
+    alphaLocalisation.title = 'Alpha Story';
+    alphaLocalisation.resources = [resource.id];
+    await alphaLocalisation.save();
+
+    const zebraStory = await StoryFactory.with('localisations').create();
+    const zebraLocalisation = zebraStory.localisations[0];
+    zebraLocalisation.title = 'Zebra Story';
+    zebraLocalisation.resources = [resource.id];
+    await zebraLocalisation.save();
+
+    const otherLocaleStory = await StoryFactory.with('localisations').create();
+    const otherLocaleLocalisation = otherLocaleStory.localisations[0];
+    otherLocaleLocalisation.locale = 'de';
+    otherLocaleLocalisation.resources = [resource.id];
+    await otherLocaleLocalisation.save();
+
+    const service = new ResourceService();
+    const usages = await service.listStoryUsages(resource.id, 'en');
+
+    assert.lengthOf(usages, 2);
+    assert.deepEqual(usages, [
+      { storyId: alphaStory.id, title: 'Alpha Story' },
+      { storyId: zebraStory.id, title: 'Zebra Story' },
+    ]);
+  });
+
   test('delete detaches resource from all story localisations', async ({ assert }) => {
     const resource = await ResourceFactory.merge({ locale: 'en' }).create();
     const other = await ResourceFactory.merge({ locale: 'en' }).create();

@@ -43,6 +43,7 @@ export default class ResourcesController {
     const props: ResourceEditProps = {
       providers,
       resource: emptyResource(),
+      usedInStories: [],
       bundle: {
         title: '',
         type: 'url',
@@ -68,6 +69,8 @@ export default class ResourcesController {
       return ctx.response.notFound('Resource not found');
     }
 
+    const usedInStories = await service.listStoryUsages(model.id, version.locale);
+
     const props: ResourceEditProps = {
       providers,
       resource: {
@@ -75,6 +78,7 @@ export default class ResourcesController {
         createdAt: service.toIndexItem(model).createdAt,
         updatedAt: service.toIndexItem(model).updatedAt,
       },
+      usedInStories,
       bundle: service.modelToBundle(model),
     };
     // @ts-expect-error Inertia page name

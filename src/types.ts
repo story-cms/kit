@@ -188,10 +188,16 @@ export interface ResourceIndexProps {
   resources: ResourceIndexItem[];
 }
 
+export interface ResourceStoryUsage {
+  storyId: number;
+  title: string;
+}
+
 export interface ResourceEditProps {
   providers: Providers;
   resource: ResourceMeta;
   bundle: any;
+  usedInStories: ResourceStoryUsage[];
 }
 
 export type ResourcePayload = {

@@ -7,6 +7,7 @@ import type {
   ResourceBundle,
   ResourceIndexItem,
   ResourcePayload,
+  ResourceStoryUsage,
   TextBundle,
   VideoBundle,
 } from '../../types.js';
@@ -138,6 +139,21 @@ export class ResourceService {
       model.useTransaction(trx);
       await model.delete();
     });
+  }
+
+  public async listStoryUsages(
+    resourceId: string,
+    locale: string,
+  ): Promise<ResourceStoryUsage[]> {
+    const localisations = await StoryLocalisation.query()
+      .where('locale', locale)
+      .whereRaw('resources @> ?::jsonb', [JSON.stringify([resourceId])])
+      .orderBy('title', 'asc');
+
+    return localisations.map((localisation) => ({
+      storyId: localisation.storyId,
+      title: localisation.title,
+    }));
   }
 
   public async updateStoryResources(

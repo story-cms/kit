@@ -4532,11 +4532,18 @@ const toEditResource = (
   createdAt: string,
   updatedAt: string,
   bundle: Record<string, unknown>,
+  usedInStories: ResourceEditProps['usedInStories'] = [],
 ): ResourceEditProps => ({
   providers: mockResourceProviders,
   resource: { ...resource, createdAt, updatedAt },
+  usedInStories,
   bundle,
 });
+
+export const mockUsedInStories: ResourceEditProps['usedInStories'] = [
+  { storyId: 1, title: 'Biblical Foundations' },
+  { storyId: 2, title: 'The Gospel of John' },
+];
 
 export const mockNewResourceEdit: ResourceEditProps = {
   providers: mockResourceProviders,
@@ -4545,6 +4552,7 @@ export const mockNewResourceEdit: ResourceEditProps = {
     createdAt: '',
     updatedAt: '',
   },
+  usedInStories: [],
   bundle: {
     title: '',
     type: 'url',
@@ -4589,6 +4597,7 @@ export const mockEditTextResource: ResourceEditProps = toEditResource(
     content:
       '## Overview\n\nThis article introduces the Synoptic Problem and compares major scholarly hypotheses.\n\n- Two-Source hypothesis\n- Farrer hypothesis\n- Augustinian hypothesis',
   },
+  mockUsedInStories,
 );
 
 export const mockEditUrlLinkResource: ResourceEditProps = toEditResource(

@@ -22,7 +22,7 @@
       </GlassHeader>
     </template>
 
-    <div class="relative mt-3">
+    <div class="relative mt-3 space-y-6">
       <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="form-panel">
         <StringField
           :field="{
@@ -143,6 +143,12 @@
           @update:model-value="setVisibility"
         />
       </form>
+
+      <ResourceUsedIn
+        v-if="resource.id"
+        :stories="usedInStories"
+        :locale="shared.locale"
+      />
     </div>
   </AppLayout>
 </template>
@@ -169,10 +175,11 @@ import StringField from '../fields/string-field.vue';
 import ImageField from '../fields/image-field.vue';
 import MarkdownField from '../fields/markdown-field.vue';
 import VideoField from '../fields/video-field.vue';
+import ResourceUsedIn from './resource-used-in.vue';
 
 const props = defineProps<ResourceEditProps & SharedPageProps>();
 
-const { bundle, resource } = toRefs(props);
+const { bundle, resource, usedInStories } = toRefs(props);
 const model = useModelStore();
 const shared = useSharedStore();
 

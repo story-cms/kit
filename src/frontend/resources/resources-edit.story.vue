@@ -22,6 +22,28 @@
       />
     </Variant>
 
+    <Variant title="With story usages" :setup-app="miniSidebar">
+      <ResourcesEdit
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :errors="sharedProps.errors"
+        :bookmarks="sharedProps.bookmarks"
+        v-bind="mockEditTextResource"
+      />
+    </Variant>
+
+    <Variant title="Empty usages" :setup-app="miniSidebar">
+      <ResourcesEdit
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :errors="sharedProps.errors"
+        :bookmarks="sharedProps.bookmarks"
+        v-bind="mockEditUrlLinkResource"
+      />
+    </Variant>
+
     <Variant title="Edit URL" :setup-app="miniSidebar">
       <ResourcesEdit
         :config="sharedProps.config"
