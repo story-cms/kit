@@ -15,7 +15,7 @@
 
     <div class="relative">
       <div
-        class="mt-[2px] flex flex-wrap gap-x-2 rounded-md border border-gray-300 bg-white px-1 pb-1 pt-1"
+        class="mt-[2px] flex min-h-9 flex-wrap items-center gap-x-2 rounded-md border border-gray-300 bg-white px-1 pb-1 pt-1"
       >
         <span
           class="flex w-full flex-wrap items-center gap-2 text-base text-gray-500 sm:text-sm/6"
@@ -49,6 +49,13 @@
             </button>
           </span>
           <slot name="input">
+            <span
+              v-if="isReadOnly && pills.length === 0"
+              class="inline-block py-1 text-sm font-normal leading-5 text-transparent select-none"
+              aria-hidden="true"
+            >
+              &nbsp;
+            </span>
             <input
               v-if="!isReadOnly && showInput"
               ref="inputRef"
