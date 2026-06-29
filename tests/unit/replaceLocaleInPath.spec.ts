@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 
 import {
   normalizePathForLanguageSwitch,
+  parentPathForBack,
   replaceLocaleInPath,
 } from '../../src/frontend/shared/helpers';
 
@@ -108,5 +109,53 @@ test.describe('normalizePathForLanguageSwitch', () => {
     const pathname = '/en/story/1/chapter/3';
     const normalized = normalizePathForLanguageSwitch(pathname);
     expect(replaceLocaleInPath(normalized, 'fr', locales)).toBe('/fr/story/1');
+  });
+});
+
+test.describe('parentPathForBack', () => {
+  test('navigates from draft edit to story index', () => {
+    expect(parentPathForBack('/it/story/5/draft/1/edit')).toBe('/it/story/5');
+  });
+
+  test('navigates from chapter preview to story index', () => {
+    expect(parentPathForBack('/it/story/5/chapter/1')).toBe('/it/story/5');
+  });
+
+  test('navigates from draft create to story index', () => {
+    expect(parentPathForBack('/it/story/5/draft/create')).toBe('/it/story/5');
+  });
+
+  test('navigates from story meta edit to story index', () => {
+    expect(parentPathForBack('/it/story/5/edit')).toBe('/it/story/5');
+  });
+
+  test('navigates from story index to story gallery', () => {
+    expect(parentPathForBack('/it/story/5')).toBe('/it/story');
+  });
+
+  test('navigates from story gallery to dashboard', () => {
+    expect(parentPathForBack('/it/story')).toBe('/it/dashboard');
+  });
+
+  test('navigates from story create to story gallery', () => {
+    expect(parentPathForBack('/it/story/create')).toBe('/it/story');
+  });
+
+  test('returns null on dashboard', () => {
+    expect(parentPathForBack('/it/dashboard')).toBeNull();
+  });
+
+  test('returns null for unrecognized paths', () => {
+    expect(parentPathForBack('/it/drop/9/edit')).toBeNull();
+    expect(parentPathForBack('/login')).toBeNull();
+  });
+
+  test('navigates from page and resource edit to index', () => {
+    expect(parentPathForBack('/en/page/5/edit')).toBe('/en/page');
+    expect(parentPathForBack('/en/resource/3/edit')).toBe('/en/resource');
+  });
+
+  test('navigates from stream drop create to stream index', () => {
+    expect(parentPathForBack('/en/stream/3/drop/create')).toBe('/en/stream/3');
   });
 });

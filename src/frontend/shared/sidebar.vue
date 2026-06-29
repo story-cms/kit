@@ -176,7 +176,11 @@ import Icon from '../shared/icon.vue';
 import LanguageSelector from './language-selector.vue';
 import DropUp from './drop-up.vue';
 import type { Subscription } from '../../types';
-import { normalizePathForLanguageSwitch, replaceLocaleInPath } from './helpers';
+import {
+  normalizePathForLanguageSwitch,
+  parentPathForBack,
+  replaceLocaleInPath,
+} from './helpers';
 import { languageDisplayName, type LanguageSortable } from './helpers';
 
 function isEnglishLanguage(item: LanguageSortable): boolean {
@@ -235,7 +239,17 @@ const locale = computed(() => {
 });
 
 const goBack = () => {
-  window.history.back();
+  const pathname = (page.url ?? window.location.pathname).split('?')[0];
+  const parent = parentPathForBack(pathname);
+  if (parent) {
+    router.get(parent);
+    return;
+  }
+  if (window.history.length > 1) {
+    window.history.back();
+    return;
+  }
+  router.get(`/${locale.value}/dashboard`);
 };
 
 const toggleMenu = () => {
