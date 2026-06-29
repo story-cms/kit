@@ -16,7 +16,7 @@ import {
   type StorySection,
   type StoryVersion,
 } from '@story-cms/kit';
-import { testCmsConfig } from '#tests/helpers/cms_mock';
+import { createCustomCmsConfig, testCmsConfig } from '#tests/helpers/cms_mock';
 
 const sourceLocale = testCmsConfig.languages[0].locale;
 const translationLocale = testCmsConfig.languages[1].locale;
@@ -100,6 +100,40 @@ test.group('Story service', (group) => {
     const props = await service.editProps(
       createMockHttpContext({ storyId: 99999, locale: 'en' }),
     );
+
+    assert.isUndefined(props);
+  });
+
+  test('createProps returns props on the source locale', async ({ assert }) => {
+    const config = createCustomCmsConfig({
+      storyTemplates: [
+        {
+          id: 'course',
+          name: 'Course',
+          fields: [{ name: 'title', label: 'Title', widget: 'string' }],
+        },
+      ],
+    });
+    const service = new StoryService(config);
+    const props = await service.createProps(createGalleryHttpContext(sourceLocale));
+
+    assert.isDefined(props);
+    assert.equal(props!.model.template, 'course');
+    assert.equal(props!.model.chapterLimit, 10);
+  });
+
+  test('createProps returns undefined on a translation locale', async ({ assert }) => {
+    const config = createCustomCmsConfig({
+      storyTemplates: [
+        {
+          id: 'course',
+          name: 'Course',
+          fields: [{ name: 'title', label: 'Title', widget: 'string' }],
+        },
+      ],
+    });
+    const service = new StoryService(config);
+    const props = await service.createProps(createGalleryHttpContext(translationLocale));
 
     assert.isUndefined(props);
   });
