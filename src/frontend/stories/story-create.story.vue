@@ -121,6 +121,9 @@ const loadNormalData: StoryHandler = ({ app, story, variant }): void => {
 Full-page form for creating a new story. Collects title, cover image, classification fields,
 and optional content shape when multiple templates are available.
 
+In production, this page is reached from the Story Gallery **+** button when
+`multi-story` is included in `config.subscriptions`. See [Story Gallery](./story-gallery.story.vue).
+
 ## Usage
 
 ```vue

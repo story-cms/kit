@@ -25,6 +25,13 @@
     <Variant title="Readonly" :setup-app="loadData">
       <TagField :field="spec" :is-read-only="true" />
     </Variant>
+
+    <Variant title="Readonly empty" :setup-app="loadReadonlyEmpty">
+      <div class="grid grid-cols-2 gap-x-4">
+        <TagField :field="spec" />
+        <TagField :field="spec" :is-read-only="true" />
+      </div>
+    </Variant>
   </Story>
 </template>
 
@@ -60,6 +67,15 @@ const loadData: StoryHandler = ({ variant }): void => {
   }
 };
 
+const loadReadonlyEmpty: StoryHandler = (): void => {
+  const store = useModelStore();
+  const shared = useSharedStore();
+
+  store.model = { tags: '' };
+  store.setSource({ tags: '' });
+  shared.clearErrors();
+};
+
 const spec = {
   name: 'tags',
   label: 'Tags',
@@ -68,5 +84,12 @@ const spec = {
 </script>
 
 <docs lang="md">
-# String Field
+# Tag Field
+
+Comma-separated tag pills with add/remove. In translation mode, read-only columns use the
+source model; empty read-only fields keep the same container height as the editable column.
+
+## Variants
+
+- **Readonly empty** — side-by-side editable and read-only with no tags (translation layout)
 </docs>

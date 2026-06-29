@@ -151,6 +151,10 @@ export class StoryService {
       target.coverImage = source.coverImage;
     }
 
+    if (locale !== sourceLocale && !target.tags) {
+      target.tags = source.tags;
+    }
+
     const resourceService = new ResourceService();
     const availableResources = await resourceService.listForLocale(locale);
     const targetFields = this.localisationFields(target);

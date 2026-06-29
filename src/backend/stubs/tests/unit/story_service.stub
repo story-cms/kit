@@ -9,6 +9,7 @@ import {
   ResourceFactory,
   StoryFactory,
   StoryLocalisation,
+  StoryLocalisationFactory,
   StoryService,
   type PostedSection,
   type StorySection,
@@ -87,6 +88,72 @@ test.group('Story service', (group) => {
     );
 
     assert.isUndefined(props);
+  });
+
+  test('editProps prefills tags from source when translation tags are empty', async ({
+    assert,
+  }) => {
+    const story = await StoryFactory.with('localisations').create();
+    const sourceLocal = await StoryLocalisation.query()
+      .where('storyId', story.id)
+      .where('locale', sourceLocale)
+      .firstOrFail();
+    sourceLocal.tags = 'gospel,john';
+    await sourceLocal.save();
+
+    const service = new StoryService(testCmsConfig);
+    const props = await service.editProps(
+      createMockHttpContext({ storyId: story.id, locale: translationLocale }),
+    );
+
+    assert.isDefined(props);
+    assert.equal(props!.model.tags, 'gospel,john');
+    assert.equal(props!.source!.tags, 'gospel,john');
+  });
+
+  test('editProps does not overwrite existing translation tags', async ({ assert }) => {
+    const story = await StoryFactory.with('localisations').create();
+    const sourceLocal = await StoryLocalisation.query()
+      .where('storyId', story.id)
+      .where('locale', sourceLocale)
+      .firstOrFail();
+    sourceLocal.tags = 'gospel,john';
+    await sourceLocal.save();
+
+    await StoryLocalisationFactory.merge({
+      storyId: story.id,
+      locale: translationLocale,
+      tags: 'evangelio,juan',
+    }).create();
+
+    const service = new StoryService(testCmsConfig);
+    const props = await service.editProps(
+      createMockHttpContext({ storyId: story.id, locale: translationLocale }),
+    );
+
+    assert.isDefined(props);
+    assert.equal(props!.model.tags, 'evangelio,juan');
+  });
+
+  test('editProps prefills coverImage from source when translation coverImage is empty', async ({
+    assert,
+  }) => {
+    const story = await StoryFactory.with('localisations').create();
+    const sourceLocal = await StoryLocalisation.query()
+      .where('storyId', story.id)
+      .where('locale', sourceLocale)
+      .firstOrFail();
+    sourceLocal.coverImage = 'https://example.com/en-cover.jpg';
+    await sourceLocal.save();
+
+    const service = new StoryService(testCmsConfig);
+    const props = await service.editProps(
+      createMockHttpContext({ storyId: story.id, locale: translationLocale }),
+    );
+
+    assert.isDefined(props);
+    assert.equal(props!.model.coverImage, 'https://example.com/en-cover.jpg');
+    assert.equal(props!.source!.coverImage, 'https://example.com/en-cover.jpg');
   });
 
   test('homeStories hydrates attached resources for each story', async ({ assert }) => {

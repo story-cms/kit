@@ -97,6 +97,21 @@
         :providers="{}"
       />
     </Variant>
+
+    <Variant title="Translation locale" :setup-app="loadTranslationLocale">
+      <StoryEdit
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="spanishLanguage"
+        :errors="{}"
+        :bookmarks="sharedProps.bookmarks"
+        :model="translationModel"
+        :source="translationSource"
+        :available-resources="availableResources"
+        :has-no-content="false"
+        :providers="{}"
+      />
+    </Variant>
   </Story>
 </template>
 
@@ -110,7 +125,13 @@ import {
 } from '../test/mocks';
 import { useSharedStore } from '../store';
 import type { StoryHandler } from '../shared/helpers';
-import type { StoryEditProps, StorySection } from '../../types';
+import type { StoryEditProps, StorySection, LanguageSpecification } from '../../types';
+
+const spanishLanguage: LanguageSpecification = {
+  locale: 'es',
+  language: 'Spanish',
+  languageDirection: 'ltr',
+};
 
 const sampleStorySections: StorySection[] = [
   {
@@ -193,6 +214,36 @@ const validationErrors = {
   'bundle.sections.1.title': ['The title field must have at least 1 character'],
 };
 
+const translationModel: StoryEditProps['model'] = {
+  ...storyModel,
+  title: '',
+  coverImage: '',
+  description: '',
+  tags: 'gospel,john,new-testament',
+  sections: [
+    {
+      id: 'section-1',
+      title: 'Introducción',
+      description: 'Sección de apertura del evangelio.',
+    },
+    {
+      id: 'section-2',
+      title: '',
+      description: '',
+    },
+  ],
+  resources: [],
+};
+
+const translationSource = {
+  title: storyModel.title,
+  coverImage: storyModel.coverImage,
+  description: storyModel.description,
+  tags: storyModel.tags,
+  sections: sampleStorySections,
+  resources: sampleAttachedResources,
+} as NonNullable<StoryEditProps['source']>;
+
 const loadNormalData: StoryHandler = ({ app, story, variant }): void => {
   const shared = useSharedStore();
   shared.setLanguage({
@@ -207,6 +258,13 @@ const loadNormalData: StoryHandler = ({ app, story, variant }): void => {
 const loadResourcesTab: StoryHandler = (context): void => {
   const url = new URL(window.location.href);
   url.searchParams.set('tab', 'Resources');
+  window.history.replaceState({}, '', url.toString());
+  loadNormalData(context);
+};
+
+const loadTranslationLocale: StoryHandler = (context): void => {
+  const url = new URL(window.location.href);
+  url.searchParams.delete('tab');
   window.history.replaceState({}, '', url.toString());
   loadNormalData(context);
 };
@@ -225,6 +283,7 @@ Saving posts attached resource IDs to the story localisation.
 - **Delete and save** — empty story, published; shows Delete (`red`) and Save Changes (`secondary`)
 - **Delete, save and publish** — empty story, unpublished; shows Delete (`red`), Save Changes (`secondary`), and Publish (`green`)
 - **Validation errors on tabs** — failed publish validation; Details and Sections tabs show error indicators and inline field messages
+- **Translation locale** — Spanish edit with English source column; tags prefilled from source on Details tab
 
 ## Usage
 
