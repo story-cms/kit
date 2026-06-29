@@ -24,6 +24,12 @@
       </div>
     </Variant>
 
+    <Variant title="Without cover">
+      <div class="grid grid-cols-1 gap-6 p-6 md:grid-cols-2 lg:grid-cols-3">
+        <StoryItem :story="storyWithoutCover" :is-list="false" />
+      </div>
+    </Variant>
+
     <Variant title="Bookmarked">
       <div class="grid grid-cols-1 gap-6 p-6 md:grid-cols-2 lg:grid-cols-3">
         <StoryItem :story="storyData" :is-list="false" />
@@ -88,6 +94,18 @@ const storyWithLongDescription = {
   updatedAt: '2024-01-01T00:00:00Z',
 };
 
+const storyWithoutCover: StoryIndexItem = {
+  id: 4,
+  name: 'Untitled Story',
+  description: 'A story created without an uploaded cover image.',
+  coverImage: '',
+  chapterLimit: 10,
+  isPublished: false,
+  draftCount: 0,
+  createdAt: '2024-01-01T00:00:00Z',
+  updatedAt: '2024-01-01T00:00:00Z',
+};
+
 const bookmark = {
   label: storyData.name,
   link: `/en/story/${storyData.id}`,
@@ -137,5 +155,6 @@ A component for displaying story information in both grid and list view formats.
 - **List View** - Horizontal layout for compact story listing
 - **With Drafts** - Shows draft count indicator
 - **Long Description** - Demonstrates text truncation
+- **Without cover** - Empty `coverImage` falls back to the default placeholder
 - **Bookmarked** - Interactive bookmark functionality
 </docs>
