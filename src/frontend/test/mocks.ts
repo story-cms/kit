@@ -4602,6 +4602,11 @@ export const mockEditTextResource: ResourceEditProps = toEditResource(
   mockUsedInStories,
 );
 
+export const mockEditTextResourceWithUsages: ResourceEditProps = {
+  ...mockEditTextResource,
+  usedInStories: mockUsedInStories,
+};
+
 export const mockEditUrlLinkResource: ResourceEditProps = toEditResource(
   availableResources[3],
   '2024-02-05',
@@ -4616,6 +4621,11 @@ export const mockEditUrlLinkResource: ResourceEditProps = toEditResource(
     url: availableResources[3].url ?? 'https://example.com/timeline',
   },
 );
+
+export const mockEditUrlLinkResourceEmptyUsages: ResourceEditProps = {
+  ...mockEditUrlLinkResource,
+  usedInStories: [],
+};
 
 export const mockResourceEditErrors: Record<string, string[]> = {
   'bundle.title': ['A resource must have a title'],

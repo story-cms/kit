@@ -29,7 +29,7 @@
         :language="sharedProps.language"
         :errors="sharedProps.errors"
         :bookmarks="sharedProps.bookmarks"
-        v-bind="mockEditTextResource"
+        v-bind="mockEditTextResourceWithUsages"
       />
     </Variant>
 
@@ -40,7 +40,7 @@
         :language="sharedProps.language"
         :errors="sharedProps.errors"
         :bookmarks="sharedProps.bookmarks"
-        v-bind="mockEditUrlLinkResource"
+        v-bind="mockEditUrlLinkResourceEmptyUsages"
       />
     </Variant>
 
@@ -88,6 +88,8 @@ import {
   mockEditVideoResource,
   mockEditTextResource,
   mockEditUrlLinkResource,
+  mockEditTextResourceWithUsages,
+  mockEditUrlLinkResourceEmptyUsages,
   mockResourceEditErrors,
 } from '../test/mocks';
 </script>

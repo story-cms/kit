@@ -1,43 +1,37 @@
 <template>
-  <section class="rounded-[14px] border border-gray-200 bg-white p-8">
-    <div class="flex items-start justify-between gap-4">
+  <section class="rounded-xl border border-gray-200 bg-white p-8">
+    <div class="mb-5 flex items-start justify-between gap-4">
       <div>
         <h2 class="text-base font-semibold text-gray-900">Used In</h2>
-        <p class="mt-1 text-sm text-gray-500">
+        <p class="mt-0.5 text-sm text-gray-500">
           Where this resource appears in your content
         </p>
       </div>
-      <div class="flex shrink-0 flex-wrap items-center justify-end gap-2">
-        <span class="text-xs text-gray-500">{{ attachmentLabel }}</span>
-        <span
-          class="inline-flex items-center gap-1.5 rounded-full bg-teal-50 px-2.5 py-1 text-xs font-medium text-teal-700"
-        >
-          <BookOpen class="size-3.5" aria-hidden="true" />
-          On Stories
-        </span>
-      </div>
+      <span v-if="stories.length > 0" class="shrink-0 text-xs text-gray-500">
+        {{ attachmentLabel }}
+      </span>
     </div>
 
-    <div v-if="stories.length > 0" class="mt-6 space-y-3">
+    <div v-if="stories.length > 0" class="space-y-2">
       <a
         v-for="story in stories"
         :key="story.storyId"
         :href="storyHref(story.storyId)"
-        class="flex items-center gap-3 rounded-xl bg-gray-50 px-4 py-3 transition-colors hover:bg-gray-100"
+        class="flex items-center gap-4 rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 transition-colors hover:bg-gray-100"
       >
         <span
-          class="inline-flex shrink-0 items-center gap-1.5 rounded px-2 py-0.5 text-xs font-medium text-violet-700 bg-violet-100"
+          class="inline-flex shrink-0 items-center gap-1.5 rounded border border-violet-100 bg-violet-50 px-2 py-1 text-xs font-medium text-violet-600"
         >
-          <BookOpen class="size-3.5" aria-hidden="true" />
+          <BookOpen class="size-4" aria-hidden="true" />
           Story
         </span>
-        <span class="min-w-0 truncate text-sm font-semibold text-gray-900">
+        <p class="min-w-0 flex-1 truncate text-sm font-medium text-gray-900">
           {{ story.title }}
-        </span>
+        </p>
       </a>
     </div>
 
-    <p v-else class="mt-6 text-sm text-gray-500">Not attached to any stories yet</p>
+    <p v-else class="text-sm text-gray-500">Not attached to any stories yet</p>
   </section>
 </template>
 
