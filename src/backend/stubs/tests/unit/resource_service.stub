@@ -97,6 +97,30 @@ test.group('Resource service', (group) => {
     assert.isNull(localisation);
   });
 
+  test('listIndexItems includes usedInCount from story attachments', async ({ assert }) => {
+    const attached = await ResourceFactory.merge({ locale: 'en', title: 'Attached' }).create();
+    await ResourceFactory.merge({ locale: 'en', title: 'Unattached' }).create();
+
+    const alphaStory = await StoryFactory.with('localisations').create();
+    const alphaLocalisation = alphaStory.localisations[0];
+    alphaLocalisation.resources = [attached.id];
+    await alphaLocalisation.save();
+
+    const zebraStory = await StoryFactory.with('localisations').create();
+    const zebraLocalisation = zebraStory.localisations[0];
+    zebraLocalisation.resources = [attached.id];
+    await zebraLocalisation.save();
+
+    const service = new ResourceService();
+    const items = await service.listIndexItems('en');
+
+    const attachedItem = items.find((item) => item.id === attached.id);
+    const unattachedItem = items.find((item) => item.title === 'Unattached');
+
+    assert.equal(attachedItem?.usedInCount, 2);
+    assert.equal(unattachedItem?.usedInCount, 0);
+  });
+
   test('listStoryUsages returns stories in locale ordered by title', async ({ assert }) => {
     const resource = await ResourceFactory.merge({ locale: 'en' }).create();
 

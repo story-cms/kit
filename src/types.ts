@@ -176,6 +176,7 @@ export interface ResourceItem {
 export interface ResourceIndexItem extends ResourceItem {
   createdAt: string;
   updatedAt: string;
+  usedInCount: number;
 }
 
 export interface ResourceMeta {

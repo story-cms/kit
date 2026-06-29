@@ -31,6 +31,15 @@
       />
     </Variant>
 
+    <Variant title="Grid / Used in stories">
+      <ResourceIndexItem
+        :resource="resource('r1')"
+        view-mode="grid"
+        @edit="onEdit"
+        @delete="onDelete"
+      />
+    </Variant>
+
     <Variant title="Grid / No image">
       <ResourceIndexItem
         :resource="videoWithoutImage"

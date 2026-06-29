@@ -4495,6 +4495,8 @@ export const mockIndexResources: ResourceIndexItem[] = shuffle(
     ...resource,
     createdAt: `2024-0${Math.min(index + 1, 9)}-15`,
     updatedAt: `2024-0${Math.min(index + 1, 9)}-${15 + (index % 14)}`,
+    usedInCount:
+      resource.id === 'r1' ? 2 : resource.id === 'r4' ? 1 : resource.id === 'r6' ? 3 : 0,
   })),
 );
 
