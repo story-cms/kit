@@ -14,6 +14,13 @@
       />
     </Variant>
 
+    <Variant title="Read only">
+      <ResourceAttachedItem
+        :item="availableResources[0]"
+        :read-only="true"
+      />
+    </Variant>
+
     <Variant title="Dragging">
       <ResourceAttachedItem
         :item="availableResources[0]"
