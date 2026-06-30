@@ -70,6 +70,20 @@
       />
     </Variant>
 
+    <Variant title="Without sections" :setup-app="loadSectionsTab">
+      <StoryEdit
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :errors="{}"
+        :bookmarks="sharedProps.bookmarks"
+        :model="noSectionsModel"
+        :available-resources="availableResources"
+        :has-no-content="false"
+        :providers="{}"
+      />
+    </Variant>
+
     <Variant title="Resources tab" :setup-app="loadResourcesTab">
       <StoryEdit
         :config="sharedProps.config"
@@ -107,6 +121,21 @@
         :bookmarks="sharedProps.bookmarks"
         :model="translationModel"
         :source="translationSource"
+        :available-resources="availableResources"
+        :has-no-content="false"
+        :providers="{}"
+      />
+    </Variant>
+
+    <Variant title="Translation without sections" :setup-app="loadTranslationLocale">
+      <StoryEdit
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="spanishLanguage"
+        :errors="{}"
+        :bookmarks="sharedProps.bookmarks"
+        :model="translationWithoutSectionsModel"
+        :source="translationSourceWithoutSections"
         :available-resources="availableResources"
         :has-no-content="false"
         :providers="{}"
@@ -170,6 +199,11 @@ const emptyResourcesModel: StoryEditProps['model'] = {
   ...storyModel,
   title: 'Untitled Story',
   resources: [],
+};
+
+const noSectionsModel: StoryEditProps['model'] = {
+  ...storyModel,
+  sections: [],
 };
 
 const unpublishedModel: StoryEditProps['model'] = {
@@ -244,6 +278,16 @@ const translationSource = {
   resources: sampleAttachedResources,
 } as NonNullable<StoryEditProps['source']>;
 
+const translationWithoutSectionsModel: StoryEditProps['model'] = {
+  ...translationModel,
+  sections: [],
+};
+
+const translationSourceWithoutSections = {
+  ...translationSource,
+  sections: [],
+} as NonNullable<StoryEditProps['source']>;
+
 const loadNormalData: StoryHandler = ({ app, story, variant }): void => {
   const shared = useSharedStore();
   shared.setLanguage({
@@ -258,6 +302,13 @@ const loadNormalData: StoryHandler = ({ app, story, variant }): void => {
 const loadResourcesTab: StoryHandler = (context): void => {
   const url = new URL(window.location.href);
   url.searchParams.set('tab', 'Resources');
+  window.history.replaceState({}, '', url.toString());
+  loadNormalData(context);
+};
+
+const loadSectionsTab: StoryHandler = (context): void => {
+  const url = new URL(window.location.href);
+  url.searchParams.set('tab', 'Sections');
   window.history.replaceState({}, '', url.toString());
   loadNormalData(context);
 };
@@ -282,8 +333,10 @@ Saving posts attached resource IDs to the story localisation.
 - **Save and publish** — unpublished story with content; shows Save Changes (`secondary`) and Publish (`green`)
 - **Delete and save** — empty story, published; shows Delete (`red`) and Save Changes (`secondary`)
 - **Delete, save and publish** — empty story, unpublished; shows Delete (`red`), Save Changes (`secondary`), and Publish (`green`)
+- **Without sections** — English source locale with no sections; Sections tab shows empty state message
 - **Validation errors on tabs** — failed publish validation; Details and Sections tabs show error indicators and inline field messages
 - **Translation locale** — Spanish edit with English source column; tags prefilled from source on Details tab
+- **Translation without sections** — Spanish edit with English source column; source localisation has no sections, so the Sections tab is empty
 
 ## Usage
 
