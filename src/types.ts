@@ -201,6 +201,8 @@ export interface ResourceEditProps {
   usedInStories: ResourceStoryUsage[];
 }
 
+export type ResourceNotFoundProps = SharedPageProps;
+
 export type ResourcePayload = {
   title: string;
   type: ResourceType;

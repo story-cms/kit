@@ -63,10 +63,11 @@ export default class ResourcesController {
   public async edit(ctx: HttpContext) {
     const version = cms.versionFromPath(ctx);
     const service = new ResourceService();
-    const model = await Resource.findOrFail(ctx.params.id);
+    const model = await Resource.find(ctx.params.id);
 
-    if (model.locale !== version.locale) {
-      return ctx.response.notFound('Resource not found');
+    if (!model || model.locale !== version.locale) {
+      // @ts-expect-error Inertia page name
+      return ctx.inertia.render('ResourceNotFound', {});
     }
 
     const usedInStories = await service.listStoryUsages(model.id, version.locale);
