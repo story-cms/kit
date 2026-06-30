@@ -9,6 +9,16 @@
       <StoryEditSections section-type="Part" tab-icon="list-bullet" />
       <ModelControl :model="translationSectionsModel" :is-inspect-only="true" />
     </Variant>
+
+    <Variant title="Empty" :setup-app="loadEmpty">
+      <StoryEditSections section-type="Part" tab-icon="list-bullet" />
+      <ModelControl :model="emptySectionsModel" :is-inspect-only="true" />
+    </Variant>
+
+    <Variant title="Translation without sections" :setup-app="loadTranslationWithoutSections">
+      <StoryEditSections section-type="Part" tab-icon="list-bullet" />
+      <ModelControl :model="translationWithoutSectionsModel" :is-inspect-only="true" />
+    </Variant>
   </Story>
 </template>
 
@@ -49,6 +59,14 @@ const translationSectionsModel = {
   ],
 };
 
+const emptySectionsModel = {
+  sections: [],
+};
+
+const translationWithoutSectionsModel = {
+  sections: [],
+};
+
 const loadDefault: StoryHandler = (): void => {
   const store = useModelStore();
   const shared = useSharedStore();
@@ -74,6 +92,32 @@ const loadTranslation: StoryHandler = (): void => {
   store.setSource({ ...sectionsModel });
   shared.clearErrors();
 };
+
+const loadEmpty: StoryHandler = (): void => {
+  const store = useModelStore();
+  const shared = useSharedStore();
+
+  shared.setFromProps(sharedProps);
+  shared.setLanguage(sharedProps.language);
+  store.setModel({ ...emptySectionsModel });
+  store.setSource({});
+  shared.clearErrors();
+};
+
+const loadTranslationWithoutSections: StoryHandler = (): void => {
+  const store = useModelStore();
+  const shared = useSharedStore();
+
+  shared.setFromProps(sharedProps);
+  shared.setLanguage({
+    locale: 'es',
+    language: 'Spanish',
+    languageDirection: 'ltr',
+  });
+  store.setModel({ ...translationWithoutSectionsModel });
+  store.setSource({ sections: [] });
+  shared.clearErrors();
+};
 </script>
 
 <docs lang="md">
@@ -86,6 +130,8 @@ panels with title and description fields.
 
 - **Default** — source locale with reorder, add, and delete controls
 - **Translation** — side-by-side editable and read-only section fields; reorder disabled
+- **Empty** — source locale with no sections; shows empty notice and Add Part button
+- **Translation without sections** — translation locale with no source sections; shows empty notice only
 
 ## Props
 
