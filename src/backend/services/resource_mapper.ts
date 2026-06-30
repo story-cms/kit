@@ -42,6 +42,14 @@ const formatResourceDate = (
   return value.toISODate() ?? value.toISO()?.split('T')[0] ?? '';
 };
 
+const formatResourceDateTime = (
+  value: DateTime | string | undefined | null,
+): string => {
+  if (!value) return '';
+  if (typeof value === 'string') return value;
+  return value.toUTC().toISO() ?? value.toUTC().toString();
+};
+
 export const toResourceItem = (model: ResourceRow): ResourceItem => {
   const bundle = model.bundle as ResourceBundle;
 
@@ -54,7 +62,7 @@ export const toResourceItem = (model: ResourceRow): ResourceItem => {
     label: model.label,
     visibility: model.visibility as VisibilityType,
     description: model.description,
-    updatedAt: formatResourceDate(model.updatedAt),
+    updatedAt: formatResourceDateTime(model.updatedAt),
   };
 };
 

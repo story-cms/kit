@@ -5,6 +5,7 @@ import {
   toResourceItem,
   toResourceIndexItem,
 } from '../../src/backend/services/resource_mapper.js';
+import { compareResourcesByRecentlyEdited } from '../../src/frontend/stories/components/resource-utils';
 import type { LinkBundle, TextBundle, VideoBundle } from '../../src/types.js';
 
 test.describe('Resource mapper', () => {
@@ -45,7 +46,7 @@ test.describe('Resource mapper', () => {
       label: 'Reading',
       visibility: 'guests',
       description: 'A description',
-      updatedAt: '2024-03-01',
+      updatedAt: '2024-03-01T12:00:00.000Z',
     });
   });
 
@@ -66,7 +67,7 @@ test.describe('Resource mapper', () => {
     expect(dto.description).toBeNull();
     expect(dto.url).toBeUndefined();
     expect(dto.type).toBe('text');
-    expect(dto.updatedAt).toBe('2024-02-12');
+    expect(dto.updatedAt).toBe('2024-02-12T08:00:00.000Z');
   });
 
   test('toResourceIndexItem includes formatted timestamps', () => {
@@ -84,7 +85,7 @@ test.describe('Resource mapper', () => {
     });
 
     expect(item.createdAt).toBe('2024-01-15');
-    expect(item.updatedAt).toBe('2024-03-01');
+    expect(item.updatedAt).toBe('2024-03-01T12:00:00.000Z');
     expect(item.url).toBe('https://example.com/v.mp4');
   });
 
@@ -103,6 +104,20 @@ test.describe('Resource mapper', () => {
     });
 
     expect(item.createdAt).toBe('2024-02-10');
-    expect(item.updatedAt).toBe('2024-02-12');
+    expect(item.updatedAt).toBe('2024-02-12T08:00:00.000Z');
+  });
+
+  test('compareResourcesByRecentlyEdited orders same-date resources by time', () => {
+    const ordered = [
+      { title: 'Older Time', updatedAt: '2024-02-12T08:00:00.000Z' },
+      { title: 'Newest Time', updatedAt: '2024-02-12T12:00:00.000Z' },
+      { title: 'Oldest Day', updatedAt: '2024-02-11T23:59:59.000Z' },
+    ].sort(compareResourcesByRecentlyEdited);
+
+    expect(ordered.map((item) => item.title)).toEqual([
+      'Newest Time',
+      'Older Time',
+      'Oldest Day',
+    ]);
   });
 });
