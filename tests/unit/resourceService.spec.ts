@@ -33,6 +33,7 @@ test.describe('Resource mapper', () => {
       visibility: 'guests',
       description: 'A description',
       bundle: { url: 'https://example.com/link' },
+      updatedAt: DateTime.fromISO('2024-03-01T12:00:00.000Z'),
     });
 
     expect(dto).toEqual({
@@ -44,6 +45,7 @@ test.describe('Resource mapper', () => {
       label: 'Reading',
       visibility: 'guests',
       description: 'A description',
+      updatedAt: '2024-03-01',
     });
   });
 
@@ -57,12 +59,14 @@ test.describe('Resource mapper', () => {
       visibility: 'public',
       description: null,
       bundle: { content: 'Body text' },
+      updatedAt: '2024-02-12T08:00:00.000Z',
     });
 
     expect(dto.label).toBeNull();
     expect(dto.description).toBeNull();
     expect(dto.url).toBeUndefined();
     expect(dto.type).toBe('text');
+    expect(dto.updatedAt).toBe('2024-02-12');
   });
 
   test('toResourceIndexItem includes formatted timestamps', () => {

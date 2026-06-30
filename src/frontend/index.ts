@@ -64,10 +64,6 @@ import UiPage from './ui/ui-page.vue';
 import UsersIndex from './team/users-index.vue';
 import VideoField from './fields/video-field.vue';
 
-import ContentSidebar from './shared/content-sidebar.vue';
-import NavigationPane from './shared/navigation-pane.vue';
-import SectionPanelField from './fields/section-panel-field.vue';
-
 export { createInertiaApp, usePage, useForm, router } from '@inertiajs/vue3';
 
 export * from './store/index';

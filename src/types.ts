@@ -171,11 +171,11 @@ export interface ResourceItem {
   label: string | null;
   visibility: VisibilityType;
   description?: string | null;
+  updatedAt: string;
 }
 
 export interface ResourceIndexItem extends ResourceItem {
   createdAt: string;
-  updatedAt: string;
   usedInCount: number;
 }
 

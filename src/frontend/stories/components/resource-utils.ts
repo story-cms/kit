@@ -18,7 +18,7 @@ export const resourceTypeLabel = (type: ResourceType): string => {
     case 'video':
       return 'Video';
     case 'text':
-      return 'Text';
+      return 'Article';
     case 'url':
       return 'URL';
     default:
@@ -57,3 +57,12 @@ export const orderedLabels = (resources: ResourceItem[]): string[] => {
 
 export const resourceIds = (resources: ResourceItem[]): string[] =>
   resources.map((r) => r.id);
+
+export const compareResourcesByRecentlyEdited = (
+  a: { updatedAt: string; title: string },
+  b: { updatedAt: string; title: string },
+): number => {
+  const byDate = b.updatedAt.localeCompare(a.updatedAt);
+  if (byDate !== 0) return byDate;
+  return a.title.localeCompare(b.title);
+};

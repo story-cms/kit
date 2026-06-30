@@ -13,7 +13,7 @@
       />
     </Variant>
 
-    <Variant title="Grid / Text">
+    <Variant title="Grid / Article">
       <ResourceIndexItem
         :resource="resource('r2')"
         view-mode="grid"
@@ -125,7 +125,7 @@
       </div>
     </Variant>
 
-    <Variant title="List / Text">
+    <Variant title="List / Article">
       <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white">
         <table class="w-full min-w-[720px] table-auto">
           <thead class="border-b border-gray-200 bg-gray-50">
