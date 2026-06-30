@@ -210,6 +210,7 @@ import StudioButton from '../shared/studio-button.vue';
 import ListSwitcher from '../shared/list-switcher.vue';
 import ResourceIndexItemCard from './resource-index-item.vue';
 import RemoveResourceModal from './remove-resource-modal.vue';
+import { compareResourcesByRecentlyEdited } from '../stories/components/resource-utils';
 
 type FilterType = 'all' | ResourceType;
 type FilterVisibility = 'all' | VisibilityType;
@@ -219,10 +220,9 @@ const shared = useSharedStore();
 shared.setFromProps(props);
 shared.setCurrentStoryName('');
 
-const sortByRecentlyUpdated = (a: ResourceIndexItem, b: ResourceIndexItem): number =>
-  b.updatedAt.localeCompare(a.updatedAt);
-
-const items = ref<ResourceIndexItem[]>([...props.resources].sort(sortByRecentlyUpdated));
+const items = ref<ResourceIndexItem[]>(
+  [...props.resources].sort(compareResourcesByRecentlyEdited),
+);
 const searchQuery = ref('');
 const isList = ref(false);
 const showFilters = ref(false);
@@ -268,7 +268,7 @@ const filteredResources = computed(() => {
 
       return matchesSearch && matchesType && matchesVisibility && matchesLabel;
     })
-    .sort(sortByRecentlyUpdated);
+    .sort(compareResourcesByRecentlyEdited);
 });
 
 const createResource = () => {

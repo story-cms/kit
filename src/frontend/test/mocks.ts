@@ -4335,7 +4335,7 @@ export const mockInvitations: InvitationItem[] = [
   },
 ];
 
-export const availableResources: ResourceItem[] = [
+const availableResourceItems: Omit<ResourceItem, 'updatedAt'>[] = [
   {
     id: 'r1',
     title: 'Introduction to Biblical Archaeology',
@@ -4479,6 +4479,13 @@ export const availableResources: ResourceItem[] = [
   },
 ];
 
+export const availableResources: ResourceItem[] = availableResourceItems.map(
+  (resource, index) => ({
+    ...resource,
+    updatedAt: `2024-0${Math.min(index + 1, 9)}-${String(15 + (index % 14)).padStart(2, '0')}`,
+  }),
+);
+
 const shuffle = <T>(items: T[]): T[] => {
   const copy = [...items];
 
@@ -4491,10 +4498,9 @@ const shuffle = <T>(items: T[]): T[] => {
 };
 
 export const mockIndexResources: ResourceIndexItem[] = shuffle(
-  availableResources.map((resource, index) => ({
+  availableResources.map((resource) => ({
     ...resource,
-    createdAt: `2024-0${Math.min(index + 1, 9)}-15`,
-    updatedAt: `2024-0${Math.min(index + 1, 9)}-${15 + (index % 14)}`,
+    createdAt: resource.updatedAt,
     usedInCount:
       resource.id === 'r1' ? 2 : resource.id === 'r4' ? 1 : resource.id === 'r6' ? 3 : 0,
   })),

@@ -54,6 +54,7 @@ export const toResourceItem = (model: ResourceRow): ResourceItem => {
     label: model.label,
     visibility: model.visibility as VisibilityType,
     description: model.description,
+    updatedAt: formatResourceDate(model.updatedAt),
   };
 };
 
@@ -61,7 +62,6 @@ export const toResourceIndexItem = (model: ResourceRow): ResourceIndexItem => {
   return {
     ...toResourceItem(model),
     createdAt: formatResourceDate(model.createdAt),
-    updatedAt: formatResourceDate(model.updatedAt),
     usedInCount: 0,
   };
 };

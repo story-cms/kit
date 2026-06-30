@@ -96,6 +96,7 @@ import { computed, ref } from 'vue';
 import { Plus, Search, Tag, X } from '@lucide/vue';
 import ResourceThumbnail from './resource-thumbnail.vue';
 import ResourceTypeBadge from './resource-type-badge.vue';
+import { compareResourcesByRecentlyEdited } from './resource-utils';
 import type { ResourceItem } from '../../../types';
 
 const props = defineProps<{
@@ -128,7 +129,8 @@ const filteredAvailableResources = computed(() =>
         (resource.label ?? '').toLowerCase().includes(query) ||
         resource.description?.toLowerCase().includes(query)
       );
-    }),
+    })
+    .sort(compareResourcesByRecentlyEdited),
 );
 
 const showSearchPanel = computed(
