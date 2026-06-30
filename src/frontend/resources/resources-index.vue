@@ -56,7 +56,7 @@
                     class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-transparent focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="all">All Types</option>
-                    <option value="text">Text</option>
+                    <option value="text">Article</option>
                     <option value="video">Video</option>
                     <option value="url">URL</option>
                   </select>

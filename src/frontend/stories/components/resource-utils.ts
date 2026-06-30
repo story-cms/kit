@@ -18,7 +18,7 @@ export const resourceTypeLabel = (type: ResourceType): string => {
     case 'video':
       return 'Video';
     case 'text':
-      return 'Text';
+      return 'Article';
     case 'url':
       return 'URL';
     default:

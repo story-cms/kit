@@ -4,7 +4,7 @@
       <ResourceTypeBadge type="video" />
     </Variant>
     <Variant title="Article">
-      <ResourceTypeBadge type="article" />
+      <ResourceTypeBadge type="text" />
     </Variant>
     <Variant title="PDF">
       <ResourceTypeBadge type="pdf" />
