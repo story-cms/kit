@@ -43,6 +43,7 @@ import PublicLayout from './shared/public-layout.vue';
 import RegionField from './fields/region-field.vue';
 import ResetPassword from './auth/reset-password.vue';
 import ResourcesEdit from './resources/resources-edit.vue';
+import ResourceNotFound from './resources/resource-not-found.vue';
 import ResourcesIndex from './resources/resources-index.vue';
 import ScriptureField from './fields/scripture-field.vue';
 import SelectField from './fields/select-field.vue';
@@ -120,6 +121,7 @@ export {
   RegionField,
   ResetPassword,
   ResourcesEdit,
+  ResourceNotFound,
   ResourcesIndex,
   ScriptureField,
   SelectField,
@@ -139,10 +141,4 @@ export {
   UiPage,
   UsersIndex,
   VideoField,
-  // ---------------
-  // TODO: remove once landed
-  // ---------------
-  ContentSidebar,
-  NavigationPane,
-  SectionPanelField,
 };
