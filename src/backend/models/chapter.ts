@@ -38,10 +38,16 @@ export default class Chapter extends BaseModel {
   }
 
   public get index(): IndexItem {
+    const references = [
+      (this.bundle['wisdom'] as any)?.['passage']?.['reference'] ?? '',
+      (this.bundle['newTestament'] as any)?.['passage']?.['reference'] ?? '',
+      (this.bundle['oldTestament'] as any)?.['passage']?.['reference'] ?? '',
+    ];
     return {
       number: this.number,
       title: this.bundle['title'] as string,
       imageUrl: this.bundle['imageUrl'] as string,
+      reference: references.join(', '),
     };
   }
 
