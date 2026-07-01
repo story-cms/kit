@@ -1,7 +1,7 @@
 <template>
   <Story title="Story Edit Details" group="stories">
     <Variant title="Source locale" :setup-app="loadSourceLocale">
-      <StoryEditDetails />
+      <StoryEditDetails :is-editing="true" />
       <ModelControl :model="sourceLocaleModel" :is-inspect-only="true" />
     </Variant>
 
@@ -16,11 +16,16 @@
     </Variant>
 
     <Variant title="Single template" :setup-app="loadSourceLocale">
-      <StoryEditDetails :templates="[storyTemplates[0]]" />
+      <StoryEditDetails :is-editing="true" :templates="[storyTemplates[0]]" />
       <ModelControl :model="sourceLocaleModel" :is-inspect-only="true" />
     </Variant>
 
-    <Variant title="Multiple templates" :setup-app="loadSourceLocale">
+    <Variant title="Multiple templates on edit" :setup-app="loadSourceLocale">
+      <StoryEditDetails :is-editing="true" :templates="storyTemplates" />
+      <ModelControl :model="sourceLocaleModel" :is-inspect-only="true" />
+    </Variant>
+
+    <Variant title="Multiple templates on create" :setup-app="loadSourceLocale">
       <StoryEditDetails :templates="storyTemplates" />
       <ModelControl :model="sourceLocaleModel" :is-inspect-only="true" />
     </Variant>
@@ -139,10 +144,12 @@ source locale only) classification fields, chapter template, and visibility.
 - **Translation locale** — side-by-side editable and read-only columns; tags prefilled from source when empty
 - **Translation without tags** — translation mode where the source locale has no tags; both editable and read-only tag fields are empty
 - **Single template** — shows read-only Chapter Template when only one template is configured
-- **Multiple templates** — shows interactive Chapter Template listbox when more than one template is available
+- **Multiple templates on edit** — read-only Chapter Template even when multiple templates are configured
+- **Multiple templates on create** — interactive Chapter Template listbox when more than one template is available
 
 ## Props
 
 - `isTranslation` — enables two-column translation layout
+- `isEditing` — locks Chapter Template after story creation; when false, template is editable only if multiple templates are available
 - `templates` — bundle templates; Chapter Template appears when at least one template is configured
 </docs>

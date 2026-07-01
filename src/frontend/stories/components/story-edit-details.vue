@@ -47,7 +47,7 @@
         label="Chapter Template"
         :hint="chapterTemplateHint"
         :options="templateRichOptions"
-        :is-read-only="templates.length <= 1"
+        :is-read-only="isTemplateReadOnly"
         @update:model-value="setTemplate"
       />
       <RichListbox
@@ -77,9 +77,10 @@ import RichListbox from '../../shared/rich-listbox.vue';
 const props = withDefaults(
   defineProps<{
     isTranslation?: boolean;
+    isEditing?: boolean;
     templates?: BundleTemplate[];
   }>(),
-  { isTranslation: false, templates: (): BundleTemplate[] => [] },
+  { isTranslation: false, isEditing: false, templates: (): BundleTemplate[] => [] },
 );
 
 const model = useModelStore();
@@ -144,6 +145,10 @@ const templateRichOptions = computed(() =>
     description: '',
     icon: FileText,
   })),
+);
+
+const isTemplateReadOnly = computed(
+  () => props.isEditing || props.templates.length <= 1,
 );
 
 const titleField: FieldSpec = {

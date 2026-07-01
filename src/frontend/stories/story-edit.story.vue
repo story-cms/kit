@@ -11,6 +11,7 @@
         :available-resources="availableResources"
         :has-no-content="false"
         :providers="{}"
+        :templates="storyTemplates"
       />
     </Variant>
 
@@ -25,6 +26,7 @@
         :available-resources="availableResources"
         :has-no-content="false"
         :providers="{}"
+        :templates="storyTemplates"
       />
     </Variant>
 
@@ -39,6 +41,7 @@
         :available-resources="availableResources"
         :has-no-content="true"
         :providers="{}"
+        :templates="storyTemplates"
       />
     </Variant>
 
@@ -53,6 +56,7 @@
         :available-resources="availableResources"
         :has-no-content="true"
         :providers="{}"
+        :templates="storyTemplates"
       />
     </Variant>
 
@@ -67,6 +71,7 @@
         :available-resources="availableResources"
         :has-no-content="false"
         :providers="{}"
+        :templates="storyTemplates"
       />
     </Variant>
 
@@ -81,6 +86,7 @@
         :available-resources="availableResources"
         :has-no-content="false"
         :providers="{}"
+        :templates="storyTemplates"
       />
     </Variant>
 
@@ -95,6 +101,7 @@
         :available-resources="availableResources"
         :has-no-content="false"
         :providers="{}"
+        :templates="storyTemplates"
       />
     </Variant>
 
@@ -109,6 +116,7 @@
         :available-resources="availableResources"
         :has-no-content="false"
         :providers="{}"
+        :templates="storyTemplates"
       />
     </Variant>
 
@@ -124,6 +132,7 @@
         :available-resources="availableResources"
         :has-no-content="false"
         :providers="{}"
+        :templates="storyTemplates"
       />
     </Variant>
 
@@ -139,6 +148,7 @@
         :available-resources="availableResources"
         :has-no-content="false"
         :providers="{}"
+        :templates="storyTemplates"
       />
     </Variant>
   </Story>
@@ -154,7 +164,25 @@ import {
 } from '../test/mocks';
 import { useSharedStore } from '../store';
 import type { StoryHandler } from '../shared/helpers';
-import type { StoryEditProps, StorySection, LanguageSpecification } from '../../types';
+import type { BundleTemplate, StoryEditProps, StorySection, LanguageSpecification } from '../../types';
+
+const storyTemplates: BundleTemplate[] = [
+  {
+    id: 'devotion',
+    name: 'Devotion',
+    fields: [],
+  },
+  {
+    id: 'course',
+    name: 'Course',
+    fields: [],
+  },
+  {
+    id: 'plan',
+    name: 'Plan',
+    fields: [],
+  },
+];
 
 const spanishLanguage: LanguageSpecification = {
   locale: 'es',
@@ -350,6 +378,7 @@ Saving posts attached resource IDs to the story localisation.
   :model="model"
   :available-resources="availableResources"
   :has-no-content="hasNoContent"
+  :templates="templates"
   :providers="providers"
 />
 ```
