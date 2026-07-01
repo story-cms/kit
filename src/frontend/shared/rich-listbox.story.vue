@@ -16,6 +16,12 @@
         :is-read-only="true"
       />
     </Variant>
+
+    <Variant title="Near bottom">
+      <div class="flex min-h-[70vh] flex-col justify-end">
+        <RichListbox v-model="visibility" label="Visibility" :options="visibilityOptions" />
+      </div>
+    </Variant>
   </Story>
 </template>
 

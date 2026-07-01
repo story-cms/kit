@@ -6,7 +6,7 @@
     as="div"
     @update:model-value="emit('update:modelValue', $event)"
   >
-    <div class="relative">
+    <div ref="listboxRef" class="relative">
       <ListboxLabel
         v-if="label"
         class="input-label mb-2 block"
@@ -18,6 +18,7 @@
       <ListboxButton
         class="control-rounded relative w-full cursor-default border border-gray-300 bg-white py-3 pl-3 pr-10 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
         :class="{ 'bg-gray-100': isReadOnly }"
+        @click="updatePlacement"
       >
         <div v-if="selectedOption" class="flex items-center gap-3">
           <component
@@ -36,7 +37,7 @@
           <Icon
             v-if="!isReadOnly"
             class="size-5 text-gray-400 transition-transform duration-100"
-            :class="{ 'rotate-180': open }"
+            :class="{ 'rotate-180': open && !openUpward }"
             aria-hidden="true"
             name="chevron-down"
           />
@@ -49,7 +50,7 @@
         leave-to-class="opacity-0"
       >
         <ListboxOptions
-          class="control-rounded absolute z-30 mt-1 max-h-60 w-full overflow-auto border border-gray-200 bg-white py-1 text-base shadow-lg focus:outline-none sm:text-sm"
+          :class="optionsPanelClasses"
         >
           <ListboxOption
             v-for="option in options"
@@ -92,7 +93,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import type { Component, PropType } from 'vue';
 import {
   Listbox,
@@ -109,6 +110,11 @@ export type RichListboxOption = {
   description: string;
   icon: Component;
 };
+
+export type RichListboxPlacement = 'auto' | 'top' | 'bottom';
+
+const MENU_MAX_HEIGHT = 240;
+const OPTION_ROW_HEIGHT = 72;
 
 const props = defineProps({
   modelValue: {
@@ -127,13 +133,45 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  placement: {
+    type: String as PropType<RichListboxPlacement>,
+    default: 'auto',
+  },
 });
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void;
 }>();
 
+const listboxRef = ref<HTMLElement | null>(null);
+const openUpward = ref(false);
+
 const selectedOption = computed(() =>
   props.options.find((option) => option.value === props.modelValue),
 );
+
+const optionsPanelClasses = computed(() => [
+  'control-rounded absolute left-0 z-30 max-h-60 w-full overflow-auto border border-gray-200 bg-white py-1 text-base shadow-lg focus:outline-none sm:text-sm',
+  openUpward.value ? 'bottom-full mb-1' : 'top-full mt-1',
+]);
+
+const updatePlacement = () => {
+  if (props.placement === 'top') {
+    openUpward.value = true;
+    return;
+  }
+
+  if (props.placement === 'bottom') {
+    openUpward.value = false;
+    return;
+  }
+
+  const el = listboxRef.value;
+  if (!el) return;
+
+  const rect = el.getBoundingClientRect();
+  const spaceBelow = window.innerHeight - rect.bottom;
+  const menuHeight = Math.min(props.options.length * OPTION_ROW_HEIGHT, MENU_MAX_HEIGHT);
+  openUpward.value = spaceBelow < menuHeight;
+};
 </script>
