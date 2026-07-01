@@ -195,7 +195,7 @@ const contentClassificationField: FieldSpec = {
         "The overall theme or category of your course (e.g., 'Educational', 'Devotional', 'Bible Study').",
     },
     {
-      title: 'Part Type',
+      title: 'Section Type',
       description:
         "How the course is divided into major sections (e.g., 'Weekly', 'Daily', 'Module').",
     },
@@ -216,16 +216,16 @@ const contentClassificationField: FieldSpec = {
       placeholderText: 'e.g., Course, Devotional, Plan',
     },
     {
-      label: 'Chapter Type',
-      name: 'chapterType',
-      widget: 'string',
-      placeholderText: 'e.g., Session, Devotion, Day',
-    },
-    {
       label: 'Section Type',
       name: 'sectionType',
       widget: 'string',
       placeholderText: 'e.g., Part, Module',
+    },
+    {
+      label: 'Chapter Type',
+      name: 'chapterType',
+      widget: 'string',
+      placeholderText: 'e.g., Session, Devotion, Day',
     },
   ],
 };
