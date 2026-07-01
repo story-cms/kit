@@ -1,6 +1,7 @@
 /// ----------------------------------------------------
 ///  these enums can not be imported into vue files
 /// ----------------------------------------------------
+
 export enum AddStatus {
   Full,
   Add,
@@ -538,10 +539,10 @@ export interface TabItem {
   count: number;
 }
 
-/** Tabs for `navigation-pane` (icon + label). */
+/** Tabs for `navigation-pane` and `tab-navigation` (icon + label). */
 export interface NavigationPaneTab {
   label: string;
-  /** Registered `Icon` name; omitted for label-only tabs. */
+  /** Registered `Icon` name; Lucide icons are passed via the component `icons` prop. */
   icon?: string;
   /** When true, tab shows validation error styling. */
   hasError?: boolean;

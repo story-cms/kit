@@ -31,7 +31,12 @@
               class="inline-flex shrink-0 items-center justify-center text-gray-400"
               aria-hidden="true"
             >
-              <Icon :name="headerIcon" class="h-5 w-5" />
+              <component
+                :is="headerIcon"
+                v-if="isLucideIcon(headerIcon)"
+                class="h-5 w-5"
+              />
+              <Icon v-else :name="headerIcon" class="h-5 w-5" />
             </span>
             <button
               type="button"
@@ -162,9 +167,10 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
+import type { Component, PropType } from 'vue';
 
 import type { FieldSpec } from '../../../types';
-import { commonProps } from '../../shared/helpers';
+import { commonProps, isLucideIcon } from '../../shared/helpers';
 import { useModelStore, useSharedStore, useWidgetsStore } from '../../store';
 import Icon from '../../shared/icon.vue';
 
@@ -175,7 +181,7 @@ const props = defineProps({
     default: 'Section',
   },
   headerIcon: {
-    type: String,
+    type: [String, Object, Function] as PropType<string | Component>,
     default: '',
   },
 });

@@ -1,5 +1,15 @@
 <template>
   <Story title="Tab navigation" group="shared">
+    <Variant title="With Lucide icons">
+      <TabNavigation
+        :tabs="lucideTabItems"
+        :icons="lucideIcons"
+        :current-tab="currentTab"
+        @change="changeTab"
+      />
+      <div class="mt-2 text-sm text-gray-600">Active: {{ currentTab }}</div>
+    </Variant>
+
     <Variant title="With icons">
       <TabNavigation :tabs="tabItems" :current-tab="currentTab" @change="changeTab" />
       <div class="mt-2 text-sm text-gray-600">Active: {{ currentTab }}</div>
@@ -21,6 +31,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { BookOpen, Folder, LayoutList } from '@lucide/vue';
 import TabNavigation from './tab-navigation.vue';
 import type { NavigationPaneTab } from '../../types';
 
@@ -35,6 +46,18 @@ const tabItems: NavigationPaneTab[] = [
   { label: 'Sections', icon: 'list-bullet' },
   { label: 'Resources', icon: 'folder' },
 ];
+
+const lucideTabItems: NavigationPaneTab[] = [
+  { label: 'Details' },
+  { label: 'Sections' },
+  { label: 'Resources' },
+];
+
+const lucideIcons = {
+  Details: BookOpen,
+  Sections: LayoutList,
+  Resources: Folder,
+};
 
 const labelOnlyTabs: NavigationPaneTab[] = [
   { label: 'Details' },
