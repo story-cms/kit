@@ -25,8 +25,8 @@
       </ListboxLabel>
 
       <ListboxButton
-        class="control-rounded relative w-full cursor-default border border-gray-300 bg-white py-3 pl-3 pr-10 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-        :class="{ 'bg-gray-100': isReadOnly }"
+        class="control-rounded relative w-full cursor-default border border-gray-300 py-3 pl-3 pr-10 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+        :class="isReadOnly ? 'bg-gray-50' : 'bg-white'"
         @click="updatePlacement"
       >
         <div v-if="selectedOption" class="flex items-center gap-3">
