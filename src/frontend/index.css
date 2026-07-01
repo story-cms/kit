@@ -29,40 +29,50 @@
   }
 
   .form-panel .input-field,
-  .form-panel .border-dashed {
+  .form-field-styles .input-field,
+  .form-panel .border-dashed,
+  .form-field-styles .border-dashed {
     @apply rounded-[10px];
   }
 
-  .form-panel .input-field {
+  .form-panel .input-field,
+  .form-field-styles .input-field {
     @apply px-4 py-2.5 focus:border-blue-500 focus:ring-blue-500;
   }
 
-  .form-panel .input-label {
+  .form-panel .input-label,
+  .form-field-styles .input-label {
     @apply text-gray-700;
   }
 
-  .form-panel .EasyMDEContainer {
+  .form-panel .EasyMDEContainer,
+  .form-field-styles .EasyMDEContainer {
     @apply rounded-[10px];
   }
 
-  .form-panel .editor-toolbar {
+  .form-panel .editor-toolbar,
+  .form-field-styles .editor-toolbar {
     @apply rounded-t-[10px] border border-b-0 border-gray-300;
     background-color: #f9fafb !important;
   }
 
-  .form-panel .editor-toolbar + .CodeMirror {
+  .form-panel .editor-toolbar + .CodeMirror,
+  .form-field-styles .editor-toolbar + .CodeMirror {
     @apply rounded-b-[10px] border border-gray-300;
   }
 
-  .form-panel .no-markup .editor-toolbar {
+  .form-panel .no-markup .editor-toolbar,
+  .form-field-styles .no-markup .editor-toolbar {
     @apply hidden;
   }
 
-  .form-panel .no-markup .CodeMirror {
+  .form-panel .no-markup .CodeMirror,
+  .form-field-styles .no-markup .CodeMirror {
     @apply rounded-[10px] border border-gray-300;
   }
 
-  .form-panel .no-markup .CodeMirror-scroll {
+  .form-panel .no-markup .CodeMirror-scroll,
+  .form-field-styles .no-markup .CodeMirror-scroll {
     @apply min-h-[90px];
   }
   .icon {
@@ -100,7 +110,8 @@
 }
 
 /* Overide CodeMirror styles */
-.form-panel .cm-s-easymde .CodeMirror {
+.form-panel .cm-s-easymde .CodeMirror,
+.form-field-styles .cm-s-easymde .CodeMirror {
   @apply text-sm font-normal leading-5;
   font-family: inherit;
 }
