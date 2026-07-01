@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-6">
+  <div class="form-panel space-y-6">
     <div v-if="isTranslation" class="grid grid-cols-2 gap-x-4">
       <StringField :field="titleField" :is-nested="true" />
       <StringField :field="titleField" :is-nested="true" :is-read-only="true" />

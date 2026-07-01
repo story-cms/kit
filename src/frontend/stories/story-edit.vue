@@ -38,7 +38,7 @@
     </template>
 
     <div class="relative mt-3">
-      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="form-panel">
+      <form :dir="shared.isRtl ? 'rtl' : 'ltr'">
         <StoryEditDetails
           v-if="currentStoryTab === 'Details'"
           :is-translation="shared.isTranslation"
