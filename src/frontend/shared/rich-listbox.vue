@@ -37,10 +37,7 @@
           />
           <div class="min-w-0">
             <p class="text-sm font-medium text-gray-900">{{ selectedOption.label }}</p>
-            <p
-              v-if="selectedOption.description"
-              class="truncate text-sm text-gray-500"
-            >
+            <p v-if="selectedOption.description" class="truncate text-sm text-gray-500">
               {{ selectedOption.description }}
             </p>
           </div>
@@ -63,9 +60,7 @@
         leave-from-class="opacity-100"
         leave-to-class="opacity-0"
       >
-        <ListboxOptions
-          :class="optionsPanelClasses"
-        >
+        <ListboxOptions :class="optionsPanelClasses">
           <ListboxOption
             v-for="option in options"
             :key="option.value"
