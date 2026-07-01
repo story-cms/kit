@@ -42,21 +42,19 @@
         class="rounded-lg border border-[#E5E7EB]"
       />
       <RichListbox
+        v-if="templates.length > 0"
+        v-model="template"
+        label="Chapter Template"
+        :hint="chapterTemplateHint"
+        :options="templateRichOptions"
+        :is-read-only="templates.length <= 1"
+        @update:model-value="setTemplate"
+      />
+      <RichListbox
         v-model="visibility"
         label="Visibility"
         :options="visibilityOptions"
         @update:model-value="setVisibility"
-      />
-      <SelectField
-        v-if="showTemplateField"
-        :field="{
-          name: 'template',
-          label: 'Content Shape',
-          widget: 'select',
-          options: templateOptions,
-          default: templateOptions[0].value,
-        }"
-        :is-nested="true"
       />
     </section>
   </div>
@@ -64,7 +62,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import { Crown, Globe, User } from '@lucide/vue';
+import { Crown, FileText, Globe, User } from '@lucide/vue';
 import type { Component } from 'vue';
 
 import type { BundleTemplate, FieldSpec, VisibilityType } from '../../../types';
@@ -74,7 +72,6 @@ import StringField from '../../fields/string-field.vue';
 import ImageField from '../../fields/image-field.vue';
 import TagField from '../../fields/tag-field.vue';
 import PanelField from '../../fields/panel-field.vue';
-import SelectField from '../../fields/select-field.vue';
 import RichListbox from '../../shared/rich-listbox.vue';
 
 const props = withDefaults(
@@ -90,6 +87,11 @@ const model = useModelStore();
 const visibility = ref<VisibilityType>(
   model.getField('visibility', 'public') as VisibilityType,
 );
+
+const template = ref<string>(model.getField('template', '') as string);
+
+const chapterTemplateHint =
+  'Defines the chapter structure for this story. This cannot be changed after the story is created.';
 
 const visibilityOptions: {
   value: VisibilityType;
@@ -123,18 +125,24 @@ const setVisibility = (value: string) => {
   model.setField('visibility', visibilityValue);
 };
 
+const setTemplate = (value: string) => {
+  template.value = value;
+  model.setField('template', value);
+};
+
 onMounted(() => {
   model.$subscribe(() => {
     visibility.value = model.getField('visibility', 'public') as VisibilityType;
+    template.value = model.getField('template', '') as string;
   });
 });
 
-const showTemplateField = computed(() => props.templates.length > 1);
-
-const templateOptions = computed(() =>
-  props.templates.map((template: BundleTemplate) => ({
-    label: template.name,
-    value: template.id,
+const templateRichOptions = computed(() =>
+  props.templates.map((item: BundleTemplate) => ({
+    value: item.id,
+    label: item.name,
+    description: '',
+    icon: FileText,
   })),
 );
 

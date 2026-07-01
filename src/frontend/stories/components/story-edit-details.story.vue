@@ -15,6 +15,11 @@
       <ModelControl :model="translationWithoutTagsModel" :is-inspect-only="true" />
     </Variant>
 
+    <Variant title="Single template" :setup-app="loadSourceLocale">
+      <StoryEditDetails :templates="[storyTemplates[0]]" />
+      <ModelControl :model="sourceLocaleModel" :is-inspect-only="true" />
+    </Variant>
+
     <Variant title="Multiple templates" :setup-app="loadSourceLocale">
       <StoryEditDetails :templates="storyTemplates" />
       <ModelControl :model="sourceLocaleModel" :is-inspect-only="true" />
@@ -126,17 +131,18 @@ const loadTranslationWithoutTags: StoryHandler = (): void => {
 # Story Edit Details
 
 Details tab for the story editor. Renders title, cover image, description, tags, and (on the
-source locale only) classification fields and content shape.
+source locale only) classification fields, chapter template, and visibility.
 
 ## Variants
 
 - **Source locale** — single-column editable fields including chapter count and visibility
 - **Translation locale** — side-by-side editable and read-only columns; tags prefilled from source when empty
 - **Translation without tags** — translation mode where the source locale has no tags; both editable and read-only tag fields are empty
-- **Multiple templates** — shows Content Shape select when more than one template is available
+- **Single template** — shows read-only Chapter Template when only one template is configured
+- **Multiple templates** — shows interactive Chapter Template listbox when more than one template is available
 
 ## Props
 
 - `isTranslation` — enables two-column translation layout
-- `templates` — bundle templates; Content Shape select appears when length is greater than 1
+- `templates` — bundle templates; Chapter Template appears when at least one template is configured
 </docs>

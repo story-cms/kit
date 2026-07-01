@@ -7,8 +7,17 @@
     @update:model-value="emit('update:modelValue', $event)"
   >
     <div ref="listboxRef" class="relative">
+      <LabelHint
+        v-if="label && hasLabelHint"
+        :label="label"
+        :hint="hint"
+        :sections="hintSections"
+        :footer="hintFooter"
+        :muted="isReadOnly"
+        class="mb-2"
+      />
       <ListboxLabel
-        v-if="label"
+        v-else-if="label"
         class="input-label mb-2 block"
         :class="{ 'text-gray-600': isReadOnly }"
       >
@@ -28,7 +37,12 @@
           />
           <div class="min-w-0">
             <p class="text-sm font-medium text-gray-900">{{ selectedOption.label }}</p>
-            <p class="truncate text-sm text-gray-500">{{ selectedOption.description }}</p>
+            <p
+              v-if="selectedOption.description"
+              class="truncate text-sm text-gray-500"
+            >
+              {{ selectedOption.description }}
+            </p>
           </div>
         </div>
         <span
@@ -75,7 +89,9 @@
                   <p class="font-medium text-gray-900">
                     {{ option.label }}
                   </p>
-                  <p class="text-sm text-gray-500">{{ option.description }}</p>
+                  <p v-if="option.description" class="text-sm text-gray-500">
+                    {{ option.description }}
+                  </p>
                 </div>
               </div>
               <span
@@ -103,6 +119,8 @@ import {
   ListboxOptions,
 } from '@headlessui/vue';
 import Icon from './icon.vue';
+import LabelHint from './label-hint.vue';
+import type { LabelHintSection } from '../../types';
 
 export type RichListboxOption = {
   value: string;
@@ -133,6 +151,18 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  hint: {
+    type: String,
+    default: '',
+  },
+  hintSections: {
+    type: Array as PropType<LabelHintSection[]>,
+    default: () => [],
+  },
+  hintFooter: {
+    type: String,
+    default: '',
+  },
   placement: {
     type: String as PropType<RichListboxPlacement>,
     default: 'auto',
@@ -148,6 +178,10 @@ const openUpward = ref(false);
 
 const selectedOption = computed(() =>
   props.options.find((option) => option.value === props.modelValue),
+);
+
+const hasLabelHint = computed(
+  () => Boolean(props.hint) || props.hintSections.length > 0 || Boolean(props.hintFooter),
 );
 
 const optionsPanelClasses = computed(() => [
