@@ -53,6 +53,7 @@
       <RichListbox
         v-model="visibility"
         label="Visibility"
+        :hint="visibilityHint"
         :options="visibilityOptions"
         @update:model-value="setVisibility"
       />
@@ -93,6 +94,9 @@ const template = ref<string>(model.getField('template', '') as string);
 
 const chapterTemplateHint =
   'Defines the chapter structure for this story. This cannot be changed after the story is created.';
+
+const visibilityHint =
+  'Controls who can see this story in the app. Public stories are visible to all users; guest and leader options restrict access to signed-in users or group leaders.';
 
 const visibilityOptions: {
   value: VisibilityType;
