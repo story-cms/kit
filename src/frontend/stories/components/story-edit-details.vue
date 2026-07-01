@@ -12,6 +12,17 @@
     </div>
     <ImageField v-else :field="coverImageField" :is-nested="true" />
 
+    <StringField
+      v-if="!isTranslation"
+      :field="{
+        name: 'chapterLimit',
+        label: 'Chapter Count',
+        widget: 'string',
+        placeholderText: 'e.g., 12',
+      }"
+      :is-nested="true"
+    />
+
     <div v-if="isTranslation" class="grid grid-cols-2 gap-x-4">
       <MarkdownField :field="descriptionField" :is-nested="true" />
       <MarkdownField :field="descriptionField" :is-nested="true" :is-read-only="true" />
@@ -25,44 +36,10 @@
     <TagField v-else :field="tagsField" :is-nested="true" />
 
     <section v-if="!isTranslation" class="space-y-6">
-      <StringField
-        :field="{
-          name: 'chapterLimit',
-          label: 'Chapter Count',
-          widget: 'string',
-          placeholderText: 'e.g., 12',
-        }"
-        :is-nested="true"
-      />
       <PanelField
-        :field="{
-          label: '',
-          name: 'contentClassification',
-          widget: 'panel',
-          backgroundColor: 'gray-50',
-          fields: [
-            {
-              label: 'Story Type',
-              name: 'storyType',
-              widget: 'string',
-              placeholderText: 'e.g., Course, Devotional, Plan',
-            },
-            {
-              label: 'Chapter Type',
-              name: 'chapterType',
-              widget: 'string',
-              placeholderText: 'e.g., Session, Devotion, Day',
-            },
-            {
-              label: 'Section Type',
-              name: 'sectionType',
-              widget: 'string',
-              placeholderText: 'e.g., Part, Section',
-            },
-          ],
-        }"
+        :field="contentClassificationField"
         :is-nested="true"
-        class="rounded-lg"
+        class="rounded-lg border border-[#E5E7EB]"
       />
       <RichListbox
         v-model="visibility"
@@ -179,7 +156,7 @@ const coverImageField: FieldSpec = {
 
 const descriptionField: FieldSpec = {
   name: 'description',
-  label: 'Description/Blurb',
+  label: 'Description',
   widget: 'markdown',
   noMarkup: true,
   minimal: true,
@@ -191,5 +168,52 @@ const tagsField: FieldSpec = {
   name: 'tags',
   label: 'Tags',
   widget: 'tags',
+};
+
+const contentClassificationField: FieldSpec = {
+  label: 'Content Classification',
+  name: 'contentClassification',
+  widget: 'panel',
+  labelStyle: 'header',
+  hintSections: [
+    {
+      title: 'Story Type',
+      description:
+        "The overall theme or category of your course (e.g., 'Educational', 'Devotional', 'Bible Study').",
+    },
+    {
+      title: 'Part Type',
+      description:
+        "How the course is divided into major sections (e.g., 'Weekly', 'Daily', 'Module').",
+    },
+    {
+      title: 'Chapter Type',
+      description:
+        "What you call individual lessons or units (e.g., 'Session', 'Lesson', 'Chapter').",
+    },
+  ],
+  hintFooter:
+    'These labels help organize and present your content consistently throughout the app.',
+  backgroundColor: 'gray-50',
+  fields: [
+    {
+      label: 'Story Type',
+      name: 'storyType',
+      widget: 'string',
+      placeholderText: 'e.g., Course, Devotional, Plan',
+    },
+    {
+      label: 'Chapter Type',
+      name: 'chapterType',
+      widget: 'string',
+      placeholderText: 'e.g., Session, Devotion, Day',
+    },
+    {
+      label: 'Section Type',
+      name: 'sectionType',
+      widget: 'string',
+      placeholderText: 'e.g., Part, Module',
+    },
+  ],
 };
 </script>

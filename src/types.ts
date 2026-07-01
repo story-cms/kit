@@ -31,6 +31,11 @@ export interface Version {
 
 export type VisibilityType = 'public' | 'guests' | 'leaders';
 
+export interface LabelHintSection {
+  title: string;
+  description: string;
+}
+
 /// ----------------------------------------------------
 ///  fields
 /// ----------------------------------------------------
@@ -52,6 +57,10 @@ export interface FieldSpec {
   toolbar?: string[];
   description?: string;
   placeholderText?: string;
+  hint?: string;
+  hintSections?: LabelHintSection[];
+  hintFooter?: string;
+  labelStyle?: 'header' | 'pill';
   extensions?: string[];
   maxSize?: number;
   tintColor?: string;
