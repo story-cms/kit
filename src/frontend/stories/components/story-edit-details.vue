@@ -185,6 +185,7 @@ const tagsField: FieldSpec = {
   name: 'tags',
   label: 'Tags',
   widget: 'tags',
+  placeholderText: 'Add tags...',
 };
 
 const contentClassificationField: FieldSpec = {
