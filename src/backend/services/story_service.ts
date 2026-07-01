@@ -92,8 +92,8 @@ export class StoryService {
     return {
       model: {
         chapterLimit: 10,
-        storyType: 'Story',
-        chapterType: 'Chapter',
+        storyType: '',
+        chapterType: '',
         sectionType: null,
         visibility: 'public',
         slug: null,
@@ -131,12 +131,12 @@ export class StoryService {
 
     const hasNoContent = await this.hasNoContent(storyId);
 
-    const target =
-      story.localisations.find((localisation) => localisation.locale === locale) ??
-      { ...emptyTranslation };
-    const source =
-      story.localisations.find((localisation) => localisation.locale === sourceLocale) ??
-      { ...emptyTranslation };
+    const target = story.localisations.find(
+      (localisation) => localisation.locale === locale,
+    ) ?? { ...emptyTranslation };
+    const source = story.localisations.find(
+      (localisation) => localisation.locale === sourceLocale,
+    ) ?? { ...emptyTranslation };
 
     if (locale !== sourceLocale && !target.coverImage) {
       target.coverImage = source.coverImage;
