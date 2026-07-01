@@ -166,6 +166,7 @@ export class StoryService {
       },
       availableResources,
       hasNoContent,
+      templates: [...this.config.bespokeTemplates, ...this.config.storyTemplates],
       providers: configService.get<Providers>('providers')!,
     };
 

@@ -25,8 +25,8 @@
       </ListboxLabel>
 
       <ListboxButton
-        class="control-rounded relative w-full cursor-default border border-gray-300 bg-white py-3 pl-3 pr-10 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-        :class="{ 'bg-gray-100': isReadOnly }"
+        class="control-rounded relative w-full cursor-default border border-gray-300 py-3 pl-3 pr-10 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+        :class="isReadOnly ? 'bg-gray-50' : 'bg-white'"
         @click="updatePlacement"
       >
         <div v-if="selectedOption" class="flex items-center gap-3">
@@ -37,10 +37,7 @@
           />
           <div class="min-w-0">
             <p class="text-sm font-medium text-gray-900">{{ selectedOption.label }}</p>
-            <p
-              v-if="selectedOption.description"
-              class="truncate text-sm text-gray-500"
-            >
+            <p v-if="selectedOption.description" class="truncate text-sm text-gray-500">
               {{ selectedOption.description }}
             </p>
           </div>
@@ -63,9 +60,7 @@
         leave-from-class="opacity-100"
         leave-to-class="opacity-0"
       >
-        <ListboxOptions
-          :class="optionsPanelClasses"
-        >
+        <ListboxOptions :class="optionsPanelClasses">
           <ListboxOption
             v-for="option in options"
             :key="option.value"

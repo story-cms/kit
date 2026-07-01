@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-6">
+  <div class="form-field-styles space-y-6">
     <PanelList
       v-if="hasSections || !shared.isTranslation"
       :field="sectionsField"
@@ -53,6 +53,7 @@ const sectionsField = {
       label: 'Title',
       name: 'title',
       widget: 'string',
+      placeholderText: 'e.g. Introduction',
     },
     {
       label: 'Description',
@@ -61,6 +62,7 @@ const sectionsField = {
       noMarkup: true,
       minimal: true,
       toolbar: [],
+      placeholderText: 'Brief overview of this section.',
     },
   ],
 };

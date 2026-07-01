@@ -42,6 +42,8 @@
         <StoryEditDetails
           v-if="currentStoryTab === 'Details'"
           :is-translation="shared.isTranslation"
+          :is-editing="true"
+          :templates="props.templates"
         />
         <StoryEditSections
           v-if="currentStoryTab === `${sectionType ?? 'Section'}s`"

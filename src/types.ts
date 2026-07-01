@@ -371,6 +371,7 @@ export interface StoryEditProps {
   };
   availableResources: ResourceItem[];
   hasNoContent: boolean;
+  templates: BundleTemplate[];
   providers: Providers;
 }
 

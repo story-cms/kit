@@ -47,12 +47,13 @@
         label="Chapter Template"
         :hint="chapterTemplateHint"
         :options="templateRichOptions"
-        :is-read-only="templates.length <= 1"
+        :is-read-only="isTemplateReadOnly"
         @update:model-value="setTemplate"
       />
       <RichListbox
         v-model="visibility"
         label="Visibility"
+        :hint="visibilityHint"
         :options="visibilityOptions"
         @update:model-value="setVisibility"
       />
@@ -77,9 +78,10 @@ import RichListbox from '../../shared/rich-listbox.vue';
 const props = withDefaults(
   defineProps<{
     isTranslation?: boolean;
+    isEditing?: boolean;
     templates?: BundleTemplate[];
   }>(),
-  { isTranslation: false, templates: (): BundleTemplate[] => [] },
+  { isTranslation: false, isEditing: false, templates: (): BundleTemplate[] => [] },
 );
 
 const model = useModelStore();
@@ -92,6 +94,9 @@ const template = ref<string>(model.getField('template', '') as string);
 
 const chapterTemplateHint =
   'Defines the chapter structure for this story. This cannot be changed after the story is created.';
+
+const visibilityHint =
+  'Controls who can see this story in the app. Public stories are visible to all users; guest and leader options restrict access to signed-in users or group leaders.';
 
 const visibilityOptions: {
   value: VisibilityType;
@@ -146,6 +151,10 @@ const templateRichOptions = computed(() =>
   })),
 );
 
+const isTemplateReadOnly = computed(
+  () => props.isEditing || props.templates.length <= 1,
+);
+
 const titleField: FieldSpec = {
   name: 'title',
   label: 'Title',
@@ -176,6 +185,7 @@ const tagsField: FieldSpec = {
   name: 'tags',
   label: 'Tags',
   widget: 'tags',
+  placeholderText: 'Add tags...',
 };
 
 const contentClassificationField: FieldSpec = {
@@ -190,7 +200,7 @@ const contentClassificationField: FieldSpec = {
         "The overall theme or category of your course (e.g., 'Educational', 'Devotional', 'Bible Study').",
     },
     {
-      title: 'Part Type',
+      title: 'Section Type',
       description:
         "How the course is divided into major sections (e.g., 'Weekly', 'Daily', 'Module').",
     },
@@ -211,16 +221,16 @@ const contentClassificationField: FieldSpec = {
       placeholderText: 'e.g., Course, Devotional, Plan',
     },
     {
-      label: 'Chapter Type',
-      name: 'chapterType',
-      widget: 'string',
-      placeholderText: 'e.g., Session, Devotion, Day',
-    },
-    {
       label: 'Section Type',
       name: 'sectionType',
       widget: 'string',
       placeholderText: 'e.g., Part, Module',
+    },
+    {
+      label: 'Chapter Type',
+      name: 'chapterType',
+      widget: 'string',
+      placeholderText: 'e.g., Session, Devotion, Day',
     },
   ],
 };

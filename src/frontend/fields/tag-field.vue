@@ -4,6 +4,7 @@
     :pills="tags"
     :errors="errors"
     :input-value="newTag"
+    :placeholder="field.placeholderText ?? ''"
     @add="addTag"
     @remove="removeTag"
     @update="newTag = $event"
