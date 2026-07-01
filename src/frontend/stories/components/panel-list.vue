@@ -31,7 +31,12 @@
               class="inline-flex shrink-0 items-center justify-center text-gray-400"
               aria-hidden="true"
             >
-              <Icon :name="headerIcon" class="h-5 w-5" />
+              <component
+                :is="headerIcon"
+                v-if="isLucideIcon(headerIcon)"
+                class="h-5 w-5"
+              />
+              <Icon v-else :name="headerIcon" class="h-5 w-5" />
             </span>
             <button
               type="button"
@@ -122,27 +127,12 @@
     <div v-if="!shared.isTranslation" class="mt-6 flex w-full flex-col">
       <button
         type="button"
-        class="inline-flex items-center justify-center rounded-xl border-2 border-dashed border-indigo-700 bg-indigo-50 px-3 py-[18px] text-sm font-medium leading-4 text-indigo-700 shadow-sm"
+        class="inline-flex items-center justify-center rounded-xl border border-dashed border-studio_forest_green px-3 py-[18px] text-sm font-medium leading-4 text-studio_forest_green shadow-sm hover:bg-studio_forest_green/10"
         @click.prevent="addSet"
       >
         <div class="inline-flex items-center justify-center gap-2">
           <span>
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 10 10"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M5 1V5M5 5V9M5 5H9M5 5L1 5"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                fill="currentColor"
-              />
-            </svg>
+            <Plus class="size-5" />
           </span>
           <span class="ml-2">Add {{ sectionType }}</span>
         </div>
@@ -162,10 +152,12 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
+import type { Component, PropType } from 'vue';
 
 import type { FieldSpec } from '../../../types';
-import { commonProps } from '../../shared/helpers';
+import { commonProps, isLucideIcon } from '../../shared/helpers';
 import { useModelStore, useSharedStore, useWidgetsStore } from '../../store';
+import { Plus } from '@lucide/vue';
 import Icon from '../../shared/icon.vue';
 
 const props = defineProps({
@@ -175,7 +167,7 @@ const props = defineProps({
     default: 'Section',
   },
   headerIcon: {
-    type: String,
+    type: [String, Object, Function] as PropType<string | Component>,
     default: '',
   },
 });

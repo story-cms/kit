@@ -29,6 +29,7 @@
         <template #controls>
           <TabNavigation
             :tabs="storyEditTabs"
+            :icons="storyEditTabIcons"
             :current-tab="currentStoryTab"
             @change="onStoryTabChange"
           />
@@ -37,7 +38,7 @@
     </template>
 
     <div class="relative mt-3">
-      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="form-panel">
+      <form :dir="shared.isRtl ? 'rtl' : 'ltr'">
         <StoryEditDetails
           v-if="currentStoryTab === 'Details'"
           :is-translation="shared.isTranslation"
@@ -62,7 +63,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { router } from '@inertiajs/vue3';
-import { Trash2 } from '@lucide/vue';
+import { Trash2, BookOpen, FolderClosed, LayoutList } from '@lucide/vue';
 
 import type {
   NavigationPaneTab,
@@ -107,7 +108,9 @@ const attachedResources = ref<ResourceItem[]>([...(props.model.resources ?? [])]
 const availableResources = props.availableResources ?? [];
 const isSaving = ref(false);
 
-const attachResourceId = new URLSearchParams(window.location.search).get('attachResource');
+const attachResourceId = new URLSearchParams(window.location.search).get(
+  'attachResource',
+);
 if (attachResourceId) {
   const resource = availableResources.find((item) => item.id === attachResourceId);
   if (resource && !attachedResources.value.some((item) => item.id === attachResourceId)) {
@@ -133,39 +136,40 @@ const headerSubtitle = computed(() => title.value?.trim() || 'Edit Story');
 
 const sectionTabLabel = computed(() => `${sectionType.value ?? 'Section'}s`);
 
-const storyEditTabs = computed(
-  (): NavigationPaneTab[] => [
-    {
-      label: 'Details',
-      icon: 'book-open',
-      hasError: storyEditTabHasError('details', errors.value),
-    },
-    {
-      label: sectionTabLabel.value,
-      icon: 'list-bullet',
-      hasError: storyEditTabHasError('sections', errors.value),
-    },
-    {
-      label: 'Resources',
-      icon: 'folder',
-      hasError: storyEditTabHasError('resources', errors.value),
-    },
-  ],
-);
+const storyEditTabs = computed((): NavigationPaneTab[] => [
+  {
+    label: 'Details',
+    hasError: storyEditTabHasError('details', errors.value),
+  },
+  {
+    label: sectionTabLabel.value,
+    hasError: storyEditTabHasError('sections', errors.value),
+  },
+  {
+    label: 'Resources',
+    hasError: storyEditTabHasError('resources', errors.value),
+  },
+]);
+
+const storyEditTabIcons = computed(() => ({
+  Details: BookOpen,
+  [sectionTabLabel.value]: LayoutList,
+  Resources: FolderClosed,
+}));
 
 const initialSectionType = props.model.sectionType || 'Section';
-const initialTabs = [
-  { label: 'Details', icon: 'book-open' },
-  { label: `${initialSectionType}s`, icon: 'list-bullet' },
-  { label: 'Resources', icon: 'folder' },
-] as NavigationPaneTab[];
+const initialTabs: NavigationPaneTab[] = [
+  { label: 'Details' },
+  { label: `${initialSectionType}s` },
+  { label: 'Resources' },
+];
 
 const currentStoryTab = ref(
   resolveStoryTab(new URLSearchParams(window.location.search).get('tab'), initialTabs),
 );
 
 const currentStoryTabIcon = computed(
-  () => storyEditTabs.value.find((t) => t.label === currentStoryTab.value)?.icon ?? '',
+  () => storyEditTabIcons.value[currentStoryTab.value],
 );
 
 const onStoryTabChange = (tab: string) => {
@@ -243,7 +247,10 @@ const publishStory = () => {
     onError: (validationErrors) => {
       shared.setErrors(validationErrors);
       focusFirstErroredTab();
-      shared.addMessage(ResponseStatus.Failure, validationFailureMessage(validationErrors));
+      shared.addMessage(
+        ResponseStatus.Failure,
+        validationFailureMessage(validationErrors),
+      );
     },
 
     onFinish: () => {
@@ -271,7 +278,10 @@ const saveStory = () => {
     onError: (validationErrors) => {
       shared.setErrors(validationErrors);
       focusFirstErroredTab();
-      shared.addMessage(ResponseStatus.Failure, validationFailureMessage(validationErrors));
+      shared.addMessage(
+        ResponseStatus.Failure,
+        validationFailureMessage(validationErrors),
+      );
     },
 
     onFinish: () => {

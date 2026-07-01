@@ -15,10 +15,16 @@
         @click.prevent="emit('change', tab.label)"
       >
         <span
-          v-if="tab.icon"
+          v-if="tab.resolvedIcon || tab.icon"
           class="inline-flex h-5 w-5 shrink-0 items-center justify-center text-current [&_svg]:block [&_svg]:h-4 [&_svg]:max-h-full [&_svg]:w-4 [&_svg]:max-w-full"
         >
-          <Icon :name="tab.icon" />
+          <component
+            :is="tab.resolvedIcon"
+            v-if="tab.resolvedIcon"
+            class="size-4 shrink-0"
+            aria-hidden="true"
+          />
+          <Icon v-else-if="tab.icon" :name="tab.icon" />
         </span>
         <span>{{ tab.label }}</span>
       </button>
@@ -27,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType } from 'vue';
+import { computed, type Component, type PropType } from 'vue';
 import type { NavigationPaneTab } from '../../types';
 import Icon from './icon.vue';
 
@@ -40,6 +46,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  icons: {
+    type: Object as PropType<Record<string, Component>>,
+    default: undefined,
+  },
 });
 
 const emit = defineEmits(['change']);
@@ -48,6 +58,7 @@ const tabs = computed(() =>
   props.tabs.map((tab: NavigationPaneTab) => ({
     ...tab,
     current: tab.label === props.currentTab,
+    resolvedIcon: props.icons?.[tab.label] ?? null,
   })),
 );
 </script>

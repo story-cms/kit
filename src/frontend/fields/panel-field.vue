@@ -9,9 +9,20 @@
     ]"
     :style="{ gridRow: `span ${fields.length + 1}` }"
   >
-    <div class="relative flex justify-center">
+    <div
+      class="relative flex"
+      :class="field.labelStyle === 'header' ? 'justify-start px-2 pt-4' : 'justify-center'"
+    >
+      <LabelHint
+        v-if="field.label && field.label.trim() !== '' && field.labelStyle === 'header'"
+        :label="field.label"
+        :hint="field.hint"
+        :sections="field.hintSections"
+        :footer="field.hintFooter"
+        class="mb-2"
+      />
       <button
-        v-if="field.label && field.label.trim() !== ''"
+        v-else-if="field.label && field.label.trim() !== ''"
         type="button"
         class="inline-flex items-center rounded-full border border-gray-300 bg-white px-4 py-1.5 text-sm font-medium leading-5 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
       >
@@ -54,6 +65,7 @@ import { computed } from 'vue';
 import { commonProps } from '../shared/helpers';
 import type { FieldSpec } from '../../types';
 import { useWidgetsStore, useSharedStore } from '../store';
+import LabelHint from '../shared/label-hint.vue';
 const shared = useSharedStore();
 
 const props = defineProps({

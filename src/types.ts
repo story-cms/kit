@@ -1,6 +1,7 @@
 /// ----------------------------------------------------
 ///  these enums can not be imported into vue files
 /// ----------------------------------------------------
+
 export enum AddStatus {
   Full,
   Add,
@@ -31,6 +32,11 @@ export interface Version {
 
 export type VisibilityType = 'public' | 'guests' | 'leaders';
 
+export interface LabelHintSection {
+  title: string;
+  description: string;
+}
+
 /// ----------------------------------------------------
 ///  fields
 /// ----------------------------------------------------
@@ -52,6 +58,10 @@ export interface FieldSpec {
   toolbar?: string[];
   description?: string;
   placeholderText?: string;
+  hint?: string;
+  hintSections?: LabelHintSection[];
+  hintFooter?: string;
+  labelStyle?: 'header' | 'pill';
   extensions?: string[];
   maxSize?: number;
   tintColor?: string;
@@ -529,10 +539,10 @@ export interface TabItem {
   count: number;
 }
 
-/** Tabs for `navigation-pane` (icon + label). */
+/** Tabs for `navigation-pane` and `tab-navigation` (icon + label). */
 export interface NavigationPaneTab {
   label: string;
-  /** Registered `Icon` name; omitted for label-only tabs. */
+  /** Registered `Icon` name; Lucide icons are passed via the component `icons` prop. */
   icon?: string;
   /** When true, tab shows validation error styling. */
   hasError?: boolean;

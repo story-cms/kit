@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-6">
+  <div class="form-panel space-y-6">
     <div v-if="isTranslation" class="grid grid-cols-2 gap-x-4">
       <StringField :field="titleField" :is-nested="true" />
       <StringField :field="titleField" :is-nested="true" :is-read-only="true" />
@@ -11,6 +11,17 @@
       <ImageField :field="coverImageField" :is-nested="true" :is-read-only="true" />
     </div>
     <ImageField v-else :field="coverImageField" :is-nested="true" />
+
+    <StringField
+      v-if="!isTranslation"
+      :field="{
+        name: 'chapterLimit',
+        label: 'Chapter Count',
+        widget: 'string',
+        placeholderText: 'e.g., 12',
+      }"
+      :is-nested="true"
+    />
 
     <div v-if="isTranslation" class="grid grid-cols-2 gap-x-4">
       <MarkdownField :field="descriptionField" :is-nested="true" />
@@ -25,44 +36,19 @@
     <TagField v-else :field="tagsField" :is-nested="true" />
 
     <section v-if="!isTranslation" class="space-y-6">
-      <StringField
-        :field="{
-          name: 'chapterLimit',
-          label: 'Chapter Count',
-          widget: 'string',
-          placeholderText: 'e.g., 12',
-        }"
-        :is-nested="true"
-      />
       <PanelField
-        :field="{
-          label: '',
-          name: 'contentClassification',
-          widget: 'panel',
-          backgroundColor: 'gray-50',
-          fields: [
-            {
-              label: 'Story Type',
-              name: 'storyType',
-              widget: 'string',
-              placeholderText: 'e.g., Course, Devotional, Plan',
-            },
-            {
-              label: 'Chapter Type',
-              name: 'chapterType',
-              widget: 'string',
-              placeholderText: 'e.g., Session, Devotion, Day',
-            },
-            {
-              label: 'Section Type',
-              name: 'sectionType',
-              widget: 'string',
-              placeholderText: 'e.g., Part, Section',
-            },
-          ],
-        }"
+        :field="contentClassificationField"
         :is-nested="true"
-        class="rounded-lg"
+        class="rounded-lg border border-[#E5E7EB]"
+      />
+      <RichListbox
+        v-if="templates.length > 0"
+        v-model="template"
+        label="Chapter Template"
+        :hint="chapterTemplateHint"
+        :options="templateRichOptions"
+        :is-read-only="templates.length <= 1"
+        @update:model-value="setTemplate"
       />
       <RichListbox
         v-model="visibility"
@@ -70,24 +56,13 @@
         :options="visibilityOptions"
         @update:model-value="setVisibility"
       />
-      <SelectField
-        v-if="showTemplateField"
-        :field="{
-          name: 'template',
-          label: 'Content Shape',
-          widget: 'select',
-          options: templateOptions,
-          default: templateOptions[0].value,
-        }"
-        :is-nested="true"
-      />
     </section>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import { Crown, Globe, User } from '@lucide/vue';
+import { Crown, FileText, Globe, User } from '@lucide/vue';
 import type { Component } from 'vue';
 
 import type { BundleTemplate, FieldSpec, VisibilityType } from '../../../types';
@@ -97,7 +72,6 @@ import StringField from '../../fields/string-field.vue';
 import ImageField from '../../fields/image-field.vue';
 import TagField from '../../fields/tag-field.vue';
 import PanelField from '../../fields/panel-field.vue';
-import SelectField from '../../fields/select-field.vue';
 import RichListbox from '../../shared/rich-listbox.vue';
 
 const props = withDefaults(
@@ -113,6 +87,11 @@ const model = useModelStore();
 const visibility = ref<VisibilityType>(
   model.getField('visibility', 'public') as VisibilityType,
 );
+
+const template = ref<string>(model.getField('template', '') as string);
+
+const chapterTemplateHint =
+  'Defines the chapter structure for this story. This cannot be changed after the story is created.';
 
 const visibilityOptions: {
   value: VisibilityType;
@@ -146,18 +125,24 @@ const setVisibility = (value: string) => {
   model.setField('visibility', visibilityValue);
 };
 
+const setTemplate = (value: string) => {
+  template.value = value;
+  model.setField('template', value);
+};
+
 onMounted(() => {
   model.$subscribe(() => {
     visibility.value = model.getField('visibility', 'public') as VisibilityType;
+    template.value = model.getField('template', '') as string;
   });
 });
 
-const showTemplateField = computed(() => props.templates.length > 1);
-
-const templateOptions = computed(() =>
-  props.templates.map((template: BundleTemplate) => ({
-    label: template.name,
-    value: template.id,
+const templateRichOptions = computed(() =>
+  props.templates.map((item: BundleTemplate) => ({
+    value: item.id,
+    label: item.name,
+    description: '',
+    icon: FileText,
   })),
 );
 
@@ -179,7 +164,7 @@ const coverImageField: FieldSpec = {
 
 const descriptionField: FieldSpec = {
   name: 'description',
-  label: 'Description/Blurb',
+  label: 'Description',
   widget: 'markdown',
   noMarkup: true,
   minimal: true,
@@ -191,5 +176,52 @@ const tagsField: FieldSpec = {
   name: 'tags',
   label: 'Tags',
   widget: 'tags',
+};
+
+const contentClassificationField: FieldSpec = {
+  label: 'Content Classification',
+  name: 'contentClassification',
+  widget: 'panel',
+  labelStyle: 'header',
+  hintSections: [
+    {
+      title: 'Story Type',
+      description:
+        "The overall theme or category of your course (e.g., 'Educational', 'Devotional', 'Bible Study').",
+    },
+    {
+      title: 'Part Type',
+      description:
+        "How the course is divided into major sections (e.g., 'Weekly', 'Daily', 'Module').",
+    },
+    {
+      title: 'Chapter Type',
+      description:
+        "What you call individual lessons or units (e.g., 'Session', 'Lesson', 'Chapter').",
+    },
+  ],
+  hintFooter:
+    'These labels help organize and present your content consistently throughout the app.',
+  backgroundColor: 'gray-50',
+  fields: [
+    {
+      label: 'Story Type',
+      name: 'storyType',
+      widget: 'string',
+      placeholderText: 'e.g., Course, Devotional, Plan',
+    },
+    {
+      label: 'Chapter Type',
+      name: 'chapterType',
+      widget: 'string',
+      placeholderText: 'e.g., Session, Devotion, Day',
+    },
+    {
+      label: 'Section Type',
+      name: 'sectionType',
+      widget: 'string',
+      placeholderText: 'e.g., Part, Module',
+    },
+  ],
 };
 </script>

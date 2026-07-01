@@ -9,7 +9,7 @@
     />
     <p
       v-if="!hasSections"
-      class="w-full shrink-0 grow-0 self-stretch text-center font-dmsans text-base font-normal leading-7 text-[#102F35]"
+      class="w-full shrink-0 grow-0 self-stretch pt-11 text-center font-dmsans text-base font-normal leading-7 text-[#102F35]"
     >
       There are currently no sections defined for this story.
     </p>
@@ -18,13 +18,14 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import type { Component } from 'vue';
 
 import { useModelStore, useSharedStore } from '../../store';
 import PanelList from './panel-list.vue';
 
 const props = withDefaults(
   defineProps<{
-    tabIcon?: string;
+    tabIcon?: string | Component;
     sectionType?: string | null;
   }>(),
   { tabIcon: '', sectionType: 'Section' },

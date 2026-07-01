@@ -1,4 +1,4 @@
-import type { App, PropType } from 'vue';
+import type { App, Component, PropType } from 'vue';
 import { type FieldSpec, type LanguageSpecification } from '../../types';
 import { BibleBooksMap } from './bibleBooks';
 import type { Variant, Story } from 'histoire';
@@ -429,5 +429,9 @@ export function replaceLocaleInPath(
   }
   segments[0] = targetLocale;
   return `/${segments.join('/')}`;
+}
+
+export function isLucideIcon(icon: string | Component): icon is Component {
+  return typeof icon === 'object' || typeof icon === 'function';
 }
 

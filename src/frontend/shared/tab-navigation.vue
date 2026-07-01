@@ -10,14 +10,20 @@
         :aria-current="tab.current ? 'page' : undefined"
         @click="emit('change', tab.label)"
       >
-        <Icon v-if="tab.icon" :name="tab.icon" aria-hidden="true" />
+        <component
+          :is="tab.resolvedIcon"
+          v-if="tab.resolvedIcon"
+          class="size-4 shrink-0"
+          aria-hidden="true"
+        />
+        <Icon v-else-if="tab.icon" :name="tab.icon" aria-hidden="true" />
       </TabButton>
     </div>
   </nav>
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType } from 'vue';
+import { computed, type Component, type PropType } from 'vue';
 import type { NavigationPaneTab } from '../../types';
 import Icon from './icon.vue';
 import TabButton from './tab-button.vue';
@@ -31,6 +37,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  icons: {
+    type: Object as PropType<Record<string, Component>>,
+    default: undefined,
+  },
 });
 
 const emit = defineEmits<{
@@ -41,6 +51,7 @@ const tabs = computed(() =>
   props.tabs.map((tab: NavigationPaneTab) => ({
     ...tab,
     current: tab.label === props.currentTab,
+    resolvedIcon: props.icons?.[tab.label] ?? null,
   })),
 );
 </script>
