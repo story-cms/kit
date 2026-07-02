@@ -1,5 +1,6 @@
 <template>
   <AppLayout>
+
     <template #header>
       <ContentHeader title="Invitations">
         <template #actions>
@@ -21,13 +22,15 @@
         </template>
       </ContentHeader>
     </template>
+    <template #main>
     <div class="my-8 grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
-      <div v-for="item in filteredItems" :key="item.id">
-        <a :href="`/${shared.locale}/invitation/${item.id}/edit`">
-          <InvitationIndexItem :invitation="item" />
-        </a>
-      </div>
-    </div>
+          <div v-for="item in filteredItems" :key="item.id">
+            <a :href="`/${shared.locale}/invitation/${item.id}/edit`">
+              <InvitationIndexItem :invitation="item" />
+            </a>
+          </div>
+        </div>
+    </template>
   </AppLayout>
 </template>
 

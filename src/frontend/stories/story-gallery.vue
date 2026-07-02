@@ -1,5 +1,6 @@
 <template>
   <AppLayout>
+
     <template #header>
       <ContentHeader title="Stories">
         <template #actions>
@@ -31,21 +32,22 @@
         </template>
       </ContentHeader>
     </template>
-
+    <template #main>
     <section>
-      <div
-        class="my-8 flex gap-x-[26px]"
-        :class="isList ? 'flex-col gap-y-6' : 'flex-wrap gap-y-[98px]'"
-      >
-        <div
-          v-for="story in sortedStories"
-          :key="story.id"
-          :class="isList ? 'w-full' : 'max-w-64'"
-        >
-          <StoryItem :story="story" :is-list="isList" />
-        </div>
-      </div>
-    </section>
+          <div
+            class="my-8 flex gap-x-[26px]"
+            :class="isList ? 'flex-col gap-y-6' : 'flex-wrap gap-y-[98px]'"
+          >
+            <div
+              v-for="story in sortedStories"
+              :key="story.id"
+              :class="isList ? 'w-full' : 'max-w-64'"
+            >
+              <StoryItem :story="story" :is-list="isList" />
+            </div>
+          </div>
+        </section>
+    </template>
   </AppLayout>
 </template>
 

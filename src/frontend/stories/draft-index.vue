@@ -1,5 +1,6 @@
 <template>
   <AppLayout>
+
     <template #header>
       <ContentHeader :title="chapterTitle">
         <template #actions>
@@ -13,47 +14,49 @@
         </template>
       </ContentHeader>
     </template>
+    <template #main>
     <div
-      :class="[
-        'relative grid',
-        {
-          'grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn,
-          'mx-auto max-w-4xl grid-cols-1': shared.isSingleColumn,
-        },
-      ]"
-    >
-      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8">
-        <div v-for="(item, index) in drafts.fields" :key="index">
-          <component :is="widgetFor(index)" :field="item" :is-nested="false" />
-        </div>
-      </form>
+          :class="[
+            'relative grid',
+            {
+              'grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn,
+              'mx-auto max-w-4xl grid-cols-1': shared.isSingleColumn,
+            },
+          ]"
+        >
+          <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8">
+            <div v-for="(item, index) in drafts.fields" :key="index">
+              <component :is="widgetFor(index)" :field="item" :is-nested="false" />
+            </div>
+          </form>
 
-      <ContentSidebar>
-        <template #meta-box>
-          <MetaBox
-            :primary="[
-              { label: story.storyType, value: story.name },
-              { label: story.chapterType, value: metaChapter },
-            ]"
-            :secondary="[
-              { label: 'Created', value: formatDate(draft.createdAt) },
-              { label: 'Auto-Saved', value: formatDate(draft.updatedAt) },
-              { label: 'Last Published', value: publishedWhen },
-            ]"
-          />
-        </template>
-        <template #app-preview>
-          <div v-if="shared.config.hasAppPreview">
-            <MobileAppPreview
-              v-if="bundle"
-              :bundle="bundle"
-              :number="props.draft.number"
-              class="mt-2"
-            />
-          </div>
-        </template>
-      </ContentSidebar>
-    </div>
+          <ContentSidebar>
+            <template #meta-box>
+              <MetaBox
+                :primary="[
+                  { label: story.storyType, value: story.name },
+                  { label: story.chapterType, value: metaChapter },
+                ]"
+                :secondary="[
+                  { label: 'Created', value: formatDate(draft.createdAt) },
+                  { label: 'Auto-Saved', value: formatDate(draft.updatedAt) },
+                  { label: 'Last Published', value: publishedWhen },
+                ]"
+              />
+            </template>
+            <template #app-preview>
+              <div v-if="shared.config.hasAppPreview">
+                <MobileAppPreview
+                  v-if="bundle"
+                  :bundle="bundle"
+                  :number="props.draft.number"
+                  class="mt-2"
+                />
+              </div>
+            </template>
+          </ContentSidebar>
+        </div>
+    </template>
   </AppLayout>
 </template>
 

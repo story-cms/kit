@@ -176,6 +176,9 @@ Sticky layout header used inside `AppLayout`. Renders a glass-style title header
   <template #controls>
     <p>Controls</p>
   </template>
+  <template #main>
+    <section>...</section>
+  </template>
 </AppLayout>
 ```
 
@@ -186,6 +189,7 @@ Sticky layout header used inside `AppLayout`. Renders a glass-style title header
 
 ## Slots
 
+- `main` - Page content rendered inside the layout `<main>` element
 - `actions` - Header action buttons
 - `controls` - Secondary controls below the title row
 - `header` - Legacy slot for custom header content such as `ContentHeader`

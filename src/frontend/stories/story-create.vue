@@ -9,11 +9,13 @@
           />
         </template>
 
+    <template #main>
     <div class="relative mt-3">
       <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="form-panel">
         <StoryEditDetails :is-translation="false" :templates="props.templates" />
       </form>
     </div>
+    </template>
   </AppLayout>
 </template>
 

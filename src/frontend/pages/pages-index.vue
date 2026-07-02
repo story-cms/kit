@@ -1,5 +1,6 @@
 <template>
   <AppLayout>
+
     <template #header>
       <ContentHeader title="Pages">
         <template #actions>
@@ -29,17 +30,19 @@
         </template>
       </ContentHeader>
     </template>
+    <template #main>
     <div class="my-8 flex flex-col space-y-8">
-      <div v-for="page in filteredItems" :key="page.id" @drop="onDrop">
-        <PageIndexItem
-          :page="page"
-          @remove-divider="deleteDivider(page.id)"
-          @tap="onTap"
-          @drag-start="fromIndex = items.indexOf(page)"
-          @drag-enter="toIndex = items.indexOf(page)"
-        />
-      </div>
-    </div>
+          <div v-for="page in filteredItems" :key="page.id" @drop="onDrop">
+            <PageIndexItem
+              :page="page"
+              @remove-divider="deleteDivider(page.id)"
+              @tap="onTap"
+              @drag-start="fromIndex = items.indexOf(page)"
+              @drag-enter="toIndex = items.indexOf(page)"
+            />
+          </div>
+        </div>
+    </template>
   </AppLayout>
 </template>
 

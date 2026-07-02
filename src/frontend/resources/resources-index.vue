@@ -92,6 +92,7 @@
           </div>
         </template>
 
+    <template #main>
     <section class="mt-3 px-3">
       <div class="mb-4 flex items-center justify-between">
         <p class="text-sm text-gray-600">
@@ -184,6 +185,7 @@
       @close="deleteModalResourceId = null"
       @confirm="confirmDeleteResource"
     />
+    </template>
   </AppLayout>
 </template>
 

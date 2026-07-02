@@ -1,5 +1,6 @@
 <template>
   <AppLayout>
+
     <template #header>
       <ContentHeader title="Settings">
         <template #actions>
@@ -29,28 +30,30 @@
         </template>
       </ContentHeader>
     </template>
+    <template #main>
     <div class="mt-5">
-      <LanguagesTable
-        :items="languageItems"
-        :source-language="sourceLanguage"
-        @remove="handleRemove"
-        @request-deletion="handleRequestDeletion"
-        @bible-translation-change="handleTableBibleTranslationChange"
-      />
-    </div>
+          <LanguagesTable
+            :items="languageItems"
+            :source-language="sourceLanguage"
+            @remove="handleRemove"
+            @request-deletion="handleRequestDeletion"
+            @bible-translation-change="handleTableBibleTranslationChange"
+          />
+        </div>
 
-    <RequestAppUpdateModal
-      :open="showRequestAppUpdateModal"
-      @close="showRequestAppUpdateModal = false"
-      @confirm="handleRequestAppUpdateConfirm"
-    />
+        <RequestAppUpdateModal
+          :open="showRequestAppUpdateModal"
+          @close="showRequestAppUpdateModal = false"
+          @confirm="handleRequestAppUpdateConfirm"
+        />
 
-    <RequestFeedbackModal
-      :open="showFeedbackModal"
-      :variant="feedbackModalVariant"
-      :contact-email="props.config.supportEmail ?? 'ops@startjourneys.io'"
-      @close="showFeedbackModal = false"
-    />
+        <RequestFeedbackModal
+          :open="showFeedbackModal"
+          :variant="feedbackModalVariant"
+          :contact-email="props.config.supportEmail ?? 'ops@startjourneys.io'"
+          @close="showFeedbackModal = false"
+        />
+    </template>
   </AppLayout>
 </template>
 

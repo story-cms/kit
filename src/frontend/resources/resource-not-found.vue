@@ -1,6 +1,6 @@
 <template>
   <AppLayout subtitle="Resource not found">
-
+    <template #main>
     <section class="mt-3 px-3">
       <div class="mx-auto max-w-lg py-16 text-center">
         <h3 class="mb-2 text-lg font-medium text-gray-900">Resource not found</h3>
@@ -15,6 +15,7 @@
         />
       </div>
     </section>
+    </template>
   </AppLayout>
 </template>
 

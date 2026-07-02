@@ -1,5 +1,6 @@
 <template>
   <AppLayout>
+
     <template #header>
       <ContentHeader :title="`${story.storyType}: ${shared.currentStoryName}`">
         <template #actions>
@@ -49,28 +50,30 @@
         </template>
       </ContentHeader>
     </template>
+    <template #main>
     <div
-      :class="[
-        'grid gap-4',
-        {
-          'grid-cols-[repeat(auto-fit,_minmax(260px,_260px))]': !isList,
-        },
-        {
-          'grid-cols-1': isList,
-        },
-      ]"
-    >
-      <index-card
-        v-for="item in filteredIndex"
-        :key="item.number"
-        :item="item"
-        :is-list="isList"
-        placeholder-image="https://res.cloudinary.com/redeem/image/upload/v1752849347/story-cms-ui/placeholder_bafmfz.jpg"
-        :scope="currentTab"
-        :chapter-name="story.chapterType"
-        @tap="onTap"
-      />
-    </div>
+          :class="[
+            'grid gap-4',
+            {
+              'grid-cols-[repeat(auto-fit,_minmax(260px,_260px))]': !isList,
+            },
+            {
+              'grid-cols-1': isList,
+            },
+          ]"
+        >
+          <index-card
+            v-for="item in filteredIndex"
+            :key="item.number"
+            :item="item"
+            :is-list="isList"
+            placeholder-image="https://res.cloudinary.com/redeem/image/upload/v1752849347/story-cms-ui/placeholder_bafmfz.jpg"
+            :scope="currentTab"
+            :chapter-name="story.chapterType"
+            @tap="onTap"
+          />
+        </div>
+    </template>
   </AppLayout>
 </template>
 

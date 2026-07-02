@@ -1,5 +1,6 @@
 <template>
   <AppLayout>
+
     <template #header>
       <ContentHeader dir="ltr" :title="title">
         <template #actions>
@@ -18,62 +19,63 @@
         </template>
       </ContentHeader>
     </template>
-
+    <template #main>
     <div
-      :class="[
-        'relative grid',
-        {
-          'grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn,
-          'mx-auto max-w-4xl grid-cols-1': shared.isSingleColumn,
-        },
-      ]"
-    >
-      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8">
-        <StringField
-          :field="{
-            name: 'title',
-            label: 'Title',
-            widget: 'string',
-          }"
-          :is-nested="false"
-          class="px-8"
-        />
-        <ImageField
-          :field="{
-            label: 'Cover Image',
-            name: 'coverImage',
-            widget: 'image',
-            uploadPreset: 'ml_default',
-            description: 'Square jpg to 300k',
-            extensions: ['.jpg', '.jpeg'],
-            maxSize: 300000,
-          }"
-          :is-nested="false"
-          class="px-8"
-        />
-        <DateField
-          :field="{
-            name: 'releaseAt',
-            label: 'Release At',
-            widget: 'date',
-          }"
-          :is-nested="false"
-          class="px-8"
-        />
-        <div v-for="(item, index) in props.spec.fields" :key="index">
-          <component :is="widgetFor(index)" :field="item" :is-nested="false" />
+          :class="[
+            'relative grid',
+            {
+              'grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn,
+              'mx-auto max-w-4xl grid-cols-1': shared.isSingleColumn,
+            },
+          ]"
+        >
+          <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8">
+            <StringField
+              :field="{
+                name: 'title',
+                label: 'Title',
+                widget: 'string',
+              }"
+              :is-nested="false"
+              class="px-8"
+            />
+            <ImageField
+              :field="{
+                label: 'Cover Image',
+                name: 'coverImage',
+                widget: 'image',
+                uploadPreset: 'ml_default',
+                description: 'Square jpg to 300k',
+                extensions: ['.jpg', '.jpeg'],
+                maxSize: 300000,
+              }"
+              :is-nested="false"
+              class="px-8"
+            />
+            <DateField
+              :field="{
+                name: 'releaseAt',
+                label: 'Release At',
+                widget: 'date',
+              }"
+              :is-nested="false"
+              class="px-8"
+            />
+            <div v-for="(item, index) in props.spec.fields" :key="index">
+              <component :is="widgetFor(index)" :field="item" :is-nested="false" />
+            </div>
+          </form>
+          <ContentSidebar>
+            <template #meta-box>
+              <DropMetaBox
+                :created-at="props.dropMeta.createdAt"
+                :updated-at="updatedAt"
+                :updated-by="props.dropMeta.updatedBy"
+              />
+            </template>
+          </ContentSidebar>
         </div>
-      </form>
-      <ContentSidebar>
-        <template #meta-box>
-          <DropMetaBox
-            :created-at="props.dropMeta.createdAt"
-            :updated-at="updatedAt"
-            :updated-by="props.dropMeta.updatedBy"
-          />
-        </template>
-      </ContentSidebar>
-    </div>
+    </template>
   </AppLayout>
 </template>
 

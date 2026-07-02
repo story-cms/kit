@@ -1,5 +1,6 @@
 <template>
   <AppLayout>
+
     <template #header>
       <ContentHeader title="Add new languages">
         <template #description>
@@ -58,7 +59,9 @@
         </template>
       </ContentHeader>
     </template>
+    <template #main>
     <LanguageList :items="languageListItems" @update="setLocaleSelected" />
+    </template>
   </AppLayout>
 </template>
 

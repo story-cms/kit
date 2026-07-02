@@ -1,5 +1,6 @@
 <template>
   <AppLayout>
+
     <template #header>
       <ContentHeader :title="stream.title">
         <template #actions>
@@ -43,26 +44,27 @@
         </template>
       </ContentHeader>
     </template>
-
+    <template #main>
     <section>
-      <div
-        class="my-8 flex gap-x-[26px]"
-        :class="isList ? 'flex-col gap-y-6' : 'flex-wrap gap-y-[98px]'"
-      >
-        <a
-          v-for="drop in displayIndex"
-          :key="drop.id"
-          :href="`/${shared.locale}/drop/${drop.id}/edit`"
-          :class="isList ? 'w-full' : 'max-w-64'"
-        >
-          <DropItem
-            :drop="drop"
-            :is-list="isList"
-            :placeholder-image="'https://res.cloudinary.com/journeys/image/upload/v1756122586/boats_uewaxo.jpg'"
-          />
-        </a>
-      </div>
-    </section>
+          <div
+            class="my-8 flex gap-x-[26px]"
+            :class="isList ? 'flex-col gap-y-6' : 'flex-wrap gap-y-[98px]'"
+          >
+            <a
+              v-for="drop in displayIndex"
+              :key="drop.id"
+              :href="`/${shared.locale}/drop/${drop.id}/edit`"
+              :class="isList ? 'w-full' : 'max-w-64'"
+            >
+              <DropItem
+                :drop="drop"
+                :is-list="isList"
+                :placeholder-image="'https://res.cloudinary.com/journeys/image/upload/v1756122586/boats_uewaxo.jpg'"
+              />
+            </a>
+          </div>
+        </section>
+    </template>
   </AppLayout>
 </template>
 
