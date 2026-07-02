@@ -1,86 +1,86 @@
 <template>
   <AppLayout title="Story" :subtitle="title || 'New Story'">
-<template #actions>
-          <ActionButton icon="info" @tap="shared.setShowMetaBox(!shared.showMetaBox)" />
-          <ActionButton v-if="isNew" icon="trash" @tap="deleteStory" />
-          <LabelButton label="Save" @tap="saveStory" />
-        </template>
+    <template #actions>
+      <ActionButton icon="info" @tap="shared.setShowMetaBox(!shared.showMetaBox)" />
+      <ActionButton v-if="isNew" icon="trash" @tap="deleteStory" />
+      <LabelButton label="Save" @tap="saveStory" />
+    </template>
     <template #main>
-    <section>
-          <div
-            :class="[
-              'relative grid',
-              {
-                'grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn,
-                'mx-auto max-w-4xl grid-cols-1': shared.isSingleColumn,
-              },
-            ]"
-          >
-            <form class="space-y-8 bg-white py-4">
-              <StringField
-                :field="{
-                  name: 'name',
-                  label: 'Title',
-                  widget: 'string',
-                }"
-                :is-nested="true"
-                class="px-8"
-              />
-              <ImageField
-                :field="{
-                  label: 'Cover Image',
-                  name: 'coverImage',
-                  widget: 'image',
-                  description: 'JPG file up to 300K',
-                  extensions: ['.jpeg', '.jpg'],
-                  maxSize: 300000,
-                }"
-                :is-nested="true"
-                class="px-8"
-              />
-              <NumberField
-                :field="{
-                  name: 'chapterLimit',
-                  label: 'Chapters',
-                  widget: 'number',
-                }"
-                :is-nested="true"
-                class="px-8"
-              />
-              <TagField
-                :field="{
-                  name: 'tags',
-                  label: 'Tags',
-                  widget: 'tags',
-                }"
-                :is-nested="true"
-                class="px-8"
-              />
-              <MarkdownField
-                :field="{
-                  name: 'description',
-                  label: 'Description',
-                  widget: 'markdown',
-                  toolbar: [],
-                }"
-                :is-nested="true"
-                class="px-8"
-              />
-            </form>
+      <section>
+        <div
+          :class="[
+            'relative grid',
+            {
+              'grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn,
+              'mx-auto grid-cols-1': shared.isSingleColumn,
+            },
+          ]"
+        >
+          <form class="space-y-8 bg-white py-4">
+            <StringField
+              :field="{
+                name: 'name',
+                label: 'Title',
+                widget: 'string',
+              }"
+              :is-nested="true"
+              class="px-8"
+            />
+            <ImageField
+              :field="{
+                label: 'Cover Image',
+                name: 'coverImage',
+                widget: 'image',
+                description: 'JPG file up to 300K',
+                extensions: ['.jpeg', '.jpg'],
+                maxSize: 300000,
+              }"
+              :is-nested="true"
+              class="px-8"
+            />
+            <NumberField
+              :field="{
+                name: 'chapterLimit',
+                label: 'Chapters',
+                widget: 'number',
+              }"
+              :is-nested="true"
+              class="px-8"
+            />
+            <TagField
+              :field="{
+                name: 'tags',
+                label: 'Tags',
+                widget: 'tags',
+              }"
+              :is-nested="true"
+              class="px-8"
+            />
+            <MarkdownField
+              :field="{
+                name: 'description',
+                label: 'Description',
+                widget: 'markdown',
+                toolbar: [],
+              }"
+              :is-nested="true"
+              class="px-8"
+            />
+          </form>
 
-            <ContentSidebar>
-              <template #meta-box>
-                <MetaMetaBox
-                  :story-type="story.storyType"
-                  :chapter-type="story.chapterType"
-                  :name="story.name"
-                  :created-at="story.createdAt"
-                  :updated-at="savedAt"
-                />
-              </template>
-            </ContentSidebar>
-          </div>
-        </section>
+          <ContentSidebar>
+            <template #meta-box>
+              <MetaMetaBox
+                :story-type="story.storyType"
+                :chapter-type="story.chapterType"
+                :name="story.name"
+                :created-at="story.createdAt"
+                :updated-at="savedAt"
+              />
+            </template>
+          </ContentSidebar>
+        </div>
+      </section>
     </template>
   </AppLayout>
 </template>

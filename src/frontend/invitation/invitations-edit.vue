@@ -1,162 +1,162 @@
 <template>
   <AppLayout title="Invitation" :subtitle="title">
-<template #actions>
-          <DraftActions @delete="deleteInvitation" />
-          <BooleanField
+    <template #actions>
+      <DraftActions @delete="deleteInvitation" />
+      <BooleanField
+        :field="{
+          name: 'isPublished',
+          label: 'Published',
+          widget: 'boolean',
+          default: false,
+          tintColor: 'green-400',
+          labelOrder: 'start',
+        }"
+        :is-nested="true"
+      />
+    </template>
+    <template #main>
+      <div
+        :class="[
+          'relative grid',
+          {
+            'grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn,
+            'mx-auto grid-cols-1': shared.isSingleColumn,
+          },
+        ]"
+      >
+        <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8 bg-white py-4">
+          <StringField
             :field="{
-              name: 'isPublished',
-              label: 'Published',
-              widget: 'boolean',
-              default: false,
-              tintColor: 'green-400',
-              labelOrder: 'start',
+              name: 'name',
+              label: 'Name',
+              widget: 'string',
             }"
             :is-nested="true"
+            class="px-8"
           />
-        </template>
-    <template #main>
-    <div
-          :class="[
-            'relative grid',
-            {
-              'grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn,
-              'mx-auto max-w-4xl grid-cols-1': shared.isSingleColumn,
-            },
-          ]"
-        >
-          <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8 bg-white py-4">
-            <StringField
-              :field="{
-                name: 'name',
-                label: 'Name',
-                widget: 'string',
-              }"
-              :is-nested="true"
-              class="px-8"
-            />
 
-            <RegionField
-              :field="{
-                name: 'regions',
-                label: 'Filter Regions',
-                widget: 'region',
-              }"
-              :is-nested="true"
-              class="px-8"
-            />
+          <RegionField
+            :field="{
+              name: 'regions',
+              label: 'Filter Regions',
+              widget: 'region',
+            }"
+            :is-nested="true"
+            class="px-8"
+          />
 
-            <DateRangeField
-              :field="{
-                name: 'window',
-                label: 'Invitation window',
-                widget: 'dateRange',
-              }"
-              :is-nested="true"
-              class="px-8"
-            />
+          <DateRangeField
+            :field="{
+              name: 'window',
+              label: 'Invitation window',
+              widget: 'dateRange',
+            }"
+            :is-nested="true"
+            class="px-8"
+          />
 
-            <ImageField
-              :field="{
-                label: 'Promo Image',
-                name: 'promoImage',
-                widget: 'image',
-                uploadPreset: 'invitations',
-                description: 'JPG file up to 300KB',
-                extensions: ['.jpg', '.jpeg'],
-                maxSize: 300000,
-              }"
-              :is-nested="true"
-              class="px-8"
-            />
+          <ImageField
+            :field="{
+              label: 'Promo Image',
+              name: 'promoImage',
+              widget: 'image',
+              uploadPreset: 'invitations',
+              description: 'JPG file up to 300KB',
+              extensions: ['.jpg', '.jpeg'],
+              maxSize: 300000,
+            }"
+            :is-nested="true"
+            class="px-8"
+          />
 
-            <StringField
-              :field="{
-                name: 'videoUrl',
-                label: 'Video URL',
-                widget: 'string',
-              }"
-              :is-nested="true"
-              class="px-8"
-            />
+          <StringField
+            :field="{
+              name: 'videoUrl',
+              label: 'Video URL',
+              widget: 'string',
+            }"
+            :is-nested="true"
+            class="px-8"
+          />
 
-            <StringField
-              :field="{
-                name: 'title',
-                label: 'Title',
-                widget: 'string',
-              }"
-              :is-nested="true"
-              class="px-8"
-            />
+          <StringField
+            :field="{
+              name: 'title',
+              label: 'Title',
+              widget: 'string',
+            }"
+            :is-nested="true"
+            class="px-8"
+          />
 
-            <MarkdownField
-              :field="{
-                name: 'message',
-                label: 'Message',
-                widget: 'markdown',
-                noMarkup: true,
-              }"
-              :is-nested="true"
-              class="px-8"
-            />
+          <MarkdownField
+            :field="{
+              name: 'message',
+              label: 'Message',
+              widget: 'markdown',
+              noMarkup: true,
+            }"
+            :is-nested="true"
+            class="px-8"
+          />
 
-            <StringField
-              :field="{
-                name: 'actionLabel',
-                label: 'Action Label',
-                widget: 'string',
-              }"
-              :is-nested="true"
-              class="px-8"
-            />
+          <StringField
+            :field="{
+              name: 'actionLabel',
+              label: 'Action Label',
+              widget: 'string',
+            }"
+            :is-nested="true"
+            class="px-8"
+          />
 
-            <SelectField
-              :field="{
-                label: 'Action Type',
-                name: 'actionType',
-                widget: 'select',
-                options: [
-                  { label: 'Close', value: 'close' },
-                  { label: 'Donate', value: 'donate' },
-                  { label: 'External URL', value: 'externalUrl' },
-                ],
-                default: defaultType,
-              }"
-              :is-free="true"
-              :is-nested="true"
-              class="px-8"
-            />
+          <SelectField
+            :field="{
+              label: 'Action Type',
+              name: 'actionType',
+              widget: 'select',
+              options: [
+                { label: 'Close', value: 'close' },
+                { label: 'Donate', value: 'donate' },
+                { label: 'External URL', value: 'externalUrl' },
+              ],
+              default: defaultType,
+            }"
+            :is-free="true"
+            :is-nested="true"
+            class="px-8"
+          />
 
-            <StringField
-              v-if="!urlFieldIsDisabled"
-              :field="{
-                name: 'actionUrl',
-                label: 'Action URL',
-                widget: 'string',
-              }"
-              :is-nested="true"
-              class="px-8"
-            />
-            <div v-else>
-              <p class="my-16"></p>
-            </div>
-          </form>
+          <StringField
+            v-if="!urlFieldIsDisabled"
+            :field="{
+              name: 'actionUrl',
+              label: 'Action URL',
+              widget: 'string',
+            }"
+            :is-nested="true"
+            class="px-8"
+          />
+          <div v-else>
+            <p class="my-16"></p>
+          </div>
+        </form>
 
-          <ContentSidebar>
-            <template #meta-box>
-              <InvitationMetaBox
-                :id="invitation.id"
-                :created-at="invitation.createdAt"
-                :saved-at="savedAt"
-                :updated-at="invitation.updatedAt"
-                :published-at="publishedAt"
-                :status="status"
-              />
-              <div class="mt-6"></div>
-              <InvitationStats :impressions="stats?.impressions" :clicks="stats?.clicks" />
-            </template>
-          </ContentSidebar>
-        </div>
+        <ContentSidebar>
+          <template #meta-box>
+            <InvitationMetaBox
+              :id="invitation.id"
+              :created-at="invitation.createdAt"
+              :saved-at="savedAt"
+              :updated-at="invitation.updatedAt"
+              :published-at="publishedAt"
+              :status="status"
+            />
+            <div class="mt-6"></div>
+            <InvitationStats :impressions="stats?.impressions" :clicks="stats?.clicks" />
+          </template>
+        </ContentSidebar>
+      </div>
     </template>
   </AppLayout>
 </template>

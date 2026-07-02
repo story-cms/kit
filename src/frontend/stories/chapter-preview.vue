@@ -1,52 +1,52 @@
 <template>
   <AppLayout title="Story" :subtitle="chapterTitle">
-<template #actions>
-          <DraftActions :can-delete="false" />
-          <Link
-            class="w-32 rounded-[38px] border border-blue-500 bg-blue-500 px-[15px] py-[9px] text-center text-sm/5 font-medium text-white shadow"
-            :href="`/${shared.locale}/story/${story.id}/draft/${chapter.number}/edit`"
-          >
-            Edit
-          </Link>
-        </template>
+    <template #actions>
+      <DraftActions :can-delete="false" />
+      <Link
+        class="w-32 rounded-[38px] border border-blue-500 bg-blue-500 px-[15px] py-[9px] text-center text-sm/5 font-medium text-white shadow"
+        :href="`/${shared.locale}/story/${story.id}/draft/${chapter.number}/edit`"
+      >
+        Edit
+      </Link>
+    </template>
     <template #main>
-    <div
-          :class="[
-            'relative grid',
-            {
-              'grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn,
-              'mx-auto max-w-4xl grid-cols-1': shared.isSingleColumn,
-            },
-          ]"
-        >
-          <!-- eslint-disable vue/no-v-html -->
-          <div class="bg-white p-8 shadow-sm" v-html="bundleView"></div>
-          <ContentSidebar>
-            <template #meta-box>
-              <MetaBox
-                :primary="[
-                  { label: story.storyType, value: story.name },
-                  { label: story.chapterType, value: metaChapter },
-                ]"
-                :secondary="[
-                  { label: 'Created', value: formatDate(chapter.createdAt) },
-                  { label: 'Auto-Saved', value: formatDate(chapter.updatedAt) },
-                  { label: 'Last Published', value: publishedWhen },
-                ]"
+      <div
+        :class="[
+          'relative grid',
+          {
+            'grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn,
+            'mx-auto grid-cols-1': shared.isSingleColumn,
+          },
+        ]"
+      >
+        <!-- eslint-disable vue/no-v-html -->
+        <div class="bg-white p-8 shadow-sm" v-html="bundleView"></div>
+        <ContentSidebar>
+          <template #meta-box>
+            <MetaBox
+              :primary="[
+                { label: story.storyType, value: story.name },
+                { label: story.chapterType, value: metaChapter },
+              ]"
+              :secondary="[
+                { label: 'Created', value: formatDate(chapter.createdAt) },
+                { label: 'Auto-Saved', value: formatDate(chapter.updatedAt) },
+                { label: 'Last Published', value: publishedWhen },
+              ]"
+            />
+          </template>
+          <template #app-preview>
+            <div v-if="shared.config.hasAppPreview">
+              <MobileAppPreview
+                v-if="bundle"
+                :bundle="bundle"
+                :number="chapter.number"
+                class="mt-2"
               />
-            </template>
-            <template #app-preview>
-              <div v-if="shared.config.hasAppPreview">
-                <MobileAppPreview
-                  v-if="bundle"
-                  :bundle="bundle"
-                  :number="chapter.number"
-                  class="mt-2"
-                />
-              </div>
-            </template>
-          </ContentSidebar>
-        </div>
+            </div>
+          </template>
+        </ContentSidebar>
+      </div>
     </template>
   </AppLayout>
 </template>

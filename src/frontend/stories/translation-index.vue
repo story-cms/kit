@@ -29,8 +29,7 @@
           'relative grid min-h-screen',
           {
             'grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn,
-            'mx-auto max-w-4xl grid-cols-1':
-              shared.isSingleColumn && !shared.showSourceColumn,
+            'mx-auto grid-cols-1': shared.isSingleColumn && !shared.showSourceColumn,
           },
         ]"
       >
