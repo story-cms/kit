@@ -1,14 +1,11 @@
 <template>
-  <AppLayout>
-
-    <template #header>
-      <ContentHeader title="Sticky Header" @delete="onAccomplish" @info="onNeutral">
-        <template #actions>
+  <AppLayout title="Test" subtitle="Sticky Header">
+    <template #actions>
           <button type="button" @click.prevent="onConfirm">Confirm</button>
+          <button type="button" @click.prevent="onAccomplish">Accomplish</button>
           <button type="button" @click.prevent="onFail">Fail</button>
+          <button type="button" @click.prevent="onNeutral">Neutral</button>
         </template>
-      </ContentHeader>
-    </template>
     <template #main>
     <div class="container mx-auto grid w-64 space-y-16 p-3">
           <p>
@@ -48,7 +45,6 @@
 
 <script setup lang="ts">
 import AppLayout from '../shared/app-layout.vue';
-import ContentHeader from '../shared/content-header.vue';
 import { type SharedPageProps, ResponseStatus } from '../../types';
 import { useSharedStore } from '../store';
 

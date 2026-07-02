@@ -1,9 +1,6 @@
 <template>
-  <AppLayout>
-
-    <template #header>
-      <ContentHeader title="Streams">
-        <template #actions>
+  <AppLayout title="Streams">
+<template #actions>
           <div class="flex items-center justify-center gap-x-6">
             <Icon
               :name="iconName"
@@ -12,8 +9,6 @@
             />
           </div>
         </template>
-      </ContentHeader>
-    </template>
     <template #main>
     <section>
           <div
@@ -37,7 +32,6 @@
 import { SharedPageProps } from '../../types';
 import { useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
-import ContentHeader from '../shared/content-header.vue';
 import Icon from '../shared/icon.vue';
 import { StreamGalleryProps } from '../../types';
 import StreamItem from './components/stream-item.vue';

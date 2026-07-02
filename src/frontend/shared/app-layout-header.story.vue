@@ -37,15 +37,29 @@
       </div>
     </Variant>
 
-    <Variant title="Legacy header slot" :setup-app="resetMessages">
+    <Variant title="Draft page" :setup-app="resetMessages">
       <div class="bg-gray-50 p-6">
-        <AppLayoutHeader>
-          <template #header>
-            <ContentHeader title="Users">
-              <template #actions>
-                <StudioButton label="Add user" />
-              </template>
-            </ContentHeader>
+        <AppLayoutHeader
+          title="Draft"
+          subtitle="My Story <span>.</span> 01 <span>.</span> Chapter title"
+        >
+          <template #actions>
+            <StudioButton label="Save" variant="secondary" />
+          </template>
+        </AppLayoutHeader>
+      </div>
+    </Variant>
+
+    <Variant title="With description" :setup-app="resetMessages">
+      <div class="bg-gray-50 p-6">
+        <AppLayoutHeader title="Settings" subtitle="Add new languages">
+          <template #description>
+            <p class="text-sm font-normal leading-5 text-black">
+              Select languages you would like to add.
+            </p>
+          </template>
+          <template #actions>
+            <StudioButton label="Add" />
           </template>
         </AppLayoutHeader>
       </div>
@@ -94,7 +108,7 @@
       </div>
     </Variant>
 
-    <Variant title="With description" :setup-app="showWithDescription">
+    <Variant title="Feedback with description" :setup-app="showWithDescription">
       <div class="bg-gray-50 p-6">
         <AppLayoutHeader />
       </div>
@@ -105,7 +119,6 @@
 <script setup lang="ts">
 import { Plus } from '@lucide/vue';
 import AppLayoutHeader from './app-layout-header.vue';
-import ContentHeader from './content-header.vue';
 import StudioButton from './studio-button.vue';
 import { useSharedStore } from '../store';
 import { ResponseStatus } from '../../types';
@@ -164,7 +177,7 @@ const onNeutral = () =>
 <docs lang="md">
 # App Layout Header
 
-Sticky layout header used inside `AppLayout`. Renders a glass-style title header by default, swaps to `MessageCentre` when feedback is active, and still supports a legacy `#header` slot for `ContentHeader`.
+Sticky layout header used inside `AppLayout`. Renders a glass-style title header by default and swaps to `MessageCentre` when feedback is active.
 
 ## Usage
 
@@ -192,5 +205,5 @@ Sticky layout header used inside `AppLayout`. Renders a glass-style title header
 - `main` - Page content rendered inside the layout `<main>` element
 - `actions` - Header action buttons
 - `controls` - Secondary controls below the title row
-- `header` - Legacy slot for custom header content such as `ContentHeader`
+- `description` - Optional helper text below the subtitle
 </docs>

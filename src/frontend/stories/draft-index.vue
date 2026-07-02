@@ -1,9 +1,6 @@
 <template>
-  <AppLayout>
-
-    <template #header>
-      <ContentHeader :title="chapterTitle">
-        <template #actions>
+  <AppLayout title="Draft" :subtitle="chapterTitle">
+    <template #actions>
           <DraftActions @delete="deleteDraft" />
           <WorkflowActions
             :has-edit-review="hasEditReview"
@@ -12,8 +9,6 @@
             @submit="submit"
           />
         </template>
-      </ContentHeader>
-    </template>
     <template #main>
     <div
           :class="[
@@ -70,7 +65,6 @@ import { padZero, debounce, formatDate, safeChapterTitle } from '../shared/helpe
 import type { FieldSpec, DraftEditProps, SharedPageProps } from '../../types';
 import { ResponseStatus } from '../../types';
 import { useDraftsStore, useModelStore, useSharedStore, useWidgetsStore } from '../store';
-import ContentHeader from '../shared/content-header.vue';
 import DraftActions from '../shared/draft-actions.vue';
 import WorkflowActions from './components/workflow-actions.vue';
 import ContentSidebar from '../shared/content-sidebar.vue';

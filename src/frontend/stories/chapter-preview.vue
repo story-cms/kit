@@ -1,9 +1,6 @@
 <template>
-  <AppLayout>
-
-    <template #header>
-      <ContentHeader :title="chapterTitle">
-        <template #actions>
+  <AppLayout title="Story" :subtitle="chapterTitle">
+<template #actions>
           <DraftActions :can-delete="false" />
           <Link
             class="w-32 rounded-[38px] border border-blue-500 bg-blue-500 px-[15px] py-[9px] text-center text-sm/5 font-medium text-white shadow"
@@ -12,8 +9,6 @@
             Edit
           </Link>
         </template>
-      </ContentHeader>
-    </template>
     <template #main>
     <div
           :class="[
@@ -64,7 +59,6 @@ import type { PreviewProps, SharedPageProps } from '../../types';
 import DraftActions from '../shared/draft-actions.vue';
 import MobileAppPreview from '../shared/mobile-app-preview.vue';
 import AppLayout from '../shared/app-layout.vue';
-import ContentHeader from '../shared/content-header.vue';
 import ContentSidebar from '../shared/content-sidebar.vue';
 import { formatDate, padZero, safeChapterTitle } from '../shared/helpers';
 import MetaBox from '../shared/meta-box.vue';

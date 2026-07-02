@@ -1,16 +1,13 @@
 <template>
-  <AppLayout>
-
-    <template #header>
-      <ContentHeader :title="stream.title">
-        <template #actions>
+  <AppLayout title="Stream" :subtitle="stream.title">
+<template #actions>
           <div class="flex items-center justify-center gap-x-6">
             <ListSwitcher :is-list="isList" @toggle="isList = !isList" />
 
             <IconButton icon="plus" @tap="addDrop" />
           </div>
         </template>
-        <template #extra-actions>
+        <template #controls>
           <div
             class="mb-4 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
           >
@@ -42,8 +39,6 @@
             </div>
           </div>
         </template>
-      </ContentHeader>
-    </template>
     <template #main>
     <section>
           <div
@@ -76,7 +71,6 @@ import ToggleButton from '../shared/toggle-button.vue';
 
 import AppLayout from '../shared/app-layout.vue';
 import Icon from '../shared/icon.vue';
-import ContentHeader from '../shared/content-header.vue';
 import { computed, ref } from 'vue';
 import type { DropIndexItem, StreamIndexProps } from '../../types';
 import DropItem from './components/drop-item.vue';

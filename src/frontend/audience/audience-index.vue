@@ -1,9 +1,6 @@
 <template>
-  <AppLayout>
-
-    <template #header>
-      <ContentHeader title="Audience">
-        <template #actions>
+  <AppLayout title="Audience">
+<template #actions>
           <button
             v-if="showExport"
             type="button"
@@ -14,8 +11,6 @@
             {{ isExporting ? 'Exporting...' : 'Export' }}
           </button>
         </template>
-      </ContentHeader>
-    </template>
     <template #main>
     <div>
           <section class="mt-8 flow-root">
@@ -88,7 +83,6 @@
 import axios from 'axios';
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import AppLayout from '../shared/app-layout.vue';
-import ContentHeader from '../shared/content-header.vue';
 
 import AudienceRow from './components/audience-row.vue';
 import type {

@@ -1,9 +1,6 @@
 <template>
-  <AppLayout>
-
-    <template #header>
-      <ContentHeader :title="`Interface: ${language.language}`">
-        <template #extra-actions>
+  <AppLayout title="Interface" :subtitle="`Interface: ${language.language}`">
+<template #controls>
           <UiToolbar
             v-model="searchTerm"
             :all-count="props.items.length"
@@ -14,8 +11,6 @@
             @sort="handleSort"
           />
         </template>
-      </ContentHeader>
-    </template>
     <template #main>
     <section>
           <div
@@ -100,7 +95,6 @@ import axios from 'axios';
 import { router } from '@inertiajs/vue3';
 import { AxiosError } from 'axios';
 
-import ContentHeader from '../shared/content-header.vue';
 import UiToolbar from './components/ui-toolbar.vue';
 import UiStringItem from './components/ui-string-item.vue';
 import UiCard from './components/ui-card.vue';

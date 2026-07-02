@@ -1,9 +1,6 @@
 <template>
-  <AppLayout>
-
-    <template #header>
-      <ContentHeader title="Invitations">
-        <template #actions>
+  <AppLayout title="Invitations">
+<template #actions>
           <div class="flex items-center gap-x-6">
             <button
               type="button"
@@ -14,14 +11,12 @@
             </button>
           </div>
         </template>
-        <template #extra-actions>
+        <template #controls>
           <div class="flex items-center justify-between">
             <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
             <div class="space-x-6"></div>
           </div>
         </template>
-      </ContentHeader>
-    </template>
     <template #main>
     <div class="my-8 grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
           <div v-for="item in filteredItems" :key="item.id">
@@ -48,7 +43,6 @@ import AppLayout from '../shared/app-layout.vue';
 import IndexFilter from '../shared/index-filter.vue';
 import Icon from '../shared/icon.vue';
 
-import ContentHeader from '../shared/content-header.vue';
 import InvitationIndexItem from './invitation-index-item.vue';
 
 const props = defineProps<InvitationIndexProps & SharedPageProps>();

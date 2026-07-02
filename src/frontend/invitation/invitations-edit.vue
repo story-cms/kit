@@ -1,9 +1,6 @@
 <template>
-  <AppLayout>
-
-    <template #header>
-      <ContentHeader dir="ltr" :title="title">
-        <template #actions>
+  <AppLayout title="Invitation" :subtitle="title">
+<template #actions>
           <DraftActions @delete="deleteInvitation" />
           <BooleanField
             :field="{
@@ -17,8 +14,6 @@
             :is-nested="true"
           />
         </template>
-      </ContentHeader>
-    </template>
     <template #main>
     <div
           :class="[
@@ -179,7 +174,6 @@ import {
 } from '../../types';
 import { useModelStore, useSharedStore, useWidgetsStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
-import ContentHeader from '../shared/content-header.vue';
 import { debounce, getInvitationStatus } from '../shared/helpers';
 import StringField from '../fields/string-field.vue';
 import ImageField from '../fields/image-field.vue';

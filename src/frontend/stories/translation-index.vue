@@ -1,9 +1,6 @@
 <template>
-  <AppLayout>
-
-    <template #header>
-      <ContentHeader :title="chapterTitle">
-        <template #actions>
+  <AppLayout title="Draft" :subtitle="chapterTitle">
+<template #actions>
           <DraftActions @delete="deleteDraft" />
           <WorkflowActions
             :has-edit-review="hasEditReview"
@@ -12,7 +9,7 @@
             @submit="submitDraft"
           />
         </template>
-        <template #extra-actions>
+        <template #controls>
           <div
             class="flex items-center justify-between py-4 text-sm font-medium leading-4"
           >
@@ -28,8 +25,6 @@
             </p>
           </div>
         </template>
-      </ContentHeader>
-    </template>
     <template #main>
     <div
           :class="[
@@ -121,7 +116,6 @@ import { ResponseStatus } from '../../types';
 import { useSharedStore, useModelStore, useWidgetsStore, useDraftsStore } from '../store';
 import { storeToRefs } from 'pinia';
 import AppLayout from '../shared/app-layout.vue';
-import ContentHeader from '../shared/content-header.vue';
 import DraftActions from '../shared/draft-actions.vue';
 import WorkflowActions from './components/workflow-actions.vue';
 import Icon from '../shared/icon.vue';

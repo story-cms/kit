@@ -1,9 +1,6 @@
 <template>
-  <AppLayout>
-
-    <template #header>
-      <ContentHeader title="Pages">
-        <template #actions>
+  <AppLayout title="Pages">
+<template #actions>
           <div class="flex items-center gap-x-6">
             <button
               v-if="isShowingPublished"
@@ -22,14 +19,12 @@
             </button>
           </div>
         </template>
-        <template #extra-actions>
+        <template #controls>
           <div class="flex items-center justify-between">
             <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
             <div class="space-x-6"></div>
           </div>
         </template>
-      </ContentHeader>
-    </template>
     <template #main>
     <div class="my-8 flex flex-col space-y-8">
           <div v-for="page in filteredItems" :key="page.id" @drop="onDrop">
@@ -55,7 +50,6 @@ import AppLayout from '../shared/app-layout.vue';
 import IndexFilter from '../shared/index-filter.vue';
 import Icon from '../shared/icon.vue';
 import { debounce } from '../shared/helpers';
-import ContentHeader from '../shared/content-header.vue';
 import PageIndexItem from './page-index-item.vue';
 
 const props = defineProps<PageIndexProps & SharedPageProps>();

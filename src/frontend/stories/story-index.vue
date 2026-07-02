@@ -1,16 +1,13 @@
 <template>
-  <AppLayout>
-
-    <template #header>
-      <ContentHeader :title="`${story.storyType}: ${shared.currentStoryName}`">
-        <template #actions>
+  <AppLayout title="Story" :subtitle="`${story.storyType}: ${shared.currentStoryName}`">
+<template #actions>
           <div class="flex items-center justify-center gap-x-6">
             <ListSwitcher :is-list="isList" @toggle="isList = !isList" />
 
             <IconButton v-if="canEditStory" icon="pencil" @tap="editMeta" />
           </div>
         </template>
-        <template #extra-actions>
+        <template #controls>
           <div
             class="mb-4 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
           >
@@ -48,8 +45,6 @@
             </div>
           </div>
         </template>
-      </ContentHeader>
-    </template>
     <template #main>
     <div
           :class="[
@@ -85,7 +80,6 @@ import { IndexReadyItem, SharedPageProps, StoryIndexProps, AddStatus } from '../
 import AddItemButton from '../shared/add-item-button.vue';
 import ListSwitcher from '../shared/list-switcher.vue';
 import AppLayout from '../shared/app-layout.vue';
-import ContentHeader from '../shared/content-header.vue';
 import Icon from '../shared/icon.vue';
 import IconButton from '../shared/icon-button.vue';
 import IndexFilter from '../shared/index-filter.vue';

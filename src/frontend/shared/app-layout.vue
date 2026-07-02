@@ -16,14 +16,14 @@
       >
         <div class="mx-auto grid max-w-7xl grid-cols-1 gap-4">
           <AppLayoutHeader ref="headerComponent" :title="title" :subtitle="subtitle">
-            <template v-if="$slots.header" #header>
-              <slot name="header" />
-            </template>
             <template v-if="$slots.actions" #actions>
               <slot name="actions" />
             </template>
             <template v-if="$slots.controls" #controls>
               <slot name="controls" />
+            </template>
+            <template v-if="$slots.description" #description>
+              <slot name="description" />
             </template>
           </AppLayoutHeader>
           <main>

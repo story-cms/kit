@@ -7,32 +7,30 @@
     ]"
   >
     <template v-if="!shared.hasFeedback">
-      <slot v-if="$slots.header" name="header" />
-      <template v-else>
-        <div class="flex items-center justify-between gap-4">
-          <div class="font-dmsans min-w-0 flex-1">
-            <h2
-              v-if="title"
-              class="text-xs font-medium uppercase leading-4 tracking-[0.3px] text-[#6A7282]"
-            >
-              {{ title }}
-            </h2>
-            <p
-              v-if="subtitle"
-              class="truncate text-xl font-semibold leading-7 tracking-[-0.45px] text-[#182E33]"
-              :title="subtitle"
-            >
-              {{ subtitle }}
-            </p>
-          </div>
-          <div class="flex shrink-0 items-center gap-2">
-            <slot name="actions" />
+      <div class="flex items-center justify-between gap-4">
+        <div class="font-dmsans min-w-0 flex-1">
+          <h2
+            v-if="title"
+            class="text-xs font-medium uppercase leading-4 tracking-[0.3px] text-[#6A7282]"
+          >
+            {{ title }}
+          </h2>
+          <p
+            v-if="subtitle"
+            class="truncate text-xl font-semibold leading-7 tracking-[-0.45px] text-[#182E33] [&>span]:text-gray-400"
+            v-html="subtitle"
+          ></p>
+          <div v-if="$slots.description" class="mt-1">
+            <slot name="description" />
           </div>
         </div>
-        <div v-if="$slots.controls" class="mt-6">
-          <slot name="controls" />
+        <div class="flex shrink-0 items-center gap-2">
+          <slot name="actions" />
         </div>
-      </template>
+      </div>
+      <div v-if="$slots.controls" class="mt-6">
+        <slot name="controls" />
+      </div>
     </template>
     <MessageCentre
       v-else

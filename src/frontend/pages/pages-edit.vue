@@ -1,9 +1,6 @@
 <template>
-  <AppLayout>
-
-    <template #header>
-      <ContentHeader dir="ltr" :title="title">
-        <template #actions>
+  <AppLayout title="Page" :subtitle="title">
+<template #actions>
           <DraftActions @delete="deletePage" />
           <BooleanField
             :field="{
@@ -17,8 +14,6 @@
             :is-nested="true"
           />
         </template>
-      </ContentHeader>
-    </template>
     <template #main>
     <div
           :class="[
@@ -140,7 +135,6 @@ import { router } from '@inertiajs/vue3';
 import { type SharedPageProps, type PageEditProps, ResponseStatus } from '../../types';
 import { useModelStore, useSharedStore, useWidgetsStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
-import ContentHeader from '../shared/content-header.vue';
 import { debounce } from '../shared/helpers';
 import StringField from '../fields/string-field.vue';
 import ImageField from '../fields/image-field.vue';

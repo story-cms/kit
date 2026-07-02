@@ -1,15 +1,10 @@
 <template>
-  <AppLayout>
-
-    <template #header>
-      <ContentHeader :title="title || 'New Story'">
-        <template #actions>
+  <AppLayout title="Story" :subtitle="title || 'New Story'">
+<template #actions>
           <ActionButton icon="info" @tap="shared.setShowMetaBox(!shared.showMetaBox)" />
           <ActionButton v-if="isNew" icon="trash" @tap="deleteStory" />
           <LabelButton label="Save" @tap="saveStory" />
         </template>
-      </ContentHeader>
-    </template>
     <template #main>
     <section>
           <div
@@ -98,7 +93,6 @@ import { router } from '@inertiajs/vue3';
 
 import { SharedPageProps } from '../../types';
 import AppLayout from '../shared/app-layout.vue';
-import ContentHeader from '../shared/content-header.vue';
 import { useSharedStore, useWidgetsStore, useModelStore } from '../store';
 import MarkdownField from '../fields/markdown-field.vue';
 import { ResponseStatus, JournaStoryEditProps } from '../../types';

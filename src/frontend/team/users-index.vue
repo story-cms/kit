@@ -1,9 +1,6 @@
 <template>
-  <AppLayout>
-
-    <template #header>
-      <ContentHeader title="User Management">
-        <template #actions>
+  <AppLayout title="Team" subtitle="User Management">
+<template #actions>
           <div class="flex items-center gap-x-6">
             <button
               type="button"
@@ -14,8 +11,6 @@
             </button>
           </div>
         </template>
-      </ContentHeader>
-    </template>
     <template #main>
     <div>
           <section class="mt-8 flow-root">
@@ -177,7 +172,6 @@
 import { computed, ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import AppLayout from '../shared/app-layout.vue';
-import ContentHeader from '../shared/content-header.vue';
 import Icon from '../shared/icon.vue';
 import UserRow from './components/user-row.vue';
 import { SharedPageProps, UsersProps, UserMeta } from '../../types';

@@ -1,9 +1,6 @@
 <template>
-  <AppLayout>
-
-    <template #header>
-      <ContentHeader dir="ltr" :title="title">
-        <template #actions>
+  <AppLayout title="Drop" :subtitle="title">
+<template #actions>
           <DraftActions @delete="onDelete" />
           <BooleanField
             :field="{
@@ -17,8 +14,6 @@
             :is-nested="true"
           />
         </template>
-      </ContentHeader>
-    </template>
     <template #main>
     <div
           :class="[
@@ -88,7 +83,6 @@ import { ResponseStatus } from '../../types';
 
 import { useSharedStore, useModelStore, useWidgetsStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
-import ContentHeader from '../shared/content-header.vue';
 import ContentSidebar from '../shared/content-sidebar.vue';
 import BooleanField from '../fields/boolean-field.vue';
 import StringField from '../fields/string-field.vue';
