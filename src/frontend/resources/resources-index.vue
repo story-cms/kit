@@ -93,7 +93,7 @@
         </template>
 
     <template #main>
-    <section class="mt-3 px-3">
+    <section class="px-3">
       <div class="mb-4 flex items-center justify-between">
         <p class="text-sm text-gray-600">
           <span class="font-medium">{{ filteredResources.length }}</span>

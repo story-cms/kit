@@ -19,7 +19,7 @@
         </template>
 
     <template #main>
-    <div class="relative mt-3 space-y-6">
+    <div class="relative space-y-6">
       <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="form-panel">
         <StringField
           :field="{

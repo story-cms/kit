@@ -10,7 +10,7 @@
         </template>
 
     <template #main>
-    <div class="relative mt-3">
+    <div class="relative">
       <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="form-panel">
         <StoryEditDetails :is-translation="false" :templates="props.templates" />
       </form>

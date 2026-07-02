@@ -19,7 +19,7 @@
           },
         ]"
       >
-        <div class="mx-auto grid max-w-7xl grid-cols-1 gap-y-4">
+        <div class="mx-auto grid max-w-7xl grid-cols-1">
           <AppLayoutHeader ref="headerComponent" :title="title" :subtitle="subtitle">
             <template v-if="$slots.actions" #actions>
               <slot name="actions" />
@@ -31,7 +31,7 @@
               <slot name="description" />
             </template>
           </AppLayoutHeader>
-          <main>
+          <main class="mt-6">
             <slot name="main" />
           </main>
           <footer></footer>

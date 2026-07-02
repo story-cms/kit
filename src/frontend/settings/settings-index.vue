@@ -26,7 +26,7 @@
           </div>
         </template>
     <template #main>
-    <div class="mt-5">
+    <div>
           <LanguagesTable
             :items="languageItems"
             :source-language="sourceLanguage"

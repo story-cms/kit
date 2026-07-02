@@ -33,7 +33,7 @@
       />
     </template>
     <template #main>
-      <div class="relative mt-3">
+      <div class="relative">
         <form :dir="shared.isRtl ? 'rtl' : 'ltr'">
           <StoryEditDetails
             v-if="currentStoryTab === 'Details'"

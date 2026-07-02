@@ -13,7 +13,7 @@
         </template>
     <template #main>
     <div>
-          <section class="mt-8 flow-root">
+          <section class="flow-root">
             <div class="-mx-4 -my-2 sm:-mx-6 lg:-mx-8">
               <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                 <div class="border-2 border-black/5 sm:rounded-lg">
