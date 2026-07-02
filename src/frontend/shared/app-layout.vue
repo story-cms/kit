@@ -14,15 +14,22 @@
           },
         ]"
       >
-        <div class="mx-auto max-w-7xl pb-6">
-          <AppLayoutHeader ref="headerComponent">
-            <template #header>
+        <div class="mx-auto grid max-w-7xl grid-cols-1 gap-4">
+          <AppLayoutHeader ref="headerComponent" :title="title" :subtitle="subtitle">
+            <template v-if="$slots.header" #header>
               <slot name="header" />
             </template>
+            <template v-if="$slots.actions" #actions>
+              <slot name="actions" />
+            </template>
+            <template v-if="$slots.controls" #controls>
+              <slot name="controls" />
+            </template>
           </AppLayoutHeader>
-          <main ref="main" class="mt-1 h-full">
-            <slot />
+          <main>
+            <slot name="main" />
           </main>
+          <footer></footer>
         </div>
       </div>
     </div>
@@ -35,6 +42,11 @@ import { usePage } from '@inertiajs/vue3';
 import { useSharedStore } from '../store';
 import AppLayoutHeader from './app-layout-header.vue';
 import type { SharedPageProps } from '../../types';
+
+defineProps<{
+  title?: string;
+  subtitle?: string;
+}>();
 
 const shared = useSharedStore();
 const page = usePage();

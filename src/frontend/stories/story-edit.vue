@@ -1,63 +1,60 @@
 <template>
-  <AppLayout>
-    <template #header>
-      <GlassHeader title="Edit Story" :subtitle="headerSubtitle">
-        <template #actions>
-          <StudioButton
-            v-if="props.hasNoContent"
-            label="Delete"
-            variant="red"
-            :disabled="isSaving"
-            @click="deleteStory"
-          >
-            <Trash2 class="size-4" aria-hidden="true" />
-          </StudioButton>
-          <StudioButton
-            label="Save Changes"
-            variant="secondary"
-            :disabled="isSaving"
-            @click="saveStory"
-          />
-          <StudioButton
-            v-if="!isPublished"
-            label="Publish"
-            variant="green"
-            :disabled="isSaving"
-            @click="publishStory"
-          />
-        </template>
-        <template #controls>
-          <TabNavigation
-            :tabs="storyEditTabs"
-            :icons="storyEditTabIcons"
-            :current-tab="currentStoryTab"
-            @change="onStoryTabChange"
-          />
-        </template>
-      </GlassHeader>
+  <AppLayout title="Edit Story" :subtitle="headerSubtitle">
+    <template #actions>
+      <StudioButton
+        v-if="props.hasNoContent"
+        label="Delete"
+        variant="red"
+        :disabled="isSaving"
+        @click="deleteStory"
+      >
+        <Trash2 class="size-4" aria-hidden="true" />
+      </StudioButton>
+      <StudioButton
+        label="Save Changes"
+        variant="secondary"
+        :disabled="isSaving"
+        @click="saveStory"
+      />
+      <StudioButton
+        v-if="!isPublished"
+        label="Publish"
+        variant="green"
+        :disabled="isSaving"
+        @click="publishStory"
+      />
     </template>
-
-    <div class="relative mt-3">
-      <form :dir="shared.isRtl ? 'rtl' : 'ltr'">
-        <StoryEditDetails
-          v-if="currentStoryTab === 'Details'"
-          :is-translation="shared.isTranslation"
-          :is-editing="true"
-          :templates="props.templates"
-        />
-        <StoryEditSections
-          v-if="currentStoryTab === `${sectionType ?? 'Section'}s`"
-          :section-type="sectionType"
-          :tab-icon="currentStoryTabIcon"
-        />
-        <StoryEditResources
-          v-if="currentStoryTab === 'Resources'"
-          v-model:resources="attachedResources"
-          :available-resources="availableResources"
-          @create="createResource"
-        />
-      </form>
-    </div>
+    <template #controls>
+      <TabNavigation
+        :tabs="storyEditTabs"
+        :icons="storyEditTabIcons"
+        :current-tab="currentStoryTab"
+        @change="onStoryTabChange"
+      />
+    </template>
+    <template #main>
+      <div class="relative mt-3">
+        <form :dir="shared.isRtl ? 'rtl' : 'ltr'">
+          <StoryEditDetails
+            v-if="currentStoryTab === 'Details'"
+            :is-translation="shared.isTranslation"
+            :is-editing="true"
+            :templates="props.templates"
+          />
+          <StoryEditSections
+            v-if="currentStoryTab === `${sectionType ?? 'Section'}s`"
+            :section-type="sectionType"
+            :tab-icon="currentStoryTabIcon"
+          />
+          <StoryEditResources
+            v-if="currentStoryTab === 'Resources'"
+            v-model:resources="attachedResources"
+            :available-resources="availableResources"
+            @create="createResource"
+          />
+        </form>
+      </div>
+    </template>
   </AppLayout>
 </template>
 
@@ -76,7 +73,6 @@ import type {
 import { ResponseStatus } from '../../types';
 import { useSharedStore, useWidgetsStore, useModelStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
-import GlassHeader from '../shared/glass-header.vue';
 import StudioButton from '../shared/studio-button.vue';
 import TabNavigation from '../shared/tab-navigation.vue';
 import StoryEditDetails from './components/story-edit-details.vue';

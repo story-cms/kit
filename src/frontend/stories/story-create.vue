@@ -1,8 +1,6 @@
 <template>
-  <AppLayout>
-    <template #header>
-      <GlassHeader title="Add Story" :subtitle="headerSubtitle">
-        <template #actions>
+  <AppLayout title="Add Story" :subtitle="headerSubtitle">
+    <template #actions>
           <StudioButton
             label="Create Story"
             variant="secondary"
@@ -10,8 +8,6 @@
             @click="createStory"
           />
         </template>
-      </GlassHeader>
-    </template>
 
     <div class="relative mt-3">
       <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="form-panel">
@@ -29,7 +25,6 @@ import type { SharedPageProps, StoryCreateProps } from '../../types';
 import { ResponseStatus } from '../../types';
 import { useSharedStore, useWidgetsStore, useModelStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
-import GlassHeader from '../shared/glass-header.vue';
 import StudioButton from '../shared/studio-button.vue';
 import StoryEditDetails from './components/story-edit-details.vue';
 

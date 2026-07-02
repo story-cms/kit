@@ -1,8 +1,6 @@
 <template>
-  <AppLayout>
-    <template #header>
-      <GlassHeader title="Resource Library" subtitle="Manage Resources">
-        <template #actions>
+  <AppLayout title="Resource Library" subtitle="Manage Resources">
+    <template #actions>
           <StudioButton
             label="Create Resource"
             variant="secondary"
@@ -10,8 +8,8 @@
           >
             <Plus class="size-4" aria-hidden="true" />
           </StudioButton>
-        </template>
-        <template #controls>
+    </template>
+    <template #controls>
           <div class="flex flex-col gap-4">
             <div class="flex items-center gap-3">
               <div class="relative flex-1">
@@ -93,8 +91,6 @@
             </div>
           </div>
         </template>
-      </GlassHeader>
-    </template>
 
     <section class="mt-3 px-3">
       <div class="mb-4 flex items-center justify-between">
@@ -205,7 +201,6 @@ import {
 } from '../../types';
 import { useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
-import GlassHeader from '../shared/glass-header.vue';
 import StudioButton from '../shared/studio-button.vue';
 import ListSwitcher from '../shared/list-switcher.vue';
 import ResourceIndexItemCard from './resource-index-item.vue';
