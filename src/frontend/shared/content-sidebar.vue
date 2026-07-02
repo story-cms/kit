@@ -3,7 +3,7 @@
     v-if="shared.showMetaBox || shared.showAppPreview"
     :class="['w-[375px]', isFloating ? 'fixed' : 'sticky [align-self:start]']"
     :style="{
-      top: `${headerHeight + 6}px`,
+      top: `${sidebarTopOffset}px`,
       right: isFloating ? rightPosition : '',
     }"
   >
@@ -29,6 +29,8 @@ const isFloating = ref(false);
 const sidebarWidth = 375;
 const sidebarGap = 16;
 const minimumContentWidth = 720;
+const headerTopOffset = 12;
+const headerGap = 16;
 
 const shared = useSharedStore();
 const { showMetaBox, showAppPreview, isSingleColumn, showSourceColumn } =
@@ -36,6 +38,7 @@ const { showMetaBox, showAppPreview, isSingleColumn, showSourceColumn } =
 const { isLargeScreen } = storeToRefs(shared);
 
 const headerHeight = computed(() => shared.headerHeight);
+const sidebarTopOffset = computed(() => headerHeight.value + headerTopOffset + headerGap);
 
 const rightPosition = computed(() => {
   const difference = shared.layoutWidth - shared.containerWidth;
