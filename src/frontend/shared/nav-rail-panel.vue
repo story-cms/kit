@@ -1,6 +1,6 @@
 <template>
   <aside
-    class="fixed inset-y-0 z-20 left-0 top-0 max-h-screen w-[320px] rounded-r-[20px] bg-white shadow-md transition-all duration-75"
+    class="glass-surface fixed inset-y-0 z-20 left-0 top-0 max-h-screen w-[320px] rounded-r-[20px] transition-all duration-75"
   >
     <nav class="flex h-full flex-col">
       <div class="flex-1 overflow-y-auto">

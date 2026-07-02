@@ -24,6 +24,10 @@
     @apply space-y-6 rounded-[14px] border border-gray-200 bg-white p-8;
   }
 
+  .glass-surface {
+    @apply border border-white bg-white/50 shadow-[0_4px_50px_rgba(16,47,53,0.05)] backdrop-blur-[20px];
+  }
+
   .control-rounded {
     @apply rounded-[10px];
   }

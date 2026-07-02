@@ -4,7 +4,7 @@
       <ListboxButton
         :disabled="isReadOnly"
         class="relative w-full cursor-default text-nowrap rounded-md py-2 pl-3 pr-10 text-left text-sm font-semibold leading-5 text-gray-700 focus:outline-none focus:ring-1"
-        :class="{ 'bg-gray-100': isReadOnly, 'bg-white': !isReadOnly }"
+        :class="{ 'bg-gray-100': isReadOnly, 'glass-surface': !isReadOnly }"
       >
         <div class="flex items-center gap-2">
           <Icon name="translate" class="size-6" />

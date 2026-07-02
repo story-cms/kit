@@ -2,7 +2,7 @@
   <header
     ref="header"
     :class="[
-      'sticky top-3 z-10 box-border w-full shrink-0 rounded-xl border border-white bg-white/50 shadow-[0_4px_50px_rgba(16,47,53,0.05)] backdrop-blur-[20px]',
+      'glass-surface sticky top-3 z-10 box-border w-full shrink-0 rounded-xl',
       shared.hasFeedback ? 'flex items-center justify-center' : 'px-4 py-6',
     ]"
   >
