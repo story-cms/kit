@@ -14,7 +14,7 @@
           },
         ]"
       >
-        <div class="mx-auto grid max-w-7xl grid-cols-1 gap-4">
+        <div class="mx-auto grid max-w-7xl grid-cols-1 gap-y-4">
           <AppLayoutHeader ref="headerComponent" :title="title" :subtitle="subtitle">
             <template v-if="$slots.actions" #actions>
               <slot name="actions" />
