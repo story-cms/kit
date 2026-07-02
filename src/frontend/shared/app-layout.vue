@@ -1,9 +1,6 @@
 <template>
   <div ref="layout" class="bg-gray-50 pb-6">
-    <div
-      ref="container"
-      :class="['relative mx-auto min-h-screen px-3 transition-all duration-75']"
-    >
+    <div ref="container" class="relative mx-auto min-h-screen px-3">
       <component :is="shared.sidebar" v-if="!isInitializing" />
       <Teleport to="body">
         <div
@@ -17,8 +14,8 @@
         :class="[
           'relative',
           {
-            'ml-[84px]': !shared.isLargeScreen || !shared.hasOpenSidebar,
-            'ml-[264px]': shared.isLargeScreen && shared.hasOpenSidebar,
+            'ml-[84px]': !sidebarPushesContent,
+            'ml-[264px]': sidebarPushesContent,
           },
         ]"
       >
@@ -45,7 +42,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, onBeforeMount, watch, nextTick } from 'vue';
+import {
+  ref,
+  computed,
+  onMounted,
+  onUnmounted,
+  onBeforeMount,
+  watch,
+  nextTick,
+} from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import { useSharedStore } from '../store';
 import AppLayoutHeader from './app-layout-header.vue';
@@ -84,9 +89,13 @@ const container = ref<HTMLElement | null>(null);
 
 const isInitializing = ref(true);
 
-const showSidebarOverlay = computed(
-  () => !shared.isLargeScreen && shared.hasOpenSidebar,
+const SIDEBAR_PUSH_BREAKPOINT = 1024;
+
+const sidebarPushesContent = computed(
+  () => shared.isLargeScreen && shared.hasOpenSidebar,
 );
+
+const showSidebarOverlay = computed(() => !shared.isLargeScreen && shared.hasOpenSidebar);
 
 const closeSidebar = () => {
   shared.setSidebarOpen(false);
@@ -133,7 +142,7 @@ watch(
 
 const resizeHook = () => {
   const fresh = document.documentElement.clientWidth;
-  shared.setLargeScreen(fresh >= 1024);
+  shared.setLargeScreen(fresh >= SIDEBAR_PUSH_BREAKPOINT);
   setDimensions();
 };
 
