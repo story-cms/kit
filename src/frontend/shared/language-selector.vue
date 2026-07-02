@@ -10,7 +10,7 @@
         >
           {{ currentLocale }}
         </span>
-        <Icon name="translate" />
+        <Languages class="size-6" aria-hidden="true" />
       </MenuButton>
     </div>
 
@@ -35,7 +35,11 @@
               @click="onLanguage(language.language)"
             >
               <span> {{ language.language }}</span>
-              <Icon v-if="language.language === currentLanguage" name="check" />
+              <Check
+                v-if="language.language === currentLanguage"
+                class="size-4 justify-self-end"
+                aria-hidden="true"
+              />
             </button>
           </MenuItem>
         </div>
@@ -46,7 +50,7 @@
 
 <script setup lang="ts">
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
-import Icon from '../shared/icon.vue';
+import { Check, Languages } from '@lucide/vue';
 import type { LanguageSpecification } from '../../types';
 
 defineProps<{

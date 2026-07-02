@@ -73,7 +73,7 @@
                 :href="bookmark.link"
               >
                 <div class="flex items-center gap-3">
-                  <Icon name="star" class="size-6" />
+                  <Star class="size-6 shrink-0" aria-hidden="true" />
                   <span class="line-clamp-2">{{ bookmark.label }}</span>
                 </div>
                 <span class="uppercase">{{ extractLocaleFromLink(bookmark.link) }}</span>
@@ -87,12 +87,12 @@
               :class="classList('settings', true)"
               :href="`/${locale}/settings`"
             >
-              <Icon name="settings" />
+              <Settings class="size-6 shrink-0" aria-hidden="true" />
               <span>Settings</span>
             </a>
 
             <a v-if="isAdmin" :class="classList('user', true)" :href="`/${locale}/user`">
-              <Icon name="users" />
+              <Users class="size-6 shrink-0" aria-hidden="true" />
               <span>Team</span>
             </a>
             <a
@@ -102,11 +102,11 @@
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Icon name="help" />
+              <CircleHelp class="size-6 shrink-0" aria-hidden="true" />
               <span>Support</span>
             </a>
             <a :class="classList('logout', true)" href="/logout">
-              <Icon name="logout" />
+              <LogOut class="size-6 shrink-0" aria-hidden="true" />
               <span>Logout</span>
             </a>
           </section>
@@ -125,7 +125,7 @@
 </template>
 
 <script setup lang="ts">
-import Icon from './icon.vue';
+import { CircleHelp, LogOut, Settings, Star, Users } from '@lucide/vue';
 import DropUp from './drop-up.vue';
 import NavRailToolbar from './nav-rail-toolbar.vue';
 import { useSidebarNav } from './use-sidebar-nav';

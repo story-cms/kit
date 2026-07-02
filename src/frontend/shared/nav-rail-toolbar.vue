@@ -6,10 +6,10 @@
     ]"
   >
     <a :class="['nav-icon']" :href="`/${locale}/dashboard`">
-      <Icon name="home" />
+      <Home class="size-6" aria-hidden="true" />
     </a>
     <button class="nav-icon" @click="goBack">
-      <Icon name="reply" />
+      <Reply class="size-6" aria-hidden="true" />
     </button>
     <div v-if="subscribed('language')">
       <button
@@ -21,7 +21,7 @@
         >
           {{ locale }}
         </span>
-        <Icon name="translate" />
+        <Languages class="size-6" aria-hidden="true" />
       </button>
       <LanguageSelector
         v-else
@@ -33,14 +33,14 @@
       />
     </div>
     <button class="nav-icon" @click="toggleMenu">
-      <Icon v-if="variant === 'pill'" name="chevron-double-right" />
-      <Icon v-else name="chevron-double-left" />
+      <ChevronsRight v-if="variant === 'pill'" class="size-6" aria-hidden="true" />
+      <ChevronsLeft v-else class="size-6" aria-hidden="true" />
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
-import Icon from './icon.vue';
+import { ChevronsLeft, ChevronsRight, Home, Languages, Reply } from '@lucide/vue';
 import LanguageSelector from './language-selector.vue';
 import { useSidebarNav } from './use-sidebar-nav';
 
