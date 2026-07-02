@@ -8,7 +8,7 @@
   >
     <template v-if="!shared.hasFeedback">
       <div class="flex items-center justify-between gap-4">
-        <div class="font-dmsans min-w-0 flex-1">
+        <div class="min-w-0 flex-1 font-dmsans">
           <h2
             v-if="title"
             class="text-xs font-medium uppercase leading-4 tracking-[0.3px] text-[#6A7282]"
