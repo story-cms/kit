@@ -137,6 +137,7 @@ watch(
   () => shared.hasOpenSidebar,
   (newVal: boolean) => {
     localStorage.setItem('sidebar-state', newVal.toString());
+    nextTick(setDimensions);
   },
 );
 

@@ -26,6 +26,9 @@ const props = defineProps<{
 }>();
 
 const isFloating = ref(false);
+const sidebarWidth = 375;
+const sidebarGap = 16;
+const minimumContentWidth = 720;
 
 const shared = useSharedStore();
 const { showMetaBox, showAppPreview, isSingleColumn, showSourceColumn } =
@@ -39,6 +42,11 @@ const rightPosition = computed(() => {
   return `${difference / 2 + 12}px`;
 });
 
+const contentWidthWithSidebar = computed(() => {
+  const availableWidth = shared.headerWidth || shared.containerWidth;
+  return availableWidth - sidebarWidth - sidebarGap;
+});
+
 const isSingleAndFloating = () => {
   const isShowingElements = showMetaBox.value || showAppPreview.value;
   // Small screen
@@ -47,6 +55,7 @@ const isSingleAndFloating = () => {
   }
   // Large screen
   if (!isShowingElements) return true;
+  if (contentWidthWithSidebar.value < minimumContentWidth) return true;
 
   if (props.isComplexLayout) {
     if (isShowingElements && !showSourceColumn.value) return false;
@@ -56,16 +65,19 @@ const isSingleAndFloating = () => {
   return false;
 };
 
-watch([showMetaBox, showAppPreview, isLargeScreen, showSourceColumn], () => {
-  if (!showMetaBox.value && !showAppPreview.value) {
-    isFloating.value = false;
-    shared.setSingleColumn(true);
-  }
+watch(
+  [showMetaBox, showAppPreview, isLargeScreen, showSourceColumn, contentWidthWithSidebar],
+  () => {
+    if (!showMetaBox.value && !showAppPreview.value) {
+      isFloating.value = false;
+      shared.setSingleColumn(true);
+    }
 
-  const setting = isSingleAndFloating();
-  shared.setSingleColumn(setting);
-  isFloating.value = setting;
-});
+    const setting = isSingleAndFloating();
+    shared.setSingleColumn(setting);
+    isFloating.value = setting;
+  },
+);
 
 watch(
   () => isSingleColumn.value,
