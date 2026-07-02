@@ -6,13 +6,12 @@
     >
       <component :is="shared.sidebar" v-if="!isInitializing" />
       <Teleport to="body">
-        <Dialog
-          :open="showSidebarOverlay"
-          class="relative z-[15]"
-          @close="closeSidebar"
-        >
-          <div class="fixed inset-0 bg-black/30" aria-hidden="true" />
-        </Dialog>
+        <div
+          v-if="showSidebarOverlay"
+          class="fixed inset-0 z-[15] bg-black/30"
+          aria-hidden="true"
+          @click="closeSidebar"
+        />
       </Teleport>
       <div
         :class="[
@@ -47,7 +46,6 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, onBeforeMount, watch, nextTick } from 'vue';
-import { Dialog } from '@headlessui/vue';
 import { usePage } from '@inertiajs/vue3';
 import { useSharedStore } from '../store';
 import AppLayoutHeader from './app-layout-header.vue';
@@ -93,6 +91,20 @@ const showSidebarOverlay = computed(
 const closeSidebar = () => {
   shared.setSidebarOpen(false);
 };
+
+const onEscape = (event: KeyboardEvent) => {
+  if (event.key === 'Escape' && showSidebarOverlay.value) {
+    closeSidebar();
+  }
+};
+
+watch(showSidebarOverlay, (open) => {
+  if (open) {
+    document.addEventListener('keydown', onEscape);
+  } else {
+    document.removeEventListener('keydown', onEscape);
+  }
+});
 
 const setDimensions = () => {
   const headerEl = headerComponent.value?.header ?? null;
@@ -149,5 +161,6 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('resize', resizeHook);
+  document.removeEventListener('keydown', onEscape);
 });
 </script>
