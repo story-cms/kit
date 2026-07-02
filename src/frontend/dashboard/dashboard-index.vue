@@ -1,13 +1,5 @@
 <template>
   <AppLayout>
-    <template #header>
-      <ContentHeader title="">
-        <template #hero>
-          <WelcomeBanner />
-        </template>
-      </ContentHeader>
-    </template>
-
     <div>
       <StatTiles :stats="stats" :is-loading="isLoading" :error="error" />
     </div>
@@ -68,8 +60,6 @@
 
 <script setup lang="ts">
 import AppLayout from '../shared/app-layout.vue';
-import ContentHeader from '../shared/content-header.vue';
-import WelcomeBanner from './welcome-banner.vue';
 import StatTiles from './stat-tiles.vue';
 import IndexFilter from '../shared/index-filter.vue';
 import LanguageBlock from './language-block.vue';
