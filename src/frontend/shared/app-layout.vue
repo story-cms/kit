@@ -5,6 +5,15 @@
       :class="['relative mx-auto min-h-screen px-3 transition-all duration-75']"
     >
       <component :is="shared.sidebar" v-if="!isInitializing" />
+      <Teleport to="body">
+        <Dialog
+          :open="showSidebarOverlay"
+          class="relative z-[15]"
+          @close="closeSidebar"
+        >
+          <div class="fixed inset-0 bg-black/30" aria-hidden="true" />
+        </Dialog>
+      </Teleport>
       <div
         :class="[
           'relative',
@@ -37,7 +46,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, onBeforeMount, watch, nextTick } from 'vue';
+import { ref, computed, onMounted, onUnmounted, onBeforeMount, watch, nextTick } from 'vue';
+import { Dialog } from '@headlessui/vue';
 import { usePage } from '@inertiajs/vue3';
 import { useSharedStore } from '../store';
 import AppLayoutHeader from './app-layout-header.vue';
@@ -76,6 +86,14 @@ const container = ref<HTMLElement | null>(null);
 
 const isInitializing = ref(true);
 
+const showSidebarOverlay = computed(
+  () => !shared.isLargeScreen && shared.hasOpenSidebar,
+);
+
+const closeSidebar = () => {
+  shared.setSidebarOpen(false);
+};
+
 const setDimensions = () => {
   const headerEl = headerComponent.value?.header ?? null;
   if (headerEl) {
@@ -103,7 +121,7 @@ watch(
 
 const resizeHook = () => {
   const fresh = document.documentElement.clientWidth;
-  shared.setLargeScreen(fresh >= 1280);
+  shared.setLargeScreen(fresh >= 1024);
   setDimensions();
 };
 
