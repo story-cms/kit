@@ -14,8 +14,8 @@
         :class="[
           'relative',
           {
-            'ml-[84px]': !sidebarPushesContent,
-            'ml-[264px]': sidebarPushesContent,
+            'ml-[88px]': !sidebarPushesContent,
+            'ml-[324px]': sidebarPushesContent,
           },
         ]"
       >
