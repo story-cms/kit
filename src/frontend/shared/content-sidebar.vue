@@ -3,7 +3,7 @@
     v-if="shared.showMetaBox || shared.showAppPreview"
     :class="['w-[375px]', isFloating ? 'fixed' : 'sticky [align-self:start]']"
     :style="{
-      top: `${headerHeight + 4}px`,
+      top: `${headerHeight + 6}px`,
       right: isFloating ? rightPosition : '',
     }"
   >
