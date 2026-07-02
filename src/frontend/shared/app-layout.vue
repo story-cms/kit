@@ -15,18 +15,11 @@
         ]"
       >
         <div class="mx-auto max-w-7xl pb-6">
-          <header
-            ref="header"
-            class="sticky top-0 z-10 border-gray-50 bg-gray-50 transition-all duration-75"
-          >
-            <slot v-if="!shared.hasFeedback" name="header" />
-            <MessageCentre
-              v-else
-              :response="shared.messageCentre.response"
-              :message="shared.messageCentre.message"
-              :description="shared.messageCentre.description"
-            />
-          </header>
+          <AppLayoutHeader ref="headerComponent">
+            <template #header>
+              <slot name="header" />
+            </template>
+          </AppLayoutHeader>
           <main ref="main" class="mt-1 h-full">
             <slot />
           </main>
@@ -40,7 +33,7 @@
 import { ref, onMounted, onUnmounted, onBeforeMount, watch, nextTick } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import { useSharedStore } from '../store';
-import MessageCentre from './message-centre.vue';
+import AppLayoutHeader from './app-layout-header.vue';
 import type { SharedPageProps } from '../../types';
 
 const shared = useSharedStore();
@@ -65,15 +58,16 @@ watch(
   { deep: true },
 );
 
-const header = ref<HTMLElement | null>(null);
+const headerComponent = ref<InstanceType<typeof AppLayoutHeader> | null>(null);
 const layout = ref<HTMLElement | null>(null);
 const container = ref<HTMLElement | null>(null);
 
 const isInitializing = ref(true);
 
 const setDimensions = () => {
-  if (header.value) {
-    const headerRect = header.value.getBoundingClientRect();
+  const headerEl = headerComponent.value?.header ?? null;
+  if (headerEl) {
+    const headerRect = headerEl.getBoundingClientRect();
     shared.setHeaderSize(headerRect.height, headerRect.width);
   }
 
