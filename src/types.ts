@@ -355,9 +355,11 @@ export interface StoryCreateProps {
     visibility: string;
     slug: string | null;
     template: string;
+    sections: StorySection[];
   };
   templates: BundleTemplate[];
   providers: Providers;
+  availableResources: ResourceItem[];
 }
 
 export interface StoryEditProps {

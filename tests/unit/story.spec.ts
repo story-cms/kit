@@ -81,6 +81,17 @@ test.describe('Story Validator', () => {
       ).rejects.toThrow();
     });
 
+    test('requires chapterLimit', async () => {
+      const validator = new StoryCreateValidator();
+
+      await expect(
+        validator.validate({
+          ...validCreateData,
+          chapterLimit: 0,
+        }),
+      ).rejects.toThrow();
+    });
+
     test('accepts valid create payload', async () => {
       const validator = new StoryCreateValidator();
       const result = await validator.validate(validCreateData);
@@ -96,6 +107,77 @@ test.describe('Story Validator', () => {
 
       expect(result.bundle.title).toBe('Gospel of John');
       expect(result.bundle.description).toBeUndefined();
+    });
+
+    test('accepts minimal create payload', async () => {
+      const validator = new StoryCreateValidator();
+      const result = await validator.validate({
+        title: 'Gospel of John',
+        chapterLimit: 12,
+        template: 'course',
+      });
+
+      expect(result.bundle.title).toBe('Gospel of John');
+      expect(result.bundle.chapterLimit).toBe(12);
+      expect(result.bundle.template).toBe('course');
+    });
+
+    test('accepts blank storyType, chapterType, visibility', async () => {
+      const validator = new StoryCreateValidator();
+      const result = await validator.validate({
+        title: 'Gospel of John',
+        chapterLimit: 12,
+        template: 'course',
+        storyType: '',
+        chapterType: '',
+        visibility: '',
+      });
+
+      expect(result.bundle.storyType).toBe('');
+      expect(result.bundle.chapterType).toBe('');
+      expect(result.bundle.visibility).toBe('');
+    });
+
+    test('accepts create without sections or resources', async () => {
+      const validator = new StoryCreateValidator();
+      const result = await validator.validate({
+        title: 'Gospel of John',
+        chapterLimit: 12,
+        template: 'course',
+      });
+
+      expect(result.bundle.sections).toBeUndefined();
+      expect(result.bundle.resources).toBeUndefined();
+    });
+
+    test('accepts create with sections and resources', async () => {
+      const validator = new StoryCreateValidator();
+      const result = await validator.validate({
+        title: 'Gospel of John',
+        chapterLimit: 12,
+        template: 'course',
+        sections: [{ title: 'Introduction', description: 'Opening section' }],
+        resources: ['00000000-0000-0000-0000-000000000001'],
+      });
+
+      expect(result.bundle.sections).toHaveLength(1);
+      expect(result.bundle.sections[0].title).toBe('Introduction');
+      expect(result.bundle.resources).toEqual([
+        '00000000-0000-0000-0000-000000000001',
+      ]);
+    });
+
+    test('rejects create with blank section title', async () => {
+      const validator = new StoryCreateValidator();
+
+      await expect(
+        validator.validate({
+          title: 'Gospel of John',
+          chapterLimit: 12,
+          template: 'course',
+          sections: [{ title: '' }],
+        }),
+      ).rejects.toThrow();
     });
   });
 

@@ -92,8 +92,8 @@ export default class StoriesController {
         coverImage: payload.coverImage,
         description: payload.description,
         tags: payload.tags,
-        sections: [],
-        resources: [],
+        sections: storyService.sourceSections(payload.sections ?? []),
+        resources: payload.resources ?? [],
       });
       local.useTransaction(trx);
       await local.save();

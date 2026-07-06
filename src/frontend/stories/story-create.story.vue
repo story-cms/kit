@@ -10,6 +10,7 @@
         :model="emptyModel"
         :templates="singleTemplate"
         :providers="{}"
+        :available-resources="availableResources"
       />
     </Variant>
 
@@ -23,6 +24,7 @@
         :model="emptyModel"
         :templates="storyTemplates"
         :providers="{}"
+        :available-resources="availableResources"
       />
     </Variant>
 
@@ -36,6 +38,21 @@
         :model="prefilledModel"
         :templates="storyTemplates"
         :providers="{}"
+        :available-resources="availableResources"
+      />
+    </Variant>
+
+    <Variant title="Resources tab" :setup-app="loadResourcesTab">
+      <StoryCreate
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :errors="{}"
+        :bookmarks="sharedProps.bookmarks"
+        :model="emptyModel"
+        :templates="storyTemplates"
+        :providers="{}"
+        :available-resources="availableResources"
       />
     </Variant>
   </Story>
@@ -43,7 +60,7 @@
 
 <script setup lang="ts">
 import StoryCreate from './story-create.vue';
-import { sharedProps, miniSidebar } from '../test/mocks';
+import { sharedProps, miniSidebar, availableResources } from '../test/mocks';
 import { useSharedStore } from '../store';
 import type { StoryHandler } from '../shared/helpers';
 import type { BundleTemplate, StoryCreateProps } from '../../types';
@@ -60,6 +77,7 @@ const emptyModel: StoryCreateProps['model'] = {
   visibility: 'public',
   slug: null,
   template: 'devotion',
+  sections: [],
 };
 
 const prefilledModel: StoryCreateProps['model'] = {
@@ -75,6 +93,13 @@ const prefilledModel: StoryCreateProps['model'] = {
   visibility: 'public',
   slug: null,
   template: 'course',
+  sections: [
+    {
+      id: 'section-1',
+      title: 'Introduction',
+      description: 'Opening section of the course.',
+    },
+  ],
 };
 
 const singleTemplate: BundleTemplate[] = [
@@ -113,13 +138,21 @@ const loadNormalData: StoryHandler = ({ app, story, variant }): void => {
 
   miniSidebar({ app, story, variant });
 };
+
+const loadResourcesTab: StoryHandler = (context): void => {
+  loadNormalData(context);
+  const url = new URL(window.location.href);
+  url.searchParams.set('tab', 'Resources');
+  window.history.replaceState({}, '', url.toString());
+};
 </script>
 
 <docs lang="md">
 # Story Create
 
-Full-page form for creating a new story. Collects title, cover image, classification fields,
-and optional content shape when multiple templates are available.
+Full-page form for creating a new story. Tabbed navigation for Details, Sections, and
+Resources. Collects title, cover image, classification fields, optional sections and
+attached resources, and chapter template when multiple templates are available.
 
 In production, this page is reached from the Story Gallery **+** button when
 `multi-story` is included in `config.subscriptions`. See [Story Gallery](./story-gallery.story.vue).
@@ -136,6 +169,7 @@ In production, this page is reached from the Story Gallery **+** button when
   :model="model"
   :templates="templates"
   :providers="providers"
+  :available-resources="availableResources"
 />
 ```
 </docs>
