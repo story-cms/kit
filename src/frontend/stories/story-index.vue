@@ -35,66 +35,68 @@
           <button
             v-if="addStatus == AddStatus.Wait"
             type="button"
-            class="font-dmsans inline-flex items-center rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-500"
+            class="inline-flex items-center rounded-full border border-gray-300 px-4 py-2 font-dmsans text-sm font-medium text-gray-500"
             disabled
           >
             {{ `No more ${story.chapterType}s available to translate` }}
           </button>
         </div>
 
-        <div ref="searchContainer" class="flex items-center gap-3">
-          <div v-if="showSearch" class="relative">
-            <input
-              id="search"
-              ref="searchInput"
-              v-model="filterNumber"
-              type="text"
-              name="search"
-              class="block w-48 rounded-xl bg-white py-2 pl-9 pr-3 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"
-              :placeholder="story.chapterType"
-              @keydown.escape="closeSearch"
-            />
-            <Search
-              class="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-gray-400"
-              aria-hidden="true"
-            />
-          </div>
-          <button
-            type="button"
-            class="rounded-xl p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700"
-            :class="{ 'bg-gray-100 text-gray-900': showSearch }"
-            aria-label="Search"
-            :aria-expanded="showSearch"
-            @click="toggleSearch"
-          >
-            <Search class="size-4" aria-hidden="true" />
-          </button>
+        <div class="flex shrink-0 items-center gap-3">
+          <ExpandableSearch
+            v-model="filterQuery"
+            :placeholder="`Search`"
+            clear-on-collapse
+          />
           <ListSwitcher :is-list="isList" @toggle="isList = !isList" />
         </div>
       </div>
     </template>
     <template #main>
       <div
-        :class="[
-          'grid gap-4',
-          {
-            'grid-cols-[repeat(auto-fit,_minmax(260px,_260px))]': !isList,
-          },
-          {
-            'grid-cols-1': isList,
-          },
-        ]"
+        v-if="filteredIndex.length > 0 && !isList"
+        class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
       >
         <index-card
           v-for="item in filteredIndex"
           :key="item.number"
+          class="h-full"
           :item="item"
-          :is-list="isList"
+          :is-list="false"
           placeholder-image="https://res.cloudinary.com/redeem/image/upload/v1752849347/story-cms-ui/placeholder_bafmfz.jpg"
           :scope="currentTab"
           :chapter-name="story.chapterType"
           @tap="onTap"
         />
+      </div>
+
+      <div
+        v-else-if="filteredIndex.length > 0 && isList"
+        class="overflow-x-auto rounded-xl border border-gray-200 bg-white"
+      >
+        <table class="w-full table-auto">
+          <thead class="border-b border-gray-200 bg-gray-50">
+            <tr>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
+                Chapter
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <index-card
+              v-for="item in filteredIndex"
+              :key="item.number"
+              :item="item"
+              :is-list="true"
+              placeholder-image="https://res.cloudinary.com/redeem/image/upload/v1752849347/story-cms-ui/placeholder_bafmfz.jpg"
+              :scope="currentTab"
+              :chapter-name="story.chapterType"
+              @tap="onTap"
+            />
+          </tbody>
+        </table>
       </div>
     </template>
   </AppLayout>
@@ -102,12 +104,14 @@
 
 <script setup lang="ts">
 import { router } from '@inertiajs/vue3';
-import { Plus, Search } from '@lucide/vue';
-import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue';
+import { Plus } from '@lucide/vue';
+import { computed, ref } from 'vue';
 
 import { IndexReadyItem, SharedPageProps, StoryIndexProps, AddStatus } from '../../types';
 import AppLayout from '../shared/app-layout.vue';
+import ExpandableSearch from '../shared/expandable-search.vue';
 import GlassButton from '../shared/glass-button.vue';
+import { padZero } from '../shared/helpers';
 import ListSwitcher from '../shared/list-switcher.vue';
 import StudioButton from '../shared/studio-button.vue';
 import { useSharedStore } from '../store';
@@ -121,11 +125,8 @@ shared.setFromProps(props);
 shared.setCurrentStoryName(props.story.name);
 
 const isList = ref(false);
-const showSearch = ref(false);
-const filterNumber = ref<string | null>(null);
+const filterQuery = ref('');
 const currentTab = ref('Live');
-const searchInput = ref<HTMLInputElement | null>(null);
-const searchContainer = ref<HTMLElement | null>(null);
 
 const liveCount = computed(
   () => props.index.filter((item) => item.tags.includes('Live')).length,
@@ -143,13 +144,25 @@ const onFilter = (tab: string) => {
 };
 
 const filteredIndex = computed(() => {
-  const needle = currentTab.value === 'Live' ? 'Live' : 'Draft';
+  const tabTag = currentTab.value === 'Live' ? 'Live' : 'Draft';
+  const query = filterQuery.value.trim().toLowerCase();
 
   return props.index.filter((item) => {
-    const hasTag = item.tags.includes(needle);
-    if (!filterNumber.value) return hasTag;
+    if (!item.tags.includes(tabTag)) return false;
+    if (!query) return true;
 
-    return hasTag && item.number.toString().startsWith(filterNumber.value);
+    const paddedNumber = padZero(item.number);
+    const title = item.title.toLowerCase();
+    const chapterLabel = `${props.story.chapterType} ${item.number}`.toLowerCase();
+    const chapterLabelPadded = `${props.story.chapterType} ${paddedNumber}`.toLowerCase();
+
+    return (
+      item.number.toString().includes(query) ||
+      paddedNumber.includes(query) ||
+      title.includes(query) ||
+      chapterLabel.includes(query) ||
+      chapterLabelPadded.includes(query)
+    );
   });
 });
 
@@ -162,37 +175,4 @@ const onTap = (item: IndexReadyItem) => {
 };
 
 const editMeta = () => router.get(`/${shared.locale}/story/${props.story.id}/edit`);
-
-const closeSearch = () => {
-  showSearch.value = false;
-  filterNumber.value = null;
-};
-
-const toggleSearch = async () => {
-  showSearch.value = !showSearch.value;
-
-  if (showSearch.value) {
-    await nextTick();
-    searchInput.value?.focus();
-  } else {
-    filterNumber.value = null;
-  }
-};
-
-const onClickOutside = (event: MouseEvent) => {
-  if (!showSearch.value) return;
-
-  const target = event.target as Node;
-  if (searchContainer.value && !searchContainer.value.contains(target)) {
-    closeSearch();
-  }
-};
-
-onMounted(() => {
-  document.addEventListener('click', onClickOutside);
-});
-
-onUnmounted(() => {
-  document.removeEventListener('click', onClickOutside);
-});
 </script>
