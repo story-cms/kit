@@ -115,7 +115,13 @@ import { router } from '@inertiajs/vue3';
 import { Plus } from '@lucide/vue';
 import { computed, ref } from 'vue';
 
-import { IndexReadyItem, SharedPageProps, StoryIndexProps, AddStatus, ResponseStatus } from '../../types';
+import {
+  IndexReadyItem,
+  SharedPageProps,
+  StoryIndexProps,
+  AddStatus,
+  ResponseStatus,
+} from '../../types';
 import { canPublishStory, publishBlockedMessage } from '../../shared/story_helpers';
 import AppLayout from '../shared/app-layout.vue';
 import ExpandableSearch from '../shared/expandable-search.vue';
@@ -210,29 +216,33 @@ const publishStory = () => {
   shared.clearErrors();
   isPublishing.value = true;
 
-  router.post(`/${shared.locale}/story/${props.story.id}/publish`, {}, {
-    preserveScroll: true,
+  router.post(
+    `/${shared.locale}/story/${props.story.id}/publish`,
+    {},
+    {
+      preserveScroll: true,
 
-    onSuccess: (page) => {
-      const flashError = (page.props as { flash?: { error?: string } }).flash?.error;
-      if (flashError) {
-        shared.addMessage(ResponseStatus.Failure, flashError);
-        return;
-      }
-      shared.addMessage(ResponseStatus.Confirmation, 'Story published successfully!');
-    },
+      onSuccess: (page) => {
+        const flashError = (page.props as { flash?: { error?: string } }).flash?.error;
+        if (flashError) {
+          shared.addMessage(ResponseStatus.Failure, flashError);
+          return;
+        }
+        shared.addMessage(ResponseStatus.Confirmation, 'Story published successfully!');
+      },
 
-    onError: (validationErrors) => {
-      shared.setErrors(validationErrors);
-      shared.addMessage(
-        ResponseStatus.Failure,
-        validationFailureMessage(validationErrors),
-      );
-    },
+      onError: (validationErrors) => {
+        shared.setErrors(validationErrors);
+        shared.addMessage(
+          ResponseStatus.Failure,
+          validationFailureMessage(validationErrors),
+        );
+      },
 
-    onFinish: () => {
-      isPublishing.value = false;
+      onFinish: () => {
+        isPublishing.value = false;
+      },
     },
-  });
+  );
 };
 </script>

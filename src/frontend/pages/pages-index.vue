@@ -28,7 +28,7 @@
     <template #main>
       <div class="my-8 flex flex-col space-y-4">
         <div
-          class="overflow-hidden rounded-xl border border-gray-200 bg-white divide-y divide-gray-100"
+          class="divide-y divide-gray-100 overflow-hidden rounded-xl border border-gray-200 bg-white"
         >
           <PageIndexItem
             v-for="page in filteredItems"
@@ -51,6 +51,7 @@
 <script setup lang="ts">
 import { ref, computed, toRefs } from 'vue';
 import { router } from '@inertiajs/vue3';
+import type { RequestPayload } from '@inertiajs/core';
 import type { TabItem, PageItem, SharedPageProps, PageIndexProps } from '../../types';
 import { usePagesStore, useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
@@ -144,7 +145,7 @@ const getPayload = (): postType => {
 };
 
 const save = debounce(1000, () => {
-  router.post(`/${shared.locale}/page/sort`, getPayload(), {
+  router.post(`/${shared.locale}/page/sort`, getPayload() as unknown as RequestPayload, {
     onSuccess: (result) => {
       console.log('! saved', result.props);
     },
