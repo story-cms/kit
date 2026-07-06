@@ -92,18 +92,27 @@ model.$subscribe(load);
 const errors = computed(() => shared.errorMessages(fieldPath.value));
 const hasError = computed(() => errors.value.length > 0 && !props.isReadOnly);
 
-shared.$subscribe(() => {
+let mde: EasyMDE | null = null;
+
+const applyEditorDirection = () => {
+  if (!mde) return;
+
   if (props.isReadOnly) {
-    mde?.codemirror.setOption('theme', 'en');
+    mde.codemirror.setOption('direction', 'ltr');
+    mde.codemirror.setOption('rtlMoveVisually', false);
+    mde.codemirror.setOption('theme', 'en');
     return;
   }
 
-  mde?.codemirror.setOption('direction', shared.languageDirection);
-  mde?.codemirror.setOption('rtlMoveVisually', shared.isRtl);
-  mde?.codemirror.setOption('theme', shared.locale);
+  mde.codemirror.setOption('direction', shared.languageDirection);
+  mde.codemirror.setOption('rtlMoveVisually', shared.isRtl);
+  mde.codemirror.setOption('theme', shared.locale);
+};
+
+shared.$subscribe(() => {
+  applyEditorDirection();
 });
 
-let mde: EasyMDE | null = null;
 const textArea = ref(undefined);
 
 const toolbar = computed((): (string | { name: string })[] => {
@@ -144,6 +153,7 @@ onMounted(async () => {
   });
   mde?.codemirror.setOption('readOnly', props.isReadOnly);
   mde?.codemirror.on('change', update);
+  applyEditorDirection();
   load();
 });
 </script>

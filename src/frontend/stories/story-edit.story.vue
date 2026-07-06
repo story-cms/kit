@@ -136,6 +136,22 @@
       />
     </Variant>
 
+    <Variant title="Arabic translation locale" :setup-app="loadTranslationLocale">
+      <StoryEdit
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="arabicLanguage"
+        :errors="{}"
+        :bookmarks="sharedProps.bookmarks"
+        :model="arabicTranslationModel"
+        :source="translationSource"
+        :available-resources="availableResources"
+        :has-no-content="false"
+        :providers="{}"
+        :templates="storyTemplates"
+      />
+    </Variant>
+
     <Variant title="Translation without sections" :setup-app="loadTranslationLocale">
       <StoryEdit
         :config="sharedProps.config"
@@ -188,6 +204,12 @@ const spanishLanguage: LanguageSpecification = {
   locale: 'es',
   language: 'Spanish',
   languageDirection: 'ltr',
+};
+
+const arabicLanguage: LanguageSpecification = {
+  locale: 'ar',
+  language: 'Arabic - عربى',
+  languageDirection: 'rtl',
 };
 
 const sampleStorySections: StorySection[] = [
@@ -297,6 +319,27 @@ const translationModel: StoryEditProps['model'] = {
   resources: [],
 };
 
+const arabicTranslationModel: StoryEditProps['model'] = {
+  ...storyModel,
+  title: '',
+  coverImage: '',
+  description: '',
+  tags: 'gospel,john,new-testament',
+  sections: [
+    {
+      id: 'section-1',
+      title: 'المقدمة',
+      description: 'القسم الافتتاحي للإنجيل.',
+    },
+    {
+      id: 'section-2',
+      title: '',
+      description: '',
+    },
+  ],
+  resources: [],
+};
+
 const translationSource = {
   title: storyModel.title,
   coverImage: storyModel.coverImage,
@@ -364,6 +407,7 @@ Saving posts attached resource IDs to the story localisation.
 - **Without sections** — English source locale with no sections; Sections tab shows empty state message
 - **Validation errors on tabs** — failed publish validation; Details and Sections tabs show error indicators and inline field messages
 - **Translation locale** — Spanish edit with English source column; tags prefilled from source on Details tab
+- **Arabic translation locale** — Arabic edit on the left, English source on the right; RTL text in the translation column; side-by-side fields on Details and Sections tabs
 - **Translation without sections** — Spanish edit with English source column; source localisation has no sections, so the Sections tab is empty
 
 ## Usage
