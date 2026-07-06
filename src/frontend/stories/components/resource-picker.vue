@@ -18,7 +18,7 @@
       </div>
       <button
         type="button"
-        class="inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full border border-studio_forest_green px-4 py-2.5 text-sm font-medium text-studio_forest_green transition-colors hover:bg-studio_forest_green/10"
+        class="inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-xl border border-studio_forest_green px-4 py-2.5 text-sm font-medium text-studio_forest_green transition-colors hover:bg-studio_forest_green/10"
         @click="emit('create')"
       >
         <Plus class="size-4" />
