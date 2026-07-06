@@ -1,122 +1,132 @@
 <template>
   <div
-    class="grid grid-cols-12"
-    :draggable="page ? page.isPublished : false"
+    v-if="page.isDivider"
+    class="flex min-w-0 items-center gap-3 overflow-hidden px-4 py-3 transition-colors"
+    :class="[{ 'opacity-50': isDragging }]"
+    :draggable="canDrag"
     @dragstart="onDragStart"
+    @dragover.prevent="onDragOver"
+    @drop.prevent="onDrop"
     @dragend="onDragEnd"
-    @dragover="onDragOver"
-    @dragenter="emit('dragEnter')"
-    @dragleave="onDragLeave"
   >
-    <div
-      v-if="page ? page.isPublished : false"
-      class="col-span-1 flex cursor-move items-center justify-center"
-    >
-      <Icon name="drag" class="h-5 w-auto text-gray-400" />
+    <GripVertical
+      v-if="canDrag"
+      class="size-4 shrink-0 cursor-move text-gray-400"
+      aria-hidden="true"
+    />
+    <div class="relative min-w-0 flex-1">
+      <div class="absolute inset-0 flex items-center" aria-hidden="true">
+        <div class="w-full border-t border-gray-300" />
+      </div>
     </div>
-    <div
-      class="col-span-11 rounded-xl border bg-white drop-shadow-sm"
-      :class="{
-        'px-4 py-2': page ? page.isDivider : false,
-        'px-7 py-4': page ? !page.isDivider : false,
-        'col-span-12': page ? !page.isPublished : false,
-      }"
+    <button
+      type="button"
+      class="shrink-0 rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
+      aria-label="Remove divider"
+      @click="emit('removeDivider')"
     >
-      <div
-        v-if="page ? !page.isDivider : false"
-        class="flex cursor-pointer justify-between space-x-3"
-        @click="emit('tap', page.id)"
+      <Trash2 class="size-4" aria-hidden="true" />
+    </button>
+  </div>
+
+  <div
+    v-else
+    class="flex min-w-0 items-center gap-3 overflow-hidden px-4 py-3 transition-colors"
+    :class="[canDrag ? 'hover:bg-gray-50' : '', { 'opacity-50': isDragging }]"
+    :draggable="canDrag"
+    @dragstart="onDragStart"
+    @dragover.prevent="onDragOver"
+    @drop.prevent="onDrop"
+    @dragend="onDragEnd"
+  >
+    <GripVertical
+      v-if="canDrag"
+      class="size-4 shrink-0 cursor-move text-gray-400"
+      aria-hidden="true"
+    />
+    <button
+      type="button"
+      class="group/edit flex min-w-0 flex-1 items-center gap-3 overflow-hidden text-left"
+      @click="emit('tap', page.id)"
+    >
+      <img
+        v-if="page.icon"
+        :src="page.icon"
+        :alt="page.title"
+        class="size-10 shrink-0 rounded-xl object-cover"
+      />
+      <div class="min-w-0 flex-1 basis-0 overflow-hidden">
+        <p
+          class="block min-w-0 truncate text-sm font-medium text-gray-900 transition-opacity group-hover/edit:opacity-70"
+        >
+          {{ page.title }}
+        </p>
+        <p
+          v-if="page.description"
+          class="mt-1 block min-w-0 overflow-hidden text-ellipsis whitespace-nowrap text-xs text-gray-500 transition-opacity group-hover/edit:opacity-70"
+        >
+          {{ page.description }}
+        </p>
+      </div>
+    </button>
+    <div class="flex shrink-0 items-center gap-2">
+      <span
+        v-if="page.isPublished"
+        class="shrink-0 rounded-xl bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700"
       >
-        <div class="flex items-center">
-          <img :src="page.icon" class="h-6 w-6" />
-          <div class="ml-5 text-lg leading-7">
-            <p class="font-bold text-gray-800">{{ page.title }}</p>
-            <p class="font-medium text-gray-500">{{ page.description }}</p>
-          </div>
-        </div>
-        <div class="flex items-center space-x-5">
-          <span
-            v-if="page.isPublished"
-            class="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-600"
-          >
-            {{ page.isPublished ? 'Live' : 'Draft' }}
-          </span>
-          <Icon v-if="isLink" name="link" class="h-5 w-5 text-gray-900" />
-          <Icon v-else name="menu" class="h-5 w-5 text-gray-900" />
-        </div>
-      </div>
-      <div v-else class="relative">
-        <div class="absolute inset-0 flex items-center" aria-hidden="true">
-          <div class="w-[calc(100%_-_56px)] border-t-2 border-gray-400"></div>
-        </div>
-        <div class="relative flex items-center justify-end">
-          <button
-            type="button"
-            class="flex h-3 w-3 items-center justify-center rounded-full border border-gray-300 bg-transparent p-5 text-sm font-medium leading-5 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            @click="emit('removeDivider')"
-          >
-            <Icon name="trash" class="text-gray-500" />
-          </button>
-        </div>
-      </div>
+        Live
+      </span>
+      <Link2 v-if="isLink" class="size-4 shrink-0 text-gray-500" aria-hidden="true" />
+      <Menu v-else class="size-4 shrink-0 text-gray-500" aria-hidden="true" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { PropType } from 'vue';
-import Icon from '../shared/icon.vue';
+import { GripVertical, Link2, Menu, Trash2 } from '@lucide/vue';
 import type { PageItem } from '../../types';
 
-const props = defineProps({
-  page: {
-    type: Object as PropType<PageItem>,
-    required: false,
-    default: null,
-  },
-  isDivider: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
-});
+const props = defineProps<{
+  page: PageItem;
+  isDragging?: boolean;
+}>();
 
-const emit = defineEmits(['removeDivider', 'tap', 'dragStart', 'dragEnter']);
+const emit = defineEmits<{
+  tap: [id: number];
+  removeDivider: [];
+  dragstart: [];
+  dragover: [];
+  drop: [];
+  dragend: [];
+}>();
 
-const page = computed(() => props.page);
+const canDrag = computed(() => props.page.isPublished === true);
 
 const isLink = computed(() => {
-  if (page.value.body === null) return false;
+  if (props.page.body === null || props.page.body === undefined) return false;
   return (
-    page.value.body?.startsWith('http://') || page.value.body?.startsWith('https://')
+    props.page.body.startsWith('http://') || props.page.body.startsWith('https://')
   );
 });
 
-// const isPublished = computed(() => page.value.isPublished);
-
-const onDragStart = (event: DragEvent) => {
-  const target = event.target as Element;
-  target.classList.add('bg-blue-200');
-  emit('dragStart');
+const onDragStart = () => {
+  if (!canDrag.value) return;
+  emit('dragstart');
 };
 
-const onDragEnd = (event: DragEvent) => {
-  const target = event.target as Element;
-  target.classList.remove('bg-blue-200');
-  target.classList.remove('border-2');
+const onDragOver = () => {
+  if (!canDrag.value) return;
+  emit('dragover');
 };
 
-const onDragOver = (event: DragEvent) => {
-  event.preventDefault();
-  const target = event.target as Element;
-  target.classList.add('border-2');
+const onDrop = () => {
+  if (!canDrag.value) return;
+  emit('drop');
 };
 
-const onDragLeave = (event: DragEvent) => {
-  const target = event.target as Element;
-  target.classList.remove('bg-purple-300');
-  target.classList.remove('border-2');
-  target.classList.remove('bg-blue-200');
+const onDragEnd = () => {
+  if (!canDrag.value) return;
+  emit('dragend');
 };
 </script>
