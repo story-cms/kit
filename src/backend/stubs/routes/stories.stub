@@ -14,6 +14,7 @@ export default () => {
   router.post(':locale/story', [StoriesController, 'store']);
   router.get(':locale/story/:storyId/edit', [StoriesController, 'edit']);
   router.delete(':locale/story/:storyId', [StoriesController, 'delete']);
+  router.post(':locale/story/:storyId/publish', [StoriesController, 'publish']);
   router.post(':locale/story/:storyId', [StoriesController, 'update']);
 
   // chapters

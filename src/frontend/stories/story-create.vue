@@ -1,20 +1,20 @@
 <template>
   <AppLayout title="Add Story" :subtitle="headerSubtitle">
     <template #actions>
-          <StudioButton
-            label="Create Story"
-            variant="secondary"
-            :disabled="isSaving"
-            @click="createStory"
-          />
-        </template>
+      <StudioButton
+        label="Create Story"
+        variant="secondary"
+        :disabled="isSaving"
+        @click="createStory"
+      />
+    </template>
 
     <template #main>
-    <div class="relative">
-      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="form-panel">
-        <StoryEditDetails :is-translation="false" :templates="props.templates" />
-      </form>
-    </div>
+      <div class="relative">
+        <form :dir="shared.isRtl ? 'rtl' : 'ltr'">
+          <StoryEditDetails :is-translation="false" :templates="props.templates" />
+        </form>
+      </div>
     </template>
   </AppLayout>
 </template>

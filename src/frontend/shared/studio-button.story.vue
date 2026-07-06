@@ -42,6 +42,24 @@
         <StudioButton label="Remove" variant="red" disabled />
       </div>
     </Variant>
+
+    <Variant title="With tooltip">
+      <StudioButton
+        label="Publish"
+        variant="green"
+        tooltip="You need to add 2 more Days to your Edition."
+        @click="handleClick"
+      />
+    </Variant>
+
+    <Variant title="Disabled with tooltip">
+      <StudioButton
+        label="Publish"
+        variant="green"
+        disabled
+        tooltip="You need to add 2 more Days to your Edition."
+      />
+    </Variant>
   </Story>
 </template>
 
@@ -53,3 +71,14 @@ const handleClick = () => {
   console.log('Studio button clicked');
 };
 </script>
+
+<docs lang="md">
+# Studio Button
+
+Shared action button for app headers and forms.
+
+## Variants
+
+- **With tooltip** — optional `tooltip` prop shows a hover label on enabled buttons
+- **Disabled with tooltip** — disabled buttons still show the tooltip on hover (used for blocked Publish actions)
+</docs>

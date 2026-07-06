@@ -29,6 +29,11 @@
       <StoryEditDetails :templates="storyTemplates" />
       <ModelControl :model="sourceLocaleModel" :is-inspect-only="true" />
     </Variant>
+
+    <Variant title="Bespoke template on edit" :setup-app="loadBespokeTemplateEdit">
+      <StoryEditDetails :is-editing="true" :templates="bespokeEditTemplates" />
+      <ModelControl :model="bespokeEditModel" :is-inspect-only="true" />
+    </Variant>
   </Story>
 </template>
 
@@ -90,6 +95,16 @@ const storyTemplates: BundleTemplate[] = [
   { id: 'plan', name: 'Plan', fields: [] },
 ];
 
+const bespokeEditTemplates: BundleTemplate[] = [
+  { id: 'course', name: 'Course (custom)', fields: [] },
+  { id: 'devotion', name: 'Devotion', fields: [] },
+];
+
+const bespokeEditModel = {
+  ...sourceLocaleModel,
+  template: 'course',
+};
+
 const loadSourceLocale: StoryHandler = (): void => {
   const store = useModelStore();
   const shared = useSharedStore();
@@ -130,6 +145,17 @@ const loadTranslationWithoutTags: StoryHandler = (): void => {
   store.setSource({ ...sourceFieldsWithoutTags });
   shared.clearErrors();
 };
+
+const loadBespokeTemplateEdit: StoryHandler = (): void => {
+  const store = useModelStore();
+  const shared = useSharedStore();
+
+  shared.setFromProps(sharedProps);
+  shared.setLanguage(sharedProps.language);
+  store.setModel({ ...bespokeEditModel });
+  store.setSource({});
+  shared.clearErrors();
+};
 </script>
 
 <docs lang="md">
@@ -146,6 +172,7 @@ source locale only) classification fields, chapter template, and visibility.
 - **Single template** — shows read-only Chapter Template when only one template is configured
 - **Multiple templates on edit** — read-only Chapter Template even when multiple templates are configured
 - **Multiple templates on create** — interactive Chapter Template listbox when more than one template is available
+- **Bespoke template on edit** — read-only Chapter Template showing bespoke templates with a "(custom)" suffix
 
 ## Props
 

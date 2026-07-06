@@ -7,6 +7,14 @@
         variant="outline"
         @click="editMeta"
       />
+      <StudioButton
+        v-if="canEditStory && !story.isPublished"
+        label="Publish"
+        variant="green"
+        :tooltip="publishBlockedReason ?? undefined"
+        :disabled="isPublishing || !canPublishStoryReady"
+        @click="publishStory"
+      />
     </template>
     <template #controls>
       <div class="flex flex-col justify-between gap-4 md:flex-row md:items-center">
@@ -107,7 +115,14 @@ import { router } from '@inertiajs/vue3';
 import { Plus } from '@lucide/vue';
 import { computed, ref } from 'vue';
 
-import { IndexReadyItem, SharedPageProps, StoryIndexProps, AddStatus } from '../../types';
+import {
+  IndexReadyItem,
+  SharedPageProps,
+  StoryIndexProps,
+  AddStatus,
+  ResponseStatus,
+} from '../../types';
+import { canPublishStory, publishBlockedMessage } from '../../shared/story_helpers';
 import AppLayout from '../shared/app-layout.vue';
 import ExpandableSearch from '../shared/expandable-search.vue';
 import GlassButton from '../shared/glass-button.vue';
@@ -127,6 +142,7 @@ shared.setCurrentStoryName(props.story.name);
 const isList = ref(false);
 const filterQuery = ref('');
 const currentTab = ref('Live');
+const isPublishing = ref(false);
 
 const liveCount = computed(
   () => props.index.filter((item) => item.tags.includes('Live')).length,
@@ -134,6 +150,19 @@ const liveCount = computed(
 
 const draftCount = computed(
   () => props.index.filter((item) => item.tags.includes('Draft')).length,
+);
+
+const canPublishStoryReady = computed(() =>
+  canPublishStory(liveCount.value, props.story.chapterLimit),
+);
+
+const publishBlockedReason = computed(() =>
+  publishBlockedMessage(
+    liveCount.value,
+    props.story.chapterLimit,
+    props.story.chapterType,
+    props.story.storyType,
+  ),
 );
 
 const addDraft = () =>
@@ -175,4 +204,45 @@ const onTap = (item: IndexReadyItem) => {
 };
 
 const editMeta = () => router.get(`/${shared.locale}/story/${props.story.id}/edit`);
+
+const validationFailureMessage = (validationErrors: Record<string, string | string[]>) =>
+  Object.keys(validationErrors).length > 0
+    ? 'Some required fields are missing'
+    : 'Something went wrong. Please try again.';
+
+const publishStory = () => {
+  if (props.story.isPublished || !canPublishStoryReady.value) return;
+
+  shared.clearErrors();
+  isPublishing.value = true;
+
+  router.post(
+    `/${shared.locale}/story/${props.story.id}/publish`,
+    {},
+    {
+      preserveScroll: true,
+
+      onSuccess: (page) => {
+        const flashError = (page.props as { flash?: { error?: string } }).flash?.error;
+        if (flashError) {
+          shared.addMessage(ResponseStatus.Failure, flashError);
+          return;
+        }
+        shared.addMessage(ResponseStatus.Confirmation, 'Story published successfully!');
+      },
+
+      onError: (validationErrors) => {
+        shared.setErrors(validationErrors);
+        shared.addMessage(
+          ResponseStatus.Failure,
+          validationFailureMessage(validationErrors),
+        );
+      },
+
+      onFinish: () => {
+        isPublishing.value = false;
+      },
+    },
+  );
+};
 </script>

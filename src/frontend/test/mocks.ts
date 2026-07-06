@@ -455,6 +455,7 @@ export const story: StorySpec = {
   chapterType: 'Episode',
   storyType: 'Book',
   schemaVersion: 1,
+  isPublished: true,
   fields: [
     {
       label: 'Title',

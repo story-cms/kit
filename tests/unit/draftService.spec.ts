@@ -78,6 +78,7 @@ function createStorySpec(id: number, fields = simpleFields): StorySpec {
     chapterType: 'chapter',
     storyType: 'story',
     schemaVersion: 1,
+    isPublished: true,
     fields,
   };
 }

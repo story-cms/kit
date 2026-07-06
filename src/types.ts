@@ -243,9 +243,25 @@ export interface StorySpec {
   chapterType: string;
   storyType: string;
   schemaVersion: number;
+  isPublished: boolean;
   fields: FieldSpec[];
   sections: Array<StorySection>;
   parts?: Array<Part>;
+}
+
+export interface StoryUpdatePayload {
+  title: string;
+  coverImage: string;
+  description: string;
+  chapterLimit: number;
+  storyType: string;
+  chapterType: string;
+  sectionType: string | null;
+  tags: string | null;
+  visibility: string;
+  sections: StorySection[];
+  resources: string[];
+  isPublished: boolean;
 }
 
 export interface StoryIndexItem {
