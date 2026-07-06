@@ -11,6 +11,7 @@ import {
   StoryService,
   StoryCreateValidator,
   StoryUpdateValidator,
+  type StoryVersion,
 } from '@story-cms/kit';
 import cms from '#services/cms';
 
@@ -132,7 +133,7 @@ export default class StoriesController {
       }
     }
 
-    await this.applyStoryUpdate(ctx, storyService, version, payload);
+    await this.applyStoryUpdate(storyService, version, payload);
 
     return ctx.response.redirect().back();
   }
@@ -163,15 +164,14 @@ export default class StoriesController {
     const validator = new StoryUpdateValidator(ctx, { publishing: true });
     const validated = await validator.validate(payload);
 
-    await this.applyStoryUpdate(ctx, storyService, version, validated.bundle);
+    await this.applyStoryUpdate(storyService, version, validated.bundle);
 
     return ctx.response.redirect().back();
   }
 
   private async applyStoryUpdate(
-    ctx: HttpContext,
     storyService: StoryService,
-    version: { storyId: number; locale: string },
+    version: StoryVersion,
     payload: {
       isPublished: boolean;
       chapterLimit: number;

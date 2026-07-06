@@ -78,7 +78,7 @@ const bespokeStories: StoryImportSpec[] = [
  
 ];
 
-type StoryImportSpec = Omit<StorySpec, 'schemaVersion' | 'fields' | 'parts'> & {
+type StoryImportSpec = Omit<StorySpec, 'schemaVersion' | 'fields' | 'parts' | 'isPublished'> & {
   slug: string;
   description: string;
   template: string;
