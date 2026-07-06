@@ -1,14 +1,14 @@
 <template>
   <div
     :class="{
-      'rounded border border-gray-200 bg-white p-8 shadow': !isNested,
+      'rounded-xl border border-gray-200 bg-white p-8 shadow': !isNested,
       'mt-4': isNested,
     }"
   >
     <div class="flex flex-col">
       <label
         :for="fieldPath"
-        class="mt-1 mr-2 input-label"
+        class="input-label mr-2 mt-1"
         :class="{ 'text-gray-600': isReadOnly }"
       >
         {{ field.label }}
@@ -18,7 +18,7 @@
         v-model="selection"
         name="select"
         :disabled="isDisabled"
-        class="py-2 pl-3 pr-10 text-sm text-gray-900 border border-gray-300 rounded-lg max-w-min focus:border-blue-500 focus:ring-blue-500"
+        class="max-w-min rounded-xl border border-gray-300 py-2 pl-3 pr-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
         :class="{
           'border-red-500': hasError,
           'text-gray-600': props.isReadOnly,

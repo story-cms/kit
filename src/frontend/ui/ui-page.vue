@@ -1,90 +1,90 @@
 <template>
   <AppLayout title="Interface" :subtitle="`Interface: ${language.language}`">
-<template #controls>
-          <UiToolbar
-            v-model="searchTerm"
-            :all-count="props.items.length"
-            :todo-count="todoCount"
-            :active-filter="activeFilter"
-            :sort-by="sortBy"
-            @update:active-filter="activeFilter = $event"
-            @sort="handleSort"
-          />
-        </template>
+    <template #controls>
+      <UiToolbar
+        v-model="searchTerm"
+        :all-count="props.items.length"
+        :todo-count="todoCount"
+        :active-filter="activeFilter"
+        :sort-by="sortBy"
+        @update:active-filter="activeFilter = $event"
+        @sort="handleSort"
+      />
+    </template>
     <template #main>
-    <section>
-          <div
-            class="grid grid-cols-[2fr_4fr] gap-x-6"
-            :style="{ height: `calc(100vh - (${headerHeight}px + 1rem))` }"
-          >
-            <div class="scrollbar-hide overflow-y-auto">
-              <div v-if="hasEmptyItems" class="sticky top-0 bg-gray-50">
-                <button
-                  v-show="todoCount"
-                  type="button"
-                  class="mb-4 flex w-full items-center justify-center gap-x-2 rounded-full py-[11px] text-sm font-medium leading-4 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                  :class="{
-                    'bg-blue-50': isTranslating,
-                    'bg-white': !isTranslating,
-                  }"
-                  @click="translateItems"
-                >
-                  <Icon class="size-4 text-gray-800" name="sparkles" />
-                  <span>
-                    {{
-                      isTranslating
-                        ? 'Translation in progress...'
-                        : 'AI translate to do items'
-                    }}
-                  </span>
-                </button>
-              </div>
-              <div class="overflow-hidden rounded-lg bg-white shadow">
-                <UiStringItem
-                  v-for="item in filteredItems"
-                  v-show="filteredItems.length"
-                  :key="item.key"
-                  :item="item"
-                  :is-selected="selectedItem?.key === item.key"
-                  @click="selectItem(item)"
-                />
-              </div>
+      <section>
+        <div
+          class="grid grid-cols-[2fr_4fr] gap-x-6"
+          :style="{ height: `calc(100vh - (${headerHeight}px + 1rem))` }"
+        >
+          <div class="scrollbar-hide overflow-y-auto">
+            <div v-if="hasEmptyItems" class="sticky top-0 bg-gray-50">
+              <button
+                v-show="todoCount"
+                type="button"
+                class="mb-4 flex w-full items-center justify-center gap-x-2 rounded-full py-[11px] text-sm font-medium leading-4 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                :class="{
+                  'bg-blue-50': isTranslating,
+                  'bg-white': !isTranslating,
+                }"
+                @click="translateItems"
+              >
+                <Icon class="size-4 text-gray-800" name="sparkles" />
+                <span>
+                  {{
+                    isTranslating
+                      ? 'Translation in progress...'
+                      : 'AI translate to do items'
+                  }}
+                </span>
+              </button>
             </div>
-            <div>
-              <template v-if="filteredItems.length">
-                <form v-if="!isTranslating">
-                  <UiCard
-                    v-if="selectedItem"
-                    :key="selectedItem.key"
-                    v-model:model="model[selectedItem.key]"
-                    :item="selectedItem"
-                    :error="itemError"
-                    @flagged="handleFlagged"
-                    @set-flag="setFlag"
-                    @save="save"
-                    @apply-suggestion="handleApplySuggestion"
-                  />
-                </form>
-                <div v-else class="grid h-full w-full place-content-center">
-                  <RivePlayer
-                    url="https://res.cloudinary.com/redeem/raw/upload/v1743751242/story-cms-ui/audio_visualizer_resize_teno9b.riv"
-                  />
-                </div>
-              </template>
-              <div v-else class="py-10 text-gray-500">
-                <p v-if="searchTerm" class="text-center text-sm">
-                  No results found for "{{ searchTerm }}"
-                </p>
-              </div>
-            </div>
-            <div
-              v-if="activeFilter === 'todo' && !todoCount && !searchTerm"
-              class="col-span-2 row-start-1 flex flex-col items-center justify-center"
-            >
-              <Icon class="size-96" name="inbox-zero" />
+            <div class="overflow-hidden rounded-xl bg-white shadow">
+              <UiStringItem
+                v-for="item in filteredItems"
+                v-show="filteredItems.length"
+                :key="item.key"
+                :item="item"
+                :is-selected="selectedItem?.key === item.key"
+                @click="selectItem(item)"
+              />
             </div>
           </div>
-        </section>
+          <div>
+            <template v-if="filteredItems.length">
+              <form v-if="!isTranslating">
+                <UiCard
+                  v-if="selectedItem"
+                  :key="selectedItem.key"
+                  v-model:model="model[selectedItem.key]"
+                  :item="selectedItem"
+                  :error="itemError"
+                  @flagged="handleFlagged"
+                  @set-flag="setFlag"
+                  @save="save"
+                  @apply-suggestion="handleApplySuggestion"
+                />
+              </form>
+              <div v-else class="grid h-full w-full place-content-center">
+                <RivePlayer
+                  url="https://res.cloudinary.com/redeem/raw/upload/v1743751242/story-cms-ui/audio_visualizer_resize_teno9b.riv"
+                />
+              </div>
+            </template>
+            <div v-else class="py-10 text-gray-500">
+              <p v-if="searchTerm" class="text-center text-sm">
+                No results found for "{{ searchTerm }}"
+              </p>
+            </div>
+          </div>
+          <div
+            v-if="activeFilter === 'todo' && !todoCount && !searchTerm"
+            class="col-span-2 row-start-1 flex flex-col items-center justify-center"
+          >
+            <Icon class="size-96" name="inbox-zero" />
+          </div>
+        </div>
+      </section>
     </template>
   </AppLayout>
 </template>

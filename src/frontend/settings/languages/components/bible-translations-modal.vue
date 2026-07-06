@@ -38,7 +38,7 @@
         <div class="grid grid-cols-1">
           <ComboboxInput
             :class="[
-              'col-start-1 row-start-1 w-full rounded-md border border-gray-300 bg-white py-2.5 pr-10 text-sm text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500',
+              'col-start-1 row-start-1 w-full rounded-xl border border-gray-300 bg-white py-2.5 pr-10 text-sm text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500',
               showSearchIcon ? 'pl-10' : 'pl-3',
             ]"
             placeholder="Search"
@@ -64,7 +64,7 @@
           leave-to-class="opacity-0"
         >
           <ComboboxOptions
-            class="absolute z-10 my-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+            class="absolute z-10 my-1 max-h-60 w-full overflow-auto rounded-xl bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
           >
             <li
               v-if="filteredBibleTranslations.length === 0"

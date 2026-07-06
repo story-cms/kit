@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    class="grid overflow-hidden rounded-lg bg-white shadow [grid-template-areas:'image'_'content']"
+    class="grid overflow-hidden rounded-xl bg-white shadow [grid-template-areas:'image'_'content']"
     :class="{
       'grid-cols-1 grid-rows-[186px_1fr]': showImage,
       'w-full grid-cols-2': isList,

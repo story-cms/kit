@@ -4,11 +4,11 @@
     :src="item.imageUrl"
     :alt="item.title"
     draggable="false"
-    class="size-12 shrink-0 rounded object-cover"
+    class="size-12 shrink-0 rounded-xl object-cover"
   />
   <div
     v-else
-    class="flex size-12 shrink-0 items-center justify-center rounded bg-gray-100 text-gray-500"
+    class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-gray-500"
   >
     <component :is="iconFor(item.type)" class="size-4" aria-hidden="true" />
   </div>

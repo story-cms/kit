@@ -2,7 +2,7 @@
   <div class="mb-2 w-full">
     <div class="flex items-center justify-between py-4">
       <div class="flex items-center gap-x-4">
-        <span class="isolate inline-flex rounded-md shadow-sm">
+        <span class="isolate inline-flex rounded-xl shadow-sm">
           <button
             type="button"
             :class="[
@@ -71,7 +71,7 @@
             type="text"
             name="search"
             :value="modelValue"
-            class="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pl-10 pr-3 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:pl-9 sm:text-sm/6"
+            class="col-start-1 row-start-1 block w-full rounded-xl bg-white py-1.5 pl-10 pr-3 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:pl-9 sm:text-sm/6"
             placeholder="Search"
             @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
           />

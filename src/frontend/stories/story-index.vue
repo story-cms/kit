@@ -1,73 +1,73 @@
 <template>
   <AppLayout title="Story" :subtitle="`${story.storyType}: ${shared.currentStoryName}`">
-<template #actions>
-          <div class="flex items-center justify-center gap-x-6">
-            <ListSwitcher :is-list="isList" @toggle="isList = !isList" />
+    <template #actions>
+      <div class="flex items-center justify-center gap-x-6">
+        <ListSwitcher :is-list="isList" @toggle="isList = !isList" />
 
-            <IconButton v-if="canEditStory" icon="pencil" @tap="editMeta" />
-          </div>
-        </template>
-        <template #controls>
-          <div
-            class="mb-4 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
+        <IconButton v-if="canEditStory" icon="pencil" @tap="editMeta" />
+      </div>
+    </template>
+    <template #controls>
+      <div
+        class="mb-4 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
+      >
+        <div class="flex gap-x-4">
+          <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
+
+          <AddItemButton
+            v-if="addStatus == AddStatus.Add"
+            :label="story.chapterType"
+            @add="addDraft"
+          />
+          <button
+            v-if="addStatus == AddStatus.Wait"
+            type="button"
+            class="inline-flex items-center rounded-xl bg-indigo-50 px-3 py-[9px] text-sm font-medium leading-4 text-indigo-700 shadow-sm"
+            disabled
           >
-            <div class="flex gap-x-4">
-              <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
+            {{ `No more ${story.chapterType}s available to translate` }}
+          </button>
+        </div>
 
-              <AddItemButton
-                v-if="addStatus == AddStatus.Add"
-                :label="story.chapterType"
-                @add="addDraft"
-              />
-              <button
-                v-if="addStatus == AddStatus.Wait"
-                type="button"
-                class="inline-flex items-center rounded-xl bg-indigo-50 px-3 py-[9px] text-sm font-medium leading-4 text-indigo-700 shadow-sm"
-                disabled
-              >
-                {{ `No more ${story.chapterType}s available to translate` }}
-              </button>
-            </div>
-
-            <div class="grid grid-cols-1">
-              <input
-                id="search"
-                v-model="filterNumber"
-                type="text"
-                name="search"
-                class="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pl-10 pr-3 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:pl-9 sm:text-sm/6"
-                :placeholder="story.chapterType"
-              />
-              <Icon
-                name="search"
-                class="pointer-events-none col-start-1 row-start-1 ml-4 size-4 self-center text-gray-400"
-              />
-            </div>
-          </div>
-        </template>
-    <template #main>
-    <div
-          :class="[
-            'grid gap-4',
-            {
-              'grid-cols-[repeat(auto-fit,_minmax(260px,_260px))]': !isList,
-            },
-            {
-              'grid-cols-1': isList,
-            },
-          ]"
-        >
-          <index-card
-            v-for="item in filteredIndex"
-            :key="item.number"
-            :item="item"
-            :is-list="isList"
-            placeholder-image="https://res.cloudinary.com/redeem/image/upload/v1752849347/story-cms-ui/placeholder_bafmfz.jpg"
-            :scope="currentTab"
-            :chapter-name="story.chapterType"
-            @tap="onTap"
+        <div class="grid grid-cols-1">
+          <input
+            id="search"
+            v-model="filterNumber"
+            type="text"
+            name="search"
+            class="col-start-1 row-start-1 block w-full rounded-xl bg-white py-1.5 pl-10 pr-3 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:pl-9 sm:text-sm/6"
+            :placeholder="story.chapterType"
+          />
+          <Icon
+            name="search"
+            class="pointer-events-none col-start-1 row-start-1 ml-4 size-4 self-center text-gray-400"
           />
         </div>
+      </div>
+    </template>
+    <template #main>
+      <div
+        :class="[
+          'grid gap-4',
+          {
+            'grid-cols-[repeat(auto-fit,_minmax(260px,_260px))]': !isList,
+          },
+          {
+            'grid-cols-1': isList,
+          },
+        ]"
+      >
+        <index-card
+          v-for="item in filteredIndex"
+          :key="item.number"
+          :item="item"
+          :is-list="isList"
+          placeholder-image="https://res.cloudinary.com/redeem/image/upload/v1752849347/story-cms-ui/placeholder_bafmfz.jpg"
+          :scope="currentTab"
+          :chapter-name="story.chapterType"
+          @tap="onTap"
+        />
+      </div>
     </template>
   </AppLayout>
 </template>

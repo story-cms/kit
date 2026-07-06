@@ -17,10 +17,10 @@
         v-for="story in stories"
         :key="story.storyId"
         :href="storyHref(story.storyId)"
-        class="flex items-center gap-4 rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 transition-colors hover:bg-gray-100"
+        class="flex items-center gap-4 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3 transition-colors hover:bg-gray-100"
       >
         <span
-          class="inline-flex shrink-0 items-center gap-1.5 rounded border border-violet-100 bg-violet-50 px-2 py-1 text-xs font-medium text-violet-600"
+          class="inline-flex shrink-0 items-center gap-1.5 rounded-xl border border-violet-100 bg-violet-50 px-2 py-1 text-xs font-medium text-violet-600"
         >
           <BookOpen class="size-4" aria-hidden="true" />
           Story

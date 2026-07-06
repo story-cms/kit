@@ -2,7 +2,7 @@
   <Story title="Bible Translations Modal" group="settings">
     <Variant title="With translations" :setup-app="setupWithTranslations">
       <button
-        class="rounded bg-blue-500 px-4 py-2 text-white"
+        class="rounded-xl bg-blue-500 px-4 py-2 text-white"
         @click="showModal = true"
       >
         Choose Bible translation
@@ -16,7 +16,7 @@
     </Variant>
     <Variant title="No translations for language" :setup-app="setupWithTranslations">
       <button
-        class="rounded bg-blue-500 px-4 py-2 text-white"
+        class="rounded-xl bg-blue-500 px-4 py-2 text-white"
         @click="showEmptyModal = true"
       >
         Choose Bible translation
@@ -30,7 +30,7 @@
     </Variant>
     <Variant title="Multiple versions" :setup-app="setupWithMultipleVersions">
       <button
-        class="rounded bg-blue-500 px-4 py-2 text-white"
+        class="rounded-xl bg-blue-500 px-4 py-2 text-white"
         @click="showMultipleModal = true"
       >
         Choose Bible translation

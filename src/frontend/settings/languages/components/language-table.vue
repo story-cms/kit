@@ -5,8 +5,8 @@
       You can manage your languages here.
     </p>
   </div>
-  <div class="border-2 border-black/5 sm:rounded-lg">
-    <table class="w-full divide-y divide-gray-300 table-fixed">
+  <div class="border-2 border-black/5 sm:rounded-xl">
+    <table class="w-full table-fixed divide-y divide-gray-300">
       <colgroup>
         <col class="w-[24%]" />
         <col class="w-[16%]" />
@@ -14,38 +14,38 @@
         <col class="w-[22%]" />
         <col class="w-[8%]" />
       </colgroup>
-      <thead class="uppercase bg-gray-50">
+      <thead class="bg-gray-50 uppercase">
         <tr>
           <th
             scope="col"
-            class="px-3 py-3 max-w-0 text-xs font-medium tracking-wide text-left text-gray-500 uppercase"
+            class="max-w-0 px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
           >
             Active translations
           </th>
           <th
             scope="col"
-            class="px-3 py-3 text-xs font-medium tracking-wide text-left text-gray-500 uppercase"
+            class="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
           >
             Translation progress
           </th>
           <th
             scope="col"
-            class="px-3 py-3 max-w-0 text-xs font-medium tracking-wide text-left text-gray-500 uppercase"
+            class="max-w-0 px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
           >
             Team members
           </th>
           <th
             scope="col"
-            class="px-3 py-3 max-w-0 text-xs font-medium tracking-wide text-left text-gray-500 uppercase"
+            class="max-w-0 px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
           >
             Bible translation
           </th>
-          <th scope="col" class="relative py-3.5 pr-4 pl-3 w-12 sm:pr-6">
+          <th scope="col" class="relative w-12 py-3.5 pl-3 pr-4 sm:pr-6">
             <span class="sr-only">Actions</span>
           </th>
         </tr>
       </thead>
-      <tbody class="bg-white divide-y divide-gray-200">
+      <tbody class="divide-y divide-gray-200 bg-white">
         <LanguageTableRow
           v-for="row in displayRows"
           :key="row.item.locale"

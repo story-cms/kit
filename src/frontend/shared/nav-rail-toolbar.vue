@@ -17,7 +17,7 @@
         class="relative flex size-14 items-center justify-center rounded-full transition-all duration-75"
       >
         <span
-          class="absolute right-2 top-4 rounded-[7px] bg-blue-100 px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-blue-800"
+          class="absolute right-2 top-4 rounded-xl bg-blue-100 px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-blue-800"
         >
           {{ locale }}
         </span>
@@ -48,15 +48,8 @@ defineProps<{
   variant: 'pill' | 'panel';
 }>();
 
-const {
-  shared,
-  locale,
-  sidebarLanguages,
-  subscribed,
-  goBack,
-  toggleMenu,
-  onLanguage,
-} = useSidebarNav();
+const { shared, locale, sidebarLanguages, subscribed, goBack, toggleMenu, onLanguage } =
+  useSidebarNav();
 </script>
 
 <style lang="postcss" scoped>

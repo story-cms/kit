@@ -1,5 +1,5 @@
 <template>
-  <img v-if="url != ''" :src="url" class="h-48 w-auto rounded-md" />
+  <img v-if="url != ''" :src="url" class="h-48 w-auto rounded-xl" />
 </template>
 
 <script setup lang="ts">

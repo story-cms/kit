@@ -3,7 +3,7 @@
     <template #actions>
       <DraftActions :can-delete="false" />
       <Link
-        class="w-32 rounded-[38px] border border-blue-500 bg-blue-500 px-[15px] py-[9px] text-center text-sm/5 font-medium text-white shadow"
+        class="w-32 rounded-xl border border-blue-500 bg-blue-500 px-[15px] py-[9px] text-center text-sm/5 font-medium text-white shadow"
         :href="`/${shared.locale}/story/${story.id}/draft/${chapter.number}/edit`"
       >
         Edit

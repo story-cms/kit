@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-full flex-col space-y-2 rounded-md bg-white px-1 py-4 shadow">
+  <div class="flex h-full flex-col space-y-2 rounded-xl bg-white px-1 py-4 shadow">
     <h3 class="text-base/leading-6 p-2 font-bold text-gray-800">
       <span
         v-if="isLive"

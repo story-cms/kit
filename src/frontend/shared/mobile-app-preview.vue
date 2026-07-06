@@ -2,7 +2,7 @@
   <div class="bg-mobile-preview relative grid h-[844px] w-full place-content-center">
     <div
       ref="flutterTarget"
-      class="h-[812px] w-[375px] transition-all [&>flutter-view]:rounded-[3.25rem]"
+      class="h-[812px] w-[375px] transition-all [&>flutter-view]:rounded-xl"
     ></div>
   </div>
 </template>

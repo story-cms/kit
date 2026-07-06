@@ -119,7 +119,7 @@ A component for displaying drop items in either card or list layout format.
 - Automatic date formatting with ordinal suffixes
 - Fallback image support
 - Clean typography and spacing
-- Shadow and rounded corners for visual appeal
+- Shadow and rounded-xl corners for visual appeal
 
 ## Layouts
 

@@ -17,7 +17,7 @@
       </p>
     </div>
     <form v-if="!success" class="mt-8 space-y-6" @submit.prevent="submit">
-      <div class="-space-y-px rounded-md shadow-sm">
+      <div class="-space-y-px rounded-xl shadow-sm">
         <div>
           <label for="email-address" class="sr-only">Email address</label>
           <input

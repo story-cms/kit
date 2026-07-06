@@ -1,7 +1,7 @@
 <template>
   <div
     :class="{
-      'box-shadow-sm rounded border border-gray-200 bg-white p-8': !isNested,
+      'box-shadow-sm rounded-xl border border-gray-200 bg-white p-8': !isNested,
       'mt-4': isNested,
     }"
   >
@@ -21,7 +21,7 @@
         :readonly="props.isReadOnly"
         placeholder="John 1 or John 1:3-4"
         autocomplete="given-name"
-        class="text-black input-field"
+        class="input-field text-black"
         :class="{ 'border-error': referenceHasError, 'text-gray-600': props.isReadOnly }"
         @input="updateReference"
         @blur="lookup"
@@ -30,7 +30,7 @@
         {{ referenceErrorMessage }}
       </p>
       <label
-        class="block mt-4 input-label"
+        class="input-label mt-4 block"
         :class="{ 'text-gray-600': props.isReadOnly }"
       >
         {{ field.label + ' Passage' }}
@@ -39,21 +39,21 @@
       <div v-if="!isReadOnly">
         <button
           type="button"
-          class="p-1 mr-1 border border-gray-100 rounded"
+          class="mr-1 rounded-xl border border-gray-100 p-1"
           @mousedown="superscript"
         >
           <Icon name="superscript" class="text-gray-500" />
         </button>
         <button
           type="button"
-          class="p-1 border border-gray-100 rounded"
+          class="rounded-xl border border-gray-100 p-1"
           @mousedown="nonBreakingSpace"
         >
           <Icon name="indent" class="text-gray-500" />
         </button>
       </div>
       <div v-if="isReadOnly">
-        <button type="button" class="p-1 mr-1" disabled>
+        <button type="button" class="mr-1 p-1" disabled>
           <Icon name="indent" class="text-white" />
         </button>
       </div>
@@ -62,7 +62,7 @@
         v-model="verse"
         :readonly="isBusy || props.isReadOnly"
         placeholder="Verse"
-        class="h-64 mt-2 text-black input-field"
+        class="input-field mt-2 h-64 text-black"
         :class="{
           'border-error': verseHasError,
           'text-gray-600': isBusy || props.isReadOnly,

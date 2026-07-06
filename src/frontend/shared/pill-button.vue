@@ -35,6 +35,6 @@ const variantClasses: Record<string, string> = {
 
 const buttonClasses = computed(
   () =>
-    `min-w-[128px] rounded-[38px] border px-[15px] py-[9px] text-sm/5 font-medium  shadow focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none ${variantClasses[props.variant]}`,
+    `min-w-[128px] rounded-xl border px-[15px] py-[9px] text-sm/5 font-medium  shadow focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none ${variantClasses[props.variant]}`,
 );
 </script>

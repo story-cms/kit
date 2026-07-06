@@ -25,7 +25,7 @@
           <label for="email" class="auth-input-label">Email Address</label>
           <div class="mt-1">
             <span
-              class="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-sm font-normal leading-5 text-gray-300 placeholder-gray-300"
+              class="relative block w-full appearance-none rounded-xl border border-gray-300 px-3 py-2 text-sm font-normal leading-5 text-gray-300 placeholder-gray-300"
             >
               {{ form.email }}
             </span>

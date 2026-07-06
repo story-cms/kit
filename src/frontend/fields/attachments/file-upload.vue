@@ -32,7 +32,7 @@
       </svg>
       <div class="flex text-sm font-medium leading-5 text-gray-600">
         <label
-          class="relative cursor-pointer rounded-md bg-white font-medium text-indigo-700 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
+          class="relative cursor-pointer rounded-xl bg-white font-medium text-indigo-700 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
         >
           <span>Upload a file</span>
           <input

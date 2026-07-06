@@ -1,17 +1,13 @@
 <template>
   <div
-    class="flex items-center rounded-lg border border-gray-300 bg-white p-1"
+    class="flex items-center rounded-xl border border-gray-300 bg-white p-1"
     role="group"
     aria-label="View mode"
   >
     <button
       type="button"
-      class="rounded-md p-2 transition-colors"
-      :class="
-        isList
-          ? 'text-gray-500 hover:text-gray-700'
-          : 'bg-gray-100 text-gray-900'
-      "
+      class="rounded-xl p-2 transition-colors"
+      :class="isList ? 'text-gray-500 hover:text-gray-700' : 'bg-gray-100 text-gray-900'"
       aria-label="Grid view"
       :aria-pressed="!isList"
       @click="selectGrid"
@@ -20,12 +16,8 @@
     </button>
     <button
       type="button"
-      class="rounded-md p-2 transition-colors"
-      :class="
-        isList
-          ? 'bg-gray-100 text-gray-900'
-          : 'text-gray-500 hover:text-gray-700'
-      "
+      class="rounded-xl p-2 transition-colors"
+      :class="isList ? 'bg-gray-100 text-gray-900' : 'text-gray-500 hover:text-gray-700'"
       aria-label="List view"
       :aria-pressed="isList"
       @click="selectList"

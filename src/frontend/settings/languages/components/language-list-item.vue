@@ -2,7 +2,7 @@
   <component
     :is="isReadOnly ? 'div' : 'label'"
     :for="isReadOnly ? undefined : language.locale"
-    class="grid w-[208px] grid-cols-[1fr_auto] gap-x-1 rounded-md px-2 py-5"
+    class="grid w-[208px] grid-cols-[1fr_auto] gap-x-1 rounded-xl px-2 py-5"
     :class="{
       'cursor-not-allowed bg-gray-100': isReadOnly,
       'cursor-pointer': !isReadOnly,
@@ -19,7 +19,7 @@
           :checked="isSelected"
           name="language"
           aria-describedby="language-description"
-          class="col-start-1 row-start-1 appearance-none rounded border border-gray-300 bg-white checked:border-blue-500 checked:bg-blue-500 indeterminate:border-blue-500 indeterminate:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
+          class="col-start-1 row-start-1 appearance-none rounded-xl border border-gray-300 bg-white checked:border-blue-500 checked:bg-blue-500 indeterminate:border-blue-500 indeterminate:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
           @change="handleUpdate"
         />
 

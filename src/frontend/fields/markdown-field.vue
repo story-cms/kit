@@ -1,7 +1,7 @@
 <template>
   <div
     :class="{
-      'rounded bg-white p-8': !isNested,
+      'rounded-xl bg-white p-8': !isNested,
       'mt-4': isNested,
       'no-markup': field.noMarkup,
     }"
@@ -19,7 +19,7 @@
       <div
         class="cm-s-easymde"
         :class="{
-          'rounded border border-error': hasError,
+          'rounded-xl border border-error': hasError,
         }"
       >
         <textarea

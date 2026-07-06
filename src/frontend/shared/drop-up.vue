@@ -3,7 +3,7 @@
     <div class="relative">
       <ListboxButton
         :disabled="isReadOnly"
-        class="relative w-full cursor-default text-nowrap rounded-md py-2 pl-3 pr-10 text-left text-sm font-semibold leading-5 text-gray-700 focus:outline-none focus:ring-1"
+        class="relative w-full cursor-default text-nowrap rounded-xl py-2 pl-3 pr-10 text-left text-sm font-semibold leading-5 text-gray-700 focus:outline-none focus:ring-1"
         :class="{ 'bg-gray-100': isReadOnly, 'glass-surface': !isReadOnly }"
       >
         <div class="flex items-center gap-2">
@@ -28,7 +28,7 @@
         leave-to-class="opacity-0"
       >
         <ListboxOptions
-          class="absolute bottom-full z-10 mb-1 max-h-[calc(100vh-10rem)] min-w-[18rem] overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+          class="absolute bottom-full z-10 mb-1 max-h-[calc(100vh-10rem)] min-w-[18rem] overflow-auto rounded-xl bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
         >
           <ListboxOption
             v-for="option in options"

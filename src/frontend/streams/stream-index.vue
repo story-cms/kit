@@ -1,64 +1,64 @@
 <template>
   <AppLayout title="Stream" :subtitle="stream.title">
-<template #actions>
-          <div class="flex items-center justify-center gap-x-6">
-            <ListSwitcher :is-list="isList" @toggle="isList = !isList" />
+    <template #actions>
+      <div class="flex items-center justify-center gap-x-6">
+        <ListSwitcher :is-list="isList" @toggle="isList = !isList" />
 
-            <IconButton icon="plus" @tap="addDrop" />
-          </div>
-        </template>
-        <template #controls>
-          <div
-            class="mb-4 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
-          >
-            <div class="flex gap-x-4">
-              <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
-              <ToggleButton
-                icon-on="sort"
-                icon-off="sort-asc"
-                label="Release Date"
-                :is-on="sortDescending"
-                :is-active="true"
-                @toggle="sortDescending = !sortDescending"
-              />
-            </div>
+        <IconButton icon="plus" @tap="addDrop" />
+      </div>
+    </template>
+    <template #controls>
+      <div
+        class="mb-4 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
+      >
+        <div class="flex gap-x-4">
+          <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
+          <ToggleButton
+            icon-on="sort"
+            icon-off="sort-asc"
+            label="Release Date"
+            :is-on="sortDescending"
+            :is-active="true"
+            @toggle="sortDescending = !sortDescending"
+          />
+        </div>
 
-            <div class="grid grid-cols-1">
-              <input
-                id="search"
-                v-model="wordFilter"
-                type="text"
-                name="search"
-                class="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pl-10 pr-3 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:pl-9 sm:text-sm/6"
-                :placeholder="config.name"
-              />
-              <Icon
-                name="search"
-                class="pointer-events-none col-start-1 row-start-1 ml-4 size-4 self-center text-gray-400"
-              />
-            </div>
-          </div>
-        </template>
+        <div class="grid grid-cols-1">
+          <input
+            id="search"
+            v-model="wordFilter"
+            type="text"
+            name="search"
+            class="col-start-1 row-start-1 block w-full rounded-xl bg-white py-1.5 pl-10 pr-3 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:pl-9 sm:text-sm/6"
+            :placeholder="config.name"
+          />
+          <Icon
+            name="search"
+            class="pointer-events-none col-start-1 row-start-1 ml-4 size-4 self-center text-gray-400"
+          />
+        </div>
+      </div>
+    </template>
     <template #main>
-    <section>
-          <div
-            class="my-8 flex gap-x-[26px]"
-            :class="isList ? 'flex-col gap-y-6' : 'flex-wrap gap-y-[98px]'"
+      <section>
+        <div
+          class="my-8 flex gap-x-[26px]"
+          :class="isList ? 'flex-col gap-y-6' : 'flex-wrap gap-y-[98px]'"
+        >
+          <a
+            v-for="drop in displayIndex"
+            :key="drop.id"
+            :href="`/${shared.locale}/drop/${drop.id}/edit`"
+            :class="isList ? 'w-full' : 'max-w-64'"
           >
-            <a
-              v-for="drop in displayIndex"
-              :key="drop.id"
-              :href="`/${shared.locale}/drop/${drop.id}/edit`"
-              :class="isList ? 'w-full' : 'max-w-64'"
-            >
-              <DropItem
-                :drop="drop"
-                :is-list="isList"
-                :placeholder-image="'https://res.cloudinary.com/journeys/image/upload/v1756122586/boats_uewaxo.jpg'"
-              />
-            </a>
-          </div>
-        </section>
+            <DropItem
+              :drop="drop"
+              :is-list="isList"
+              :placeholder-image="'https://res.cloudinary.com/journeys/image/upload/v1756122586/boats_uewaxo.jpg'"
+            />
+          </a>
+        </div>
+      </section>
     </template>
   </AppLayout>
 </template>

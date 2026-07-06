@@ -1,7 +1,7 @@
 <template>
   <div
     :class="{
-      'rounded border border-gray-200 bg-white p-8 drop-shadow-sm': !isNested,
+      'rounded-xl border border-gray-200 bg-white p-8 drop-shadow-sm': !isNested,
       'mt-4': isNested,
     }"
   >
@@ -14,7 +14,7 @@
     </label>
     <div class="mt-[2px] flex flex-col pt-1 sm:col-span-2 sm:mt-0">
       <div
-        class="max-w-max rounded-md border-2 bg-white"
+        class="max-w-max rounded-xl border-2 bg-white"
         :class="errors.length > 0 ? 'border-red-500' : 'border-white'"
       >
         <VueDatePicker

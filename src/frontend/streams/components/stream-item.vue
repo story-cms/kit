@@ -1,7 +1,7 @@
 <template>
   <a
     :href="`/${shared.locale}/stream/${stream.id}`"
-    class="group relative flex h-full overflow-hidden rounded-lg bg-white shadow"
+    class="group relative flex h-full overflow-hidden rounded-xl bg-white shadow"
     :class="isList ? 'flex-row items-center' : 'flex-col'"
   >
     <div

@@ -20,7 +20,7 @@
     <template #dropdown>
       <div
         v-if="showDropdown && filteredRegions.length > 0 && !props.isReadOnly"
-        class="absolute z-10 mt-1 w-full rounded-md border border-gray-300 bg-white py-1 shadow-lg"
+        class="absolute z-10 mt-1 w-full rounded-xl border border-gray-300 bg-white py-1 shadow-lg"
       >
         <button
           v-for="(region, index) in filteredRegions"
