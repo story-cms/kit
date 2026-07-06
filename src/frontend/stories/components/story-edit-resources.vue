@@ -3,8 +3,9 @@
     <ResourcePicker
       :available-resources="availableResources"
       :attached-resources="attachedResources"
+      :allow-create="allowCreate"
       @attach="attachResource"
-      @create="emit('create')"
+      @create="onCreate"
     />
 
     <ResourceEmptyState v-if="attachedResources.length === 0" />
@@ -20,15 +21,25 @@ import ResourceEmptyState from './resource-empty-state.vue';
 import ResourcePicker from './resource-picker.vue';
 import type { ResourceItem } from '../../../types';
 
-const props = defineProps<{
-  resources: ResourceItem[];
-  availableResources: ResourceItem[];
-}>();
+const props = withDefaults(
+  defineProps<{
+    resources: ResourceItem[];
+    availableResources: ResourceItem[];
+    allowCreate?: boolean;
+  }>(),
+  { allowCreate: true },
+);
 
 const emit = defineEmits<{
   'update:resources': [resources: ResourceItem[]];
   create: [];
 }>();
+
+const onCreate = () => {
+  if (props.allowCreate) {
+    emit('create');
+  }
+};
 
 const attachedResources = computed({
   get: () => props.resources,

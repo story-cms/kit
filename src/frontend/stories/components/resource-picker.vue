@@ -17,6 +17,7 @@
         />
       </div>
       <button
+        v-if="allowCreate"
         type="button"
         class="inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-xl border border-studio_forest_green px-4 py-2.5 text-sm font-medium text-studio_forest_green transition-colors hover:bg-studio_forest_green/10"
         @click="emit('create')"
@@ -99,10 +100,14 @@ import ResourceTypeBadge from './resource-type-badge.vue';
 import { compareResourcesByRecentlyEdited } from './resource-utils';
 import type { ResourceItem } from '../../../types';
 
-const props = defineProps<{
-  availableResources: ResourceItem[];
-  attachedResources: ResourceItem[];
-}>();
+const props = withDefaults(
+  defineProps<{
+    availableResources: ResourceItem[];
+    attachedResources: ResourceItem[];
+    allowCreate?: boolean;
+  }>(),
+  { allowCreate: true },
+);
 
 const emit = defineEmits<{
   attach: [resource: ResourceItem];

@@ -50,11 +50,21 @@ const createSchema = {
   description: vine.string().trim().optional(),
   chapterLimit: vine.number().min(1),
   tags: vine.string().optional(),
-  storyType: vine.string().trim().minLength(1),
-  chapterType: vine.string().trim().minLength(1),
+  storyType: vine.string().trim().optional(),
+  chapterType: vine.string().trim().optional(),
   sectionType: vine.string().optional(),
-  visibility: vine.string().trim().minLength(1),
+  visibility: vine.string().trim().optional(),
   template: vine.string().trim().minLength(1),
+  sections: vine
+    .array(
+      vine.object({
+        id: vine.string().optional(),
+        title: vine.string().trim().minLength(1),
+        description: vine.string().optional(),
+      }),
+    )
+    .optional(),
+  resources: vine.array(vine.string()).optional(),
 };
 
 export class StoryCreateValidator {

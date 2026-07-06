@@ -17,6 +17,15 @@
         @create="onCreate"
       />
     </Variant>
+
+    <Variant title="Attach only">
+      <ResourcePicker
+        :available-resources="availableResources"
+        :attached-resources="attachedResources"
+        :allow-create="false"
+        @attach="onAttach"
+      />
+    </Variant>
   </Story>
 </template>
 

@@ -88,9 +88,13 @@ export class StoryService {
     const params = this.paramsFromPath(ctx);
     if (params?.locale !== this.config.languages[0].locale) return undefined;
 
+    const locale = params.locale;
     const template = this.config.storyTemplates[0].id;
 
     const target = { ...emptyTranslation };
+
+    const resourceService = new ResourceService();
+    const availableResources = await resourceService.listForLocale(locale);
 
     return {
       model: {
@@ -105,6 +109,7 @@ export class StoryService {
       },
       templates: this.config.storyTemplates,
       providers: configService.get<Providers>('providers')!,
+      availableResources,
     };
   }
 
