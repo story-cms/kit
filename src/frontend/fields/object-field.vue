@@ -2,7 +2,7 @@
   <div
     class="p-8"
     :class="{
-      'my-[32px] rounded bg-white p-[32px]': !isNested,
+      'my-[32px] rounded-xl bg-white p-[32px]': !isNested,
       subgrid: isNested,
     }"
     :style="isNested ? { gridRow: `span ${totalSpan}` } : undefined"

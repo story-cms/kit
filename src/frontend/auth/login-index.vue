@@ -56,7 +56,7 @@
             v-model="form.remember"
             name="remember-me"
             type="checkbox"
-            class="h-4 w-4 rounded border-gray-300 text-[--primary-color] focus:ring-[--secondary-color]"
+            class="h-4 w-4 rounded-xl border-gray-300 text-[--primary-color] focus:ring-[--secondary-color]"
           />
           <label for="remember-me" class="ml-2 block text-sm text-gray-900">
             Remember me

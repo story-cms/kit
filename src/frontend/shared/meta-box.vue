@@ -1,6 +1,6 @@
 <template>
   <div
-    class="rounded-lg border border-gray-100 bg-white font-['Inter'] text-xs leading-4 text-gray-600"
+    class="rounded-xl border border-gray-100 bg-white font-['Inter'] text-xs leading-4 text-gray-600"
   >
     <section
       v-for="item in primary"

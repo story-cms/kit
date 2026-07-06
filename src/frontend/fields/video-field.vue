@@ -18,7 +18,7 @@
       @dropped="onDropped"
     >
       <div class="grid w-full gap-8" :class="isStacked ? 'grid-cols-1' : 'grid-cols-2'">
-        <div class="overflow-hidden rounded-md">
+        <div class="overflow-hidden rounded-xl">
           <VideoPlayer :url="previewUrl" :library="host.library" />
         </div>
         <VideoMeta :metadata-rows="metadataRows" />

@@ -69,14 +69,14 @@
           </span>
           <ResourceTypeBadge :type="resource.type" />
           <span
-            class="rounded px-2 py-0.5 text-xs font-medium capitalize"
+            class="rounded-xl px-2 py-0.5 text-xs font-medium capitalize"
             :class="visibilityBadgeClasses(resource.visibility)"
           >
             {{ resource.visibility }}
           </span>
           <Menu as="div" class="relative">
             <MenuButton
-              class="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+              class="rounded-xl p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
             >
               <MoreVertical class="size-4" aria-hidden="true" />
             </MenuButton>
@@ -89,7 +89,7 @@
               leave-to-class="scale-95 opacity-0"
             >
               <MenuItems
-                class="absolute bottom-full right-0 z-10 mb-2 w-48 origin-bottom-right rounded-lg border border-gray-200 bg-white py-1 shadow-lg focus:outline-none"
+                class="absolute bottom-full right-0 z-10 mb-2 w-48 origin-bottom-right rounded-xl border border-gray-200 bg-white py-1 shadow-lg focus:outline-none"
               >
                 <MenuItem v-slot="{ active }">
                   <button
@@ -130,7 +130,7 @@
       <div class="group/edit flex min-w-0 items-center gap-3">
         <button
           type="button"
-          class="shrink-0 rounded transition-opacity group-hover/edit:opacity-70"
+          class="shrink-0 rounded-xl transition-opacity group-hover/edit:opacity-70"
           @click="emit('edit', resource.id)"
         >
           <ResourceThumbnail :item="resource" />
@@ -162,7 +162,7 @@
     </td>
     <td class="whitespace-nowrap px-6 py-4">
       <span
-        class="rounded px-2 py-1 text-xs font-medium capitalize"
+        class="rounded-xl px-2 py-1 text-xs font-medium capitalize"
         :class="visibilityBadgeClasses(resource.visibility)"
       >
         {{ resource.visibility }}
@@ -175,14 +175,14 @@
       <div class="flex items-center justify-end gap-2">
         <button
           type="button"
-          class="rounded p-1.5 text-gray-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+          class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
           @click="emit('edit', resource.id)"
         >
           <SquarePen class="size-4" aria-hidden="true" />
         </button>
         <button
           type="button"
-          class="rounded p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
+          class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
           @click="emit('delete', resource.id)"
         >
           <Trash2 class="size-4" aria-hidden="true" />
@@ -229,9 +229,7 @@ const formatListDate = (value: string): string => {
 };
 
 const visibilityBadgeClasses = (visibility: VisibilityType): string =>
-  visibility === 'public'
-    ? 'bg-green-100 text-green-700'
-    : 'bg-gray-100 text-gray-700';
+  visibility === 'public' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700';
 
 const iconFor = (type: ResourceType): Component => {
   switch (type) {

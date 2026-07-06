@@ -2,7 +2,7 @@
   <Story title="Request Feedback Modal" group="settings">
     <Variant title="Success">
       <button
-        class="rounded bg-blue-500 px-4 py-2 text-white"
+        class="rounded-xl bg-blue-500 px-4 py-2 text-white"
         @click="showSuccess = true"
       >
         Show success
@@ -15,7 +15,10 @@
       />
     </Variant>
     <Variant title="Error">
-      <button class="rounded bg-red-500 px-4 py-2 text-white" @click="showError = true">
+      <button
+        class="rounded-xl bg-red-500 px-4 py-2 text-white"
+        @click="showError = true"
+      >
         Show error
       </button>
       <RequestFeedbackModal

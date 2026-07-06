@@ -79,12 +79,6 @@ export const useSharedStore = defineStore('shared', () => {
 
   // main and header
 
-  const isMainUnderHeader = ref(false);
-
-  const setMainUnderHeader = (isUnder: boolean) => {
-    isMainUnderHeader.value = isUnder;
-  };
-
   const headerHeight = ref(0);
   const headerWidth = ref(0);
   const layoutWidth = ref(0);
@@ -209,8 +203,6 @@ export const useSharedStore = defineStore('shared', () => {
     isLargeScreen,
     setLargeScreen,
 
-    isMainUnderHeader,
-    setMainUnderHeader,
     headerHeight,
     headerWidth,
     setHeaderSize,

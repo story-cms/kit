@@ -1,6 +1,6 @@
 <template>
   <Transition name="slide-fade">
-    <div v-if="true" class="rounded-lg bg-white font-['Inter'] shadow">
+    <div v-if="true" class="rounded-xl bg-white font-['Inter'] shadow">
       <div class="grid grid-cols-2 gap-x-10 px-8 pb-4 pt-6">
         <div>
           <label :for="item.key" class="block text-sm/5 font-medium text-gray-700">
@@ -15,7 +15,7 @@
               :value="model"
               rows="4"
               name="translation"
-              class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+              class="block w-full rounded-xl bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
               @input="
                 $emit('update:model', ($event.target as HTMLTextAreaElement)?.value)
               "
@@ -107,13 +107,13 @@
         <div v-show="isLoading">
           <div class="flex animate-pulse space-x-4">
             <div class="flex-1 space-y-6 py-1">
-              <div class="h-2 rounded bg-gray-200"></div>
+              <div class="h-2 rounded-xl bg-gray-200"></div>
               <div class="space-y-3">
                 <div class="grid grid-cols-3 gap-4">
-                  <div class="col-span-2 h-2 rounded bg-gray-200"></div>
-                  <div class="col-span-1 h-2 rounded bg-gray-200"></div>
+                  <div class="col-span-2 h-2 rounded-xl bg-gray-200"></div>
+                  <div class="col-span-1 h-2 rounded-xl bg-gray-200"></div>
                 </div>
-                <div class="h-2 rounded bg-gray-200"></div>
+                <div class="h-2 rounded-xl bg-gray-200"></div>
               </div>
             </div>
           </div>
@@ -133,14 +133,14 @@
           <div v-show="suggestion.length > 0" class="flex gap-x-6">
             <button
               type="button"
-              class="w-32 rounded-[38px] border bg-white px-[15px] py-[9px] text-sm/5 font-medium text-gray-800 shadow hover:bg-green-400 focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset]"
+              class="w-32 rounded-xl border bg-white px-[15px] py-[9px] text-sm/5 font-medium text-gray-800 shadow hover:bg-green-400 focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset]"
               @click="discardSuggestion"
             >
               Discard
             </button>
             <button
               type="button"
-              class="rounded-[38px] border bg-blue-500 px-[15px] py-[9px] text-sm/5 font-medium text-white shadow hover:bg-green-400 focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset]"
+              class="rounded-xl border bg-blue-500 px-[15px] py-[9px] text-sm/5 font-medium text-white shadow hover:bg-green-400 focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset]"
               @click="applySuggestion"
             >
               Apply Suggestion

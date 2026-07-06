@@ -22,7 +22,7 @@
         <button
           v-if="isExpanded(index) && !isReadOnly"
           type="button"
-          class="absolute bottom-0 left-2 cursor-pointer rounded bg-white px-1.5 py-2 shadow-sm"
+          class="absolute bottom-0 left-2 cursor-pointer rounded-xl bg-white px-1.5 py-2 shadow-sm"
           @click="toggle(index)"
         >
           <Icon name="chevron-up-down" class="h-3.5 w-3.5 text-gray-700" />
@@ -106,8 +106,8 @@
             <component
               :is="widgets.picker(item.widget)"
               :class="{
-                'rounded bg-white': item.widget != 'list',
-                'rounded bg-white p-8': isIsland(item.widget),
+                'rounded-xl bg-white': item.widget != 'list',
+                'rounded-xl bg-white p-8': isIsland(item.widget),
               }"
               :field="item"
               :is-read-only="props.isReadOnly"

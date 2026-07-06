@@ -57,13 +57,10 @@
           leave-to-class="opacity-0"
         >
           <MenuItems
-            class="absolute right-10 top-3 z-10 flex max-w-[250px] flex-col items-start overflow-hidden rounded-md bg-white shadow focus:outline-none"
+            class="absolute right-10 top-3 z-10 flex max-w-[250px] flex-col items-start overflow-hidden rounded-xl bg-white shadow focus:outline-none"
           >
             <MenuItem v-slot="{ active }">
-              <a
-                :href="`/${item.locale}/user`"
-                :class="menuItemClass(active, 'first')"
-              >
+              <a :href="`/${item.locale}/user`" :class="menuItemClass(active, 'first')">
                 Assign team members
               </a>
             </MenuItem>
@@ -138,5 +135,4 @@ const rowProgress = computed(() => {
   }
   return props.item.translationProgress ?? [];
 });
-
 </script>

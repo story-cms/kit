@@ -1,8 +1,6 @@
 <template>
-  <AppLayout>
-    <template #header>
-      <ContentHeader title="Settings">
-        <template #actions>
+  <AppLayout title="Settings">
+<template #actions>
           <PillButton
             label="Request App Update"
             variant="green"
@@ -10,7 +8,7 @@
             @click="showRequestAppUpdateModal = true"
           />
         </template>
-        <template #extra-actions>
+        <template #controls>
           <div class="flex justify-between items-center pb-4">
             <div>
               <h3 class="font-semibold leading-7 text-gray-800 text-xl/7">Languages</h3>
@@ -27,30 +25,30 @@
             </button>
           </div>
         </template>
-      </ContentHeader>
+    <template #main>
+    <div>
+          <LanguagesTable
+            :items="languageItems"
+            :source-language="sourceLanguage"
+            @remove="handleRemove"
+            @request-deletion="handleRequestDeletion"
+            @bible-translation-change="handleTableBibleTranslationChange"
+          />
+        </div>
+
+        <RequestAppUpdateModal
+          :open="showRequestAppUpdateModal"
+          @close="showRequestAppUpdateModal = false"
+          @confirm="handleRequestAppUpdateConfirm"
+        />
+
+        <RequestFeedbackModal
+          :open="showFeedbackModal"
+          :variant="feedbackModalVariant"
+          :contact-email="props.config.supportEmail ?? 'ops@startjourneys.io'"
+          @close="showFeedbackModal = false"
+        />
     </template>
-    <div class="mt-5">
-      <LanguagesTable
-        :items="languageItems"
-        :source-language="sourceLanguage"
-        @remove="handleRemove"
-        @request-deletion="handleRequestDeletion"
-        @bible-translation-change="handleTableBibleTranslationChange"
-      />
-    </div>
-
-    <RequestAppUpdateModal
-      :open="showRequestAppUpdateModal"
-      @close="showRequestAppUpdateModal = false"
-      @confirm="handleRequestAppUpdateConfirm"
-    />
-
-    <RequestFeedbackModal
-      :open="showFeedbackModal"
-      :variant="feedbackModalVariant"
-      :contact-email="props.config.supportEmail ?? 'ops@startjourneys.io'"
-      @close="showFeedbackModal = false"
-    />
   </AppLayout>
 </template>
 
@@ -59,7 +57,6 @@ import { ref, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
 import type { RequestPayload } from '@inertiajs/core';
 import AppLayout from '../shared/app-layout.vue';
-import ContentHeader from '../shared/content-header.vue';
 import Icon from '../shared/icon.vue';
 import PillButton from '../shared/pill-button.vue';
 import LanguagesTable from './languages/components/language-table.vue';

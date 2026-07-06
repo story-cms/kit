@@ -2,7 +2,7 @@
   <button
     v-if="showRequestChangeButton"
     type="submit"
-    class="w-32 rounded-[38px] border border-red-500 bg-red-500 px-[15px] py-[9px] text-sm/5 font-medium text-white shadow"
+    class="w-32 rounded-xl border border-red-500 bg-red-500 px-[15px] py-[9px] text-sm/5 font-medium text-white shadow"
     @click.prevent="emit('request-change')"
   >
     Request Change
@@ -11,7 +11,7 @@
     v-if="showSubmitButton"
     :disabled="widgets.isDirty"
     type="submit"
-    class="w-32 rounded-[38px] border px-[15px] py-[9px] text-sm/5 font-medium text-white shadow focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset]"
+    class="w-32 rounded-xl border px-[15px] py-[9px] text-sm/5 font-medium text-white shadow focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset]"
     :class="{
       'bg-gray-400 opacity-80 hover:bg-gray-400 hover:shadow-none active:opacity-80':
         widgets.isDirty,
@@ -26,7 +26,7 @@
     v-if="showPublishButton"
     type="submit"
     :disabled="widgets.isDirty"
-    class="w-32 rounded-[38px] border px-[15px] py-[9px] text-sm/5 font-medium text-white shadow focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset]"
+    class="w-32 rounded-xl border px-[15px] py-[9px] text-sm/5 font-medium text-white shadow focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset]"
     :class="{
       'bg-gray-400 opacity-80 hover:bg-gray-400 hover:shadow-none active:opacity-80':
         widgets.isDirty,

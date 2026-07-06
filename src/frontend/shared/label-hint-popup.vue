@@ -4,7 +4,7 @@
       <div class="fixed inset-0 bg-black/30" aria-hidden="true" />
       <div class="fixed inset-0 flex items-center justify-center p-4">
         <DialogPanel
-          class="relative z-10 max-w-80 overflow-hidden rounded-2xl bg-white p-4 shadow-xl"
+          class="relative z-10 max-w-80 overflow-hidden rounded-xl bg-white p-4 shadow-xl"
         >
           <div class="grid grid-cols-[1fr_auto] items-start gap-4">
             <DialogTitle class="text-left text-sm font-semibold leading-5 text-[#101828]">
@@ -12,7 +12,7 @@
             </DialogTitle>
             <button
               type="button"
-              class="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+              class="rounded-xl p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
               aria-label="Close"
               @click="emit('close')"
             >

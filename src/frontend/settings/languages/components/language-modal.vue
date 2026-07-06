@@ -4,7 +4,7 @@
       <div class="fixed inset-0 bg-black/30" aria-hidden="true" />
       <div class="fixed inset-0 flex items-center justify-center p-4">
         <DialogPanel
-          class="relative z-10 w-full max-w-xl overflow-hidden rounded-2xl bg-white px-6 py-9 shadow-xl"
+          class="relative z-10 w-full max-w-xl overflow-hidden rounded-xl bg-white px-6 py-9 shadow-xl"
         >
           <div
             class="items-center"
@@ -20,7 +20,7 @@
             <div v-if="!hideCloseButton" class="justify-self-end">
               <button
                 type="button"
-                class="rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                class="rounded-xl p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                 aria-label="Close"
                 @click="emit('close')"
               >

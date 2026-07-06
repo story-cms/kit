@@ -6,11 +6,11 @@
         class="relative flex size-14 items-center justify-center rounded-full transition-all duration-75 hover:bg-gray-100"
       >
         <span
-          class="absolute right-2 top-4 rounded-[7px] bg-blue-100 px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-blue-800"
+          class="absolute right-2 top-4 rounded-xl bg-blue-100 px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-blue-800"
         >
           {{ currentLocale }}
         </span>
-        <Icon name="translate" />
+        <Languages class="size-6" aria-hidden="true" />
       </MenuButton>
     </div>
 
@@ -23,7 +23,7 @@
       leave-to-class="opacity-0 transform scale-95"
     >
       <MenuItems
-        class="absolute left-0 z-10 max-h-[calc(100vh-240px)] w-56 origin-top-right overflow-y-auto rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
+        class="absolute left-0 z-10 max-h-[calc(100vh-240px)] w-56 origin-top-right overflow-y-auto rounded-xl bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
       >
         <div v-for="language in languages" :key="language.locale" class="py-1">
           <MenuItem v-slot="{ active }">
@@ -35,7 +35,11 @@
               @click="onLanguage(language.language)"
             >
               <span> {{ language.language }}</span>
-              <Icon v-if="language.language === currentLanguage" name="check" />
+              <Check
+                v-if="language.language === currentLanguage"
+                class="size-4 justify-self-end"
+                aria-hidden="true"
+              />
             </button>
           </MenuItem>
         </div>
@@ -46,7 +50,7 @@
 
 <script setup lang="ts">
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
-import Icon from '../shared/icon.vue';
+import { Check, Languages } from '@lucide/vue';
 import type { LanguageSpecification } from '../../types';
 
 defineProps<{

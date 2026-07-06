@@ -1,41 +1,40 @@
 <template>
   <div ref="layout" class="bg-gray-50 pb-6">
-    <div
-      ref="container"
-      :class="['relative mx-auto min-h-screen px-3 transition-all duration-75']"
-    >
+    <div ref="container" class="relative mx-auto min-h-screen px-3">
       <component :is="shared.sidebar" v-if="!isInitializing" />
+      <Teleport to="body">
+        <div
+          v-if="showSidebarOverlay"
+          class="fixed inset-0 z-[15] bg-black/30"
+          aria-hidden="true"
+          @click="closeSidebar"
+        />
+      </Teleport>
       <div
         :class="[
           'relative',
           {
-            'ml-[84px]': !shared.isLargeScreen || !shared.hasOpenSidebar,
-            'ml-[264px]': shared.isLargeScreen && shared.hasOpenSidebar,
+            'ml-[88px]': !sidebarPushesContent,
+            'ml-[324px]': sidebarPushesContent,
           },
         ]"
       >
-        <div class="mx-auto max-w-7xl pb-6">
-          <header
-            ref="header"
-            :class="[
-              'sticky top-0 z-10 bg-gray-50 transition-all duration-75',
-              shared.isMainUnderHeader
-                ? 'border-x border-b border-gray-200'
-                : 'border-gray-50',
-            ]"
-          >
-            <slot v-if="!shared.hasFeedback" name="header" />
-            <MessageCentre
-              v-else
-              :response="shared.messageCentre.response"
-              :message="shared.messageCentre.message"
-              :description="shared.messageCentre.description"
-            />
-          </header>
-          <main ref="main" class="mt-1 h-full">
-            <div ref="sentinel" class="h-px w-full"></div>
-            <slot />
+        <div class="mx-auto grid max-w-7xl grid-cols-1">
+          <AppLayoutHeader ref="headerComponent" :title="title" :subtitle="subtitle">
+            <template v-if="$slots.actions" #actions>
+              <slot name="actions" />
+            </template>
+            <template v-if="$slots.controls" #controls>
+              <slot name="controls" />
+            </template>
+            <template v-if="$slots.description" #description>
+              <slot name="description" />
+            </template>
+          </AppLayoutHeader>
+          <main class="mt-6">
+            <slot name="main" />
           </main>
+          <footer></footer>
         </div>
       </div>
     </div>
@@ -43,11 +42,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, onBeforeMount, watch, nextTick } from 'vue';
+import {
+  ref,
+  computed,
+  onMounted,
+  onUnmounted,
+  onBeforeMount,
+  watch,
+  nextTick,
+} from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import { useSharedStore } from '../store';
-import MessageCentre from './message-centre.vue';
+import AppLayoutHeader from './app-layout-header.vue';
 import type { SharedPageProps } from '../../types';
+
+defineProps<{
+  title?: string;
+  subtitle?: string;
+}>();
 
 const shared = useSharedStore();
 const page = usePage();
@@ -71,17 +83,42 @@ watch(
   { deep: true },
 );
 
-const header = ref<HTMLElement | null>(null);
+const headerComponent = ref<InstanceType<typeof AppLayoutHeader> | null>(null);
 const layout = ref<HTMLElement | null>(null);
 const container = ref<HTMLElement | null>(null);
-const sentinel = ref<HTMLElement | null>(null);
-let observer: IntersectionObserver | null = null;
 
 const isInitializing = ref(true);
 
+const SIDEBAR_PUSH_BREAKPOINT = 1024;
+
+const sidebarPushesContent = computed(
+  () => shared.isLargeScreen && shared.hasOpenSidebar,
+);
+
+const showSidebarOverlay = computed(() => !shared.isLargeScreen && shared.hasOpenSidebar);
+
+const closeSidebar = () => {
+  shared.setSidebarOpen(false);
+};
+
+const onEscape = (event: KeyboardEvent) => {
+  if (event.key === 'Escape' && showSidebarOverlay.value) {
+    closeSidebar();
+  }
+};
+
+watch(showSidebarOverlay, (open) => {
+  if (open) {
+    document.addEventListener('keydown', onEscape);
+  } else {
+    document.removeEventListener('keydown', onEscape);
+  }
+});
+
 const setDimensions = () => {
-  if (header.value) {
-    const headerRect = header.value.getBoundingClientRect();
+  const headerEl = headerComponent.value?.header ?? null;
+  if (headerEl) {
+    const headerRect = headerEl.getBoundingClientRect();
     shared.setHeaderSize(headerRect.height, headerRect.width);
   }
 
@@ -100,12 +137,13 @@ watch(
   () => shared.hasOpenSidebar,
   (newVal: boolean) => {
     localStorage.setItem('sidebar-state', newVal.toString());
+    nextTick(setDimensions);
   },
 );
 
 const resizeHook = () => {
   const fresh = document.documentElement.clientWidth;
-  shared.setLargeScreen(fresh >= 1280);
+  shared.setLargeScreen(fresh >= SIDEBAR_PUSH_BREAKPOINT);
   setDimensions();
 };
 
@@ -118,19 +156,6 @@ onMounted(() => {
   window.addEventListener('resize', resizeHook);
   resizeHook();
   setDimensions();
-
-  if (sentinel.value) {
-    observer = new IntersectionObserver(
-      ([entry]) => {
-        shared.setMainUnderHeader(!entry.isIntersecting);
-      },
-      {
-        root: null,
-        threshold: 0,
-      },
-    );
-    observer.observe(sentinel.value);
-  }
 
   const sidebarState = localStorage.getItem('sidebar-state');
 
@@ -146,9 +171,6 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('resize', resizeHook);
-  if (observer && sentinel.value) {
-    observer.unobserve(sentinel.value);
-    observer.disconnect();
-  }
+  document.removeEventListener('keydown', onEscape);
 });
 </script>

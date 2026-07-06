@@ -28,5 +28,28 @@ const pages: PageItem[] = [
     isPublished: true,
     isDivider: false,
   },
+  {
+    id: 2,
+    title: 'Contact Us',
+    description: 'How to contact us',
+    icon: 'https://res.cloudinary.com/journeys/image/upload/v1756122183/aatrg9bikextwwun4vb2_kblpui.svg',
+    body: '## Contact Us\n\nYou can contact us by email at info@journeys.com.',
+    isPublished: true,
+    isDivider: false,
+  },
+  {
+    id: 4,
+    isDivider: true,
+    isPublished: true,
+  },
+  {
+    id: 3,
+    title: 'Privacy Policy',
+    description: 'Our privacy policy',
+    icon: 'https://res.cloudinary.com/journeys/image/upload/v1756122183/aatrg9bikextwwun4vb2_kblpui.svg',
+    body: '## Privacy Policy\n\nWe respect your privacy and will not share your information with anyone.',
+    isPublished: true,
+    isDivider: false,
+  },
 ];
 </script>

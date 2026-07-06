@@ -1,45 +1,50 @@
 <template>
-  <AppLayout>
-    <template #header>
-      <ContentHeader title="Pages">
-        <template #actions>
-          <div class="flex items-center gap-x-6">
-            <button
-              v-if="isShowingPublished"
-              type="button"
-              class="rounded-full bg-blue-500 p-2 shadow-md hover:bg-blue-700"
-              @click="addDivider"
-            >
-              <Icon name="divider" class="text-white" />
-            </button>
-            <button
-              type="button"
-              class="rounded-full bg-blue-500 p-2 shadow-md hover:bg-blue-700"
-              @click="addPage"
-            >
-              <Icon name="plus" class="text-white" />
-            </button>
-          </div>
-        </template>
-        <template #extra-actions>
-          <div class="flex items-center justify-between">
-            <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
-            <div class="space-x-6"></div>
-          </div>
-        </template>
-      </ContentHeader>
-    </template>
-    <div class="my-8 flex flex-col space-y-8">
-      <div v-for="page in filteredItems" :key="page.id" @drop="onDrop">
-        <PageIndexItem
-          :page="page"
-          @remove-divider="deleteDivider(page.id)"
-          @tap="onTap"
-          @drag-start="fromIndex = items.indexOf(page)"
-          @drag-enter="toIndex = items.indexOf(page)"
-        />
+  <AppLayout title="Pages">
+    <template #actions>
+      <div class="flex items-center gap-x-6">
+        <button
+          v-if="isShowingPublished"
+          type="button"
+          class="rounded-full bg-blue-500 p-2 shadow-md hover:bg-blue-700"
+          @click="addDivider"
+        >
+          <Icon name="divider" class="text-white" />
+        </button>
+        <button
+          type="button"
+          class="rounded-full bg-blue-500 p-2 shadow-md hover:bg-blue-700"
+          @click="addPage"
+        >
+          <Icon name="plus" class="text-white" />
+        </button>
       </div>
-    </div>
+    </template>
+    <template #controls>
+      <div class="flex items-center justify-between">
+        <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
+        <div class="space-x-6"></div>
+      </div>
+    </template>
+    <template #main>
+      <div class="my-8 flex flex-col space-y-4">
+        <div
+          class="overflow-hidden rounded-xl border border-gray-200 bg-white divide-y divide-gray-100"
+        >
+          <PageIndexItem
+            v-for="page in filteredItems"
+            :key="page.id"
+            :page="page"
+            :is-dragging="draggingPageId === page.id"
+            @remove-divider="deleteDivider(page.id)"
+            @tap="onTap"
+            @dragstart="onDragStart(page)"
+            @dragover="onDragOver(page)"
+            @drop="onDragEnd"
+            @dragend="onDragEnd"
+          />
+        </div>
+      </div>
+    </template>
   </AppLayout>
 </template>
 
@@ -52,7 +57,6 @@ import AppLayout from '../shared/app-layout.vue';
 import IndexFilter from '../shared/index-filter.vue';
 import Icon from '../shared/icon.vue';
 import { debounce } from '../shared/helpers';
-import ContentHeader from '../shared/content-header.vue';
 import PageIndexItem from './page-index-item.vue';
 
 const props = defineProps<PageIndexProps & SharedPageProps>();
@@ -64,8 +68,7 @@ const pageStore = usePagesStore();
 const { pages } = toRefs(props);
 pageStore.setItems([...pages.value]);
 const items = ref<PageItem[]>([...pages.value]);
-const fromIndex = ref();
-const toIndex = ref();
+const draggingPageId = ref<number | null>(null);
 
 // filtering
 const currentTab = ref('Published');
@@ -98,21 +101,40 @@ const onTap = (id: number) => {
   router.visit(`/${shared.locale}/page/${id}/edit`);
 };
 
-const onDrop = () => {
-  swapListItems(items.value, fromIndex.value, toIndex.value);
-  pageStore.setItems(items.value);
-  fromIndex.value = null;
-  toIndex.value = null;
+const moveItem = (fromIndex: number, toIndex: number) => {
+  if (fromIndex === toIndex) return;
+
+  const list = [...items.value];
+  const [moved] = list.splice(fromIndex, 1);
+  if (!moved) return;
+  list.splice(toIndex, 0, moved);
+  items.value = list;
+  pageStore.setItems(list);
 };
 
-const swapListItems = (items: any[], fromIndex: number, toIndex: number) => {
-  const element = items[fromIndex];
-  items.splice(fromIndex, 1);
-  items.splice(toIndex, 0, element);
+const onDragStart = (page: PageItem) => {
+  if (!isShowingPublished.value) return;
+  draggingPageId.value = page.id;
+};
+
+const onDragOver = (page: PageItem) => {
+  if (!isShowingPublished.value) return;
+  if (draggingPageId.value === null) return;
+
+  const fromIndex = items.value.findIndex((item) => item.id === draggingPageId.value);
+  const toIndex = items.value.indexOf(page);
+  if (fromIndex === -1 || toIndex === -1) return;
+  if (fromIndex === toIndex) return;
+
+  moveItem(fromIndex, toIndex);
+};
+
+const onDragEnd = () => {
+  draggingPageId.value = null;
 };
 
 type postType = {
-  items: any[];
+  items: PageItem[];
 };
 
 const getPayload = (): postType => {

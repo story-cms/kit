@@ -3,12 +3,12 @@
     <div>
       <MenuButton
         :disabled="!hasOptions"
-        class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+        class="inline-flex w-full justify-center gap-x-1.5 rounded-xl bg-white px-3 py-2 text-sm text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
       >
         {{ anchor }}
         <Icon
           v-if="hasOptions"
-          class="w-5 h-5 text-gray-700"
+          class="h-5 w-5 text-gray-700"
           aria-hidden="true"
           name="chevron-down"
         />
@@ -24,7 +24,7 @@
       leave-to-class="transform scale-95 opacity-0"
     >
       <MenuItems
-        class="absolute right-0 z-10 w-32 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none text-nowrap"
+        class="absolute right-0 z-10 mt-2 w-32 origin-top-right text-nowrap rounded-xl bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
       >
         <div class="py-1">
           <MenuItem v-for="item in options" :key="item" v-slot="{ active }">

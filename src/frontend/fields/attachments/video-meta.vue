@@ -5,14 +5,14 @@
         {{ row.label }}
       </label>
       <div
-        class="mt-2 flex items-center rounded-md border border-gray-200 bg-gray-50 px-3 py-2"
+        class="mt-2 flex items-center rounded-xl border border-gray-200 bg-gray-50 px-3 py-2"
       >
         <span class="min-w-0 flex-1 truncate text-sm text-gray-900" :title="row.value">
           {{ row.value }}
         </span>
         <button
           type="button"
-          class="shrink-0 rounded p-1 text-gray-500 transition-colors hover:bg-gray-200 hover:text-gray-700"
+          class="shrink-0 rounded-xl p-1 text-gray-500 transition-colors hover:bg-gray-200 hover:text-gray-700"
           :title="copiedLabel === row.label ? 'Copied!' : `Copy ${row.label}`"
           @click="copyToClipboard(row.value, row.label)"
         >

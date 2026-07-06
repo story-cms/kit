@@ -1,8 +1,6 @@
 <template>
-  <AppLayout>
-    <template #header>
-      <GlassHeader :title="headerTitle" :subtitle="headerSubtitle">
-        <template #actions>
+  <AppLayout :title="headerTitle" :subtitle="headerSubtitle">
+    <template #actions>
           <StudioButton label="Cancel" variant="outline" @click="cancel" />
           <StudioButton
             v-if="!resource.id"
@@ -19,10 +17,9 @@
             @click="save"
           />
         </template>
-      </GlassHeader>
-    </template>
 
-    <div class="relative mt-3 space-y-6">
+    <template #main>
+    <div class="relative space-y-6">
       <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="form-panel">
         <StringField
           :field="{
@@ -150,6 +147,7 @@
         :locale="shared.locale"
       />
     </div>
+    </template>
   </AppLayout>
 </template>
 
@@ -168,7 +166,6 @@ import {
 } from '../../types';
 import { useModelStore, useSharedStore, useWidgetsStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
-import GlassHeader from '../shared/glass-header.vue';
 import StudioButton from '../shared/studio-button.vue';
 import RichListbox from '../shared/rich-listbox.vue';
 import StringField from '../fields/string-field.vue';

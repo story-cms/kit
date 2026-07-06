@@ -29,10 +29,9 @@
       />
     </Variant>
     <Variant title="Grid">
-      <div
-        class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
-      >
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         <IndexCard
+          class="h-full"
           :item="itemWide"
           :is-list="notList"
           scope="Draft"
@@ -40,12 +39,14 @@
         />
 
         <IndexCard
+          class="h-full"
           :item="itemSquare"
           :is-list="notList"
           scope="Draft"
           chapter-name="Story"
         />
         <IndexCard
+          class="h-full"
           :item="itemTall"
           :is-list="notList"
           scope="Draft"
@@ -70,13 +71,28 @@
       <template #controls> </template>
     </Variant>
     <Variant title="List">
-      <IndexCard
-        :item="item"
-        :is-list="isList"
-        scope=""
-        placeholder-image="https://picsum.photos/seed/1733288671859/500/500"
-        chapter-name="Story"
-      />
+      <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white">
+        <table class="w-full table-auto">
+          <thead class="border-b border-gray-200 bg-gray-50">
+            <tr>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
+                Chapter
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <IndexCard
+              :item="item"
+              :is-list="isList"
+              scope="Draft"
+              placeholder-image="https://picsum.photos/seed/1733288671859/500/500"
+              chapter-name="Story"
+            />
+          </tbody>
+        </table>
+      </div>
     </Variant>
   </Story>
 </template>

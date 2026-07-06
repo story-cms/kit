@@ -3,7 +3,7 @@
     v-if="shared.showMetaBox || shared.showAppPreview"
     :class="['w-[375px]', isFloating ? 'fixed' : 'sticky [align-self:start]']"
     :style="{
-      top: `${headerHeight + 4}px`,
+      top: `${sidebarTopOffset}px`,
       right: isFloating ? rightPosition : '',
     }"
   >
@@ -26,6 +26,11 @@ const props = defineProps<{
 }>();
 
 const isFloating = ref(false);
+const sidebarWidth = 375;
+const sidebarGap = 16;
+const minimumContentWidth = 720;
+const headerTopOffset = 12;
+const headerGap = 16;
 
 const shared = useSharedStore();
 const { showMetaBox, showAppPreview, isSingleColumn, showSourceColumn } =
@@ -33,10 +38,16 @@ const { showMetaBox, showAppPreview, isSingleColumn, showSourceColumn } =
 const { isLargeScreen } = storeToRefs(shared);
 
 const headerHeight = computed(() => shared.headerHeight);
+const sidebarTopOffset = computed(() => headerHeight.value + headerTopOffset + headerGap);
 
 const rightPosition = computed(() => {
   const difference = shared.layoutWidth - shared.containerWidth;
   return `${difference / 2 + 12}px`;
+});
+
+const contentWidthWithSidebar = computed(() => {
+  const availableWidth = shared.headerWidth || shared.containerWidth;
+  return availableWidth - sidebarWidth - sidebarGap;
 });
 
 const isSingleAndFloating = () => {
@@ -47,6 +58,7 @@ const isSingleAndFloating = () => {
   }
   // Large screen
   if (!isShowingElements) return true;
+  if (contentWidthWithSidebar.value < minimumContentWidth) return true;
 
   if (props.isComplexLayout) {
     if (isShowingElements && !showSourceColumn.value) return false;
@@ -56,16 +68,19 @@ const isSingleAndFloating = () => {
   return false;
 };
 
-watch([showMetaBox, showAppPreview, isLargeScreen, showSourceColumn], () => {
-  if (!showMetaBox.value && !showAppPreview.value) {
-    isFloating.value = false;
-    shared.setSingleColumn(true);
-  }
+watch(
+  [showMetaBox, showAppPreview, isLargeScreen, showSourceColumn, contentWidthWithSidebar],
+  () => {
+    if (!showMetaBox.value && !showAppPreview.value) {
+      isFloating.value = false;
+      shared.setSingleColumn(true);
+    }
 
-  const setting = isSingleAndFloating();
-  shared.setSingleColumn(setting);
-  isFloating.value = setting;
-});
+    const setting = isSingleAndFloating();
+    shared.setSingleColumn(setting);
+    isFloating.value = setting;
+  },
+);
 
 watch(
   () => isSingleColumn.value,

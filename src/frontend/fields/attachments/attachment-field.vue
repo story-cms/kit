@@ -13,7 +13,7 @@
           type="button"
           @click.prevent="emit('delete')"
         >
-          <Icon name="trash" class="w-10 h-10 text-gray-500" />
+          <Icon name="trash" class="h-10 w-10 text-gray-500" />
         </button>
       </div>
 
@@ -24,7 +24,7 @@
       <div v-else class="h-48">
         <div
           v-if="!props.isReadOnly"
-          class="relative mt-[2px] rounded-md border-2 border-dashed border-gray-300"
+          class="relative mt-[2px] rounded-xl border-2 border-dashed border-gray-300"
         >
           <FileUpload
             :description="defaults.description"
@@ -34,7 +34,7 @@
           />
           <div
             v-if="isUploading"
-            class="absolute top-0 left-0 w-full h-full bg-gray-400 rounded-md bg-opacity-30"
+            class="absolute left-0 top-0 h-full w-full rounded-xl bg-gray-400 bg-opacity-30"
           >
             <div class="h-full bg-accent opacity-30" :style="progress"></div>
           </div>

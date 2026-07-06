@@ -4,12 +4,12 @@
       <label class="input-label">{{ field.label }}</label>
     </div>
     <div
-      class="relative mt-[2px] h-48 w-full rounded-md border-2 border-dashed border-gray-300"
+      class="relative mt-[2px] h-48 w-full rounded-xl border-2 border-dashed border-gray-300"
     >
       <!-- Progress bar background -->
       <div
         v-if="!isDone"
-        class="absolute bottom-0 left-0 h-full w-full rounded-md bg-transparent"
+        class="absolute bottom-0 left-0 h-full w-full rounded-xl bg-transparent"
       >
         <!-- Progress bar fill -->
         <div class="h-full bg-accent opacity-30" :style="progress"></div>

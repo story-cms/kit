@@ -1,91 +1,119 @@
 <template>
-  <AppLayout>
-    <template #header>
-      <ContentHeader :title="`${story.storyType}: ${shared.currentStoryName}`">
-        <template #actions>
-          <div class="flex items-center justify-center gap-x-6">
-            <ListSwitcher :is-list="isList" @toggle="isList = !isList" />
-
-            <IconButton v-if="canEditStory" icon="pencil" @tap="editMeta" />
-          </div>
-        </template>
-        <template #extra-actions>
-          <div
-            class="mb-4 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
-          >
-            <div class="flex gap-x-4">
-              <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
-
-              <AddItemButton
-                v-if="addStatus == AddStatus.Add"
-                :label="story.chapterType"
-                @add="addDraft"
-              />
-              <button
-                v-if="addStatus == AddStatus.Wait"
-                type="button"
-                class="inline-flex items-center rounded-xl bg-indigo-50 px-3 py-[9px] text-sm font-medium leading-4 text-indigo-700 shadow-sm"
-                disabled
-              >
-                {{ `No more ${story.chapterType}s available to translate` }}
-              </button>
-            </div>
-
-            <div class="grid grid-cols-1">
-              <input
-                id="search"
-                v-model="filterNumber"
-                type="text"
-                name="search"
-                class="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pl-10 pr-3 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:pl-9 sm:text-sm/6"
-                :placeholder="story.chapterType"
-              />
-              <Icon
-                name="search"
-                class="pointer-events-none col-start-1 row-start-1 ml-4 size-4 self-center text-gray-400"
-              />
-            </div>
-          </div>
-        </template>
-      </ContentHeader>
-    </template>
-    <div
-      :class="[
-        'grid gap-4',
-        {
-          'grid-cols-[repeat(auto-fit,_minmax(260px,_260px))]': !isList,
-        },
-        {
-          'grid-cols-1': isList,
-        },
-      ]"
-    >
-      <index-card
-        v-for="item in filteredIndex"
-        :key="item.number"
-        :item="item"
-        :is-list="isList"
-        placeholder-image="https://res.cloudinary.com/redeem/image/upload/v1752849347/story-cms-ui/placeholder_bafmfz.jpg"
-        :scope="currentTab"
-        :chapter-name="story.chapterType"
-        @tap="onTap"
+  <AppLayout :title="story.storyType" :subtitle="story.name">
+    <template #actions>
+      <StudioButton
+        v-if="canEditStory"
+        label="Edit"
+        variant="outline"
+        @click="editMeta"
       />
-    </div>
+    </template>
+    <template #controls>
+      <div class="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+        <div class="flex flex-wrap items-center gap-3">
+          <GlassButton
+            label="Live"
+            :count="liveCount"
+            :active="currentTab === 'Live'"
+            @click="onFilter('Live')"
+          />
+          <GlassButton
+            label="Draft"
+            :count="draftCount"
+            :active="currentTab === 'Draft'"
+            @click="onFilter('Draft')"
+          />
+
+          <StudioButton
+            v-if="addStatus == AddStatus.Add"
+            :label="story.chapterType"
+            variant="outline"
+            @click="addDraft"
+          >
+            <Plus class="size-4" aria-hidden="true" />
+          </StudioButton>
+          <button
+            v-if="addStatus == AddStatus.Wait"
+            type="button"
+            class="inline-flex items-center rounded-full border border-gray-300 px-4 py-2 font-dmsans text-sm font-medium text-gray-500"
+            disabled
+          >
+            {{ `No more ${story.chapterType}s available to translate` }}
+          </button>
+        </div>
+
+        <div class="flex shrink-0 items-center gap-3">
+          <ExpandableSearch
+            v-model="filterQuery"
+            :placeholder="`Search`"
+            clear-on-collapse
+          />
+          <ListSwitcher :is-list="isList" @toggle="isList = !isList" />
+        </div>
+      </div>
+    </template>
+    <template #main>
+      <div
+        v-if="filteredIndex.length > 0 && !isList"
+        class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+      >
+        <index-card
+          v-for="item in filteredIndex"
+          :key="item.number"
+          class="h-full"
+          :item="item"
+          :is-list="false"
+          placeholder-image="https://res.cloudinary.com/redeem/image/upload/v1752849347/story-cms-ui/placeholder_bafmfz.jpg"
+          :scope="currentTab"
+          :chapter-name="story.chapterType"
+          @tap="onTap"
+        />
+      </div>
+
+      <div
+        v-else-if="filteredIndex.length > 0 && isList"
+        class="overflow-x-auto rounded-xl border border-gray-200 bg-white"
+      >
+        <table class="w-full table-auto">
+          <thead class="border-b border-gray-200 bg-gray-50">
+            <tr>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
+                Chapter
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <index-card
+              v-for="item in filteredIndex"
+              :key="item.number"
+              :item="item"
+              :is-list="true"
+              placeholder-image="https://res.cloudinary.com/redeem/image/upload/v1752849347/story-cms-ui/placeholder_bafmfz.jpg"
+              :scope="currentTab"
+              :chapter-name="story.chapterType"
+              @tap="onTap"
+            />
+          </tbody>
+        </table>
+      </div>
+    </template>
   </AppLayout>
 </template>
 
 <script setup lang="ts">
 import { router } from '@inertiajs/vue3';
+import { Plus } from '@lucide/vue';
 import { computed, ref } from 'vue';
 
 import { IndexReadyItem, SharedPageProps, StoryIndexProps, AddStatus } from '../../types';
-import AddItemButton from '../shared/add-item-button.vue';
-import ListSwitcher from '../shared/list-switcher.vue';
 import AppLayout from '../shared/app-layout.vue';
-import ContentHeader from '../shared/content-header.vue';
-import Icon from '../shared/icon.vue';
-import IconButton from '../shared/icon-button.vue';
-import IndexFilter from '../shared/index-filter.vue';
+import ExpandableSearch from '../shared/expandable-search.vue';
+import GlassButton from '../shared/glass-button.vue';
+import { padZero } from '../shared/helpers';
+import ListSwitcher from '../shared/list-switcher.vue';
+import StudioButton from '../shared/studio-button.vue';
 import { useSharedStore } from '../store';
 import IndexCard from './components/index-card.vue';
 
@@ -97,9 +125,16 @@ shared.setFromProps(props);
 shared.setCurrentStoryName(props.story.name);
 
 const isList = ref(false);
-
-const filterNumber = ref<string | null>(null);
+const filterQuery = ref('');
 const currentTab = ref('Live');
+
+const liveCount = computed(
+  () => props.index.filter((item) => item.tags.includes('Live')).length,
+);
+
+const draftCount = computed(
+  () => props.index.filter((item) => item.tags.includes('Draft')).length,
+);
 
 const addDraft = () =>
   router.get(`/${shared.locale}/story/${props.story.id}/draft/create`);
@@ -109,35 +144,30 @@ const onFilter = (tab: string) => {
 };
 
 const filteredIndex = computed(() => {
-  const needle = currentTab.value === 'Live' ? 'Live' : 'Draft';
+  const tabTag = currentTab.value === 'Live' ? 'Live' : 'Draft';
+  const query = filterQuery.value.trim().toLowerCase();
 
   return props.index.filter((item) => {
-    const hasTag = item.tags.includes(needle);
-    if (!filterNumber.value) return hasTag;
+    if (!item.tags.includes(tabTag)) return false;
+    if (!query) return true;
 
-    return hasTag && item.number.toString().startsWith(filterNumber.value);
+    const paddedNumber = padZero(item.number);
+    const title = item.title.toLowerCase();
+    const chapterLabel = `${props.story.chapterType} ${item.number}`.toLowerCase();
+    const chapterLabelPadded = `${props.story.chapterType} ${paddedNumber}`.toLowerCase();
+
+    return (
+      item.number.toString().includes(query) ||
+      paddedNumber.includes(query) ||
+      title.includes(query) ||
+      chapterLabel.includes(query) ||
+      chapterLabelPadded.includes(query)
+    );
   });
 });
 
-const tabs = computed(() => {
-  const liveCount = props.index.reduce(
-    (carry, item) => (item.tags.includes('Live') ? carry + 1 : carry),
-    0,
-  );
-
-  const draftCount = props.index.reduce(
-    (carry, item) => (item.tags.includes('Draft') ? carry + 1 : carry),
-    0,
-  );
-
-  return [
-    { label: 'Live', count: liveCount },
-    { label: 'Drafts', count: draftCount },
-  ];
-});
-
 const onTap = (item: IndexReadyItem) => {
-  if (currentTab.value == 'Drafts') {
+  if (currentTab.value === 'Draft') {
     router.get(`/${shared.locale}/story/${props.story.id}/draft/${item.number}/edit`);
   } else {
     router.get(`/${shared.locale}/story/${props.story.id}/chapter/${item.number}`);

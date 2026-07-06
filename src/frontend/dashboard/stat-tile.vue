@@ -1,19 +1,21 @@
 <template>
-  <div class="w-full p-6 bg-white rounded-lg shadow">
+  <div class="w-full rounded-xl bg-white p-6 shadow">
     <div>
       <dt class="text-base font-normal text-gray-900">
         <span
           v-if="isLoading"
-          class="inline-block w-32 h-4 bg-gray-200 rounded animate-pulse"
+          class="inline-block h-4 w-32 animate-pulse rounded-xl bg-gray-200"
         ></span>
         <span v-else>{{ props.metric.name }}</span>
       </dt>
-      <dd class="flex items-baseline justify-between mt-1">
+      <dd class="mt-1 flex items-baseline justify-between">
         <div class="flex items-baseline text-2xl font-semibold leading-8 text-gray-900">
           <template v-if="isLoading">
-            <span class="inline-block w-24 h-8 bg-gray-200 rounded animate-pulse"></span>
             <span
-              class="inline-block w-16 h-4 ml-2 bg-gray-200 rounded animate-pulse"
+              class="inline-block h-8 w-24 animate-pulse rounded-xl bg-gray-200"
+            ></span>
+            <span
+              class="ml-2 inline-block h-4 w-16 animate-pulse rounded-xl bg-gray-200"
             ></span>
           </template>
           <template v-else>
@@ -49,7 +51,10 @@
           </span>
           {{ changePercentage }}
         </div>
-        <div v-else class="inline-block w-16 h-6 bg-gray-200 rounded animate-pulse"></div>
+        <div
+          v-else
+          class="inline-block h-6 w-16 animate-pulse rounded-xl bg-gray-200"
+        ></div>
       </dd>
     </div>
   </div>

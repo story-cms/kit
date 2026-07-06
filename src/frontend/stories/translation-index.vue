@@ -1,111 +1,106 @@
 <template>
-  <AppLayout>
-    <template #header>
-      <ContentHeader :title="chapterTitle">
-        <template #actions>
-          <DraftActions @delete="deleteDraft" />
-          <WorkflowActions
-            :has-edit-review="hasEditReview"
-            @publish="publishDraft"
-            @request-change="reject"
-            @submit="submitDraft"
-          />
-        </template>
-        <template #extra-actions>
-          <div
-            class="flex items-center justify-between py-4 text-sm font-medium leading-4"
-          >
-            <p class="text-left">{{ shared.language.language }}</p>
-            <p class="inline-flex items-center justify-end">
-              English
-              <button
-                class="ml-2"
-                @click="shared.setSourceColumnAsHidden(!shared.showSourceColumn)"
-              >
-                <Icon name="eyeoff" class="block size-6 cursor-pointer text-black" />
-              </button>
-            </p>
-          </div>
-        </template>
-      </ContentHeader>
+  <AppLayout title="Draft" :subtitle="chapterTitle">
+    <template #actions>
+      <DraftActions @delete="deleteDraft" />
+      <WorkflowActions
+        :has-edit-review="hasEditReview"
+        @publish="publishDraft"
+        @request-change="reject"
+        @submit="submitDraft"
+      />
     </template>
-    <div
-      :class="[
-        'relative grid min-h-screen',
-        {
-          'grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn,
-          'mx-auto max-w-4xl grid-cols-1':
-            shared.isSingleColumn && !shared.showSourceColumn,
-        },
-      ]"
-    >
+    <template #controls>
+      <div class="flex items-center justify-between py-4 text-sm font-medium leading-4">
+        <p class="text-left">{{ shared.language.language }}</p>
+        <p class="inline-flex items-center justify-end">
+          English
+          <button
+            class="ml-2"
+            @click="shared.setSourceColumnAsHidden(!shared.showSourceColumn)"
+          >
+            <Icon name="eyeoff" class="block size-6 cursor-pointer text-black" />
+          </button>
+        </p>
+      </div>
+    </template>
+    <template #main>
       <div
         :class="[
-          'grid h-full grid-flow-col-dense',
+          'relative grid min-h-screen',
           {
-            'grid-cols-[repeat(2,_minmax(440px,_1fr))] overflow-x-auto':
-              shared.showSourceColumn && !shared.isLargeScreen,
-            'grid-cols-2 overflow-x-auto':
-              shared.showSourceColumn && shared.isLargeScreen,
-            'grid-cols-1': !shared.showSourceColumn,
+            'grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn,
+            'mx-auto grid-cols-1': shared.isSingleColumn && !shared.showSourceColumn,
           },
         ]"
       >
-        <section class="subgrid row-[span_1000]">
-          <form
-            :dir="shared.isRtl ? 'rtl' : 'ltr'"
-            class="subgrid row-[span_1000] gap-y-4"
-          >
-            <template v-for="(item, index) in story.fields" :key="index">
-              <component :is="widgetFor(index)" :field="item" :is-nested="false" />
-            </template>
-          </form>
-        </section>
-        <section
-          ref="sourceSection"
-          :class="['subgrid row-[span_1000]', { hidden: !shared.showSourceColumn }]"
+        <div
+          :class="[
+            'grid h-full grid-flow-col-dense',
+            {
+              'grid-cols-[repeat(2,_minmax(440px,_1fr))] overflow-x-auto':
+                shared.showSourceColumn && !shared.isLargeScreen,
+              'grid-cols-2 overflow-x-auto':
+                shared.showSourceColumn && shared.isLargeScreen,
+              'grid-cols-1': !shared.showSourceColumn,
+            },
+          ]"
         >
-          <div dir="ltr" class="subgrid row-[span_1000] gap-y-4">
-            <template v-for="(item, index) in story.fields" :key="index">
-              <component
-                :is="widgetFor(index)"
-                :field="item"
-                :is-nested="false"
-                :is-read-only="true"
-              />
-            </template>
-          </div>
-        </section>
-      </div>
-      <ContentSidebar
-        :is-complex-layout="true"
-        :style="{ marginRight: `${marginRight}px` }"
-      >
-        <template #meta-box>
-          <MetaBox
-            :primary="[
-              { label: story.storyType, value: story.name },
-              { label: story.chapterType, value: metaChapter },
-            ]"
-            :secondary="[
-              { label: 'Created', value: formatDate(draft.createdAt) },
-              { label: 'Auto-Saved', value: formatDate(draft.updatedAt) },
-              { label: 'Last Published', value: publishedWhen },
-            ]"
-          />
-        </template>
-        <template #app-preview>
-          <div v-if="shared.config.hasAppPreview">
-            <MobileAppPreview
-              v-if="bundle"
-              :bundle="bundle"
-              :number="props.draft.number"
-              class="mt-2"
+          <section class="subgrid row-[span_1000]">
+            <form
+              :dir="shared.isRtl ? 'rtl' : 'ltr'"
+              class="subgrid row-[span_1000] gap-y-4"
+            >
+              <template v-for="(item, index) in story.fields" :key="index">
+                <component :is="widgetFor(index)" :field="item" :is-nested="false" />
+              </template>
+            </form>
+          </section>
+          <section
+            ref="sourceSection"
+            :class="['subgrid row-[span_1000]', { hidden: !shared.showSourceColumn }]"
+          >
+            <div dir="ltr" class="subgrid row-[span_1000] gap-y-4">
+              <template v-for="(item, index) in story.fields" :key="index">
+                <component
+                  :is="widgetFor(index)"
+                  :field="item"
+                  :is-nested="false"
+                  :is-read-only="true"
+                />
+              </template>
+            </div>
+          </section>
+        </div>
+        <ContentSidebar
+          :is-complex-layout="true"
+          :style="{ marginRight: `${marginRight}px` }"
+        >
+          <template #meta-box>
+            <MetaBox
+              :primary="[
+                { label: story.storyType, value: story.name },
+                { label: story.chapterType, value: metaChapter },
+              ]"
+              :secondary="[
+                { label: 'Created', value: formatDate(draft.createdAt) },
+                { label: 'Auto-Saved', value: formatDate(draft.updatedAt) },
+                { label: 'Last Published', value: publishedWhen },
+              ]"
             />
-          </div>
-        </template>
-      </ContentSidebar>
-    </div>
+          </template>
+          <template #app-preview>
+            <div v-if="shared.config.hasAppPreview">
+              <MobileAppPreview
+                v-if="bundle"
+                :bundle="bundle"
+                :number="props.draft.number"
+                class="mt-2"
+              />
+            </div>
+          </template>
+        </ContentSidebar>
+      </div>
+    </template>
   </AppLayout>
 </template>
 
@@ -118,7 +113,6 @@ import { ResponseStatus } from '../../types';
 import { useSharedStore, useModelStore, useWidgetsStore, useDraftsStore } from '../store';
 import { storeToRefs } from 'pinia';
 import AppLayout from '../shared/app-layout.vue';
-import ContentHeader from '../shared/content-header.vue';
 import DraftActions from '../shared/draft-actions.vue';
 import WorkflowActions from './components/workflow-actions.vue';
 import Icon from '../shared/icon.vue';

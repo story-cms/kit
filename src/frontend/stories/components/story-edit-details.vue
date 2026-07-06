@@ -39,7 +39,7 @@
       <PanelField
         :field="contentClassificationField"
         :is-nested="true"
-        class="rounded-lg border border-[#E5E7EB]"
+        class="rounded-xl border border-[#E5E7EB]"
       />
       <RichListbox
         v-if="templates.length > 0"
@@ -151,9 +151,7 @@ const templateRichOptions = computed(() =>
   })),
 );
 
-const isTemplateReadOnly = computed(
-  () => props.isEditing || props.templates.length <= 1,
-);
+const isTemplateReadOnly = computed(() => props.isEditing || props.templates.length <= 1);
 
 const titleField: FieldSpec = {
   name: 'title',

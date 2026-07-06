@@ -1,7 +1,7 @@
 <template>
   <div
     :class="{
-      'rounded border border-gray-200 bg-white p-8 drop-shadow-sm': !isNested,
+      'rounded-xl border border-gray-200 bg-white p-8 drop-shadow-sm': !isNested,
       'mt-4': isNested,
     }"
   >
@@ -36,7 +36,7 @@
 
         <div
           v-else
-          class="flex min-h-9 flex-wrap items-center gap-x-2 rounded-md border border-gray-300 bg-white px-1 pb-1 pt-1"
+          class="flex min-h-9 flex-wrap items-center gap-x-2 rounded-xl border border-gray-300 bg-white px-1 pb-1 pt-1"
           :class="{ 'border-error': hasError }"
         >
           <span
@@ -73,7 +73,7 @@
             <slot name="input">
               <span
                 v-if="isReadOnly && pills.length === 0"
-                class="inline-block py-1 text-sm font-normal leading-5 text-transparent select-none"
+                class="inline-block select-none py-1 text-sm font-normal leading-5 text-transparent"
                 aria-hidden="true"
               >
                 &nbsp;

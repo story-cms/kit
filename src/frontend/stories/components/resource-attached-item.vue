@@ -22,7 +22,7 @@
         <ResourceTypeBadge :type="item.type" />
         <span
           v-if="item.visibility !== 'public'"
-          class="shrink-0 rounded bg-gray-100 px-2 py-0.5 text-xs font-medium capitalize text-gray-700"
+          class="shrink-0 rounded-xl bg-gray-100 px-2 py-0.5 text-xs font-medium capitalize text-gray-700"
         >
           {{ item.visibility }}
         </span>
@@ -37,7 +37,7 @@
     <div class="flex shrink-0 items-center gap-1">
       <button
         type="button"
-        class="rounded p-1.5 text-gray-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+        class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
         aria-label="Edit resource"
         @click="editResource"
       >
@@ -46,7 +46,7 @@
       <button
         v-if="!readOnly"
         type="button"
-        class="rounded p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
+        class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
         aria-label="Remove resource"
         @click="emit('remove')"
       >

@@ -1,8 +1,6 @@
 <template>
-  <AppLayout>
-    <template #header>
-      <ContentHeader title="Add new languages">
-        <template #description>
+  <AppLayout title="Settings" subtitle="Add new languages">
+<template #description>
           <p class="text-sm font-normal leading-5 text-black">
             Select languages you would like to add. Once you have chosen press add to
             confirm.
@@ -16,7 +14,7 @@
             @click="addLanguage"
           />
         </template>
-        <template #extra-actions>
+        <template #controls>
           <div
             v-if="selectedLanguages.length > 0"
             class="flex justify-between items-center pb-4"
@@ -56,9 +54,9 @@
             </div>
           </div>
         </template>
-      </ContentHeader>
-    </template>
+    <template #main>
     <LanguageList :items="languageListItems" @update="setLocaleSelected" />
+    </template>
   </AppLayout>
 </template>
 
@@ -66,7 +64,6 @@
 import { ref, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
 import AppLayout from '../../shared/app-layout.vue';
-import ContentHeader from '../../shared/content-header.vue';
 import PillButton from '../../shared/pill-button.vue';
 import LanguageList from './language-list.vue';
 import {

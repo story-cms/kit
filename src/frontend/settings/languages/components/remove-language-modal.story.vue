@@ -2,7 +2,7 @@
   <Story title="Remove Language Modal" group="settings">
     <Variant title="Default">
       <button
-        class="rounded bg-blue-500 px-4 py-2 text-white"
+        class="rounded-xl bg-blue-500 px-4 py-2 text-white"
         @click="showModal = true"
       >
         Remove language

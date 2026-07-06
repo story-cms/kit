@@ -1,15 +1,13 @@
 <template>
-  <AppLayout>
-    <template #header>
-      <ContentHeader title="Stories">
-        <template #actions>
+  <AppLayout title="Stories">
+<template #actions>
           <div class="flex items-center justify-center gap-x-6">
             <ListSwitcher :is-list="isList" @toggle="isList = !isList" />
 
             <IconButton v-if="canAddStories" icon="plus" @tap="addStory" />
           </div>
         </template>
-        <template #extra-actions>
+        <template #controls>
           <div class="flex items-center gap-x-4">
             <ToggleButton
               icon-on="sort"
@@ -29,23 +27,22 @@
             />
           </div>
         </template>
-      </ContentHeader>
-    </template>
-
+    <template #main>
     <section>
-      <div
-        class="my-8 flex gap-x-[26px]"
-        :class="isList ? 'flex-col gap-y-6' : 'flex-wrap gap-y-[98px]'"
-      >
-        <div
-          v-for="story in sortedStories"
-          :key="story.id"
-          :class="isList ? 'w-full' : 'max-w-64'"
-        >
-          <StoryItem :story="story" :is-list="isList" />
-        </div>
-      </div>
-    </section>
+          <div
+            class="my-8 flex gap-x-[26px]"
+            :class="isList ? 'flex-col gap-y-6' : 'flex-wrap gap-y-[98px]'"
+          >
+            <div
+              v-for="story in sortedStories"
+              :key="story.id"
+              :class="isList ? 'w-full' : 'max-w-64'"
+            >
+              <StoryItem :story="story" :is-list="isList" />
+            </div>
+          </div>
+        </section>
+    </template>
   </AppLayout>
 </template>
 
@@ -54,7 +51,6 @@ import { ref, computed } from 'vue';
 import type { SharedPageProps, StoryGalleryProps } from '../../types';
 import { useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
-import ContentHeader from '../shared/content-header.vue';
 import ToggleButton from '../shared/toggle-button.vue';
 import IconButton from '../shared/icon-button.vue';
 import ListSwitcher from '../shared/list-switcher.vue';

@@ -1,10 +1,7 @@
 <template>
-  <AppLayout>
-    <template #header>
-      <GlassHeader title="" subtitle="Resource not found" />
-    </template>
-
-    <section class="mt-3 px-3">
+  <AppLayout subtitle="Resource not found">
+    <template #main>
+    <section class="px-3">
       <div class="mx-auto max-w-lg py-16 text-center">
         <h3 class="mb-2 text-lg font-medium text-gray-900">Resource not found</h3>
         <p class="mb-6 text-sm text-gray-500">
@@ -18,6 +15,7 @@
         />
       </div>
     </section>
+    </template>
   </AppLayout>
 </template>
 
@@ -26,7 +24,6 @@ import { router } from '@inertiajs/vue3';
 import type { ResourceNotFoundProps } from '../../types';
 import { useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
-import GlassHeader from '../shared/glass-header.vue';
 import StudioButton from '../shared/studio-button.vue';
 
 const props = defineProps<ResourceNotFoundProps>();

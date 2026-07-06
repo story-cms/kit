@@ -5,14 +5,14 @@
     <div class="flex flex-1 justify-between sm:hidden">
       <button
         :disabled="currentPage === 1"
-        class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+        class="relative inline-flex items-center rounded-xl border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
         @click="previousPage"
       >
         Previous
       </button>
       <button
         :disabled="currentPage === totalPages"
-        class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+        class="relative ml-3 inline-flex items-center rounded-xl border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
         @click="nextPage"
       >
         Next
@@ -32,7 +32,7 @@
       </div>
       <div>
         <nav
-          class="isolate inline-flex -space-x-px rounded-md shadow-sm"
+          class="isolate inline-flex -space-x-px rounded-xl shadow-sm"
           aria-label="Pagination"
         >
           <button

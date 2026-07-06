@@ -1,133 +1,130 @@
 <template>
-  <AppLayout>
-    <template #header>
-      <ContentHeader dir="ltr" :title="title">
-        <template #actions>
-          <DraftActions @delete="deletePage" />
-          <BooleanField
+  <AppLayout title="Page" :subtitle="title">
+    <template #actions>
+      <DraftActions @delete="deletePage" />
+      <BooleanField
+        :field="{
+          name: 'isPublished',
+          label: 'Published',
+          widget: 'boolean',
+          default: false,
+          tintColor: 'green-400',
+          labelOrder: 'start',
+        }"
+        :is-nested="true"
+      />
+    </template>
+    <template #main>
+      <div
+        :class="[
+          'relative grid',
+          {
+            'grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn,
+            'mx-auto grid-cols-1': shared.isSingleColumn,
+          },
+        ]"
+      >
+        <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8 bg-white py-4">
+          <StringField
             :field="{
-              name: 'isPublished',
-              label: 'Published',
-              widget: 'boolean',
-              default: false,
-              tintColor: 'green-400',
-              labelOrder: 'start',
+              name: 'title',
+              label: 'Title',
+              widget: 'string',
             }"
             :is-nested="true"
+            class="px-8"
           />
-        </template>
-      </ContentHeader>
+          <ImageField
+            :field="{
+              label: 'Menu Icon',
+              name: 'icon',
+              widget: 'image',
+              uploadPreset: 'menuicon',
+              description: 'Square svg to 5MB',
+              extensions: ['.svg'],
+              maxSize: 5662310,
+            }"
+            :is-nested="true"
+            class="px-8"
+          />
+          <StringField
+            :field="{
+              name: 'description',
+              label: 'Short Description',
+              widget: 'string',
+            }"
+            :is-nested="true"
+            class="px-8"
+          />
+          <StringField
+            :field="{
+              name: 'category',
+              label: 'Category',
+              widget: 'string',
+            }"
+            :is-nested="true"
+            class="px-8"
+          />
+          <SelectField
+            :field="{
+              label: 'Page Type',
+              name: 'type',
+              widget: 'select',
+              options: [
+                { label: 'Text', value: 'text' },
+                { label: 'Link', value: 'link' },
+              ],
+              default: defaultType,
+            }"
+            :is-free="true"
+            :is-nested="true"
+            class="px-8"
+          />
+          <StringField
+            v-if="isLink"
+            :field="{
+              name: 'body',
+              label: 'External Link',
+              widget: 'string',
+            }"
+            :is-nested="true"
+            class="px-8"
+          />
+          <MarkdownField
+            v-else
+            :field="{
+              name: 'body',
+              label: 'Body',
+              widget: 'markdown',
+              toolbar: [
+                'heading',
+                'bold',
+                'italic',
+                'ordered-list',
+                'unordered-list',
+                'quote',
+                'link',
+                '|',
+                'undo',
+                'redo',
+              ],
+            }"
+            :is-nested="true"
+            class="px-8"
+          />
+        </form>
+        <ContentSidebar>
+          <template #meta-box>
+            <PageMetaBox
+              :created-at="page.createdAt"
+              :saved-at="savedAt"
+              :updated-at="page.updatedAt"
+              :published-at="publishedAt"
+            />
+          </template>
+        </ContentSidebar>
+      </div>
     </template>
-
-    <div
-      :class="[
-        'relative grid',
-        {
-          'grid-cols-[1fr_375px] gap-x-4': !shared.isSingleColumn,
-          'mx-auto max-w-4xl grid-cols-1': shared.isSingleColumn,
-        },
-      ]"
-    >
-      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8 bg-white py-4">
-        <StringField
-          :field="{
-            name: 'title',
-            label: 'Title',
-            widget: 'string',
-          }"
-          :is-nested="true"
-          class="px-8"
-        />
-        <ImageField
-          :field="{
-            label: 'Menu Icon',
-            name: 'icon',
-            widget: 'image',
-            uploadPreset: 'menuicon',
-            description: 'Square svg to 5MB',
-            extensions: ['.svg'],
-            maxSize: 5662310,
-          }"
-          :is-nested="true"
-          class="px-8"
-        />
-        <StringField
-          :field="{
-            name: 'description',
-            label: 'Short Description',
-            widget: 'string',
-          }"
-          :is-nested="true"
-          class="px-8"
-        />
-        <StringField
-          :field="{
-            name: 'category',
-            label: 'Category',
-            widget: 'string',
-          }"
-          :is-nested="true"
-          class="px-8"
-        />
-        <SelectField
-          :field="{
-            label: 'Page Type',
-            name: 'type',
-            widget: 'select',
-            options: [
-              { label: 'Text', value: 'text' },
-              { label: 'Link', value: 'link' },
-            ],
-            default: defaultType,
-          }"
-          :is-free="true"
-          :is-nested="true"
-          class="px-8"
-        />
-        <StringField
-          v-if="isLink"
-          :field="{
-            name: 'body',
-            label: 'External Link',
-            widget: 'string',
-          }"
-          :is-nested="true"
-          class="px-8"
-        />
-        <MarkdownField
-          v-else
-          :field="{
-            name: 'body',
-            label: 'Body',
-            widget: 'markdown',
-            toolbar: [
-              'heading',
-              'bold',
-              'italic',
-              'ordered-list',
-              'unordered-list',
-              'quote',
-              'link',
-              '|',
-              'undo',
-              'redo',
-            ],
-          }"
-          :is-nested="true"
-          class="px-8"
-        />
-      </form>
-      <ContentSidebar>
-        <template #meta-box>
-          <PageMetaBox
-            :created-at="page.createdAt"
-            :saved-at="savedAt"
-            :updated-at="page.updatedAt"
-            :published-at="publishedAt"
-          />
-        </template>
-      </ContentSidebar>
-    </div>
   </AppLayout>
 </template>
 
@@ -138,7 +135,6 @@ import { router } from '@inertiajs/vue3';
 import { type SharedPageProps, type PageEditProps, ResponseStatus } from '../../types';
 import { useModelStore, useSharedStore, useWidgetsStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
-import ContentHeader from '../shared/content-header.vue';
 import { debounce } from '../shared/helpers';
 import StringField from '../fields/string-field.vue';
 import ImageField from '../fields/image-field.vue';
