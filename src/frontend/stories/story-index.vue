@@ -1,47 +1,75 @@
 <template>
-  <AppLayout title="Story" :subtitle="`${story.storyType}: ${shared.currentStoryName}`">
+  <AppLayout :title="story.storyType" :subtitle="story.name">
     <template #actions>
-      <div class="flex items-center justify-center gap-x-6">
-        <ListSwitcher :is-list="isList" @toggle="isList = !isList" />
-
-        <IconButton v-if="canEditStory" icon="pencil" @tap="editMeta" />
-      </div>
+      <StudioButton
+        v-if="canEditStory"
+        label="Edit"
+        variant="outline"
+        @click="editMeta"
+      />
     </template>
     <template #controls>
-      <div
-        class="mb-4 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
-      >
-        <div class="flex gap-x-4">
-          <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
+      <div class="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+        <div class="flex flex-wrap items-center gap-3">
+          <GlassButton
+            label="Live"
+            :count="liveCount"
+            :active="currentTab === 'Live'"
+            @click="onFilter('Live')"
+          />
+          <GlassButton
+            label="Draft"
+            :count="draftCount"
+            :active="currentTab === 'Draft'"
+            @click="onFilter('Draft')"
+          />
 
-          <AddItemButton
+          <StudioButton
             v-if="addStatus == AddStatus.Add"
             :label="story.chapterType"
-            @add="addDraft"
-          />
+            variant="outline"
+            @click="addDraft"
+          >
+            <Plus class="size-4" aria-hidden="true" />
+          </StudioButton>
           <button
             v-if="addStatus == AddStatus.Wait"
             type="button"
-            class="inline-flex items-center rounded-xl bg-indigo-50 px-3 py-[9px] text-sm font-medium leading-4 text-indigo-700 shadow-sm"
+            class="font-dmsans inline-flex items-center rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-500"
             disabled
           >
             {{ `No more ${story.chapterType}s available to translate` }}
           </button>
         </div>
 
-        <div class="grid grid-cols-1">
-          <input
-            id="search"
-            v-model="filterNumber"
-            type="text"
-            name="search"
-            class="col-start-1 row-start-1 block w-full rounded-xl bg-white py-1.5 pl-10 pr-3 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:pl-9 sm:text-sm/6"
-            :placeholder="story.chapterType"
-          />
-          <Icon
-            name="search"
-            class="pointer-events-none col-start-1 row-start-1 ml-4 size-4 self-center text-gray-400"
-          />
+        <div ref="searchContainer" class="flex items-center gap-3">
+          <div v-if="showSearch" class="relative">
+            <input
+              id="search"
+              ref="searchInput"
+              v-model="filterNumber"
+              type="text"
+              name="search"
+              class="block w-48 rounded-xl bg-white py-2 pl-9 pr-3 text-sm text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"
+              :placeholder="story.chapterType"
+              @keydown.escape="closeSearch"
+            />
+            <Search
+              class="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-gray-400"
+              aria-hidden="true"
+            />
+          </div>
+          <button
+            type="button"
+            class="rounded-xl p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700"
+            :class="{ 'bg-gray-100 text-gray-900': showSearch }"
+            aria-label="Search"
+            :aria-expanded="showSearch"
+            @click="toggleSearch"
+          >
+            <Search class="size-4" aria-hidden="true" />
+          </button>
+          <ListSwitcher :is-list="isList" @toggle="isList = !isList" />
         </div>
       </div>
     </template>
@@ -74,15 +102,14 @@
 
 <script setup lang="ts">
 import { router } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { Plus, Search } from '@lucide/vue';
+import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue';
 
 import { IndexReadyItem, SharedPageProps, StoryIndexProps, AddStatus } from '../../types';
-import AddItemButton from '../shared/add-item-button.vue';
-import ListSwitcher from '../shared/list-switcher.vue';
 import AppLayout from '../shared/app-layout.vue';
-import Icon from '../shared/icon.vue';
-import IconButton from '../shared/icon-button.vue';
-import IndexFilter from '../shared/index-filter.vue';
+import GlassButton from '../shared/glass-button.vue';
+import ListSwitcher from '../shared/list-switcher.vue';
+import StudioButton from '../shared/studio-button.vue';
 import { useSharedStore } from '../store';
 import IndexCard from './components/index-card.vue';
 
@@ -94,9 +121,19 @@ shared.setFromProps(props);
 shared.setCurrentStoryName(props.story.name);
 
 const isList = ref(false);
-
+const showSearch = ref(false);
 const filterNumber = ref<string | null>(null);
 const currentTab = ref('Live');
+const searchInput = ref<HTMLInputElement | null>(null);
+const searchContainer = ref<HTMLElement | null>(null);
+
+const liveCount = computed(
+  () => props.index.filter((item) => item.tags.includes('Live')).length,
+);
+
+const draftCount = computed(
+  () => props.index.filter((item) => item.tags.includes('Draft')).length,
+);
 
 const addDraft = () =>
   router.get(`/${shared.locale}/story/${props.story.id}/draft/create`);
@@ -116,25 +153,8 @@ const filteredIndex = computed(() => {
   });
 });
 
-const tabs = computed(() => {
-  const liveCount = props.index.reduce(
-    (carry, item) => (item.tags.includes('Live') ? carry + 1 : carry),
-    0,
-  );
-
-  const draftCount = props.index.reduce(
-    (carry, item) => (item.tags.includes('Draft') ? carry + 1 : carry),
-    0,
-  );
-
-  return [
-    { label: 'Live', count: liveCount },
-    { label: 'Drafts', count: draftCount },
-  ];
-});
-
 const onTap = (item: IndexReadyItem) => {
-  if (currentTab.value == 'Drafts') {
+  if (currentTab.value === 'Draft') {
     router.get(`/${shared.locale}/story/${props.story.id}/draft/${item.number}/edit`);
   } else {
     router.get(`/${shared.locale}/story/${props.story.id}/chapter/${item.number}`);
@@ -142,4 +162,37 @@ const onTap = (item: IndexReadyItem) => {
 };
 
 const editMeta = () => router.get(`/${shared.locale}/story/${props.story.id}/edit`);
+
+const closeSearch = () => {
+  showSearch.value = false;
+  filterNumber.value = null;
+};
+
+const toggleSearch = async () => {
+  showSearch.value = !showSearch.value;
+
+  if (showSearch.value) {
+    await nextTick();
+    searchInput.value?.focus();
+  } else {
+    filterNumber.value = null;
+  }
+};
+
+const onClickOutside = (event: MouseEvent) => {
+  if (!showSearch.value) return;
+
+  const target = event.target as Node;
+  if (searchContainer.value && !searchContainer.value.contains(target)) {
+    closeSearch();
+  }
+};
+
+onMounted(() => {
+  document.addEventListener('click', onClickOutside);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', onClickOutside);
+});
 </script>
