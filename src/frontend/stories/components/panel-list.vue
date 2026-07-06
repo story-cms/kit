@@ -24,7 +24,7 @@
               class="cursor-move text-gray-400 disabled:cursor-not-allowed disabled:opacity-40"
               aria-label="Reorder section"
             >
-              <Icon name="drag" class="h-5 w-5" />
+              <Icon name="drag" class="size-4" />
             </button>
             <span
               v-if="headerIcon"
@@ -34,9 +34,9 @@
               <component
                 :is="headerIcon"
                 v-if="isLucideIcon(headerIcon)"
-                class="h-5 w-5"
+                class="size-4"
               />
-              <Icon v-else :name="headerIcon" class="h-5 w-5" />
+              <Icon v-else :name="headerIcon" class="size-4" />
             </span>
             <button
               type="button"
@@ -46,40 +46,30 @@
               <span>{{ sectionTitle(index) }}</span>
             </button>
           </div>
-          <div class="flex items-center justify-center gap-x-3">
+          <div class="flex items-center justify-center gap-1">
             <div v-if="itemHasError(index)" class="text-error">
               <Icon name="exclamation" class="size-5" aria-hidden="true" />
             </div>
             <button
               v-if="!shared.isTranslation"
               type="button"
-              class="inline-flex h-8 w-8 shrink-0 items-center justify-center"
+              class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
+              aria-label="Delete section"
               @click="onDelete(index)"
             >
-              <Icon name="trash" class="size-5 hover:text-error" />
+              <Trash2 class="size-4" aria-hidden="true" />
             </button>
             <button
               type="button"
-              class="inline-flex size-8 items-center justify-center text-gray-500 hover:bg-gray-50"
+              class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+              :aria-label="isExpanded(index) ? 'Collapse section' : 'Expand section'"
               @click="toggle(index)"
             >
-              <span>
-                <svg
-                  class="size-5 origin-center transition-transform duration-200 ease-out"
-                  :class="[isExpanded(index) ? 'rotate-180' : '']"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M15 12.5L10 7.5L5 12.5"
-                    stroke="currentColor"
-                    stroke-width="1.66667"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </span>
+              <ChevronDown
+                class="size-4 origin-center transition-transform duration-200 ease-out"
+                :class="{ 'rotate-180': isExpanded(index) }"
+                aria-hidden="true"
+              />
             </button>
           </div>
         </div>
@@ -157,7 +147,7 @@ import type { Component, PropType } from 'vue';
 import type { FieldSpec } from '../../../types';
 import { commonProps, isLucideIcon } from '../../shared/helpers';
 import { useModelStore, useSharedStore, useWidgetsStore } from '../../store';
-import { Plus } from '@lucide/vue';
+import { ChevronDown, Plus, Trash2 } from '@lucide/vue';
 import Icon from '../../shared/icon.vue';
 
 const props = defineProps({
