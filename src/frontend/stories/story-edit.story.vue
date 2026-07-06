@@ -15,7 +15,7 @@
       />
     </Variant>
 
-    <Variant title="Save and publish" :setup-app="loadNormalData">
+    <Variant title="Save draft" :setup-app="loadNormalData">
       <StoryEdit
         :config="sharedProps.config"
         :user="sharedProps.user"
@@ -45,7 +45,7 @@
       />
     </Variant>
 
-    <Variant title="Delete, save and publish" :setup-app="loadNormalData">
+    <Variant title="Delete and save draft" :setup-app="loadNormalData">
       <StoryEdit
         :config="sharedProps.config"
         :user="sharedProps.user"
@@ -401,9 +401,8 @@ Saving posts attached resource IDs to the story localisation.
 ## Variants
 
 - **Save changes** — published story with content; shows Save Changes only (`secondary`)
-- **Save and publish** — unpublished story with content; shows Save Changes (`secondary`) and Publish (`green`)
 - **Delete and save** — empty story, published; shows Delete (`red`) and Save Changes (`secondary`)
-- **Delete, save and publish** — empty story, unpublished; shows Delete (`red`), Save Changes (`secondary`), and Publish (`green`)
+- **Delete and save draft** — empty story, unpublished; shows Delete (`red`) and Save Changes (`secondary`)
 - **Without sections** — English source locale with no sections; Sections tab shows empty state message
 - **Validation errors on tabs** — failed publish validation; Details and Sections tabs show error indicators and inline field messages
 - **Translation locale** — Spanish edit with English source column; tags prefilled from source on Details tab

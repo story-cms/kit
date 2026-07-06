@@ -75,8 +75,12 @@ export class StoryCreateValidator {
 export class StoryUpdateValidator {
   protected isPublished: boolean;
 
-  constructor(protected ctx: HttpContext) {
-    this.isPublished = ctx.request.input('isPublished') === true;
+  constructor(
+    protected ctx: HttpContext,
+    options?: { publishing?: boolean },
+  ) {
+    this.isPublished =
+      options?.publishing === true || ctx.request.input('isPublished') === true;
   }
 
   validate(data: any): Promise<any> {

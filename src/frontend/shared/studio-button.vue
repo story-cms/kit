@@ -1,5 +1,30 @@
 <template>
+  <span
+    v-if="tooltip"
+    class="relative inline-flex group"
+    :class="{ 'cursor-not-allowed': disabled }"
+  >
+    <span class="inline-flex" :class="{ 'pointer-events-none': disabled }">
+      <button
+        type="button"
+        class="font-dmsans inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-[15px] font-semibold leading-5 tracking-[-0.15px] transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+        :class="variantClasses"
+        :disabled="disabled"
+        @click="emit('click')"
+      >
+        <slot />
+        {{ label }}
+      </button>
+    </span>
+    <span
+      role="tooltip"
+      class="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 hidden w-max max-w-xs -translate-x-1/2 rounded-lg bg-gray-900 px-3 py-2 text-center text-xs font-medium leading-5 text-white group-hover:block"
+    >
+      {{ tooltip }}
+    </span>
+  </span>
   <button
+    v-else
     type="button"
     class="font-dmsans inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-[15px] font-semibold leading-5 tracking-[-0.15px] transition-colors disabled:cursor-not-allowed disabled:opacity-50"
     :class="variantClasses"
@@ -28,10 +53,12 @@ const props = withDefaults(
     label: string;
     variant?: StudioButtonVariant;
     disabled?: boolean;
+    tooltip?: string;
   }>(),
   {
     variant: 'primary',
     disabled: false,
+    tooltip: undefined,
   },
 );
 

@@ -4,6 +4,12 @@ export {
   standardAudienceKeys,
 } from '../../shared/audience_helpers.js';
 
+export {
+  canPublishStory,
+  missingPublishedChapters,
+  publishBlockedMessage,
+} from '../../shared/story_helpers.js';
+
 export const getCredentialsFrom = (key: string): any => {
   const credentialsBase64 = process.env[key] || '';
   if (!credentialsBase64) {

@@ -16,13 +16,6 @@
         :disabled="isSaving"
         @click="saveStory"
       />
-      <StudioButton
-        v-if="!isPublished"
-        label="Publish"
-        variant="green"
-        :disabled="isSaving"
-        @click="publishStory"
-      />
     </template>
     <template #controls>
       <TabNavigation
@@ -117,8 +110,6 @@ if (attachResourceId) {
   }
 }
 
-const isPublished = computed(() => props.model.isPublished);
-
 if (shared.isTranslation) {
   model.setSource(props.source ?? {});
 }
@@ -207,56 +198,20 @@ const deleteStory = () => {
   });
 };
 
-const getPayload = (forPublish: boolean = false) => {
-  const askingIsPublished = forPublish ? true : model.getField('isPublished', false);
-  return {
-    title: model.getField('title', ''),
-    coverImage: model.getField('coverImage', ''),
-    chapterLimit: model.getField('chapterLimit', 0),
-    storyType: model.getField('storyType', ''),
-    chapterType: model.getField('chapterType', ''),
-    sectionType: model.getField('sectionType', ''),
-    tags: model.getField('tags', ''),
-    description: model.getField('description', ''),
-    visibility: model.getField('visibility', ''),
-    sections: model.getField('sections', []),
-    resources: resourceIds(attachedResources.value),
-    isPublished: askingIsPublished,
-  };
-};
-
-const publishStory = () => {
-  if (isPublished.value) return;
-
-  shared.clearErrors();
-  isSaving.value = true;
-
-  router.post(`/${shared.locale}/story/${props.model.id}`, getPayload(true), {
-    preserveScroll: true,
-
-    onSuccess: (page) => {
-      const flashError = (page.props as { flash?: { error?: string } }).flash?.error;
-      if (flashError) {
-        shared.addMessage(ResponseStatus.Failure, flashError);
-        return;
-      }
-      shared.addMessage(ResponseStatus.Confirmation, 'Story published successfully!');
-    },
-
-    onError: (validationErrors) => {
-      shared.setErrors(validationErrors);
-      focusFirstErroredTab();
-      shared.addMessage(
-        ResponseStatus.Failure,
-        validationFailureMessage(validationErrors),
-      );
-    },
-
-    onFinish: () => {
-      isSaving.value = false;
-    },
-  });
-};
+const getPayload = () => ({
+  title: model.getField('title', ''),
+  coverImage: model.getField('coverImage', ''),
+  chapterLimit: model.getField('chapterLimit', 0),
+  storyType: model.getField('storyType', ''),
+  chapterType: model.getField('chapterType', ''),
+  sectionType: model.getField('sectionType', ''),
+  tags: model.getField('tags', ''),
+  description: model.getField('description', ''),
+  visibility: model.getField('visibility', ''),
+  sections: model.getField('sections', []),
+  resources: resourceIds(attachedResources.value),
+  isPublished: model.getField('isPublished', false),
+});
 
 const saveStory = () => {
   shared.clearErrors();

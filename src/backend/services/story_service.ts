@@ -8,7 +8,7 @@ import Index from '../models/index.js';
 import Story from '../models/story.js';
 import StoryLocalisation, { emptyTranslation } from '../models/story_localisation.js';
 import StoryDeleteException from '../exceptions/story_delete_exception.js';
-import { slugify } from './helpers.js';
+import { slugify, publishBlockedMessage } from './helpers.js';
 import { ResourceService } from './resource_service.js';
 import type {
   CmsConfig,
@@ -18,6 +18,7 @@ import type {
   StoryIndexItem,
   StorySection,
   StorySpec,
+  StoryUpdatePayload,
   StoryVersion,
   Providers,
   ResourceItem,
@@ -43,17 +44,18 @@ export class StoryService {
   }
 
   public async blockingPublishMessages(story: Story): Promise<string[]> {
-    const collected: string[] = [];
     const sourceChapters = await Chapter.query()
       .where('storyId', story.id)
       .where('locale', this.config.languages[0].locale);
-    const missingChapters = story.chapterLimit - (sourceChapters?.length ?? 0);
-    if (missingChapters > 0)
-      collected.push(
-        `You need to add ${missingChapters} more ${story.chapterType}s to your ${story.storyType}.`,
-      );
 
-    return collected;
+    const message = publishBlockedMessage(
+      sourceChapters?.length ?? 0,
+      story.chapterLimit,
+      story.chapterType,
+      story.storyType,
+    );
+
+    return message ? [message] : [];
   }
 
   async blockingDeleteMessages(storyId: number): Promise<string[]> {
@@ -179,6 +181,50 @@ export class StoryService {
     }
 
     return props;
+  }
+
+  public async buildUpdatePayload(
+    storyId: number,
+    locale: string,
+  ): Promise<StoryUpdatePayload | undefined> {
+    const sourceLocale = this.config.languages[0].locale;
+
+    const story = await Story.query()
+      .where('id', storyId)
+      .preload('localisations', (localisationsQuery) => {
+        localisationsQuery.whereIn('locale', [locale, sourceLocale]);
+      })
+      .first();
+
+    if (!story) return undefined;
+
+    const target = story.localisations.find(
+      (localisation) => localisation.locale === locale,
+    ) ?? { ...emptyTranslation };
+    const source = story.localisations.find(
+      (localisation) => localisation.locale === sourceLocale,
+    ) ?? { ...emptyTranslation };
+
+    if (locale !== sourceLocale && !target.coverImage) {
+      target.coverImage = source.coverImage;
+    }
+
+    if (locale !== sourceLocale && !target.tags) {
+      target.tags = source.tags;
+    }
+
+    const targetFields = this.localisationFields(target);
+
+    return {
+      ...targetFields,
+      chapterLimit: story.chapterLimit,
+      storyType: story.storyType,
+      chapterType: story.chapterType,
+      sectionType: story.sectionType ?? null,
+      visibility: story.visibility,
+      resources: target.resources ?? [],
+      isPublished: story.isPublished,
+    };
   }
 
   public async prepSections(
@@ -356,6 +402,7 @@ export class StoryService {
       chapterType: story.chapterType,
       storyType: story.storyType,
       schemaVersion: 1,
+      isPublished: story.isPublished,
       fields: this.fieldsFromTemplate(story.template),
       sections: localisation?.sections ?? [],
     };

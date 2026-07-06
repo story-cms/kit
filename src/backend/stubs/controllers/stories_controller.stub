@@ -132,11 +132,67 @@ export default class StoriesController {
       }
     }
 
+    await this.applyStoryUpdate(ctx, storyService, version, payload);
+
+    return ctx.response.redirect().back();
+  }
+
+  /**
+   * Publish an existing story using its saved metadata
+   * @param ctx HttpContext
+   * @returns Inertia page name
+   */
+  public async publish(ctx: HttpContext) {
+    const storyService = new StoryService(cms.config);
+    const { story, version } = await storyService.parsePath(ctx);
+    if (story === undefined) return ctx.response.notFound();
+    if (story.isPublished) return ctx.response.redirect().back();
+
+    const payload = await storyService.buildUpdatePayload(version.storyId, version.locale);
+    if (!payload) return ctx.response.notFound();
+
+    payload.isPublished = true;
+
+    const model = await Story.findOrFail(version.storyId);
+    const messages = await storyService.blockingPublishMessages(model);
+    if (messages.length > 0) {
+      ctx.session.flash('errorsBag', { other: messages.join(' | ') });
+      return ctx.response.redirect().back();
+    }
+
+    const validator = new StoryUpdateValidator(ctx, { publishing: true });
+    const validated = await validator.validate(payload);
+
+    await this.applyStoryUpdate(ctx, storyService, version, validated.bundle);
+
+    return ctx.response.redirect().back();
+  }
+
+  private async applyStoryUpdate(
+    ctx: HttpContext,
+    storyService: StoryService,
+    version: { storyId: number; locale: string },
+    payload: {
+      isPublished: boolean;
+      chapterLimit: number;
+      storyType: string;
+      chapterType: string;
+      sectionType: string | null;
+      visibility: string;
+      title: string;
+      coverImage: string;
+      description: string;
+      tags: string | null;
+      sections: Array<{ id?: string; title: string; description?: string }>;
+      resources?: string[];
+    },
+  ) {
     const sections = await storyService.prepSections(version, payload.sections);
 
     await db.transaction(async (trx) => {
       // update the story if it's the source locale
       if (version.locale === cms.config.languages[0].locale) {
+        const story = await Story.findOrFail(version.storyId);
         story.merge({
           isPublished: payload.isPublished,
           chapterLimit: Number(payload.chapterLimit),
@@ -177,8 +233,6 @@ export default class StoriesController {
         await created.save();
       }
     });
-
-    return ctx.response.redirect().back();
   }
 
   /**
