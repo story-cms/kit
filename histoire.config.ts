@@ -52,40 +52,24 @@ export default defineConfig({
         title: '', // No toggle
       },
       {
-        id: 'widgets',
-        title: 'Field Widgets',
-      },
-      {
         id: 'dashboard',
         title: 'Dashboard',
       },
       {
-        id: 'stories',
-        title: 'Stories',
-      },
-      {
-        id: 'resources',
-        title: 'Resources',
-      },
-      {
-        id: 'streams',
-        title: 'Streams',
-      },
-      {
-        id: 'pages',
-        title: 'Pages',
+        id: 'widgets',
+        title: 'Field Widgets',
       },
       {
         id: 'invitation',
         title: 'Invitation',
       },
       {
-        id: 'interface',
-        title: 'UI',
+        id: 'pages',
+        title: 'Pages',
       },
       {
-        id: 'team',
-        title: 'Team',
+        id: 'resources',
+        title: 'Resources',
       },
       {
         id: 'settings',
@@ -94,6 +78,22 @@ export default defineConfig({
       {
         id: 'shared',
         title: 'Shared',
+      },
+      {
+        id: 'stories',
+        title: 'Stories',
+      },
+      {
+        id: 'streams',
+        title: 'Streams',
+      },
+      {
+        id: 'team',
+        title: 'Team',
+      },
+      {
+        id: 'interface',
+        title: 'UI',
       },
     ],
   },

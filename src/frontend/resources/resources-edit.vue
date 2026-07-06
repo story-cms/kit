@@ -233,6 +233,12 @@ const resourceTypes: {
   icon: Component;
 }[] = [
   {
+    value: 'text',
+    label: 'Article',
+    description: 'Write a rich-text article',
+    icon: FileText,
+  },
+  {
     value: 'url',
     label: 'URL',
     description: 'Link to an external website or resource',
@@ -243,12 +249,6 @@ const resourceTypes: {
     label: 'Video',
     description: 'Upload a video file',
     icon: Video,
-  },
-  {
-    value: 'text',
-    label: 'Article',
-    description: 'Write a rich-text article',
-    icon: FileText,
   },
 ];
 
