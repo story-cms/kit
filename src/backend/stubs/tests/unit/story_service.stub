@@ -104,6 +104,36 @@ test.group('Story service', (group) => {
     assert.isUndefined(props);
   });
 
+  test('editProps labels bespoke templates with (custom) suffix', async ({ assert }) => {
+    const story = await StoryFactory.with('localisations').create();
+    const config = createCustomCmsConfig({
+      bespokeTemplates: [
+        {
+          id: 'course',
+          name: 'Course',
+          fields: [{ name: 'title', label: 'Title', widget: 'string' }],
+        },
+      ],
+      storyTemplates: [
+        {
+          id: 'devotion',
+          name: 'Devotion',
+          fields: [{ name: 'title', label: 'Title', widget: 'string' }],
+        },
+      ],
+    });
+    const service = new StoryService(config);
+    const props = await service.editProps(
+      createMockHttpContext({ storyId: story.id, locale: sourceLocale }),
+    );
+
+    assert.isDefined(props);
+    assert.equal(props!.templates[0].id, 'course');
+    assert.equal(props!.templates[0].name, 'Course (custom)');
+    assert.equal(props!.templates[1].id, 'devotion');
+    assert.equal(props!.templates[1].name, 'Devotion');
+  });
+
   test('createProps returns props on the source locale', async ({ assert }) => {
     const config = createCustomCmsConfig({
       storyTemplates: [

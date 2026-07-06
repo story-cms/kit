@@ -11,6 +11,7 @@ import StoryDeleteException from '../exceptions/story_delete_exception.js';
 import { slugify, publishBlockedMessage } from './helpers.js';
 import { ResourceService } from './resource_service.js';
 import type {
+  BundleTemplate,
   CmsConfig,
   FieldSpec,
   StoryCreateProps,
@@ -168,7 +169,7 @@ export class StoryService {
       },
       availableResources,
       hasNoContent,
-      templates: [...this.config.bespokeTemplates, ...this.config.storyTemplates],
+      templates: this.templatesForEditDisplay(),
       providers: configService.get<Providers>('providers')!,
     };
 
@@ -425,6 +426,24 @@ export class StoryService {
       tags: local.tags ?? null,
       sections: local.sections ?? [],
     };
+  }
+
+  private formatBespokeTemplateForDisplay(template: BundleTemplate): BundleTemplate {
+    return {
+      ...template,
+      name: template.name.endsWith(' (custom)')
+        ? template.name
+        : `${template.name} (custom)`,
+    };
+  }
+
+  private templatesForEditDisplay(): BundleTemplate[] {
+    return [
+      ...this.config.bespokeTemplates.map((template) =>
+        this.formatBespokeTemplateForDisplay(template),
+      ),
+      ...this.config.storyTemplates,
+    ];
   }
 
   protected fieldsFromTemplate(id: string): FieldSpec[] {
