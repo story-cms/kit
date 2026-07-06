@@ -347,7 +347,7 @@ export interface StoryCreateProps {
     title: string;
     coverImage: string;
     description: string;
-    chapterLimit: number;
+    chapterLimit: number | null;
     tags: string | null;
     storyType: string;
     chapterType: string;

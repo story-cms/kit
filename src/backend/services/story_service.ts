@@ -98,7 +98,7 @@ export class StoryService {
 
     return {
       model: {
-        chapterLimit: 10,
+        chapterLimit: null,
         storyType: '',
         chapterType: '',
         sectionType: null,
