@@ -77,6 +77,7 @@ function createStorySpec(id: number, fields = simpleFields): StorySpec {
     chapterLimit: 100,
     chapterType: 'chapter',
     storyType: 'story',
+    visibility: 'public',
     schemaVersion: 1,
     isPublished: true,
     fields,

@@ -454,6 +454,7 @@ export const story: StorySpec = {
   chapterLimit: 42,
   chapterType: 'Episode',
   storyType: 'Book',
+  visibility: 'public',
   schemaVersion: 1,
   isPublished: true,
   fields: [

@@ -8,7 +8,12 @@ import Index from '../models/index.js';
 import Story from '../models/story.js';
 import StoryLocalisation, { emptyTranslation } from '../models/story_localisation.js';
 import StoryDeleteException from '../exceptions/story_delete_exception.js';
-import { slugify, publishBlockedMessage } from './helpers.js';
+import {
+  slugify,
+  publishBlockedMessage,
+  storyMetadataBlockedMessages,
+  type StoryPublishMetadata,
+} from './helpers.js';
 import { ResourceService } from './resource_service.js';
 import type {
   BundleTemplate,
@@ -44,19 +49,29 @@ export class StoryService {
     return { storyId: Number.parseInt(ctx.params.storyId), locale: ctx.params.locale };
   }
 
-  public async blockingPublishMessages(story: Story): Promise<string[]> {
+  public async blockingPublishMessages(
+    story: Story,
+    metadata?: StoryPublishMetadata,
+  ): Promise<string[]> {
     const sourceChapters = await Chapter.query()
       .where('storyId', story.id)
       .where('locale', this.config.languages[0].locale);
 
-    const message = publishBlockedMessage(
+    const messages: string[] = [];
+
+    const chapterMessage = publishBlockedMessage(
       sourceChapters?.length ?? 0,
       story.chapterLimit,
       story.chapterType,
       story.storyType,
     );
+    if (chapterMessage) messages.push(chapterMessage);
 
-    return message ? [message] : [];
+    if (metadata) {
+      messages.push(...storyMetadataBlockedMessages(metadata));
+    }
+
+    return messages;
   }
 
   async blockingDeleteMessages(storyId: number): Promise<string[]> {
@@ -407,6 +422,7 @@ export class StoryService {
       chapterLimit: story.chapterLimit,
       chapterType: story.chapterType,
       storyType: story.storyType,
+      visibility: story.visibility,
       schemaVersion: 1,
       isPublished: story.isPublished,
       fields: this.fieldsFromTemplate(story.template),

@@ -242,6 +242,7 @@ export interface StorySpec {
   chapterLimit: number;
   chapterType: string;
   storyType: string;
+  visibility: string;
   schemaVersion: number;
   isPublished: boolean;
   fields: FieldSpec[];

@@ -237,6 +237,17 @@ test.describe('Story Validator', () => {
         await expect(validator.validate(data)).rejects.toThrow();
       });
 
+      test('requires story type', async () => {
+        const data = {
+          ...validPublishUpdateData,
+          storyType: '',
+        };
+        const ctx = createMockHttpContext(data);
+        const validator = new StoryUpdateValidator(ctx);
+
+        await expect(validator.validate(data)).rejects.toThrow();
+      });
+
       test('requires sections', async () => {
         const data = {
           ...validPublishUpdateData,

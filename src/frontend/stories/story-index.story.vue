@@ -48,6 +48,18 @@
         :can-edit-story="true"
       />
     </Variant>
+    <Variant title="Missing metadata" :setup-app="miniSidebar">
+      <StoryIndex
+        :index="readyToPublishIndex"
+        :config="sharedProps.config"
+        :user="user"
+        :language="sharedProps.language"
+        :add-status="AddStatus.Add"
+        :story="missingMetadataStory"
+        :bookmarks="sharedProps.bookmarks"
+        :can-edit-story="true"
+      />
+    </Variant>
   </Story>
 </template>
 
@@ -68,6 +80,7 @@ const storyMock: StorySpec = {
   chapterLimit: 42,
   chapterType: 'Day',
   storyType: 'Edition',
+  visibility: 'public',
   schemaVersion: 1,
   isPublished: false,
   fields: [],
@@ -112,6 +125,12 @@ const missingChaptersStory: StorySpec = {
   ...readyToPublishStory,
 };
 
+const missingMetadataStory: StorySpec = {
+  ...readyToPublishStory,
+  coverImage: '',
+  storyType: '',
+};
+
 const readyToPublishIndex = indexWithLiveCount(5, 5);
 const missingChaptersIndex = indexWithLiveCount(3, 5);
 
@@ -140,4 +159,5 @@ const indexItems: IndexReadyItem[] = [
 - **Published** — Edit only; Publish hidden
 - **Ready to publish** — 5 Live items matching a chapter limit of 5; Publish enabled
 - **Missing chapters** — 3 Live items with a chapter limit of 5; Publish disabled with a `StudioButton` tooltip explaining how many chapters are still needed.
+- **Missing metadata** — 5 Live items matching chapter limit, but blank cover image and story type; Publish disabled with a metadata tooltip.
 </docs>

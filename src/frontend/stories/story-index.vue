@@ -12,7 +12,7 @@
         label="Publish"
         variant="green"
         :tooltip="publishBlockedReason ?? undefined"
-        :disabled="isPublishing || !canPublishStoryReady"
+        :disabled="isPublishing || !canPublishStoryReadyState"
         @click="publishStory"
       />
     </template>
@@ -122,7 +122,7 @@ import {
   AddStatus,
   ResponseStatus,
 } from '../../types';
-import { canPublishStory, publishBlockedMessage } from '../../shared/story_helpers';
+import { canPublishStoryReady, storyPublishBlockedMessage } from '../../shared/story_helpers';
 import AppLayout from '../shared/app-layout.vue';
 import ExpandableSearch from '../shared/expandable-search.vue';
 import GlassButton from '../shared/glass-button.vue';
@@ -152,16 +152,23 @@ const draftCount = computed(
   () => props.index.filter((item) => item.tags.includes('Draft')).length,
 );
 
-const canPublishStoryReady = computed(() =>
-  canPublishStory(liveCount.value, props.story.chapterLimit),
+const publishMetadata = computed(() => ({
+  title: props.story.name,
+  coverImage: props.story.coverImage,
+  storyType: props.story.storyType,
+  chapterType: props.story.chapterType,
+  visibility: props.story.visibility,
+}));
+
+const canPublishStoryReadyState = computed(() =>
+  canPublishStoryReady(liveCount.value, props.story.chapterLimit, publishMetadata.value),
 );
 
 const publishBlockedReason = computed(() =>
-  publishBlockedMessage(
+  storyPublishBlockedMessage(
     liveCount.value,
     props.story.chapterLimit,
-    props.story.chapterType,
-    props.story.storyType,
+    publishMetadata.value,
   ),
 );
 
@@ -211,7 +218,7 @@ const validationFailureMessage = (validationErrors: Record<string, string | stri
     : 'Something went wrong. Please try again.';
 
 const publishStory = () => {
-  if (props.story.isPublished || !canPublishStoryReady.value) return;
+  if (props.story.isPublished || !canPublishStoryReadyState.value) return;
 
   shared.clearErrors();
   isPublishing.value = true;

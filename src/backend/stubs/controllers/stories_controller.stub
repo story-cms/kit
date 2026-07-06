@@ -126,7 +126,13 @@ export default class StoriesController {
     const story = await Story.findOrFail(version.storyId);
 
     if (payload.isPublished) {
-      const messages = await storyService.blockingPublishMessages(story);
+      const messages = await storyService.blockingPublishMessages(story, {
+        title: payload.title,
+        coverImage: payload.coverImage,
+        storyType: payload.storyType,
+        chapterType: payload.chapterType,
+        visibility: payload.visibility,
+      });
       if (messages.length > 0) {
         ctx.session.flash('errorsBag', { other: messages.join(' | ') });
         return ctx.response.redirect().back();
@@ -155,7 +161,13 @@ export default class StoriesController {
     payload.isPublished = true;
 
     const model = await Story.findOrFail(version.storyId);
-    const messages = await storyService.blockingPublishMessages(model);
+    const messages = await storyService.blockingPublishMessages(model, {
+      title: payload.title,
+      coverImage: payload.coverImage,
+      storyType: payload.storyType,
+      chapterType: payload.chapterType,
+      visibility: payload.visibility,
+    });
     if (messages.length > 0) {
       ctx.session.flash('errorsBag', { other: messages.join(' | ') });
       return ctx.response.redirect().back();
