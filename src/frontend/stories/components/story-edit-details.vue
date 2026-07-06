@@ -1,14 +1,22 @@
 <template>
   <div class="form-panel space-y-6">
-    <div v-if="isTranslation" class="grid grid-cols-2 gap-x-4">
-      <StringField :field="titleField" :is-nested="true" />
-      <StringField :field="titleField" :is-nested="true" :is-read-only="true" />
+    <div v-if="isTranslation" class="grid grid-cols-2 gap-x-4" dir="ltr">
+      <div :dir="translationDir">
+        <StringField :field="titleField" :is-nested="true" />
+      </div>
+      <div dir="ltr">
+        <StringField :field="titleField" :is-nested="true" :is-read-only="true" />
+      </div>
     </div>
     <StringField v-else :field="titleField" :is-nested="true" />
 
-    <div v-if="isTranslation" class="grid grid-cols-2 gap-x-4">
-      <ImageField :field="coverImageField" :is-nested="true" />
-      <ImageField :field="coverImageField" :is-nested="true" :is-read-only="true" />
+    <div v-if="isTranslation" class="grid grid-cols-2 gap-x-4" dir="ltr">
+      <div :dir="translationDir">
+        <ImageField :field="coverImageField" :is-nested="true" />
+      </div>
+      <div dir="ltr">
+        <ImageField :field="coverImageField" :is-nested="true" :is-read-only="true" />
+      </div>
     </div>
     <ImageField v-else :field="coverImageField" :is-nested="true" />
 
@@ -23,15 +31,23 @@
       :is-nested="true"
     />
 
-    <div v-if="isTranslation" class="grid grid-cols-2 gap-x-4">
-      <MarkdownField :field="descriptionField" :is-nested="true" />
-      <MarkdownField :field="descriptionField" :is-nested="true" :is-read-only="true" />
+    <div v-if="isTranslation" class="grid grid-cols-2 gap-x-4" dir="ltr">
+      <div :dir="translationDir">
+        <MarkdownField :field="descriptionField" :is-nested="true" />
+      </div>
+      <div dir="ltr">
+        <MarkdownField :field="descriptionField" :is-nested="true" :is-read-only="true" />
+      </div>
     </div>
     <MarkdownField v-else :field="descriptionField" :is-nested="true" />
 
-    <div v-if="isTranslation" class="grid grid-cols-2 gap-x-4">
-      <TagField :field="tagsField" :is-nested="true" />
-      <TagField :field="tagsField" :is-nested="true" :is-read-only="true" />
+    <div v-if="isTranslation" class="grid grid-cols-2 gap-x-4" dir="ltr">
+      <div :dir="translationDir">
+        <TagField :field="tagsField" :is-nested="true" />
+      </div>
+      <div dir="ltr">
+        <TagField :field="tagsField" :is-nested="true" :is-read-only="true" />
+      </div>
     </div>
     <TagField v-else :field="tagsField" :is-nested="true" />
 
@@ -67,7 +83,7 @@ import { Crown, FileText, Globe, User } from '@lucide/vue';
 import type { Component } from 'vue';
 
 import type { BundleTemplate, FieldSpec, VisibilityType } from '../../../types';
-import { useModelStore } from '../../store';
+import { useModelStore, useSharedStore } from '../../store';
 import MarkdownField from '../../fields/markdown-field.vue';
 import StringField from '../../fields/string-field.vue';
 import ImageField from '../../fields/image-field.vue';
@@ -85,6 +101,9 @@ const props = withDefaults(
 );
 
 const model = useModelStore();
+const shared = useSharedStore();
+
+const translationDir = computed(() => (shared.isRtl ? 'rtl' : 'ltr'));
 
 const visibility = ref<VisibilityType>(
   model.getField('visibility', 'public') as VisibilityType,

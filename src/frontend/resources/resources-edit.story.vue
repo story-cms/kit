@@ -76,6 +76,17 @@
         v-bind="mockNewResourceEdit"
       />
     </Variant>
+
+    <Variant title="Arabic locale" :setup-app="miniSidebar">
+      <ResourcesEdit
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="arabicLanguage"
+        :errors="sharedProps.errors"
+        :bookmarks="sharedProps.bookmarks"
+        v-bind="mockArabicEditTextResource"
+      />
+    </Variant>
   </Story>
 </template>
 
@@ -92,4 +103,27 @@ import {
   mockEditUrlLinkResourceEmptyUsages,
   mockResourceEditErrors,
 } from '../test/mocks';
+import type { LanguageSpecification, ResourceEditProps } from '../../types';
+
+const arabicLanguage: LanguageSpecification = {
+  locale: 'ar',
+  language: 'Arabic - عربى',
+  languageDirection: 'rtl',
+};
+
+const mockArabicEditTextResource: ResourceEditProps = {
+  ...mockEditTextResourceWithUsages,
+  bundle: {
+    ...mockEditTextResourceWithUsages.bundle,
+    title: 'المشكلة الإنجيلية التوافقية',
+    description: 'مقدمة موجزة للمشكلة الإنجيلية التوافقية.',
+    label: 'قراءة تكميلية',
+    content:
+      '## نظرة عامة\n\nتقدّم هذه المقالة المشكلة الإنجيلية التوافقية وتقارن بين الفرضيات العلمية الرئيسية.\n\n- فرضية المصدرين\n- فرضية فارر\n- فرضية أوغستانية',
+  },
+  usedInStories: [
+    { storyId: 1, title: 'أسس الكتاب المقدس' },
+    { storyId: 2, title: 'إنجيل يوحنا' },
+  ],
+};
 </script>

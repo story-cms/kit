@@ -46,12 +46,13 @@
             :section-type="sectionType"
             :tab-icon="currentStoryTabIcon"
           />
-          <StoryEditResources
-            v-if="currentStoryTab === 'Resources'"
-            v-model:resources="attachedResources"
-            :available-resources="availableResources"
-            @create="createResource"
-          />
+          <div v-if="currentStoryTab === 'Resources'" dir="ltr">
+            <StoryEditResources
+              v-model:resources="attachedResources"
+              :available-resources="availableResources"
+              @create="createResource"
+            />
+          </div>
         </form>
       </div>
     </template>

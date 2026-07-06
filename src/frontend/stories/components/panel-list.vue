@@ -83,22 +83,26 @@
             :key="item.name + itemIndex.toString()"
             :class="item.widget === 'object' || item.widget === 'list' ? 'subgrid' : ''"
           >
-            <div v-if="shared.isTranslation" class="grid grid-cols-2 gap-x-4 px-8">
-              <component
-                :is="widgets.picker(item.widget)"
-                :field="item"
-                :is-read-only="false"
-                :root-path="`${fieldPath}.${index.toString()}`"
-                :is-nested="true"
-              />
+            <div v-if="shared.isTranslation" class="grid grid-cols-2 gap-x-4 px-8" dir="ltr">
+              <div :dir="shared.isRtl ? 'rtl' : 'ltr'">
+                <component
+                  :is="widgets.picker(item.widget)"
+                  :field="item"
+                  :is-read-only="false"
+                  :root-path="`${fieldPath}.${index.toString()}`"
+                  :is-nested="true"
+                />
+              </div>
 
-              <component
-                :is="widgets.picker(item.widget)"
-                :field="item"
-                :is-read-only="true"
-                :root-path="`${fieldPath}.${index.toString()}`"
-                :is-nested="true"
-              />
+              <div dir="ltr">
+                <component
+                  :is="widgets.picker(item.widget)"
+                  :field="item"
+                  :is-read-only="true"
+                  :root-path="`${fieldPath}.${index.toString()}`"
+                  :is-nested="true"
+                />
+              </div>
             </div>
 
             <component
