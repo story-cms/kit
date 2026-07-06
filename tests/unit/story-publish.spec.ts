@@ -58,31 +58,31 @@ test.describe('story metadata publish readiness', () => {
   test('storyMetadataBlockedMessages reports missing cover image', () => {
     expect(
       storyMetadataBlockedMessages({ ...completeMetadata, coverImage: '' }),
-    ).toContain('Your story must have a cover image');
+    ).toContain('Please add a cover image.');
   });
 
   test('storyMetadataBlockedMessages reports missing story type', () => {
     expect(
       storyMetadataBlockedMessages({ ...completeMetadata, storyType: '' }),
-    ).toContain('How about "Story"? We need to call it something.');
+    ).toContain('Please choose a story type.');
   });
 
   test('storyMetadataBlockedMessages reports missing chapter type', () => {
     expect(
       storyMetadataBlockedMessages({ ...completeMetadata, chapterType: '' }),
-    ).toContain('Choose something like "Session", "Lesson", "Episode"');
+    ).toContain('Please choose a chapter type.');
   });
 
   test('storyMetadataBlockedMessages reports missing visibility', () => {
     expect(
       storyMetadataBlockedMessages({ ...completeMetadata, visibility: '' }),
-    ).toContain('Choose the visibility of the story');
+    ).toContain('Please choose a visibility.');
   });
 
   test('storyMetadataBlockedMessages reports missing title', () => {
     expect(
       storyMetadataBlockedMessages({ ...completeMetadata, title: '   ' }),
-    ).toContain('Your story must have a title');
+    ).toContain('Please add a title.');
   });
 
   test('storyPublishBlockedMessage prioritizes missing chapters over metadata', () => {
@@ -94,7 +94,7 @@ test.describe('story metadata publish readiness', () => {
   test('storyPublishBlockedMessage reports metadata when chapters are ready', () => {
     expect(
       storyPublishBlockedMessage(5, 5, { ...completeMetadata, coverImage: '' }),
-    ).toBe('Your story must have a cover image');
+    ).toBe('Please add a cover image.');
   });
 
   test('canPublishStoryReady is true when chapters and metadata are complete', () => {

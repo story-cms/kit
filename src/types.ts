@@ -61,6 +61,7 @@ export interface FieldSpec {
   hint?: string;
   hintSections?: LabelHintSection[];
   hintFooter?: string;
+  panelErrorMessage?: string;
   labelStyle?: 'header' | 'pill';
   extensions?: string[];
   maxSize?: number;

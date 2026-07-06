@@ -210,6 +210,7 @@ const contentClassificationField: FieldSpec = {
   name: 'contentClassification',
   widget: 'panel',
   labelStyle: 'header',
+  panelErrorMessage: 'Please complete the content classification',
   hintSections: [
     {
       title: 'Story Type',

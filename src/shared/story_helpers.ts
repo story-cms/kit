@@ -32,19 +32,19 @@ export const storyMetadataBlockedMessages = (
   const messages: string[] = [];
 
   if (!metadata.title.trim()) {
-    messages.push('Your story must have a title');
+    messages.push('Please add a title.');
   }
   if (!metadata.coverImage.trim()) {
-    messages.push('Your story must have a cover image');
+    messages.push('Please add a cover image.');
   }
   if (!metadata.storyType.trim()) {
-    messages.push('How about "Story"? We need to call it something.');
+    messages.push('Please choose a story type.');
   }
   if (!metadata.chapterType.trim()) {
-    messages.push('Choose something like "Session", "Lesson", "Episode"');
+    messages.push('Please choose a chapter type.');
   }
   if (!metadata.visibility.trim()) {
-    messages.push('Choose the visibility of the story');
+    messages.push('Please choose a visibility.');
   }
 
   return messages;
