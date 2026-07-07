@@ -35,7 +35,7 @@
       </div>
       <div>
         <div>
-          <div class="flex items-center justify-between px-3 py-10">
+          <div class="flex items-center justify-between py-10">
             <h3
               class="font-['Inter'] text-2xl font-semibold leading-8 text-gray-800 [&>span]:text-gray-400"
             >
@@ -45,7 +45,7 @@
         </div>
         <div
           v-if="isMultiLingual"
-          class="mb-7 flex flex-col justify-between gap-y-4 px-3 md:flex-row md:items-center md:gap-x-4"
+          class="mb-7 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
         >
           <div class="flex gap-x-4">
             <IndexFilter

@@ -1,5 +1,5 @@
 <template>
-  <div class="px-3 pt-[30px]">
+  <div class="pt-[30px]">
     <h3 class="font-['Inter'] text-2xl font-semibold leading-8 text-gray-800">
       Analytics
     </h3>
