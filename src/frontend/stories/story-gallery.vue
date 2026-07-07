@@ -1,54 +1,64 @@
 <template>
   <AppLayout title="Stories">
-<template #actions>
-          <div class="flex items-center justify-center gap-x-6">
-            <ListSwitcher :is-list="isList" @toggle="isList = !isList" />
+    <template #actions>
+      <div class="flex items-center justify-center gap-x-6">
+        <ListSwitcher :is-list="isList" @toggle="isList = !isList" />
 
-            <StudioButton
-              v-if="canAddStories"
-              label="Add story"
-              variant="secondary"
-              @click="addStory"
-            >
-              <Plus class="size-4" aria-hidden="true" />
-            </StudioButton>
-          </div>
-        </template>
-        <template #controls>
-          <div class="flex items-center gap-x-4">
-            <ToggleButton
-              icon-on="sort"
-              icon-off="sort-asc"
-              label="Edited Date"
-              :is-on="sortField === 'updatedAt' && sortDescending"
-              :is-active="sortField === 'updatedAt'"
-              @toggle="toggleSort('updatedAt')"
-            />
-            <ToggleButton
-              icon-on="sort"
-              icon-off="sort-asc"
-              label="Created Date"
-              :is-on="sortField === 'createdAt' && sortDescending"
-              :is-active="sortField === 'createdAt'"
-              @toggle="toggleSort('createdAt')"
-            />
-          </div>
-        </template>
-    <template #main>
-    <section>
-          <div
-            class="my-8 flex gap-x-[26px]"
-            :class="isList ? 'flex-col gap-y-6' : 'flex-wrap gap-y-[98px]'"
+        <StudioButton
+          v-if="canAddStories"
+          label="Add story"
+          variant="secondary"
+          @click="addStory"
+        >
+          <Plus class="size-4" aria-hidden="true" />
+        </StudioButton>
+      </div>
+    </template>
+    <template #controls>
+      <nav aria-label="Sort stories">
+        <div class="flex flex-wrap gap-1">
+          <TabButton
+            label="Edited Date"
+            :is-active="sortField === 'updatedAt'"
+            @click="toggleSort('updatedAt')"
           >
-            <div
-              v-for="story in sortedStories"
-              :key="story.id"
-              :class="isList ? 'w-full' : 'max-w-64'"
-            >
-              <StoryItem :story="story" :is-list="isList" />
-            </div>
+            <ArrowDownWideNarrow
+              v-if="sortField === 'updatedAt' && sortDescending"
+              class="size-4"
+              aria-hidden="true"
+            />
+            <ArrowUpWideNarrow v-else class="size-4" aria-hidden="true" />
+          </TabButton>
+          <TabButton
+            label="Created Date"
+            :is-active="sortField === 'createdAt'"
+            @click="toggleSort('createdAt')"
+          >
+            <ArrowDownWideNarrow
+              v-if="sortField === 'createdAt' && sortDescending"
+              class="size-4"
+              aria-hidden="true"
+            />
+            <ArrowUpWideNarrow v-else class="size-4" aria-hidden="true" />
+          </TabButton>
+        </div>
+      </nav>
+    </template>
+    <template #main>
+      <section>
+        <div
+          class="my-8 flex gap-x-[26px]"
+          :class="isList ? 'flex-col gap-y-6' : 'flex-wrap gap-y-[98px]'"
+        >
+          <div
+            v-for="story in sortedStories"
+            :key="story.id"
+            :class="isList ? 'w-full' : 'max-w-64'"
+          >
+            <StoryItem :story="story" :is-list="isList" />
           </div>
-        </section>
+        </div>
+      </section>
     </template>
   </AppLayout>
 </template>
@@ -58,9 +68,9 @@ import { ref, computed } from 'vue';
 import type { SharedPageProps, StoryGalleryProps } from '../../types';
 import { useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
-import ToggleButton from '../shared/toggle-button.vue';
+import TabButton from '../shared/tab-button.vue';
 import StudioButton from '../shared/studio-button.vue';
-import { Plus } from '@lucide/vue';
+import { ArrowDownWideNarrow, ArrowUpWideNarrow, Plus } from '@lucide/vue';
 import ListSwitcher from '../shared/list-switcher.vue';
 import StoryItem from './components/story-item.vue';
 import { router } from '@inertiajs/vue3';
