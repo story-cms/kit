@@ -49,7 +49,7 @@
       <section>
         <div
           v-if="sortedStories.length > 0 && !isList"
-          class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+          class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3"
         >
           <StoryItem
             v-for="story in sortedStories"

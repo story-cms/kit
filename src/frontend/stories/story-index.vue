@@ -52,7 +52,7 @@
     <template #main>
       <div
         v-if="filteredIndex.length > 0 && !isList"
-        class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+        class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3"
       >
         <index-card
           v-for="item in filteredIndex"
@@ -125,7 +125,10 @@ import {
   ResponseStatus,
   TabItem,
 } from '../../types';
-import { canPublishStoryReady, storyPublishBlockedMessage } from '../../shared/story_helpers';
+import {
+  canPublishStoryReady,
+  storyPublishBlockedMessage,
+} from '../../shared/story_helpers';
 import AppLayout from '../shared/app-layout.vue';
 import ExpandableSearch from '../shared/expandable-search.vue';
 import IndexFilter from '../shared/index-filter.vue';
