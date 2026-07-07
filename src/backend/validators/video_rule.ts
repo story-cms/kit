@@ -9,7 +9,7 @@ function video(value: unknown, _options: null, field: FieldContext) {
   const notValid = !isValidVideo(value);
 
   if (notValid) {
-    field.report('Please upload a valid file', 'video', field);
+    field.report('Please upload a video', 'video', field);
   }
 }
 
