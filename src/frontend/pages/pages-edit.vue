@@ -98,7 +98,6 @@
               ],
             }"
             :is-nested="true"
-            class="px-8"
           />
         </form>
         <ContentSidebar>
