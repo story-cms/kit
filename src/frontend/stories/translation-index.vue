@@ -10,18 +10,27 @@
       />
     </template>
     <template #controls>
-      <div class="flex items-center justify-between py-4 text-sm font-medium leading-4">
-        <p class="text-left">{{ shared.language.language }}</p>
-        <p class="inline-flex items-center justify-end">
-          English
-          <button
-            class="ml-2"
+      <nav aria-label="Language columns">
+        <div class="flex flex-wrap justify-between gap-1">
+          <TabButton
+            :label="shared.language.language"
+            :is-active="false"
+            :is-action="false"
+          >
+            <Eye aria-hidden="true" />
+          </TabButton>
+
+          <TabButton
+            :label="sourceLanguageName"
+            :is-active="shared.showSourceColumn"
+            :aria-pressed="shared.showSourceColumn"
             @click="shared.setSourceColumnAsHidden(!shared.showSourceColumn)"
           >
-            <Icon name="eyeoff" class="block size-6 cursor-pointer text-black" />
-          </button>
-        </p>
-      </div>
+            <Eye v-if="shared.showSourceColumn" aria-hidden="true" />
+            <EyeOff v-else aria-hidden="true" />
+          </TabButton>
+        </div>
+      </nav>
     </template>
     <template #main>
       <div
@@ -106,6 +115,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed, onUnmounted, nextTick, watch } from 'vue';
+import { Eye, EyeOff } from '@lucide/vue';
 import { router } from '@inertiajs/vue3';
 import type { Errors } from '@inertiajs/core';
 import type { FieldSpec, DraftEditProps, SharedPageProps } from '../../types';
@@ -114,8 +124,8 @@ import { useSharedStore, useModelStore, useWidgetsStore, useDraftsStore } from '
 import { storeToRefs } from 'pinia';
 import AppLayout from '../shared/app-layout.vue';
 import DraftActions from '../shared/draft-actions.vue';
+import TabButton from '../shared/tab-button.vue';
 import WorkflowActions from './components/workflow-actions.vue';
-import Icon from '../shared/icon.vue';
 import ContentSidebar from '../shared/content-sidebar.vue';
 import MetaBox from '../shared/meta-box.vue';
 import MobileAppPreview from '../shared/mobile-app-preview.vue';
@@ -133,6 +143,10 @@ const widgets = useWidgetsStore();
 widgets.setProviders(props.providers);
 const shared = useSharedStore();
 const model = useModelStore();
+
+const sourceLanguageName = computed(
+  () => shared.config.languages?.[0]?.language ?? 'English',
+);
 
 const defaultTitle = computed(() => {
   return `New ${props.story.chapterType}`;

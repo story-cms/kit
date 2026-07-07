@@ -1,7 +1,7 @@
 <template>
   <div
     :class="[
-      'subgrid',
+      'subgrid rounded-xl',
       panelBackgroundClass,
       {
         'p-8 pt-2': !field.isRow,
@@ -11,7 +11,9 @@
   >
     <div
       class="relative flex"
-      :class="field.labelStyle === 'header' ? 'justify-start px-2 pt-4' : 'justify-center'"
+      :class="
+        field.labelStyle === 'header' ? 'justify-start px-2 pt-4' : 'justify-center'
+      "
     >
       <LabelHint
         v-if="field.label && field.label.trim() !== '' && field.labelStyle === 'header'"
