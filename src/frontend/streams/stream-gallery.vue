@@ -1,29 +1,25 @@
 <template>
-  <AppLayout title="Streams">
-<template #actions>
-          <div class="flex items-center justify-center gap-x-6">
-            <Icon
-              :name="iconName"
-              class="inline-flex h-8 w-8 cursor-pointer items-center justify-center text-black"
-              @click.prevent="toggle"
-            />
-          </div>
-        </template>
+  <AppLayout title="Streams" subtitle="Manage Streams">
+    <template #controls>
+      <div class="flex items-center justify-end">
+        <ListSwitcher :is-list="isList" @toggle="isList = !isList" />
+      </div>
+    </template>
     <template #main>
-    <section>
+      <section>
+        <div
+          class="my-8 flex gap-x-[26px]"
+          :class="isList ? 'flex-col gap-y-6' : 'flex-wrap gap-y-[98px]'"
+        >
           <div
-            class="my-8 flex gap-x-[26px]"
-            :class="isList ? 'flex-col gap-y-6' : 'flex-wrap gap-y-[98px]'"
+            v-for="stream in streams"
+            :key="stream.id"
+            :class="isList ? 'w-full' : 'max-w-64'"
           >
-            <div
-              v-for="stream in streams"
-              :key="stream.id"
-              :class="isList ? 'w-full' : 'max-w-64'"
-            >
-              <StreamItem :stream="stream" :is-list="isList" />
-            </div>
+            <StreamItem :stream="stream" :is-list="isList" />
           </div>
-        </section>
+        </div>
+      </section>
     </template>
   </AppLayout>
 </template>
@@ -32,22 +28,14 @@
 import { SharedPageProps } from '../../types';
 import { useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
-import Icon from '../shared/icon.vue';
+import ListSwitcher from '../shared/list-switcher.vue';
 import { StreamGalleryProps } from '../../types';
 import StreamItem from './components/stream-item.vue';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 
 const props = defineProps<StreamGalleryProps & SharedPageProps>();
 const shared = useSharedStore();
 shared.setFromProps(props);
 
 const isList = ref(false);
-
-const toggle = () => {
-  isList.value = !isList.value;
-};
-
-const iconName = computed(() => {
-  return isList.value ? 'grid' : 'list';
-});
 </script>

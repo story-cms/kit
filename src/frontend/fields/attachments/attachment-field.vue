@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white" :class="{ 'p-8': !isNested, 'mt-4': isNested }">
+  <div class="rounded-xl bg-white" :class="{ 'p-8': !isNested, 'mt-4': isNested }">
     <div class="relative">
       <div class="relative">
         <label
@@ -24,7 +24,7 @@
       <div v-else class="h-48">
         <div
           v-if="!props.isReadOnly"
-          class="relative mt-[2px] rounded-xl border-2 border-dashed border-gray-300"
+          class="relative mt-[2px] rounded-xl border-2 border-dashed border-gray-300 p-2"
         >
           <FileUpload
             :description="defaults.description"

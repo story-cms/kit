@@ -1,5 +1,5 @@
 <template>
-  <AppLayout title="Stories">
+  <AppLayout title="Stories" subtitle="Manage Stories">
     <template #actions>
       <div class="flex items-center justify-center gap-x-6">
         <StudioButton
@@ -46,7 +46,7 @@
       </div>
     </template>
     <template #main>
-      <section class="px-3">
+      <section>
         <div
           v-if="sortedStories.length > 0 && !isList"
           class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
@@ -95,7 +95,7 @@
                 <th
                   class="whitespace-nowrap px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500"
                 >
-                  Bookmarked
+                  Actions
                 </th>
               </tr>
             </thead>

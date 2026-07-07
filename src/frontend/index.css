@@ -20,7 +20,7 @@
   }
 
   .form-panel {
-    @apply space-y-6 rounded-xl border border-gray-200 bg-white p-8;
+    @apply space-y-6 rounded-xl border border-gray-200 bg-white p-6;
   }
 
   .glass-surface {

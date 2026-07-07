@@ -24,7 +24,7 @@
           },
         ]"
       >
-        <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8 bg-white py-4">
+        <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="form-panel">
           <StringField
             :field="{
               name: 'name',
@@ -32,7 +32,6 @@
               widget: 'string',
             }"
             :is-nested="true"
-            class="px-8"
           />
 
           <RegionField
@@ -42,7 +41,6 @@
               widget: 'region',
             }"
             :is-nested="true"
-            class="px-8"
           />
 
           <DateRangeField
@@ -52,7 +50,6 @@
               widget: 'dateRange',
             }"
             :is-nested="true"
-            class="px-8"
           />
 
           <ImageField
@@ -66,7 +63,6 @@
               maxSize: 300000,
             }"
             :is-nested="true"
-            class="px-8"
           />
 
           <StringField
@@ -76,7 +72,6 @@
               widget: 'string',
             }"
             :is-nested="true"
-            class="px-8"
           />
 
           <StringField
@@ -86,7 +81,6 @@
               widget: 'string',
             }"
             :is-nested="true"
-            class="px-8"
           />
 
           <MarkdownField
@@ -97,7 +91,6 @@
               noMarkup: true,
             }"
             :is-nested="true"
-            class="px-8"
           />
 
           <StringField
@@ -107,17 +100,14 @@
               widget: 'string',
             }"
             :is-nested="true"
-            class="px-8"
           />
 
-          <div class="px-8">
-            <RichListbox
-              v-model="selection"
-              label="Action Type"
-              :options="actionTypeOptions"
-              @update:model-value="setActionType"
-            />
-          </div>
+          <RichListbox
+            v-model="selection"
+            label="Action Type"
+            :options="actionTypeOptions"
+            @update:model-value="setActionType"
+          />
 
           <StringField
             v-if="!urlFieldIsDisabled"
@@ -127,7 +117,6 @@
               widget: 'string',
             }"
             :is-nested="true"
-            class="px-8"
           />
           <div v-else>
             <p class="my-16"></p>

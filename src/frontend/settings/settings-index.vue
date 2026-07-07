@@ -1,53 +1,52 @@
 <template>
-  <AppLayout title="Settings">
-<template #actions>
-          <PillButton
-            label="Request App Update"
-            variant="green"
-            :disabled="!props.requireAppUpdate"
-            @click="showRequestAppUpdateModal = true"
-          />
-        </template>
-        <template #controls>
-          <div class="flex justify-between items-center pb-4">
-            <div>
-              <h3 class="font-semibold leading-7 text-gray-800 text-xl/7">Languages</h3>
-              <p class="font-normal leading-5 text-gray-500 text-sm/5">
-                Here you can manage your languages. Press the blue + to add a new
-                language.
-              </p>
-            </div>
-            <button
-              class="p-1 bg-blue-500 rounded-full shadow-md hover:bg-blue-700"
-              @click="router.visit(`/${shared.locale}/settings/languages/edit`)"
-            >
-              <Icon name="plus" class="text-white" />
-            </button>
-          </div>
-        </template>
-    <template #main>
-    <div>
-          <LanguagesTable
-            :items="languageItems"
-            :source-language="sourceLanguage"
-            @remove="handleRemove"
-            @request-deletion="handleRequestDeletion"
-            @bible-translation-change="handleTableBibleTranslationChange"
-          />
+  <AppLayout title="Settings" subtitle="Manage Settings">
+    <template #actions>
+      <PillButton
+        label="Request App Update"
+        variant="green"
+        :disabled="!props.requireAppUpdate"
+        @click="showRequestAppUpdateModal = true"
+      />
+    </template>
+    <template #controls>
+      <div class="flex items-center justify-between pb-4">
+        <div>
+          <h3 class="text-xl/7 font-semibold leading-7 text-gray-800">Languages</h3>
+          <p class="text-sm/5 font-normal leading-5 text-gray-500">
+            Here you can manage your languages. Press the blue + to add a new language.
+          </p>
         </div>
-
-        <RequestAppUpdateModal
-          :open="showRequestAppUpdateModal"
-          @close="showRequestAppUpdateModal = false"
-          @confirm="handleRequestAppUpdateConfirm"
+        <button
+          class="rounded-full bg-blue-500 p-1 shadow-md hover:bg-blue-700"
+          @click="router.visit(`/${shared.locale}/settings/languages/edit`)"
+        >
+          <Icon name="plus" class="text-white" />
+        </button>
+      </div>
+    </template>
+    <template #main>
+      <div>
+        <LanguagesTable
+          :items="languageItems"
+          :source-language="sourceLanguage"
+          @remove="handleRemove"
+          @request-deletion="handleRequestDeletion"
+          @bible-translation-change="handleTableBibleTranslationChange"
         />
+      </div>
 
-        <RequestFeedbackModal
-          :open="showFeedbackModal"
-          :variant="feedbackModalVariant"
-          :contact-email="props.config.supportEmail ?? 'ops@startjourneys.io'"
-          @close="showFeedbackModal = false"
-        />
+      <RequestAppUpdateModal
+        :open="showRequestAppUpdateModal"
+        @close="showRequestAppUpdateModal = false"
+        @confirm="handleRequestAppUpdateConfirm"
+      />
+
+      <RequestFeedbackModal
+        :open="showFeedbackModal"
+        :variant="feedbackModalVariant"
+        :contact-email="props.config.supportEmail ?? 'ops@startjourneys.io'"
+        @close="showFeedbackModal = false"
+      />
     </template>
   </AppLayout>
 </template>
@@ -115,16 +114,20 @@ const handleRequestAppUpdateConfirm = (reasons: string[]) => {
     return;
   }
 
-  postWithPayload(`/${shared.locale}/settings/support`, payload as unknown as RequestPayload, {
-    onSuccess: () => {
-      feedbackModalVariant.value = 'success';
-      showFeedbackModal.value = true;
+  postWithPayload(
+    `/${shared.locale}/settings/support`,
+    payload as unknown as RequestPayload,
+    {
+      onSuccess: () => {
+        feedbackModalVariant.value = 'success';
+        showFeedbackModal.value = true;
+      },
+      onError: () => {
+        feedbackModalVariant.value = 'error';
+        showFeedbackModal.value = true;
+      },
     },
-    onError: () => {
-      feedbackModalVariant.value = 'error';
-      showFeedbackModal.value = true;
-    },
-  });
+  );
 };
 
 const handleRemove = (item: LanguageTableItem) => {

@@ -124,7 +124,17 @@
       {{ formatListDate(story.updatedAt) }}
     </td>
     <td class="whitespace-nowrap px-6 py-4 text-right">
-      <BookmarkAction :bookmark="bookmark" />
+      <div class="flex items-center justify-end gap-2">
+        <BookmarkAction :bookmark="bookmark" />
+        <button
+          type="button"
+          class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+          aria-label="Edit story"
+          @click="editStory"
+        >
+          <SquarePen class="size-4" aria-hidden="true" />
+        </button>
+      </div>
     </td>
   </tr>
 </template>
@@ -132,7 +142,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { router } from '@inertiajs/vue3';
-import { BookOpen } from '@lucide/vue';
+import { BookOpen, SquarePen } from '@lucide/vue';
 import { DateTime } from 'luxon';
 import { StoryIndexItem } from '../../../types';
 import { useSharedStore } from '../../store';
@@ -189,6 +199,10 @@ const statusBadgeClasses = computed(() =>
 
 const openStory = () => {
   router.visit(storyUrl.value);
+};
+
+const editStory = () => {
+  router.visit(`/${shared.locale}/story/${props.story.id}/edit`);
 };
 
 const formatListDate = (value: string): string => {

@@ -1,14 +1,24 @@
 <template>
-  <button @click.prevent.stop="toggleBookmark">
-    <Icon
-      :name="shared.isBookmarked(props.bookmark) ? 'star-filled' : 'star'"
-      :class="shared.isBookmarked(props.bookmark) ? 'text-yellow-500' : 'text-gray-400'"
+  <button
+    type="button"
+    class="rounded-xl p-1.5 transition-colors"
+    :class="
+      shared.isBookmarked(props.bookmark)
+        ? 'text-yellow-500 hover:bg-yellow-50 hover:text-yellow-600'
+        : 'text-gray-400 hover:bg-yellow-50 hover:text-yellow-600'
+    "
+    @click.prevent.stop="toggleBookmark"
+  >
+    <Star
+      class="size-6 shrink-0"
+      :class="shared.isBookmarked(props.bookmark) ? 'fill-current' : ''"
+      aria-hidden="true"
     />
   </button>
 </template>
 <script setup lang="ts">
 import axios from 'axios';
-import Icon from './icon.vue';
+import { Star } from '@lucide/vue';
 import { useSharedStore } from '../store';
 import { type Bookmark } from '../../types';
 import { ResponseStatus } from '../../types';

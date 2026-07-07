@@ -2,12 +2,7 @@
   <AppLayout title="Story" :subtitle="chapterTitle">
     <template #actions>
       <DraftActions :can-delete="false" />
-      <Link
-        class="w-32 rounded-xl border border-blue-500 bg-blue-500 px-[15px] py-[9px] text-center text-sm/5 font-medium text-white shadow"
-        :href="`/${shared.locale}/story/${story.id}/draft/${chapter.number}/edit`"
-      >
-        Edit
-      </Link>
+      <StudioButton label="Edit" variant="blue" @click="editChapter" />
     </template>
     <template #main>
       <div
@@ -20,7 +15,7 @@
         ]"
       >
         <!-- eslint-disable vue/no-v-html -->
-        <div class="bg-white p-8 shadow-sm" v-html="bundleView"></div>
+        <div class="form-panel" v-html="bundleView"></div>
         <ContentSidebar>
           <template #meta-box>
             <MetaBox
@@ -53,10 +48,11 @@
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
-import { Link } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
 
 import type { PreviewProps, SharedPageProps } from '../../types';
 import DraftActions from '../shared/draft-actions.vue';
+import StudioButton from '../shared/studio-button.vue';
 import MobileAppPreview from '../shared/mobile-app-preview.vue';
 import AppLayout from '../shared/app-layout.vue';
 import ContentSidebar from '../shared/content-sidebar.vue';
@@ -82,6 +78,12 @@ const publishedWhen = computed(() => {
 const metaChapter = computed(
   () => `${padZero(props.chapter.number)} of ${padZero(props.story.chapterLimit)}`,
 );
+
+const editChapter = () => {
+  router.visit(
+    `/${shared.locale}/story/${props.story.id}/draft/${props.chapter.number}/edit`,
+  );
+};
 
 onMounted(() => {
   shared.setSourceColumnAsHidden(false);

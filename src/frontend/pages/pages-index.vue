@@ -1,5 +1,5 @@
 <template>
-  <AppLayout title="Manage Pages">
+  <AppLayout title="Pages" subtitle="Manage Pages">
     <template #actions>
       <div class="flex items-center gap-x-6">
         <StudioButton
@@ -21,7 +21,7 @@
       </div>
     </template>
     <template #main>
-      <div class="my-8 flex flex-col space-y-4">
+      <div class="flex flex-col space-y-4">
         <div
           v-if="filteredItems.length > 0"
           class="divide-y divide-gray-100 overflow-hidden rounded-xl border border-gray-200 bg-white"

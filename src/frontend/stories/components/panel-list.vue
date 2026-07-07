@@ -74,16 +74,17 @@
           </div>
         </div>
 
-        <ul
-          v-if="isExpanded(index)"
-          class="subgrid m-0 w-full list-none gap-y-6 px-4 py-6"
-        >
+        <ul v-if="isExpanded(index)" class="subgrid m-0 w-full list-none gap-y-6 p-6">
           <li
             v-for="(item, itemIndex) in fields"
             :key="item.name + itemIndex.toString()"
             :class="item.widget === 'object' || item.widget === 'list' ? 'subgrid' : ''"
           >
-            <div v-if="shared.isTranslation" class="grid grid-cols-2 gap-x-4 px-8" dir="ltr">
+            <div
+              v-if="shared.isTranslation"
+              class="grid grid-cols-2 gap-x-4 px-8"
+              dir="ltr"
+            >
               <div :dir="shared.isRtl ? 'rtl' : 'ltr'">
                 <component
                   :is="widgets.picker(item.widget)"

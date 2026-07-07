@@ -59,7 +59,7 @@
     </template>
 
     <template #main>
-      <section class="px-3">
+      <section>
         <div class="mb-4 flex items-center justify-between">
           <p class="text-sm text-gray-600">
             <span class="font-medium">{{ filteredItems.length }}</span>
@@ -187,8 +187,7 @@ const filteredItems = computed(() => {
       item.regions?.toLowerCase().includes(query);
 
     const status = getInvitationStatus(item.isPublished, item.window ?? '');
-    const matchesStatus =
-      filterStatus.value === 'all' || status === filterStatus.value;
+    const matchesStatus = filterStatus.value === 'all' || status === filterStatus.value;
 
     return matchesSearch && matchesStatus;
   });

@@ -2,13 +2,9 @@
   <AppLayout title="Team" subtitle="User Management">
     <template #actions>
       <div class="flex items-center gap-x-6">
-        <button
-          type="button"
-          class="rounded-full border border-gray-300 bg-white p-2 shadow hover:bg-blue-100"
-          @click="onAdd()"
-        >
-          <Icon name="plus" class="text-gray-900" />
-        </button>
+        <StudioButton label="Add user" variant="secondary" @click="onAdd">
+          <Plus class="size-4" aria-hidden="true" />
+        </StudioButton>
       </div>
     </template>
     <template #main>
@@ -172,7 +168,9 @@
 import { computed, ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import AppLayout from '../shared/app-layout.vue';
+import StudioButton from '../shared/studio-button.vue';
 import Icon from '../shared/icon.vue';
+import { Plus } from '@lucide/vue';
 import UserRow from './components/user-row.vue';
 import { SharedPageProps, UsersProps, UserMeta } from '../../types';
 import { ResponseStatus } from '../../types';
