@@ -46,6 +46,10 @@ const baseResource = {
 };
 
 test.describe('Resource Validator', () => {
+  test.beforeEach(() => {
+    vine.convertEmptyStringsToNull = false;
+  });
+
   test.describe('Published resources', () => {
     test('requires title', async () => {
       const data = {
@@ -235,6 +239,10 @@ test.describe('Resource Validator', () => {
   test.describe('with convertEmptyStringsToNull', () => {
     test.beforeEach(() => {
       vine.convertEmptyStringsToNull = true;
+    });
+
+    test.afterEach(() => {
+      vine.convertEmptyStringsToNull = false;
     });
 
     test('text returns friendly content message for empty content', async () => {

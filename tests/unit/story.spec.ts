@@ -87,6 +87,10 @@ const validPublishUpdateData = {
 };
 
 test.describe('Story Validator', () => {
+  test.beforeEach(() => {
+    vine.convertEmptyStringsToNull = false;
+  });
+
   test.describe('StoryCreateValidator', () => {
     test('requires title', async () => {
       const validator = new StoryCreateValidator();
@@ -314,6 +318,10 @@ test.describe('Story Validator', () => {
   test.describe('with convertEmptyStringsToNull', () => {
     test.beforeEach(() => {
       vine.convertEmptyStringsToNull = true;
+    });
+
+    test.afterEach(() => {
+      vine.convertEmptyStringsToNull = false;
     });
 
     test('create returns friendly title message for empty title', async () => {
