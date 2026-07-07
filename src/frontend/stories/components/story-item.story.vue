@@ -7,8 +7,46 @@
     </Variant>
 
     <Variant title="List View">
-      <div class="space-y-4 p-6">
-        <StoryItem :story="storyData" :is-list="true" />
+      <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white p-6">
+        <table class="w-full min-w-[720px] table-auto">
+          <thead class="border-b border-gray-200 bg-gray-50">
+            <tr>
+              <th
+                class="max-w-[400px] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
+                Story
+              </th>
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
+                Chapters
+              </th>
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
+                Drafts
+              </th>
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
+                Status
+              </th>
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
+                Updated
+              </th>
+              <th
+                class="whitespace-nowrap px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <StoryItem :story="storyData" :is-list="true" />
+          </tbody>
+        </table>
       </div>
     </Variant>
 
@@ -61,6 +99,7 @@ const storyData: StoryIndexItem = {
     'https://res.cloudinary.com/journeys/image/upload/v1756403499/alabaster-co-rlb3upCBLck-unsplash_nfp13e.jpg',
   chapterLimit: 21,
   isPublished: true,
+  liveCount: 21,
   draftCount: 0,
   createdAt: '2024-01-01T00:00:00Z',
   updatedAt: '2024-01-01T00:00:00Z',
@@ -75,6 +114,7 @@ const storyWithDrafts = {
     'https://res.cloudinary.com/journeys/image/upload/v1756403499/alabaster-co-rlb3upCBLck-unsplash_nfp13e.jpg',
   chapterLimit: 28,
   isPublished: true,
+  liveCount: 23,
   draftCount: 5,
   createdAt: '2024-01-01T00:00:00Z',
   updatedAt: '2024-01-01T00:00:00Z',
@@ -89,6 +129,7 @@ const storyWithLongDescription = {
     'https://res.cloudinary.com/journeys/image/upload/v1756403499/alabaster-co-rlb3upCBLck-unsplash_nfp13e.jpg',
   chapterLimit: 22,
   isPublished: false,
+  liveCount: 19,
   draftCount: 3,
   createdAt: '2024-01-01T00:00:00Z',
   updatedAt: '2024-01-01T00:00:00Z',
@@ -101,6 +142,7 @@ const storyWithoutCover: StoryIndexItem = {
   coverImage: '',
   chapterLimit: 10,
   isPublished: false,
+  liveCount: 0,
   draftCount: 0,
   createdAt: '2024-01-01T00:00:00Z',
   updatedAt: '2024-01-01T00:00:00Z',
@@ -137,24 +179,25 @@ A component for displaying story information in both grid and list view formats.
 
 ## Props
 
-- `story` - Story data object containing id, name, description, coverImage, chapterLimit, and draftCount
+- `story` - Story data object containing id, name, description, coverImage, chapterLimit, liveCount, draftCount, and isPublished
 - `is-list` - Boolean to determine if the component should render in list view (true) or grid view (false)
 
 ## Features
 
-- Responsive design that adapts to grid and list layouts
-- Bookmark functionality with hover effects
-- Chapter limit and draft count indicators
-- Text truncation for long descriptions
-- Cover image display
-- Link to story detail page
+- Responsive grid card and table row layouts matching the resource library pattern
+- Bookmark in the card footer (grid) or actions column (list)
+- Grid footer shows Live/Draft status plus conditional progress: `Published: 34 of 42` or `Drafts: 6`
+- List view Chapters and Drafts columns show values only (`34 of 42`, `6`) since headers provide context
+- Line-clamped descriptions in grid view
+- Cover image with placeholder fallback, or BookOpen icon when no image is available
+- Navigates to the story detail page on click
 
 ## Variants
 
-- **Grid View** - Default card layout for story display
-- **List View** - Horizontal layout for compact story listing
-- **With Drafts** - Shows draft count indicator
-- **Long Description** - Demonstrates text truncation
+- **Grid View** - Bordered card with image, title, description, status badge, and progress badge
+- **List View** - Table row with Story, Chapters, Drafts, Status, Updated, and Actions columns
+- **With Drafts** - Published story shows published progress, not draft count
+- **Long Description** - Demonstrates line-clamp text truncation
 - **Without cover** - Empty `coverImage` falls back to the default placeholder
-- **Bookmarked** - Interactive bookmark functionality
+- **Bookmarked** - Interactive bookmark functionality in the card footer
 </docs>

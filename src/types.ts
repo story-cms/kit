@@ -275,6 +275,7 @@ export interface StoryIndexItem {
   isPublished: boolean;
   createdAt: string;
   updatedAt: string;
+  liveCount: number;
   draftCount: number;
 }
 

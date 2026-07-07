@@ -57,6 +57,7 @@ const sampleStories: StoryIndexItem[] = [
     isPublished: true,
     createdAt: '2024-01-15T10:30:00Z',
     updatedAt: '2024-03-20T14:45:00Z',
+    liveCount: 37,
     draftCount: 5,
   },
   {
@@ -70,6 +71,7 @@ const sampleStories: StoryIndexItem[] = [
     isPublished: true,
     createdAt: '2024-02-10T09:15:00Z',
     updatedAt: '2024-03-18T16:20:00Z',
+    liveCount: 25,
     draftCount: 3,
   },
   {
@@ -83,6 +85,7 @@ const sampleStories: StoryIndexItem[] = [
     isPublished: false,
     createdAt: '2024-01-25T11:00:00Z',
     updatedAt: '2024-03-15T13:30:00Z',
+    liveCount: 14,
     draftCount: 2,
   },
 ];

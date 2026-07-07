@@ -359,6 +359,7 @@ export class StoryService {
         isPublished: story.isPublished,
         createdAt: story.createdAt?.toISO() ?? '',
         updatedAt: story.updatedAt?.toISO() ?? '',
+        liveCount: index?.publishedList.length ?? 0,
         draftCount: index?.draftsList.length ?? 0,
       };
     });

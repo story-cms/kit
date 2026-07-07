@@ -45,18 +45,68 @@
       </nav>
     </template>
     <template #main>
-      <section>
+      <section class="px-3">
         <div
-          class="my-8 flex gap-x-[26px]"
-          :class="isList ? 'flex-col gap-y-6' : 'flex-wrap gap-y-[98px]'"
+          v-if="sortedStories.length > 0 && !isList"
+          class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
         >
-          <div
+          <StoryItem
             v-for="story in sortedStories"
             :key="story.id"
-            :class="isList ? 'w-full' : 'max-w-64'"
-          >
-            <StoryItem :story="story" :is-list="isList" />
-          </div>
+            class="h-full"
+            :story="story"
+            :is-list="false"
+          />
+        </div>
+
+        <div
+          v-else-if="sortedStories.length > 0 && isList"
+          class="overflow-x-auto rounded-xl border border-gray-200 bg-white"
+        >
+          <table class="w-full min-w-[720px] table-auto">
+            <thead class="border-b border-gray-200 bg-gray-50">
+              <tr>
+                <th
+                  class="max-w-[400px] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                >
+                  Story
+                </th>
+                <th
+                  class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                >
+                  Chapters
+                </th>
+                <th
+                  class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                >
+                  Drafts
+                </th>
+                <th
+                  class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                >
+                  Status
+                </th>
+                <th
+                  class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                >
+                  Updated
+                </th>
+                <th
+                  class="whitespace-nowrap px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500"
+                >
+                  Bookmarked
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              <StoryItem
+                v-for="story in sortedStories"
+                :key="story.id"
+                :story="story"
+                :is-list="true"
+              />
+            </tbody>
+          </table>
         </div>
       </section>
     </template>
