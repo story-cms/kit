@@ -22,6 +22,12 @@
       <StudioButton label="Confirm" variant="green" @click="handleClick" />
     </Variant>
 
+    <Variant title="Icon only">
+      <StudioButton aria-label="Save" variant="green" @click="handleClick">
+        <Check class="size-4" aria-hidden="true" />
+      </StudioButton>
+    </Variant>
+
     <Variant title="Blue">
       <StudioButton label="Close" variant="blue" @click="handleClick" />
     </Variant>
@@ -64,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { Plus } from '@lucide/vue';
+import { Check, Plus } from '@lucide/vue';
 import StudioButton from './studio-button.vue';
 
 const handleClick = () => {

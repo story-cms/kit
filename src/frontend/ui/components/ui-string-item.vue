@@ -15,24 +15,28 @@
       {{ item.source }}
     </p>
     <div class="flex items-center justify-center h-full">
-      <Icon v-if="isSelected" class="h-[10px] w-auto text-white" name="chevron-right" />
-      <Icon
-        v-else-if="item.flag === 'recheck'"
-        class="text-blue-500 size-5"
-        name="flag"
+      <ChevronRight
+        v-if="isSelected"
+        class="h-[10px] w-auto text-white"
+        aria-hidden="true"
       />
-      <Icon
+      <Flag
+        v-else-if="item.flag === 'recheck'"
+        class="size-5 text-blue-500"
+        aria-hidden="true"
+      />
+      <Sparkles
         v-else-if="item.flag === 'prefilled'"
-        class="text-blue-500 size-5"
-        name="sparkles"
+        class="size-5 text-blue-500"
+        aria-hidden="true"
       />
     </div>
   </button>
 </template>
 
 <script setup lang="ts">
+import { ChevronRight, Flag, Sparkles } from '@lucide/vue';
 import type { UiItem } from '../../../types';
-import Icon from '../../shared/icon.vue';
 
 defineProps<{
   item: UiItem;

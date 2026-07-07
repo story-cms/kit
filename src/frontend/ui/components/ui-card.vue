@@ -24,9 +24,7 @@
               v-if="error"
               class="mt-4 flex items-center gap-x-[11px] text-sm font-medium leading-[120%] text-[#FF2415]"
             >
-              <span>
-                <Icon name="exclamation-circle" />
-              </span>
+              <CircleAlert class="size-5 shrink-0" aria-hidden="true" />
               {{ error }}
             </p>
           </div>
@@ -53,53 +51,43 @@
           <div class="flex items-center justify-end gap-x-6">
             <button
               type="button"
-              class="size-10 rounded-full p-2 hover:bg-gray-100"
+              aria-label="Flag for recheck"
+              class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-blue-50 hover:text-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
               :disabled="!model"
               @click="handleSetFlag(FlagState.RECHECK)"
             >
-              <Icon
-                class="size-6"
+              <Flag
+                class="size-5"
                 :class="{
                   'text-blue-500': item.flag === FlagState.RECHECK,
-                  'text-gray-700': item.flag !== FlagState.RECHECK,
+                  'text-gray-400': item.flag !== FlagState.RECHECK,
                 }"
-                name="flag"
+                aria-hidden="true"
               />
             </button>
             <button
               type="button"
-              class="size-10 rounded-full p-2 hover:bg-gray-100"
+              aria-label="Suggest translation"
+              class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
               @click="suggestAi"
             >
-              <Icon
-                class="size-6"
+              <Sparkles
+                class="size-5"
                 :class="{
                   'text-blue-500': item.flag === FlagState.PREFILLED,
-                  'text-gray-700': item.flag !== FlagState.PREFILLED,
+                  'text-gray-400': item.flag !== FlagState.PREFILLED,
                 }"
-                name="sparkles"
+                aria-hidden="true"
               />
             </button>
-            <button
-              type="button"
-              class="rounded-full border border-gray-300 p-2 disabled:border-gray-300 disabled:bg-gray-100"
+            <StudioButton
+              aria-label="Save translation"
+              variant="green"
               :disabled="!model"
-              :class="{ 'border-green-800 bg-green-500': model }"
-              @click="
-                emit('save', {
-                  key: props.item.key,
-                  locale: shared.locale,
-                  translation: props.model ?? '',
-                  isPrefilled: false,
-                })
-              "
+              @click="saveTranslation"
             >
-              <Icon
-                class="h-6 w-auto"
-                :class="{ 'text-gray-300': !model, 'text-white': model }"
-                name="check"
-              />
-            </button>
+              <Check class="size-4" aria-hidden="true" />
+            </StudioButton>
           </div>
         </div>
       </div>
@@ -131,20 +119,12 @@
             </div>
           </div>
           <div v-show="suggestion.length > 0" class="flex gap-x-6">
-            <button
-              type="button"
-              class="w-32 rounded-xl border bg-white px-[15px] py-[9px] text-sm/5 font-medium text-gray-800 shadow hover:bg-green-400 focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset]"
-              @click="discardSuggestion"
-            >
-              Discard
-            </button>
-            <button
-              type="button"
-              class="rounded-xl border bg-blue-500 px-[15px] py-[9px] text-sm/5 font-medium text-white shadow hover:bg-green-400 focus:outline-none focus:ring focus:ring-indigo-500 active:[box-shadow:_0px_2px_4px_0px_rgba(0,_0,_0,_0.15)_inset]"
+            <StudioButton label="Discard" variant="outline" @click="discardSuggestion" />
+            <StudioButton
+              label="Apply Suggestion"
+              variant="secondary"
               @click="applySuggestion"
-            >
-              Apply Suggestion
-            </button>
+            />
           </div>
         </div>
       </div>
@@ -153,8 +133,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import { Check, CircleAlert, Flag, Sparkles } from '@lucide/vue';
 
 import {
   type UiItem,
@@ -162,8 +143,8 @@ import {
   FlagState,
   ResponseStatus,
 } from '../../../types';
-import Icon from '../../shared/icon.vue';
 import { useSharedStore } from '../../store';
+import StudioButton from '../../shared/studio-button.vue';
 
 const shared = useSharedStore();
 const isOpen = ref(false);
@@ -174,6 +155,8 @@ const props = defineProps<{
   item: UiItem;
   model: string | undefined;
   error: string | undefined;
+  initialSuggestion?: string;
+  initialSuggestionLoading?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -187,6 +170,15 @@ const emit = defineEmits<{
 const handleSetFlag = (state: FlagState) => {
   emit('set-flag', props.item.key, state);
   emit('flagged', props.item.key);
+};
+
+const saveTranslation = () => {
+  emit('save', {
+    key: props.item.key,
+    locale: shared.locale,
+    translation: props.model ?? '',
+    isPrefilled: false,
+  });
 };
 
 const discardSuggestion = () => {
@@ -219,6 +211,20 @@ const applySuggestion = () => {
   emit('apply-suggestion', suggestion.value);
   isOpen.value = false;
 };
+
+onMounted(() => {
+  if (props.initialSuggestionLoading) {
+    isOpen.value = true;
+    isLoading.value = true;
+    return;
+  }
+
+  if (props.initialSuggestion) {
+    isOpen.value = true;
+    suggestion.value = props.initialSuggestion;
+    isLoading.value = false;
+  }
+});
 </script>
 
 <style scoped>

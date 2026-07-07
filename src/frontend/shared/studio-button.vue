@@ -1,19 +1,20 @@
 <template>
   <span
     v-if="tooltip"
-    class="relative inline-flex group"
+    class="group relative inline-flex"
     :class="{ 'cursor-not-allowed': disabled }"
   >
     <span class="inline-flex" :class="{ 'pointer-events-none': disabled }">
       <button
         type="button"
-        class="font-dmsans inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-[15px] font-semibold leading-5 tracking-[-0.15px] transition-colors disabled:cursor-not-allowed disabled:opacity-50"
-        :class="variantClasses"
+        class="inline-flex items-center justify-center gap-2 rounded-full font-dmsans text-[15px] font-semibold leading-5 tracking-[-0.15px] transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+        :class="[variantClasses, sizeClasses]"
+        :aria-label="accessibleLabel"
         :disabled="disabled"
         @click="emit('click')"
       >
         <slot />
-        {{ label }}
+        <span v-if="label">{{ label }}</span>
       </button>
     </span>
     <span
@@ -26,18 +27,19 @@
   <button
     v-else
     type="button"
-    class="font-dmsans inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-[15px] font-semibold leading-5 tracking-[-0.15px] transition-colors disabled:cursor-not-allowed disabled:opacity-50"
-    :class="variantClasses"
+    class="inline-flex items-center justify-center gap-2 rounded-full font-dmsans text-[15px] font-semibold leading-5 tracking-[-0.15px] transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+    :class="[variantClasses, sizeClasses]"
+    :aria-label="accessibleLabel"
     :disabled="disabled"
     @click="emit('click')"
   >
     <slot />
-    {{ label }}
+    <span v-if="label">{{ label }}</span>
   </button>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, useSlots } from 'vue';
 
 export type StudioButtonVariant =
   | 'primary'
@@ -50,7 +52,8 @@ export type StudioButtonVariant =
 
 const props = withDefaults(
   defineProps<{
-    label: string;
+    label?: string;
+    ariaLabel?: string;
     variant?: StudioButtonVariant;
     disabled?: boolean;
     tooltip?: string;
@@ -59,12 +62,22 @@ const props = withDefaults(
     variant: 'primary',
     disabled: false,
     tooltip: undefined,
+    label: undefined,
+    ariaLabel: undefined,
   },
 );
 
 const emit = defineEmits<{
   (e: 'click'): void;
 }>();
+
+const slots = useSlots();
+
+const accessibleLabel = computed(() => props.ariaLabel ?? props.label);
+
+const isIconOnly = computed(() => !props.label && !!slots.default?.());
+
+const sizeClasses = computed(() => (isIconOnly.value ? 'px-3 py-3' : 'px-6 py-3'));
 
 const variantClassMap: Record<StudioButtonVariant, string> = {
   primary: 'bg-studio_forest_green text-studio_lime hover:bg-studio_forest_green/90',

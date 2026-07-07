@@ -1,14 +1,15 @@
 <template>
-  <AppLayout title="Interface" :subtitle="`Interface: ${language.language}`">
+  <AppLayout title="Interface" :subtitle="`${language.language}`">
     <template #controls>
       <UiToolbar
         v-model="searchTerm"
         :all-count="props.items.length"
         :todo-count="todoCount"
         :active-filter="activeFilter"
-        :sort-by="sortBy"
+        :sort-field="sortField"
+        :sort-descending="sortDescending"
         @update:active-filter="activeFilter = $event"
-        @sort="handleSort"
+        @sort="toggleSort"
       />
     </template>
     <template #main>
@@ -29,7 +30,7 @@
                 }"
                 @click="translateItems"
               >
-                <Icon class="size-4 text-gray-800" name="sparkles" />
+                <Sparkles class="size-4 text-gray-800" aria-hidden="true" />
                 <span>
                   {{
                     isTranslating
@@ -59,6 +60,8 @@
                   v-model:model="model[selectedItem.key]"
                   :item="selectedItem"
                   :error="itemError"
+                  :initial-suggestion="initialSuggestion"
+                  :initial-suggestion-loading="initialSuggestionLoading"
                   @flagged="handleFlagged"
                   @set-flag="setFlag"
                   @save="save"
@@ -94,6 +97,7 @@ import { reactive, ref, computed, watch } from 'vue';
 import axios from 'axios';
 import { router } from '@inertiajs/vue3';
 import { AxiosError } from 'axios';
+import { Sparkles } from '@lucide/vue';
 
 import UiToolbar from './components/ui-toolbar.vue';
 import UiStringItem from './components/ui-string-item.vue';
@@ -109,7 +113,13 @@ import RivePlayer from '../fields/attachments/rive-player.vue';
 
 type ModelType = { [key: string]: string | undefined };
 
-const props = defineProps<SharedPageProps & UiPageProps>();
+const props = defineProps<
+  SharedPageProps &
+    UiPageProps & {
+      initialSuggestion?: string;
+      initialSuggestionLoading?: boolean;
+    }
+>();
 
 const searchTerm = ref('');
 const itemError = ref('');
@@ -118,9 +128,8 @@ const todoCount = computed(() => {
 });
 
 const activeFilter = ref<'todo' | 'all'>('todo');
-const sortBy = ref<{ field: 'status' | 'lastEdited' }>({
-  field: 'lastEdited',
-});
+const sortField = ref<'status' | 'lastEdited'>('lastEdited');
+const sortDescending = ref(true);
 
 const hasEmptyItems = computed(() => {
   return props.items.some((item) => !item.translation);
@@ -166,29 +175,10 @@ const filteredItems = computed(() => {
     return new Date(b.updatedAt!).getTime() - new Date(a.updatedAt!).getTime();
   };
 
-  const sortFunction =
-    sortBy.value.field === 'status'
-      ? sortByStatus
-      : sortBy.value.field === 'lastEdited'
-        ? sortByLastEdited
-        : (a: UiItem, b: UiItem) => {
-            const aTranslated = !!a.translation;
-            const bTranslated = !!b.translation;
-            if (aTranslated !== bTranslated) {
-              return aTranslated ? 1 : -1;
-            }
+  const sortFunction = sortField.value === 'status' ? sortByStatus : sortByLastEdited;
+  const direction = sortDescending.value ? 1 : -1;
 
-            if (a.flag === FlagState.RECHECK && b.flag !== FlagState.RECHECK) return -1;
-            if (a.flag !== FlagState.RECHECK && b.flag === FlagState.RECHECK) return 1;
-            if (a.flag === FlagState.PREFILLED && b.flag !== FlagState.PREFILLED)
-              return -1;
-            if (a.flag !== FlagState.PREFILLED && b.flag === FlagState.PREFILLED)
-              return 1;
-
-            return 0;
-          };
-
-  return items.sort(sortFunction);
+  return [...items].sort((a, b) => direction * sortFunction(a, b));
 });
 
 const shared = useSharedStore();
@@ -320,8 +310,14 @@ const handleApplySuggestion = (suggestion: string) => {
   });
 };
 
-const handleSort = (field: 'status' | 'lastEdited') => {
-  sortBy.value.field = field;
+const toggleSort = (field: 'status' | 'lastEdited') => {
+  if (sortField.value === field) {
+    sortDescending.value = !sortDescending.value;
+  } else {
+    sortField.value = field;
+    sortDescending.value = true;
+  }
+
   if (filteredItems.value.length > 0) {
     selectedItem.value = filteredItems.value[0];
   }
