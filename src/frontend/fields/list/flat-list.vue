@@ -60,9 +60,7 @@
       <template v-else-if="isRemoved(index)">
         <template v-if="canMutate">
           <li class="relative flex items-center justify-between">
-            <span
-              class="absolute left-0 right-0 top-1/2 border-t border-gray-300"
-            ></span>
+            <span class="absolute left-0 right-0 top-1/2 border-t border-gray-300"></span>
             <div
               class="z-[1] inline-flex items-center rounded-full border border-gray-300 bg-gray-200 px-4 py-1.5 text-sm font-medium leading-5 text-gray-500 shadow-sm"
             >
@@ -86,7 +84,7 @@
         </template>
       </template>
     </ul>
-    <div v-if="canMutate" class="mt-8 flex flex-row items-center gap-4">
+    <div v-if="canMutate" class="my-8 flex flex-row items-center gap-4">
       <AddItemButton :label="field.label" @add="emit('addSet')" />
       <div v-if="showEmptyListWarning()">
         <div
@@ -175,9 +173,7 @@ const toggleRemove = (index: number) => {
   widgets.toggleRemovedIndex(props.fieldPath, index);
 
   if (!isCurrentlyRemoved) {
-    const list = [
-      ...(model.getField(props.fieldPath, []) as Record<string, unknown>[]),
-    ];
+    const list = [...(model.getField(props.fieldPath, []) as Record<string, unknown>[])];
     list[index] = {};
     model.setField(props.fieldPath, list);
   }

@@ -24,7 +24,7 @@
           },
         ]"
       >
-        <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="space-y-8 bg-white py-4">
+        <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="form-panel">
           <StringField
             :field="{
               name: 'title',
@@ -32,7 +32,6 @@
               widget: 'string',
             }"
             :is-nested="true"
-            class="px-8"
           />
           <ImageField
             :field="{
@@ -45,7 +44,6 @@
               maxSize: 5662310,
             }"
             :is-nested="true"
-            class="px-8"
           />
           <StringField
             :field="{
@@ -54,7 +52,6 @@
               widget: 'string',
             }"
             :is-nested="true"
-            class="px-8"
           />
           <StringField
             :field="{
@@ -63,23 +60,15 @@
               widget: 'string',
             }"
             :is-nested="true"
-            class="px-8"
           />
-          <SelectField
-            :field="{
-              label: 'Page Type',
-              name: 'type',
-              widget: 'select',
-              options: [
-                { label: 'Text', value: 'text' },
-                { label: 'Link', value: 'link' },
-              ],
-              default: defaultType,
-            }"
-            :is-free="true"
-            :is-nested="true"
-            class="px-8"
-          />
+          <div>
+            <RichListbox
+              v-model="selection"
+              label="Page Type"
+              :options="pageTypes"
+              @update:model-value="setType"
+            />
+          </div>
           <StringField
             v-if="isLink"
             :field="{
@@ -88,7 +77,6 @@
               widget: 'string',
             }"
             :is-nested="true"
-            class="px-8"
           />
           <MarkdownField
             v-else
@@ -130,15 +118,17 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, toRefs, watch, onUnmounted } from 'vue';
+import type { Component } from 'vue';
 import { DateTime } from 'luxon';
 import { router } from '@inertiajs/vue3';
+import { ExternalLink, FileText } from '@lucide/vue';
 import { type SharedPageProps, type PageEditProps, ResponseStatus } from '../../types';
 import { useModelStore, useSharedStore, useWidgetsStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
+import RichListbox from '../shared/rich-listbox.vue';
 import { debounce } from '../shared/helpers';
 import StringField from '../fields/string-field.vue';
 import ImageField from '../fields/image-field.vue';
-import SelectField from '../fields/select-field.vue';
 import MarkdownField from '../fields/markdown-field.vue';
 import BooleanField from '../fields/boolean-field.vue';
 import PageMetaBox from './page-meta-box.vue';
@@ -176,7 +166,36 @@ const getPayload = (): RequestPayload => {
 
 const defaultType = ref(model.getField('body', '').startsWith('http') ? 'link' : 'text');
 
-const selection = ref(model.getField('type', defaultType));
+if (!model.isPopulated('type')) {
+  model.setField('type', defaultType.value);
+}
+
+const selection = ref(model.getField('type', defaultType.value));
+
+const pageTypes: {
+  value: string;
+  label: string;
+  description: string;
+  icon: Component;
+}[] = [
+  {
+    value: 'text',
+    label: 'Text',
+    description: 'Write page content with markdown',
+    icon: FileText,
+  },
+  {
+    value: 'link',
+    label: 'Link',
+    description: 'Link to an external website',
+    icon: ExternalLink,
+  },
+];
+
+const setType = (type: string) => {
+  selection.value = type;
+  model.setField('type', type);
+};
 const title = ref(model.getField('title', 'Page'));
 const isPublished = ref(Boolean(model.getField('isPublished', false)));
 
@@ -234,7 +253,7 @@ onMounted(() => {
     }
 
     save();
-    selection.value = model.getField('type', defaultType);
+    selection.value = model.getField('type', defaultType.value);
     title.value = model.getField('title', 'Page');
     isPublished.value = Boolean(model.getField('isPublished', false));
   });
