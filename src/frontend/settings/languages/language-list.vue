@@ -1,41 +1,10 @@
 <template>
   <div class="pb-11">
-    <div class="grid grid-cols-1 gap-4 pb-6 pl-2 md:grid-cols-[1fr_auto]">
-      <ul class="flex flex-row flex-wrap items-center gap-[10px] py-[9px]">
-        <li v-for="letter in letters" :key="letter">
-          <button
-            type="button"
-            class="flex size-7 shrink-0 items-center justify-center rounded-full p-0 text-sm text-gray-500"
-            :class="{ 'bg-blue-100': letterFilter === letter }"
-            @click="handleLetterFilter(letter)"
-          >
-            {{ letter }}
-          </button>
-        </li>
-      </ul>
-      <div class="flex items-center justify-end">
-        <div class="grid w-full grid-cols-1">
-          <input
-            id="search"
-            v-model="searchFilter"
-            type="text"
-            name="search"
-            class="col-start-1 row-start-1 block w-full rounded-xl bg-white py-1.5 pl-10 pr-3 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:pl-9 sm:text-sm/6"
-            placeholder="Search"
-          />
-          <Icon
-            name="search"
-            class="pointer-events-none col-start-1 row-start-1 ml-4 size-4 self-center text-gray-400"
-          />
-        </div>
-      </div>
-    </div>
-
     <div
       class="grid grid-cols-1 gap-x-[30px] gap-y-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
     >
       <LanguageListItem
-        v-for="item in filteredItems"
+        v-for="item in items"
         :key="item.language.locale"
         :language="item.language"
         :status="item.status"
@@ -43,7 +12,7 @@
         @update="(isSelected) => emit('update', item.language.locale, isSelected)"
       />
     </div>
-    <div v-if="filteredItems.length === 0" class="mt-10 flex justify-center">
+    <div v-if="items.length === 0" class="mt-10 flex justify-center">
       <div class="flex max-w-[600px] flex-col items-center justify-center">
         <svg
           width="54"
@@ -79,14 +48,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
 import type { LanguageListItemProps } from '../../../types';
 import { useSharedStore } from '../../store';
 import LanguageListItem from './components/language-list-item.vue';
-import Icon from '../../shared/icon.vue';
 import PillButton from '../../shared/pill-button.vue';
 
-const props = defineProps<{
+defineProps<{
   items: LanguageListItemProps[];
 }>();
 
@@ -95,42 +62,6 @@ const emit = defineEmits<{
 }>();
 
 const shared = useSharedStore();
-
-const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-const letterFilter = ref('');
-
-const searchFilter = ref('');
-
-watch(searchFilter, (value) => {
-  if (value) letterFilter.value = '';
-});
-
-watch(letterFilter, (value) => {
-  if (value) searchFilter.value = '';
-});
-
-const filteredItems = computed(() => {
-  let items = props.items;
-  if (letterFilter.value) {
-    items = items.filter((item: LanguageListItemProps) => {
-      return item.language.language
-        .toLowerCase()
-        .startsWith(letterFilter.value.toLowerCase());
-    });
-  }
-  if (searchFilter.value) {
-    items = items.filter((item: LanguageListItemProps) => {
-      return item.language.language
-        .toLowerCase()
-        .includes(searchFilter.value.toLowerCase());
-    });
-  }
-  return items;
-});
-
-const handleLetterFilter = (letter: string) => {
-  letterFilter.value = letterFilter.value === letter ? '' : letter;
-};
 
 const handleRequestLanguage = () => {
   const subject = `Request new language`;

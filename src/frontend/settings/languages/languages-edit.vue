@@ -14,46 +14,26 @@
       />
     </template>
     <template #controls>
-      <div
-        v-if="selectedLanguages.length > 0"
-        class="flex items-center justify-between pb-4"
-      >
-        <div class="flex items-center justify-start gap-4">
-          <h3 class="text-xs font-medium uppercase leading-5 text-gray-800">Selected:</h3>
-
-          <ul class="flex flex-wrap gap-x-4 gap-y-2">
-            <li
-              v-for="language in selectedLanguages"
-              :key="language.locale"
-              class="inline-flex items-center gap-2 rounded-full bg-gray-100 py-1.5 pl-3 pr-2 text-xs font-medium leading-4 text-gray-900"
-            >
-              {{ language.language }}
-              <button
-                type="button"
-                class="text-gray-800"
-                :aria-label="`Remove ${language.language}`"
-                @click="setLocaleSelected(language.locale, false)"
-              >
-                <X class="size-3.5" aria-hidden="true" />
-              </button>
-            </li>
-          </ul>
-        </div>
-      </div>
+      <LanguageListControls
+        v-model:search-filter="searchFilter"
+        v-model:letter-filter="letterFilter"
+        :selected-languages="selectedLanguages"
+        @remove="setLocaleSelected($event, false)"
+      />
     </template>
     <template #main>
-      <LanguageList :items="languageListItems" @update="setLocaleSelected" />
+      <LanguageList :items="filteredLanguageListItems" @update="setLocaleSelected" />
     </template>
   </AppLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { X } from '@lucide/vue';
 import { router } from '@inertiajs/vue3';
 import AppLayout from '../../shared/app-layout.vue';
 import PillButton from '../../shared/pill-button.vue';
 import LanguageList from './language-list.vue';
+import LanguageListControls from './components/language-list-controls.vue';
 import {
   ResponseStatus,
   type LanguageListItemProps,
@@ -82,6 +62,9 @@ const emit = defineEmits<{
 
 const selectedLocales = ref<Set<string>>(new Set());
 
+const letterFilter = ref('');
+const searchFilter = ref('');
+
 const addedLocales = computed(() => new Set(props.addedLanguages.map((l) => l.locale)));
 
 const languageListItems = computed(() => {
@@ -95,6 +78,24 @@ const languageListItems = computed(() => {
   }));
 
   return listItems.sort((a, b) => compareLanguagesByDisplayName(a.language, b.language));
+});
+
+const filteredLanguageListItems = computed(() => {
+  let items = languageListItems.value;
+
+  if (letterFilter.value) {
+    items = items.filter((item) =>
+      item.language.language.toLowerCase().startsWith(letterFilter.value.toLowerCase()),
+    );
+  }
+
+  if (searchFilter.value) {
+    items = items.filter((item) =>
+      item.language.language.toLowerCase().includes(searchFilter.value.toLowerCase()),
+    );
+  }
+
+  return items;
 });
 
 const selectedLanguages = computed(() =>
