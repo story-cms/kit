@@ -3,13 +3,10 @@
     <div class="mb-5 flex items-start justify-between gap-4">
       <div>
         <h2 class="text-base font-semibold text-gray-900">Used In</h2>
-        <p class="mt-0.5 text-sm text-gray-500">
-          Where this resource appears in your content
+        <p v-if="stories.length > 0" class="mt-0.5 text-sm text-gray-500">
+          {{ attachmentDescription }}
         </p>
       </div>
-      <span v-if="stories.length > 0" class="shrink-0 text-xs text-gray-500">
-        {{ attachmentLabel }}
-      </span>
     </div>
 
     <div v-if="stories.length > 0" class="space-y-2">
@@ -31,7 +28,13 @@
       </a>
     </div>
 
-    <p v-else class="text-sm text-gray-500">Not attached to any stories yet</p>
+    <div v-else class="text-sm text-gray-500">
+      <p>This resource is not attached to any content items yet.</p>
+      <p>
+        To attach it, open a content item, then go to
+        <strong class="font-bold">Edit → Resources</strong> to add it.
+      </p>
+    </div>
   </section>
 </template>
 
@@ -45,10 +48,10 @@ const props = defineProps<{
   locale: string;
 }>();
 
-const attachmentLabel = computed(() => {
+const attachmentDescription = computed(() => {
   const count = props.stories.length;
-  const noun = count === 1 ? 'Story' : 'Stories';
-  return `Linked to ${count} ${noun}`;
+  const noun = count === 1 ? 'content item' : 'content items';
+  return `This resource is attached to ${count} ${noun}`;
 });
 
 const storyHref = (storyId: number) =>
