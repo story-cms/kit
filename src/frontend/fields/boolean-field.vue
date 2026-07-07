@@ -4,14 +4,7 @@
       'rounded-bl-lg rounded-br-lg bg-white px-8 py-6 shadow-sm': !isNested,
     }"
   >
-    <SwitchGroup as="div" class="flex shrink-0 items-center gap-3">
-      <SwitchLabel
-        v-if="labelStart"
-        as="span"
-        class="text-xs font-medium uppercase leading-5 text-gray-900"
-      >
-        {{ field.label }}
-      </SwitchLabel>
+    <SwitchGroup as="div" class="flex items-center">
       <Switch
         :class="[btnClass]"
         class="relative inline-flex h-6 w-11 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2"
@@ -29,11 +22,13 @@
         />
       </Switch>
       <SwitchLabel
-        v-if="!labelStart"
         as="span"
-        class="text-xs font-medium leading-5 text-gray-900"
+        :class="[
+          labelStart ? 'order-first ltr:mr-3 rtl:ml-3' : 'order-last ltr:ml-3 rtl:mr-3',
+        ]"
+        class="text-sm"
       >
-        {{ field.label }}
+        <span class="font-medium text-gray-900">{{ field.label }}</span>
       </SwitchLabel>
     </SwitchGroup>
     <p v-if="hasError" class="mt-1 text-sm text-error">{{ errors[0] }}</p>
