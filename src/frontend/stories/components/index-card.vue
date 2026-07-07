@@ -51,55 +51,78 @@
 
   <tr v-else class="transition-colors hover:bg-gray-50">
     <td class="px-6 py-4">
-      <div class="group/edit flex min-w-0 items-center justify-between gap-4">
-        <div class="flex min-w-0 items-center gap-3">
+      <div class="group/edit flex min-w-0 items-center gap-3">
+        <button
+          type="button"
+          class="shrink-0 rounded-xl transition-opacity group-hover/edit:opacity-70"
+          @click="emit('tap', item)"
+        >
+          <img
+            v-if="hasThumbnail"
+            :src="imgUrl"
+            :alt="chapterLabel"
+            draggable="false"
+            class="size-12 shrink-0 rounded-xl object-cover"
+          />
+          <div
+            v-else
+            class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-gray-500"
+          >
+            <BookOpen class="size-4" aria-hidden="true" />
+          </div>
+        </button>
+        <div class="min-w-0 flex-1">
           <button
             type="button"
-            class="shrink-0 rounded-xl transition-opacity group-hover/edit:opacity-70"
+            class="block w-full truncate text-left text-sm font-medium text-gray-900 transition-opacity group-hover/edit:opacity-70"
             @click="emit('tap', item)"
           >
-            <img
-              v-if="hasThumbnail"
-              :src="imgUrl"
-              :alt="chapterLabel"
-              draggable="false"
-              class="size-12 shrink-0 rounded-xl object-cover"
-            />
-            <div
-              v-else
-              class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-gray-500"
-            >
-              <BookOpen class="size-4" aria-hidden="true" />
-            </div>
+            {{ chapterLabel }}
           </button>
-          <div class="min-w-0 flex-1">
-            <button
-              type="button"
-              class="block w-full truncate text-left text-sm font-medium text-gray-900 transition-opacity group-hover/edit:opacity-70"
-              @click="emit('tap', item)"
-            >
-              {{ chapterLabel }}
-            </button>
-            <button
-              v-if="showSubtitle"
-              type="button"
-              class="block w-full truncate text-left text-xs text-gray-500 transition-opacity group-hover/edit:opacity-70"
-              @click="emit('tap', item)"
-            >
-              {{ title }}
-            </button>
-          </div>
+          <button
+            v-if="showSubtitle"
+            type="button"
+            class="block w-full truncate text-left text-xs text-gray-500 transition-opacity group-hover/edit:opacity-70"
+            @click="emit('tap', item)"
+          >
+            {{ title }}
+          </button>
         </div>
-        <div v-if="tags.length > 0" class="flex shrink-0 items-center gap-2">
-          <StatusTag v-for="tag in tags" :key="tag" :tag="tag" />
-        </div>
+      </div>
+    </td>
+    <td class="whitespace-nowrap px-6 py-4">
+      <div v-if="tags.length > 0" class="flex items-center gap-2">
+        <StatusTag v-for="tag in tags" :key="tag" :tag="tag" />
+      </div>
+      <span v-else class="text-sm text-gray-400">—</span>
+    </td>
+    <td class="whitespace-nowrap px-6 py-4 text-right">
+      <div class="flex items-center justify-end gap-2">
+        <button
+          v-if="canEdit"
+          type="button"
+          class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+          aria-label="Edit"
+          @click.stop="emit('edit', item)"
+        >
+          <SquarePen class="size-4" aria-hidden="true" />
+        </button>
+        <button
+          v-if="hasLiveVersion"
+          type="button"
+          class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+          aria-label="Preview"
+          @click.stop="emit('preview', item)"
+        >
+          <Eye class="size-4" aria-hidden="true" />
+        </button>
       </div>
     </td>
   </tr>
 </template>
 
 <script setup lang="ts">
-import { BookOpen } from '@lucide/vue';
+import { BookOpen, Eye, SquarePen } from '@lucide/vue';
 import type { PropType } from 'vue';
 import { computed } from 'vue';
 import StatusTag from '../../shared/status-tag.vue';
@@ -128,9 +151,13 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  canEdit: {
+    type: Boolean,
+    default: true,
+  },
 });
 
-const emit = defineEmits(['tap']);
+const emit = defineEmits(['tap', 'edit', 'preview']);
 
 const imgUrl = computed(() => props.item.imageUrl || props.placeholderImage);
 
@@ -145,6 +172,8 @@ const showSubtitle = computed(() => !!props.item.title);
 const chapterNumber = computed(() => padZero(props.item.number));
 
 const chapterLabel = computed(() => `${props.chapterName} ${chapterNumber.value}`);
+
+const hasLiveVersion = computed(() => props.item.tags.includes('Live'));
 
 const tags = computed(() => {
   if (props.scope === 'Live') {

@@ -80,6 +80,16 @@
               >
                 Chapter
               </th>
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
+                Status
+              </th>
+              <th
+                class="whitespace-nowrap px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200">
@@ -87,6 +97,13 @@
               :item="item"
               :is-list="isList"
               scope="Draft"
+              placeholder-image="https://picsum.photos/seed/1733288671859/500/500"
+              chapter-name="Story"
+            />
+            <IndexCard
+              :item="itemTall"
+              :is-list="isList"
+              scope="Live"
               placeholder-image="https://picsum.photos/seed/1733288671859/500/500"
               chapter-name="Story"
             />

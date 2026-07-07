@@ -2,8 +2,6 @@
   <AppLayout title="Stories">
     <template #actions>
       <div class="flex items-center justify-center gap-x-6">
-        <ListSwitcher :is-list="isList" @toggle="isList = !isList" />
-
         <StudioButton
           v-if="canAddStories"
           label="Add story"
@@ -15,34 +13,37 @@
       </div>
     </template>
     <template #controls>
-      <nav aria-label="Sort stories">
-        <div class="flex flex-wrap gap-1">
-          <TabButton
-            label="Edited Date"
-            :is-active="sortField === 'updatedAt'"
-            @click="toggleSort('updatedAt')"
-          >
-            <ArrowDownWideNarrow
-              v-if="sortField === 'updatedAt' && sortDescending"
-              class="size-4"
-              aria-hidden="true"
-            />
-            <ArrowUpWideNarrow v-else class="size-4" aria-hidden="true" />
-          </TabButton>
-          <TabButton
-            label="Created Date"
-            :is-active="sortField === 'createdAt'"
-            @click="toggleSort('createdAt')"
-          >
-            <ArrowDownWideNarrow
-              v-if="sortField === 'createdAt' && sortDescending"
-              class="size-4"
-              aria-hidden="true"
-            />
-            <ArrowUpWideNarrow v-else class="size-4" aria-hidden="true" />
-          </TabButton>
-        </div>
-      </nav>
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <nav aria-label="Sort stories">
+          <div class="flex flex-wrap gap-1">
+            <TabButton
+              label="Edited Date"
+              :is-active="sortField === 'updatedAt'"
+              @click="toggleSort('updatedAt')"
+            >
+              <ArrowDownWideNarrow
+                v-if="sortField === 'updatedAt' && sortDescending"
+                class="size-4"
+                aria-hidden="true"
+              />
+              <ArrowUpWideNarrow v-else class="size-4" aria-hidden="true" />
+            </TabButton>
+            <TabButton
+              label="Created Date"
+              :is-active="sortField === 'createdAt'"
+              @click="toggleSort('createdAt')"
+            >
+              <ArrowDownWideNarrow
+                v-if="sortField === 'createdAt' && sortDescending"
+                class="size-4"
+                aria-hidden="true"
+              />
+              <ArrowUpWideNarrow v-else class="size-4" aria-hidden="true" />
+            </TabButton>
+          </div>
+        </nav>
+        <ListSwitcher :is-list="isList" @toggle="isList = !isList" />
+      </div>
     </template>
     <template #main>
       <section class="px-3">

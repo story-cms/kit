@@ -18,7 +18,6 @@
     <template #controls>
       <div class="flex items-center justify-between">
         <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
-        <div class="space-x-6"></div>
       </div>
     </template>
     <template #main>

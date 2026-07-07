@@ -19,18 +19,7 @@
     <template #controls>
       <div class="flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div class="flex flex-wrap items-center gap-3">
-          <GlassButton
-            label="Live"
-            :count="liveCount"
-            :active="currentTab === 'Live'"
-            @click="onFilter('Live')"
-          />
-          <GlassButton
-            label="Draft"
-            :count="draftCount"
-            :active="currentTab === 'Draft'"
-            @click="onFilter('Draft')"
-          />
+          <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
 
           <StudioButton
             v-if="addStatus == AddStatus.Add"
@@ -90,6 +79,16 @@
               >
                 Chapter
               </th>
+              <th
+                class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
+                Status
+              </th>
+              <th
+                class="whitespace-nowrap px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500"
+              >
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200">
@@ -98,10 +97,13 @@
               :key="item.number"
               :item="item"
               :is-list="true"
+              :can-edit="canEditStory !== false"
               placeholder-image="https://res.cloudinary.com/redeem/image/upload/v1752849347/story-cms-ui/placeholder_bafmfz.jpg"
               :scope="currentTab"
               :chapter-name="story.chapterType"
               @tap="onTap"
+              @edit="onEdit"
+              @preview="onPreview"
             />
           </tbody>
         </table>
@@ -121,11 +123,12 @@ import {
   StoryIndexProps,
   AddStatus,
   ResponseStatus,
+  TabItem,
 } from '../../types';
 import { canPublishStoryReady, storyPublishBlockedMessage } from '../../shared/story_helpers';
 import AppLayout from '../shared/app-layout.vue';
 import ExpandableSearch from '../shared/expandable-search.vue';
-import GlassButton from '../shared/glass-button.vue';
+import IndexFilter from '../shared/index-filter.vue';
 import { padZero } from '../shared/helpers';
 import ListSwitcher from '../shared/list-switcher.vue';
 import StudioButton from '../shared/studio-button.vue';
@@ -151,6 +154,11 @@ const liveCount = computed(
 const draftCount = computed(
   () => props.index.filter((item) => item.tags.includes('Draft')).length,
 );
+
+const tabs = computed((): TabItem[] => [
+  { label: 'Live', count: liveCount.value },
+  { label: 'Draft', count: draftCount.value },
+]);
 
 const publishMetadata = computed(() => ({
   title: props.story.name,
@@ -203,12 +211,22 @@ const filteredIndex = computed(() => {
 });
 
 const onTap = (item: IndexReadyItem) => {
-  if (currentTab.value === 'Draft') {
-    router.get(`/${shared.locale}/story/${props.story.id}/draft/${item.number}/edit`);
-  } else {
-    router.get(`/${shared.locale}/story/${props.story.id}/chapter/${item.number}`);
-  }
+  router.get(
+    item.tags.includes('Live')
+      ? chapterPreviewUrl(item.number)
+      : draftEditUrl(item.number),
+  );
 };
+
+const onEdit = (item: IndexReadyItem) => router.get(draftEditUrl(item.number));
+
+const onPreview = (item: IndexReadyItem) => router.get(chapterPreviewUrl(item.number));
+
+const chapterPreviewUrl = (number: number) =>
+  `/${shared.locale}/story/${props.story.id}/chapter/${number}`;
+
+const draftEditUrl = (number: number) =>
+  `/${shared.locale}/story/${props.story.id}/draft/${number}/edit`;
 
 const editMeta = () => router.get(`/${shared.locale}/story/${props.story.id}/edit`);
 
