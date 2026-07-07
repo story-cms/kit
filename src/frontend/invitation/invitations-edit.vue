@@ -110,22 +110,14 @@
             class="px-8"
           />
 
-          <SelectField
-            :field="{
-              label: 'Action Type',
-              name: 'actionType',
-              widget: 'select',
-              options: [
-                { label: 'Close', value: 'close' },
-                { label: 'Donate', value: 'donate' },
-                { label: 'External URL', value: 'externalUrl' },
-              ],
-              default: defaultType,
-            }"
-            :is-free="true"
-            :is-nested="true"
-            class="px-8"
-          />
+          <div class="px-8">
+            <RichListbox
+              v-model="selection"
+              label="Action Type"
+              :options="actionTypeOptions"
+              @update:model-value="setActionType"
+            />
+          </div>
 
           <StringField
             v-if="!urlFieldIsDisabled"
@@ -163,8 +155,10 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, toRefs, watch } from 'vue';
+import type { Component } from 'vue';
 import { DateTime } from 'luxon';
 import { router } from '@inertiajs/vue3';
+import { ExternalLink, Heart, X } from '@lucide/vue';
 import axios from 'axios';
 import {
   type SharedPageProps,
@@ -174,10 +168,10 @@ import {
 } from '../../types';
 import { useModelStore, useSharedStore, useWidgetsStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
+import RichListbox from '../shared/rich-listbox.vue';
 import { debounce, getInvitationStatus } from '../shared/helpers';
 import StringField from '../fields/string-field.vue';
 import ImageField from '../fields/image-field.vue';
-import SelectField from '../fields/select-field.vue';
 import MarkdownField from '../fields/markdown-field.vue';
 import BooleanField from '../fields/boolean-field.vue';
 import InvitationMetaBox from './invitation-meta-box.vue';
@@ -233,6 +227,43 @@ const selection = ref(model.getField('actionType', defaultType));
 const title = ref(model.getField('name', 'New Invitation'));
 const isPublished = ref(Boolean(model.getField('isPublished', false)));
 
+const actionTypeOptions: {
+  value: string;
+  label: string;
+  description: string;
+  icon: Component;
+}[] = [
+  {
+    value: 'close',
+    label: 'Close',
+    description: 'Dismiss the invitation',
+    icon: X,
+  },
+  {
+    value: 'donate',
+    label: 'Donate',
+    description: 'Open the in-app donate flow',
+    icon: Heart,
+  },
+  {
+    value: 'externalUrl',
+    label: 'External URL',
+    description: 'Link to an external website',
+    icon: ExternalLink,
+  },
+];
+
+const setActionType = (type: string) => {
+  const previousSelection = selection.value;
+  selection.value = type;
+  model.setField('actionType', type);
+
+  if (previousSelection === 'externalUrl' && type !== 'externalUrl') {
+    const actionUrl = model.getField('actionUrl', '');
+    if (actionUrl) model.setField('actionUrl', '');
+  }
+};
+
 const savedAt = ref(invitation.value['updatedAt']);
 const publishedAt = computed(() =>
   isPublished.value ? (invitation.value['updatedAt'] as string) : 'unpublished',
@@ -284,29 +315,11 @@ watch(
 
 const urlFieldIsDisabled = computed(() => selection.value !== 'externalUrl');
 
-const handleActionTypeChange = () => {
-  const previousSelection = selection.value;
-  selection.value = model.getField('actionType', defaultType);
-
-  // when not switching from external, move on
-  if (previousSelection !== 'externalUrl') return;
-
-  // when not a type switch, move on
-  if (previousSelection === selection.value) return;
-
-  // when the URL field is already empty, move on
-  const actionUrl = model.getField('actionUrl', '');
-  if (!actionUrl) return;
-
-  // we have switched away from external type, so we need to clear the url field
-  model.setField('actionUrl', '');
-};
-
 const stats = ref<InvitationStatsType>({ impressions: 0, clicks: 0 });
 
 onMounted(async (): Promise<void> => {
   model.$subscribe(() => {
-    handleActionTypeChange();
+    selection.value = model.getField('actionType', defaultType);
 
     if (ignoreTheNextChange) {
       ignoreTheNextChange = false;
