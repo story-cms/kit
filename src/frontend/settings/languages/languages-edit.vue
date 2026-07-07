@@ -18,32 +18,23 @@
         v-if="selectedLanguages.length > 0"
         class="flex items-center justify-between pb-4"
       >
-        <div>
-          <h3 class="text-sm font-medium leading-5 text-gray-800">Selected</h3>
+        <div class="flex items-center justify-start gap-4">
+          <h3 class="text-xs font-medium uppercase leading-5 text-gray-800">Selected:</h3>
 
-          <ul class="mt-2 flex flex-wrap gap-2">
+          <ul class="flex flex-wrap gap-x-4 gap-y-2">
             <li
               v-for="language in selectedLanguages"
               :key="language.locale"
-              class="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-1 text-xs font-medium leading-4 text-blue-800"
+              class="inline-flex items-center gap-2 rounded-full bg-gray-100 py-1.5 pl-3 pr-2 text-xs font-medium leading-4 text-gray-900"
             >
               {{ language.language }}
-              <button type="button" @click="setLocaleSelected(language.locale, false)">
-                <svg
-                  width="8"
-                  height="8"
-                  viewBox="0 0 8 8"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M6.75 0.75L0.75 6.75M0.75 0.75L6.75 6.75L0.75 0.75Z"
-                    stroke="#9CA3AF"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
+              <button
+                type="button"
+                class="text-gray-800"
+                :aria-label="`Remove ${language.language}`"
+                @click="setLocaleSelected(language.locale, false)"
+              >
+                <X class="size-3.5" aria-hidden="true" />
               </button>
             </li>
           </ul>
@@ -58,6 +49,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import { X } from '@lucide/vue';
 import { router } from '@inertiajs/vue3';
 import AppLayout from '../../shared/app-layout.vue';
 import PillButton from '../../shared/pill-button.vue';
