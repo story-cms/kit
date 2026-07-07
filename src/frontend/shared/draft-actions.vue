@@ -1,31 +1,48 @@
 <template>
-  <button
-    type="button"
-    :class="['action-button', shared.showMetaBox ? 'active' : 'bg-white']"
-    @click.prevent="shared.setShowMetaBox(!shared.showMetaBox)"
-  >
-    <Icon name="info" class="action-icon" />
-  </button>
-  <button
-    v-if="shared.config.hasAppPreview && !$page?.url?.includes('page')"
-    type="button"
-    :class="['action-button', shared.showAppPreview ? 'active' : 'bg-white']"
-    @click.prevent="shared.setShowAppPreview(!shared.showAppPreview)"
-  >
-    <Icon name="mobile" class="action-icon" />
-  </button>
-  <button
-    v-if="canDelete"
-    type="button"
-    class="action-button bg-white"
-    @click="emit('delete')"
-  >
-    <Icon name="trash" class="action-icon" />
-  </button>
+  <div class="flex shrink-0 items-center gap-2">
+    <button
+      type="button"
+      :class="[
+        'rounded-xl p-1.5 transition-colors',
+        shared.showMetaBox
+          ? 'bg-blue-50 text-blue-600'
+          : 'text-gray-400 hover:bg-blue-50 hover:text-blue-600',
+      ]"
+      :aria-pressed="shared.showMetaBox"
+      aria-label="Toggle meta box"
+      @click.prevent="shared.setShowMetaBox(!shared.showMetaBox)"
+    >
+      <Info class="size-5" aria-hidden="true" />
+    </button>
+    <button
+      v-if="shared.config.hasAppPreview && !$page?.url?.includes('page')"
+      type="button"
+      :class="[
+        'rounded-xl p-1.5 transition-colors',
+        shared.showAppPreview
+          ? 'bg-blue-50 text-blue-600'
+          : 'text-gray-400 hover:bg-blue-50 hover:text-blue-600',
+      ]"
+      :aria-pressed="shared.showAppPreview"
+      aria-label="Toggle app preview"
+      @click.prevent="shared.setShowAppPreview(!shared.showAppPreview)"
+    >
+      <Smartphone class="size-5" aria-hidden="true" />
+    </button>
+    <button
+      v-if="canDelete"
+      type="button"
+      class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
+      aria-label="Delete draft"
+      @click="emit('delete')"
+    >
+      <Trash2 class="size-5" aria-hidden="true" />
+    </button>
+  </div>
 </template>
 
 <script setup lang="ts">
-import Icon from '../shared/icon.vue';
+import { Info, Smartphone, Trash2 } from '@lucide/vue';
 import { useSharedStore } from '../store';
 
 defineProps({
@@ -39,11 +56,3 @@ const shared = useSharedStore();
 
 const emit = defineEmits(['delete']);
 </script>
-<style lang="postcss" scoped>
-.action-icon {
-  @apply size-6 cursor-pointer text-gray-500;
-}
-.action-button {
-  @apply grid size-10 cursor-pointer place-content-center rounded-full transition-all duration-200 ease-in-out hover:bg-gray-100;
-}
-</style>

@@ -4,7 +4,14 @@
           <div class="flex items-center justify-center gap-x-6">
             <ListSwitcher :is-list="isList" @toggle="isList = !isList" />
 
-            <IconButton v-if="canAddStories" icon="plus" @tap="addStory" />
+            <StudioButton
+              v-if="canAddStories"
+              label="Add story"
+              variant="secondary"
+              @click="addStory"
+            >
+              <Plus class="size-4" aria-hidden="true" />
+            </StudioButton>
           </div>
         </template>
         <template #controls>
@@ -52,7 +59,8 @@ import type { SharedPageProps, StoryGalleryProps } from '../../types';
 import { useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
 import ToggleButton from '../shared/toggle-button.vue';
-import IconButton from '../shared/icon-button.vue';
+import StudioButton from '../shared/studio-button.vue';
+import { Plus } from '@lucide/vue';
 import ListSwitcher from '../shared/list-switcher.vue';
 import StoryItem from './components/story-item.vue';
 import { router } from '@inertiajs/vue3';
