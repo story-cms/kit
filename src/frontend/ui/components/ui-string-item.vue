@@ -7,7 +7,7 @@
     @click="$emit('click', item)"
   >
     <p
-      class="line-clamp-1 text-left font-['Inter'] text-base font-medium leading-8 text-black"
+      class="line-clamp-1 text-left font-dmsans text-base font-medium leading-8 text-black"
       :class="{
         'text-white': isSelected,
       }"

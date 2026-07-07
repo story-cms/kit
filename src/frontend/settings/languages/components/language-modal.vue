@@ -12,7 +12,7 @@
           >
             <DialogTitle
               v-if="title"
-              class="text-left font-['Inter']"
+              class="text-left font-dmsans"
               :class="variantClass"
             >
               {{ title }}
@@ -33,7 +33,7 @@
             <slot>
               <p
                 v-if="message"
-                class="text-left font-['Inter'] text-base font-normal leading-7 tracking-normal text-black"
+                class="text-left font-dmsans text-base font-normal leading-7 tracking-normal text-black"
               >
                 {{ message }}
               </p>

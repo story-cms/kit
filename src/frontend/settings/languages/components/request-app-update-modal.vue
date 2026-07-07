@@ -2,12 +2,12 @@
   <LanguageModal :open="open" title="App update request" @close="emit('close')">
     <div class="pb-8">
       <p
-        class="pt-2 text-left font-['Inter'] text-base font-semibold leading-7 tracking-normal text-black"
+        class="pt-2 text-left font-dmsans text-base font-semibold leading-7 tracking-normal text-black"
       >
         What's the reason for the app update?
       </p>
       <p
-        class="pt-2 text-left font-['Inter'] text-base font-normal leading-7 tracking-normal text-black"
+        class="pt-2 text-left font-dmsans text-base font-normal leading-7 tracking-normal text-black"
       >
         Please select all that apply.
       </p>
@@ -59,7 +59,7 @@
               <div class="text-sm/6">
                 <label
                   for="language"
-                  class="font-['Inter'] text-sm font-semibold leading-[130%] tracking-normal"
+                  class="font-dmsans text-sm font-semibold leading-[130%] tracking-normal"
                   :class="
                     selectedReasons.includes('New language')
                       ? 'text-blue-900'
@@ -69,7 +69,7 @@
                 >
                 <p
                   id="language-description"
-                  class="font-['Inter'] text-sm font-normal leading-5 tracking-normal"
+                  class="font-dmsans text-sm font-normal leading-5 tracking-normal"
                   :class="
                     selectedReasons.includes('New language')
                       ? 'text-blue-700'
@@ -124,7 +124,7 @@
               <div class="text-sm/6">
                 <label
                   for="content"
-                  class="font-['Inter'] text-sm font-semibold leading-[130%] tracking-normal"
+                  class="font-dmsans text-sm font-semibold leading-[130%] tracking-normal"
                   :class="
                     selectedReasons.includes('New content')
                       ? 'text-blue-900'
@@ -134,7 +134,7 @@
                 >
                 <p
                   id="content-description"
-                  class="font-['Inter'] text-sm font-normal leading-5 tracking-normal"
+                  class="font-dmsans text-sm font-normal leading-5 tracking-normal"
                   :class="
                     selectedReasons.includes('New content')
                       ? 'text-blue-700'

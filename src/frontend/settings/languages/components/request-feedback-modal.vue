@@ -2,12 +2,12 @@
   <LanguageModal :open="open" :title="title" :variant="variant" @close="$emit('close')">
     <div class="pb-9 pt-4">
       <p
-        class="font-['Inter'] text-base font-semibold leading-7 tracking-normal text-black"
+        class="font-dmsans text-base font-semibold leading-7 tracking-normal text-black"
       >
         {{ heading }}
       </p>
       <p
-        class="pt-[10px] font-['Inter'] text-base font-normal leading-7 tracking-normal text-black"
+        class="pt-[10px] font-dmsans text-base font-normal leading-7 tracking-normal text-black"
       >
         {{ message }}
       </p>

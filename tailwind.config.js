@@ -15,7 +15,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        inter: ['Inter', 'sans-serif'],
+        sans: ['DM Sans', 'sans-serif'],
         dmsans: ['DM Sans', 'sans-serif'],
         amiri: ['Amiri', 'serif'],
       },

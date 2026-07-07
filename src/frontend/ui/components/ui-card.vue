@@ -1,6 +1,6 @@
 <template>
   <Transition name="slide-fade">
-    <div v-if="true" class="rounded-xl bg-white font-['Inter'] shadow">
+    <div v-if="true" class="rounded-xl bg-white font-dmsans shadow">
       <div class="grid grid-cols-2 gap-x-10 px-8 pb-4 pt-6">
         <div>
           <label :for="item.key" class="block text-sm/5 font-medium text-gray-700">

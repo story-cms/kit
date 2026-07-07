@@ -1,6 +1,8 @@
 <template>
   <div class="pt-[30px]">
-    <h3 class="font-['Inter'] text-2xl font-semibold leading-8 text-gray-800">
+    <h3
+      class="text-xl font-semibold leading-7 tracking-[-0.45px] text-[#182E33] [&>span]:text-gray-400"
+    >
       Analytics
     </h3>
     <div>
