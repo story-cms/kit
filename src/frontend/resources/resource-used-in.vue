@@ -47,8 +47,8 @@ const props = defineProps<{
 
 const attachmentLabel = computed(() => {
   const count = props.stories.length;
-  const noun = count === 1 ? 'attachment' : 'attachments';
-  return `${count} explicit ${noun}`;
+  const noun = count === 1 ? 'Story' : 'Stories';
+  return `Linked to ${count} ${noun}`;
 });
 
 const storyHref = (storyId: number) =>
