@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import vine from '@vinejs/vine';
 import { ResourceValidator } from '../../src/backend/validators/resource.js';
 import type { HttpContext } from '@adonisjs/core/http';
 
@@ -8,6 +9,34 @@ function createMockHttpContext(inputs: Record<string, any>): HttpContext {
       input: (key: string) => inputs[key],
     },
   } as HttpContext;
+}
+
+type ValidationError = {
+  messages?: Array<{ message: string; rule: string; field: string }>;
+};
+
+async function expectValidationMessages(
+  validate: () => Promise<unknown>,
+  expected: Array<{ field: string; message: string }>,
+) {
+  let error: ValidationError | undefined;
+  try {
+    await validate();
+  } catch (e) {
+    error = e as ValidationError;
+  }
+
+  expect(error).toBeDefined();
+  for (const item of expected) {
+    expect(error!.messages).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          field: item.field,
+          message: item.message,
+        }),
+      ]),
+    );
+  }
 }
 
 const baseResource = {
@@ -200,6 +229,56 @@ test.describe('Resource Validator', () => {
       const validator = new ResourceValidator(ctx);
 
       await expect(validator.validate(data)).rejects.toThrow();
+    });
+  });
+
+  test.describe('with convertEmptyStringsToNull', () => {
+    test.beforeEach(() => {
+      vine.convertEmptyStringsToNull = true;
+    });
+
+    test('text returns friendly content message for empty content', async () => {
+      const data = {
+        ...baseResource,
+        type: 'text' as const,
+        content: '',
+      };
+      const ctx = createMockHttpContext(data);
+      const validator = new ResourceValidator(ctx);
+
+      await expectValidationMessages(
+        () => validator.validate(data),
+        [{ field: 'bundle.content', message: 'Please add some content' }],
+      );
+    });
+
+    test('url returns friendly url message for empty url', async () => {
+      const data = {
+        ...baseResource,
+        type: 'url' as const,
+        url: '',
+      };
+      const ctx = createMockHttpContext(data);
+      const validator = new ResourceValidator(ctx);
+
+      await expectValidationMessages(
+        () => validator.validate(data),
+        [{ field: 'bundle.url', message: 'Please enter a URL' }],
+      );
+    });
+
+    test('video returns friendly message when video is missing', async () => {
+      const data = {
+        ...baseResource,
+        type: 'video' as const,
+      };
+      const ctx = createMockHttpContext(data);
+      const validator = new ResourceValidator(ctx);
+
+      await expectValidationMessages(
+        () => validator.validate(data),
+        [{ field: 'bundle.video', message: 'Please upload a video' }],
+      );
     });
   });
 });

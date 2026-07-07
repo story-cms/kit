@@ -75,10 +75,16 @@ export class ResourceValidator {
   }
 }
 
-export const resourceErrorMessages = new SimpleMessagesProvider({
+export const resourceValidationMessages = {
   'bundle.title.minLength': 'Please enter a title',
-  'bundle.content.minLength': 'Please add article content',
+  'bundle.title.required': 'Please enter a title',
+  'bundle.content.minLength': 'Please add some content',
+  'bundle.content.required': 'Please add some content',
   'bundle.url.minLength': 'Please enter a URL',
+  'bundle.url.required': 'Please enter a URL',
   'bundle.url.url': 'Please enter a valid URL',
   'bundle.video': 'Please upload a video',
-});
+  'bundle.video.required': 'Please upload a video',
+};
+
+export const resourceErrorMessages = new SimpleMessagesProvider(resourceValidationMessages);
