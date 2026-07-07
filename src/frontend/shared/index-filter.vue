@@ -1,32 +1,29 @@
 <template>
-  <div class="flex">
-    <button
-      v-for="(tab, index) in tabs"
-      :key="tab.label"
-      type="button"
-      :aria-current="tab.current ? 'page' : undefined"
-      :class="[
-        'relative inline-flex items-center px-4 py-2 text-sm font-medium leading-4 ring-1 ring-inset ring-gray-300 transition-all duration-75 hover:bg-gray-50',
-        index === 0 ? 'rounded-l-md' : 'rounded-r-md',
-        tab.current
-          ? 'bg-indigo-50 text-indigo-700 ring-indigo-700'
-          : 'bg-white text-gray-900',
-      ]"
-      @click.prevent="emit('change', tab.label)"
-    >
-      {{ tab.label }}
-      <span
-        v-if="tab.count"
-        class="ml-1 inline-flex items-center rounded-full bg-gray-100 px-2 py-1 text-xs font-medium leading-4 text-indigo-700"
-        >{{ tab.count }}</span
+  <nav aria-label="Filter tabs">
+    <div class="flex flex-wrap gap-1">
+      <TabButton
+        v-for="tab in tabs"
+        :key="tab.label"
+        :is-active="tab.current"
+        :aria-current="tab.current ? 'page' : undefined"
+        @click="emit('change', tab.label)"
       >
-    </button>
-  </div>
+        {{ tab.label }}
+        <span
+          v-if="tab.count"
+          class="inline-flex items-center rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700"
+        >
+          {{ tab.count }}
+        </span>
+      </TabButton>
+    </div>
+  </nav>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { TabItem } from '../../types';
+import TabButton from './tab-button.vue';
 
 const props = defineProps({
   tabs: {

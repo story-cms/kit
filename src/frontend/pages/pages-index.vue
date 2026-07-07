@@ -2,21 +2,17 @@
   <AppLayout title="Pages">
     <template #actions>
       <div class="flex items-center gap-x-6">
-        <button
+        <StudioButton
           v-if="isShowingPublished"
-          type="button"
-          class="rounded-full bg-blue-500 p-2 shadow-md hover:bg-blue-700"
+          label="Add divider"
+          variant="blue"
           @click="addDivider"
         >
-          <Icon name="divider" class="text-white" />
-        </button>
-        <button
-          type="button"
-          class="rounded-full bg-blue-500 p-2 shadow-md hover:bg-blue-700"
-          @click="addPage"
-        >
-          <Icon name="plus" class="text-white" />
-        </button>
+          <SeparatorHorizontal class="size-4" aria-hidden="true" />
+        </StudioButton>
+        <StudioButton label="Add page" variant="blue" @click="addPage">
+          <Plus class="size-4" aria-hidden="true" />
+        </StudioButton>
       </div>
     </template>
     <template #controls>
@@ -28,6 +24,7 @@
     <template #main>
       <div class="my-8 flex flex-col space-y-4">
         <div
+          v-if="filteredItems.length > 0"
           class="divide-y divide-gray-100 overflow-hidden rounded-xl border border-gray-200 bg-white"
         >
           <PageIndexItem
@@ -43,6 +40,10 @@
             @dragend="onDragEnd"
           />
         </div>
+        <div v-else class="text-center text-gray-500">
+          <p>No pages found</p>
+          <p>Get started by creating your first page</p>
+        </div>
       </div>
     </template>
   </AppLayout>
@@ -56,7 +57,8 @@ import type { TabItem, PageItem, SharedPageProps, PageIndexProps } from '../../t
 import { usePagesStore, useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
 import IndexFilter from '../shared/index-filter.vue';
-import Icon from '../shared/icon.vue';
+import StudioButton from '../shared/studio-button.vue';
+import { Plus, SeparatorHorizontal } from '@lucide/vue';
 import { debounce } from '../shared/helpers';
 import PageIndexItem from './page-index-item.vue';
 
