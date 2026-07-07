@@ -1,5 +1,5 @@
 <template>
-  <AppLayout title="Pages">
+  <AppLayout title="Manage Pages">
     <template #actions>
       <div class="flex items-center gap-x-6">
         <StudioButton

@@ -13,17 +13,20 @@
       leave-from-class="transform translate-y-0 opacity-100"
       leave-to-class="transform -translate-y-2 opacity-0"
     >
-      <div
-        v-if="message"
-        class="flex flex-col items-center text-center text-sm font-medium leading-4"
-      >
-        <div class="flex w-full items-center justify-center gap-x-6">
-          <Icon :name="responseConfig.icon" :class="responseConfig.iconClass" />
-          <p class="max-w-full">{{ message }}</p>
+      <div v-if="message" class="flex flex-col items-center">
+        <div class="flex w-full flex-col items-center justify-center gap-4">
+          <component
+            :is="responseConfig.icon"
+            :class="responseConfig.iconClass"
+            aria-hidden="true"
+          />
+          <p class="max-w-full text-center font-dmsans text-xl font-semibold leading-4">
+            {{ message }}
+          </p>
         </div>
         <p
           v-if="description"
-          class="mt-2 text-center font-['Inter'] text-sm font-normal leading-5"
+          class="mt-4 text-center font-dmsans text-sm font-normal leading-5"
         >
           {{ description }}
         </p>
@@ -32,8 +35,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue';
-import Icon from './icon.vue';
+import { computed, type Component } from 'vue';
+import { BadgeCheck, Check, CircleAlert, Info } from '@lucide/vue';
 import { ResponseStatus } from '../../types';
 import { useSharedStore } from '../store';
 
@@ -47,23 +50,23 @@ const props = defineProps<{
 
 const RESPONSE_CONFIG: Record<
   Exclude<ResponseStatus, ResponseStatus.None>,
-  { icon: string; iconClass: string }
+  { icon: Component; iconClass: string }
 > = {
   [ResponseStatus.Failure]: {
-    icon: 'exclamation',
-    iconClass: 'inline-flex h-6 w-6 items-center text-red-500',
+    icon: CircleAlert,
+    iconClass: 'inline-flex size-6 shrink-0 text-red-500',
   },
   [ResponseStatus.Confirmation]: {
-    icon: 'check',
-    iconClass: 'inline-flex h-6 w-6 items-center text-blue-500',
+    icon: Check,
+    iconClass: 'inline-flex size-6 shrink-0 text-blue-500',
   },
   [ResponseStatus.Accomplishment]: {
-    icon: 'badge-check',
-    iconClass: 'inline-flex h-6 w-6 items-center text-green-500',
+    icon: BadgeCheck,
+    iconClass: 'inline-flex size-6 shrink-0 text-green-500',
   },
   [ResponseStatus.Neutral]: {
-    icon: 'information-circle',
-    iconClass: 'inline-flex h-6 w-6 items-center text-yellow-500',
+    icon: Info,
+    iconClass: 'inline-flex size-6 shrink-0 text-yellow-500',
   },
 };
 

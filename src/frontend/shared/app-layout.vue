@@ -5,7 +5,7 @@
       <Teleport to="body">
         <div
           v-if="showSidebarOverlay"
-          class="fixed inset-0 z-[15] bg-black/30"
+          class="fixed inset-0 z-[15]"
           aria-hidden="true"
           @click="closeSidebar"
         />

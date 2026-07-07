@@ -5,6 +5,7 @@
           <button type="button" @click.prevent="onAccomplish">Accomplish</button>
           <button type="button" @click.prevent="onFail">Fail</button>
           <button type="button" @click.prevent="onNeutral">Neutral</button>
+          <button type="button" @click.prevent="onWithDescription">With description</button>
         </template>
     <template #main>
     <div class="container mx-auto grid w-64 space-y-16 p-3">
@@ -63,4 +64,11 @@ const onFail = () => shared.addMessage(ResponseStatus.Failure, 'You broke the in
 
 const onNeutral = () =>
   shared.addMessage(ResponseStatus.Neutral, 'Remember to wash behind your ears');
+
+const onWithDescription = () =>
+  shared.addMessage(
+    ResponseStatus.Confirmation,
+    'Your languages have been added',
+    'Remember, once you’ve translated your content you’ll need to request an app update to make these live for your users.',
+  );
 </script>
