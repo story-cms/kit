@@ -1,61 +1,57 @@
 <template>
   <AppLayout title="Settings" subtitle="Add new languages">
-<template #description>
-          <p class="text-sm font-normal leading-5 text-black">
-            Select languages you would like to add. Once you have chosen press add to
-            confirm.
-          </p>
-        </template>
-        <template #actions>
-          <PillButton
-            label="Add"
-            variant="blue"
-            :disabled="selectedLanguages.length === 0"
-            @click="addLanguage"
-          />
-        </template>
-        <template #controls>
-          <div
-            v-if="selectedLanguages.length > 0"
-            class="flex justify-between items-center pb-4"
-          >
-            <div>
-              <h3 class="text-sm font-medium leading-5 text-gray-800">Selected</h3>
+    <template #description>
+      <p class="text-sm font-normal leading-5 text-black">
+        Select languages you would like to add. Once you have chosen press add to confirm.
+      </p>
+    </template>
+    <template #actions>
+      <PillButton
+        label="Add"
+        variant="blue"
+        :disabled="selectedLanguages.length === 0"
+        @click="addLanguage"
+      />
+    </template>
+    <template #controls>
+      <div
+        v-if="selectedLanguages.length > 0"
+        class="flex items-center justify-between pb-4"
+      >
+        <div>
+          <h3 class="text-sm font-medium leading-5 text-gray-800">Selected</h3>
 
-              <ul class="flex flex-wrap gap-2 mt-2">
-                <li
-                  v-for="language in selectedLanguages"
-                  :key="language.locale"
-                  class="inline-flex gap-1 items-center px-2 py-1 text-xs font-medium leading-4 text-blue-800 bg-blue-100 rounded-full"
+          <ul class="mt-2 flex flex-wrap gap-2">
+            <li
+              v-for="language in selectedLanguages"
+              :key="language.locale"
+              class="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-1 text-xs font-medium leading-4 text-blue-800"
+            >
+              {{ language.language }}
+              <button type="button" @click="setLocaleSelected(language.locale, false)">
+                <svg
+                  width="8"
+                  height="8"
+                  viewBox="0 0 8 8"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  {{ language.language }}
-                  <button
-                    type="button"
-                    @click="setLocaleSelected(language.locale, false)"
-                  >
-                    <svg
-                      width="8"
-                      height="8"
-                      viewBox="0 0 8 8"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M6.75 0.75L0.75 6.75M0.75 0.75L6.75 6.75L0.75 0.75Z"
-                        stroke="#9CA3AF"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
-                  </button>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </template>
+                  <path
+                    d="M6.75 0.75L0.75 6.75M0.75 0.75L6.75 6.75L0.75 0.75Z"
+                    stroke="#9CA3AF"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </template>
     <template #main>
-    <LanguageList :items="languageListItems" @update="setLocaleSelected" />
+      <LanguageList :items="languageListItems" @update="setLocaleSelected" />
     </template>
   </AppLayout>
 </template>
@@ -106,9 +102,7 @@ const languageListItems = computed(() => {
         : 'available',
   }));
 
-  return listItems.sort((a, b) =>
-    compareLanguagesByDisplayName(a.language, b.language),
-  );
+  return listItems.sort((a, b) => compareLanguagesByDisplayName(a.language, b.language));
 });
 
 const selectedLanguages = computed(() =>
