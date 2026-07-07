@@ -7,7 +7,7 @@
   >
     <template #actions>
       <div class="mt-9 flex w-full justify-end gap-x-4">
-        <PillButton label="Remove" variant="red" @click="emit('confirm')" />
+        <PillButton label="Delete" variant="red" @click="emit('confirm')" />
         <PillButton label="Cancel" variant="gray" @click="emit('close')" />
       </div>
     </template>
