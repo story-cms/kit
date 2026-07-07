@@ -12,8 +12,8 @@
       <div
         v-if="isExpanded"
         key="input"
-        class="relative w-40"
-        :class="{ 'min-w-[10rem]': isForcedOpen && !hasRoom }"
+        class="relative shrink-0 w-56 rounded-full border border-gray-300 bg-white"
+        :class="{ 'min-w-[14rem]': isForcedOpen && !hasRoom }"
       >
         <Search
           class="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-gray-400"
@@ -25,17 +25,26 @@
           name="search"
           :value="modelValue"
           :placeholder="placeholder"
-          class="block w-full rounded-xl border border-gray-300 py-2 pl-10 pr-3 text-sm text-gray-900 focus:border-transparent focus:ring-2 focus:ring-blue-500"
+          class="block w-full rounded-full border-0 bg-transparent py-2 pl-10 pr-10 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
           @input="onInput"
           @focus="resetIdleTimer"
           @keydown.escape="onEscape"
         />
+        <button
+          v-if="showClearButton"
+          type="button"
+          class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-600"
+          aria-label="Clear search"
+          @click="onClear"
+        >
+          <X class="size-4" aria-hidden="true" />
+        </button>
       </div>
       <button
         v-else
         key="icon"
         type="button"
-        class="rounded-xl p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700"
+        class="shrink-0 p-0 text-gray-500 transition-colors hover:text-gray-700"
         aria-label="Search"
         :aria-expanded="isForcedOpen"
         @click.stop="openSearch"
@@ -47,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { Search } from '@lucide/vue';
+import { Search, X } from '@lucide/vue';
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 
 const IDLE_MS = 5000;
@@ -81,6 +90,9 @@ let idleTimer: ReturnType<typeof setTimeout> | null = null;
 
 const hasRoom = computed(() => containerWidth.value >= props.expandAt);
 const isExpanded = computed(() => hasRoom.value || isForcedOpen.value);
+const showClearButton = computed(
+  () => props.modelValue.length > 0 || (isForcedOpen.value && !hasRoom.value),
+);
 
 watch(hasRoom, (room) => {
   if (room) {
@@ -124,6 +136,16 @@ const collapse = () => {
   }
 
   emit('collapse');
+};
+
+const onClear = () => {
+  if (props.modelValue.length > 0) {
+    emit('update:modelValue', '');
+  }
+
+  if (isForcedOpen.value && !hasRoom.value) {
+    collapse();
+  }
 };
 
 const onEscape = () => {

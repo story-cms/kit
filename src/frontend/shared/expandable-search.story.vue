@@ -2,7 +2,16 @@
   <Story title="Expandable Search" group="shared" :layout="{ type: 'grid', width: 500 }">
     <Variant title="Expanded">
       <div class="flex items-center gap-3 bg-gray-50 p-6" style="width: 400px">
-        <ExpandableSearch v-model="query" placeholder="Search resources..." />
+        <ExpandableSearch
+          v-model="query"
+          placeholder="Search resources to attach..."
+        />
+      </div>
+    </Variant>
+
+    <Variant title="With value">
+      <div class="flex items-center gap-3 bg-gray-50 p-6" style="width: 400px">
+        <ExpandableSearch v-model="filledQuery" placeholder="Search" />
       </div>
     </Variant>
 
@@ -36,7 +45,7 @@
           />
         </label>
         <div
-          class="flex items-center gap-3 overflow-hidden rounded-xl border border-dashed border-gray-300 p-3"
+          class="flex flex-wrap items-center gap-[10px] overflow-hidden rounded-xl border border-dashed border-gray-300 p-3"
           :style="{ width: `${containerWidth}px` }"
         >
           <ExpandableSearch
@@ -44,14 +53,15 @@
             placeholder="Search..."
             clear-on-collapse
           />
-          <div
-            class="flex shrink-0 items-center rounded-xl border border-gray-300 bg-white p-1"
+          <button
+            v-for="letter in letters"
+            :key="letter"
+            type="button"
+            class="flex size-7 shrink-0 items-center justify-center rounded-full p-0 text-sm text-gray-500"
             aria-hidden="true"
           >
-            <div class="rounded-xl bg-gray-100 p-2">
-              <LayoutGrid class="size-4 text-gray-900" />
-            </div>
-          </div>
+            {{ letter }}
+          </button>
         </div>
         <p class="text-sm text-gray-600">Value: "{{ interactiveQuery }}"</p>
       </div>
@@ -60,12 +70,13 @@
 </template>
 
 <script setup lang="ts">
-import { LayoutGrid } from '@lucide/vue';
 import { ref } from 'vue';
 import ExpandableSearch from './expandable-search.vue';
 
 const query = ref('');
+const filledQuery = ref('Portuguese');
 const idleQuery = ref('');
 const interactiveQuery = ref('');
 const containerWidth = ref(200);
+const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 </script>
