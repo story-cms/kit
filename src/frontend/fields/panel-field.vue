@@ -30,7 +30,7 @@
       </button>
     </div>
     <div v-if="hasError" class="my-2 flex items-center justify-center">
-      <p class="text-sm text-error">{{ errors[0] }}</p>
+      <p class="text-sm text-error">{{ panelMessage }}</p>
     </div>
     <div
       :class="[
@@ -102,5 +102,8 @@ const errors = computed(() => {
   }
   return allErrors;
 });
+const panelMessage = computed(
+  () => field.value.panelErrorMessage ?? errors.value[0] ?? '',
+);
 const hasError = computed(() => errors.value.length > 0 && !props.isReadOnly);
 </script>

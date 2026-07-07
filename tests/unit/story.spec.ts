@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import type { HttpContext } from '@adonisjs/core/http';
+import vine from '@vinejs/vine';
 import {
   StoryCreateValidator,
   StoryUpdateValidator,
@@ -11,6 +12,34 @@ function createMockHttpContext(inputs: Record<string, unknown>): HttpContext {
       input: (key: string) => inputs[key],
     },
   } as HttpContext;
+}
+
+type ValidationError = {
+  messages?: Array<{ message: string; rule: string; field: string }>;
+};
+
+async function expectValidationMessages(
+  validate: () => Promise<unknown>,
+  expected: Array<{ field: string; message: string }>,
+) {
+  let error: ValidationError | undefined;
+  try {
+    await validate();
+  } catch (e) {
+    error = e as ValidationError;
+  }
+
+  expect(error).toBeDefined();
+  for (const item of expected) {
+    expect(error!.messages).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          field: item.field,
+          message: item.message,
+        }),
+      ]),
+    );
+  }
 }
 
 function withoutKey<T extends Record<string, unknown>, K extends keyof T>(
@@ -279,6 +308,63 @@ test.describe('Story Validator', () => {
         expect(result.bundle.title).toBe('Gospel of John');
         expect(result.bundle.description).toBeUndefined();
       });
+    });
+  });
+
+  test.describe('with convertEmptyStringsToNull', () => {
+    test.beforeEach(() => {
+      vine.convertEmptyStringsToNull = true;
+    });
+
+    test('create returns friendly title message for empty title', async () => {
+      const validator = new StoryCreateValidator();
+
+      await expectValidationMessages(
+        () =>
+          validator.validate({
+            ...validCreateData,
+            title: '',
+          }),
+        [{ field: 'bundle.title', message: 'Please add a title.' }],
+      );
+    });
+
+    test('update returns friendly storyType message for empty storyType', async () => {
+      const data = {
+        ...validDraftUpdateData,
+        storyType: '',
+      };
+      const ctx = createMockHttpContext(data);
+      const validator = new StoryUpdateValidator(ctx);
+
+      await expectValidationMessages(
+        () => validator.validate(data),
+        [
+          {
+            field: 'bundle.storyType',
+            message: 'Please choose a story type.',
+          },
+        ],
+      );
+    });
+
+    test('update returns friendly storyType message for null storyType', async () => {
+      const data = {
+        ...validDraftUpdateData,
+        storyType: null,
+      };
+      const ctx = createMockHttpContext(data);
+      const validator = new StoryUpdateValidator(ctx);
+
+      await expectValidationMessages(
+        () => validator.validate(data),
+        [
+          {
+            field: 'bundle.storyType',
+            message: 'Please choose a story type.',
+          },
+        ],
+      );
     });
   });
 });

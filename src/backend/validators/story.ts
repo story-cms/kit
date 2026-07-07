@@ -69,10 +69,7 @@ const createSchema = {
 
 export class StoryCreateValidator {
   validate(data: any): Promise<any> {
-    vine.messagesProvider = new SimpleMessagesProvider({
-      ...storyErrorMessages,
-      'bundle.template.minLength': 'Choose a content shape for the story',
-    });
+    vine.messagesProvider = storyErrorMessages;
 
     const schema = vine.object({
       bundle: vine.object(createSchema),
@@ -109,15 +106,26 @@ export class StoryUpdateValidator {
   }
 }
 
-export const storyErrorMessages = new SimpleMessagesProvider({
-  'bundle.title.minLength': 'Your story must have a title',
-  'bundle.coverImage.minLength': 'Your story must have a cover image',
-  'bundle.chapterLimit.number': 'The chapter limit must be a number',
-  'bundle.chapterLimit.min': 'The chapter limit must be a number greater than 0',
-  'bundle.storyType.minLength': 'How about "Story"? We need to call it something.',
-  'bundle.sectionType.minLength': 'Shall we just use "Section" then?',
-  'bundle.chapterType.minLength': 'Choose something like "Session", "Lesson", "Episode"',
-  'bundle.visibility.minLength': 'Choose the visibility of the story',
-  'bundle.sections.*.title.minLength': 'A section must have a title',
-  'bundle.template.minLength': 'Choose a content shape for the story',
-});
+export const storyValidationMessages = {
+  'bundle.title.minLength': 'Please add a title.',
+  'bundle.title.required': 'Please add a title.',
+  'bundle.coverImage.minLength': 'Please add a cover image.',
+  'bundle.coverImage.required': 'Please add a cover image.',
+  'bundle.chapterLimit.number': 'Please enter at least 1 chapter.',
+  'bundle.chapterLimit.min': 'Please enter at least 1 chapter.',
+  'bundle.chapterLimit.required': 'Please enter at least 1 chapter.',
+  'bundle.storyType.minLength': 'Please choose a story type.',
+  'bundle.storyType.required': 'Please choose a story type.',
+  'bundle.sectionType.minLength': 'Please choose a section type.',
+  'bundle.sectionType.required': 'Please choose a section type.',
+  'bundle.chapterType.minLength': 'Please choose a chapter type.',
+  'bundle.chapterType.required': 'Please choose a chapter type.',
+  'bundle.visibility.minLength': 'Please choose a visibility.',
+  'bundle.visibility.required': 'Please choose a visibility.',
+  'bundle.sections.*.title.minLength': 'Please add a section title.',
+  'bundle.sections.*.title.required': 'Please add a section title.',
+  'bundle.template.minLength': 'Please choose a chapter template.',
+  'bundle.template.required': 'Please choose a chapter template.',
+};
+
+export const storyErrorMessages = new SimpleMessagesProvider(storyValidationMessages);
