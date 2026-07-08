@@ -1,66 +1,78 @@
 <template>
-  <td class="px-3 py-4">
-    <div class="flex items-center">
-      <div class="size-11 shrink-0">
-        <div class="grid size-11 place-items-center rounded-full bg-red-300">
-          <p class="font-extrabold uppercase text-white">
-            {{ user.initials }}
-          </p>
+  <tr class="transition-colors hover:bg-gray-50">
+    <td class="max-w-[400px] px-6 py-4">
+      <div class="group/edit flex min-w-0 items-center gap-3">
+        <div class="size-11 shrink-0">
+          <div class="grid size-11 place-items-center rounded-full bg-red-300">
+            <p class="font-extrabold uppercase text-white">
+              {{ user.initials }}
+            </p>
+          </div>
+        </div>
+        <div class="min-w-0 flex-1">
+          <button
+            type="button"
+            class="block w-full truncate text-left text-sm font-medium capitalize text-gray-900 transition-opacity group-hover/edit:opacity-70"
+            @click="emit('update')"
+          >
+            {{ user.name }}
+          </button>
+          <button
+            type="button"
+            class="block w-full truncate text-left text-xs text-gray-500 transition-opacity group-hover/edit:opacity-70"
+            @click="emit('update')"
+          >
+            {{ user.email }}
+          </button>
         </div>
       </div>
-      <div class="ml-4">
-        <div class="font-medium capitalize text-gray-900">{{ user.name }}</div>
-        <div class="text-gray-500">{{ user.email }}</div>
+    </td>
+    <td class="whitespace-nowrap px-6 py-4">
+      <span
+        class="rounded-xl bg-gray-100 px-2 py-1 text-xs font-medium capitalize text-gray-700"
+      >
+        <span v-if="user.hasPendingInvite" class="normal-case">Invite pending</span>
+        <span v-else>{{ user.role }}</span>
+      </span>
+    </td>
+    <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
+      <span class="rounded-xl bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700">
+        {{ language }}
+      </span>
+    </td>
+    <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+      {{ lastActivity }}
+    </td>
+    <td class="whitespace-nowrap px-6 py-4 text-right">
+      <div class="flex items-center justify-end gap-2">
+        <button
+          type="button"
+          class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+          @click="emit('update')"
+        >
+          <SquarePen class="size-4" aria-hidden="true" />
+        </button>
+        <button
+          v-if="user.id != shared.user.id"
+          type="button"
+          class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
+          @click="emit('remove')"
+        >
+          <Trash2 class="size-4" aria-hidden="true" />
+        </button>
       </div>
-    </div>
-  </td>
-  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-800">
-    <span class="rounded-full bg-gray-100 px-[10px] py-[2px] capitalize">
-      <span v-if="user.hasPendingInvite" class="normal-case">Invite pending</span>
-      <span v-else>{{ user.role }}</span>
-    </span>
-  </td>
-  <td class="whitespace-nowrap px-3 py-4 text-sm text-blue-800">
-    <span class="rounded-full bg-blue-100 px-[10px] py-[2px]"> {{ language }}</span>
-  </td>
-  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-    {{ lastActivity }}
-  </td>
-  <td class="relative py-4 pl-3 pr-4 text-sm sm:pr-6">
-    <button class="cursor-pointer" @click="showDropdown = !showDropdown">
-      <Icon name="dots-horizontal" class="h-5 w-5" />
-    </button>
-    <div
-      v-if="showDropdown"
-      class="absolute -left-16 top-12 z-10 flex w-[164px] flex-col gap-2 rounded-xl border bg-white shadow-sm"
-    >
-      <button
-        class="py-4 pl-6 text-left text-sm text-gray-500 hover:bg-gray-100"
-        @click="(emit('update'), (showDropdown = false))"
-      >
-        Update User
-      </button>
-      <button
-        v-if="user.id != shared.user.id"
-        class="py-4 pl-6 text-left text-sm text-gray-500 hover:bg-gray-100"
-        @click="(emit('remove'), (showDropdown = false))"
-      >
-        Remove User
-      </button>
-    </div>
-  </td>
+    </td>
+  </tr>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { DateTime } from 'luxon';
-import Icon from '../../shared/icon.vue';
+import { SquarePen, Trash2 } from '@lucide/vue';
 import type { UserMeta } from '../../../types';
 import { useSharedStore } from '../../store';
 
 const shared = useSharedStore();
-
-const showDropdown = ref(false);
 
 const emit = defineEmits<{
   (e: 'update'): void;
@@ -99,7 +111,7 @@ const lastActivity = computed(() => {
             : 'th';
     return `${day}${ordinal} ${date.toFormat('MMMM')}`;
   } else {
-    return date.toFormat('dd/MM/yy');
+    return date.toFormat('dd/MM/yyyy');
   }
 });
 

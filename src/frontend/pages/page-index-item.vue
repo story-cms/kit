@@ -52,14 +52,14 @@
       <img
         v-if="page.icon"
         :src="page.icon"
-        :alt="page.title"
+        :alt="pageTitle"
         class="size-10 shrink-0 rounded-xl object-cover"
       />
       <div class="min-w-0 flex-1 basis-0 overflow-hidden">
         <p
           class="block min-w-0 truncate text-sm font-medium text-gray-900 transition-opacity group-hover/edit:opacity-70"
         >
-          {{ page.title }}
+          {{ pageTitle }}
         </p>
         <p
           v-if="page.description"
@@ -86,6 +86,7 @@
 import { computed } from 'vue';
 import { GripVertical, Link2, Menu, Trash2 } from '@lucide/vue';
 import type { PageItem } from '../../types';
+import { padZero } from '../shared/helpers';
 
 const props = defineProps<{
   page: PageItem;
@@ -102,6 +103,14 @@ const emit = defineEmits<{
 }>();
 
 const canDrag = computed(() => props.page.isPublished === true);
+
+const pageTitle = computed(() =>
+  props.page.title === null ||
+  props.page.title === undefined ||
+  props.page.title === ''
+    ? `Page ${padZero(props.page.id)}`
+    : props.page.title,
+);
 
 const isLink = computed(() => {
   if (props.page.body === null || props.page.body === undefined) return false;

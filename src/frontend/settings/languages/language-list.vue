@@ -36,7 +36,7 @@
           You’re going to the ends of the earth! We couldn’t find that language in our
           system...yet. If you’d like us to add it, please contact us.
         </p>
-        <PillButton
+        <StudioButton
           label="Request Language"
           variant="blue"
           class="my-8"
@@ -51,7 +51,7 @@
 import type { LanguageListItemProps } from '../../../types';
 import { useSharedStore } from '../../store';
 import LanguageListItem from './components/language-list-item.vue';
-import PillButton from '../../shared/pill-button.vue';
+import StudioButton from '../../shared/studio-button.vue';
 
 defineProps<{
   items: LanguageListItemProps[];

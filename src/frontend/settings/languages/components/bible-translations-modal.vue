@@ -105,8 +105,8 @@
 
     <template #actions>
       <div class="flex w-full justify-end gap-x-4">
-        <PillButton label="Cancel" variant="gray" @click="handleClose" />
-        <PillButton
+        <StudioButton label="Cancel" variant="gray" @click="handleClose" />
+        <StudioButton
           label="Confirm selection"
           variant="green"
           :disabled="isLoading || hasError || currentBibleTranslations.length === 0"
@@ -130,7 +130,7 @@ import {
 } from '@headlessui/vue';
 import Icon from '../../../shared/icon.vue';
 import LanguageModal from './language-modal.vue';
-import PillButton from '../../../shared/pill-button.vue';
+import StudioButton from '../../../shared/studio-button.vue';
 import { languageMatches } from '../../../shared/helpers';
 import type { LanguageTableItem, LanguageSpecification } from '../../../../types';
 

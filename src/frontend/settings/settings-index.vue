@@ -1,7 +1,7 @@
 <template>
   <AppLayout title="Settings" subtitle="Manage Settings">
     <template #actions>
-      <PillButton
+      <StudioButton
         label="Request App Update"
         variant="green"
         :disabled="!props.requireAppUpdate"
@@ -57,7 +57,7 @@ import { router } from '@inertiajs/vue3';
 import type { RequestPayload } from '@inertiajs/core';
 import AppLayout from '../shared/app-layout.vue';
 import Icon from '../shared/icon.vue';
-import PillButton from '../shared/pill-button.vue';
+import StudioButton from '../shared/studio-button.vue';
 import LanguagesTable from './languages/components/language-table.vue';
 import RequestAppUpdateModal from './languages/components/request-app-update-modal.vue';
 import RequestFeedbackModal from './languages/components/request-feedback-modal.vue';

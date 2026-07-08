@@ -6,7 +6,7 @@
       </p>
     </template>
     <template #actions>
-      <PillButton
+      <StudioButton
         label="Add"
         variant="blue"
         :disabled="selectedLanguages.length === 0"
@@ -31,7 +31,7 @@
 import { ref, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
 import AppLayout from '../../shared/app-layout.vue';
-import PillButton from '../../shared/pill-button.vue';
+import StudioButton from '../../shared/studio-button.vue';
 import LanguageList from './language-list.vue';
 import LanguageListControls from './components/language-list-controls.vue';
 import {

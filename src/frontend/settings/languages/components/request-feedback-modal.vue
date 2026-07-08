@@ -15,7 +15,7 @@
 
     <template #actions>
       <div class="flex w-full justify-end">
-        <PillButton label="Close" variant="blue" @click="$emit('close')" />
+        <StudioButton label="Close" variant="blue" @click="$emit('close')" />
       </div>
     </template>
   </LanguageModal>
@@ -24,7 +24,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import LanguageModal from './language-modal.vue';
-import PillButton from '../../../shared/pill-button.vue';
+import StudioButton from '../../../shared/studio-button.vue';
 
 const props = defineProps<{
   open: boolean;

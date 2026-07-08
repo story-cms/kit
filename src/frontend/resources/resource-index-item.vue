@@ -225,7 +225,7 @@ const usedInTitle = (count: number): string =>
 
 const formatListDate = (value: string): string => {
   const parsed = DateTime.fromISO(value);
-  return parsed.isValid ? parsed.toFormat('dd-MM-yyyy') : value;
+  return parsed.isValid ? parsed.toFormat('dd/MM/yyyy') : value;
 };
 
 const visibilityBadgeClasses = (visibility: VisibilityType): string =>

@@ -152,7 +152,7 @@
 
     <template #actions>
       <div class="flex w-full justify-end">
-        <PillButton
+        <StudioButton
           label="Confirm"
           variant="green"
           :disabled="selectedReasons.length === 0"
@@ -166,7 +166,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import LanguageModal from './language-modal.vue';
-import PillButton from '../../../shared/pill-button.vue';
+import StudioButton from '../../../shared/studio-button.vue';
 
 const props = defineProps<{
   open: boolean;
