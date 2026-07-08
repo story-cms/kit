@@ -46,7 +46,7 @@ export default class ResourcesController {
       usedInStories: [],
       bundle: {
         title: '',
-        type: 'url',
+        type: 'text',
         imageUrl: '',
         description: '',
         label: '',

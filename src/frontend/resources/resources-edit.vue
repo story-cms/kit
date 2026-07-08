@@ -187,7 +187,11 @@ if (Object.keys(props.errors ?? {}).length === 0) {
 }
 useWidgetsStore().setProviders(props.providers);
 
-const selectedType = ref<ResourceType>(model.getField('type', 'url') as ResourceType);
+const DEFAULT_RESOURCE_TYPE: ResourceType = 'text';
+
+const selectedType = ref<ResourceType>(
+  model.getField('type', DEFAULT_RESOURCE_TYPE) as ResourceType,
+);
 const visibility = ref<VisibilityType>(
   model.getField('visibility', 'public') as VisibilityType,
 );
@@ -354,7 +358,7 @@ const save = () => {
 
 onMounted(() => {
   model.$subscribe(() => {
-    selectedType.value = model.getField('type', 'url') as ResourceType;
+    selectedType.value = model.getField('type', DEFAULT_RESOURCE_TYPE) as ResourceType;
     visibility.value = model.getField('visibility', 'public') as VisibilityType;
   });
 });
