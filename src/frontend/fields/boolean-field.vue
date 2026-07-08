@@ -1,5 +1,6 @@
 <template>
   <div
+    :dir="props.dir"
     :class="{
       'rounded-bl-lg rounded-br-lg bg-white px-8 py-6 shadow-sm': !isNested,
     }"
@@ -36,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, nextTick } from 'vue';
+import { computed, ref, nextTick, type PropType } from 'vue';
 import type { FieldSpec } from '../../types';
 import { useModelStore, useSharedStore } from '../store';
 import { commonProps } from '../shared/helpers';
@@ -45,6 +46,11 @@ import { Switch, SwitchGroup, SwitchLabel } from '@headlessui/vue';
 
 const props = defineProps({
   ...commonProps,
+
+  dir: {
+    type: String as PropType<'ltr' | 'rtl'>,
+    default: 'ltr',
+  },
 });
 
 const model = useModelStore();
