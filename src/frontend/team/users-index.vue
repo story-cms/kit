@@ -9,54 +9,48 @@
     </template>
     <template #main>
       <div>
-        <section class="flow-root">
-          <div class="-mx-4 -my-2 sm:-mx-6 lg:-mx-8">
-            <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-              <div class="border-2 border-black/5 sm:rounded-xl">
-                <table class="min-w-full divide-y divide-gray-300">
-                  <thead class="bg-gray-50 uppercase">
-                    <tr>
-                      <th
-                        scope="col"
-                        class="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6"
-                      >
-                        Name
-                      </th>
-                      <th
-                        scope="col"
-                        class="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
-                      >
-                        Role
-                      </th>
-                      <th
-                        scope="col"
-                        class="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
-                      >
-                        Languages
-                      </th>
-                      <th
-                        scope="col"
-                        class="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
-                      >
-                        Last Activity
-                      </th>
-                      <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                        <span class="sr-only">Edit</span>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody class="divide-y divide-gray-200 bg-white">
-                    <tr v-for="user in users" :key="user.id">
-                      <UserRow
-                        :user="user"
-                        @update="focus(user)"
-                        @remove="deleteUser(user)"
-                      />
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+        <section>
+          <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white">
+            <table class="w-full min-w-[720px] table-auto">
+              <thead class="border-b border-gray-200 bg-gray-50">
+                <tr>
+                  <th
+                    class="max-w-[400px] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                  >
+                    Name
+                  </th>
+                  <th
+                    class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                  >
+                    Role
+                  </th>
+                  <th
+                    class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                  >
+                    Languages
+                  </th>
+                  <th
+                    class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                  >
+                    Last Activity
+                  </th>
+                  <th
+                    class="whitespace-nowrap px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500"
+                  >
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <UserRow
+                  v-for="user in users"
+                  :key="user.id"
+                  :user="user"
+                  @update="focus(user)"
+                  @remove="deleteUser(user)"
+                />
+              </tbody>
+            </table>
           </div>
         </section>
         <section
