@@ -4,17 +4,12 @@
       'rounded-bl-lg rounded-br-lg bg-white px-8 py-6 shadow-sm': !isNested,
     }"
   >
-    <SwitchGroup as="div" class="flex items-center gap-3">
-      <SwitchLabel v-if="labelStart" as="span" class="text-sm">
-        <span class="font-medium text-gray-900">{{ field.label }}</span>
-      </SwitchLabel>
-
+    <SwitchGroup as="div" class="flex items-center">
       <Switch
-        v-model="isOn"
         :class="[btnClass]"
-        class="relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2"
+        class="relative inline-flex h-6 w-11 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2"
         :disabled="props.isReadOnly"
-        @update:model-value="onModelValueChange"
+        @click="toggle"
       >
         <span
           aria-hidden="true"
@@ -26,8 +21,13 @@
           ]"
         />
       </Switch>
-
-      <SwitchLabel v-if="!labelStart" as="span" class="text-sm">
+      <SwitchLabel
+        as="span"
+        :class="[
+          labelStart ? 'order-first ltr:mr-3 rtl:ml-3' : 'order-last ltr:ml-3 rtl:mr-3',
+        ]"
+        class="text-sm"
+      >
         <span class="font-medium text-gray-900">{{ field.label }}</span>
       </SwitchLabel>
     </SwitchGroup>
@@ -60,25 +60,22 @@ if (!model.isPopulated(fieldPath.value)) {
   model.setField(fieldPath.value, field.value.default);
 }
 
-const readFieldValue = (): boolean => {
-  const value = model.readPath(fieldPath.value);
-  return value !== undefined ? Boolean(value) : Boolean(field.value.default);
-};
-
+// toggle
 const isOn = props.isReadOnly
   ? ref(Boolean(model.getSourceField(fieldPath.value, field.value.default)))
-  : ref(readFieldValue());
+  : ref(Boolean(model.getField(fieldPath.value, field.value.default)));
 
-const onModelValueChange = (value: boolean) => {
+const toggle = () => {
   if (props.isReadOnly) return;
-  model.setField(fieldPath.value, value);
+  isOn.value = !isOn.value;
+  model.setField(fieldPath.value, isOn.value);
 };
 
 model.$subscribe(() => {
   if (props.isReadOnly) return;
 
   nextTick().then(() => {
-    isOn.value = readFieldValue();
+    isOn.value = Boolean(model.getField(fieldPath.value, field.value.default));
   });
 });
 
