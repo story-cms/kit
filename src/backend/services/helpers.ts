@@ -9,9 +9,11 @@ export {
   canPublishStoryMetadata,
   canPublishStoryReady,
   missingPublishedChapters,
+  storyDetailsBlockedMessages,
   publishBlockedMessage,
   storyMetadataBlockedMessages,
   storyPublishBlockedMessage,
+  storyTypeBlockedMessages,
   type StoryPublishMetadata,
 } from '../../shared/story_helpers.js';
 

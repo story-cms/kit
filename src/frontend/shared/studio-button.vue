@@ -19,7 +19,7 @@
     </span>
     <span
       role="tooltip"
-      class="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 hidden w-max max-w-xs -translate-x-1/2 rounded-lg bg-gray-900 px-3 py-2 text-center text-xs font-medium leading-5 text-white group-hover:block"
+      class="pointer-events-none absolute bottom-full right-0 z-20 mb-[3px] hidden w-max max-w-xs whitespace-normal rounded-lg bg-gray-900 px-2 py-px text-left text-xs font-normal leading-5 text-white group-hover:block"
     >
       {{ tooltip }}
     </span>

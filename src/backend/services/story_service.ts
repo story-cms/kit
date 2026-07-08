@@ -10,8 +10,9 @@ import StoryLocalisation, { emptyTranslation } from '../models/story_localisatio
 import StoryDeleteException from '../exceptions/story_delete_exception.js';
 import {
   slugify,
+  storyDetailsBlockedMessages,
   publishBlockedMessage,
-  storyMetadataBlockedMessages,
+  storyTypeBlockedMessages,
   type StoryPublishMetadata,
 } from './helpers.js';
 import { ResourceService } from './resource_service.js';
@@ -59,16 +60,23 @@ export class StoryService {
 
     const messages: string[] = [];
 
+    messages.push(
+      ...storyTypeBlockedMessages(
+        metadata?.storyType ?? story.storyType,
+        metadata?.chapterType ?? story.chapterType,
+      ),
+    );
+
     const chapterMessage = publishBlockedMessage(
       sourceChapters?.length ?? 0,
       story.chapterLimit,
-      story.chapterType ?? '',
-      story.storyType ?? '',
+      metadata?.chapterType ?? story.chapterType,
+      metadata?.storyType ?? story.storyType,
     );
     if (chapterMessage) messages.push(chapterMessage);
 
     if (metadata) {
-      messages.push(...storyMetadataBlockedMessages(metadata));
+      messages.push(...storyDetailsBlockedMessages(metadata));
     }
 
     return messages;
