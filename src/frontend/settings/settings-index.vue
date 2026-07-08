@@ -17,10 +17,12 @@
           </p>
         </div>
         <button
-          class="rounded-full bg-blue-500 p-1 shadow-md hover:bg-blue-700"
+          type="button"
+          class="rounded-xl p-1.5 text-blue-500 transition-colors hover:bg-blue-50 hover:text-blue-600"
+          aria-label="Add language"
           @click="router.visit(`/${shared.locale}/settings/languages/edit`)"
         >
-          <Icon name="plus" class="text-white" />
+          <Plus class="size-5" aria-hidden="true" />
         </button>
       </div>
     </template>
@@ -56,7 +58,7 @@ import { ref, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
 import type { RequestPayload } from '@inertiajs/core';
 import AppLayout from '../shared/app-layout.vue';
-import Icon from '../shared/icon.vue';
+import { Plus } from '@lucide/vue';
 import StudioButton from '../shared/studio-button.vue';
 import LanguagesTable from './languages/components/language-table.vue';
 import RequestAppUpdateModal from './languages/components/request-app-update-modal.vue';

@@ -1,90 +1,82 @@
 <template>
-  <div class="pb-6 pl-3">
-    <h3 class="text-xl font-semibold leading-7 text-black">Active languages</h3>
-    <p class="text-sm font-normal leading-5 text-black">
-      You can manage your languages here.
-    </p>
-  </div>
-  <div class="border-2 border-black/5 sm:rounded-xl">
-    <table class="w-full table-fixed divide-y divide-gray-300">
-      <colgroup>
-        <col class="w-[24%]" />
-        <col class="w-[16%]" />
-        <col class="w-[30%]" />
-        <col class="w-[22%]" />
-        <col class="w-[8%]" />
-      </colgroup>
-      <thead class="bg-gray-50 uppercase">
-        <tr>
-          <th
-            scope="col"
-            class="max-w-0 px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
-          >
-            Active translations
-          </th>
-          <th
-            scope="col"
-            class="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
-          >
-            Translation progress
-          </th>
-          <th
-            scope="col"
-            class="max-w-0 px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
-          >
-            Team members
-          </th>
-          <th
-            scope="col"
-            class="max-w-0 px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
-          >
-            Bible translation
-          </th>
-          <th scope="col" class="relative w-12 py-3.5 pl-3 pr-4 sm:pr-6">
-            <span class="sr-only">Actions</span>
-          </th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-gray-200 bg-white">
-        <LanguageTableRow
-          v-for="row in displayRows"
-          :key="row.item.locale"
-          :item="row.item"
-          :is-source="row.isSource"
-          :deletion-mode="row.deletionMode"
-          @open-bible-translations="openBibleTranslationsModal"
-          @remove-or-request-deletion="handleRemoveOrRequestDeletion"
-        />
-      </tbody>
-    </table>
+  <section>
+    <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white">
+      <table class="w-full min-w-[720px] table-auto">
+        <thead class="border-b border-gray-200 bg-gray-50">
+          <tr>
+            <th
+              scope="col"
+              class="max-w-[400px] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+            >
+              Active translations
+            </th>
+            <th
+              scope="col"
+              class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+            >
+              Translation progress
+            </th>
+            <th
+              scope="col"
+              class="max-w-[400px] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+            >
+              Team members
+            </th>
+            <th
+              scope="col"
+              class="whitespace-nowrap px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+            >
+              Bible translation
+            </th>
+            <th
+              scope="col"
+              class="whitespace-nowrap px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500"
+            >
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <LanguageTableRow
+            v-for="row in displayRows"
+            :key="row.item.locale"
+            :item="row.item"
+            :is-source="row.isSource"
+            :deletion-mode="row.deletionMode"
+            @open-bible-translations="openBibleTranslationsModal"
+            @remove-or-request-deletion="handleRemoveOrRequestDeletion"
+          />
+        </tbody>
+      </table>
 
-    <RemoveLanguageModal
-      :open="removeModalLocale !== null"
-      @close="removeModalLocale = null"
-      @confirm="confirmRemove"
-    />
+      <RemoveLanguageModal
+        :open="removeModalLocale !== null"
+        @close="removeModalLocale = null"
+        @confirm="confirmRemove"
+      />
 
-    <RequestDeletionModal
-      :open="requestDeletionModalLocale !== null"
-      @close="requestDeletionModalLocale = null"
-      @confirm="confirmRequestDeletion"
-    />
+      <RequestDeletionModal
+        :open="requestDeletionModalLocale !== null"
+        @close="requestDeletionModalLocale = null"
+        @confirm="confirmRequestDeletion"
+      />
 
-    <BibleTranslationsModal
-      :open="bibleTranslationsModalLocale !== null"
-      :item="bibleTranslationsModalItem"
-      @close="closeBibleTranslationsModal"
-      @confirm="handleBibleTranslationConfirm"
-    />
+      <BibleTranslationsModal
+        :open="bibleTranslationsModalLocale !== null"
+        :item="bibleTranslationsModalItem"
+        @close="closeBibleTranslationsModal"
+        @confirm="handleBibleTranslationConfirm"
+      />
 
-    <Pagination
-      v-if="totalItems > itemsPerPage"
-      :current-page="currentPage"
-      :total-items="totalItems"
-      :items-per-page="itemsPerPage"
-      @page-change="handlePageChange"
-    />
-  </div>
+      <Pagination
+        v-if="totalItems > itemsPerPage"
+        :current-page="currentPage"
+        :total-items="totalItems"
+        :items-per-page="itemsPerPage"
+        @page-change="handlePageChange"
+      />
+    </div>
+  </section>
 </template>
 
 <script setup lang="ts">
