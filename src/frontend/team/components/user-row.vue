@@ -111,7 +111,7 @@ const lastActivity = computed(() => {
             : 'th';
     return `${day}${ordinal} ${date.toFormat('MMMM')}`;
   } else {
-    return date.toFormat('dd/MM/yy');
+    return date.toFormat('dd/MM/yyyy');
   }
 });
 

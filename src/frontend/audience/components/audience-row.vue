@@ -72,7 +72,7 @@ const formatAudienceDate = (dateString: string, emptyLabel: string) => {
             : 'th';
     return `${day}${ordinal} ${date.toFormat('MMMM')}`;
   } else {
-    return date.toFormat('dd/MM/yy');
+    return date.toFormat('dd/MM/yyyy');
   }
 };
 </script>
