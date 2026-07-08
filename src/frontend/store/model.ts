@@ -91,6 +91,7 @@ export const useModelStore = defineStore('model', () => {
   return {
     model,
     getField,
+    readPath,
     setField,
     updateVerse,
     updateReference,
