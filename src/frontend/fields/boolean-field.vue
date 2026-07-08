@@ -1,13 +1,11 @@
 <template>
   <div
+    :dir="props.dir"
     :class="{
       'rounded-bl-lg rounded-br-lg bg-white px-8 py-6 shadow-sm': !isNested,
     }"
   >
-    <SwitchGroup as="div" class="flex items-center gap-3">
-      <SwitchLabel v-if="labelStart" as="span" class="text-sm">
-        <span class="font-medium text-gray-900">{{ field.label }}</span>
-      </SwitchLabel>
+    <SwitchGroup as="div" class="flex items-center">
       <Switch
         :class="[btnClass]"
         class="relative inline-flex h-6 w-11 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2"
@@ -24,7 +22,13 @@
           ]"
         />
       </Switch>
-      <SwitchLabel v-if="!labelStart" as="span">
+      <SwitchLabel
+        as="span"
+        :class="[
+          labelStart ? 'order-first ltr:mr-3 rtl:ml-3' : 'order-last ltr:ml-3 rtl:mr-3',
+        ]"
+        class="text-sm"
+      >
         <span class="font-medium text-gray-900">{{ field.label }}</span>
       </SwitchLabel>
     </SwitchGroup>
@@ -33,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, nextTick } from 'vue';
+import { computed, ref, nextTick, type PropType } from 'vue';
 import type { FieldSpec } from '../../types';
 import { useModelStore, useSharedStore } from '../store';
 import { commonProps } from '../shared/helpers';
@@ -42,6 +46,11 @@ import { Switch, SwitchGroup, SwitchLabel } from '@headlessui/vue';
 
 const props = defineProps({
   ...commonProps,
+
+  dir: {
+    type: String as PropType<'ltr' | 'rtl'>,
+    default: 'ltr',
+  },
 });
 
 const model = useModelStore();
