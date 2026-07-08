@@ -10,6 +10,16 @@
         :pages="pages"
       />
     </Variant>
+    <Variant title="Pages without titles" :setup-app="miniSidebar">
+      <PagesIndex
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :errors="sharedProps.errors"
+        :bookmarks="sharedProps.bookmarks"
+        :pages="pagesWithoutTitles"
+      />
+    </Variant>
   </Story>
 </template>
 
@@ -49,6 +59,27 @@ const pages: PageItem[] = [
     icon: 'https://res.cloudinary.com/journeys/image/upload/v1756122183/aatrg9bikextwwun4vb2_kblpui.svg',
     body: '## Privacy Policy\n\nWe respect your privacy and will not share your information with anyone.',
     isPublished: true,
+    isDivider: false,
+  },
+];
+
+const pagesWithoutTitles: PageItem[] = [
+  {
+    id: 1,
+    title: '',
+    description: '',
+    icon: 'https://res.cloudinary.com/journeys/image/upload/v1756122183/aatrg9bikextwwun4vb2_kblpui.svg',
+    body: '',
+    isPublished: false,
+    isDivider: false,
+  },
+  {
+    id: 2,
+    title: '',
+    description: '',
+    icon: '',
+    body: '',
+    isPublished: false,
     isDivider: false,
   },
 ];
