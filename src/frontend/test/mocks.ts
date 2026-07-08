@@ -4565,7 +4565,7 @@ export const mockNewResourceEdit: ResourceEditProps = {
   usedInStories: [],
   bundle: {
     title: '',
-    type: 'url',
+    type: 'text',
     imageUrl: '',
     description: '',
     label: '',

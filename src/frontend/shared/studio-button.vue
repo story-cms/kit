@@ -75,7 +75,7 @@ const slots = useSlots();
 
 const accessibleLabel = computed(() => props.ariaLabel ?? props.label);
 
-const isIconOnly = computed(() => !props.label && !!slots.default?.());
+const isIconOnly = computed(() => !props.label && !!slots.default);
 
 const sizeClasses = computed(() => (isIconOnly.value ? 'px-3 py-3' : 'px-6 py-3'));
 
