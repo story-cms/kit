@@ -7,8 +7,8 @@
   >
     <template #actions>
       <div class="mt-9 flex w-full justify-end gap-x-4">
-        <PillButton label="Remove" variant="red" @click="emit('confirm')" />
-        <PillButton label="Cancel" variant="gray" @click="emit('close')" />
+        <StudioButton label="Remove" variant="red" @click="emit('confirm')" />
+        <StudioButton label="Cancel" variant="gray" @click="emit('close')" />
       </div>
     </template>
   </LanguageModal>
@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import LanguageModal from './language-modal.vue';
-import PillButton from '../../../shared/pill-button.vue';
+import StudioButton from '../../../shared/studio-button.vue';
 
 defineProps<{
   open: boolean;
