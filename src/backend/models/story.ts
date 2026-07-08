@@ -11,10 +11,10 @@ export default class Story extends BaseModel {
   declare chapterLimit: number;
 
   @column()
-  declare storyType: string;
+  declare storyType: string | null;
 
   @column()
-  declare chapterType: string;
+  declare chapterType: string | null;
 
   @column()
   declare sectionType: string | null;

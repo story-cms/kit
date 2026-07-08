@@ -28,16 +28,14 @@ export default class extends BaseSchema {
 
       table
         .string('story_type', 255)
-        .notNullable()
-        .defaultTo('Story')
+        .nullable()
         .comment(
           'group name for chapters, e.g. story, edition, book, course, journey, guide, module etc.',
         );
 
       table
         .string('chapter_type', 255)
-        .notNullable()
-        .defaultTo('Chapter')
+        .nullable()
         .comment(
           'name of basic structured content type, e.g. chapter, day, devotion, episode, lesson, step etc.',
         );

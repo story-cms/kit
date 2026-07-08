@@ -10,8 +10,9 @@ import StoryLocalisation, { emptyTranslation } from '../models/story_localisatio
 import StoryDeleteException from '../exceptions/story_delete_exception.js';
 import {
   slugify,
+  storyDetailsBlockedMessages,
   publishBlockedMessage,
-  storyMetadataBlockedMessages,
+  storyTypeBlockedMessages,
   type StoryPublishMetadata,
 } from './helpers.js';
 import { ResourceService } from './resource_service.js';
@@ -59,16 +60,23 @@ export class StoryService {
 
     const messages: string[] = [];
 
+    messages.push(
+      ...storyTypeBlockedMessages(
+        metadata?.storyType ?? story.storyType,
+        metadata?.chapterType ?? story.chapterType,
+      ),
+    );
+
     const chapterMessage = publishBlockedMessage(
       sourceChapters?.length ?? 0,
       story.chapterLimit,
-      story.chapterType,
-      story.storyType,
+      metadata?.chapterType ?? story.chapterType,
+      metadata?.storyType ?? story.storyType,
     );
     if (chapterMessage) messages.push(chapterMessage);
 
     if (metadata) {
-      messages.push(...storyMetadataBlockedMessages(metadata));
+      messages.push(...storyDetailsBlockedMessages(metadata));
     }
 
     return messages;
@@ -177,8 +185,8 @@ export class StoryService {
       model: {
         id: story.id,
         chapterLimit: story.chapterLimit,
-        storyType: story.storyType,
-        chapterType: story.chapterType,
+        storyType: story.storyType ?? null,
+        chapterType: story.chapterType ?? null,
         sectionType: story.sectionType ?? null,
         visibility: story.visibility,
         slug: story.slug,
@@ -239,8 +247,8 @@ export class StoryService {
     return {
       ...targetFields,
       chapterLimit: story.chapterLimit,
-      storyType: story.storyType,
-      chapterType: story.chapterType,
+      storyType: story.storyType ?? '',
+      chapterType: story.chapterType ?? '',
       sectionType: story.sectionType ?? null,
       visibility: story.visibility,
       resources: target.resources ?? [],
@@ -421,8 +429,8 @@ export class StoryService {
       name: localisation?.title ?? '',
       coverImage: localisation?.coverImage ?? '',
       chapterLimit: story.chapterLimit,
-      chapterType: story.chapterType,
-      storyType: story.storyType,
+      chapterType: story.chapterType ?? '',
+      storyType: story.storyType ?? '',
       visibility: story.visibility,
       schemaVersion: 1,
       isPublished: story.isPublished,
@@ -499,8 +507,8 @@ export class StoryService {
           name: local?.title ?? '',
           coverImage: local?.coverImage ?? '',
           chapterLimit: story.chapterLimit,
-          chapterType: story.chapterType,
-          storyType: story.storyType,
+          chapterType: story.chapterType ?? '',
+          storyType: story.storyType ?? '',
           description: local?.description ?? '',
           chapters: chapters
             .filter((chapter) => chapter.storyId === story.id)

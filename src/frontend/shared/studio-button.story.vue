@@ -66,6 +66,17 @@
         tooltip="You need to add 2 more Days to your Edition."
       />
     </Variant>
+
+    <Variant title="With tooltip (header-right)">
+      <div class="flex justify-end">
+        <StudioButton
+          label="Publish"
+          variant="green"
+          disabled
+          tooltip="You need to add 2 more Days to your Edition."
+        />
+      </div>
+    </Variant>
   </Story>
 </template>
 

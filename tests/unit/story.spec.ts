@@ -171,6 +171,32 @@ test.describe('Story Validator', () => {
       expect(result.bundle.visibility).toBe('');
     });
 
+    test('accepts null storyType and chapterType', async () => {
+      const validator = new StoryCreateValidator();
+      const result = await validator.validate({
+        title: 'Gospel of John',
+        chapterLimit: 12,
+        template: 'course',
+        storyType: null,
+        chapterType: null,
+      });
+
+      expect(result.bundle.storyType).toBeNull();
+      expect(result.bundle.chapterType).toBeNull();
+    });
+
+    test('accepts omitted storyType and chapterType', async () => {
+      const validator = new StoryCreateValidator();
+      const result = await validator.validate({
+        title: 'Gospel of John',
+        chapterLimit: 12,
+        template: 'course',
+      });
+
+      expect(result.bundle.storyType).toBeUndefined();
+      expect(result.bundle.chapterType).toBeUndefined();
+    });
+
     test('accepts create without sections or resources', async () => {
       const validator = new StoryCreateValidator();
       const result = await validator.validate({
@@ -370,6 +396,58 @@ test.describe('Story Validator', () => {
           {
             field: 'bundle.storyType',
             message: 'Please choose a story type.',
+          },
+        ],
+      );
+    });
+
+    test('create accepts null storyType and chapterType', async () => {
+      const validator = new StoryCreateValidator();
+      const result = await validator.validate({
+        title: 'Gospel of John',
+        chapterLimit: 12,
+        template: 'course',
+        storyType: null,
+        chapterType: null,
+      });
+
+      expect(result.bundle.storyType).toBeNull();
+      expect(result.bundle.chapterType).toBeNull();
+    });
+
+    test('update returns friendly chapterType message for empty chapterType', async () => {
+      const data = {
+        ...validDraftUpdateData,
+        chapterType: '',
+      };
+      const ctx = createMockHttpContext(data);
+      const validator = new StoryUpdateValidator(ctx);
+
+      await expectValidationMessages(
+        () => validator.validate(data),
+        [
+          {
+            field: 'bundle.chapterType',
+            message: 'Please choose a chapter type.',
+          },
+        ],
+      );
+    });
+
+    test('update returns friendly chapterType message for null chapterType', async () => {
+      const data = {
+        ...validDraftUpdateData,
+        chapterType: null,
+      };
+      const ctx = createMockHttpContext(data);
+      const validator = new StoryUpdateValidator(ctx);
+
+      await expectValidationMessages(
+        () => validator.validate(data),
+        [
+          {
+            field: 'bundle.chapterType',
+            message: 'Please choose a chapter type.',
           },
         ],
       );

@@ -74,9 +74,9 @@ export default class StoriesController {
     await db.transaction(async (trx) => {
       const story = new Story().fill({
         chapterLimit: payload.chapterLimit,
-        storyType: payload.storyType,
-        chapterType: payload.chapterType,
-        sectionType: payload.sectionType,
+        storyType: payload.storyType ?? null,
+        chapterType: payload.chapterType ?? null,
+        sectionType: payload.sectionType ?? null,
         visibility: payload.visibility,
         template: payload.template,
         slug,

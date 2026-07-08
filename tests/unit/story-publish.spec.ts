@@ -48,11 +48,40 @@ test.describe('story publish readiness', () => {
       'You need to add 2 more Days to your Edition.',
     );
   });
+
+  test('publishBlockedMessage returns null when story type is blank', () => {
+    expect(publishBlockedMessage(3, 5, 'Day', '')).toBeNull();
+    expect(publishBlockedMessage(3, 5, 'Day', null)).toBeNull();
+    expect(publishBlockedMessage(3, 5, 'Day', undefined)).toBeNull();
+    expect(publishBlockedMessage(3, 5, 'Day', '   ')).toBeNull();
+  });
+
+  test('publishBlockedMessage returns null when chapter type is blank', () => {
+    expect(publishBlockedMessage(3, 5, '', 'Edition')).toBeNull();
+    expect(publishBlockedMessage(3, 5, null, 'Edition')).toBeNull();
+    expect(publishBlockedMessage(3, 5, undefined, 'Edition')).toBeNull();
+    expect(publishBlockedMessage(3, 5, '   ', 'Edition')).toBeNull();
+  });
 });
 
 test.describe('story metadata publish readiness', () => {
   test('canPublishStoryMetadata is true when all metadata is present', () => {
     expect(canPublishStoryMetadata(completeMetadata)).toBe(true);
+  });
+
+  test('storyMetadataBlockedMessages prioritizes types before other metadata', () => {
+    expect(
+      storyMetadataBlockedMessages({
+        ...completeMetadata,
+        storyType: '',
+        title: '',
+        coverImage: '',
+      }),
+    ).toEqual([
+      'Please choose a story type.',
+      'Please add a title.',
+      'Please add a cover image.',
+    ]);
   });
 
   test('storyMetadataBlockedMessages reports missing cover image', () => {
@@ -67,9 +96,27 @@ test.describe('story metadata publish readiness', () => {
     ).toContain('Please choose a story type.');
   });
 
+  test('storyMetadataBlockedMessages reports missing story type when null', () => {
+    expect(
+      storyMetadataBlockedMessages({ ...completeMetadata, storyType: null }),
+    ).toContain('Please choose a story type.');
+  });
+
+  test('storyMetadataBlockedMessages reports missing story type when undefined', () => {
+    expect(
+      storyMetadataBlockedMessages({ ...completeMetadata, storyType: undefined }),
+    ).toContain('Please choose a story type.');
+  });
+
   test('storyMetadataBlockedMessages reports missing chapter type', () => {
     expect(
       storyMetadataBlockedMessages({ ...completeMetadata, chapterType: '' }),
+    ).toContain('Please choose a chapter type.');
+  });
+
+  test('storyMetadataBlockedMessages reports missing chapter type when null', () => {
+    expect(
+      storyMetadataBlockedMessages({ ...completeMetadata, chapterType: null }),
     ).toContain('Please choose a chapter type.');
   });
 
@@ -85,7 +132,23 @@ test.describe('story metadata publish readiness', () => {
     ).toContain('Please add a title.');
   });
 
-  test('storyPublishBlockedMessage prioritizes missing chapters over metadata', () => {
+  test('storyPublishBlockedMessage prioritizes missing types over chapters and metadata', () => {
+    expect(
+      storyPublishBlockedMessage(3, 5, {
+        ...completeMetadata,
+        storyType: '',
+        coverImage: '',
+      }),
+    ).toBe('Please choose a story type.');
+  });
+
+  test('storyPublishBlockedMessage prioritizes missing chapter type over chapters', () => {
+    expect(
+      storyPublishBlockedMessage(3, 5, { ...completeMetadata, chapterType: null }),
+    ).toBe('Please choose a chapter type.');
+  });
+
+  test('storyPublishBlockedMessage prioritizes missing chapters over other metadata', () => {
     expect(
       storyPublishBlockedMessage(3, 5, { ...completeMetadata, coverImage: '' }),
     ).toBe('You need to add 2 more Days to your Edition.');
