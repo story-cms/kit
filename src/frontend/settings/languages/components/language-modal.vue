@@ -10,21 +10,17 @@
             class="items-center"
             :class="hideCloseButton ? '' : 'grid grid-cols-[1fr_auto]'"
           >
-            <DialogTitle
-              v-if="title"
-              class="text-left font-dmsans"
-              :class="variantClass"
-            >
+            <DialogTitle v-if="title" class="text-left font-dmsans" :class="variantClass">
               {{ title }}
             </DialogTitle>
             <div v-if="!hideCloseButton" class="justify-self-end">
               <button
                 type="button"
-                class="rounded-xl p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
                 aria-label="Close"
                 @click="emit('close')"
               >
-                <Icon name="close" class="size-4" />
+                <X class="size-5" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -51,8 +47,8 @@
 
 <script setup lang="ts">
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/vue';
+import { X } from '@lucide/vue';
 import { computed } from 'vue';
-import Icon from '../../../shared/icon.vue';
 
 type ModalVariant = 'success' | 'error' | '';
 
