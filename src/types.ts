@@ -352,8 +352,8 @@ export interface StoryCreateProps {
     description: string;
     chapterLimit: number | null;
     tags: string | null;
-    storyType: string;
-    chapterType: string;
+    storyType: string | null;
+    chapterType: string | null;
     sectionType: string | null;
     visibility: string;
     slug: string | null;
@@ -373,8 +373,8 @@ export interface StoryEditProps {
     description: string;
     chapterLimit: number;
     tags: string | null;
-    storyType: string;
-    chapterType: string;
+    storyType: string | null;
+    chapterType: string | null;
     sectionType: string | null;
     visibility: string;
     slug: string;
