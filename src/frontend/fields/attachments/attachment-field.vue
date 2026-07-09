@@ -41,7 +41,7 @@
         </div>
       </div>
     </div>
-    <p v-if="hasError" class="mt-2 text-sm text-error">{{ errors[0] }}</p>
+    <p v-if="hasError" class="mt-6 text-sm text-error">{{ errors[0] }}</p>
   </div>
 </template>
 
