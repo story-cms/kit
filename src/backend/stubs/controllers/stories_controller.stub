@@ -88,6 +88,7 @@ export default class StoriesController {
       const local = new StoryLocalisation().fill({
         storyId: story.id,
         locale: locale,
+        isPublished: false,
         title: payload.title,
         coverImage: payload.coverImage,
         description: payload.description,
@@ -126,13 +127,17 @@ export default class StoriesController {
     const story = await Story.findOrFail(version.storyId);
 
     if (payload.isPublished) {
-      const messages = await storyService.blockingPublishMessages(story, {
-        title: payload.title,
-        coverImage: payload.coverImage,
-        storyType: payload.storyType,
-        chapterType: payload.chapterType,
-        visibility: payload.visibility,
-      });
+      const messages = await storyService.blockingPublishMessages(
+        story,
+        {
+          title: payload.title,
+          coverImage: payload.coverImage,
+          storyType: payload.storyType,
+          chapterType: payload.chapterType,
+          visibility: payload.visibility,
+        },
+        version.locale,
+      );
       if (messages.length > 0) {
         ctx.session.flash('errorsBag', { other: messages.join(' | ') });
         return ctx.response.redirect().back();
@@ -161,13 +166,17 @@ export default class StoriesController {
     payload.isPublished = true;
 
     const model = await Story.findOrFail(version.storyId);
-    const messages = await storyService.blockingPublishMessages(model, {
-      title: payload.title,
-      coverImage: payload.coverImage,
-      storyType: payload.storyType,
-      chapterType: payload.chapterType,
-      visibility: payload.visibility,
-    });
+    const messages = await storyService.blockingPublishMessages(
+      model,
+      {
+        title: payload.title,
+        coverImage: payload.coverImage,
+        storyType: payload.storyType,
+        chapterType: payload.chapterType,
+        visibility: payload.visibility,
+      },
+      version.locale,
+    );
     if (messages.length > 0) {
       ctx.session.flash('errorsBag', { other: messages.join(' | ') });
       return ctx.response.redirect().back();
@@ -218,6 +227,7 @@ export default class StoriesController {
       }
 
       const localisationData = {
+        isPublished: payload.isPublished,
         title: payload.title,
         coverImage: payload.coverImage ?? '',
         description: payload.description ?? '',
