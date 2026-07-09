@@ -53,6 +53,7 @@ export const testCmsConfig: CmsConfig = {
     },
   ],
   storiesHasEditReview: false,
+  storiesHasSections: false,
   bespokeTemplates: [
     {
       id: 'test-story',

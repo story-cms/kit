@@ -205,7 +205,7 @@ const tagsField: FieldSpec = {
   placeholderText: 'Add tags...',
 };
 
-const contentClassificationField: FieldSpec = {
+const contentClassificationField = computed((): FieldSpec => ({
   label: 'Content Classification',
   name: 'contentClassification',
   widget: 'panel',
@@ -217,11 +217,15 @@ const contentClassificationField: FieldSpec = {
       description:
         "The overall theme or category of your course (e.g., 'Educational', 'Devotional', 'Bible Study').",
     },
-    {
-      title: 'Section Type',
-      description:
-        "How the course is divided into major sections (e.g., 'Weekly', 'Daily', 'Module').",
-    },
+    ...(shared.config.storiesHasSections
+      ? [
+          {
+            title: 'Section Type',
+            description:
+              "How the course is divided into major sections (e.g., 'Weekly', 'Daily', 'Module').",
+          },
+        ]
+      : []),
     {
       title: 'Chapter Type',
       description:
@@ -238,12 +242,16 @@ const contentClassificationField: FieldSpec = {
       widget: 'string',
       placeholderText: 'e.g., Course, Devotional, Plan',
     },
-    {
-      label: 'Section Type',
-      name: 'sectionType',
-      widget: 'string',
-      placeholderText: 'e.g., Part, Module',
-    },
+    ...(shared.config.storiesHasSections
+      ? [
+          {
+            label: 'Section Type',
+            name: 'sectionType',
+            widget: 'string',
+            placeholderText: 'e.g., Part, Module',
+          },
+        ]
+      : []),
     {
       label: 'Chapter Type',
       name: 'chapterType',
@@ -251,5 +259,5 @@ const contentClassificationField: FieldSpec = {
       placeholderText: 'e.g., Session, Devotion, Day',
     },
   ],
-};
+}));
 </script>

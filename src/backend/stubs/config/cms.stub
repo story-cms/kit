@@ -125,6 +125,11 @@ const cmsConfig: Partial<CmsConfig> = {
     */
   storiesHasEditReview: false,
 
+  /**
+    * Flag to enable the Sections tab and section type field on story create/edit
+    */
+  storiesHasSections: false,
+
   bespokeTemplates: [
     {
       id: 'daily-grace',

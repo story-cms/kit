@@ -77,7 +77,7 @@
 
     <Variant title="Without sections" :setup-app="loadSectionsTab">
       <StoryEdit
-        :config="sharedProps.config"
+        :config="configWithSections"
         :user="sharedProps.user"
         :language="sharedProps.language"
         :errors="{}"
@@ -107,7 +107,7 @@
 
     <Variant title="Validation errors on tabs" :setup-app="loadNormalData">
       <StoryEdit
-        :config="sharedProps.config"
+        :config="configWithSections"
         :user="sharedProps.user"
         :language="sharedProps.language"
         :errors="validationErrors"
@@ -138,7 +138,7 @@
 
     <Variant title="Arabic translation locale" :setup-app="loadTranslationLocale">
       <StoryEdit
-        :config="sharedProps.config"
+        :config="configWithSections"
         :user="sharedProps.user"
         :language="arabicLanguage"
         :errors="{}"
@@ -154,7 +154,7 @@
 
     <Variant title="Translation without sections" :setup-app="loadTranslationLocale">
       <StoryEdit
-        :config="sharedProps.config"
+        :config="configWithSections"
         :user="sharedProps.user"
         :language="spanishLanguage"
         :errors="{}"
@@ -180,7 +180,12 @@ import {
 } from '../test/mocks';
 import { useSharedStore } from '../store';
 import type { StoryHandler } from '../shared/helpers';
-import type { BundleTemplate, StoryEditProps, StorySection, LanguageSpecification } from '../../types';
+import type { BundleTemplate, StoryEditProps, StorySection, LanguageSpecification, UiConfig } from '../../types';
+
+const configWithSections: UiConfig = {
+  ...sharedProps.config,
+  storiesHasSections: true,
+};
 
 const storyTemplates: BundleTemplate[] = [
   {
@@ -395,19 +400,19 @@ const loadTranslationLocale: StoryHandler = (context): void => {
 <docs lang="md">
 # Story Edit
 
-Full-page story editor with tabbed navigation for Details, Sections, and Resources.
+Full-page story editor with tabbed navigation for Details, Resources, and optionally Sections when `config.storiesHasSections` is enabled.
 Saving posts attached resource IDs to the story localisation.
 
 ## Variants
 
-- **Save changes** — published story with content; shows Save Changes only (`secondary`)
+- **Save changes** — published story with content; shows Save Changes only (`secondary`); Sections tab hidden by default
 - **Delete and save** — empty story, published; shows Delete (`red`) and Save Changes (`secondary`)
 - **Delete and save draft** — empty story, unpublished; shows Delete (`red`) and Save Changes (`secondary`)
-- **Without sections** — English source locale with no sections; Sections tab shows empty state message
-- **Validation errors on tabs** — failed publish validation; Details and Sections tabs show error indicators and inline field messages
+- **Without sections** — `storiesHasSections: true`; English source locale with no sections; Sections tab shows empty state message
+- **Validation errors on tabs** — `storiesHasSections: true`; failed publish validation; Details and Sections tabs show error indicators and inline field messages
 - **Translation locale** — Spanish edit with English source column; tags prefilled from source on Details tab
-- **Arabic translation locale** — Arabic edit on the left, English source on the right; RTL text in the translation column; side-by-side fields on Details and Sections tabs
-- **Translation without sections** — Spanish edit with English source column; source localisation has no sections, so the Sections tab is empty
+- **Arabic translation locale** — `storiesHasSections: true`; Arabic edit on the left, English source on the right; RTL text in the translation column; side-by-side fields on Details and Sections tabs
+- **Translation without sections** — `storiesHasSections: true`; Spanish edit with English source column; source localisation has no sections, so the Sections tab is empty
 
 ## Usage
 

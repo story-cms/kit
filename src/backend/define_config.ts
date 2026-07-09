@@ -57,6 +57,9 @@ export function defineConfig(config: Partial<CmsConfig>): CmsConfig {
     storiesHasEditReview:
       config.storiesHasEditReview === undefined ? false : config.storiesHasEditReview,
 
+    storiesHasSections:
+      config.storiesHasSections === undefined ? false : config.storiesHasSections,
+
     storyTemplates: config.storyTemplates || [],
   } satisfies CmsConfig;
 }

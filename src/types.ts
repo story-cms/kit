@@ -706,6 +706,7 @@ export type CmsConfig = {
   // streamTemplates: BundleTemplate[];
 
   storiesHasEditReview: boolean;
+  storiesHasSections: boolean;
   storyTemplates: BundleTemplate[];
 };
 
@@ -720,6 +721,7 @@ export interface UiConfig {
   helpUrl: string;
   supportEmail: string;
   hasAppPreview: boolean;
+  storiesHasSections: boolean;
   videoCollectionId: string;
   languages: LanguageSpecification[];
   subscriptions: Subscription[];

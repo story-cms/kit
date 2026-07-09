@@ -35,7 +35,9 @@
             :templates="props.templates"
           />
           <StoryEditSections
-            v-if="currentStoryTab === `${sectionType ?? 'Section'}s`"
+            v-if="
+              hasSections && currentStoryTab === `${sectionType ?? 'Section'}s`
+            "
             :section-type="sectionType"
             :tab-icon="currentStoryTabIcon"
           />
@@ -124,38 +126,62 @@ model.$subscribe(() => {
 
 const headerSubtitle = computed(() => title.value?.trim() || 'Edit Story');
 
+const hasSections = computed(() => shared.config.storiesHasSections);
+
 const sectionTabLabel = computed(() => `${sectionType.value ?? 'Section'}s`);
 
-const storyEditTabs = computed((): NavigationPaneTab[] => [
-  {
-    label: 'Details',
-    hasError: storyEditTabHasError('details', errors.value),
-  },
-  {
-    label: sectionTabLabel.value,
-    hasError: storyEditTabHasError('sections', errors.value),
-  },
-  {
+const storyEditTabs = computed((): NavigationPaneTab[] => {
+  const tabs: NavigationPaneTab[] = [
+    {
+      label: 'Details',
+      hasError: storyEditTabHasError('details', errors.value, hasSections.value),
+    },
+  ];
+
+  if (hasSections.value) {
+    tabs.push({
+      label: sectionTabLabel.value,
+      hasError: storyEditTabHasError('sections', errors.value, hasSections.value),
+    });
+  }
+
+  tabs.push({
     label: 'Resources',
-    hasError: storyEditTabHasError('resources', errors.value),
-  },
-]);
+    hasError: storyEditTabHasError('resources', errors.value, hasSections.value),
+  });
 
-const storyEditTabIcons = computed(() => ({
-  Details: BookOpen,
-  [sectionTabLabel.value]: LayoutList,
-  Resources: FolderClosed,
-}));
+  return tabs;
+});
 
-const initialSectionType = props.model.sectionType || 'Section';
-const initialTabs: NavigationPaneTab[] = [
-  { label: 'Details' },
-  { label: `${initialSectionType}s` },
-  { label: 'Resources' },
-];
+const storyEditTabIcons = computed(() => {
+  const icons: Record<string, typeof BookOpen> = {
+    Details: BookOpen,
+    Resources: FolderClosed,
+  };
+
+  if (hasSections.value) {
+    icons[sectionTabLabel.value] = LayoutList;
+  }
+
+  return icons;
+});
+
+const buildInitialTabs = (): NavigationPaneTab[] => {
+  const tabs: NavigationPaneTab[] = [{ label: 'Details' }];
+
+  if (props.config.storiesHasSections) {
+    tabs.push({ label: `${props.model.sectionType || 'Section'}s` });
+  }
+
+  tabs.push({ label: 'Resources' });
+  return tabs;
+};
 
 const currentStoryTab = ref(
-  resolveStoryTab(new URLSearchParams(window.location.search).get('tab'), initialTabs),
+  resolveStoryTab(
+    new URLSearchParams(window.location.search).get('tab'),
+    buildInitialTabs(),
+  ),
 );
 
 const currentStoryTabIcon = computed(
@@ -167,7 +193,11 @@ const onStoryTabChange = (tab: string) => {
 };
 
 const focusFirstErroredTab = () => {
-  const tab = firstStoryEditTabWithError(errors.value, sectionTabLabel.value);
+  const tab = firstStoryEditTabWithError(
+    errors.value,
+    sectionTabLabel.value,
+    hasSections.value,
+  );
   if (tab) {
     currentStoryTab.value = tab;
   }

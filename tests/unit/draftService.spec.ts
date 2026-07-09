@@ -53,6 +53,7 @@ function createMockCmsConfig(sourceLocale: string = 'en'): CmsConfig {
     ],
     streams: [],
     storiesHasEditReview: false,
+    storiesHasSections: false,
     storyTemplates: [],
     bespokeTemplates: [],
     pagesTracking: '',
