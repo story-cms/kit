@@ -75,18 +75,32 @@ export interface mediaConfig {
   maxSize: number;
 }
 
-export function courseFields(video: mediaConfig, image: mediaConfig): FieldSpec[] {
+export interface CourseFieldsOptions {
+  hasSections?: boolean;
+}
+
+export function courseFields(
+  video: mediaConfig,
+  image: mediaConfig,
+  options: CourseFieldsOptions = {},
+): FieldSpec[] {
+  const { hasSections = false } = options;
+
   return [
     {
       name: 'title',
       label: 'Title',
       widget: 'string',
     },
-    {
-      name: 'section',
-      label: 'Section',
-      widget: 'string',
-    },
+    ...(hasSections
+      ? [
+          {
+            name: 'section',
+            label: 'Section',
+            widget: 'string',
+          } as FieldSpec,
+        ]
+      : []),
     {
       name: 'imageUrl',
       label: 'Cover Image',

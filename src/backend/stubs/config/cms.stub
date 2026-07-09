@@ -1,8 +1,7 @@
 {{{
   exports({ to: app.configPath('cms.ts') })
 }}}
-import type { FieldSpec, CmsConfig, mediaConfig } from '@story-cms/kit';
-import { cou
+import type { FieldSpec, CmsConfig, mediaConfig, StreamSpec, courseFields } from '@story-cms/kit';
 
 // ---------------------------------------
 // Media upload configurations
@@ -68,6 +67,8 @@ const devotionStream: StreamSpec = {
 // CMS configuration
 // ---------------------------------------
 
+const storiesHasSections = false;
+
 const cmsConfig: Partial<CmsConfig> = {
   /**
     * The name of the app
@@ -128,7 +129,7 @@ const cmsConfig: Partial<CmsConfig> = {
   /**
     * Flag to enable the Sections tab and section type field on story create/edit
     */
-  storiesHasSections: false,
+  storiesHasSections,
 
   bespokeTemplates: [
     {
@@ -146,7 +147,9 @@ const cmsConfig: Partial<CmsConfig> = {
     {
       id: 'course',
       name: 'Course',
-      fields: [courseFields(videoUploadConfig, imageUploadConfig)],
+      fields: courseFields(videoUploadConfig, imageUploadConfig, {
+        hasSections: storiesHasSections,
+      }),
     },
   ],
 

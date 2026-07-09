@@ -1,4 +1,5 @@
 import vine, { SimpleMessagesProvider } from '@vinejs/vine';
+import type { CourseFieldsOptions } from '../define_config.js';
 import videoRule from '../validators/video_rule.js';
 import type { ValidatorType } from '../../types';
 
@@ -20,6 +21,12 @@ const screenSchema = vine.object({
 });
 
 export class CourseValidator implements ValidatorType {
+  #hasSections: boolean;
+
+  constructor(options: CourseFieldsOptions = {}) {
+    this.#hasSections = options.hasSections === true;
+  }
+
   validate(data: any): Promise<any> {
     vine.messagesProvider = new SimpleMessagesProvider({
       'bundle.title.required': 'The chapter must have a title',
@@ -33,7 +40,7 @@ export class CourseValidator implements ValidatorType {
     const schema = vine.create({
       bundle: vine.object({
         title: vine.string(),
-        section: vine.string(),
+        ...(this.#hasSections ? { section: vine.string() } : {}),
         imageUrl: vine.string(),
         screens: vine.array(screenSchema).minLength(1),
       }),
