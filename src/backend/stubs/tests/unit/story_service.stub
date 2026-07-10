@@ -12,6 +12,7 @@ import {
   StoryLocalisationFactory,
   StoryService,
   emptyTranslation,
+  ChapterFactory,
   type PostedSection,
   type StorySection,
   type StoryVersion,
@@ -150,6 +151,8 @@ test.group('Story service', (group) => {
     assert.isDefined(props);
     assert.equal(props!.model.template, 'course');
     assert.equal(props!.model.chapterLimit, 10);
+    assert.equal(props!.model.storyType, 'Story');
+    assert.equal(props!.model.chapterType, 'Chapter');
   });
 
   test('createProps returns undefined on a translation locale', async ({ assert }) => {
@@ -313,6 +316,133 @@ test.group('Story service', (group) => {
     assert.equal(result!.resources[0].id, second.id);
     assert.equal(result!.resources[1].id, first.id);
     assert.equal(result!.resources[0].title, 'Second Resource');
+  });
+
+  test('galleryIndex uses per-locale publish status', async ({ assert }) => {
+    const story = await StoryFactory.with('localisations').merge({ isPublished: true }).create();
+    const sourceLocal = await StoryLocalisation.query()
+      .where('storyId', story.id)
+      .where('locale', sourceLocale)
+      .firstOrFail();
+    sourceLocal.isPublished = true;
+    await sourceLocal.save();
+
+    await StoryLocalisationFactory.merge({
+      storyId: story.id,
+      locale: translationLocale,
+      isPublished: false,
+      title: 'Historia traducida',
+    }).create();
+
+    const service = new StoryService(testCmsConfig);
+    const sourceGallery = await service.galleryIndex(createGalleryHttpContext(sourceLocale));
+    const translationGallery = await service.galleryIndex(
+      createGalleryHttpContext(translationLocale),
+    );
+
+    assert.isTrue(sourceGallery.find((item) => item.id === story.id)?.isPublished);
+    assert.isFalse(translationGallery.find((item) => item.id === story.id)?.isPublished);
+  });
+
+  test('editProps and buildUpdatePayload use localisation publish status', async ({
+    assert,
+  }) => {
+    const story = await StoryFactory.with('localisations').merge({ isPublished: true }).create();
+    const sourceLocal = await StoryLocalisation.query()
+      .where('storyId', story.id)
+      .where('locale', sourceLocale)
+      .firstOrFail();
+    sourceLocal.isPublished = true;
+    await sourceLocal.save();
+
+    await StoryLocalisationFactory.merge({
+      storyId: story.id,
+      locale: translationLocale,
+      isPublished: false,
+      title: 'Historia traducida',
+      coverImage: 'https://example.com/es-cover.jpg',
+    }).create();
+
+    const service = new StoryService(testCmsConfig);
+    const sourceProps = await service.editProps(
+      createMockHttpContext({ storyId: story.id, locale: sourceLocale }),
+    );
+    const translationProps = await service.editProps(
+      createMockHttpContext({ storyId: story.id, locale: translationLocale }),
+    );
+    const translationPayload = await service.buildUpdatePayload(story.id, translationLocale);
+
+    assert.isTrue(sourceProps!.model.isPublished);
+    assert.isFalse(translationProps!.model.isPublished);
+    assert.isFalse(translationPayload!.isPublished);
+  });
+
+  test('blockingPublishMessages counts chapters for the requested locale', async ({
+    assert,
+  }) => {
+    const story = await StoryFactory.with('localisations')
+      .merge({ chapterLimit: 1, isPublished: false })
+      .create();
+
+    await ChapterFactory.merge({
+      storyId: story.id,
+      locale: translationLocale,
+      number: 1,
+      apiVersion: 1,
+    }).create();
+
+    const service = new StoryService(testCmsConfig);
+    const sourceMessages = await service.blockingPublishMessages(
+      sourceLocale,
+      story,
+      {
+        title: 'Ready',
+        coverImage: 'https://example.com/cover.jpg',
+        storyType: 'Story',
+        chapterType: 'Chapter',
+        visibility: 'public',
+      },
+    );
+    const translationMessages = await service.blockingPublishMessages(
+      translationLocale,
+      story,
+      {
+        title: 'Listo',
+        coverImage: 'https://example.com/cover.jpg',
+        storyType: 'Story',
+        chapterType: 'Chapter',
+        visibility: 'public',
+      },
+    );
+
+    assert.isAbove(sourceMessages.length, 0);
+    assert.lengthOf(translationMessages, 0);
+  });
+
+  test('homeStories excludes stories unpublished in the requested locale', async ({
+    assert,
+  }) => {
+    const story = await StoryFactory.with('localisations').merge({ isPublished: true }).create();
+    const sourceLocal = await StoryLocalisation.query()
+      .where('storyId', story.id)
+      .where('locale', sourceLocale)
+      .firstOrFail();
+    sourceLocal.isPublished = true;
+    await sourceLocal.save();
+
+    await StoryLocalisationFactory.merge({
+      storyId: story.id,
+      locale: translationLocale,
+      isPublished: false,
+      title: 'Historia traducida',
+    }).create();
+
+    const service = new StoryService(testCmsConfig);
+    const { stories: sourceStories } = await service.homeStories(sourceLocale);
+    const { stories: translationStories } = await service.homeStories(translationLocale);
+
+    assert.isDefined(sourceStories.find((item) => item.id === story.id));
+    assert.isUndefined(translationStories.find((item) => item.id === story.id));
   });
 });
 

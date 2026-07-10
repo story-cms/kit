@@ -7,6 +7,7 @@ export const StoryLocalisationFactory = factory
     return {
       locale: 'en',
       // storyId: 1,
+      isPublished: true,
       title: faker.lorem.sentence(),
       coverImage: faker.image.url(),
       description: faker.lorem.paragraph(),

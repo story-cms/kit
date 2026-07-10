@@ -51,12 +51,13 @@ export class StoryService {
   }
 
   public async blockingPublishMessages(
+    locale: string,
     story: Story,
     metadata?: StoryPublishMetadata,
   ): Promise<string[]> {
-    const sourceChapters = await Chapter.query()
+    const localeChapters = await Chapter.query()
       .where('storyId', story.id)
-      .where('locale', this.config.languages[0].locale);
+      .where('locale', locale);
 
     const messages: string[] = [];
 
@@ -68,7 +69,7 @@ export class StoryService {
     );
 
     const chapterMessage = publishBlockedMessage(
-      sourceChapters?.length ?? 0,
+      localeChapters?.length ?? 0,
       story.chapterLimit,
       metadata?.chapterType ?? story.chapterType,
       metadata?.storyType ?? story.storyType,
@@ -86,7 +87,14 @@ export class StoryService {
     const collected: string[] = [];
     const story = await Story.query().where('id', storyId).first();
     if (!story) collected.push('Story not found.');
-    if (story?.isPublished) collected.push('Story is published.');
+
+    const publishedLocalisation = await StoryLocalisation.query()
+      .where('storyId', storyId)
+      .where('isPublished', true)
+      .first();
+    if (publishedLocalisation || story?.isPublished) {
+      collected.push('Story is published.');
+    }
 
     const chapters = await Chapter.query().where('storyId', storyId);
     if (chapters.length > 0) collected.push('Story has published chapters.');
@@ -122,8 +130,8 @@ export class StoryService {
     return {
       model: {
         chapterLimit: null,
-        storyType: '',
-        chapterType: '',
+        storyType: 'Story',
+        chapterType: 'Chapter',
         sectionType: null,
         visibility: 'public',
         slug: null,
@@ -191,7 +199,7 @@ export class StoryService {
         visibility: story.visibility,
         slug: story.slug,
         template: story.template,
-        isPublished: story.isPublished,
+        isPublished: this.localisationIsPublished(target),
         ...targetFields,
         resources: await resourceService.hydrate(target.resources ?? []),
       },
@@ -252,7 +260,7 @@ export class StoryService {
       sectionType: story.sectionType ?? null,
       visibility: story.visibility,
       resources: target.resources ?? [],
-      isPublished: story.isPublished,
+      isPublished: this.localisationIsPublished(target),
     };
   }
 
@@ -364,7 +372,7 @@ export class StoryService {
         description: local?.description ?? source?.description ?? '',
         coverImage: local?.coverImage || (source?.coverImage ?? ''),
         chapterLimit: story.chapterLimit,
-        isPublished: story.isPublished,
+        isPublished: this.localisationIsPublished(local),
         createdAt: story.createdAt?.toISO() ?? '',
         updatedAt: story.updatedAt?.toISO() ?? '',
         liveCount: index?.publishedList.length ?? 0,
@@ -433,10 +441,17 @@ export class StoryService {
       storyType: story.storyType ?? '',
       visibility: story.visibility,
       schemaVersion: 1,
-      isPublished: story.isPublished,
+      isPublished: this.localisationIsPublished(localisation),
       fields: this.fieldsFromTemplate(story.template),
       sections: localisation?.sections ?? [],
     };
+  }
+
+  protected localisationIsPublished(
+    localisation?:
+      Pick<StoryLocalisation, 'isPublished'> | Partial<StoryLocalisation> | null,
+  ): boolean {
+    return localisation?.isPublished === true;
   }
 
   private localisationFields(local: {
@@ -489,7 +504,10 @@ export class StoryService {
 
     const storyModels = await Story.query()
       .preload('localisations', (localisationsQuery) => {
-        localisationsQuery.where('locale', locale);
+        localisationsQuery.where('locale', locale).where('isPublished', true);
+      })
+      .whereHas('localisations', (localisationsQuery) => {
+        localisationsQuery.where('locale', locale).where('isPublished', true);
       })
       .orderBy('order', 'asc');
 

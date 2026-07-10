@@ -44,6 +44,7 @@ export default class SeedStories extends BaseCommand {
 
       await story.related('localisations').create({
         locale: 'en',
+        isPublished: true,
         title: spec.name,
         coverImage: spec.coverImage,
         description: spec.description,

@@ -21,6 +21,9 @@ export default class StoryLocalisation extends BaseModel {
   declare storyId: number;
 
   @column()
+  declare isPublished: boolean;
+
+  @column()
   declare title: string;
 
   @column()
@@ -55,6 +58,7 @@ export default class StoryLocalisation extends BaseModel {
 }
 
 export const emptyTranslation: Partial<StoryLocalisation> = {
+  isPublished: false,
   title: '',
   coverImage: '',
   description: '',
