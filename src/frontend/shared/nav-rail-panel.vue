@@ -37,7 +37,7 @@
             >
 
             <a
-              v-if="subscribed('invitation')"
+              v-if="isAdmin && subscribed('invitation')"
               :class="classList('invitation')"
               :href="`/${locale}/invitation`"
               >Invitations</a
