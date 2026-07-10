@@ -56,6 +56,15 @@ test.describe('CourseValidator', () => {
 
     expect(result.bundle.section).toBe('Module 1');
   });
+
+  test('accepts bundle without imageUrl', async () => {
+    const validator = new CourseValidator();
+    const { title, screens } = validBundle().bundle;
+    const result = await validator.validate({ bundle: { title, screens } });
+
+    expect(result.bundle.title).toBe('Introduction to Alongsiding');
+    expect(result.bundle.imageUrl).toBeUndefined();
+  });
 });
 
 test.describe('courseFields', () => {
