@@ -393,6 +393,7 @@ test.group('Story service', (group) => {
 
     const service = new StoryService(testCmsConfig);
     const sourceMessages = await service.blockingPublishMessages(
+      sourceLocale,
       story,
       {
         title: 'Ready',
@@ -401,9 +402,9 @@ test.group('Story service', (group) => {
         chapterType: 'Chapter',
         visibility: 'public',
       },
-      sourceLocale,
     );
     const translationMessages = await service.blockingPublishMessages(
+      translationLocale,
       story,
       {
         title: 'Listo',
@@ -412,7 +413,6 @@ test.group('Story service', (group) => {
         chapterType: 'Chapter',
         visibility: 'public',
       },
-      translationLocale,
     );
 
     assert.isAbove(sourceMessages.length, 0);

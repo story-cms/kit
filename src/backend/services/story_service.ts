@@ -51,14 +51,13 @@ export class StoryService {
   }
 
   public async blockingPublishMessages(
+    locale: string,
     story: Story,
     metadata?: StoryPublishMetadata,
-    locale?: string,
   ): Promise<string[]> {
-    const publishLocale = locale ?? this.config.languages[0].locale;
     const localeChapters = await Chapter.query()
       .where('storyId', story.id)
-      .where('locale', publishLocale);
+      .where('locale', locale);
 
     const messages: string[] = [];
 
@@ -441,7 +440,8 @@ export class StoryService {
   }
 
   protected localisationIsPublished(
-    localisation?: Pick<StoryLocalisation, 'isPublished'> | Partial<StoryLocalisation> | null,
+    localisation?:
+      Pick<StoryLocalisation, 'isPublished'> | Partial<StoryLocalisation> | null,
   ): boolean {
     return localisation?.isPublished === true;
   }
