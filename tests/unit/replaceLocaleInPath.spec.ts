@@ -105,10 +105,20 @@ test.describe('normalizePathForLanguageSwitch', () => {
     expect(normalizePathForLanguageSwitch('/en/dashboard')).toBe('/en/dashboard');
   });
 
+  test('redirects story create to story gallery', () => {
+    expect(normalizePathForLanguageSwitch('/en/story/create')).toBe('/en/story');
+  });
+
   test('combined with replaceLocaleInPath redirects chapter to translated story index', () => {
     const pathname = '/en/story/1/chapter/3';
     const normalized = normalizePathForLanguageSwitch(pathname);
     expect(replaceLocaleInPath(normalized, 'fr', locales)).toBe('/fr/story/1');
+  });
+
+  test('combined with replaceLocaleInPath redirects story create to translated story gallery', () => {
+    const pathname = '/en/story/create';
+    const normalized = normalizePathForLanguageSwitch(pathname);
+    expect(replaceLocaleInPath(normalized, 'fr', locales)).toBe('/fr/story');
   });
 });
 
