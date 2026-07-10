@@ -128,6 +128,7 @@ export default class StoriesController {
 
     if (payload.isPublished) {
       const messages = await storyService.blockingPublishMessages(
+        version.locale,
         story,
         {
           title: payload.title,
@@ -136,7 +137,6 @@ export default class StoriesController {
           chapterType: payload.chapterType,
           visibility: payload.visibility,
         },
-        version.locale,
       );
       if (messages.length > 0) {
         ctx.session.flash('errorsBag', { other: messages.join(' | ') });
@@ -167,6 +167,7 @@ export default class StoriesController {
 
     const model = await Story.findOrFail(version.storyId);
     const messages = await storyService.blockingPublishMessages(
+      version.locale,
       model,
       {
         title: payload.title,
@@ -175,7 +176,6 @@ export default class StoriesController {
         chapterType: payload.chapterType,
         visibility: payload.visibility,
       },
-      version.locale,
     );
     if (messages.length > 0) {
       ctx.session.flash('errorsBag', { other: messages.join(' | ') });
