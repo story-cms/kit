@@ -15,6 +15,22 @@
         :bookmarks="sharedProps.bookmarks"
       />
     </Variant>
+
+    <Variant title="Validation errors" :setup-app="miniSidebar">
+      <DraftIndex
+        :draft="draft"
+        :bundle="validationErrorBundle"
+        :story="{ ...story, fields }"
+        :has-edit-review="false"
+        :last-published="'2021-10-10T14:48:00.000000Z'"
+        :providers="{}"
+        :errors="validationErrors"
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :bookmarks="sharedProps.bookmarks"
+      />
+    </Variant>
   </Story>
 </template>
 
@@ -95,6 +111,32 @@ const bundle = {
     image: 'https://source.unsplash.com/random/800x600',
     body: 'A *lot* less things ...',
   },
+};
+
+const validationErrorBundle = {
+  ...bundle,
+  title: '',
+  imageUrl: '',
+  description: '',
+  nested: {
+    ...bundle.nested,
+    title: '',
+  },
+  spreads: [
+    {
+      ...listInListModel.spreads[0],
+      notes: [listInListModel.spreads[0].notes[0], { type: 'comment', content: '' }],
+    },
+    ...listInListModel.spreads.slice(1),
+  ],
+};
+
+const validationErrors = {
+  'bundle.title': ['The title field must have at least 1 character'],
+  'bundle.imageUrl': ['The cover image field must have at least 1 character'],
+  'bundle.description': ['The description field must have at least 1 character'],
+  'bundle.spreads.0.notes.1.content': ['The content field must have at least 1 character'],
+  'bundle.nested.title': ['The title field must have at least 1 character'],
 };
 
 const draft = {
