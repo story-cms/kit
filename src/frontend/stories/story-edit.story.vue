@@ -308,7 +308,7 @@ const translationModel: StoryEditProps['model'] = {
   title: '',
   coverImage: '',
   description: '',
-  tags: 'gospel,john,new-testament',
+  tags: '',
   sections: [
     {
       id: 'section-1',
@@ -329,7 +329,7 @@ const arabicTranslationModel: StoryEditProps['model'] = {
   title: '',
   coverImage: '',
   description: '',
-  tags: 'gospel,john,new-testament',
+  tags: '',
   sections: [
     {
       id: 'section-1',
@@ -410,7 +410,7 @@ Saving posts attached resource IDs to the story localisation.
 - **Delete and save draft** — empty story, unpublished; shows Delete (`red`) and Save Changes (`secondary`)
 - **Without sections** — `storiesHasSections: true`; English source locale with no sections; Sections tab shows empty state message
 - **Validation errors on tabs** — `storiesHasSections: true`; failed publish validation; Details and Sections tabs show error indicators and inline field messages
-- **Translation locale** — Spanish edit with English source column; tags prefilled from source on Details tab
+- **Translation locale** — Spanish edit with English source column; source tags shown in read-only column only on Details tab
 - **Arabic translation locale** — `storiesHasSections: true`; Arabic edit on the left, English source on the right; RTL text in the translation column; side-by-side fields on Details and Sections tabs
 - **Translation without sections** — `storiesHasSections: true`; Spanish edit with English source column; source localisation has no sections, so the Sections tab is empty
 
