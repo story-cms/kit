@@ -151,6 +151,8 @@ test.group('Story service', (group) => {
     assert.isDefined(props);
     assert.equal(props!.model.template, 'course');
     assert.equal(props!.model.chapterLimit, 10);
+    assert.equal(props!.model.storyType, 'Story');
+    assert.equal(props!.model.chapterType, 'Chapter');
   });
 
   test('createProps returns undefined on a translation locale', async ({ assert }) => {

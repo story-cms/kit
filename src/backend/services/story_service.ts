@@ -131,8 +131,8 @@ export class StoryService {
     return {
       model: {
         chapterLimit: null,
-        storyType: '',
-        chapterType: '',
+        storyType: 'Story',
+        chapterType: 'Chapter',
         sectionType: null,
         visibility: 'public',
         slug: null,

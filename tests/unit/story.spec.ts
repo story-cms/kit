@@ -61,6 +61,14 @@ const validCreateData = {
   template: 'course',
 };
 
+const minimalCreateData = {
+  title: 'Gospel of John',
+  chapterLimit: 12,
+  storyType: 'Story',
+  chapterType: 'Chapter',
+  template: 'course',
+};
+
 const validDraftUpdateData = {
   title: 'Gospel of John',
   description: 'A study through John',
@@ -125,6 +133,28 @@ test.describe('Story Validator', () => {
       ).rejects.toThrow();
     });
 
+    test('requires storyType', async () => {
+      const validator = new StoryCreateValidator();
+
+      await expect(
+        validator.validate({
+          ...validCreateData,
+          storyType: '',
+        }),
+      ).rejects.toThrow();
+    });
+
+    test('requires chapterType', async () => {
+      const validator = new StoryCreateValidator();
+
+      await expect(
+        validator.validate({
+          ...validCreateData,
+          chapterType: '',
+        }),
+      ).rejects.toThrow();
+    });
+
     test('accepts valid create payload', async () => {
       const validator = new StoryCreateValidator();
       const result = await validator.validate(validCreateData);
@@ -144,66 +174,52 @@ test.describe('Story Validator', () => {
 
     test('accepts minimal create payload', async () => {
       const validator = new StoryCreateValidator();
-      const result = await validator.validate({
-        title: 'Gospel of John',
-        chapterLimit: 12,
-        template: 'course',
-      });
+      const result = await validator.validate(minimalCreateData);
 
       expect(result.bundle.title).toBe('Gospel of John');
       expect(result.bundle.chapterLimit).toBe(12);
+      expect(result.bundle.storyType).toBe('Story');
+      expect(result.bundle.chapterType).toBe('Chapter');
       expect(result.bundle.template).toBe('course');
     });
 
-    test('accepts blank storyType, chapterType, visibility', async () => {
+    test('accepts blank visibility', async () => {
       const validator = new StoryCreateValidator();
       const result = await validator.validate({
-        title: 'Gospel of John',
-        chapterLimit: 12,
-        template: 'course',
-        storyType: '',
-        chapterType: '',
+        ...minimalCreateData,
         visibility: '',
       });
 
-      expect(result.bundle.storyType).toBe('');
-      expect(result.bundle.chapterType).toBe('');
       expect(result.bundle.visibility).toBe('');
     });
 
-    test('accepts null storyType and chapterType', async () => {
+    test('rejects null storyType and chapterType', async () => {
       const validator = new StoryCreateValidator();
-      const result = await validator.validate({
-        title: 'Gospel of John',
-        chapterLimit: 12,
-        template: 'course',
-        storyType: null,
-        chapterType: null,
-      });
 
-      expect(result.bundle.storyType).toBeNull();
-      expect(result.bundle.chapterType).toBeNull();
+      await expect(
+        validator.validate({
+          ...minimalCreateData,
+          storyType: null,
+          chapterType: null,
+        }),
+      ).rejects.toThrow();
     });
 
-    test('accepts omitted storyType and chapterType', async () => {
+    test('rejects omitted storyType and chapterType', async () => {
       const validator = new StoryCreateValidator();
-      const result = await validator.validate({
-        title: 'Gospel of John',
-        chapterLimit: 12,
-        template: 'course',
-      });
 
-      expect(result.bundle.storyType).toBeUndefined();
-      expect(result.bundle.chapterType).toBeUndefined();
+      await expect(
+        validator.validate({
+          title: 'Gospel of John',
+          chapterLimit: 12,
+          template: 'course',
+        }),
+      ).rejects.toThrow();
     });
 
     test('accepts create without sections or resources', async () => {
       const validator = new StoryCreateValidator();
-      const result = await validator.validate({
-        title: 'Gospel of John',
-        chapterLimit: 12,
-        template: 'course',
-      });
+      const result = await validator.validate(minimalCreateData);
 
       expect(result.bundle.sections).toBeUndefined();
       expect(result.bundle.resources).toBeUndefined();
@@ -212,9 +228,7 @@ test.describe('Story Validator', () => {
     test('accepts create with sections and resources', async () => {
       const validator = new StoryCreateValidator();
       const result = await validator.validate({
-        title: 'Gospel of John',
-        chapterLimit: 12,
-        template: 'course',
+        ...minimalCreateData,
         sections: [{ title: 'Introduction', description: 'Opening section' }],
         resources: ['00000000-0000-0000-0000-000000000001'],
       });
@@ -231,9 +245,7 @@ test.describe('Story Validator', () => {
 
       await expect(
         validator.validate({
-          title: 'Gospel of John',
-          chapterLimit: 12,
-          template: 'course',
+          ...minimalCreateData,
           sections: [{ title: '' }],
         }),
       ).rejects.toThrow();
@@ -363,6 +375,42 @@ test.describe('Story Validator', () => {
       );
     });
 
+    test('create returns friendly storyType message for empty storyType', async () => {
+      const validator = new StoryCreateValidator();
+
+      await expectValidationMessages(
+        () =>
+          validator.validate({
+            ...validCreateData,
+            storyType: '',
+          }),
+        [
+          {
+            field: 'bundle.storyType',
+            message: 'Please choose a story type.',
+          },
+        ],
+      );
+    });
+
+    test('create returns friendly storyType message for null storyType', async () => {
+      const validator = new StoryCreateValidator();
+
+      await expectValidationMessages(
+        () =>
+          validator.validate({
+            ...validCreateData,
+            storyType: null,
+          }),
+        [
+          {
+            field: 'bundle.storyType',
+            message: 'Please choose a story type.',
+          },
+        ],
+      );
+    });
+
     test('update returns friendly storyType message for empty storyType', async () => {
       const data = {
         ...validDraftUpdateData,
@@ -401,18 +449,40 @@ test.describe('Story Validator', () => {
       );
     });
 
-    test('create accepts null storyType and chapterType', async () => {
+    test('create returns friendly chapterType message for empty chapterType', async () => {
       const validator = new StoryCreateValidator();
-      const result = await validator.validate({
-        title: 'Gospel of John',
-        chapterLimit: 12,
-        template: 'course',
-        storyType: null,
-        chapterType: null,
-      });
 
-      expect(result.bundle.storyType).toBeNull();
-      expect(result.bundle.chapterType).toBeNull();
+      await expectValidationMessages(
+        () =>
+          validator.validate({
+            ...validCreateData,
+            chapterType: '',
+          }),
+        [
+          {
+            field: 'bundle.chapterType',
+            message: 'Please choose a chapter type.',
+          },
+        ],
+      );
+    });
+
+    test('create returns friendly chapterType message for null chapterType', async () => {
+      const validator = new StoryCreateValidator();
+
+      await expectValidationMessages(
+        () =>
+          validator.validate({
+            ...validCreateData,
+            chapterType: null,
+          }),
+        [
+          {
+            field: 'bundle.chapterType',
+            message: 'Please choose a chapter type.',
+          },
+        ],
+      );
     });
 
     test('update returns friendly chapterType message for empty chapterType', async () => {
