@@ -387,6 +387,7 @@ export interface StoryEditProps {
     title: string;
     coverImage: string;
     description: string;
+    tags: string | null;
     sections: StorySection[];
     resources: ResourceItem[];
   };
