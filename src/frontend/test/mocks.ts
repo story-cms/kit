@@ -10,6 +10,7 @@ import type {
   StorySpec,
   InvitationItem,
   UiConfig,
+  AppUserInterface,
 } from '../../types.ts';
 import { StoryHandler } from '../shared/helpers.js';
 import { useSharedStore } from '../store/shared.js';
@@ -442,6 +443,18 @@ export const user = {
   language: 'en',
   hasPendingInvite: false,
   isAllowed: (locale: string) => locale === 'en',
+};
+
+export const adminUser: AppUserInterface = {
+  ...user,
+  role: 'admin',
+  isAdmin: true,
+};
+
+export const editorUser: AppUserInterface = {
+  ...user,
+  role: 'editor',
+  isAdmin: false,
 };
 
 export const stories = ['John', 'Acts'];
