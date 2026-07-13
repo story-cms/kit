@@ -1,5 +1,4 @@
 import vine, { SimpleMessagesProvider } from '@vinejs/vine';
-import type { CourseFieldsOptions } from '../define_config.js';
 import videoRule from '../validators/video_rule.js';
 import type { ValidatorType } from '../../types';
 
@@ -21,16 +20,12 @@ const screenSchema = vine.object({
 });
 
 export class CourseValidator implements ValidatorType {
-  #hasSections: boolean;
-
-  constructor(options: CourseFieldsOptions = {}) {
-    this.#hasSections = options.hasSections === true;
-  }
-
   validate(data: any): Promise<any> {
     vine.messagesProvider = new SimpleMessagesProvider({
       'bundle.title.required': 'The chapter must have a title',
-      'bundle.section.required': 'The chapter must have a section',
+      // TODO(sections): re-enable when spec is ready
+      // 'bundle.section.required': 'The chapter must have a section',
+      'bundle.imageUrl.required': 'The chapter must have a cover image',
       'bundle.screens.required': 'The chapter must have at least one screen',
       'bundle.screens.*.screenName.required': 'Each screen must have a name',
       'bundle.screens.*.sessionVideo.videoSchema': 'Please upload a valid video file',
@@ -39,8 +34,9 @@ export class CourseValidator implements ValidatorType {
     const schema = vine.create({
       bundle: vine.object({
         title: vine.string(),
-        ...(this.#hasSections ? { section: vine.string() } : {}),
-        imageUrl: vine.string().optional(),
+        // TODO(sections): re-enable when spec is ready
+        // section: vine.string(),
+        imageUrl: vine.string(),
         screens: vine.array(screenSchema).minLength(1),
       }),
     });

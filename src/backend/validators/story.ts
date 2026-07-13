@@ -2,6 +2,12 @@ import type { HttpContext } from '@adonisjs/core/http';
 import vine, { SimpleMessagesProvider } from '@vinejs/vine';
 import type { SchemaTypes } from '@vinejs/vine/types';
 
+const sectionSchema = vine.object({
+  id: vine.string().optional(),
+  title: vine.string().trim().minLength(1),
+  description: vine.string().optional(),
+});
+
 const draft = {
   title: vine.string().trim().minLength(1),
   coverImage: vine.string().optional(),
@@ -13,13 +19,9 @@ const draft = {
   sectionType: vine.string().optional(),
   visibility: vine.string().trim().minLength(1),
   isPublished: vine.boolean(),
-  sections: vine.array(
-    vine.object({
-      id: vine.string().optional(),
-      title: vine.string().trim().minLength(1),
-      description: vine.string().optional(),
-    }),
-  ),
+  // TODO(sections): re-enable when spec is ready
+  // sections: vine.array(sectionSchema),
+  sections: vine.array(sectionSchema).optional(),
   resources: vine.array(vine.string()).optional(),
 };
 
@@ -34,13 +36,9 @@ const live = {
   sectionType: vine.string().optional(),
   visibility: vine.string().trim().minLength(1),
   isPublished: vine.boolean(),
-  sections: vine.array(
-    vine.object({
-      id: vine.string().optional(),
-      title: vine.string().trim().minLength(1),
-      description: vine.string().optional(),
-    }),
-  ),
+  // TODO(sections): re-enable when spec is ready
+  // sections: vine.array(sectionSchema),
+  sections: vine.array(sectionSchema).optional(),
   resources: vine.array(vine.string()).optional(),
 };
 
@@ -55,15 +53,7 @@ const createSchema = {
   sectionType: vine.string().optional(),
   visibility: vine.string().trim().optional(),
   template: vine.string().trim().minLength(1),
-  sections: vine
-    .array(
-      vine.object({
-        id: vine.string().optional(),
-        title: vine.string().trim().minLength(1),
-        description: vine.string().optional(),
-      }),
-    )
-    .optional(),
+  sections: vine.array(sectionSchema).optional(),
   resources: vine.array(vine.string()).optional(),
 };
 
@@ -122,8 +112,9 @@ export const storyValidationMessages = {
   'bundle.chapterType.required': 'Please choose a chapter type.',
   'bundle.visibility.minLength': 'Please choose a visibility.',
   'bundle.visibility.required': 'Please choose a visibility.',
-  'bundle.sections.*.title.minLength': 'Please add a section title.',
-  'bundle.sections.*.title.required': 'Please add a section title.',
+  // TODO(sections): re-enable when spec is ready
+  // 'bundle.sections.*.title.minLength': 'Please add a section title.',
+  // 'bundle.sections.*.title.required': 'Please add a section title.',
   'bundle.template.minLength': 'Please choose a chapter template.',
   'bundle.template.required': 'Please choose a chapter template.',
 };

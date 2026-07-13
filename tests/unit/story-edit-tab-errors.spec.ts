@@ -49,18 +49,4 @@ test.describe('firstStoryEditTabWithError', () => {
   test('returns null when there are no errors', () => {
     expect(firstStoryEditTabWithError({}, 'Chapters')).toBeNull();
   });
-
-  test('returns null for section errors when sections are disabled', () => {
-    const errors = { 'bundle.sections.0.title': ['Section title is required'] };
-
-    expect(firstStoryEditTabWithError(errors, 'Chapters', false)).toBeNull();
-  });
-});
-
-test.describe('storyEditTabHasError with sections disabled', () => {
-  test('does not flag Sections for bundle.sections errors', () => {
-    const errors = { 'bundle.sections.1.title': ['Title is required'] };
-
-    expect(storyEditTabHasError('sections', errors, false)).toBe(false);
-  });
 });
