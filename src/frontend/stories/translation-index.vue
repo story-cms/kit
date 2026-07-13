@@ -1,9 +1,9 @@
 <template>
   <AppLayout title="Draft" :subtitle="chapterTitle">
     <template #actions>
-      <DraftActions @delete="deleteDraft" />
-      <WorkflowActions
+      <DraftEditActions
         :has-edit-review="hasEditReview"
+        @delete="deleteDraft"
         @publish="publishDraft"
         @request-change="reject"
         @submit="submitDraft"
@@ -123,9 +123,8 @@ import { ResponseStatus } from '../../types';
 import { useSharedStore, useModelStore, useWidgetsStore, useDraftsStore } from '../store';
 import { storeToRefs } from 'pinia';
 import AppLayout from '../shared/app-layout.vue';
-import DraftActions from '../shared/draft-actions.vue';
+import DraftEditActions from './components/draft-edit-actions.vue';
 import TabButton from '../shared/tab-button.vue';
-import WorkflowActions from './components/workflow-actions.vue';
 import ContentSidebar from '../shared/content-sidebar.vue';
 import MetaBox from '../shared/meta-box.vue';
 import MobileAppPreview from '../shared/mobile-app-preview.vue';

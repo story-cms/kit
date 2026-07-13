@@ -30,6 +30,12 @@
     <Variant title="Admin no review draft started" :setup-app="loadData">
       <WorkflowActions :has-edit-review="false" />
     </Variant>
+    <Variant title="Admin publish — never published" :setup-app="loadData">
+      <WorkflowActions :has-edit-review="false" />
+    </Variant>
+    <Variant title="Admin publish — republish" :setup-app="loadData">
+      <WorkflowActions :has-edit-review="false" />
+    </Variant>
   </Story>
 </template>
 
@@ -77,6 +83,16 @@ const loadData: StoryHandler = ({ variant }): void => {
   if (variant?.title === 'Editor no review draft started') {
     shared.user.role = 'editor';
     drafts.draft.status = 'started';
+  }
+  if (variant?.title === 'Admin publish — never published') {
+    shared.user.role = 'admin';
+    drafts.draft.status = 'started';
+    drafts.lastPublished = '';
+  }
+  if (variant?.title === 'Admin publish — republish') {
+    shared.user.role = 'admin';
+    drafts.draft.status = 'started';
+    drafts.lastPublished = '2025-03-06T22:51:06.741+00:00';
   }
 };
 </script>

@@ -1,9 +1,9 @@
 <template>
   <AppLayout title="Draft" :subtitle="chapterTitle">
     <template #actions>
-      <DraftActions @delete="deleteDraft" />
-      <WorkflowActions
+      <DraftEditActions
         :has-edit-review="hasEditReview"
+        @delete="deleteDraft"
         @publish="publish"
         @request-change="reject"
         @submit="submit"
@@ -65,8 +65,7 @@ import { padZero, debounce, formatDate, safeChapterTitle } from '../shared/helpe
 import type { FieldSpec, DraftEditProps, SharedPageProps } from '../../types';
 import { ResponseStatus } from '../../types';
 import { useDraftsStore, useModelStore, useSharedStore, useWidgetsStore } from '../store';
-import DraftActions from '../shared/draft-actions.vue';
-import WorkflowActions from './components/workflow-actions.vue';
+import DraftEditActions from './components/draft-edit-actions.vue';
 import ContentSidebar from '../shared/content-sidebar.vue';
 import MetaBox from '../shared/meta-box.vue';
 import MobileAppPreview from '../shared/mobile-app-preview.vue';

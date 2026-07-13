@@ -14,8 +14,8 @@
   />
   <StudioButton
     v-if="showPublishButton"
-    label="Publish"
-    variant="green"
+    :label="publishLabel"
+    variant="primary"
     :disabled="widgets.isDirty"
     @click="emit('publish')"
   />
@@ -53,4 +53,8 @@ const showPublishButton = computed(() => {
   if (shared.user.role !== 'admin') return false;
   return true;
 });
+
+const publishLabel = computed(() =>
+  drafts.lastPublished === '' ? 'Mark Ready' : 'Publish changes',
+);
 </script>
