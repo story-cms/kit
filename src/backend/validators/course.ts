@@ -25,7 +25,6 @@ export class CourseValidator implements ValidatorType {
       'bundle.title.required': 'The chapter must have a title',
       // TODO(sections): re-enable when spec is ready
       // 'bundle.section.required': 'The chapter must have a section',
-      'bundle.imageUrl.required': 'The chapter must have a cover image',
       'bundle.screens.required': 'The chapter must have at least one screen',
       'bundle.screens.*.screenName.required': 'Each screen must have a name',
       'bundle.screens.*.sessionVideo.videoSchema': 'Please upload a valid video file',
@@ -36,7 +35,7 @@ export class CourseValidator implements ValidatorType {
         title: vine.string(),
         // TODO(sections): re-enable when spec is ready
         // section: vine.string(),
-        imageUrl: vine.string(),
+        imageUrl: vine.string().optional(),
         screens: vine.array(screenSchema).minLength(1),
       }),
     });
