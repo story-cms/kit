@@ -176,12 +176,12 @@ const chapterLabel = computed(() => `${props.chapterName} ${chapterNumber.value}
 const hasLiveVersion = computed(() => props.item.tags.includes('Live'));
 
 const tags = computed(() => {
-  if (props.scope === 'Live') {
+  if (props.scope === 'Live' || props.scope === 'Ready') {
     if (props.item.tags.includes('Draft')) {
       return ['Changed'];
     }
   } else {
-    if (props.item.tags.includes('Live')) {
+    if (props.scope === 'Changes' || props.item.tags.includes('Live')) {
       return ['Changes'];
     }
     return ['New'];

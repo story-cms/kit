@@ -29,14 +29,18 @@
           >
             <Plus class="size-4" aria-hidden="true" />
           </StudioButton>
-          <button
+          <p
             v-if="addStatus == AddStatus.Wait"
-            type="button"
-            class="inline-flex items-center rounded-full border border-gray-300 px-4 py-2 font-dmsans text-sm font-medium text-gray-500"
-            disabled
+            class="font-dmsans text-xs font-normal leading-5 text-gray-600"
           >
             {{ `No more ${story.chapterType}s available to translate` }}
-          </button>
+          </p>
+          <p
+            v-if="addStatus == AddStatus.Full && !story.isPublished"
+            class="font-dmsans text-xs font-normal leading-5 text-gray-600"
+          >
+            {{ `All ${story.chapterType}s created` }}
+          </p>
         </div>
 
         <div class="flex shrink-0 items-center gap-3">
@@ -147,7 +151,7 @@ shared.setCurrentStoryName(props.story.name);
 
 const isList = ref(false);
 const filterQuery = ref('');
-const currentTab = ref('Live');
+const currentTab = ref(props.story.isPublished ? 'Live' : 'Ready');
 const isPublishing = ref(false);
 
 const liveCount = computed(
@@ -158,9 +162,13 @@ const draftCount = computed(
   () => props.index.filter((item) => item.tags.includes('Draft')).length,
 );
 
+const liveTabLabel = computed(() => (props.story.isPublished ? 'Live' : 'Ready'));
+
+const draftTabLabel = computed(() => (props.story.isPublished ? 'Changes' : 'Draft'));
+
 const tabs = computed((): TabItem[] => [
-  { label: 'Live', count: liveCount.value },
-  { label: 'Draft', count: draftCount.value },
+  { label: liveTabLabel.value, count: liveCount.value },
+  { label: draftTabLabel.value, count: draftCount.value },
 ]);
 
 const publishMetadata = computed(() => ({
@@ -190,8 +198,10 @@ const onFilter = (tab: string) => {
   currentTab.value = tab;
 };
 
+const isLiveScope = (tab: string) => tab === 'Live' || tab === 'Ready';
+
 const filteredIndex = computed(() => {
-  const tabTag = currentTab.value === 'Live' ? 'Live' : 'Draft';
+  const tabTag = isLiveScope(currentTab.value) ? 'Live' : 'Draft';
   const query = filterQuery.value.trim().toLowerCase();
 
   return props.index.filter((item) => {
