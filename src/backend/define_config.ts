@@ -57,9 +57,6 @@ export function defineConfig(config: Partial<CmsConfig>): CmsConfig {
     storiesHasEditReview:
       config.storiesHasEditReview === undefined ? false : config.storiesHasEditReview,
 
-    storiesHasSections:
-      config.storiesHasSections === undefined ? false : config.storiesHasSections,
-
     storyTemplates: config.storyTemplates || [],
   } satisfies CmsConfig;
 }
@@ -75,32 +72,19 @@ export interface mediaConfig {
   maxSize: number;
 }
 
-export interface CourseFieldsOptions {
-  hasSections?: boolean;
-}
-
-export function courseFields(
-  video: mediaConfig,
-  image: mediaConfig,
-  options: CourseFieldsOptions = {},
-): FieldSpec[] {
-  const { hasSections = false } = options;
-
+export function courseFields(video: mediaConfig, image: mediaConfig): FieldSpec[] {
   return [
     {
       name: 'title',
       label: 'Title',
       widget: 'string',
     },
-    ...(hasSections
-      ? [
-          {
-            name: 'section',
-            label: 'Section',
-            widget: 'string',
-          } as FieldSpec,
-        ]
-      : []),
+    // TODO(sections): re-enable when spec is ready
+    // {
+    //   name: 'section',
+    //   label: 'Section',
+    //   widget: 'string',
+    // },
     {
       name: 'imageUrl',
       label: 'Cover Image',

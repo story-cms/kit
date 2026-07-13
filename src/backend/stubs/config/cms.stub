@@ -67,8 +67,6 @@ const devotionStream: StreamSpec = {
 // CMS configuration
 // ---------------------------------------
 
-const storiesHasSections = false;
-
 const cmsConfig: Partial<CmsConfig> = {
   /**
     * The name of the app
@@ -126,11 +124,6 @@ const cmsConfig: Partial<CmsConfig> = {
     */
   storiesHasEditReview: false,
 
-  /**
-    * Flag to enable the Sections tab and section type field on story create/edit
-    */
-  storiesHasSections,
-
   bespokeTemplates: [
     {
       id: 'daily-grace',
@@ -147,9 +140,7 @@ const cmsConfig: Partial<CmsConfig> = {
     {
       id: 'course',
       name: 'Course',
-      fields: courseFields(videoUploadConfig, imageUploadConfig, {
-        hasSections: storiesHasSections,
-      }),
+      fields: [courseFields(videoUploadConfig, imageUploadConfig)],
     },
   ],
 
