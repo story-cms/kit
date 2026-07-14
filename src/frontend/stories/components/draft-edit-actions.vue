@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col flex-wrap items-start gap-1 md:flex-row md:items-center">
-    <p class="mr-1 font-dmsans text-xs font-normal leading-5 text-gray-600">
+    <p v-if="hasBeenSaved" class="mr-1 font-dmsans text-xs font-normal leading-5 text-gray-600">
       Last saved {{ lastSaved }}
     </p>
     <DraftActions @delete="emit('delete')" />
@@ -28,6 +28,10 @@ defineProps<{
 const emit = defineEmits(['delete', 'publish', 'request-change', 'submit']);
 
 const drafts = useDraftsStore();
+
+const hasBeenSaved = computed(
+  () => drafts.draft.updatedAt !== drafts.draft.createdAt,
+);
 
 const now = ref(DateTime.now());
 
