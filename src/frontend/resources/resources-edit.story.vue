@@ -77,6 +77,17 @@
       />
     </Variant>
 
+    <Variant title="Media validation errors" :setup-app="showErrorMessage">
+      <ResourcesEdit
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :errors="mediaValidationErrors"
+        :bookmarks="sharedProps.bookmarks"
+        v-bind="mockMediaValidationResource"
+      />
+    </Variant>
+
     <Variant title="Arabic locale" :setup-app="miniSidebar">
       <ResourcesEdit
         :config="sharedProps.config"
@@ -103,7 +114,10 @@ import {
   mockEditUrlLinkResourceEmptyUsages,
   mockResourceEditErrors,
 } from '../test/mocks';
+import { useSharedStore } from '../store';
+import { ResponseStatus } from '../../types';
 import type { LanguageSpecification, ResourceEditProps } from '../../types';
+import type { StoryHandler } from '../shared/helpers';
 
 const arabicLanguage: LanguageSpecification = {
   locale: 'ar',
@@ -125,5 +139,28 @@ const mockArabicEditTextResource: ResourceEditProps = {
     { storyId: 1, title: 'أسس الكتاب المقدس' },
     { storyId: 2, title: 'إنجيل يوحنا' },
   ],
+};
+
+const mockMediaValidationResource: ResourceEditProps = {
+  ...mockEditVideoResource,
+  bundle: {
+    ...mockEditVideoResource.bundle,
+    video: { url: null },
+    imageUrl: '',
+  },
+};
+
+const mediaValidationErrors = {
+  'bundle.video': ['We could not publish the file. Please try again.'],
+  'bundle.imageUrl': ['The thumbnail image field must have at least 1 character'],
+};
+
+const showErrorMessage: StoryHandler = (): void => {
+  const shared = useSharedStore();
+  shared.setSidebarOpen(false);
+  shared.messageCentre.response = ResponseStatus.Failure;
+  shared.messageCentre.message = 'Some required fields are missing';
+  shared.messageCentre.description = undefined;
+  shared.setHeaderSize(72, 800);
 };
 </script>

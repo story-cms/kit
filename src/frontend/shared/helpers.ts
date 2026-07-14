@@ -404,7 +404,7 @@ export function parentPathForBack(pathname: string): string | null {
   return null;
 }
 
-/** Redirect chapter preview paths to the story index before switching locale. */
+/** Redirect unsafe paths to a locale-switchable parent before swapping locale. */
 export function normalizePathForLanguageSwitch(pathname: string): string {
   const segments = pathname.split('/').filter(Boolean);
   if (
@@ -413,6 +413,9 @@ export function normalizePathForLanguageSwitch(pathname: string): string {
     segments[3] === 'chapter'
   ) {
     return `/${segments.slice(0, 3).join('/')}`;
+  }
+  if (segments.length === 3 && segments[1] === 'story' && segments[2] === 'create') {
+    return `/${segments.slice(0, 2).join('/')}`;
   }
   return pathname;
 }

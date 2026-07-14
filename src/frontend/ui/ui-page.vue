@@ -84,7 +84,7 @@
             v-if="activeFilter === 'todo' && !todoCount && !searchTerm"
             class="col-span-2 row-start-1 flex flex-col items-center justify-center"
           >
-            <Icon class="size-96" name="inbox-zero" />
+            <p class="text-center text-sm">There are no further translations.</p>
           </div>
         </div>
       </section>
@@ -107,7 +107,6 @@ import { useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
 import { ResponseStatus, FlagState } from '../../types';
 import type { UiItem, UiPageProps, SharedPageProps, UiItemPayload } from '../../types';
-import Icon from '../shared/icon.vue';
 
 import RivePlayer from '../fields/attachments/rive-player.vue';
 
