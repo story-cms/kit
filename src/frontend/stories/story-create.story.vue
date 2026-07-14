@@ -150,9 +150,8 @@ const loadResourcesTab: StoryHandler = (context): void => {
 <docs lang="md">
 # Story Create
 
-Full-page form for creating a new story. Tabbed navigation for Details, Sections, and
-Resources. Collects title, cover image, classification fields, optional sections and
-attached resources, and chapter template when multiple templates are available.
+Full-page form for creating a new story. Tabbed navigation for Details and Resources (Sections tab temporarily commented out).
+Collects title, cover image, classification fields, optional sections and attached resources, and chapter template when multiple templates are available.
 
 In production, this page is reached from the Story Gallery **+** button when
 `multi-story` is included in `config.subscriptions`. See [Story Gallery](./story-gallery.story.vue).

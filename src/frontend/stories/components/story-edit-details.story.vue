@@ -63,7 +63,7 @@ const translationLocaleModel = {
   title: '',
   coverImage: '',
   description: '',
-  tags: 'gospel,john',
+  tags: '',
 };
 
 const translationWithoutTagsModel = {
@@ -167,7 +167,7 @@ source locale only) classification fields, chapter template, and visibility.
 ## Variants
 
 - **Source locale** — single-column editable fields including chapter count and visibility
-- **Translation locale** — side-by-side editable and read-only columns; tags prefilled from source when empty
+- **Translation locale** — side-by-side editable and read-only columns; source tags shown in read-only column only
 - **Translation without tags** — translation mode where the source locale has no tags; both editable and read-only tag fields are empty
 - **Single template** — shows read-only Chapter Template when only one template is configured
 - **Multiple templates on edit** — read-only Chapter Template even when multiple templates are configured

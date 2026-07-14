@@ -171,7 +171,7 @@ test.group('Story service', (group) => {
     assert.isUndefined(props);
   });
 
-  test('editProps prefills tags from source when translation tags are empty', async ({
+  test('editProps does not prefill tags from source when translation tags are empty', async ({
     assert,
   }) => {
     const story = await StoryFactory.with('localisations').create();
@@ -188,7 +188,7 @@ test.group('Story service', (group) => {
     );
 
     assert.isDefined(props);
-    assert.equal(props!.model.tags, 'gospel,john');
+    assert.equal(props!.model.tags, '');
     assert.equal(props!.source!.tags, 'gospel,john');
   });
 

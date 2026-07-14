@@ -235,9 +235,7 @@ test.describe('Story Validator', () => {
 
       expect(result.bundle.sections).toHaveLength(1);
       expect(result.bundle.sections[0].title).toBe('Introduction');
-      expect(result.bundle.resources).toEqual([
-        '00000000-0000-0000-0000-000000000001',
-      ]);
+      expect(result.bundle.resources).toEqual(['00000000-0000-0000-0000-000000000001']);
     });
 
     test('rejects create with blank section title', async () => {
@@ -267,9 +265,7 @@ test.describe('Story Validator', () => {
         const validator = new StoryUpdateValidator(ctx);
         const result = await validator.validate(validDraftUpdateData);
 
-        expect(result.bundle.resources).toEqual([
-          '00000000-0000-0000-0000-000000000001',
-        ]);
+        expect(result.bundle.resources).toEqual(['00000000-0000-0000-0000-000000000001']);
       });
 
       test('accepts draft without resources', async () => {
@@ -335,9 +331,7 @@ test.describe('Story Validator', () => {
         const validator = new StoryUpdateValidator(ctx);
         const result = await validator.validate(validPublishUpdateData);
 
-        expect(result.bundle.resources).toEqual([
-          '00000000-0000-0000-0000-000000000001',
-        ]);
+        expect(result.bundle.resources).toEqual(['00000000-0000-0000-0000-000000000001']);
         expect(result.bundle.sections).toHaveLength(1);
       });
 
