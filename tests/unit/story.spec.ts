@@ -235,22 +235,19 @@ test.describe('Story Validator', () => {
 
       expect(result.bundle.sections).toHaveLength(1);
       expect(result.bundle.sections[0].title).toBe('Introduction');
-      expect(result.bundle.resources).toEqual([
-        '00000000-0000-0000-0000-000000000001',
-      ]);
+      expect(result.bundle.resources).toEqual(['00000000-0000-0000-0000-000000000001']);
     });
 
-    // TODO(sections): re-enable when spec is ready
-    // test('rejects create with blank section title', async () => {
-    //   const validator = new StoryCreateValidator();
-    //
-    //   await expect(
-    //     validator.validate({
-    //       ...minimalCreateData,
-    //       sections: [{ title: '' }],
-    //     }),
-    //   ).rejects.toThrow();
-    // });
+    test('rejects create with blank section title', async () => {
+      const validator = new StoryCreateValidator();
+
+      await expect(
+        validator.validate({
+          ...minimalCreateData,
+          sections: [{ title: '' }],
+        }),
+      ).rejects.toThrow();
+    });
   });
 
   test.describe('StoryUpdateValidator', () => {
@@ -268,9 +265,7 @@ test.describe('Story Validator', () => {
         const validator = new StoryUpdateValidator(ctx);
         const result = await validator.validate(validDraftUpdateData);
 
-        expect(result.bundle.resources).toEqual([
-          '00000000-0000-0000-0000-000000000001',
-        ]);
+        expect(result.bundle.resources).toEqual(['00000000-0000-0000-0000-000000000001']);
       });
 
       test('accepts draft without resources', async () => {
@@ -320,26 +315,23 @@ test.describe('Story Validator', () => {
         await expect(validator.validate(data)).rejects.toThrow();
       });
 
-      // TODO(sections): re-enable when spec is ready
-      // test('requires sections', async () => {
-      //   const data = {
-      //     ...validPublishUpdateData,
-      //     sections: [{ title: '' }],
-      //   };
-      //   const ctx = createMockHttpContext(data);
-      //   const validator = new StoryUpdateValidator(ctx);
-      //
-      //   await expect(validator.validate(data)).rejects.toThrow();
-      // });
+      test('requires sections', async () => {
+        const data = {
+          ...validPublishUpdateData,
+          sections: [{ title: '' }],
+        };
+        const ctx = createMockHttpContext(data);
+        const validator = new StoryUpdateValidator(ctx);
+
+        await expect(validator.validate(data)).rejects.toThrow();
+      });
 
       test('accepts resources array when publishing', async () => {
         const ctx = createMockHttpContext(validPublishUpdateData);
         const validator = new StoryUpdateValidator(ctx);
         const result = await validator.validate(validPublishUpdateData);
 
-        expect(result.bundle.resources).toEqual([
-          '00000000-0000-0000-0000-000000000001',
-        ]);
+        expect(result.bundle.resources).toEqual(['00000000-0000-0000-0000-000000000001']);
         expect(result.bundle.sections).toHaveLength(1);
       });
 
