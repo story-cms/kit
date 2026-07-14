@@ -7,8 +7,8 @@
     <span class="inline-flex" :class="{ 'pointer-events-none': disabled }">
       <button
         type="button"
-        class="inline-flex items-center justify-center gap-2 rounded-full font-dmsans text-[15px] font-semibold leading-5 tracking-[-0.15px] transition-colors disabled:cursor-not-allowed disabled:opacity-50"
-        :class="[variantClasses, sizeClasses]"
+        class="inline-flex items-center justify-center gap-2 font-dmsans text-[15px] font-semibold leading-5 tracking-[-0.15px] transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+        :class="[shapeClasses, variantClasses, sizeClasses]"
         :aria-label="accessibleLabel"
         :disabled="disabled"
         @click="emit('click')"
@@ -27,8 +27,8 @@
   <button
     v-else
     type="button"
-    class="inline-flex items-center justify-center gap-2 rounded-full font-dmsans text-[15px] font-semibold leading-5 tracking-[-0.15px] transition-colors disabled:cursor-not-allowed disabled:opacity-50"
-    :class="[variantClasses, sizeClasses]"
+    class="inline-flex items-center justify-center gap-2 font-dmsans text-[15px] font-semibold leading-5 tracking-[-0.15px] transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+    :class="[shapeClasses, variantClasses, sizeClasses]"
     :aria-label="accessibleLabel"
     :disabled="disabled"
     @click="emit('click')"
@@ -42,24 +42,22 @@
 import { computed, useSlots } from 'vue';
 
 export type StudioButtonVariant =
-  | 'primary'
-  | 'outline'
-  | 'secondary'
-  | 'green'
-  | 'blue'
-  | 'gray'
-  | 'red';
+  'primary' | 'outline' | 'secondary' | 'green' | 'blue' | 'gray' | 'red';
+
+export type StudioButtonShape = 'default' | 'cta';
 
 const props = withDefaults(
   defineProps<{
     label?: string;
     ariaLabel?: string;
     variant?: StudioButtonVariant;
+    shape?: StudioButtonShape;
     disabled?: boolean;
     tooltip?: string;
   }>(),
   {
     variant: 'primary',
+    shape: 'default',
     disabled: false,
     tooltip: undefined,
     label: undefined,
@@ -77,7 +75,15 @@ const accessibleLabel = computed(() => props.ariaLabel ?? props.label);
 
 const isIconOnly = computed(() => !props.label && !!slots.default);
 
-const sizeClasses = computed(() => (isIconOnly.value ? 'px-3 py-3' : 'px-6 py-3'));
+const sizeClasses = computed(() => {
+  if (props.shape === 'cta') return 'p-[9px]';
+  if (isIconOnly.value) return 'px-3 py-3';
+  return 'px-6 py-3';
+});
+
+const shapeClasses = computed(() =>
+  props.shape === 'cta' ? 'rounded-[15px]' : 'rounded-full',
+);
 
 const variantClassMap: Record<StudioButtonVariant, string> = {
   primary: 'bg-studio_forest_green text-studio_lime hover:bg-studio_forest_green/90',

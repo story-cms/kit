@@ -1,9 +1,9 @@
 <template>
   <AppLayout title="Draft" :subtitle="chapterTitle">
     <template #actions>
-      <DraftActions @delete="deleteDraft" />
-      <WorkflowActions
+      <DraftEditActions
         :has-edit-review="hasEditReview"
+        @delete="deleteDraft"
         @publish="publish"
         @request-change="reject"
         @submit="submit"
@@ -33,8 +33,8 @@
                 { label: story.chapterType, value: metaChapter },
               ]"
               :secondary="[
-                { label: 'Created', value: formatDate(draft.createdAt) },
-                { label: 'Auto-Saved', value: formatDate(draft.updatedAt) },
+                { label: 'Created', value: formatDate(drafts.draft.createdAt) },
+                { label: 'Auto-Saved', value: formatDate(drafts.draft.updatedAt) },
                 { label: 'Last Published', value: publishedWhen },
               ]"
             />
@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue';
+import { computed, ref, onMounted, watch } from 'vue';
 import AppLayout from '../shared/app-layout.vue';
 
 import { router } from '@inertiajs/vue3';
@@ -65,8 +65,7 @@ import { padZero, debounce, formatDate, safeChapterTitle } from '../shared/helpe
 import type { FieldSpec, DraftEditProps, SharedPageProps } from '../../types';
 import { ResponseStatus } from '../../types';
 import { useDraftsStore, useModelStore, useSharedStore, useWidgetsStore } from '../store';
-import DraftActions from '../shared/draft-actions.vue';
-import WorkflowActions from './components/workflow-actions.vue';
+import DraftEditActions from './components/draft-edit-actions.vue';
 import ContentSidebar from '../shared/content-sidebar.vue';
 import MetaBox from '../shared/meta-box.vue';
 import MobileAppPreview from '../shared/mobile-app-preview.vue';
@@ -79,6 +78,13 @@ const shared = useSharedStore();
 shared.setFromProps(props);
 const drafts = useDraftsStore();
 drafts.setFromProps(props);
+
+watch(
+  () => props.draft.updatedAt,
+  (updatedAt) => drafts.setUpdatedAt(updatedAt),
+  { immediate: true },
+);
+
 const widgets = useWidgetsStore();
 widgets.setProviders(props.providers);
 

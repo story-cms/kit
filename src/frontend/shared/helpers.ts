@@ -59,6 +59,45 @@ export const formatDate = (value: string): string => {
   )}, ${padZero(d.getHours())}:${padZero(d.getMinutes())}`;
 };
 
+export const toRelativeTime = (value: string, now?: DateTime): string => {
+  const saved = DateTime.fromISO(value);
+  const currentTime = now ?? DateTime.now();
+
+  const pluralize = (n: number, unit: string): string => `${n} ${unit}${n === 1 ? '' : 's'} ago`;
+
+  const elapsedSeconds = Math.floor(currentTime.diff(saved, 'seconds').seconds);
+  if (elapsedSeconds < 60) return pluralize(Math.max(1, elapsedSeconds), 'sec');
+
+  const elapsedMinutes = Math.floor(elapsedSeconds / 60);
+  if (elapsedMinutes < 60) return pluralize(elapsedMinutes, 'min');
+
+  const elapsedHours = Math.floor(elapsedMinutes / 60);
+  if (elapsedHours < 24) return pluralize(elapsedHours, 'hour');
+
+  const elapsedDays = Math.floor(elapsedHours / 24);
+  if (elapsedDays < 7) return pluralize(elapsedDays, 'day');
+
+  const display = saved.toUTC();
+  const hour12 = display.hour % 12 === 0 ? 12 : display.hour % 12;
+  const meridiem = display.hour < 12 ? 'am' : 'pm';
+
+  return `on ${padZero(display.day)}/${padZero(display.month)}/${display.year} at ${hour12}:${padZero(
+    display.minute,
+  )}${meridiem}`;
+};
+
+export const indexCardTags = (scope: string, itemTags: string[]): string[] => {
+  if (scope === 'Live' || scope === 'Ready') {
+    return itemTags.includes('Draft') ? ['Changed'] : [];
+  }
+
+  if (scope === 'Changes' || itemTags.includes('Live')) {
+    return ['Changes'];
+  }
+
+  return ['New'];
+};
+
 export const debounce = <T extends (...args: any[]) => void>(
   wait: number,
   callback: T,

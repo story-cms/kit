@@ -1,9 +1,9 @@
 <template>
   <AppLayout title="Draft" :subtitle="chapterTitle">
     <template #actions>
-      <DraftActions @delete="deleteDraft" />
-      <WorkflowActions
+      <DraftEditActions
         :has-edit-review="hasEditReview"
+        @delete="deleteDraft"
         @publish="publishDraft"
         @request-change="reject"
         @submit="submitDraft"
@@ -91,8 +91,8 @@
                 { label: story.chapterType, value: metaChapter },
               ]"
               :secondary="[
-                { label: 'Created', value: formatDate(draft.createdAt) },
-                { label: 'Auto-Saved', value: formatDate(draft.updatedAt) },
+                { label: 'Created', value: formatDate(drafts.draft.createdAt) },
+                { label: 'Auto-Saved', value: formatDate(drafts.draft.updatedAt) },
                 { label: 'Last Published', value: publishedWhen },
               ]"
             />
@@ -123,9 +123,8 @@ import { ResponseStatus } from '../../types';
 import { useSharedStore, useModelStore, useWidgetsStore, useDraftsStore } from '../store';
 import { storeToRefs } from 'pinia';
 import AppLayout from '../shared/app-layout.vue';
-import DraftActions from '../shared/draft-actions.vue';
+import DraftEditActions from './components/draft-edit-actions.vue';
 import TabButton from '../shared/tab-button.vue';
-import WorkflowActions from './components/workflow-actions.vue';
 import ContentSidebar from '../shared/content-sidebar.vue';
 import MetaBox from '../shared/meta-box.vue';
 import MobileAppPreview from '../shared/mobile-app-preview.vue';
@@ -138,6 +137,12 @@ useSharedStore().setFromProps(props);
 useModelStore().setFromProps(props);
 const drafts = useDraftsStore();
 drafts.setFromProps(props);
+
+watch(
+  () => props.draft.updatedAt,
+  (updatedAt) => drafts.setUpdatedAt(updatedAt),
+  { immediate: true },
+);
 
 const widgets = useWidgetsStore();
 widgets.setProviders(props.providers);

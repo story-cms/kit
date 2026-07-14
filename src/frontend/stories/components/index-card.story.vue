@@ -70,6 +70,24 @@
       />
       <template #controls> </template>
     </Variant>
+    <Variant title="Changes scope">
+      <IndexCard
+        :item="itemTall"
+        :is-list="notList"
+        scope="Changes"
+        placeholder-image="https://picsum.photos/seed/1733288671859/500/500"
+        chapter-name="Story"
+      />
+    </Variant>
+    <Variant title="Ready scope">
+      <IndexCard
+        :item="itemTall"
+        :is-list="notList"
+        scope="Ready"
+        placeholder-image="https://picsum.photos/seed/1733288671859/500/500"
+        chapter-name="Story"
+      />
+    </Variant>
     <Variant title="List">
       <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white">
         <table class="w-full table-auto">

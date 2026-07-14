@@ -18,6 +18,10 @@ export const useDraftsStore = defineStore('drafts', () => {
     draft.value.status = status;
   };
 
+  const setUpdatedAt = (updatedAt: string) => {
+    draft.value.updatedAt = updatedAt;
+  };
+
   return {
     fields,
     lastPublished,
@@ -26,5 +30,6 @@ export const useDraftsStore = defineStore('drafts', () => {
     setFromProps,
 
     setStatus,
+    setUpdatedAt,
   };
 });
