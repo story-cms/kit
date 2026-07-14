@@ -26,11 +26,13 @@
             :is-translation="false"
             :templates="props.templates"
           />
+          <!-- TODO(sections): re-enable when spec is ready
           <StoryEditSections
             v-if="currentStoryTab === `${sectionType ?? 'Section'}s`"
             :section-type="sectionType"
             :tab-icon="currentStoryTabIcon"
           />
+          -->
           <div v-if="currentStoryTab === 'Resources'" dir="ltr">
             <StoryEditResources
               v-model:resources="attachedResources"
@@ -48,7 +50,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { router } from '@inertiajs/vue3';
-import { BookOpen, FolderClosed, LayoutList } from '@lucide/vue';
+import { BookOpen, FolderClosed } from '@lucide/vue';
 
 import type {
   NavigationPaneTab,
@@ -62,7 +64,8 @@ import AppLayout from '../shared/app-layout.vue';
 import StudioButton from '../shared/studio-button.vue';
 import TabNavigation from '../shared/tab-navigation.vue';
 import StoryEditDetails from './components/story-edit-details.vue';
-import StoryEditSections from './components/story-edit-sections.vue';
+// TODO(sections): re-enable when spec is ready
+// import StoryEditSections from './components/story-edit-sections.vue';
 import StoryEditResources from './components/story-edit-resources.vue';
 import { resourceIds } from './components/resource-utils';
 import {
@@ -110,10 +113,11 @@ const storyEditTabs = computed((): NavigationPaneTab[] => [
     label: 'Details',
     hasError: storyEditTabHasError('details', errors.value),
   },
-  {
-    label: sectionTabLabel.value,
-    hasError: storyEditTabHasError('sections', errors.value),
-  },
+  // TODO(sections): re-enable when spec is ready
+  // {
+  //   label: sectionTabLabel.value,
+  //   hasError: storyEditTabHasError('sections', errors.value),
+  // },
   {
     label: 'Resources',
     hasError: storyEditTabHasError('resources', errors.value),
@@ -122,23 +126,20 @@ const storyEditTabs = computed((): NavigationPaneTab[] => [
 
 const storyEditTabIcons = computed(() => ({
   Details: BookOpen,
-  [sectionTabLabel.value]: LayoutList,
+  // TODO(sections): re-enable when spec is ready
+  // [sectionTabLabel.value]: LayoutList,
   Resources: FolderClosed,
 }));
 
-const initialSectionType = props.model.sectionType || 'Section';
 const initialTabs: NavigationPaneTab[] = [
   { label: 'Details' },
-  { label: `${initialSectionType}s` },
+  // TODO(sections): re-enable when spec is ready
+  // { label: `${props.model.sectionType || 'Section'}s` },
   { label: 'Resources' },
 ];
 
 const currentStoryTab = ref(
   resolveStoryTab(new URLSearchParams(window.location.search).get('tab'), initialTabs),
-);
-
-const currentStoryTabIcon = computed(
-  () => storyEditTabIcons.value[currentStoryTab.value],
 );
 
 const onStoryTabChange = (tab: string) => {
@@ -147,7 +148,7 @@ const onStoryTabChange = (tab: string) => {
 
 const focusFirstErroredTab = () => {
   const tab = firstStoryEditTabWithError(errors.value, sectionTabLabel.value);
-  if (tab) {
+  if (tab && tab !== sectionTabLabel.value) {
     currentStoryTab.value = tab;
   }
 };

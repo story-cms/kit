@@ -1,8 +1,7 @@
 {{{
   exports({ to: app.configPath('cms.ts') })
 }}}
-import type { FieldSpec, CmsConfig, mediaConfig } from '@story-cms/kit';
-import { cou
+import type { FieldSpec, CmsConfig, mediaConfig, StreamSpec, courseFields } from '@story-cms/kit';
 
 // ---------------------------------------
 // Media upload configurations

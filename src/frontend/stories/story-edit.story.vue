@@ -303,7 +303,7 @@ const translationModel: StoryEditProps['model'] = {
   title: '',
   coverImage: '',
   description: '',
-  tags: 'gospel,john,new-testament',
+  tags: '',
   sections: [
     {
       id: 'section-1',
@@ -324,7 +324,7 @@ const arabicTranslationModel: StoryEditProps['model'] = {
   title: '',
   coverImage: '',
   description: '',
-  tags: 'gospel,john,new-testament',
+  tags: '',
   sections: [
     {
       id: 'section-1',
@@ -395,7 +395,7 @@ const loadTranslationLocale: StoryHandler = (context): void => {
 <docs lang="md">
 # Story Edit
 
-Full-page story editor with tabbed navigation for Details, Sections, and Resources.
+Full-page story editor with tabbed navigation for Details and Resources. The Sections tab is temporarily commented out until the spec is ready.
 Saving posts attached resource IDs to the story localisation.
 
 ## Variants
@@ -403,11 +403,11 @@ Saving posts attached resource IDs to the story localisation.
 - **Save changes** — published story with content; shows Save Changes only (`secondary`)
 - **Delete and save** — empty story, published; shows Delete (`red`) and Save Changes (`secondary`)
 - **Delete and save draft** — empty story, unpublished; shows Delete (`red`) and Save Changes (`secondary`)
-- **Without sections** — English source locale with no sections; Sections tab shows empty state message
-- **Validation errors on tabs** — failed publish validation; Details and Sections tabs show error indicators and inline field messages
-- **Translation locale** — Spanish edit with English source column; tags prefilled from source on Details tab
-- **Arabic translation locale** — Arabic edit on the left, English source on the right; RTL text in the translation column; side-by-side fields on Details and Sections tabs
-- **Translation without sections** — Spanish edit with English source column; source localisation has no sections, so the Sections tab is empty
+- **Without sections** — English source locale with no sections (Sections tab disabled in UI)
+- **Validation errors on tabs** — failed publish validation; Details tab shows error indicators and inline field messages
+- **Translation locale** — Spanish edit with English source column; source tags shown in read-only column only on Details tab
+- **Arabic translation locale** — Arabic edit on the left, English source on the right; RTL text in the translation column
+- **Translation without sections** — Spanish edit with English source column; source localisation has no sections
 
 ## Usage
 

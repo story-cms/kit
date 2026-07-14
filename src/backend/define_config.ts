@@ -79,11 +79,12 @@ export function courseFields(video: mediaConfig, image: mediaConfig): FieldSpec[
       label: 'Title',
       widget: 'string',
     },
-    {
-      name: 'section',
-      label: 'Section',
-      widget: 'string',
-    },
+    // TODO(sections): re-enable when spec is ready
+    // {
+    //   name: 'section',
+    //   label: 'Section',
+    //   widget: 'string',
+    // },
     {
       name: 'imageUrl',
       label: 'Cover Image',

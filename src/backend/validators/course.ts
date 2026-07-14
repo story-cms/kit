@@ -23,8 +23,8 @@ export class CourseValidator implements ValidatorType {
   validate(data: any): Promise<any> {
     vine.messagesProvider = new SimpleMessagesProvider({
       'bundle.title.required': 'The chapter must have a title',
-      'bundle.section.required': 'The chapter must have a section',
-      'bundle.imageUrl.required': 'The chapter must have a cover image',
+      // TODO(sections): re-enable when spec is ready
+      // 'bundle.section.required': 'The chapter must have a section',
       'bundle.screens.required': 'The chapter must have at least one screen',
       'bundle.screens.*.screenName.required': 'Each screen must have a name',
       'bundle.screens.*.sessionVideo.videoSchema': 'Please upload a valid video file',
@@ -33,8 +33,9 @@ export class CourseValidator implements ValidatorType {
     const schema = vine.create({
       bundle: vine.object({
         title: vine.string(),
-        section: vine.string(),
-        imageUrl: vine.string(),
+        // TODO(sections): re-enable when spec is ready
+        // section: vine.string(),
+        imageUrl: vine.string().optional(),
         screens: vine.array(screenSchema).minLength(1),
       }),
     });
