@@ -42,13 +42,7 @@
 import { computed, useSlots } from 'vue';
 
 export type StudioButtonVariant =
-  | 'primary'
-  | 'outline'
-  | 'secondary'
-  | 'green'
-  | 'blue'
-  | 'gray'
-  | 'red';
+  'primary' | 'outline' | 'secondary' | 'green' | 'blue' | 'gray' | 'red';
 
 export type StudioButtonShape = 'default' | 'cta';
 
@@ -82,7 +76,7 @@ const accessibleLabel = computed(() => props.ariaLabel ?? props.label);
 const isIconOnly = computed(() => !props.label && !!slots.default);
 
 const sizeClasses = computed(() => {
-  if (props.shape === 'cta') return 'px-2 py-3';
+  if (props.shape === 'cta') return 'p-[9px]';
   if (isIconOnly.value) return 'px-3 py-3';
   return 'px-6 py-3';
 });
