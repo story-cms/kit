@@ -66,7 +66,7 @@ export const toRelativeTime = (value: string, now?: DateTime): string => {
   const pluralize = (n: number, unit: string): string => `${n} ${unit}${n === 1 ? '' : 's'} ago`;
 
   const elapsedSeconds = Math.floor(currentTime.diff(saved, 'seconds').seconds);
-  if (elapsedSeconds < 60) return pluralize(elapsedSeconds, 'sec');
+  if (elapsedSeconds < 60) return pluralize(Math.max(1, elapsedSeconds), 'sec');
 
   const elapsedMinutes = Math.floor(elapsedSeconds / 60);
   if (elapsedMinutes < 60) return pluralize(elapsedMinutes, 'min');

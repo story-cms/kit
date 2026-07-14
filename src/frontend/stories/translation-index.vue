@@ -218,7 +218,6 @@ const saveDraft = debounce(2000, () => {
     {
       preserveScroll: true,
       onSuccess: () => {
-        drafts.setUpdatedAt(props.draft.updatedAt);
         onSuccess();
         if (props.user.role === 'admin') return;
         drafts.setStatus('started');

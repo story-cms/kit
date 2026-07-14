@@ -16,6 +16,22 @@
       />
     </Variant>
 
+    <Variant title="Last saved" :setup-app="miniSidebar">
+      <DraftIndex
+        :draft="recentlySavedDraft"
+        :bundle="bundle"
+        :story="{ ...story, fields }"
+        :has-edit-review="false"
+        :last-published="'2021-10-10T14:48:00.000000Z'"
+        :providers="{}"
+        :errors="sharedProps.errors"
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :bookmarks="sharedProps.bookmarks"
+      />
+    </Variant>
+
     <Variant title="Validation errors" :setup-app="miniSidebar">
       <DraftIndex
         :draft="draft"
@@ -35,6 +51,7 @@
 </template>
 
 <script setup lang="ts">
+import { DateTime } from 'luxon';
 import DraftIndex from './draft-index.vue';
 import {
   sharedProps,
@@ -145,5 +162,13 @@ const draft = {
   status: 'submitted',
   updatedAt: '2021-08-10T14:48:00.000000Z',
   createdAt: '2021-08-10T14:48:00.000000Z',
+};
+
+const recentlySavedDraft = {
+  id: 1,
+  number: 1,
+  status: 'started',
+  createdAt: DateTime.now().minus({ days: 1 }).toISO()!,
+  updatedAt: DateTime.now().minus({ seconds: 1 }).toISO()!,
 };
 </script>

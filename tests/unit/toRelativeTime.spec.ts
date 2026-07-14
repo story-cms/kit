@@ -8,8 +8,8 @@ const now = DateTime.fromISO('2026-07-13T12:00:00.000Z');
 const secondsAgo = (n: number): string => now.minus({ seconds: n }).toISO() as string;
 
 test.describe('toRelativeTime', () => {
-  test('returns "0 secs ago" at zero elapsed time', () => {
-    expect(toRelativeTime(secondsAgo(0), now)).toBe('0 secs ago');
+  test('returns "1 sec ago" at zero elapsed time', () => {
+    expect(toRelativeTime(secondsAgo(0), now)).toBe('1 sec ago');
   });
 
   test('returns singular "1 sec ago"', () => {
