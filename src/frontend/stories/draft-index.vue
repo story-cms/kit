@@ -33,8 +33,8 @@
                 { label: story.chapterType, value: metaChapter },
               ]"
               :secondary="[
-                { label: 'Created', value: formatDate(draft.createdAt) },
-                { label: 'Auto-Saved', value: formatDate(draft.updatedAt) },
+                { label: 'Created', value: formatDate(drafts.draft.createdAt) },
+                { label: 'Auto-Saved', value: formatDate(drafts.draft.updatedAt) },
                 { label: 'Last Published', value: publishedWhen },
               ]"
             />
@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue';
+import { computed, ref, onMounted, watch } from 'vue';
 import AppLayout from '../shared/app-layout.vue';
 
 import { router } from '@inertiajs/vue3';
@@ -78,6 +78,13 @@ const shared = useSharedStore();
 shared.setFromProps(props);
 const drafts = useDraftsStore();
 drafts.setFromProps(props);
+
+watch(
+  () => props.draft.updatedAt,
+  (updatedAt) => drafts.setUpdatedAt(updatedAt),
+  { immediate: true },
+);
+
 const widgets = useWidgetsStore();
 widgets.setProviders(props.providers);
 
@@ -128,6 +135,7 @@ const save = debounce(2000, () => {
     {
       preserveScroll: true,
       onSuccess: () => {
+        drafts.setUpdatedAt(props.draft.updatedAt);
         onSuccess();
         if (props.user.role === 'admin') return;
         drafts.setStatus('started');
