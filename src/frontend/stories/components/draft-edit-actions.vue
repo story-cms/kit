@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col flex-wrap items-start gap-1 md:flex-row md:items-center">
     <p class="mr-1 font-dmsans text-xs font-normal leading-5 text-gray-600">
-      Last saved {{ toRelativeTime(drafts.draft.updatedAt) }}
+      Last saved {{ lastSaved }}
     </p>
     <DraftActions @delete="emit('delete')" />
     <WorkflowActions
@@ -14,6 +14,8 @@
 </template>
 
 <script setup lang="ts">
+import { computed, onUnmounted, ref, watch } from 'vue';
+import { DateTime } from 'luxon';
 import { toRelativeTime } from '../../shared/helpers';
 import DraftActions from '../../shared/draft-actions.vue';
 import WorkflowActions from './workflow-actions.vue';
@@ -26,4 +28,21 @@ defineProps<{
 const emit = defineEmits(['delete', 'publish', 'request-change', 'submit']);
 
 const drafts = useDraftsStore();
+
+const now = ref(DateTime.now());
+
+const lastSaved = computed(() => toRelativeTime(drafts.draft.updatedAt, now.value));
+
+watch(
+  () => drafts.draft.updatedAt,
+  () => {
+    now.value = DateTime.now();
+  },
+);
+
+const interval = setInterval(() => {
+  now.value = DateTime.now();
+}, 5000);
+
+onUnmounted(() => clearInterval(interval));
 </script>
