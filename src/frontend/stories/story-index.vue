@@ -25,6 +25,7 @@
             v-if="addStatus == AddStatus.Add"
             :label="story.chapterType"
             variant="outline"
+            shape="cta"
             @click="addDraft"
           >
             <Plus class="size-4" aria-hidden="true" />

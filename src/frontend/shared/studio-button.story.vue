@@ -40,6 +40,20 @@
       <StudioButton label="Remove" variant="red" @click="handleClick" />
     </Variant>
 
+    <Variant title="CTA shape">
+      <StudioButton label="Get started" shape="cta" @click="handleClick" />
+    </Variant>
+
+    <Variant title="CTA shape with icon">
+      <StudioButton label="Get started" shape="cta" @click="handleClick">
+        <Plus class="size-4" />
+      </StudioButton>
+    </Variant>
+
+    <Variant title="CTA shape outline">
+      <StudioButton label="Learn more" variant="outline" shape="cta" @click="handleClick" />
+    </Variant>
+
     <Variant title="Disabled">
       <div class="flex flex-col gap-2">
         <StudioButton label="Request content update" disabled />
@@ -98,4 +112,9 @@ Shared action button for app headers and forms.
 
 - **With tooltip** — optional `tooltip` prop shows a hover label on enabled buttons
 - **Disabled with tooltip** — disabled buttons still show the tooltip on hover (used for blocked Publish actions)
+
+## Shape
+
+- **default** — pill shape (`rounded-full`)
+- **cta** — call-to-action shape (`rounded-[15px]`, `px-2 py-3` padding); works with any color `variant`
 </docs>
