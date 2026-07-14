@@ -45,7 +45,7 @@ test.describe('story publish readiness', () => {
 
   test('publishBlockedMessage returns expected string when chapters are missing', () => {
     expect(publishBlockedMessage(3, 5, 'Day', 'Edition')).toBe(
-      'You need to add 2 more Days to your Edition.',
+      'You need to make ready 2 more Days to your Edition.',
     );
   });
 
@@ -151,7 +151,7 @@ test.describe('story metadata publish readiness', () => {
   test('storyPublishBlockedMessage prioritizes missing chapters over other metadata', () => {
     expect(
       storyPublishBlockedMessage(3, 5, { ...completeMetadata, coverImage: '' }),
-    ).toBe('You need to add 2 more Days to your Edition.');
+    ).toBe('You need to make ready 2 more Days to your Edition.');
   });
 
   test('storyPublishBlockedMessage reports metadata when chapters are ready', () => {

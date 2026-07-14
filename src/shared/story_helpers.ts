@@ -45,7 +45,7 @@ export const publishBlockedMessage = (
   const missing = missingPublishedChapters(publishedCount, chapterLimit);
   if (missing === 0) return null;
 
-  return `You need to add ${missing} more ${chapterType}s to your ${storyType}.`;
+  return `You need to make ready ${missing} more ${chapterType}s to your ${storyType}.`;
 };
 
 export const storyMetadataBlockedMessages = (

@@ -67,7 +67,7 @@
       <StudioButton
         label="Publish"
         variant="green"
-        tooltip="You need to add 2 more Days to your Edition."
+        tooltip="You need to make ready 2 more Days to your Edition."
         @click="handleClick"
       />
     </Variant>
@@ -77,7 +77,7 @@
         label="Publish"
         variant="green"
         disabled
-        tooltip="You need to add 2 more Days to your Edition."
+        tooltip="You need to make ready 2 more Days to your Edition."
       />
     </Variant>
 
@@ -87,7 +87,7 @@
           label="Publish"
           variant="green"
           disabled
-          tooltip="You need to add 2 more Days to your Edition."
+          tooltip="You need to make ready 2 more Days to your Edition."
         />
       </div>
     </Variant>
