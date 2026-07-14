@@ -127,7 +127,7 @@ import type { PropType } from 'vue';
 import { computed } from 'vue';
 import StatusTag from '../../shared/status-tag.vue';
 import type { IndexReadyItem } from '../../../types';
-import { padZero } from '../../shared/helpers';
+import { padZero, indexCardTags } from '../../shared/helpers';
 
 const props = defineProps({
   item: {
@@ -175,17 +175,5 @@ const chapterLabel = computed(() => `${props.chapterName} ${chapterNumber.value}
 
 const hasLiveVersion = computed(() => props.item.tags.includes('Live'));
 
-const tags = computed(() => {
-  if (props.scope === 'Live' || props.scope === 'Ready') {
-    if (props.item.tags.includes('Draft')) {
-      return ['Changed'];
-    }
-  } else {
-    if (props.scope === 'Changes' || props.item.tags.includes('Live')) {
-      return ['Changes'];
-    }
-    return ['New'];
-  }
-  return [];
-});
+const tags = computed(() => indexCardTags(props.scope, props.item.tags));
 </script>

@@ -86,6 +86,18 @@ export const toRelativeTime = (value: string, now?: DateTime): string => {
   )}${meridiem}`;
 };
 
+export const indexCardTags = (scope: string, itemTags: string[]): string[] => {
+  if (scope === 'Live' || scope === 'Ready') {
+    return itemTags.includes('Draft') ? ['Changed'] : [];
+  }
+
+  if (scope === 'Changes' || itemTags.includes('Live')) {
+    return ['Changes'];
+  }
+
+  return ['New'];
+};
+
 export const debounce = <T extends (...args: any[]) => void>(
   wait: number,
   callback: T,
