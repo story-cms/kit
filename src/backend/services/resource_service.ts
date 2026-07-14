@@ -7,7 +7,7 @@ import type {
   ResourceBundle,
   ResourceIndexItem,
   ResourcePayload,
-  ResourceStoryUsage,
+  ResourceUsage,
   TextBundle,
   VideoBundle,
 } from '../../types.js';
@@ -64,7 +64,7 @@ export class ResourceService {
     return models.map((model) => this.toResourceItem(model));
   }
 
-  public async countStoryUsagesByLocale(locale: string): Promise<Map<string, number>> {
+  async usageCountForLocale(locale: string): Promise<Map<string, number>> {
     const localisations = await StoryLocalisation.query()
       .where('locale', locale)
       .select('resources');
@@ -82,7 +82,7 @@ export class ResourceService {
 
   public async listIndexItems(locale: string): Promise<ResourceIndexItem[]> {
     const models = await Resource.query().where('locale', locale).orderBy('title', 'asc');
-    const usageCounts = await this.countStoryUsagesByLocale(locale);
+    const usageCounts = await this.usageCountForLocale(locale);
 
     return models.map((model) => ({
       ...this.toIndexItem(model),
@@ -162,17 +162,17 @@ export class ResourceService {
     });
   }
 
-  public async listStoryUsages(
+  public async storyUsageFor(
     resourceId: string,
     locale: string,
-  ): Promise<ResourceStoryUsage[]> {
+  ): Promise<ResourceUsage[]> {
     const localisations = await StoryLocalisation.query()
       .where('locale', locale)
       .whereRaw('resources @> ?::jsonb', [JSON.stringify([resourceId])])
       .orderBy('title', 'asc');
 
     return localisations.map((localisation) => ({
-      storyId: localisation.storyId,
+      id: localisation.storyId,
       title: localisation.title,
     }));
   }

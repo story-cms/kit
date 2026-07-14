@@ -70,7 +70,7 @@ export default class ResourcesController {
       return ctx.inertia.render('ResourceNotFound', {});
     }
 
-    const usedInStories = await service.listStoryUsages(model.id, version.locale);
+    const usedInStories = await service.storyUsageFor(model.id, version.locale);
 
     const props: ResourceEditProps = {
       providers,
