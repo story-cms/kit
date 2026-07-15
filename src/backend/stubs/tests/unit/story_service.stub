@@ -344,7 +344,7 @@ test.group('Story service', (group) => {
     assert.isFalse(translationGallery.find((item) => item.id === story.id)?.isPublished);
   });
 
-  test('editProps and buildUpdatePayload use localisation publish status', async ({
+  test('editProps and updatePayloadFor use localisation publish status', async ({
     assert,
   }) => {
     const story = await StoryFactory.with('localisations').merge({ isPublished: true }).create();
@@ -370,7 +370,7 @@ test.group('Story service', (group) => {
     const translationProps = await service.editProps(
       createMockHttpContext({ storyId: story.id, locale: translationLocale }),
     );
-    const translationPayload = await service.buildUpdatePayload(story.id, translationLocale);
+    const translationPayload = await service.updatePayloadFor(story.id, translationLocale);
 
     assert.isTrue(sourceProps!.model.isPublished);
     assert.isFalse(translationProps!.model.isPublished);
@@ -446,13 +446,13 @@ test.group('Story service', (group) => {
   });
 });
 
-test.group('StoryService.prepSections', (group) => {
+test.group('StoryService.preppedSections', (group) => {
   group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
 
   const service = new StoryService(testCmsConfig);
 
   test('returns an empty array when sections are omitted', async ({ assert }) => {
-    const result = await service.prepSections(versionFor(1, sourceLocale));
+    const result = await service.preppedSections(versionFor(1, sourceLocale));
 
     assert.deepEqual(result, []);
   });
@@ -460,7 +460,7 @@ test.group('StoryService.prepSections', (group) => {
   test('returns an empty array when sections are an empty array on the source locale', async ({
     assert,
   }) => {
-    const result = await service.prepSections(versionFor(1, sourceLocale), []);
+    const result = await service.preppedSections(versionFor(1, sourceLocale), []);
 
     assert.deepEqual(result, []);
   });
@@ -475,7 +475,7 @@ test.group('StoryService.prepSections', (group) => {
       { title: 'Part Four' },
     ];
 
-    const result = await service.prepSections(versionFor(1, sourceLocale), posted);
+    const result = await service.preppedSections(versionFor(1, sourceLocale), posted);
 
     assert.lengthOf(result, 4);
     assert.equal(result[0].id, 'existing-id');
@@ -501,7 +501,7 @@ test.group('StoryService.prepSections', (group) => {
   }) => {
     const story = await StoryFactory.merge({ id: 90 }).create();
 
-    const result = await service.prepSections(versionFor(story.id, translationLocale), [
+    const result = await service.preppedSections(versionFor(story.id, translationLocale), [
       { id: 'ignored', title: 'Translated title' },
     ]);
 
@@ -519,7 +519,7 @@ test.group('StoryService.prepSections', (group) => {
     sourceLocal.sections = [];
     await sourceLocal.save();
 
-    const result = await service.prepSections(versionFor(story.id, translationLocale), [
+    const result = await service.preppedSections(versionFor(story.id, translationLocale), [
       { id: 'ignored', title: 'Translated title' },
     ]);
 
@@ -547,7 +547,7 @@ test.group('StoryService.prepSections', (group) => {
       { id: 'client-id-b', title: 'Profundizar', description: 'ES body' },
     ];
 
-    const result = await service.prepSections(
+    const result = await service.preppedSections(
       versionFor(story.id, translationLocale),
       posted,
     );
@@ -574,7 +574,7 @@ test.group('StoryService.prepSections', (group) => {
     sourceLocal.sections = sourceSections;
     await sourceLocal.save();
 
-    const result = await service.prepSections(versionFor(story.id, translationLocale), [
+    const result = await service.preppedSections(versionFor(story.id, translationLocale), [
       { id: 'client-id-a', title: 'Solo intro', description: 'Solo ES' },
     ]);
 
@@ -598,7 +598,7 @@ test.group('StoryService.prepSections', (group) => {
     ];
     await sourceLocal.save();
 
-    const result = await service.prepSections(versionFor(story.id, translationLocale), [
+    const result = await service.preppedSections(versionFor(story.id, translationLocale), [
       { id: 'section-a', title: 'Introducción', description: 'ES intro' },
       { id: 'section-b', title: 'Extra', description: 'Should be dropped' },
     ]);

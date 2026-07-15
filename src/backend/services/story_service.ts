@@ -216,7 +216,7 @@ export class StoryService {
     return props;
   }
 
-  public async buildUpdatePayload(
+  public async updatePayloadFor(
     storyId: number,
     locale: string,
   ): Promise<StoryUpdatePayload | undefined> {
@@ -256,13 +256,13 @@ export class StoryService {
     };
   }
 
-  public async prepSections(
+  public async preppedSections(
     version: StoryVersion,
     sections?: PostedSection[],
   ): Promise<StorySection[]> {
     if (!sections) return [];
     const sourceLocale = this.config.languages[0].locale;
-    if (version.locale === sourceLocale) return this.sourceSections(sections);
+    if (version.locale === sourceLocale) return this.indexedSections(sections);
 
     const sourceLocalisation = await StoryLocalisation.query()
       .where('storyId', version.storyId)
@@ -282,7 +282,7 @@ export class StoryService {
     });
   }
 
-  sourceSections(sections: PostedSection[]): StorySection[] {
+  public indexedSections(sections: PostedSection[]): StorySection[] {
     return sections.map((section) => {
       return {
         id: section.id?.trim() ? section.id : randomUUID(),
@@ -465,7 +465,7 @@ export class StoryService {
     };
   }
 
-  private formatBespokeTemplateForDisplay(template: BundleTemplate): BundleTemplate {
+  private templateItemForPicklist(template: BundleTemplate): BundleTemplate {
     return {
       ...template,
       name: template.name.endsWith(' (custom)')
@@ -477,7 +477,7 @@ export class StoryService {
   private templatesForEditDisplay(): BundleTemplate[] {
     return [
       ...this.config.bespokeTemplates.map((template) =>
-        this.formatBespokeTemplateForDisplay(template),
+        this.templateItemForPicklist(template),
       ),
       ...this.config.storyTemplates,
     ];
