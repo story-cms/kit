@@ -30,6 +30,21 @@
       />
     </Variant>
 
+    <Variant title="Published story" :setup-app="loadNormalData">
+      <StoryEdit
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :errors="{}"
+        :bookmarks="sharedProps.bookmarks"
+        :model="publishedStoryModel"
+        :available-resources="availableResources"
+        :has-no-content="false"
+        :providers="{}"
+        :templates="storyTemplates"
+      />
+    </Variant>
+
     <Variant title="Delete and save" :setup-app="loadNormalData">
       <StoryEdit
         :config="sharedProps.config"
@@ -180,7 +195,12 @@ import {
 } from '../test/mocks';
 import { useSharedStore } from '../store';
 import type { StoryHandler } from '../shared/helpers';
-import type { BundleTemplate, StoryEditProps, StorySection, LanguageSpecification } from '../../types';
+import type {
+  BundleTemplate,
+  StoryEditProps,
+  StorySection,
+  LanguageSpecification,
+} from '../../types';
 
 const storyTemplates: BundleTemplate[] = [
   {
@@ -233,7 +253,7 @@ const storyModel: StoryEditProps['model'] = {
   coverImage:
     'https://res.cloudinary.com/journeys/image/upload/v1756121793/mountain-placeholder_yuflkz.jpg',
   chapterLimit: 21,
-  isPublished: true,
+  isPublished: false,
   tags: 'gospel,john,new-testament',
   description:
     '# The Gospel of John\n\nThis is the fourth gospel in the New Testament...',
@@ -243,6 +263,11 @@ const storyModel: StoryEditProps['model'] = {
   template: 'devotion',
   sections: sampleStorySections,
   resources: sampleAttachedResources,
+};
+
+const publishedStoryModel: StoryEditProps['model'] = {
+  ...storyModel,
+  isPublished: true,
 };
 
 const emptyResourcesModel: StoryEditProps['model'] = {

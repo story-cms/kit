@@ -20,16 +20,28 @@
     </div>
     <ImageField v-else :field="coverImageField" :is-nested="true" />
 
-    <StringField
-      v-if="!isTranslation"
-      :field="{
-        name: 'chapterLimit',
-        label: 'Chapter Count',
-        widget: 'string',
-        placeholderText: 'e.g., 12',
-      }"
-      :is-nested="true"
-    />
+    <div v-if="!isTranslation">
+      <StringField
+        v-if="!isPublished"
+        :field="{
+          name: 'chapterLimit',
+          label: 'Chapter Count',
+          widget: 'string',
+          placeholderText: 'e.g., 12',
+        }"
+        :is-nested="true"
+      />
+
+      <div v-else>
+        <label for="Chapter Count" class="input-label text-gray-600">Chapter Count</label>
+        <input
+          type="number"
+          class="input-field text-gray-400 shadow-none"
+          :value="chapterLimit"
+          disabled
+        />
+      </div>
+    </div>
 
     <div v-if="isTranslation" class="grid grid-cols-2 gap-x-4" dir="ltr">
       <div :dir="translationDir">
@@ -93,11 +105,16 @@ import RichListbox from '../../shared/rich-listbox.vue';
 
 const props = withDefaults(
   defineProps<{
+    isPublished: boolean;
     isTranslation?: boolean;
     isEditing?: boolean;
     templates?: BundleTemplate[];
   }>(),
-  { isTranslation: false, isEditing: false, templates: (): BundleTemplate[] => [] },
+  {
+    isTranslation: false,
+    isEditing: false,
+    templates: (): BundleTemplate[] => [],
+  },
 );
 
 const model = useModelStore();
@@ -110,6 +127,8 @@ const visibility = ref<VisibilityType>(
 );
 
 const template = ref<string>(model.getField('template', '') as string);
+
+const chapterLimit = ref<number>(model.getField('chapterLimit', 0) as number);
 
 const chapterTemplateHint =
   'Defines the chapter structure for this story. This cannot be changed after the story is created.';
@@ -217,11 +236,11 @@ const contentClassificationField: FieldSpec = {
       description:
         "The overall theme or category of your course (e.g., 'Educational', 'Devotional', 'Bible Study').",
     },
-    {
-      title: 'Section Type',
-      description:
-        "How the course is divided into major sections (e.g., 'Weekly', 'Daily', 'Module').",
-    },
+    // {
+    //   title: 'Section Type',
+    //   description:
+    //     "How the course is divided into major sections (e.g., 'Weekly', 'Daily', 'Module').",
+    // },
     {
       title: 'Chapter Type',
       description:
@@ -238,12 +257,12 @@ const contentClassificationField: FieldSpec = {
       widget: 'string',
       placeholderText: 'e.g., Course, Devotional, Plan',
     },
-    {
-      label: 'Section Type',
-      name: 'sectionType',
-      widget: 'string',
-      placeholderText: 'e.g., Part, Module',
-    },
+    // {
+    //   label: 'Section Type',
+    //   name: 'sectionType',
+    //   widget: 'string',
+    //   placeholderText: 'e.g., Part, Module',
+    // },
     {
       label: 'Chapter Type',
       name: 'chapterType',
