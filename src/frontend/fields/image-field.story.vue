@@ -10,6 +10,13 @@
       <ModelControl :model="objectModelBlankImage" />
     </Variant>
 
+    <Variant title="Nested" :setup-app="loadData">
+      <div class="rounded-lg bg-gray-200 p-4">
+        <ImageField :field="spec" :is-nested="true" />
+        <ModelControl :model="objectModelBlankImage" />
+      </div>
+    </Variant>
+
     <Variant title="Non Image Upload" :setup-app="loadData">
       <ImageField :field="nonImageSpec" />
       <ModelControl :model="objectModelBlankImage" />
@@ -70,6 +77,10 @@ const loadData: StoryHandler = ({ variant }): void => {
     return;
   }
   if (variant?.title === 'Model without image') {
+    store.model = objectModelBlankImage;
+    return;
+  }
+  if (variant?.title === 'Nested') {
     store.model = objectModelBlankImage;
     return;
   }
