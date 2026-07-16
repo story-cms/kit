@@ -30,6 +30,7 @@ import type {
   Providers,
   ResourceItem,
 } from '../../types.js';
+import { placeholderImage } from '../../shared/constants.js';
 
 export type PostedSection = {
   id?: string;
@@ -137,6 +138,7 @@ export class StoryService {
         slug: null,
         template,
         ...this.localisationFields(target),
+        coverImage: placeholderImage,
       },
       templates: this.config.storyTemplates,
       providers: configService.get<Providers>('providers')!,
@@ -458,7 +460,7 @@ export class StoryService {
   > {
     return {
       title: local.title ?? '',
-      coverImage: local.coverImage ?? '',
+      coverImage: local.coverImage ?? placeholderImage,
       description: local.description ?? '',
       tags: local.tags ?? null,
       sections: local.sections ?? [],

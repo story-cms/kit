@@ -23,6 +23,7 @@
         <form :dir="shared.isRtl ? 'rtl' : 'ltr'">
           <StoryEditDetails
             v-if="currentStoryTab === 'Details'"
+            :is-published="false"
             :is-translation="false"
             :templates="props.templates"
           />

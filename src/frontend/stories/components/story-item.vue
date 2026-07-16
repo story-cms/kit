@@ -147,6 +147,7 @@ import { DateTime } from 'luxon';
 import { StoryIndexItem } from '../../../types';
 import { useSharedStore } from '../../store';
 import BookmarkAction from '../../shared/bookmark-action.vue';
+import { placeholderImage as defaultPlaceholderImage } from '../../../shared/constants';
 
 const shared = useSharedStore();
 
@@ -157,8 +158,7 @@ const props = withDefaults(
     placeholderImage?: string;
   }>(),
   {
-    placeholderImage:
-      'https://res.cloudinary.com/redeem/image/upload/v1752849347/story-cms-ui/placeholder_bafmfz.jpg',
+    placeholderImage: defaultPlaceholderImage,
   },
 );
 
@@ -188,7 +188,9 @@ const progressLabel = computed(() =>
 );
 
 const progressBadgeClasses = computed(() =>
-  props.story.isPublished ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800',
+  props.story.isPublished
+    ? 'bg-green-100 text-green-800'
+    : 'bg-yellow-100 text-yellow-800',
 );
 
 const statusLabel = computed(() => (props.story.isPublished ? 'Live' : 'Draft'));

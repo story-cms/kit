@@ -128,6 +128,7 @@ import { computed } from 'vue';
 import StatusTag from '../../shared/status-tag.vue';
 import type { IndexReadyItem } from '../../../types';
 import { padZero, indexCardTags } from '../../shared/helpers';
+import { placeholderImage } from '../../../shared/constants';
 
 const props = defineProps({
   item: {
@@ -142,11 +143,6 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  placeholderImage: {
-    type: String,
-    default: '',
-    required: false,
-  },
   chapterName: {
     type: String,
     required: true,
@@ -159,9 +155,9 @@ const props = defineProps({
 
 const emit = defineEmits(['tap', 'edit', 'preview']);
 
-const imgUrl = computed(() => props.item.imageUrl || props.placeholderImage);
+const imgUrl = computed(() => props.item.imageUrl || placeholderImage);
 
-const hasThumbnail = computed(() => !!(props.item.imageUrl || props.placeholderImage));
+const hasThumbnail = computed(() => !!(props.item.imageUrl || placeholderImage));
 
 const title = computed(
   () => props.item.title || `${props.chapterName} ${props.item.number}`,
