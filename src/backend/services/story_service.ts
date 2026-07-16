@@ -138,6 +138,7 @@ export class StoryService {
         slug: null,
         template,
         ...this.localisationFields(target),
+        coverImage: placeholderImage,
       },
       templates: this.config.storyTemplates,
       providers: configService.get<Providers>('providers')!,
