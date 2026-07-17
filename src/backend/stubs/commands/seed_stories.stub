@@ -48,6 +48,7 @@ export default class SeedStories extends BaseCommand {
         title: spec.name,
         coverImage: spec.coverImage,
         description: spec.description,
+        isPublished: true,
       });
 
       this.logger.info({{ '`${spec.name} done.`' }});

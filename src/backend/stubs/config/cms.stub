@@ -1,7 +1,25 @@
 {{{
   exports({ to: app.configPath('cms.ts') })
 }}}
-import type { FieldSpec, CmsConfig, mediaConfig, StreamSpec, courseFields } from '@story-cms/kit';
+import type { FieldSpec, CmsConfig, mediaConfig, StreamSpec, Subscription } from '@story-cms/kit';
+import { courseFields } from '@story-cms/kit';
+
+// ---------------------------------------
+// Subscriptions
+// ---------------------------------------
+
+const subscriptions: Subscription[] = [
+  'story',
+  'multi-story',
+//  'stream',
+  'language',
+//  'audience',
+  'invitation',
+  'resource',
+  'settings',
+  'ui',
+  'page',
+];
 
 // ---------------------------------------
 // Media upload configurations
@@ -145,6 +163,8 @@ const cmsConfig: Partial<CmsConfig> = {
   ],
 
   pagesTracking: 'utm_source=storyapp&utm_medium=referral&utm_campaign=page_menu',
+  
+  subscriptions,
 };
 
 export default cmsConfig;

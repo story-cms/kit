@@ -150,7 +150,7 @@ test.group('Story service', (group) => {
 
     assert.isDefined(props);
     assert.equal(props!.model.template, 'course');
-    assert.equal(props!.model.chapterLimit, 10);
+    assert.equal(props!.model.chapterLimit, null);
     assert.equal(props!.model.storyType, 'Story');
     assert.equal(props!.model.chapterType, 'Chapter');
   });

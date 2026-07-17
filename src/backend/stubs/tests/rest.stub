@@ -6,6 +6,10 @@ GET \{\{ authority \}\}/api/v1/chapter/1 HTTP/1.1
 Accept: application/json
 
 ###
+GET \{\{ authority \}\}/api/v1/page HTTP/1.1
+Accept: application/json
+
+###
 GET \{\{ authority \}\}/api/v1/preview/1 HTTP/1.1
 Accept: application/json
 
