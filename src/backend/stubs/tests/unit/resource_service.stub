@@ -10,6 +10,7 @@ import {
   ResourceService,
   StoryFactory,
   StoryLocalisation,
+  type LinkBundle,
 } from '@story-cms/kit';
 
 test.group('Resource service', (group) => {
@@ -192,12 +193,11 @@ test.group('Resource service', (group) => {
         visibility: 'public',
         url: 'https://example.com/guide',
       },
-      null,
     );
 
     assert.equal(created.title, 'Guide');
     assert.equal(created.type, 'url');
-    assert.equal(created.bundle.url, 'https://example.com/guide');
+    assert.equal((created.bundle as LinkBundle).url, 'https://example.com/guide');
 
     const updated = await service.update(
       created.id,
@@ -208,11 +208,10 @@ test.group('Resource service', (group) => {
         visibility: 'guests',
         url: 'https://example.com/updated',
       },
-      null,
     );
 
     assert.equal(updated.title, 'Updated Guide');
     assert.equal(updated.visibility, 'guests');
-    assert.equal(updated.bundle.url, 'https://example.com/updated');
+    assert.equal((updated.bundle as LinkBundle).url, 'https://example.com/updated');
   });
 });

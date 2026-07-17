@@ -18,6 +18,9 @@ import {
   DraftFactory,
   PageFactory,
   ResourceFactory,
+  type LinkBundle,
+  type TextBundle,
+  type VideoBundle,
 } from '@story-cms/kit';
 
 test.group('User', (group) => {
@@ -664,20 +667,20 @@ test.group('Resource', (group) => {
     const resource = await ResourceFactory.apply('text').create();
 
     assert.equal(resource.type, 'text');
-    assert.include(resource.bundle.content, 'Lorem ipsum');
+    assert.include((resource.bundle as TextBundle).content, 'Lorem ipsum');
   });
 
   test('video bundle stores url', async ({ assert }) => {
     const resource = await ResourceFactory.apply('video').create();
 
     assert.equal(resource.type, 'video');
-    assert.equal(resource.bundle.video.url, 'https://example.com/video.mp4');
+    assert.equal((resource.bundle as VideoBundle).video.url, 'https://example.com/video.mp4');
   });
 
   test('url bundle stores url', async ({ assert }) => {
     const resource = await ResourceFactory.apply('url').create();
 
     assert.equal(resource.type, 'url');
-    assert.equal(resource.bundle.url, 'https://example.com/info');
+    assert.equal((resource.bundle as LinkBundle).url, 'https://example.com/info');
   });
 });

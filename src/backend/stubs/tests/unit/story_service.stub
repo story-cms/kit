@@ -37,7 +37,7 @@ function createMockHttpContext(params: {
         },
       }),
     },
-  } as HttpContext;
+  } as unknown as HttpContext;
 }
 
 function createGalleryHttpContext(locale: string): HttpContext {
@@ -50,7 +50,7 @@ function createGalleryHttpContext(locale: string): HttpContext {
         },
       }),
     },
-  } as HttpContext;
+  } as unknown as HttpContext;
 }
 
 function versionFor(storyId: number, locale: string): StoryVersion {
