@@ -200,8 +200,8 @@ export interface ResourceIndexProps {
   resources: ResourceIndexItem[];
 }
 
-export interface ResourceStoryUsage {
-  storyId: number;
+export interface ResourceUsage {
+  id: number;
   title: string;
 }
 
@@ -209,7 +209,7 @@ export interface ResourceEditProps {
   providers: Providers;
   resource: ResourceMeta;
   bundle: any;
-  usedInStories: ResourceStoryUsage[];
+  usedInStories: ResourceUsage[];
 }
 
 export type ResourceNotFoundProps = SharedPageProps;
@@ -808,10 +808,7 @@ export interface LanguageListItemProps {
 }
 
 export type SupportCode =
-  | 'REMOVE_LANGUAGE'
-  | 'UPDATE_LANGUAGE'
-  | 'UPDATE_CONTENT'
-  | 'UPDATE_APP';
+  'REMOVE_LANGUAGE' | 'UPDATE_LANGUAGE' | 'UPDATE_CONTENT' | 'UPDATE_APP';
 
 export interface SupportRequest {
   supportCode: SupportCode;

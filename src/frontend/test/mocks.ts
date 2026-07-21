@@ -4564,8 +4564,8 @@ const toEditResource = (
 });
 
 export const mockUsedInStories: ResourceEditProps['usedInStories'] = [
-  { storyId: 1, title: 'Biblical Foundations' },
-  { storyId: 2, title: 'The Gospel of John' },
+  { id: 1, title: 'Biblical Foundations' },
+  { id: 2, title: 'The Gospel of John' },
 ];
 
 export const mockNewResourceEdit: ResourceEditProps = {

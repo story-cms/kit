@@ -93,7 +93,7 @@ export default class StoriesController {
         coverImage: payload.coverImage,
         description: payload.description,
         tags: payload.tags,
-        sections: storyService.sourceSections(payload.sections ?? []),
+        sections: storyService.indexedSections(payload.sections ?? []),
         resources: payload.resources ?? [],
       });
       local.useTransaction(trx);
@@ -160,7 +160,7 @@ export default class StoriesController {
     if (story === undefined) return ctx.response.notFound();
     if (story.isPublished) return ctx.response.redirect().back();
 
-    const payload = await storyService.buildUpdatePayload(version.storyId, version.locale);
+    const payload = await storyService.updatePayloadFor(version.storyId, version.locale);
     if (!payload) return ctx.response.notFound();
 
     payload.isPublished = true;
@@ -208,7 +208,7 @@ export default class StoriesController {
       resources?: string[];
     },
   ) {
-    const sections = await storyService.prepSections(version, payload.sections);
+    const sections = await storyService.preppedSections(version, payload.sections);
 
     await db.transaction(async (trx) => {
       // update the story if it's the source locale

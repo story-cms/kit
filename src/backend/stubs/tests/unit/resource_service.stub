@@ -122,7 +122,7 @@ test.group('Resource service', (group) => {
     assert.equal(unattachedItem?.usedInCount, 0);
   });
 
-  test('listStoryUsages returns stories in locale ordered by title', async ({ assert }) => {
+  test('storyUsageFor returns stories in locale ordered by title', async ({ assert }) => {
     const resource = await ResourceFactory.merge({ locale: 'en' }).create();
 
     const alphaStory = await StoryFactory.with('localisations').create();
@@ -144,7 +144,7 @@ test.group('Resource service', (group) => {
     await otherLocaleLocalisation.save();
 
     const service = new ResourceService();
-    const usages = await service.listStoryUsages(resource.id, 'en');
+    const usages = await service.storyUsageFor(resource.id, 'en');
 
     assert.lengthOf(usages, 2);
     assert.deepEqual(usages, [

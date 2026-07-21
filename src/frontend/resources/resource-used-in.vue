@@ -12,8 +12,8 @@
     <div v-if="stories.length > 0" class="space-y-2">
       <a
         v-for="story in stories"
-        :key="story.storyId"
-        :href="storyHref(story.storyId)"
+        :key="story.id"
+        :href="storyHref(story.id)"
         class="flex items-center gap-4 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3 transition-colors hover:bg-gray-100"
       >
         <span
@@ -41,10 +41,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { BookOpen } from '@lucide/vue';
-import type { ResourceStoryUsage } from '../../types';
+import type { ResourceUsage } from '../../types';
 
 const props = defineProps<{
-  stories: ResourceStoryUsage[];
+  stories: ResourceUsage[];
   locale: string;
 }>();
 
