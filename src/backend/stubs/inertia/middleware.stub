@@ -3,6 +3,7 @@
 }}}
 import type { HttpContext } from '@adonisjs/core/http';
 import type { NextFn } from '@adonisjs/core/types/http';
+import type { PageProps } from '@adonisjs/inertia/types';
 import BaseInertiaMiddleware from '@adonisjs/inertia/inertia_middleware';
 import cms from '#services/cms';
 
@@ -43,7 +44,7 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
         // resolve as follows: const flashError = (page.props as { flash?: { error?: string } }).flash?.error;
         error: error,
       }),
-    };
+    } as unknown as PageProps;
   }
 
   async handle(ctx: HttpContext, next: NextFn) {
