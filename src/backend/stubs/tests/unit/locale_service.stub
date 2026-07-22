@@ -31,7 +31,7 @@ async function publishInLocale(storyId: number, locale: string) {
     storyId,
     locale,
     isPublished: true,
-    title: `Story in ${locale}`,
+    title: {{ '`Story in ${locale}`' }},
   }).create();
 }
 
