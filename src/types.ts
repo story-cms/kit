@@ -408,6 +408,15 @@ export interface StoryGalleryProps {
   stories: StoryIndexItem[];
 }
 
+export interface LocaleStoriesItem {
+  locale: string;
+  stories: string[];
+}
+
+export interface LocaleStoriesResponse {
+  content: LocaleStoriesItem[];
+}
+
 export interface DraftEditProps {
   draft: DraftMeta; // drafts
   bundle: any; // model

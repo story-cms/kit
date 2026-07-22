@@ -3,6 +3,7 @@
 }}}
 import router from '@adonisjs/core/services/router';
 import { middleware } from '#start/kernel';
+import locale from '#start/routes/locale';
 const StreamController = () => import('#controllers/streams_controller');
 const ChaptersController = () => import('#controllers/chapters_controller');
 const PreviewController = () => import('#controllers/preview_controller');
@@ -40,6 +41,8 @@ export default () => {
       router.get('/page', [PagesController, 'get']);
 
       router.get('/invitations', [InvitationsController, 'get']);
+
+      locale();
     })
     .use(middleware.noIndex())
     .prefix('/api/v1');

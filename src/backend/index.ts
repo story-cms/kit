@@ -42,6 +42,7 @@ export * from './services/index_service.js';
 export * from './services/page_service.js';
 export * from './services/progress_service.js';
 export * from './services/language_service.js';
+export * from './services/locale_service.js';
 export * from './services/ui_service.js';
 export * from './services/user_service.js';
 export * from './services/stream_service.js';

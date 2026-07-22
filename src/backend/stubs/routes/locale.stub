@@ -1,0 +1,9 @@
+{{{
+  exports({ to: app.makePath('start/routes/locale.ts') })
+}}}
+import router from '@adonisjs/core/services/router';
+const LocaleController = () => import('#controllers/locale_controller');
+
+export default () => {
+  router.get('/locale', [LocaleController, 'index']);
+};
