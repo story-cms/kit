@@ -137,7 +137,6 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'routes/audience.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/preferences.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/streams.stub', {});
-  await codemods.makeUsingStub(stubsRoot, 'routes/locale.stub', {});
 
   await codemods.makeUsingStub(stubsRoot, 'mail/forget_password.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'mail/create_account.stub', {});
