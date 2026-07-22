@@ -1,0 +1,56 @@
+---
+description: Conventional commit message format for this repo
+alwaysApply: true
+---
+
+# Commit Messages
+
+Use [Conventional Commits](https://www.conventionalcommits.org/) with project-specific types.
+
+## Format
+
+```
+<type>: <subject>
+
+[optional body]
+```
+
+- **Subject**: imperative mood, lowercase after the colon, no trailing period, ~72 chars max
+- **Body**: optional; explain *why*, not step-by-step *what*
+- **Scope**: omit unless disambiguation helps (this repo rarely uses scopes)
+
+## Types
+
+| Type | Alternative considered | Notes |
+|------|------------------------|-------|
+| `revert` | | reverts a previous commit |
+| `fix` | | bug fix, bumps the PATCH release |
+| `feat` | | add a new feature, bumps the MINOR release |
+| `increment` | improve, ++, incr | functional improvement that is not a feat or a fix |
+| `ops` | build, chore, ci | non-functional code changes needed to build or deploy the app |
+| `qa` | test, docs | non-functional changes to improve understanding and assurance |
+| `refactor` | style, perf | non-functional changes that improve maintainability and efficiency |
+
+- **increment examples**: remove a feature, add loading state, new screen layout, show popup once only
+- **refactor examples**: trim dead wood, move or rename file
+
+Use the project types above. If tempted to use an alternative (e.g. `chore`, `docs`, `test`, `ci`, `build`, `style`, `perf`), pick the matching project type instead.
+
+## Examples
+
+```
+revert: revert "feat: add LocaleService and /api/v1/locale endpoint"
+fix: escape strings in locale service test stub
+feat: add LocaleService and /api/v1/locale endpoint
+increment: show onboarding popup only once per user
+refactor: rename availableStories to storiesByLocale
+ops: update lock file
+qa: add unit tests for storiesByLocale publish filtering
+```
+
+## When committing
+
+- One logical change per commit
+- Do not commit secrets (`.env`, credentials)
+- Only commit when explicitly asked
+- Match the style of recent history: `git log --oneline -10`

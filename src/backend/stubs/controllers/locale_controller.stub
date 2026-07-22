@@ -8,6 +8,6 @@ import { LocaleService } from '@story-cms/kit';
 export default class LocaleController {
   public async index(ctx: HttpContext) {
     const service = new LocaleService(cms.config);
-    return service.availableStories();
+    return service.storiesByLocale();
   }
 }

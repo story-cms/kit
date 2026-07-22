@@ -4,7 +4,7 @@ import type { CmsConfig, LocaleStoriesResponse } from '../../types.js';
 export class LocaleService {
   public constructor(protected readonly config: CmsConfig) {}
 
-  public async availableStories(): Promise<LocaleStoriesResponse> {
+  public async storiesByLocale(): Promise<LocaleStoriesResponse> {
     const locales = this.config.languages.map((language) => language.locale);
 
     const stories = await Story.query()
