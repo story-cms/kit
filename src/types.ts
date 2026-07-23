@@ -413,8 +413,15 @@ export interface LocaleStoriesItem {
   stories: string[];
 }
 
+export interface LocaleItem {
+  locale: string;
+  name: string;
+  nativeName: string;
+}
+
 export interface LocaleStoriesResponse {
   content: LocaleStoriesItem[];
+  app: LocaleItem[];
 }
 
 export interface DraftEditProps {

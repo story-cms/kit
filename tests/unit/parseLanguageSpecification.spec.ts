@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-import { parseLanguageSpecification } from '../../src/frontend/shared/helpers';
+import { parseLanguageSpecification } from '../../src/shared/language_helpers';
 import type { LanguageSpecification } from '../../src/types';
 
 test.describe('parseLanguageSpecification', () => {

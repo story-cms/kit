@@ -1,5 +1,6 @@
 import Story from '../models/story.js';
-import type { CmsConfig, LocaleStoriesResponse } from '../../types.js';
+import { parseLanguageSpecification } from '../../shared/language_helpers.js';
+import type { CmsConfig, LocaleItem, LocaleStoriesResponse } from '../../types.js';
 
 export class LocaleService {
   public constructor(protected readonly config: CmsConfig) {}
@@ -25,10 +26,19 @@ export class LocaleService {
       }
     }
 
-    return {
-      content: locales
-        .map((locale) => ({ locale, stories: byLocale.get(locale) ?? [] }))
-        .filter((item) => item.stories.length > 0),
-    };
+    const content = locales
+      .map((locale) => ({ locale, stories: byLocale.get(locale) ?? [] }))
+      .filter((item) => item.stories.length > 0);
+
+    const languagesByLocale = new Map(
+      this.config.languages.map((language) => [language.locale, language]),
+    );
+
+    const app: LocaleItem[] = content.map(({ locale }) => {
+      const spec = languagesByLocale.get(locale)!;
+      return parseLanguageSpecification(spec);
+    });
+
+    return { content, app };
   }
 }
