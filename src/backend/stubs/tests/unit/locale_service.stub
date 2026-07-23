@@ -177,8 +177,38 @@ test.group('LocaleService', (group) => {
     const { app } = await service.storiesByLocale();
 
     assert.deepEqual(app, [
-      { locale: 'en', name: 'English', nativeName: 'English' },
-      { locale: 'es', name: 'Spanish', nativeName: 'Español' },
+      { locale: 'en', name: 'English', nativeName: 'English', languageDirection: 'ltr' },
+      { locale: 'es', name: 'Spanish', nativeName: 'Español', languageDirection: 'ltr' },
+    ]);
+  });
+
+  test('returns languageDirection in app metadata', async ({ assert }) => {
+    const config = createCustomCmsConfig({
+      languages: [
+        {
+          locale: 'ar',
+          language: 'Arabic - العربية',
+          languageDirection: 'rtl',
+        },
+      ],
+    });
+
+    const story = await StoryFactory.with('localisations')
+      .merge({ slug: 'rtl-story', order: 1 })
+      .create();
+
+    await publishInLocale(story.id, 'ar');
+
+    const service = new LocaleService(config);
+    const { app } = await service.storiesByLocale();
+
+    assert.deepEqual(app, [
+      {
+        locale: 'ar',
+        name: 'Arabic',
+        nativeName: 'العربية',
+        languageDirection: 'rtl',
+      },
     ]);
   });
 });

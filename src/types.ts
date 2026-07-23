@@ -413,8 +413,7 @@ export interface LocaleStoriesItem {
   stories: string[];
 }
 
-export interface LocaleItem {
-  locale: string;
+export interface LocaleItem extends Pick<LanguageSpecification, 'locale' | 'languageDirection'> {
   name: string;
   nativeName: string;
 }
