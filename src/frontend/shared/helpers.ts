@@ -1,5 +1,9 @@
 import type { App, Component, PropType } from 'vue';
 import { type FieldSpec, type LanguageSpecification } from '../../types';
+import {
+  LANGUAGE_LABEL_SEPARATOR,
+  parseLanguageSpecification,
+} from '../../shared/language_helpers';
 import { BibleBooksMap } from './bibleBooks';
 import type { Variant, Story } from 'histoire';
 import { DateTime } from 'luxon';
@@ -33,8 +37,6 @@ export const expandShortcuts = (text: string) => {
 };
 
 export const padZero = (value: number): string => (value > 9 ? `${value}` : `0${value}`);
-
-const LANGUAGE_LABEL_SEPARATOR = /\s*-\s*|\s*\|\s*/;
 
 export type LanguageSortable = Pick<LanguageSpecification, 'language' | 'locale'>;
 
@@ -353,25 +355,7 @@ export function sortLanguagesByDisplayName<T extends LanguageSortable>(
   return [...languages].sort(compareLanguagesByDisplayName);
 }
 
-/** Name, native name, and locale from a language specification. */
-export function parseLanguageSpecification(spec: LanguageSpecification): {
-  name: string;
-  nativeName: string;
-  locale: string;
-} {
-  const { language, locale } = spec;
-  const parts = language.split(LANGUAGE_LABEL_SEPARATOR).map((part) => part.trim());
-
-  if (parts.length >= 2) {
-    return {
-      name: parts[0],
-      nativeName: parts.slice(1).join(' - '),
-      locale,
-    };
-  }
-
-  return { name: language, nativeName: language, locale };
-}
+export { parseLanguageSpecification };
 
 /** Return the logical parent path for sidebar back navigation, or null to fall back to browser history. */
 export function parentPathForBack(pathname: string): string | null {

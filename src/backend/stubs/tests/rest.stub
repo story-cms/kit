@@ -32,3 +32,7 @@ Accept: application/json
 ###
 GET \{\{ authority \}\}/api/v1/invitations?locale=en HTTP/1.1
 Accept: application/json
+
+###
+GET \{\{ authority \}\}/api/v1/locale HTTP/1.1
+Accept: application/json

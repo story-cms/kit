@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-import { parseLanguageSpecification } from '../../src/frontend/shared/helpers';
+import { parseLanguageSpecification } from '../../src/shared/language_helpers';
 import type { LanguageSpecification } from '../../src/types';
 
 test.describe('parseLanguageSpecification', () => {
@@ -15,6 +15,7 @@ test.describe('parseLanguageSpecification', () => {
       name: 'English',
       nativeName: 'English',
       locale: 'en',
+      languageDirection: 'ltr',
     });
   });
 
@@ -29,6 +30,7 @@ test.describe('parseLanguageSpecification', () => {
       name: 'English',
       nativeName: 'American',
       locale: 'en',
+      languageDirection: 'ltr',
     });
   });
 
@@ -43,6 +45,7 @@ test.describe('parseLanguageSpecification', () => {
       name: 'English',
       nativeName: 'American',
       locale: 'en',
+      languageDirection: 'ltr',
     });
   });
 
@@ -57,6 +60,7 @@ test.describe('parseLanguageSpecification', () => {
       name: 'Spanish',
       nativeName: 'Español',
       locale: 'es',
+      languageDirection: 'ltr',
     });
   });
 
@@ -71,6 +75,7 @@ test.describe('parseLanguageSpecification', () => {
       name: 'German',
       nativeName: 'Deutsch',
       locale: 'de',
+      languageDirection: 'ltr',
     });
   });
 });
