@@ -1,12 +1,11 @@
 {{{
   exports({ to: app.makePath('app/controllers/locale_controller.ts') })
 }}}
-import type { HttpContext } from '@adonisjs/core/http';
 import cms from '#services/cms';
 import { LocaleService } from '@story-cms/kit';
 
 export default class LocaleController {
-  public async index(ctx: HttpContext) {
+  public async index() {
     const service = new LocaleService(cms.config);
     return service.localeIndex();
   }
