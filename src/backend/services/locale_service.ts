@@ -1,11 +1,11 @@
 import Story from '../models/story.js';
 import { parseLanguageSpecification } from '../../shared/language_helpers.js';
-import type { CmsConfig, LocaleItem, LocaleStoriesResponse } from '../../types.js';
+import type { CmsConfig, LocaleItem, LocaleIndexResponse } from '../../types.js';
 
 export class LocaleService {
   public constructor(protected readonly config: CmsConfig) {}
 
-  public async storiesByLocale(): Promise<LocaleStoriesResponse> {
+  public async localeIndex(): Promise<LocaleIndexResponse> {
     const locales = this.config.languages.map((language) => language.locale);
 
     const stories = await Story.query()

@@ -43,9 +43,9 @@ revert: revert "feat: add LocaleService and /api/v1/locale endpoint"
 fix: escape strings in locale service test stub
 feat: add LocaleService and /api/v1/locale endpoint
 increment: show onboarding popup only once per user
-refactor: rename availableStories to storiesByLocale
+refactor: rename availableStories to localeIndex
 ops: update lock file
-qa: add unit tests for storiesByLocale publish filtering
+qa: add unit tests for localeIndex publish filtering
 ```
 
 ## When committing
