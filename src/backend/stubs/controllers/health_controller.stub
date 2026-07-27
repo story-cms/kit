@@ -1,0 +1,56 @@
+{{{
+  exports({ to: app.makePath('app/controllers/health_controller.ts') })
+}}}
+import { inject } from '@adonisjs/core';
+import type { HttpContext } from '@adonisjs/core/http';
+import { DateTime } from 'luxon';
+import { HealthService } from '@story-cms/kit';
+import env from '#start/env';
+
+@inject()
+export default class HealthController {
+  constructor(private readonly healthService: HealthService) {}
+
+  public async index({ request, response, logger }: HttpContext) {
+    if (request.input('extend') !== 'db') {
+      return response.ok({ status: 'ok' });
+    }
+
+    const healthCheckToken = env.get('HEALTH_CHECK_TOKEN');
+    if (
+      !healthCheckToken ||
+      request.header('x-health-check-token') !== healthCheckToken
+    ) {
+      return response.notFound({ status: 'not_found' });
+    }
+
+    try {
+      const { database, databaseCheckedAt } = await this.healthService.checkDatabase();
+
+      return response.ok({
+        status: 'ok',
+        database,
+        databaseCheckedAt,
+      });
+    } catch (error) {
+      const databaseCheckedAt = DateTime.utc().toISO() as string;
+
+      logger.error(
+        {
+          err: error,
+          component: 'database',
+          provider: 'neon',
+          healthCheck: 'extended',
+          databaseCheckedAt,
+        },
+        'Database health check failed',
+      );
+
+      return response.serviceUnavailable({
+        status: 'error',
+        database: 'error',
+        databaseCheckedAt,
+      });
+    }
+  }
+}
