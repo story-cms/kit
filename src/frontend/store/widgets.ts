@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import type { WidgetPicker, Providers } from '../../types';
 import { widgetField } from '../fields/widget-fields';
+import { useListStateStore } from './list-state';
 
 const defaultProviders: Providers = {
   s3: {
@@ -29,6 +30,8 @@ const defaultProviders: Providers = {
 };
 
 export const useWidgetsStore = defineStore('widgets', () => {
+  const listState = useListStateStore();
+
   // widget picker
 
   const standardPicker = (widget: string) => widgetField(widget);
@@ -38,31 +41,20 @@ export const useWidgetsStore = defineStore('widgets', () => {
     picker.value = fresh;
   };
 
-  // track folding in foldable lists
+  // track folding and removed items in flexible lists
 
-  const listToggles = ref<Record<string, boolean[]>>({});
+  const getListToggles = (path: string): boolean[] => listState.getListToggles(path);
   const setListToggles = (path: string, value: boolean[]): void => {
-    const fresh = { ...listToggles.value };
-    fresh[path] = value;
-    listToggles.value = fresh;
+    listState.setListToggles(path, value);
   };
-  const getListToggles = (path: string): boolean[] => listToggles.value[path] || [];
-
-  // track removed items in flexible lists
-
-  const removedItems = ref<Record<string, number[]>>({});
   const toggleRemovedIndex = (path: string, index: number): void => {
-    const fresh = { ...removedItems.value };
-    fresh[path] = Array.from(removedItems.value[path] || []);
-    if (fresh[path].includes(index)) {
-      fresh[path].splice(fresh[path].indexOf(index), 1);
-    } else {
-      fresh[path].push(index);
-    }
-    removedItems.value = fresh;
+    listState.toggleRemovedIndex(path, index);
   };
   const isInRemovedList = (path: string, index: number): boolean =>
-    removedItems.value[path]?.includes(index) || false;
+    listState.isInRemovedList(path, index);
+  const clearListState = (): void => {
+    listState.clearListState();
+  };
 
   // providers
 
@@ -90,9 +82,9 @@ export const useWidgetsStore = defineStore('widgets', () => {
 
     getListToggles,
     setListToggles,
-
     toggleRemovedIndex,
     isInRemovedList,
+    clearListState,
 
     setProviders,
     providers,
