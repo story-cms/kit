@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, nextTick, onMounted } from 'vue';
+import { computed, ref, nextTick, onMounted, watch } from 'vue';
 import type { FieldSpec } from '../../types';
 import { useModelStore, useSharedStore } from '../store';
 import { commonProps, expandShortcuts } from '../shared/helpers';
@@ -93,6 +93,17 @@ const errors = computed(() => shared.errorMessages(fieldPath.value));
 const hasError = computed(() => errors.value.length > 0 && !props.isReadOnly);
 
 let mde: EasyMDE | null = null;
+
+watch(
+  () => shared.showSourceColumn,
+  async (isVisible) => {
+    if (!isVisible || !props.isReadOnly) return;
+
+    // CodeMirror cannot measure itself while its source column is hidden.
+    await nextTick();
+    mde?.codemirror.refresh();
+  },
+);
 
 const applyEditorDirection = () => {
   if (!mde) return;
