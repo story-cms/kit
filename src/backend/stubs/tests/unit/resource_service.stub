@@ -148,8 +148,8 @@ test.group('Resource service', (group) => {
 
     assert.lengthOf(usages, 2);
     assert.deepEqual(usages, [
-      { storyId: alphaStory.id, title: 'Alpha Story' },
-      { storyId: zebraStory.id, title: 'Zebra Story' },
+      { id: alphaStory.id, title: 'Alpha Story' },
+      { id: zebraStory.id, title: 'Zebra Story' },
     ]);
   });
 
