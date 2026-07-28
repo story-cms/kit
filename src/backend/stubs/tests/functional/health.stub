@@ -2,29 +2,24 @@
   exports({ to: app.makePath('tests/functional/health.spec.ts') }) 
 }}}
 import { test } from '@japa/runner';
-import app from '@adonisjs/core/services/app';
+import db from '@adonisjs/lucid/services/db';
 import env from '#start/env';
-import { HealthService, type DatabaseHealth } from '@story-cms/kit';
 
 const HEALTH_CHECK_TOKEN = 'test-health-check-token';
-const DATABASE_CHECKED_AT = '2026-07-24T10:00:00.000Z';
 
-class FakeHealthService extends HealthService {
-  constructor(private readonly check: () => Promise<DatabaseHealth>) {
-    super();
-  }
+type RawQueryStub = (...args: Parameters<typeof db.rawQuery>) => unknown;
 
-  public override checkDatabase(): Promise<DatabaseHealth> {
-    return this.check();
-  }
-}
-
-function swapHealthService(check: () => Promise<DatabaseHealth>) {
-  app.container.swap(HealthService, () => new FakeHealthService(check));
+function swapRawQuery(replacement: RawQueryStub) {
+  const original = db.rawQuery.bind(db);
+  db.rawQuery = replacement as typeof db.rawQuery;
+  return () => {
+    db.rawQuery = original;
+  };
 }
 
 test.group('GET /health', (group) => {
   let previousHealthCheckToken: string | undefined;
+  let restoreRawQuery: (() => void) | undefined;
 
   group.each.setup(() => {
     previousHealthCheckToken = env.get('HEALTH_CHECK_TOKEN');
@@ -32,7 +27,8 @@ test.group('GET /health', (group) => {
   });
 
   group.each.teardown(() => {
-    app.container.restore(HealthService);
+    restoreRawQuery?.();
+    restoreRawQuery = undefined;
     env.set('HEALTH_CHECK_TOKEN', previousHealthCheckToken ?? '');
   });
 
@@ -41,7 +37,7 @@ test.group('GET /health', (group) => {
     client,
   }) => {
     let databaseChecks = 0;
-    swapHealthService(async () => {
+    restoreRawQuery = swapRawQuery(async () => {
       databaseChecks++;
       throw new Error('The basic health check must not query the database');
     });
@@ -58,7 +54,7 @@ test.group('GET /health', (group) => {
     client,
   }) => {
     let databaseChecks = 0;
-    swapHealthService(async () => {
+    restoreRawQuery = swapRawQuery(async () => {
       databaseChecks++;
       throw new Error('An unauthenticated check must not query the database');
     });
@@ -75,7 +71,7 @@ test.group('GET /health', (group) => {
     client,
   }) => {
     let databaseChecks = 0;
-    swapHealthService(async () => {
+    restoreRawQuery = swapRawQuery(async () => {
       databaseChecks++;
       throw new Error('A wrong token must not query the database');
     });
@@ -96,7 +92,7 @@ test.group('GET /health', (group) => {
     env.set('HEALTH_CHECK_TOKEN', '');
 
     let databaseChecks = 0;
-    swapHealthService(async () => {
+    restoreRawQuery = swapRawQuery(async () => {
       databaseChecks++;
       throw new Error('Must not query when token env is missing');
     });
@@ -110,12 +106,9 @@ test.group('GET /health', (group) => {
 
   test('runs an authenticated database check', async ({ assert, client }) => {
     let databaseChecks = 0;
-    swapHealthService(async () => {
+    restoreRawQuery = swapRawQuery(async () => {
       databaseChecks++;
-      return {
-        database: 'ok',
-        databaseCheckedAt: DATABASE_CHECKED_AT,
-      };
+      return [];
     });
 
     const response = await client
@@ -123,11 +116,9 @@ test.group('GET /health', (group) => {
       .header('x-health-check-token', HEALTH_CHECK_TOKEN);
 
     response.assertStatus(200);
-    assert.deepEqual(response.body(), {
-      status: 'ok',
-      database: 'ok',
-      databaseCheckedAt: DATABASE_CHECKED_AT,
-    });
+    assert.equal(response.body().status, 'ok');
+    assert.equal(response.body().database, 'ok');
+    assert.isString(response.body().databaseCheckedAt);
     assert.equal(databaseChecks, 1);
   });
 
@@ -135,7 +126,7 @@ test.group('GET /health', (group) => {
     assert,
     client,
   }) => {
-    swapHealthService(async () => {
+    restoreRawQuery = swapRawQuery(async () => {
       throw new Error('connection refused');
     });
 
@@ -151,12 +142,9 @@ test.group('GET /health', (group) => {
 
   test('does not cache authenticated database checks', async ({ assert, client }) => {
     let databaseChecks = 0;
-    swapHealthService(async () => {
+    restoreRawQuery = swapRawQuery(async () => {
       databaseChecks++;
-      return {
-        database: 'ok',
-        databaseCheckedAt: DATABASE_CHECKED_AT,
-      };
+      return [];
     });
 
     const first = await client
