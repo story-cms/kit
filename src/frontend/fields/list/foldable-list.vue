@@ -136,6 +136,7 @@ import type { PropType } from 'vue';
 import type { FieldSpec } from '../../../types';
 import Icon from '../../shared/icon.vue';
 import { useModelStore, useWidgetsStore, useSharedStore } from '../../store';
+import { useListStateStore } from '../../store/list-state';
 import AddItemButton from '../../shared/add-item-button.vue';
 
 const props = defineProps({
@@ -168,6 +169,7 @@ const field = computed(() => props.field as FieldSpec);
 const fields = field.value.fields as FieldSpec[];
 const model = useModelStore();
 const widgets = useWidgetsStore();
+const listState = useListStateStore();
 const shared = useSharedStore();
 
 const canMutate = computed(() => {
@@ -181,14 +183,14 @@ const isIsland = (type: string): boolean => {
   return singleWidgets.includes(type);
 };
 
-const toggleState = computed(() => widgets.getListToggles(props.fieldPath));
+const toggleState = computed(() => listState.getListToggles(props.fieldPath));
 
 const ensureToggles = () => {
   const current = toggleState.value;
   if (current.length < props.listItems.length) {
     const needed = props.listItems.length - current.length;
     const fresh = [...current, ...new Array(needed).fill(true)];
-    widgets.setListToggles(props.fieldPath, fresh);
+    listState.setListToggles(props.fieldPath, fresh);
   }
 };
 
@@ -202,12 +204,12 @@ const toggle = (index: number) => {
   const fresh = toggleState.value;
   fresh[index] = !fresh[index];
 
-  widgets.setListToggles(props.fieldPath, fresh);
+  listState.setListToggles(props.fieldPath, fresh);
 };
 
 const toggleRemove = (index: number) => {
-  const isCurrentlyRemoved = widgets.isInRemovedList(props.fieldPath, index);
-  widgets.toggleRemovedIndex(props.fieldPath, index);
+  const isCurrentlyRemoved = listState.isInRemovedList(props.fieldPath, index);
+  listState.toggleRemovedIndex(props.fieldPath, index);
 
   if (!isCurrentlyRemoved) {
     const list = [...(model.getField(props.fieldPath, []) as Record<string, unknown>[])];
@@ -217,14 +219,14 @@ const toggleRemove = (index: number) => {
     const fresh = toggleState.value;
     if (fresh[index]) {
       fresh[index] = false;
-      widgets.setListToggles(props.fieldPath, fresh);
+      listState.setListToggles(props.fieldPath, fresh);
     }
   }
 };
 
 const isRemoved = (index: number): boolean => {
   if (props.isReadOnly) return false;
-  return widgets.isInRemovedList(props.fieldPath, index);
+  return listState.isInRemovedList(props.fieldPath, index);
 };
 
 const hasSourceItem = (index: number): boolean => {
