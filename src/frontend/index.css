@@ -13,6 +13,10 @@
     --primary-color: #39ccfb;
     --secondary-color: #34d399;
   }
+
+  h2 {
+    @apply font-dmsans font-semibold text-xl leading-7;
+  }
 }
 
 @layer components {
