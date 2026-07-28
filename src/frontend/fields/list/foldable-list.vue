@@ -60,9 +60,9 @@
             </button>
           </template>
 
-          <div v-if="itemHasError(index)" class="z-[1] text-accent-one">
+          <div v-if="itemHasError(index)" class="z-[1] text-error-light">
             <div class="rounded-full border bg-white p-2">
-              <Icon name="exclamation" class="h-10 w-10 text-red-500" />
+              <Icon name="exclamation" class="h-10 w-10 text-error" />
             </div>
           </div>
 

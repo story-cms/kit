@@ -2,7 +2,7 @@
   <AppLayout title="Story" :subtitle="chapterTitle">
     <template #actions>
       <DraftActions :can-delete="false" />
-      <StudioButton label="Edit" variant="blue" @click="editChapter" />
+      <StudioButton label="Edit" variant="primary" @click="editChapter" />
     </template>
     <template #main>
       <div

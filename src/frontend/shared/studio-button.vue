@@ -7,8 +7,7 @@
     <span class="inline-flex" :class="{ 'pointer-events-none': disabled }">
       <button
         type="button"
-        class="inline-flex items-center justify-center gap-2 font-dmsans text-[15px] font-semibold leading-5 tracking-[-0.15px] transition-colors disabled:cursor-not-allowed disabled:opacity-50"
-        :class="[shapeClasses, variantClasses, sizeClasses]"
+        :class="[buttonBaseClasses, shapeClasses, variantClasses, sizeClasses]"
         :aria-label="accessibleLabel"
         :disabled="disabled"
         @click="emit('click')"
@@ -27,8 +26,7 @@
   <button
     v-else
     type="button"
-    class="inline-flex items-center justify-center gap-2 font-dmsans text-[15px] font-semibold leading-5 tracking-[-0.15px] transition-colors disabled:cursor-not-allowed disabled:opacity-50"
-    :class="[shapeClasses, variantClasses, sizeClasses]"
+    :class="[buttonBaseClasses, shapeClasses, variantClasses, sizeClasses]"
     :aria-label="accessibleLabel"
     :disabled="disabled"
     @click="emit('click')"
@@ -42,9 +40,12 @@
 import { computed, useSlots } from 'vue';
 
 export type StudioButtonVariant =
-  'primary' | 'outline' | 'secondary' | 'green' | 'blue' | 'gray' | 'red';
+  'primary' | 'outline' | 'secondary' | 'green' | 'gray' | 'red';
 
 export type StudioButtonShape = 'default' | 'cta';
+
+const buttonBaseClasses =
+  'inline-flex items-center justify-center gap-2 font-dmsans text-[15px] font-semibold leading-5 tracking-[-0.15px] transition-colors disabled:cursor-not-allowed disabled:opacity-50';
 
 const props = withDefaults(
   defineProps<{
@@ -86,12 +87,11 @@ const shapeClasses = computed(() =>
 );
 
 const variantClassMap: Record<StudioButtonVariant, string> = {
-  primary: 'bg-studio_forest_green text-studio_lime hover:bg-studio_forest_green/90',
+  primary: 'bg-studio-forest text-studio-lime hover:bg-studio-green/90',
   outline:
-    'border border-studio_forest_green bg-transparent text-studio_forest_green hover:bg-studio_forest_green/5',
+    'border border-studio-green bg-transparent text-studio-green hover:bg-studio-green/5',
   secondary: 'bg-blue-600 text-white hover:bg-blue-700',
   green: 'bg-green-500 text-white hover:bg-green-400',
-  blue: 'bg-blue-500 text-white hover:bg-blue-400',
   gray: 'bg-gray-200 text-gray-700 hover:bg-gray-300',
   red: 'bg-red-500 text-white hover:bg-red-400',
 };

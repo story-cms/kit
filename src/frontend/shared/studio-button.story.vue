@@ -28,10 +28,6 @@
       </StudioButton>
     </Variant>
 
-    <Variant title="Blue">
-      <StudioButton label="Close" variant="blue" @click="handleClick" />
-    </Variant>
-
     <Variant title="Gray">
       <StudioButton label="Cancel" variant="gray" @click="handleClick" />
     </Variant>

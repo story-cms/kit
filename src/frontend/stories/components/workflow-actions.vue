@@ -8,7 +8,7 @@
   <StudioButton
     v-if="showSubmitButton"
     label="Submit"
-    variant="blue"
+    variant="primary"
     :disabled="widgets.isDirty"
     @click="emit('submit')"
   />

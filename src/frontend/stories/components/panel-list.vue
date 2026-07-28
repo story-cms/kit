@@ -122,7 +122,7 @@
     <div v-if="!shared.isTranslation" class="mt-6 flex w-full flex-col">
       <button
         type="button"
-        class="inline-flex items-center justify-center rounded-xl border border-dashed border-studio_forest_green px-3 py-[18px] text-sm font-medium leading-4 text-studio_forest_green shadow-sm hover:bg-studio_forest_green/10"
+        class="border-studio-green text-studio-green hover:bg-studio-green/10 inline-flex items-center justify-center rounded-xl border border-dashed px-3 py-[18px] text-sm font-medium leading-4 shadow-sm"
         @click.prevent="addSet"
       >
         <div class="inline-flex items-center justify-center gap-2">

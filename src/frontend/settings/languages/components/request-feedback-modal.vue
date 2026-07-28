@@ -15,7 +15,7 @@
 
     <template #actions>
       <div class="flex w-full justify-end">
-        <StudioButton label="Close" variant="blue" @click="$emit('close')" />
+        <StudioButton label="Close" variant="primary" @click="$emit('close')" />
       </div>
     </template>
   </LanguageModal>

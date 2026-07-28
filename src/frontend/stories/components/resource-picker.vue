@@ -11,7 +11,7 @@
           v-model="searchQuery"
           type="text"
           placeholder="Search resources to attach..."
-          class="w-full rounded-xl border border-gray-300 py-2.5 pl-11 pr-4 focus:border-transparent focus:ring-2 focus:ring-studio_forest_green"
+          class="focus:ring-studio-green w-full rounded-xl border border-gray-300 py-2.5 pl-11 pr-4 focus:border-transparent focus:ring-2"
           @focus="showSearch = true"
           @input="showSearch = true"
         />
@@ -19,7 +19,7 @@
       <button
         v-if="allowCreate"
         type="button"
-        class="inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-xl border border-studio_forest_green px-4 py-2.5 text-sm font-medium text-studio_forest_green transition-colors hover:bg-studio_forest_green/10"
+        class="border-studio-green text-studio-green hover:bg-studio-green/10 inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-xl border px-4 py-2.5 text-sm font-medium transition-colors"
         @click="emit('create')"
       >
         <Plus class="size-4" />
