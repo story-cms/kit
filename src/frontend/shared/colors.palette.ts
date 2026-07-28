@@ -32,8 +32,9 @@ export const colorSections: ColorSection[] = [
     title: 'Studio',
     colors: [
       { name: 'studio-dark', class: 'bg-studio-dark', hex: '#64748B' },
+      { name: 'studio-forest', class: 'bg-studio-forest', hex: '#102F35' },
       { name: 'studio-green', class: 'bg-studio-green', hex: '#B9E86C' },
-      { name: 'studio-green-light', class: 'bg-studio-green-light', hex: '#D7FE96' },
+      { name: 'studio-lime', class: 'bg-studio-lime', hex: '#D7FE96' },
       { name: 'studio-yellow', class: 'bg-studio-yellow', hex: '#FBFF96' },
     ],
   },

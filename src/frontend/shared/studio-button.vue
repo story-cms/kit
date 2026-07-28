@@ -87,13 +87,14 @@ const shapeClasses = computed(() =>
 );
 
 const variantClassMap: Record<StudioButtonVariant, string> = {
-  primary: 'bg-studio-forest text-studio-lime hover:bg-studio-green/90',
+  primary: 'bg-studio-forest text-studio-lime enabled:hover:bg-studio-green/90',
   outline:
-    'border border-studio-green bg-transparent text-studio-green hover:bg-studio-green/5',
-  secondary: 'bg-gray-200 text-gray-700 hover:bg-gray-800 hover:text-white min-w-32',
-  green: 'bg-green-500 text-white hover:bg-green-400',
-  gray: 'bg-gray-200 text-gray-700 hover:bg-gray-300',
-  red: 'bg-red-500 text-white hover:bg-red-400',
+    'border border-studio-green bg-transparent text-studio-green enabled:hover:bg-studio-green/5',
+  secondary:
+    'min-w-32 bg-gray-200 text-gray-700 enabled:hover:bg-gray-800 enabled:hover:text-white',
+  green: 'bg-green-500 text-white enabled:hover:bg-green-400',
+  gray: 'bg-gray-200 text-gray-700 enabled:hover:bg-gray-300',
+  red: 'bg-red-500 text-white enabled:hover:bg-red-400',
 };
 
 const variantClasses = computed(() => variantClassMap[props.variant]);
