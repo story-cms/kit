@@ -1,27 +1,5 @@
 <template>
   <AppLayout title="Dashboard" :subtitle="greeting">
-    <template #actions>
-      <div class="flex flex-wrap gap-4">
-        <Link
-          v-if="shared.user.isAdmin"
-          :href="`/${shared.locale}/user`"
-          class="flex items-center gap-x-2 rounded-full bg-blue-50 px-3 py-[9px] text-sm font-medium leading-4 text-blue-700 shadow-[0px_1px_2px_0px_#0000000D] hover:bg-blue-100"
-        >
-          <Icon name="user-add" />
-          New User
-        </Link>
-        <a
-          v-if="shared.config.helpUrl"
-          class="flex items-center gap-x-2 rounded-full bg-blue-50 px-3 py-[9px] text-sm font-medium leading-4 text-blue-700 shadow-[0px_1px_2px_0px_#0000000D] hover:bg-blue-100"
-          :href="shared.config.helpUrl"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Icon name="question-mark-circle" />
-          Get Support
-        </a>
-      </div>
-    </template>
     <template #main>
       <div>
         <StatTiles :stats="stats" :is-loading="isLoading" :error="error" />
@@ -92,7 +70,7 @@ import ActionGrid, { ActionGridItem } from './action-grid.vue';
 import Icon from '../shared/icon.vue';
 import { BookOpen, FileText, Languages } from '@lucide/vue';
 import { ref, computed, onMounted } from 'vue';
-import { Link, router } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
 import axios from 'axios';
 
 import { SharedPageProps, DashboardProps, StatMetric } from '../../types';
