@@ -1,9 +1,11 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import type { Scripture, SharedPageProps, DraftEditProps } from '../../types';
+import { useListStateStore } from './list-state';
 
 export const useModelStore = defineStore('model', () => {
   const model = ref({});
+  const listState = useListStateStore();
 
   const resolvePath = (
     object: Record<string | number, any>,
@@ -48,6 +50,7 @@ export const useModelStore = defineStore('model', () => {
     resolvePath(model.value, path, defaultValue);
 
   const setModel = (fresh: object) => {
+    listState.clearListState();
     model.value = fresh;
   };
 
@@ -79,6 +82,8 @@ export const useModelStore = defineStore('model', () => {
   };
 
   const setFromProps = (props: DraftEditProps & SharedPageProps) => {
+    listState.clearListState();
+
     if (props.bundle) {
       model.value = { ...props.bundle };
     }

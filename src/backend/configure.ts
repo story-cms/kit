@@ -120,12 +120,14 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'controllers/users_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/settings_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/locale_controller.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'controllers/health_controller.stub', {});
 
   await codemods.makeUsingStub(stubsRoot, 'inertia/middleware.stub', {});
 
   await codemods.makeUsingStub(stubsRoot, 'routes/users.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/settings.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/auth.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'routes/health.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/routes.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/invitations.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/dashboard.stub', {});
@@ -161,6 +163,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'tests/rest.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/ui.rest.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/functional/draft.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'tests/functional/health.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/ui_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/invitation_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/page_service.stub', {});
@@ -197,6 +200,7 @@ export async function configure(command: Configure) {
     OPENAI_API_KEY: 'redacted',
     GOOGLE_APPLICATION_CREDENTIALS_JSON: 'redacted',
     FIREBASE_SERVICE_ACCOUNT_KEY_JSON: 'redacted',
+    HEALTH_CHECK_TOKEN: '',
   });
 
   /**
@@ -252,6 +256,13 @@ export async function configure(command: Configure) {
       FIREBASE_SERVICE_ACCOUNT_KEY_JSON: `Env.schema.string(),`,
     },
     leadingComment: 'Configuration for the Firebase service account key',
+  });
+
+  await codemods.defineEnvValidations({
+    variables: {
+      HEALTH_CHECK_TOKEN: `Env.schema.string.optional(),`,
+    },
+    leadingComment: 'Variables for configuring the Health check token',
   });
 
   /**

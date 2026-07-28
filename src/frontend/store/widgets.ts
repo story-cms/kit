@@ -38,32 +38,6 @@ export const useWidgetsStore = defineStore('widgets', () => {
     picker.value = fresh;
   };
 
-  // track folding in foldable lists
-
-  const listToggles = ref<Record<string, boolean[]>>({});
-  const setListToggles = (path: string, value: boolean[]): void => {
-    const fresh = { ...listToggles.value };
-    fresh[path] = value;
-    listToggles.value = fresh;
-  };
-  const getListToggles = (path: string): boolean[] => listToggles.value[path] || [];
-
-  // track removed items in flexible lists
-
-  const removedItems = ref<Record<string, number[]>>({});
-  const toggleRemovedIndex = (path: string, index: number): void => {
-    const fresh = { ...removedItems.value };
-    fresh[path] = Array.from(removedItems.value[path] || []);
-    if (fresh[path].includes(index)) {
-      fresh[path].splice(fresh[path].indexOf(index), 1);
-    } else {
-      fresh[path].push(index);
-    }
-    removedItems.value = fresh;
-  };
-  const isInRemovedList = (path: string, index: number): boolean =>
-    removedItems.value[path]?.includes(index) || false;
-
   // providers
 
   const providers = ref<Providers>(defaultProviders);
@@ -87,12 +61,6 @@ export const useWidgetsStore = defineStore('widgets', () => {
     picker,
     setPicker,
     standardPicker,
-
-    getListToggles,
-    setListToggles,
-
-    toggleRemovedIndex,
-    isInRemovedList,
 
     setProviders,
     providers,

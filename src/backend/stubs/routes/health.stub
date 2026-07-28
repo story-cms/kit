@@ -1,0 +1,10 @@
+{{{
+  exports({ to: app.makePath('start/routes/health.ts') })
+}}}
+import router from '@adonisjs/core/services/router';
+import { middleware } from '#start/kernel';
+const HealthController = () => import('#controllers/health_controller');
+
+export default () => {
+  router.get('/health', [HealthController, 'index']).use(middleware.noIndex());
+};

@@ -105,6 +105,7 @@ import type { FieldSpec } from '../../../types';
 import Icon from '../../shared/icon.vue';
 import AddItemButton from '../../shared/add-item-button.vue';
 import { useWidgetsStore, useSharedStore, useModelStore } from '../../store';
+import { useListStateStore } from '../../store/list-state';
 
 const props = defineProps({
   field: {
@@ -135,6 +136,7 @@ const emit = defineEmits(['addSet', 'removeSet']);
 const field = computed(() => props.field as FieldSpec);
 const fields = field.value.fields as FieldSpec[];
 const widgets = useWidgetsStore();
+const listState = useListStateStore();
 const shared = useSharedStore();
 const model = useModelStore();
 
@@ -169,8 +171,8 @@ const hasSourceItem = (index: number): boolean => {
 
 // This does soft remove
 const toggleRemove = (index: number) => {
-  const isCurrentlyRemoved = widgets.isInRemovedList(props.fieldPath, index);
-  widgets.toggleRemovedIndex(props.fieldPath, index);
+  const isCurrentlyRemoved = listState.isInRemovedList(props.fieldPath, index);
+  listState.toggleRemovedIndex(props.fieldPath, index);
 
   if (!isCurrentlyRemoved) {
     const list = [...(model.getField(props.fieldPath, []) as Record<string, unknown>[])];
@@ -180,7 +182,7 @@ const toggleRemove = (index: number) => {
 };
 
 const isRemoved = (index: number): boolean => {
-  return widgets.isInRemovedList(props.fieldPath, index);
+  return listState.isInRemovedList(props.fieldPath, index);
 };
 
 const isSubgridWidget = (widget: string): boolean => {

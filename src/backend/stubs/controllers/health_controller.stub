@@ -1,0 +1,52 @@
+{{{
+  exports({ to: app.makePath('app/controllers/health_controller.ts') })
+}}}
+import type { HttpContext } from '@adonisjs/core/http';
+import db from '@adonisjs/lucid/services/db';
+import { DateTime } from 'luxon';
+import env from '#start/env';
+
+export default class HealthController {
+  public async index({ request, response, logger }: HttpContext) {
+    if (request.input('extend') !== 'db') {
+      return response.ok({ status: 'ok' });
+    }
+
+    const healthCheckToken = env.get('HEALTH_CHECK_TOKEN');
+    if (
+      !healthCheckToken ||
+      request.header('x-health-check-token') !== healthCheckToken
+    ) {
+      return response.notFound({ status: 'not_found' });
+    }
+
+    try {
+      await db.rawQuery('select 1');
+      const databaseCheckedAt = DateTime.utc().toISO() as string;
+
+      return response.ok({
+        status: 'ok',
+        database: 'ok',
+        databaseCheckedAt,
+      });
+    } catch (error) {
+      const databaseCheckedAt = DateTime.utc().toISO() as string;
+
+      logger.error(
+        {
+          err: error,
+          component: 'database',
+          healthCheck: 'extended',
+          databaseCheckedAt,
+        },
+        'Database health check failed',
+      );
+
+      return response.serviceUnavailable({
+        status: 'error',
+        database: 'error',
+        databaseCheckedAt,
+      });
+    }
+  }
+}

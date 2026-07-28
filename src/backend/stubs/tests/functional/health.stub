@@ -1,0 +1,161 @@
+{{{ 
+  exports({ to: app.makePath('tests/functional/health.spec.ts') }) 
+}}}
+import { test } from '@japa/runner';
+import db from '@adonisjs/lucid/services/db';
+import env from '#start/env';
+
+const HEALTH_CHECK_TOKEN = 'test-health-check-token';
+
+type RawQueryStub = (...args: Parameters<typeof db.rawQuery>) => unknown;
+
+function swapRawQuery(replacement: RawQueryStub) {
+  const original = db.rawQuery.bind(db);
+  db.rawQuery = replacement as typeof db.rawQuery;
+  return () => {
+    db.rawQuery = original;
+  };
+}
+
+test.group('GET /health', (group) => {
+  let previousHealthCheckToken: string | undefined;
+  let restoreRawQuery: (() => void) | undefined;
+
+  group.each.setup(() => {
+    previousHealthCheckToken = env.get('HEALTH_CHECK_TOKEN');
+    env.set('HEALTH_CHECK_TOKEN', HEALTH_CHECK_TOKEN);
+  });
+
+  group.each.teardown(() => {
+    restoreRawQuery?.();
+    restoreRawQuery = undefined;
+    env.set('HEALTH_CHECK_TOKEN', previousHealthCheckToken ?? '');
+  });
+
+  test('returns application liveness without checking the database', async ({
+    assert,
+    client,
+  }) => {
+    let databaseChecks = 0;
+    restoreRawQuery = swapRawQuery(async () => {
+      databaseChecks++;
+      throw new Error('The basic health check must not query the database');
+    });
+
+    const response = await client.get('/health');
+
+    response.assertStatus(200);
+    assert.deepEqual(response.body(), { status: 'ok' });
+    assert.equal(databaseChecks, 0);
+  });
+
+  test('rejects an unauthenticated database check without querying the database', async ({
+    assert,
+    client,
+  }) => {
+    let databaseChecks = 0;
+    restoreRawQuery = swapRawQuery(async () => {
+      databaseChecks++;
+      throw new Error('An unauthenticated check must not query the database');
+    });
+
+    const response = await client.get('/health?extend=db');
+
+    response.assertStatus(404);
+    assert.deepEqual(response.body(), { status: 'not_found' });
+    assert.equal(databaseChecks, 0);
+  });
+
+  test('rejects a wrong token without querying the database', async ({
+    assert,
+    client,
+  }) => {
+    let databaseChecks = 0;
+    restoreRawQuery = swapRawQuery(async () => {
+      databaseChecks++;
+      throw new Error('A wrong token must not query the database');
+    });
+
+    const response = await client
+      .get('/health?extend=db')
+      .header('x-health-check-token', 'wrong-token');
+
+    response.assertStatus(404);
+    assert.deepEqual(response.body(), { status: 'not_found' });
+    assert.equal(databaseChecks, 0);
+  });
+
+  test('rejects extend=db when HEALTH_CHECK_TOKEN is not configured', async ({
+    assert,
+    client,
+  }) => {
+    env.set('HEALTH_CHECK_TOKEN', '');
+
+    let databaseChecks = 0;
+    restoreRawQuery = swapRawQuery(async () => {
+      databaseChecks++;
+      throw new Error('Must not query when token env is missing');
+    });
+
+    const response = await client.get('/health?extend=db');
+
+    response.assertStatus(404);
+    assert.deepEqual(response.body(), { status: 'not_found' });
+    assert.equal(databaseChecks, 0);
+  });
+
+  test('runs an authenticated database check', async ({ assert, client }) => {
+    let databaseChecks = 0;
+    restoreRawQuery = swapRawQuery(async () => {
+      databaseChecks++;
+      return [];
+    });
+
+    const response = await client
+      .get('/health?extend=db')
+      .header('x-health-check-token', HEALTH_CHECK_TOKEN);
+
+    response.assertStatus(200);
+    assert.equal(response.body().status, 'ok');
+    assert.equal(response.body().database, 'ok');
+    assert.isString(response.body().databaseCheckedAt);
+    assert.equal(databaseChecks, 1);
+  });
+
+  test('returns 503 when the authenticated database check fails', async ({
+    assert,
+    client,
+  }) => {
+    restoreRawQuery = swapRawQuery(async () => {
+      throw new Error('connection refused');
+    });
+
+    const response = await client
+      .get('/health?extend=db')
+      .header('x-health-check-token', HEALTH_CHECK_TOKEN);
+
+    response.assertStatus(503);
+    assert.equal(response.body().status, 'error');
+    assert.equal(response.body().database, 'error');
+    assert.isString(response.body().databaseCheckedAt);
+  });
+
+  test('does not cache authenticated database checks', async ({ assert, client }) => {
+    let databaseChecks = 0;
+    restoreRawQuery = swapRawQuery(async () => {
+      databaseChecks++;
+      return [];
+    });
+
+    const first = await client
+      .get('/health?extend=db')
+      .header('x-health-check-token', HEALTH_CHECK_TOKEN);
+    const second = await client
+      .get('/health?extend=db')
+      .header('x-health-check-token', HEALTH_CHECK_TOKEN);
+
+    first.assertStatus(200);
+    second.assertStatus(200);
+    assert.equal(databaseChecks, 2);
+  });
+});
