@@ -26,6 +26,15 @@
         @action="handleAction"
       />
     </Variant>
+    <Variant title="New Page disabled">
+      <ActionCard
+        :icon="FileText"
+        title="New Page"
+        description="Engage your audience morning, noon, and night. Create healthy daily rhythms with content that reaches them throughout the day."
+        @action="handleAction"
+        disabled
+      />
+    </Variant>
   </Story>
 </template>
 
