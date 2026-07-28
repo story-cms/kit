@@ -3,13 +3,6 @@
     <template #actions>
       <div class="flex flex-wrap gap-4">
         <Link
-          :href="`/${shared.locale}/page/create`"
-          class="flex items-center gap-x-2 rounded-full bg-blue-50 px-3 py-[9px] text-sm font-medium leading-4 text-blue-700 shadow-[0px_1px_2px_0px_#0000000D] hover:bg-blue-100"
-        >
-          <Icon name="document-add" />
-          New Page
-        </Link>
-        <Link
           v-if="shared.user.isAdmin"
           :href="`/${shared.locale}/user`"
           class="flex items-center gap-x-2 rounded-full bg-blue-50 px-3 py-[9px] text-sm font-medium leading-4 text-blue-700 shadow-[0px_1px_2px_0px_#0000000D] hover:bg-blue-100"
@@ -33,14 +26,15 @@
       <div>
         <StatTiles :stats="stats" :is-loading="isLoading" :error="error" />
       </div>
+      <div class="pt-10">
+        <ActionGrid :items="actionItems" @action="handleActionGrid" />
+      </div>
       <div>
         <div>
           <div class="flex items-center justify-between py-10">
-            <h3
-              class="text-xl font-semibold leading-7 tracking-[-0.45px] text-[#182E33] [&>span]:text-gray-400"
-            >
-              {{ isMultiLingual ? 'Language translation' : '' }}
-            </h3>
+            <h1>
+              {{ isMultiLingual ? 'Translations' : '' }}
+            </h1>
           </div>
         </div>
         <div
@@ -94,9 +88,11 @@ import AppLayout from '../shared/app-layout.vue';
 import StatTiles from './stat-tiles.vue';
 import IndexFilter from '../shared/index-filter.vue';
 import LanguageBlock from './language-block.vue';
+import ActionGrid, { ActionGridItem } from './action-grid.vue';
 import Icon from '../shared/icon.vue';
+import { BookOpen, FileText, Languages } from '@lucide/vue';
 import { ref, computed, onMounted } from 'vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
 import axios from 'axios';
 
 import { SharedPageProps, DashboardProps, StatMetric } from '../../types';
@@ -113,6 +109,41 @@ const greeting = computed(() => {
   const firstName = shared.user.name.split(' ')[0];
   return `Hey ${firstName}!`;
 });
+
+const actionItems = computed<ActionGridItem[]>(() => {
+  const disabled = !shared.user.isAdmin;
+
+  return [
+    {
+      url: `/${shared.locale}/settings/languages/edit`,
+      icon: Languages,
+      title: 'New Language',
+      description:
+        'Engage your audience morning, noon, and night. Create healthy daily rhythms with content that reaches them throughout the day. ',
+      disabled,
+    },
+    {
+      url: `/${shared.locale}/story/create`,
+      icon: BookOpen,
+      title: 'New Story',
+      description:
+        'Engage your audience morning, noon, and night. Create healthy daily rhythms with content that reaches them throughout the day. ',
+      disabled,
+    },
+    {
+      url: `/${shared.locale}/page/create`,
+      icon: FileText,
+      title: 'New Page',
+      description:
+        'Engage your audience morning, noon, and night. Create healthy daily rhythms with content that reaches them throughout the day. ',
+      disabled,
+    },
+  ];
+});
+
+const handleActionGrid = (url: string) => {
+  router.visit(url);
+};
 
 const activeFilter = ref<'To do' | 'All'>('To do');
 

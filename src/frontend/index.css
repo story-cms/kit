@@ -14,6 +14,10 @@
     --secondary-color: #34d399;
   }
 
+  h1 {
+    @apply font-dmsans text-2xl leading-8 font-semibold text-gray-800;
+  }
+
   h2 {
     @apply font-dmsans font-semibold text-xl leading-7;
   }
