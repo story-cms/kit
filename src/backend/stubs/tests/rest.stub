@@ -36,3 +36,12 @@ Accept: application/json
 ###
 GET \{\{ authority \}\}/api/v1/locale HTTP/1.1
 Accept: application/json
+
+###
+GET \{\{ authority \}\}/health HTTP/1.1
+Accept: application/json
+
+###
+GET \{\{ authority \}\}/health?extend=db HTTP/1.1
+Accept: application/json
+X-Health-Check-Token: \{\{ healthCheckToken \}\}
