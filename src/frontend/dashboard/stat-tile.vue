@@ -1,7 +1,7 @@
 <template>
   <div class="w-full rounded-xl bg-white p-6 shadow">
     <div>
-      <dt class="text-base font-normal text-gray-900">
+      <dt class="font-dmsans text-xs font-normal leading-4 text-gray-900">
         <span
           v-if="isLoading"
           class="inline-block h-4 w-32 animate-pulse rounded-xl bg-gray-200"
@@ -9,7 +9,9 @@
         <span v-else>{{ props.metric.name }}</span>
       </dt>
       <dd class="mt-1 flex items-baseline justify-between">
-        <div class="flex items-baseline text-2xl font-semibold leading-8 text-gray-900">
+        <div
+          class="flex items-baseline font-dmsans text-2xl font-semibold leading-8 text-gray-900"
+        >
           <template v-if="isLoading">
             <span
               class="inline-block h-8 w-24 animate-pulse rounded-xl bg-gray-200"
@@ -20,7 +22,7 @@
           </template>
           <template v-else>
             {{ props.metric.stat.toLocaleString() }}
-            <span class="ml-2 text-sm font-medium text-gray-500"
+            <span class="ml-2 text-sm font-normal leading-5 text-gray-500"
               >from {{ props.metric.previousStat.toLocaleString() }}</span
             >
           </template>
@@ -30,26 +32,25 @@
           v-if="!isLoading"
           :class="[
             changeType === 'increase'
-              ? 'bg-green-100 text-green-800'
-              : 'bg-red-100 text-red-800',
+              ? 'bg-studio-lime text-green-800'
+              : 'bg-error-light text-error',
             'inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium md:mt-2 lg:mt-0',
           ]"
         >
-          <Icon
-            v-if="changeType === 'increase'"
-            name="arrow-up"
-            class="-ml-1 mr-0.5 size-3 shrink-0 self-center text-green-500"
-          />
-          <Icon
-            v-else
-            name="arrow-up"
-            class="-ml-1 mr-0.5 size-3 shrink-0 rotate-180 self-center text-red-500"
-          />
-
           <span class="sr-only">
             {{ changeType === 'increase' ? 'Increased' : 'Decreased' }} by
           </span>
           {{ changePercentage }}
+          <Icon
+            v-if="changeType === 'increase'"
+            name="arrow-up"
+            class="ml-1 size-3 shrink-0 self-center text-green-500"
+          />
+          <Icon
+            v-else
+            name="arrow-up"
+            class="ml-1 size-3 shrink-0 rotate-180 self-center text-error"
+          />
         </div>
         <div
           v-else
