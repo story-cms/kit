@@ -41,15 +41,15 @@
             {{ changeType === 'increase' ? 'Increased' : 'Decreased' }} by
           </span>
           {{ changePercentage }}
-          <Icon
+          <ArrowUp
             v-if="changeType === 'increase'"
-            name="arrow-up"
             class="ml-1 size-3 shrink-0 self-center text-green-500"
+            aria-hidden="true"
           />
-          <Icon
+          <ArrowDown
             v-else
-            name="arrow-up"
-            class="ml-1 size-3 shrink-0 rotate-180 self-center text-error"
+            class="ml-1 size-3 shrink-0 self-center text-error"
+            aria-hidden="true"
           />
         </div>
         <div
@@ -62,8 +62,8 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
+import { ArrowUp, ArrowDown } from '@lucide/vue';
 import { StatMetric } from '../../types';
-import Icon from '../shared/icon.vue';
 
 const props = defineProps<{
   metric: StatMetric;
