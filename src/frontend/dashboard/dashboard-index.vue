@@ -1,13 +1,11 @@
 <template>
   <AppLayout title="Dashboard" :subtitle="greeting">
     <template #main>
-      <div>
-        <StatTiles :stats="stats" :is-loading="isLoading" :error="error" />
-      </div>
-      <div class="pt-10">
-        <ActionGrid :items="actionItems" @action="handleActionGrid" />
-      </div>
-      <div>
+      <StatTiles :stats="stats" :is-loading="isLoading" :error="error" />
+
+      <ActionGrid :items="actionItems" @action="handleActionGrid" />
+
+      <section>
         <div>
           <div class="flex items-center justify-between py-10">
             <h1>
@@ -41,7 +39,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </section>
       <div
         v-if="isMultiLingual"
         class="grid grid-cols-[repeat(auto-fit,_minmax(207px,_207px))] justify-center gap-x-[34px] gap-y-[27px]"
