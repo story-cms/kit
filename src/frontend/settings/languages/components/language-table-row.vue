@@ -14,7 +14,7 @@
       </div>
     </td>
     <td class="whitespace-nowrap px-6 py-4 align-top text-sm">
-      <RingBlock :progress="rowProgress" />
+      <Ring size="compact" label-position="top" :progress="rowProgress" />
     </td>
     <td class="max-w-[400px] px-6 py-4 align-top text-sm text-gray-800">
       <div v-if="item.teamMembers?.length" class="flex min-w-0 flex-col gap-1">
@@ -76,7 +76,7 @@
 import { computed } from 'vue';
 import { BookOpen, Trash2, Users } from '@lucide/vue';
 import MemberRow from './member-row.vue';
-import RingBlock from '../../../dashboard/ring-block.vue';
+import Ring from '../../../dashboard/ring.vue';
 import LangStrip from './language-strip.vue';
 import type { LanguageTableItem } from '../../../../types';
 

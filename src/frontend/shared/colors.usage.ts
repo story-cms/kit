@@ -71,9 +71,8 @@ export const colorUsage: Record<string, ColorUsage> = {
       'index.css',
       'shared/pill-button.vue',
     ] },
-  'blue-50': { count: 67, files: [
+  'blue-50': { count: 66, files: [
       'audience/audience-index.vue',
-      'dashboard/ring-block.vue',
       'fields/select-field.vue',
       'index.css',
       'invitation/invitation-index-item.vue',
@@ -104,9 +103,8 @@ export const colorUsage: Record<string, ColorUsage> = {
       'ui/components/ui-string-item.vue',
       'ui/ui-page.vue',
     ] },
-  'blue-500': { count: 38, files: [
+  'blue-500': { count: 37, files: [
       'audience/audience-index.vue',
-      'dashboard/ring-block.vue',
       'fields/select-field.vue',
       'index.css',
       'invitation/invitations-index.vue',
@@ -242,9 +240,8 @@ export const colorUsage: Record<string, ColorUsage> = {
       'streams/components/stream-item.vue',
       'team/components/user-row.vue',
     ] },
-  'gray-200': { count: 97, files: [
+  'gray-200': { count: 96, files: [
       'audience/audience-index.vue',
-      'dashboard/ring-block.vue',
       'dashboard/stat-tile.vue',
       'fields/attachments/file-upload.vue',
       'fields/attachments/video-meta.vue',
@@ -365,7 +362,6 @@ export const colorUsage: Record<string, ColorUsage> = {
       'audience/audience-index.vue',
       'audience/components/audience-row.vue',
       'dashboard/language-block.vue',
-      'dashboard/ring-block.vue',
       'dashboard/ring.vue',
       'dashboard/stat-tile.vue',
       'fields/attachments/attachment-field.vue',
@@ -434,7 +430,6 @@ export const colorUsage: Record<string, ColorUsage> = {
       'audience/audience-index.vue',
       'audience/components/audience-row.vue',
       'dashboard/language-block.vue',
-      'dashboard/ring-block.vue',
       'dashboard/ring.vue',
       'dashboard/stat-tile.vue',
       'fields/attachments/attachment-field.vue',
@@ -563,7 +558,6 @@ export const colorUsage: Record<string, ColorUsage> = {
   'gray-800': { count: 26, files: [
       'dashboard/action-card.vue',
       'dashboard/dashboard-index.vue',
-      'dashboard/ring-block.vue',
       'dashboard/ring.vue',
       'fields/section-panel-field.vue',
       'index.css',
@@ -771,9 +765,10 @@ export const colorUsage: Record<string, ColorUsage> = {
       'streams/components/stream-item.vue',
     ] },
   'studio-dark': { count: 0, files: [] },
-  'studio-forest': { count: 6, files: [
+  'studio-forest': { count: 9, files: [
       'dashboard/language-block.vue',
       'dashboard/ring.vue',
+      'shared/app-footer.vue',
       'shared/index-tab-button.vue',
       'shared/studio-button.vue',
     ] },
@@ -783,7 +778,7 @@ export const colorUsage: Record<string, ColorUsage> = {
       'stories/components/resource-empty-state.vue',
       'stories/components/resource-picker.vue',
     ] },
-  'studio-lime': { count: 5, files: [
+  'studio-lime': { count: 6, files: [
       'dashboard/language-block.vue',
       'dashboard/ring.vue',
       'dashboard/stat-tile.vue',
@@ -793,11 +788,7 @@ export const colorUsage: Record<string, ColorUsage> = {
   'studio-yellow': { count: 1, files: [
       'dashboard/action-card.vue',
     ] },
-  'teal-500': { count: 4, files: [
-      'dashboard/ring-block.vue',
-    ] },
-  'transparent': { count: 26, files: [
-      'dashboard/ring-block.vue',
+  'transparent': { count: 23, files: [
       'dashboard/ring.vue',
       'fields/attachments/video-progress.vue',
       'fields/boolean-field.vue',
@@ -829,7 +820,6 @@ export const colorUsage: Record<string, ColorUsage> = {
       'audience/audience-index.vue',
       'dashboard/action-card.vue',
       'dashboard/language-block.vue',
-      'dashboard/ring-block.story.vue',
       'dashboard/ring.story.vue',
       'dashboard/stat-tile.vue',
       'fields/attachments/attachment-field.vue',

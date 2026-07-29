@@ -147,12 +147,6 @@ export const colorSections: ColorSection[] = [
     ],
   },
   {
-    title: 'Teal',
-    colors: [
-      { name: 'teal-500', class: 'bg-teal-500' },
-    ],
-  },
-  {
     title: 'Violet',
     colors: [
       { name: 'violet-100', class: 'bg-violet-100' },
