@@ -4,10 +4,10 @@
     :class="progress.isReadOnly ? 'opacity-60' : ''"
   >
     <div v-if="hasCompleteRings" class="grow">
-      <div class="relative mx-auto size-24 rounded-full border-[3px] border-green-500">
-        <div class="absolute inset-0 flex items-center justify-center">
-          <Icon name="check-large" class="h-auto w-6 text-green-500" />
-        </div>
+      <div
+        class="mx-auto flex size-24 items-center justify-center rounded-full bg-studio-lime"
+      >
+        <Check class="h-auto w-9 text-studio-forest" />
       </div>
       <p class="mt-2 text-center text-xs font-medium leading-4">All done</p>
     </div>
@@ -34,9 +34,10 @@
         <span>{{ englishName }} </span>
         <span class="uppercase"> ({{ progress.locale }}) </span>
       </h3>
-      <p class="text-xs font-normal leading-4 text-gray-500">
+      <p v-if="lastUpdate" class="text-xs font-normal leading-4 text-gray-500">
         Last update: <span>{{ lastUpdate }}</span>
       </p>
+      <p v-else class="text-xs font-normal leading-4 text-gray-500">No updates</p>
     </div>
   </div>
 </template>
@@ -44,10 +45,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import Ring from './ring.vue';
-import Icon from '../shared/icon.vue';
+import { Check } from '@lucide/vue';
 import { Progress, TranslationProgress } from '../../types';
 import { router } from '@inertiajs/vue3';
-import { toRelativeDate } from '../shared/helpers';
+import { toRelativeTime } from '../shared/helpers';
 
 const props = defineProps<{ progress: TranslationProgress }>();
 
@@ -82,6 +83,6 @@ const lastUpdate = computed(() => {
 
   if (!timestamp) return '';
 
-  return toRelativeDate(timestamp);
+  return toRelativeTime(timestamp);
 });
 </script>

@@ -67,10 +67,10 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { DateTime } from 'luxon';
 import { SquarePen, Trash2 } from '@lucide/vue';
 import type { UserMeta } from '../../../types';
 import { useSharedStore } from '../../store';
+import { toRelativeTime } from '../../shared/helpers';
 
 const shared = useSharedStore();
 
@@ -88,31 +88,7 @@ const lastActivity = computed(() => {
     return 'No activity';
   }
 
-  const date = DateTime.fromISO(props.user.lastActivity);
-  const now = DateTime.now();
-
-  const diff = now.diff(date, 'days').days;
-
-  if (diff < 1) {
-    return 'Today';
-  } else if (diff < 2) {
-    return 'Yesterday';
-  } else if (diff < 7) {
-    return date.toFormat('cccc');
-  } else if (date.year === now.year) {
-    const day = date.day;
-    const ordinal =
-      day === 1 || day === 21 || day === 31
-        ? 'st'
-        : day === 2 || day === 22
-          ? 'nd'
-          : day === 3 || day === 23
-            ? 'rd'
-            : 'th';
-    return `${day}${ordinal} ${date.toFormat('MMMM')}`;
-  } else {
-    return date.toFormat('dd/MM/yyyy');
-  }
+  return toRelativeTime(props.user.lastActivity);
 });
 
 const language = computed(() => {

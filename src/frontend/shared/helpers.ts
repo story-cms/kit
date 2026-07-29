@@ -61,47 +61,30 @@ export const formatDate = (value: string): string => {
   )}, ${padZero(d.getHours())}:${padZero(d.getMinutes())}`;
 };
 
-const relativeBucket = (value: string, now?: DateTime): string | null => {
-  const saved = DateTime.fromISO(value);
+export const toRelativeTime = (value: string, now?: DateTime): string => {
+  const date = DateTime.fromISO(value);
   const currentTime = now ?? DateTime.now();
 
-  const pluralize = (n: number, unit: string): string => `${n} ${unit}${n === 1 ? '' : 's'} ago`;
+  const diff = currentTime.diff(date, 'days').days;
 
-  const elapsedSeconds = Math.floor(currentTime.diff(saved, 'seconds').seconds);
-  if (elapsedSeconds < 60) return pluralize(Math.max(1, elapsedSeconds), 'sec');
+  if (diff < 1) return 'Today';
+  if (diff < 2) return 'Yesterday';
+  if (diff < 7) return date.toFormat('cccc');
 
-  const elapsedMinutes = Math.floor(elapsedSeconds / 60);
-  if (elapsedMinutes < 60) return pluralize(elapsedMinutes, 'min');
+  if (date.year === currentTime.year) {
+    const day = date.day;
+    const ordinal =
+      day === 1 || day === 21 || day === 31
+        ? 'st'
+        : day === 2 || day === 22
+          ? 'nd'
+          : day === 3 || day === 23
+            ? 'rd'
+            : 'th';
+    return `${day}${ordinal} ${date.toFormat('MMMM')}`;
+  }
 
-  const elapsedHours = Math.floor(elapsedMinutes / 60);
-  if (elapsedHours < 24) return pluralize(elapsedHours, 'hour');
-
-  const elapsedDays = Math.floor(elapsedHours / 24);
-  if (elapsedDays < 7) return pluralize(elapsedDays, 'day');
-
-  return null;
-};
-
-export const toRelativeTime = (value: string, now?: DateTime): string => {
-  const bucket = relativeBucket(value, now);
-  if (bucket) return bucket;
-
-  const display = DateTime.fromISO(value).toUTC();
-  const hour12 = display.hour % 12 === 0 ? 12 : display.hour % 12;
-  const meridiem = display.hour < 12 ? 'am' : 'pm';
-
-  return `on ${padZero(display.day)}/${padZero(display.month)}/${display.year} at ${hour12}:${padZero(
-    display.minute,
-  )}${meridiem}`;
-};
-
-export const toRelativeDate = (value: string, now?: DateTime): string => {
-  const bucket = relativeBucket(value, now);
-  if (bucket) return bucket;
-
-  const display = DateTime.fromISO(value).toUTC();
-
-  return `on ${padZero(display.day)}/${padZero(display.month)}/${display.year}`;
+  return date.toFormat('dd/MM/yyyy');
 };
 
 export const indexCardTags = (scope: string, itemTags: string[]): string[] => {
