@@ -12,7 +12,7 @@
       </StudioButton>
       <StudioButton
         label="Save Changes"
-        variant="secondary"
+        variant="primary"
         :disabled="isSaving"
         @click="saveStory"
       />

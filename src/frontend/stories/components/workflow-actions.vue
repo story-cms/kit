@@ -15,7 +15,7 @@
   <StudioButton
     v-if="showPublishButton"
     :label="publishLabel"
-    variant="green"
+    variant="primary"
     :disabled="widgets.isDirty"
     @click="emit('publish')"
   />

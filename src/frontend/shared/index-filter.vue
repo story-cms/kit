@@ -11,7 +11,10 @@
         {{ tab.label }}
         <span
           v-if="tab.count"
-          class="inline-flex items-center rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700"
+          class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium"
+          :class="
+            tab.current ? 'bg-studio-green text-studio-forest' : 'bg-gray-100 text-gray-500'
+          "
         >
           {{ tab.count }}
         </span>

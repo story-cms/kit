@@ -6,7 +6,7 @@
             v-if="!resource.id"
             label="Create Resource"
             :disabled="isSaving || !canCreate"
-            variant="secondary"
+            variant="primary"
             @click="save"
           />
           <StudioButton

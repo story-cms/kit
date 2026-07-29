@@ -3,7 +3,7 @@
     <template #actions>
       <StudioButton
         label="Create Story"
-        variant="secondary"
+        variant="primary"
         :disabled="isSaving"
         @click="createStory"
       />

@@ -16,15 +16,15 @@
           @input="showSearch = true"
         />
       </div>
-      <button
+      <StudioButton
         v-if="allowCreate"
-        type="button"
-        class="border-studio-green text-studio-green hover:bg-studio-green/10 inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-xl border px-4 py-2.5 text-sm font-medium transition-colors"
+        class="shrink-0"
+        label="Create New Resource"
+        variant="secondary"
         @click="emit('create')"
       >
-        <Plus class="size-4" />
-        Create New Resource
-      </button>
+        <Plus class="size-4" aria-hidden="true" />
+      </StudioButton>
     </div>
 
     <div
@@ -97,6 +97,7 @@ import { computed, ref } from 'vue';
 import { Plus, Search, Tag, X } from '@lucide/vue';
 import ResourceThumbnail from './resource-thumbnail.vue';
 import ResourceTypeBadge from './resource-type-badge.vue';
+import StudioButton from '../../shared/studio-button.vue';
 import { compareResourcesByRecentlyEdited } from './resource-utils';
 import type { ResourceItem } from '../../../types';
 
