@@ -61,7 +61,7 @@ export const formatDate = (value: string): string => {
   )}, ${padZero(d.getHours())}:${padZero(d.getMinutes())}`;
 };
 
-export const toRelativeTime = (value: string, now?: DateTime): string => {
+const relativeBucket = (value: string, now?: DateTime): string | null => {
   const saved = DateTime.fromISO(value);
   const currentTime = now ?? DateTime.now();
 
@@ -79,13 +79,29 @@ export const toRelativeTime = (value: string, now?: DateTime): string => {
   const elapsedDays = Math.floor(elapsedHours / 24);
   if (elapsedDays < 7) return pluralize(elapsedDays, 'day');
 
-  const display = saved.toUTC();
+  return null;
+};
+
+export const toRelativeTime = (value: string, now?: DateTime): string => {
+  const bucket = relativeBucket(value, now);
+  if (bucket) return bucket;
+
+  const display = DateTime.fromISO(value).toUTC();
   const hour12 = display.hour % 12 === 0 ? 12 : display.hour % 12;
   const meridiem = display.hour < 12 ? 'am' : 'pm';
 
   return `on ${padZero(display.day)}/${padZero(display.month)}/${display.year} at ${hour12}:${padZero(
     display.minute,
   )}${meridiem}`;
+};
+
+export const toRelativeDate = (value: string, now?: DateTime): string => {
+  const bucket = relativeBucket(value, now);
+  if (bucket) return bucket;
+
+  const display = DateTime.fromISO(value).toUTC();
+
+  return `on ${padZero(display.day)}/${padZero(display.month)}/${display.year}`;
 };
 
 export const indexCardTags = (scope: string, itemTags: string[]): string[] => {

@@ -30,15 +30,11 @@
         hasCompleteRings ? 'mt-3' : 'mt-10',
       ]"
     >
-      <p
-        class="text-base font-bold leading-6 text-gray-800"
-        v-text="hasNativeName ? nativeName : englishName"
-      ></p>
-      <p>
-        <span v-if="hasNativeName">{{ englishName }} </span>
+      <h3>
+        <span>{{ englishName }} </span>
         <span class="uppercase"> ({{ progress.locale }}) </span>
-      </p>
-      <p class="text-xs">
+      </h3>
+      <p class="text-xs font-normal leading-4 text-gray-500">
         Last update: <span>{{ lastUpdate }}</span>
       </p>
     </div>
@@ -51,6 +47,7 @@ import Ring from './ring.vue';
 import Icon from '../shared/icon.vue';
 import { Progress, TranslationProgress } from '../../types';
 import { router } from '@inertiajs/vue3';
+import { toRelativeDate } from '../shared/helpers';
 
 const props = defineProps<{ progress: TranslationProgress }>();
 
@@ -63,11 +60,7 @@ const nameParts = computed(() => {
   return props.progress.language.split(new RegExp(separators.join('|')));
 });
 
-const hasNativeName = computed(() => nameParts.value.length > 1);
-
 const englishName = computed(() => nameParts.value[0]?.trim() || '');
-
-const nativeName = computed(() => nameParts.value[1]?.trim() || '');
 
 const goTo = (item: Progress) => {
   if (props.progress.isReadOnly) return;
@@ -89,7 +82,6 @@ const lastUpdate = computed(() => {
 
   if (!timestamp) return '';
 
-  const date = new Date(timestamp);
-  return date.toISOString().split('T')[0];
+  return toRelativeDate(timestamp);
 });
 </script>

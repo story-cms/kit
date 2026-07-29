@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { DateTime } from 'luxon';
 
-import { toRelativeTime } from '../../src/frontend/shared/helpers';
+import { toRelativeTime, toRelativeDate } from '../../src/frontend/shared/helpers';
 
 const now = DateTime.fromISO('2026-07-13T12:00:00.000Z');
 
@@ -81,5 +81,23 @@ test.describe('toRelativeTime', () => {
     const laterNow = DateTime.fromISO('2026-01-09T12:00:00.000Z');
     const value = '2026-01-01T12:00:00.000Z';
     expect(toRelativeTime(value, laterNow)).toBe('on 01/01/2026 at 12:00pm');
+  });
+});
+
+test.describe('toRelativeDate', () => {
+  test('returns the same relative buckets as toRelativeTime under a week', () => {
+    expect(toRelativeDate(secondsAgo(3600), now)).toBe('1 hour ago');
+    expect(toRelativeDate(secondsAgo(6 * 86400), now)).toBe('6 days ago');
+  });
+
+  test('switches to an absolute date, without a time, at 7 days elapsed', () => {
+    const value = '2026-07-02T17:11:00.000Z';
+    expect(toRelativeDate(value, now)).toBe('on 02/07/2026');
+  });
+
+  test('formats the absolute date across a month/year rollover', () => {
+    const laterNow = DateTime.fromISO('2026-01-10T09:05:00.000Z');
+    const value = '2025-12-31T09:05:00.000Z';
+    expect(toRelativeDate(value, laterNow)).toBe('on 31/12/2025');
   });
 });

@@ -21,6 +21,11 @@
   h2 {
     @apply font-dmsans font-semibold text-xl leading-7;
   }
+
+  h3 {
+    @apply font-dmsans font-bold text-base leading-5 text-gray-800;
+  }
+
   p {
     @apply font-dmsans font-normal text-sm leading-5 text-gray-500;
   }
