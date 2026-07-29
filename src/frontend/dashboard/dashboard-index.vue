@@ -30,12 +30,12 @@
 
           <div class="flex gap-x-6">
             <div class="flex items-center justify-center gap-x-2">
-              <Icon name="pie-chart" class="size-5 text-green-500" />
-              <span class="text-sm font-medium leading-4">Done</span>
+              <Icon name="pie-chart" class="size-5 text-gray-800" />
+              <span class="text-sm font-medium leading-4 text-black">Done</span>
             </div>
             <div class="flex items-center justify-center gap-x-2">
-              <Icon name="pie-chart" class="size-5 text-blue-500" />
-              <span class="text-sm font-medium leading-4">Pending</span>
+              <Icon name="pie-chart" class="size-5 text-gray-400" />
+              <span class="text-sm font-medium leading-4 text-black">Pending</span>
             </div>
           </div>
         </div>
