@@ -18,7 +18,7 @@
           class="mb-7 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
         >
           <div class="flex gap-x-4">
-            <IndexFilter
+            <IndexTabs
               :tabs="[
                 { label: 'To do', count: todoCount },
                 { label: 'All', count: allCount },
@@ -62,7 +62,7 @@
 <script setup lang="ts">
 import AppLayout from '../shared/app-layout.vue';
 import StatTiles from './stat-tiles.vue';
-import IndexFilter from '../shared/index-filter.vue';
+import IndexTabs from '../shared/index-tabs.vue';
 import LanguageBlock from './language-block.vue';
 import ActionGrid, { ActionGridItem } from './action-grid.vue';
 import Icon from '../shared/icon.vue';

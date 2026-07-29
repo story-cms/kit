@@ -46,8 +46,7 @@ export const colorUsage: Record<string, ColorUsage> = {
       'shared/language-selector.vue',
       'ui/components/ui-string-item.vue',
     ] },
-  'blue-100': { count: 13, files: [
-      'dashboard/dashboard-index.vue',
+  'blue-100': { count: 10, files: [
       'invitation/invitation-index-item.vue',
       'settings/languages/components/language-list-controls.vue',
       'shared/icon-button.story.vue',
@@ -71,7 +70,7 @@ export const colorUsage: Record<string, ColorUsage> = {
       'index.css',
       'shared/pill-button.vue',
     ] },
-  'blue-50': { count: 72, files: [
+  'blue-50': { count: 69, files: [
       'audience/audience-index.vue',
       'dashboard/dashboard-index.vue',
       'dashboard/ring-block.vue',
@@ -147,8 +146,7 @@ export const colorUsage: Record<string, ColorUsage> = {
       'team/components/user-row.vue',
       'ui/components/ui-card.vue',
     ] },
-  'blue-700': { count: 12, files: [
-      'dashboard/dashboard-index.vue',
+  'blue-700': { count: 9, files: [
       'invitation/invitation-index-item.vue',
       'resources/resource-index-item.vue',
       'settings/languages/components/request-app-update-modal.vue',
@@ -168,9 +166,10 @@ export const colorUsage: Record<string, ColorUsage> = {
   'blue-900': { count: 2, files: [
       'settings/languages/components/request-app-update-modal.vue',
     ] },
-  'current': { count: 5, files: [
+  'current': { count: 6, files: [
       'shared/bookmark-action.vue',
       'shared/index-filter.vue',
+      'shared/index-tabs.vue',
       'shared/navigation-pane.vue',
       'shared/tab-navigation.vue',
     ] },
@@ -179,11 +178,12 @@ export const colorUsage: Record<string, ColorUsage> = {
       'test/language-control.vue',
       'test/model-control.vue',
     ] },
-  'error': { count: 43, files: [
+  'error': { count: 45, files: [
       'auth/create-account.vue',
       'auth/forgot-password.vue',
       'auth/login-index.vue',
       'auth/reset-password.vue',
+      'dashboard/stat-tile.vue',
       'fields/attachments/attachment-field.vue',
       'fields/attachments/file-upload.vue',
       'fields/boolean-field.vue',
@@ -201,10 +201,11 @@ export const colorUsage: Record<string, ColorUsage> = {
       'stories/components/panel-list.vue',
       'team/components/user-form-modal.vue',
     ] },
-  'error-light': { count: 1, files: [
+  'error-light': { count: 2, files: [
+      'dashboard/stat-tile.vue',
       'fields/list/foldable-list.vue',
     ] },
-  'gray-100': { count: 70, files: [
+  'gray-100': { count: 71, files: [
       'fields/list/flat-list.vue',
       'fields/region-field.vue',
       'fields/scripture-field.vue',
@@ -225,6 +226,7 @@ export const colorUsage: Record<string, ColorUsage> = {
       'shared/drop-down.vue',
       'shared/drop-up.vue',
       'shared/gallery-grid.story.vue',
+      'shared/index-tab-button.vue',
       'shared/label-hint-popup.vue',
       'shared/language-selector.vue',
       'shared/list-switcher.vue',
@@ -291,7 +293,7 @@ export const colorUsage: Record<string, ColorUsage> = {
       'ui/components/ui-card.vue',
       'ui/components/ui-string-item.vue',
     ] },
-  'gray-300': { count: 59, files: [
+  'gray-300': { count: 61, files: [
       'audience/audience-index.vue',
       'auth/create-account.vue',
       'auth/login-index.vue',
@@ -314,6 +316,7 @@ export const colorUsage: Record<string, ColorUsage> = {
       'shared/drop-down.vue',
       'shared/expandable-search.story.vue',
       'shared/expandable-search.vue',
+      'shared/index-tabs.vue',
       'shared/list-switcher.vue',
       'shared/navigation-pane.vue',
       'shared/pagination.vue',
@@ -325,10 +328,8 @@ export const colorUsage: Record<string, ColorUsage> = {
       'ui/components/ui-card.vue',
       'ui/ui-page.vue',
     ] },
-  'gray-400': { count: 78, files: [
+  'gray-400': { count: 76, files: [
       'audience/audience-index.vue',
-      'dashboard/dashboard-index.vue',
-      'dashboard/stat-tiles.vue',
       'fields/attachments/attachment-field.vue',
       'fields/section-panel-field.vue',
       'index.css',
@@ -361,7 +362,7 @@ export const colorUsage: Record<string, ColorUsage> = {
       'team/components/user-row.vue',
       'ui/components/ui-card.vue',
     ] },
-  'gray-50': { count: 224, files: [
+  'gray-50': { count: 226, files: [
       'audience/audience-index.vue',
       'audience/components/audience-row.vue',
       'dashboard/language-block.vue',
@@ -408,6 +409,7 @@ export const colorUsage: Record<string, ColorUsage> = {
       'shared/gallery-grid.story.vue',
       'shared/gallery-item.vue',
       'shared/glass-button.story.vue',
+      'shared/index-tab-button.vue',
       'shared/list-switcher.vue',
       'shared/meta-box.vue',
       'shared/nav-rail-panel.story.vue',
@@ -429,7 +431,7 @@ export const colorUsage: Record<string, ColorUsage> = {
       'team/users-index.vue',
       'ui/ui-page.vue',
     ] },
-  'gray-500': { count: 156, files: [
+  'gray-500': { count: 157, files: [
       'audience/audience-index.vue',
       'audience/components/audience-row.vue',
       'dashboard/language-block.vue',
@@ -471,6 +473,7 @@ export const colorUsage: Record<string, ColorUsage> = {
       'shared/expandable-search.vue',
       'shared/gallery-grid.story.vue',
       'shared/gallery-item.vue',
+      'shared/index-tab-button.vue',
       'shared/list-switcher.vue',
       'shared/meta-box.vue',
       'shared/rich-listbox.vue',
@@ -489,7 +492,7 @@ export const colorUsage: Record<string, ColorUsage> = {
       'team/users-index.vue',
       'ui/ui-page.vue',
     ] },
-  'gray-600': { count: 56, files: [
+  'gray-600': { count: 57, files: [
       'auth/login-index.vue',
       'fields/attachments/attachment-field.vue',
       'fields/attachments/file-upload.vue',
@@ -512,6 +515,7 @@ export const colorUsage: Record<string, ColorUsage> = {
       'shared/expandable-search.story.vue',
       'shared/expandable-search.vue',
       'shared/glass-button.story.vue',
+      'shared/index-tabs.story.vue',
       'shared/label-hint-popup.vue',
       'shared/label-hint.vue',
       'shared/list-switcher.story.vue',
@@ -557,12 +561,13 @@ export const colorUsage: Record<string, ColorUsage> = {
       'team/components/user-row.vue',
       'ui/components/ui-card.vue',
     ] },
-  'gray-800': { count: 23, files: [
+  'gray-800': { count: 24, files: [
       'dashboard/action-card.vue',
       'dashboard/language-block.vue',
       'dashboard/ring-block.vue',
       'dashboard/ring.vue',
       'fields/section-panel-field.vue',
+      'index.css',
       'settings/languages/components/language-list-controls.vue',
       'settings/languages/components/language-table-row.vue',
       'settings/languages/components/language-table.story.vue',
@@ -616,8 +621,7 @@ export const colorUsage: Record<string, ColorUsage> = {
       'team/components/user-row.vue',
       'ui/components/ui-card.vue',
     ] },
-  'green-100': { count: 7, files: [
-      'dashboard/stat-tile.vue',
+  'green-100': { count: 6, files: [
       'invitation/invitation-index-item.vue',
       'pages/page-index-item.vue',
       'resources/resource-index-item.vue',
@@ -707,8 +711,7 @@ export const colorUsage: Record<string, ColorUsage> = {
   'orange-700': { count: 1, files: [
       'stories/components/resource-utils.ts',
     ] },
-  'red-100': { count: 3, files: [
-      'dashboard/stat-tile.vue',
+  'red-100': { count: 2, files: [
       'settings/languages/components/language-modal.vue',
       'streams/components/stream-item.vue',
     ] },
@@ -720,9 +723,8 @@ export const colorUsage: Record<string, ColorUsage> = {
       'shared/pill-button.vue',
       'shared/studio-button.vue',
     ] },
-  'red-50': { count: 26, files: [
+  'red-50': { count: 25, files: [
       'auth/create-account.vue',
-      'dashboard/stat-tile.vue',
       'dashboard/stat-tiles.vue',
       'fields/date-field.vue',
       'fields/date-range-field.vue',
@@ -743,9 +745,8 @@ export const colorUsage: Record<string, ColorUsage> = {
       'stories/components/resource-attached-item.vue',
       'team/components/user-row.vue',
     ] },
-  'red-500': { count: 18, files: [
+  'red-500': { count: 17, files: [
       'auth/create-account.vue',
-      'dashboard/stat-tile.vue',
       'dashboard/stat-tiles.vue',
       'fields/date-field.vue',
       'fields/date-range-field.vue',
@@ -769,13 +770,13 @@ export const colorUsage: Record<string, ColorUsage> = {
       'stories/components/resource-attached-item.vue',
       'team/components/user-row.vue',
     ] },
-  'red-800': { count: 3, files: [
-      'dashboard/stat-tile.vue',
+  'red-800': { count: 2, files: [
       'settings/languages/components/language-modal.vue',
       'streams/components/stream-item.vue',
     ] },
   'studio-dark': { count: 0, files: [] },
-  'studio-forest': { count: 1, files: [
+  'studio-forest': { count: 4, files: [
+      'shared/index-tab-button.vue',
       'shared/studio-button.vue',
     ] },
   'studio-green': { count: 12, files: [
@@ -784,7 +785,9 @@ export const colorUsage: Record<string, ColorUsage> = {
       'stories/components/resource-empty-state.vue',
       'stories/components/resource-picker.vue',
     ] },
-  'studio-lime': { count: 1, files: [
+  'studio-lime': { count: 3, files: [
+      'dashboard/stat-tile.vue',
+      'shared/index-tab-button.vue',
       'shared/studio-button.vue',
     ] },
   'studio-yellow': { count: 1, files: [
@@ -822,7 +825,7 @@ export const colorUsage: Record<string, ColorUsage> = {
   'violet-700': { count: 1, files: [
       'stories/components/resource-utils.ts',
     ] },
-  'white': { count: 158, files: [
+  'white': { count: 161, files: [
       'audience/audience-index.vue',
       'dashboard/action-card.vue',
       'dashboard/language-block.vue',
@@ -872,6 +875,8 @@ export const colorUsage: Record<string, ColorUsage> = {
       'shared/gallery-item.vue',
       'shared/glass-button.vue',
       'shared/index-filter.story.vue',
+      'shared/index-tab-button.vue',
+      'shared/index-tabs.story.vue',
       'shared/label-hint-popup.vue',
       'shared/language-selector.vue',
       'shared/list-switcher.vue',
