@@ -1,7 +1,7 @@
 <template>
   <AppLayout title="Invitations" subtitle="Manage Invitations">
     <template #actions>
-      <StudioButton label="Create Invitation" variant="secondary" @click="addInvitation">
+      <StudioButton label="Create Invitation" variant="primary" @click="addInvitation">
         <Plus class="size-4" aria-hidden="true" />
       </StudioButton>
     </template>

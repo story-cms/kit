@@ -87,7 +87,8 @@ const shapeClasses = computed(() =>
 );
 
 const variantClassMap: Record<StudioButtonVariant, string> = {
-  primary: 'bg-studio-forest text-studio-lime enabled:hover:bg-studio-green/90',
+  primary:
+    'bg-studio-forest text-studio-lime enabled:hover:bg-studio-green enabled:hover:text-studio-forest',
   outline:
     'border border-studio-green bg-transparent text-studio-green enabled:hover:bg-studio-green/5',
   secondary:
