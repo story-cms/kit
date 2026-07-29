@@ -1,5 +1,5 @@
 <template>
-  <AppLayout title="Dashboard" :subtitle="greeting">
+  <AppLayout title="Dashboard" :subtitle="greeting" show-brand>
     <template #main>
       <StatTiles :stats="stats" :is-loading="isLoading" :error="error" />
 

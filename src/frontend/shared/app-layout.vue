@@ -35,7 +35,7 @@
             <slot name="main" />
           </main>
           <footer>
-            <AppFooter />
+            <AppFooter :show-brand="showBrand" />
           </footer>
         </div>
       </div>
@@ -62,6 +62,7 @@ import AppFooter from './app-footer.vue';
 defineProps<{
   title?: string;
   subtitle?: string;
+  showBrand?: boolean;
 }>();
 
 const shared = useSharedStore();
