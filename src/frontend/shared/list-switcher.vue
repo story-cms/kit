@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex items-center rounded-xl border border-gray-300 bg-white p-1"
+    class="flex items-center rounded-xl border border-gray-300 bg-gray-100 p-1"
     role="group"
     aria-label="View mode"
   >
