@@ -91,28 +91,29 @@ const actionItems = computed<ActionGridItem[]>(() => {
 
   return [
     {
-      url: `/${shared.locale}/settings/languages/edit`,
-      icon: Languages,
-      title: 'New Language',
-      description:
-        'Engage your audience morning, noon, and night. Create healthy daily rhythms with content that reaches them throughout the day. ',
-      disabled,
-    },
-    {
       url: `/${shared.locale}/story/create`,
       icon: BookOpen,
-      title: 'New Story',
-      description:
-        'Engage your audience morning, noon, and night. Create healthy daily rhythms with content that reaches them throughout the day. ',
+      title: 'Create a story',
+      description: 'Build a devotional, course, or other structured content series.',
       disabled,
+      label: 'Create story',
     },
     {
       url: `/${shared.locale}/page/create`,
       icon: FileText,
-      title: 'New Page',
+      title: 'Create a page',
       description:
-        'Engage your audience morning, noon, and night. Create healthy daily rhythms with content that reaches them throughout the day. ',
+        'Share links, acknowledgements, and information about your organisation.',
       disabled,
+      label: 'Create page',
+    },
+    {
+      url: `/${shared.locale}/settings/languages/edit`,
+      icon: Languages,
+      title: 'Add a user',
+      description: 'Invite teammates to create, edit, and manage content.',
+      disabled,
+      label: 'Add user',
     },
   ];
 });

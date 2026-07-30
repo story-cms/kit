@@ -9,11 +9,11 @@
       <h2 class="text-gray-800">{{ title }}</h2>
     </div>
 
-    <p>{{ description }}</p>
+    <p class="flex-1">{{ description }}</p>
 
     <div class="flex justify-end">
       <StudioButton
-        label="Go"
+        :label="label"
         variant="secondary"
         :disabled="disabled"
         @click="emit('action')"
@@ -23,15 +23,10 @@
 </template>
 
 <script setup lang="ts">
-import type { Component } from 'vue';
+import type { ActionGridItem } from './action-grid.vue';
 import StudioButton from '../shared/studio-button.vue';
 
-defineProps<{
-  icon: Component;
-  title: string;
-  description: string;
-  disabled?: boolean;
-}>();
+defineProps<ActionGridItem>();
 
 const emit = defineEmits<{
   (e: 'action'): void;
