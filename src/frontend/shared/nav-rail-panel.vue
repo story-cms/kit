@@ -113,10 +113,12 @@
         </div>
       </div>
       <div class="px-4 pb-4">
-        <DropUp
+        <NavRailLanguageSelector
           v-model="shared.language.language"
+          variant="panel"
+          :current-locale="locale"
+          :languages="sidebarLanguages"
           :is-read-only="!shared.user.isManager"
-          :options="languageOptions"
           @change="onLanguage"
         />
       </div>
@@ -126,7 +128,7 @@
 
 <script setup lang="ts">
 import { CircleHelp, LogOut, Settings, Star, Users } from '@lucide/vue';
-import DropUp from './drop-up.vue';
+import NavRailLanguageSelector from './nav-rail-language-selector.vue';
 import NavRailToolbar from './nav-rail-toolbar.vue';
 import { useSidebarNav } from './use-sidebar-nav';
 
@@ -134,7 +136,7 @@ const {
   shared,
   locale,
   isAdmin,
-  languageOptions,
+  sidebarLanguages,
   subscribed,
   classList,
   extractLocaleFromLink,

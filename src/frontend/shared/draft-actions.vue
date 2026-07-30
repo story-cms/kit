@@ -5,8 +5,8 @@
       :class="[
         'rounded-xl p-1.5 transition-colors',
         shared.showMetaBox
-          ? 'bg-blue-50 text-blue-600'
-          : 'text-gray-400 hover:bg-blue-50 hover:text-blue-600',
+          ? 'bg-gray-50 text-gray-600'
+          : 'text-gray-400 hover:bg-gray-50 hover:text-gray-600',
       ]"
       :aria-pressed="shared.showMetaBox"
       aria-label="Toggle meta box"
@@ -20,8 +20,8 @@
       :class="[
         'rounded-xl p-1.5 transition-colors',
         shared.showAppPreview
-          ? 'bg-blue-50 text-blue-600'
-          : 'text-gray-400 hover:bg-blue-50 hover:text-blue-600',
+          ? 'bg-gray-50 text-gray-600'
+          : 'text-gray-400 hover:bg-gray-50 hover:text-gray-600',
       ]"
       :aria-pressed="shared.showAppPreview"
       aria-label="Toggle app preview"
