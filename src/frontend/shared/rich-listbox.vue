@@ -70,7 +70,7 @@
           >
             <li
               :class="[
-                selected ? 'bg-blue-50' : active ? 'bg-gray-50' : 'bg-white',
+                selected ? 'bg-gray-200' : active ? 'bg-gray-100' : 'bg-white',
                 'relative cursor-default select-none py-3 pl-3 pr-10',
               ]"
             >
@@ -93,7 +93,7 @@
                 v-if="selected"
                 class="absolute inset-y-0 right-0 flex items-center pr-4"
               >
-                <span class="size-2 rounded-full bg-blue-500" aria-hidden="true" />
+                <span class="size-2 rounded-full bg-gray-800" aria-hidden="true" />
               </span>
             </li>
           </ListboxOption>
