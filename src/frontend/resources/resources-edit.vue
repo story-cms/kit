@@ -1,152 +1,152 @@
 <template>
   <AppLayout :title="headerTitle" :subtitle="headerSubtitle">
     <template #actions>
-          <StudioButton label="Cancel" variant="outline" @click="cancel" />
-          <StudioButton
-            v-if="!resource.id"
-            label="Create Resource"
-            :disabled="isSaving || !canCreate"
-            variant="primary"
-            @click="save"
-          />
-          <StudioButton
-            v-else
-            label="Save Changes"
-            :disabled="isSaving"
-            variant="secondary"
-            @click="save"
-          />
-        </template>
+      <StudioButton label="Cancel" variant="outline" @click="cancel" />
+      <StudioButton
+        v-if="!resource.id"
+        label="Create Resource"
+        :disabled="isSaving || !canCreate"
+        variant="primary"
+        @click="save"
+      />
+      <StudioButton
+        v-else
+        label="Save Changes"
+        :disabled="isSaving"
+        variant="primary"
+        @click="save"
+      />
+    </template>
 
     <template #main>
-    <div class="relative space-y-6">
-      <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="form-panel">
-        <StringField
-          :field="{
-            name: 'title',
-            label: 'Title',
-            widget: 'string',
-            placeholderText: 'Enter resource title',
-          }"
-          :is-nested="true"
-        />
-
-        <MarkdownField
-          :field="{
-            name: 'description',
-            label: 'Description',
-            widget: 'markdown',
-            noMarkup: true,
-            minimal: true,
-            placeholderText: 'Brief description of this resource...',
-          }"
-          :is-nested="true"
-        />
-
-        <div>
-          <RichListbox
-            v-model="selectedType"
-            label="Resource Type"
-            :options="resourceTypes"
-            @update:model-value="setType"
-          />
-        </div>
-
-        <StringField
-          v-if="selectedType === 'url'"
-          :field="{
-            name: 'url',
-            label: 'URL',
-            widget: 'string',
-            placeholderText: 'https://...',
-          }"
-          :is-nested="true"
-        />
-
-        <VideoField
-          v-if="selectedType === 'video'"
-          :field="{
-            label: 'Video',
-            name: 'video',
-            widget: 'video',
-            description: 'MP4 and MOV files up to 500MB',
-            extensions: ['.mp4', '.mov'],
-            collectionId: config.videoCollectionId,
-            maxSize: 500662310,
-          }"
-          :is-nested="true"
-        />
-
-        <MarkdownField
-          v-if="selectedType === 'text'"
-          :field="{
-            name: 'content',
-            label: 'Article Content',
-            widget: 'markdown',
-            placeholderText: 'Write your article content here...',
-            toolbar: [
-              'heading-1',
-              'heading-2',
-              'bold',
-              'italic',
-              'underline',
-              'strikethrough',
-              'unordered-list',
-              'ordered-list',
-              'quote',
-              'horizontal-rule',
-              'link',
-              '|',
-              'undo',
-              'redo',
-            ],
-          }"
-          :is-nested="true"
-        />
-
-        <ImageField
-          :field="{
-            label: 'Thumbnail Image (Optional)',
-            name: 'imageUrl',
-            widget: 'image',
-            uploadPreset: 'resources',
-            description: 'PNG, JPG, GIF up to 10MB',
-            extensions: ['.jpg', '.jpeg', '.png', '.gif', '.webp'],
-            maxSize: 10_000_000,
-          }"
-          :is-nested="true"
-        />
-
-        <div>
+      <div class="relative space-y-6">
+        <form :dir="shared.isRtl ? 'rtl' : 'ltr'" class="form-panel">
           <StringField
             :field="{
-              name: 'label',
-              label: 'Label (Optional)',
+              name: 'title',
+              label: 'Title',
               widget: 'string',
-              placeholderText: 'e.g., Supplementary Reading',
+              placeholderText: 'Enter resource title',
             }"
             :is-nested="true"
           />
-          <p class="mt-1 text-sm text-gray-500">
-            Organise resources on the Story listing. Resources without a label appear
-            together in one block.
-          </p>
-        </div>
 
-        <RichListbox
-          v-model="visibility"
-          label="Visibility"
-          :options="visibilityOptions"
-          @update:model-value="setVisibility"
+          <MarkdownField
+            :field="{
+              name: 'description',
+              label: 'Description',
+              widget: 'markdown',
+              noMarkup: true,
+              minimal: true,
+              placeholderText: 'Brief description of this resource...',
+            }"
+            :is-nested="true"
+          />
+
+          <div>
+            <RichListbox
+              v-model="selectedType"
+              label="Resource Type"
+              :options="resourceTypes"
+              @update:model-value="setType"
+            />
+          </div>
+
+          <StringField
+            v-if="selectedType === 'url'"
+            :field="{
+              name: 'url',
+              label: 'URL',
+              widget: 'string',
+              placeholderText: 'https://...',
+            }"
+            :is-nested="true"
+          />
+
+          <VideoField
+            v-if="selectedType === 'video'"
+            :field="{
+              label: 'Video',
+              name: 'video',
+              widget: 'video',
+              description: 'MP4 and MOV files up to 500MB',
+              extensions: ['.mp4', '.mov'],
+              collectionId: config.videoCollectionId,
+              maxSize: 500662310,
+            }"
+            :is-nested="true"
+          />
+
+          <MarkdownField
+            v-if="selectedType === 'text'"
+            :field="{
+              name: 'content',
+              label: 'Article Content',
+              widget: 'markdown',
+              placeholderText: 'Write your article content here...',
+              toolbar: [
+                'heading-1',
+                'heading-2',
+                'bold',
+                'italic',
+                'underline',
+                'strikethrough',
+                'unordered-list',
+                'ordered-list',
+                'quote',
+                'horizontal-rule',
+                'link',
+                '|',
+                'undo',
+                'redo',
+              ],
+            }"
+            :is-nested="true"
+          />
+
+          <ImageField
+            :field="{
+              label: 'Thumbnail Image (Optional)',
+              name: 'imageUrl',
+              widget: 'image',
+              uploadPreset: 'resources',
+              description: 'PNG, JPG, GIF up to 10MB',
+              extensions: ['.jpg', '.jpeg', '.png', '.gif', '.webp'],
+              maxSize: 10_000_000,
+            }"
+            :is-nested="true"
+          />
+
+          <div>
+            <StringField
+              :field="{
+                name: 'label',
+                label: 'Label (Optional)',
+                widget: 'string',
+                placeholderText: 'e.g., Supplementary Reading',
+              }"
+              :is-nested="true"
+            />
+            <p class="mt-1 text-sm text-gray-500">
+              Organise resources on the Story listing. Resources without a label appear
+              together in one block.
+            </p>
+          </div>
+
+          <RichListbox
+            v-model="visibility"
+            label="Visibility"
+            :options="visibilityOptions"
+            @update:model-value="setVisibility"
+          />
+        </form>
+
+        <ResourceUsedIn
+          v-if="resource.id"
+          :stories="usedInStories"
+          :locale="shared.locale"
         />
-      </form>
-
-      <ResourceUsedIn
-        v-if="resource.id"
-        :stories="usedInStories"
-        :locale="shared.locale"
-      />
-    </div>
+      </div>
     </template>
   </AppLayout>
 </template>

@@ -1,13 +1,13 @@
-import type { ResourceItem, ResourceType } from '../../../types';
+import type { ResourceItem, ResourceType, VisibilityType } from '../../../types';
 
-export const resourceTypeColor = (type: ResourceType): string => {
-  switch (type) {
-    case 'video':
-      return 'bg-violet-100 text-violet-700';
-    case 'text':
-      return 'bg-blue-100 text-blue-700';
-    case 'url':
-      return 'bg-orange-100 text-orange-700';
+export const visibilityBadgeClasses = (visibility: VisibilityType): string => {
+  switch (visibility) {
+    case 'public':
+      return 'bg-studio-yellow text-studio-forest';
+    case 'leaders':
+      return 'bg-studio-lime text-studio-forest';
+    case 'guests':
+      return 'bg-studio-green text-studio-forest';
     default:
       return 'bg-gray-100 text-gray-700';
   }

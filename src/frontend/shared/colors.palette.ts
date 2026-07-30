@@ -139,19 +139,11 @@ export const colorSections: ColorSection[] = [
     ],
   },
   {
-    title: 'Orange',
-    colors: [
-      { name: 'orange-100', class: 'bg-orange-100' },
-      { name: 'orange-700', class: 'bg-orange-700' },
-    ],
-  },
-  {
     title: 'Violet',
     colors: [
       { name: 'violet-100', class: 'bg-violet-100' },
       { name: 'violet-50', class: 'bg-violet-50' },
       { name: 'violet-600', class: 'bg-violet-600' },
-      { name: 'violet-700', class: 'bg-violet-700' },
     ],
   },
 ];

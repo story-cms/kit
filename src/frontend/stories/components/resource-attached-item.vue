@@ -20,12 +20,7 @@
           {{ item.title }}
         </h4>
         <ResourceTypeBadge :type="item.type" />
-        <span
-          v-if="item.visibility !== 'public'"
-          class="shrink-0 rounded-xl bg-gray-100 px-2 py-0.5 text-xs font-medium capitalize text-gray-700"
-        >
-          {{ item.visibility }}
-        </span>
+        <ResourceVisibilityBadge :visibility="item.visibility" />
       </div>
       <p
         v-if="item.description"
@@ -61,6 +56,7 @@ import { router } from '@inertiajs/vue3';
 import { GripVertical, SquarePen, X } from '@lucide/vue';
 import ResourceThumbnail from './resource-thumbnail.vue';
 import ResourceTypeBadge from './resource-type-badge.vue';
+import ResourceVisibilityBadge from './resource-visibility-badge.vue';
 import type { ResourceItem } from '../../../types';
 import { useSharedStore } from '../../store';
 

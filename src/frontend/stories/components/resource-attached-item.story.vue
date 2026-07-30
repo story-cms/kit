@@ -1,8 +1,15 @@
 <template>
   <Story title="Resource Attached Item" group="resources" :layout="{ type: 'grid', width: 800 }">
-    <Variant title="Default">
+    <Variant title="Public visibility">
       <ResourceAttachedItem
         :item="availableResources[0]"
+        @remove="onRemove"
+      />
+    </Variant>
+
+    <Variant title="Guest visibility">
+      <ResourceAttachedItem
+        :item="availableResources[13]"
         @remove="onRemove"
       />
     </Variant>

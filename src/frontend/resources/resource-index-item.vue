@@ -68,12 +68,7 @@
             {{ resource.usedInCount }}
           </span>
           <ResourceTypeBadge :type="resource.type" />
-          <span
-            class="rounded-xl px-2 py-0.5 text-xs font-medium capitalize"
-            :class="visibilityBadgeClasses(resource.visibility)"
-          >
-            {{ resource.visibility }}
-          </span>
+          <ResourceVisibilityBadge :visibility="resource.visibility" />
           <Menu as="div" class="relative">
             <MenuButton
               class="rounded-xl p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
@@ -161,12 +156,7 @@
       <ResourceTypeBadge :type="resource.type" />
     </td>
     <td class="whitespace-nowrap px-6 py-4">
-      <span
-        class="rounded-xl px-2 py-1 text-xs font-medium capitalize"
-        :class="visibilityBadgeClasses(resource.visibility)"
-      >
-        {{ resource.visibility }}
-      </span>
+      <ResourceVisibilityBadge :visibility="resource.visibility" />
     </td>
     <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
       {{ formatListDate(resource.updatedAt) }}
@@ -206,9 +196,10 @@ import {
 } from '@lucide/vue';
 import { DateTime } from 'luxon';
 import type { Component } from 'vue';
-import type { ResourceIndexItem, ResourceType, VisibilityType } from '../../types';
+import type { ResourceIndexItem, ResourceType } from '../../types';
 import ResourceThumbnail from '../stories/components/resource-thumbnail.vue';
 import ResourceTypeBadge from '../stories/components/resource-type-badge.vue';
+import ResourceVisibilityBadge from '../stories/components/resource-visibility-badge.vue';
 
 defineProps<{
   resource: ResourceIndexItem;
@@ -227,9 +218,6 @@ const formatListDate = (value: string): string => {
   const parsed = DateTime.fromISO(value);
   return parsed.isValid ? parsed.toFormat('dd/MM/yyyy') : value;
 };
-
-const visibilityBadgeClasses = (visibility: VisibilityType): string =>
-  visibility === 'public' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700';
 
 const iconFor = (type: ResourceType): Component => {
   switch (type) {

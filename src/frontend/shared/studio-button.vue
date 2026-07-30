@@ -90,7 +90,7 @@ const variantClassMap: Record<StudioButtonVariant, string> = {
   primary:
     'bg-studio-forest text-studio-lime enabled:hover:bg-studio-green enabled:hover:text-studio-forest',
   outline:
-    'border border-studio-green bg-transparent text-studio-green enabled:hover:bg-studio-green/5',
+    'border border-studio-forest bg-transparent text-studio-forest enabled:hover:bg-gray-300',
   secondary:
     'min-w-32 bg-gray-200 text-gray-700 enabled:hover:bg-gray-800 enabled:hover:text-white',
   green: 'bg-green-500 text-white enabled:hover:bg-green-400',
