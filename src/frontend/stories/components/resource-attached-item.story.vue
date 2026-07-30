@@ -1,6 +1,6 @@
 <template>
   <Story title="Resource Attached Item" group="resources" :layout="{ type: 'grid', width: 800 }">
-    <Variant title="Public visibility">
+    <Variant title="Public visibility (no badge)">
       <ResourceAttachedItem
         :item="availableResources[0]"
         @remove="onRemove"

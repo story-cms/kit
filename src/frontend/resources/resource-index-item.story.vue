@@ -58,7 +58,7 @@
       />
     </Variant>
 
-    <Variant title="Grid / Public visibility">
+    <Variant title="Grid / Public visibility (no badge)">
       <ResourceIndexItem
         :resource="resource('r1')"
         view-mode="grid"
@@ -192,7 +192,7 @@
       </div>
     </Variant>
 
-    <Variant title="List / Public visibility">
+    <Variant title="List / Public visibility (no badge)">
       <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white">
         <table class="w-full min-w-[720px] table-auto">
           <thead class="border-b border-gray-200 bg-gray-50">

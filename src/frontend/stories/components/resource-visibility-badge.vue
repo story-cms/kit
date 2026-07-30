@@ -1,5 +1,6 @@
 <template>
   <span
+    v-if="visibility !== 'public'"
     class="shrink-0 rounded-xl px-2 py-0.5 text-xs font-medium capitalize"
     :class="visibilityBadgeClasses(visibility)"
   >
