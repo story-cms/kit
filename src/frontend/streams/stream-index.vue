@@ -13,14 +13,18 @@
       >
         <div class="flex gap-x-4">
           <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
-          <ToggleButton
-            icon-on="sort"
-            icon-off="sort-asc"
+          <TabButton
             label="Release Date"
-            :is-on="sortDescending"
             :is-active="true"
-            @toggle="sortDescending = !sortDescending"
-          />
+            @click="sortDescending = !sortDescending"
+          >
+            <ArrowDownWideNarrow
+              v-if="sortDescending"
+              class="size-4"
+              aria-hidden="true"
+            />
+            <ArrowUpWideNarrow v-else class="size-4" aria-hidden="true" />
+          </TabButton>
         </div>
 
         <div class="grid grid-cols-1">
@@ -67,7 +71,8 @@
 import { SharedPageProps } from '../../types';
 
 import IndexFilter from '../shared/index-filter.vue';
-import ToggleButton from '../shared/toggle-button.vue';
+import TabButton from '../shared/tab-button.vue';
+import { ArrowDownWideNarrow, ArrowUpWideNarrow } from '@lucide/vue';
 
 import AppLayout from '../shared/app-layout.vue';
 import Icon from '../shared/icon.vue';
