@@ -116,5 +116,6 @@ _Unchanged `.vue` files with co-located stories in folders where something chang
 | `src/frontend/shared/app-layout.vue` | Find a parent page story or add a co-located `.story.vue` |
 | `src/frontend/shared/icon.vue` | Find a parent page story or add a co-located `.story.vue` |
 | `src/frontend/shared/index-tab-button.vue` | Find a parent page story or add a co-located `.story.vue` |
+| `src/frontend/shared/toggle-button.vue` | Find a parent page story or add a co-located `.story.vue` |
 | `src/frontend/team/components/user-form-modal.vue` | Find a parent page story or add a co-located `.story.vue` |
 | `src/frontend/team/components/user-row.vue` | Find a parent page story or add a co-located `.story.vue` |
