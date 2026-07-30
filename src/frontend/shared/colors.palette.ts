@@ -118,7 +118,6 @@ export const colorSections: ColorSection[] = [
   {
     title: 'Indigo',
     colors: [
-      { name: 'indigo-100', class: 'bg-indigo-100' },
       { name: 'indigo-200', class: 'bg-indigo-200' },
       { name: 'indigo-50', class: 'bg-indigo-50' },
       { name: 'indigo-500', class: 'bg-indigo-500' },
