@@ -9,6 +9,7 @@ import {
   StoryLocalisation,
   StoryLocalisationFactory,
   Ui,
+  User,
 } from '@story-cms/kit';
 import { testCmsConfig, createCustomCmsConfig } from '#tests/helpers/cms_mock';
 
@@ -40,6 +41,14 @@ async function seedUiStrings(
   sourceKeys: string[],
   translations: Record<string, Record<string, string | { text: string; flag?: string | null }>>,
 ) {
+  await User.create({
+    id: 1,
+    name: 'Test User',
+    email: 'test@test.com',
+    password: 'password',
+    language: '*',
+  });
+
   const rows = sourceKeys.flatMap((key) => {
     const sourceRows = [
       {
@@ -87,7 +96,7 @@ async function seedUiStrings(
 }
 
 test.group('LocaleService', (group) => {
-  group.each.setup(() => testUtils.db().withGlobalTransaction());
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
 
   test('returns slugs grouped by locale', async ({ assert }) => {
     const classic = await StoryFactory.with('localisations')
