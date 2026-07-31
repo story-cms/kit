@@ -3,6 +3,10 @@ import vine from '@vinejs/vine';
 import dateRangeRule from '../../src/backend/validators/date_range_rule.js';
 
 test.describe('Date Range Rule Validator', () => {
+  test.beforeEach(() => {
+    vine.convertEmptyStringsToNull = false;
+  });
+
   test('should validate valid date ranges', async () => {
     const validDateRanges = [
       '2027-01-08T07:30:00.000Z|2027-01-15T07:30:00.000Z',

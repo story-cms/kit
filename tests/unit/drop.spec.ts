@@ -1,8 +1,13 @@
 import { test, expect } from '@playwright/test';
+import vine from '@vinejs/vine';
 import DropValidator from '../../src/backend/validators/drop.js';
 import { dropBundleFields } from '../mocks.js';
 
 test.describe('Drop Validator', () => {
+  test.beforeEach(() => {
+    vine.convertEmptyStringsToNull = false;
+  });
+
   test.describe('Draft mode (isPublished = false)', () => {
     test('should validate valid draft data with all fields', async () => {
       const validator = new DropValidator(false, dropBundleFields);

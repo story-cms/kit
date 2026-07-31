@@ -4,6 +4,10 @@ import videoRule from '../../src/backend/validators/video_rule.js';
 import { Video } from '../../src/types';
 
 test.describe('Video Rule Validator', () => {
+  test.beforeEach(() => {
+    vine.convertEmptyStringsToNull = false;
+  });
+
   test('should validate valid video objects with .mp4 extension', async () => {
     const validVideos: Video[] = [
       { url: 'https://example.com/video.mp4' },

@@ -1,5 +1,4 @@
 import { errors, HttpContext } from '@adonisjs/core/http';
-import config from '@adonisjs/core/services/config';
 import type {
   CmsConfig,
   Version,
@@ -9,6 +8,7 @@ import type {
   AppUserInterface,
   UiConfig,
 } from '../../types';
+import { isValidLanguageTag } from '../../shared/language_helpers.js';
 import { defineConfig } from '../define_config.js';
 import { PreferenceService } from './preference_service.js';
 import Config from '../models/config.js';
@@ -49,7 +49,8 @@ export class CmsService {
     active.data = newConfig;
     await active.save();
 
-    const trackedConfig = config.get<CmsConfig>('cms') || {};
+    const { default: adonisConfig } = await import('@adonisjs/core/services/config');
+    const trackedConfig = adonisConfig.get<CmsConfig>('cms') || {};
 
     // make sure we do not clobber the tracked config
     this.#config = { ...newConfig, ...trackedConfig };
@@ -76,7 +77,7 @@ export class CmsService {
   }
 
   public localeFromQuery(ctx: HttpContext): string {
-    return ctx.request.qs()['locale'] || this.sourceLocale;
+    return this.localeFromQueryParam(ctx.request.qs()['locale']);
   }
 
   public versionFromPath(ctx: HttpContext): Version {
@@ -93,8 +94,20 @@ export class CmsService {
   public versionFromQuery(ctx: HttpContext): Version {
     return {
       apiVersion: 1,
-      locale: ctx.request.qs()['locale'] || this.sourceLocale,
+      locale: this.localeFromQueryParam(ctx.request.qs()['locale']),
     };
+  }
+
+  private localeFromQueryParam(queryLocale: string | undefined): string {
+    if (!queryLocale) return this.sourceLocale;
+
+    // Query-param locales are not auth-gated like path locales (localeFromPath), but
+    // must still be valid BCP 47 tags. Underscore variants (e.g. zh_Hans) pass i18n
+    // string lookup yet crash IntlMessageFormat during formatting → 500 on RSS/API.
+    // Reject malformed tags here so downstream i18n/ICU never sees them.
+    if (!isValidLanguageTag(queryLocale)) throw errors.E_ROUTE_NOT_FOUND;
+
+    return queryLocale;
   }
 
   protected getLanguage(locale: string | null): LanguageSpecification {

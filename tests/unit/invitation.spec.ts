@@ -18,6 +18,10 @@ function createMockHttpContext(inputs: Record<string, any>): HttpContext {
 }
 
 test.describe('Invitation validator', () => {
+  test.beforeEach(() => {
+    vine.convertEmptyStringsToNull = false;
+  });
+
   test.describe('Draft Schema', () => {
     test('allows all fields to be optional', async () => {
       const data = {
