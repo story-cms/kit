@@ -4,6 +4,10 @@ import { complexFields, nestedFields, simpleFields } from '../mocks.js';
 import vine from '@vinejs/vine';
 
 test.describe('Bundle builder', () => {
+  test.beforeEach(() => {
+    vine.convertEmptyStringsToNull = false;
+  });
+
   test('Identify junk', () => {
     // arrange
     const service = new BundleService(simpleFields);
@@ -66,6 +70,10 @@ test.describe('Bundle builder', () => {
 });
 
 test.describe('Bundle updater', () => {
+  test.beforeEach(() => {
+    vine.convertEmptyStringsToNull = false;
+  });
+
   test('updates bundle with new changes', async () => {
     // arrange
     const service = new BundleService(simpleFields);
@@ -228,6 +236,10 @@ test.describe('Bundle updater', () => {
 });
 
 test.describe('Bundle validator', () => {
+  test.beforeEach(() => {
+    vine.convertEmptyStringsToNull = false;
+  });
+
   test('it can validate a complex object', async () => {
     // arrange
     const objectSpec = [
