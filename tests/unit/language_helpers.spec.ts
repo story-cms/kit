@@ -11,6 +11,11 @@ test.describe('isValidLanguageTag', () => {
     expect(isValidLanguageTag('en-US')).toBe(true);
   });
 
+  test('accepts exotic, well-formed tags', () => {
+    expect(isValidLanguageTag('qqq')).toBe(true);
+    expect(isValidLanguageTag('xx-Sw')).toBe(true);
+  });
+
   test('rejects underscore-style tags and empty string', () => {
     expect(isValidLanguageTag('zh_Hans')).toBe(false);
     expect(isValidLanguageTag('zh_CN')).toBe(false);
