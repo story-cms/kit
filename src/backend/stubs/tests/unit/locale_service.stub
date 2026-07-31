@@ -8,6 +8,8 @@ import {
   StoryFactory,
   StoryLocalisation,
   StoryLocalisationFactory,
+  Ui,
+  User,
 } from '@story-cms/kit';
 import { testCmsConfig, createCustomCmsConfig } from '#tests/helpers/cms_mock';
 
@@ -35,8 +37,66 @@ async function publishInLocale(storyId: number, locale: string) {
   }).create();
 }
 
+async function seedUiStrings(
+  sourceKeys: string[],
+  translations: Record<string, Record<string, string | { text: string; flag?: string | null }>>,
+) {
+  await User.create({
+    id: 1,
+    name: 'Test User',
+    email: 'test@test.com',
+    password: 'password',
+    language: '*',
+  });
+
+  const rows = sourceKeys.flatMap((key) => {
+    const sourceRows = [
+      {
+        locale: sourceLocale,
+        key,
+        microCopy: {{ '`Source ${key}`' }},
+        flag: null,
+        updatedBy: 1,
+      },
+    ];
+
+    const localeRows = Object.entries(translations).flatMap(([locale, items]) => {
+      const item = items[key];
+      if (!item) {
+        return [];
+      }
+
+      if (typeof item === 'string') {
+        return [
+          {
+            locale,
+            key,
+            microCopy: item,
+            flag: null,
+            updatedBy: 1,
+          },
+        ];
+      }
+
+      return [
+        {
+          locale,
+          key,
+          microCopy: item.text,
+          flag: item.flag ?? null,
+          updatedBy: 1,
+        },
+      ];
+    });
+
+    return [...sourceRows, ...localeRows];
+  });
+
+  await Ui.createMany(rows);
+}
+
 test.group('LocaleService', (group) => {
-  group.each.setup(() => testUtils.db().withGlobalTransaction());
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
 
   test('returns slugs grouped by locale', async ({ assert }) => {
     const classic = await StoryFactory.with('localisations')
@@ -60,10 +120,7 @@ test.group('LocaleService', (group) => {
     assert.isDefined(translationEntry);
     assert.deepEqual(sourceEntry!.stories, ['classic', 'youth']);
     assert.deepEqual(translationEntry!.stories, ['classic']);
-    assert.deepEqual(
-      app.map((item) => item.locale),
-      content.map((item) => item.locale),
-    );
+    assert.deepEqual(app, [sourceLocale]);
   });
 
   test('respects publish state per locale', async ({ assert }) => {
@@ -89,7 +146,7 @@ test.group('LocaleService', (group) => {
     assert.isDefined(sourceEntry);
     assert.deepEqual(sourceEntry!.stories, ['express']);
     assert.isUndefined(translationEntry);
-    assert.deepEqual(app.map((item) => item.locale), [sourceLocale]);
+    assert.deepEqual(app, [sourceLocale]);
   });
 
   test('omits locales with no published stories', async ({ assert }) => {
@@ -105,8 +162,7 @@ test.group('LocaleService', (group) => {
     assert.isTrue(content.every((item) => item.stories.length > 0));
     assert.isUndefined(content.find((item) => item.locale === translationLocale));
     assert.isUndefined(content.find((item) => item.locale === thirdLocale));
-    assert.isUndefined(app.find((item) => item.locale === translationLocale));
-    assert.isUndefined(app.find((item) => item.locale === thirdLocale));
+    assert.deepEqual(app, [sourceLocale]);
   });
 
   test('preserves story order within each locale', async ({ assert }) => {
@@ -126,7 +182,7 @@ test.group('LocaleService', (group) => {
     const sourceEntry = content.find((item) => item.locale === sourceLocale);
     assert.isDefined(sourceEntry);
     assert.deepEqual(sourceEntry!.stories, ['first', 'second']);
-    assert.deepEqual(app.map((item) => item.locale), [sourceLocale]);
+    assert.deepEqual(app, [sourceLocale]);
   });
 
   test('uses configured locale order in response', async ({ assert }) => {
@@ -138,19 +194,19 @@ test.group('LocaleService', (group) => {
     await publishInLocale(story.id, translationLocale);
 
     const service = new LocaleService(testCmsConfig);
-    const { content, app } = await service.localeIndex();
+    const { content, languages } = await service.localeIndex();
 
     assert.deepEqual(
       content.map((item) => item.locale),
       [sourceLocale, translationLocale],
     );
     assert.deepEqual(
-      app.map((item) => item.locale),
-      [sourceLocale, translationLocale],
+      languages.map((item) => item.locale),
+      [sourceLocale, translationLocale, thirdLocale],
     );
   });
 
-  test('returns parsed name and nativeName in app metadata', async ({ assert }) => {
+  test('returns all configured languages in languages metadata', async ({ assert }) => {
     const config = createCustomCmsConfig({
       languages: [
         {
@@ -166,23 +222,16 @@ test.group('LocaleService', (group) => {
       ],
     });
 
-    const story = await StoryFactory.with('localisations')
-      .merge({ slug: 'localized', order: 1 })
-      .create();
-
-    await publishInLocale(story.id, 'en');
-    await publishInLocale(story.id, 'es');
-
     const service = new LocaleService(config);
-    const { app } = await service.localeIndex();
+    const { languages } = await service.localeIndex();
 
-    assert.deepEqual(app, [
+    assert.deepEqual(languages, [
       { locale: 'en', name: 'English', nativeName: 'English', languageDirection: 'ltr' },
       { locale: 'es', name: 'Spanish', nativeName: 'Español', languageDirection: 'ltr' },
     ]);
   });
 
-  test('returns languageDirection in app metadata', async ({ assert }) => {
+  test('returns languageDirection in languages metadata', async ({ assert }) => {
     const config = createCustomCmsConfig({
       languages: [
         {
@@ -193,16 +242,10 @@ test.group('LocaleService', (group) => {
       ],
     });
 
-    const story = await StoryFactory.with('localisations')
-      .merge({ slug: 'rtl-story', order: 1 })
-      .create();
-
-    await publishInLocale(story.id, 'ar');
-
     const service = new LocaleService(config);
-    const { app } = await service.localeIndex();
+    const { languages } = await service.localeIndex();
 
-    assert.deepEqual(app, [
+    assert.deepEqual(languages, [
       {
         locale: 'ar',
         name: 'Arabic',
@@ -210,5 +253,76 @@ test.group('LocaleService', (group) => {
         languageDirection: 'rtl',
       },
     ]);
+  });
+
+  test('always includes source locale in app', async ({ assert }) => {
+    const service = new LocaleService(testCmsConfig);
+    const { app } = await service.localeIndex();
+
+    assert.deepEqual(app, [sourceLocale]);
+  });
+
+  test('includes locales with more than 80% non-AI UI translation in app', async ({
+    assert,
+  }) => {
+    await seedUiStrings(['k1', 'k2', 'k3', 'k4', 'k5'], {
+      [translationLocale]: {
+        k1: 'Uno',
+        k2: 'Dos',
+        k3: 'Tres',
+        k4: 'Cuatro',
+        k5: 'Cinco',
+      },
+      [thirdLocale]: {
+        k1: 'One',
+        k2: 'Two',
+      },
+    });
+
+    const service = new LocaleService(testCmsConfig);
+    const { app } = await service.localeIndex();
+
+    assert.deepEqual(app, [sourceLocale, translationLocale]);
+  });
+
+  test('excludes AI-prefilled translations from app progress', async ({ assert }) => {
+    await seedUiStrings(['k1', 'k2', 'k3', 'k4', 'k5'], {
+      [translationLocale]: {
+        k1: 'Uno',
+        k2: 'Dos',
+        k3: 'Tres',
+        k4: 'Cuatro',
+        k5: { text: 'Cinco', flag: 'prefilled' },
+      },
+    });
+
+    const service = new LocaleService(testCmsConfig);
+    const { app } = await service.localeIndex();
+
+    assert.deepEqual(app, [sourceLocale]);
+  });
+
+  test('counts recheck translations toward app progress', async ({ assert }) => {
+    await seedUiStrings(['k1', 'k2', 'k3', 'k4', 'k5'], {
+      [translationLocale]: {
+        k1: 'Uno',
+        k2: 'Dos',
+        k3: 'Tres',
+        k4: 'Cuatro',
+        k5: { text: 'Cinco', flag: 'recheck' },
+      },
+    });
+
+    const service = new LocaleService(testCmsConfig);
+    const { app } = await service.localeIndex();
+
+    assert.deepEqual(app, [sourceLocale, translationLocale]);
+  });
+
+  test('returns source locale in media', async ({ assert }) => {
+    const service = new LocaleService(testCmsConfig);
+    const { media } = await service.localeIndex();
+
+    assert.deepEqual(media, [sourceLocale]);
   });
 });
