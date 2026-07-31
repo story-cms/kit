@@ -45,7 +45,7 @@ async function seedUiStrings(
       {
         locale: sourceLocale,
         key,
-        microCopy: `Source ${key}`,
+        microCopy: {{ '`Source ${key}`' }},
         flag: null,
         updatedBy: 1,
       },
