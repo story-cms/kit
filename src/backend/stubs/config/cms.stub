@@ -112,28 +112,8 @@ const cmsConfig: Partial<CmsConfig> = {
     * Bunny collection ID for resource video uploads
     * example: videoUploadConfig.collection
     */
-  // videoCollectionId: '',
+   videoCollectionId: videoUploadConfig.collection,
 
-  /**
-    * A list of languages to be used in the app
-    *
-    * https://en.wikipedia.org/wiki/IETF_language_tag
-    * https://r12a.github.io/app-subtags/
-    */
-  languages: [
-    {
-      locale: 'en',
-      language: 'English',
-      languageDirection: 'ltr',
-      bibleVersion: 'de4e12af7f28f599-01',
-    },
-    {
-      locale: 'de',
-      language: 'German | Deutsch',
-      languageDirection: 'ltr',
-      bibleVersion: '3e2eb613d45e131e-01',
-    },
-  ],
 
   streams: [devotionStream],
 
