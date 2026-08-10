@@ -1,12 +1,21 @@
 import Story from '../models/story.js';
+import Ui from '../models/ui.js';
 import { parseLanguageSpecification } from '../../shared/language_helpers.js';
-import type { CmsConfig, LocaleItem, LocaleIndexResponse } from '../../types.js';
+import { FlagState } from '../../types.js';
+import type { CmsConfig, LocaleIndexResponse } from '../../types.js';
+
+const APP_UI_TRANSLATION_THRESHOLD = 0.8;
 
 export class LocaleService {
   public constructor(protected readonly config: CmsConfig) {}
 
+  public get sourceLocale(): string {
+    return this.config.languages[0].locale;
+  }
+
   public async localeIndex(): Promise<LocaleIndexResponse> {
     const locales = this.config.languages.map((language) => language.locale);
+    const languages = this.config.languages.map(parseLanguageSpecification);
 
     const stories = await Story.query()
       .select('id', 'slug', 'order')
@@ -30,15 +39,45 @@ export class LocaleService {
       .map((locale) => ({ locale, stories: byLocale.get(locale) ?? [] }))
       .filter((item) => item.stories.length > 0);
 
-    const languagesByLocale = new Map(
-      this.config.languages.map((language) => [language.locale, language]),
-    );
+    const app = await this.appLocales(locales);
 
-    const app: LocaleItem[] = content.map(({ locale }) => {
-      const spec = languagesByLocale.get(locale)!;
-      return parseLanguageSpecification(spec);
-    });
+    return {
+      languages,
+      content,
+      app,
+      media: [this.sourceLocale],
+    };
+  }
 
-    return { content, app };
+  private async appLocales(locales: string[]): Promise<string[]> {
+    const sourceLocale = this.sourceLocale;
+    const rows = await Ui.query().whereIn('locale', locales);
+    const totalUiCount = rows.filter((row) => row.locale === sourceLocale).length;
+
+    const app = [sourceLocale];
+
+    if (totalUiCount === 0) {
+      return app;
+    }
+
+    for (const locale of locales) {
+      if (locale === sourceLocale) {
+        continue;
+      }
+
+      const translatedCount = rows.filter(
+        (row) =>
+          row.locale === locale &&
+          row.microCopy &&
+          row.microCopy.trim() !== '' &&
+          row.flag !== FlagState.PREFILLED,
+      ).length;
+
+      if (translatedCount / totalUiCount > APP_UI_TRANSLATION_THRESHOLD) {
+        app.push(locale);
+      }
+    }
+
+    return app;
   }
 }

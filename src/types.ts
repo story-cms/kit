@@ -422,8 +422,10 @@ export interface LocaleItem extends Pick<
 }
 
 export interface LocaleIndexResponse {
+  languages: LocaleItem[];
   content: LocaleContentItem[];
-  app: LocaleItem[];
+  app: string[];
+  media: string[];
 }
 
 export interface DraftEditProps {

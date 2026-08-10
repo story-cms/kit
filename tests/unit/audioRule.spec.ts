@@ -4,6 +4,10 @@ import audioRule from '../../src/backend/validators/audio_rule.js';
 import { Audio } from '../../src/types';
 
 test.describe('Audio Rule Validator', () => {
+  test.beforeEach(() => {
+    vine.convertEmptyStringsToNull = false;
+  });
+
   test('should validate valid audio objects with .mp3 extension', async () => {
     const validAudios: Audio[] = [
       { url: 'https://example.com/audio.mp3', length: 120 },

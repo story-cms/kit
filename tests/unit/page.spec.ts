@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import vine from '@vinejs/vine';
 import PageValidator from '../../src/backend/validators/page.js';
 import type { HttpContext } from '@adonisjs/core/http';
 
@@ -12,6 +13,10 @@ function createMockHttpContext(inputs: Record<string, any>): HttpContext {
 }
 
 test.describe('Page Validator', () => {
+  test.beforeEach(() => {
+    vine.convertEmptyStringsToNull = false;
+  });
+
   test.describe('Draft Schema', () => {
     test('requires title', async () => {
       const data = {

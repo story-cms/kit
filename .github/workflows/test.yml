@@ -15,7 +15,7 @@ jobs:
       contents: read
       deployments: write
 
-    name: Code quality checks
+    name: Tests and code quality checks
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -25,3 +25,6 @@ jobs:
 
       - name: Lint
         run: npm run lint
+
+      - name: Test
+        run: npm run test
