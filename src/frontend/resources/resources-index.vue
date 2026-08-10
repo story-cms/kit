@@ -1,7 +1,7 @@
 <template>
   <AppLayout title="Resource Library" subtitle="Manage Resources">
     <template #actions>
-      <StudioButton label="Create Resource" variant="secondary" @click="createResource">
+      <StudioButton label="Create Resource" variant="primary" @click="createResource">
         <Plus class="size-4" aria-hidden="true" />
       </StudioButton>
     </template>
