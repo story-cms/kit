@@ -20,13 +20,15 @@
             :class="responseConfig.iconClass"
             aria-hidden="true"
           />
-          <p class="max-w-full text-center font-dmsans text-xl font-semibold leading-4">
+          <p
+            class="max-w-full text-center font-dmsans text-xl font-semibold leading-4 text-studio-forest"
+          >
             {{ message }}
           </p>
         </div>
         <p
           v-if="description"
-          class="mt-4 text-center font-dmsans text-sm font-normal leading-5"
+          class="mt-4 text-center font-dmsans text-sm font-normal leading-5 text-studio-forest"
         >
           {{ description }}
         </p>

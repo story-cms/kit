@@ -1,7 +1,7 @@
 <template>
   <AppLayout :title="headerTitle" :subtitle="headerSubtitle">
     <template #actions>
-      <StudioButton label="Cancel" variant="outline" @click="cancel" />
+      <StudioButton label="Cancel" variant="tertiary" @click="cancel" />
       <StudioButton
         v-if="!resource.id"
         label="Create Resource"

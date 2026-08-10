@@ -40,7 +40,7 @@
 import { computed, useSlots } from 'vue';
 
 export type StudioButtonVariant =
-  'primary' | 'outline' | 'secondary' | 'green' | 'gray' | 'red';
+  'primary' | 'secondary' | 'tertiary' | 'destructive';
 
 export type StudioButtonShape = 'default' | 'cta';
 
@@ -89,13 +89,11 @@ const shapeClasses = computed(() =>
 const variantClassMap: Record<StudioButtonVariant, string> = {
   primary:
     'bg-studio-forest text-studio-lime enabled:hover:bg-studio-green enabled:hover:text-studio-forest',
-  outline:
-    'border border-studio-forest bg-transparent text-studio-forest enabled:hover:bg-gray-300',
   secondary:
     'min-w-32 bg-gray-200 text-gray-700 enabled:hover:bg-gray-800 enabled:hover:text-white',
-  green: 'bg-green-500 text-white enabled:hover:bg-green-400',
-  gray: 'bg-gray-200 text-gray-700 enabled:hover:bg-gray-300',
-  red: 'bg-red-500 text-white enabled:hover:bg-red-400',
+  tertiary:
+    'border border-studio-forest bg-transparent text-studio-forest enabled:hover:bg-gray-300',
+  destructive: 'bg-red-500 text-white enabled:hover:bg-red-400',
 };
 
 const variantClasses = computed(() => variantClassMap[props.variant]);

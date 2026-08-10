@@ -6,7 +6,7 @@
     :class="{
       'cursor-not-allowed bg-gray-100': isReadOnly,
       'cursor-pointer': !isReadOnly,
-      'bg-[#EFF6FF]': isSelected && !isReadOnly,
+      'bg-gray-300': isSelected && !isReadOnly,
       'hover:bg-gray-100': isAvailable,
     }"
   >
@@ -19,52 +19,31 @@
           :checked="isSelected"
           name="language"
           aria-describedby="language-description"
-          class="col-start-1 row-start-1 appearance-none rounded-xl border border-gray-300 bg-white checked:border-blue-500 checked:bg-blue-500 indeterminate:border-blue-500 indeterminate:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
+          class="col-start-1 row-start-1 appearance-none rounded-[4px] border border-gray-300 bg-white text-gray-800 checked:!border-gray-800 checked:!bg-gray-800 checked:[background-image:none] checked:hover:!border-gray-800 checked:hover:!bg-gray-800 checked:focus:!border-gray-800 checked:focus:!bg-gray-800 indeterminate:!border-gray-800 indeterminate:!bg-gray-800 focus:ring-0 focus:ring-offset-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-800 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
           @change="handleUpdate"
         />
 
-        <svg
-          viewBox="0 0 14 14"
-          fill="none"
-          class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-[:disabled]:stroke-gray-950/25"
-        >
-          <path
-            d="M3 8L6 11L11 3.5"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="opacity-0 group-has-[:checked]:opacity-100"
-          />
-          <path
-            d="M3 7H11"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="opacity-0 group-has-[:indeterminate]:opacity-100"
-          />
-        </svg>
+        <Check
+          class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center text-white opacity-0 group-has-[:checked]:opacity-100 group-has-[:disabled]:text-gray-950/25"
+          aria-hidden="true"
+          :stroke-width="1.5"
+        />
       </template>
 
       <template v-else>
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          class="pointer-events-none col-start-1 row-start-1 size-6 self-center justify-self-center stroke-white group-has-[:disabled]:stroke-gray-950/25"
+        <div
+          class="pointer-events-none col-start-1 row-start-1 grid size-4 place-items-center rounded-[4px] border border-gray-300 bg-gray-100"
+          aria-hidden="true"
         >
-          <path
-            d="M20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12ZM14.293 9.29297C14.6835 8.90244 15.3165 8.90244 15.707 9.29297C16.0976 9.68349 16.0976 10.3165 15.707 10.707L11.707 14.707C11.3165 15.0976 10.6835 15.0976 10.293 14.707L8.29297 12.707L8.22461 12.6309C7.90426 12.2381 7.92685 11.6591 8.29297 11.293C8.65908 10.9269 9.23809 10.9043 9.63086 11.2246L9.70703 11.293L11 12.5859L14.293 9.29297ZM22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z"
-            fill="#9CA3AF"
-          />
-        </svg>
+          <Check class="size-3.5 text-gray-400" aria-hidden="true" :stroke-width="1.5" />
+        </div>
       </template>
     </div>
   </component>
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
+import { Check } from '@lucide/vue';
 import type { LanguageListItemProps } from '../../../../types';
 import LanguageStrip from './language-strip.vue';
 const props = defineProps<LanguageListItemProps>();

@@ -2,7 +2,7 @@
   <StudioButton
     v-if="showRequestChangeButton"
     label="Request Change"
-    variant="red"
+    variant="destructive"
     @click="emit('request-change')"
   />
   <StudioButton

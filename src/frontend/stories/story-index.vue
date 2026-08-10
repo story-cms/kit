@@ -4,13 +4,13 @@
       <StudioButton
         v-if="canEditStory"
         label="Edit"
-        variant="outline"
+        variant="tertiary"
         @click="editMeta"
       />
       <StudioButton
         v-if="canEditStory && !story.isPublished"
         label="Publish"
-        variant="green"
+        variant="primary"
         :tooltip="publishBlockedReason ?? undefined"
         :disabled="isPublishing || !canPublishStoryReadyState"
         @click="publishStory"
@@ -24,7 +24,7 @@
           <StudioButton
             v-if="addStatus == AddStatus.Add"
             :label="story.chapterType"
-            variant="outline"
+            variant="tertiary"
             shape="cta"
             @click="addDraft"
           >

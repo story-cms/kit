@@ -105,10 +105,10 @@
 
     <template #actions>
       <div class="flex w-full justify-end gap-x-4">
-        <StudioButton label="Cancel" variant="gray" @click="handleClose" />
+        <StudioButton label="Cancel" variant="secondary" @click="handleClose" />
         <StudioButton
           label="Confirm selection"
-          variant="green"
+          variant="primary"
           :disabled="isLoading || hasError || currentBibleTranslations.length === 0"
           @click="handleConfirm"
         />
