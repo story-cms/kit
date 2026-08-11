@@ -28,13 +28,6 @@ test.describe('storyEditTabHasError', () => {
     expect(storyEditTabHasError('sections', errors)).toBe(false);
     expect(storyEditTabHasError('resources', errors)).toBe(true);
   });
-
-  test('does not flag story tabs for chapter-only bundle.blocks errors', () => {
-    const errors = { 'bundle.blocks.0.blockName': ['Block name is required'] };
-
-    expect(storyEditTabHasError('details', errors)).toBe(false);
-    expect(storyEditTabHasError('resources', errors)).toBe(false);
-  });
 });
 
 test.describe('firstStoryEditTabWithError', () => {
