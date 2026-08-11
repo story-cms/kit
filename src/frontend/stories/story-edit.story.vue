@@ -120,6 +120,21 @@
       />
     </Variant>
 
+    <Variant title="Blocks tab" :setup-app="loadBlocksTab">
+      <StoryEdit
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :errors="{}"
+        :bookmarks="sharedProps.bookmarks"
+        :model="storyModel"
+        :available-resources="availableResources"
+        :has-no-content="false"
+        :providers="mockResourceProviders"
+        :templates="storyTemplates"
+      />
+    </Variant>
+
     <Variant title="Validation errors on tabs" :setup-app="loadNormalData">
       <StoryEdit
         :config="sharedProps.config"
@@ -189,6 +204,7 @@
 import StoryEdit from './story-edit.vue';
 import {
   availableResources,
+  mockResourceProviders,
   sampleAttachedResources,
   sharedProps,
   miniSidebar,
@@ -402,6 +418,13 @@ const loadResourcesTab: StoryHandler = (context): void => {
   loadNormalData(context);
 };
 
+const loadBlocksTab: StoryHandler = (context): void => {
+  const url = new URL(window.location.href);
+  url.searchParams.set('tab', 'Blocks');
+  window.history.replaceState({}, '', url.toString());
+  loadNormalData(context);
+};
+
 const loadSectionsTab: StoryHandler = (context): void => {
   const url = new URL(window.location.href);
   url.searchParams.set('tab', 'Sections');
@@ -420,7 +443,7 @@ const loadTranslationLocale: StoryHandler = (context): void => {
 <docs lang="md">
 # Story Edit
 
-Full-page story editor with tabbed navigation for Details and Resources. The Sections tab is temporarily commented out until the spec is ready.
+Full-page story editor with tabbed navigation for Details, Blocks, and Resources. The Sections tab is temporarily commented out until the spec is ready.
 Saving posts attached resource IDs to the story localisation.
 
 ## Variants

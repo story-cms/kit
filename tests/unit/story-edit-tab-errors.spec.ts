@@ -10,6 +10,7 @@ test.describe('storyEditTabHasError', () => {
 
     expect(storyEditTabHasError('details', errors)).toBe(true);
     expect(storyEditTabHasError('sections', errors)).toBe(false);
+    expect(storyEditTabHasError('blocks', errors)).toBe(false);
     expect(storyEditTabHasError('resources', errors)).toBe(false);
   });
 
@@ -18,6 +19,7 @@ test.describe('storyEditTabHasError', () => {
 
     expect(storyEditTabHasError('details', errors)).toBe(false);
     expect(storyEditTabHasError('sections', errors)).toBe(true);
+    expect(storyEditTabHasError('blocks', errors)).toBe(false);
     expect(storyEditTabHasError('resources', errors)).toBe(false);
   });
 
@@ -26,7 +28,17 @@ test.describe('storyEditTabHasError', () => {
 
     expect(storyEditTabHasError('details', errors)).toBe(false);
     expect(storyEditTabHasError('sections', errors)).toBe(false);
+    expect(storyEditTabHasError('blocks', errors)).toBe(false);
     expect(storyEditTabHasError('resources', errors)).toBe(true);
+  });
+
+  test('flags Blocks for bundle.blocks', () => {
+    const errors = { 'bundle.blocks.0.blockName': ['Block name is required'] };
+
+    expect(storyEditTabHasError('details', errors)).toBe(false);
+    expect(storyEditTabHasError('sections', errors)).toBe(false);
+    expect(storyEditTabHasError('blocks', errors)).toBe(true);
+    expect(storyEditTabHasError('resources', errors)).toBe(false);
   });
 });
 

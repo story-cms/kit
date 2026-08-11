@@ -236,6 +236,49 @@ export interface StorySection {
   description?: string;
 }
 
+export interface BlockVisibility {
+  presenter: boolean;
+  personal: boolean;
+  hidden: boolean;
+}
+
+export type StoryBlockKind = 'content' | 'title' | 'scripture';
+
+interface StoryBlockBase {
+  id: string;
+  kind: StoryBlockKind;
+  blockName: string;
+  visibility: BlockVisibility;
+}
+
+export interface StoryContentBlock extends StoryBlockBase {
+  kind: 'content';
+  displayName: string;
+  blockRole: string;
+  style: string;
+  blockType: ResourceType;
+  content: string;
+  url?: string;
+  video?: { url: string | null };
+  leadersNotes: string;
+  showLeadersNotes: boolean;
+}
+
+export interface StoryTitleBlock extends StoryBlockBase {
+  kind: 'title';
+  title: string;
+  style: string;
+}
+
+export interface StoryScriptureBlock extends StoryBlockBase {
+  kind: 'scripture';
+  scripture: Scripture;
+  leadersNotes: string;
+  showLeadersNotes: boolean;
+}
+
+export type StoryBlock = StoryContentBlock | StoryTitleBlock | StoryScriptureBlock;
+
 export interface StorySpec {
   id: number;
   name: string;
