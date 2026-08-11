@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import type { Editor, EditorChange } from 'codemirror';
-import type EasyMDE from '../../fields/markdown/types';
+import type EasyMDE from '../../../fields/markdown/types';
 
 const props = withDefaults(
   defineProps<{

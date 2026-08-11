@@ -5,9 +5,9 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, watch } from 'vue';
 
-import type { FieldSpec } from '../../../types';
-import VideoField from '../../fields/video-field.vue';
-import { useModelStore } from '../../store';
+import type { FieldSpec } from '../../../../types';
+import VideoField from '../../../fields/video-field.vue';
+import { useModelStore } from '../../../store';
 
 const props = withDefaults(
   defineProps<{
@@ -26,7 +26,7 @@ const emit = defineEmits<{
 }>();
 
 const model = useModelStore();
-const rootPath = computed(() => `_contentBlocks.${props.blockId}`);
+const rootPath = computed(() => `_chapterBlocks.${props.blockId}`);
 const videoPath = computed(() => `${rootPath.value}.video`);
 
 const fieldSpec = computed(

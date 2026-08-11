@@ -34,12 +34,6 @@
             :tab-icon="currentStoryTabIcon"
           />
           -->
-          <div v-if="currentStoryTab === 'Blocks'" dir="ltr">
-            <StoryEditBlocks
-              v-model:blocks="blocks"
-              :video-collection-id="props.config.videoCollectionId"
-            />
-          </div>
           <div v-if="currentStoryTab === 'Resources'" dir="ltr">
             <StoryEditResources
               v-model:resources="attachedResources"
@@ -57,13 +51,12 @@
 import { computed, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { router } from '@inertiajs/vue3';
-import { BookOpen, FolderClosed, LayoutGrid } from '@lucide/vue';
+import { BookOpen, FolderClosed } from '@lucide/vue';
 
 import type {
   NavigationPaneTab,
   ResourceItem,
   SharedPageProps,
-  StoryBlock,
   StoryCreateProps,
 } from '../../types';
 import { ResponseStatus } from '../../types';
@@ -75,8 +68,6 @@ import StoryEditDetails from './components/story-edit-details.vue';
 // TODO(sections): re-enable when spec is ready
 // import StoryEditSections from './components/story-edit-sections.vue';
 import StoryEditResources from './components/story-edit-resources.vue';
-import StoryEditBlocks from './components/story-edit-blocks.vue';
-import { createEmptyBlock } from './components/block-utils';
 import { resourceIds } from './components/resource-utils';
 import {
   firstStoryEditTabWithError,
@@ -103,7 +94,6 @@ const model = useModelStore();
 model.setModel(props.model);
 
 const attachedResources = ref<ResourceItem[]>([]);
-const blocks = ref<StoryBlock[]>([createEmptyBlock()]);
 const availableResources = props.availableResources ?? [];
 const isSaving = ref(false);
 
@@ -130,10 +120,6 @@ const storyEditTabs = computed((): NavigationPaneTab[] => [
   //   hasError: storyEditTabHasError('sections', errors.value),
   // },
   {
-    label: 'Blocks',
-    hasError: storyEditTabHasError('blocks', errors.value),
-  },
-  {
     label: 'Resources',
     hasError: storyEditTabHasError('resources', errors.value),
   },
@@ -143,7 +129,6 @@ const storyEditTabIcons = computed(() => ({
   Details: BookOpen,
   // TODO(sections): re-enable when spec is ready
   // [sectionTabLabel.value]: LayoutList,
-  Blocks: LayoutGrid,
   Resources: FolderClosed,
 }));
 
@@ -151,7 +136,6 @@ const initialTabs: NavigationPaneTab[] = [
   { label: 'Details' },
   // TODO(sections): re-enable when spec is ready
   // { label: `${props.model.sectionType || 'Section'}s` },
-  { label: 'Blocks' },
   { label: 'Resources' },
 ];
 

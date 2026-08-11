@@ -120,21 +120,6 @@
       />
     </Variant>
 
-    <Variant title="Blocks tab" :setup-app="loadBlocksTab">
-      <StoryEdit
-        :config="sharedProps.config"
-        :user="sharedProps.user"
-        :language="sharedProps.language"
-        :errors="{}"
-        :bookmarks="sharedProps.bookmarks"
-        :model="storyModel"
-        :available-resources="availableResources"
-        :has-no-content="false"
-        :providers="mockResourceProviders"
-        :templates="storyTemplates"
-      />
-    </Variant>
-
     <Variant title="Validation errors on tabs" :setup-app="loadNormalData">
       <StoryEdit
         :config="sharedProps.config"
@@ -204,7 +189,6 @@
 import StoryEdit from './story-edit.vue';
 import {
   availableResources,
-  mockResourceProviders,
   sampleAttachedResources,
   sharedProps,
   miniSidebar,
@@ -418,13 +402,6 @@ const loadResourcesTab: StoryHandler = (context): void => {
   loadNormalData(context);
 };
 
-const loadBlocksTab: StoryHandler = (context): void => {
-  const url = new URL(window.location.href);
-  url.searchParams.set('tab', 'Blocks');
-  window.history.replaceState({}, '', url.toString());
-  loadNormalData(context);
-};
-
 const loadSectionsTab: StoryHandler = (context): void => {
   const url = new URL(window.location.href);
   url.searchParams.set('tab', 'Sections');
@@ -443,7 +420,7 @@ const loadTranslationLocale: StoryHandler = (context): void => {
 <docs lang="md">
 # Story Edit
 
-Full-page story editor with tabbed navigation for Details, Blocks, and Resources. The Sections tab is temporarily commented out until the spec is ready.
+Full-page story editor with tabbed navigation for Details and Resources. The Sections tab is temporarily commented out until the spec is ready.
 Saving posts attached resource IDs to the story localisation.
 
 ## Variants
@@ -452,6 +429,7 @@ Saving posts attached resource IDs to the story localisation.
 - **Delete and save** — empty story, published; shows Delete (`red`) and Save Changes (`secondary`)
 - **Delete and save draft** — empty story, unpublished; shows Delete (`red`) and Save Changes (`secondary`)
 - **Without sections** — English source locale with no sections (Sections tab disabled in UI)
+- **Resources tab** — opens directly on the Resources tab
 - **Validation errors on tabs** — failed publish validation; Details tab shows error indicators and inline field messages
 - **Translation locale** — Spanish edit with English source column; source tags shown in read-only column only on Details tab
 - **Arabic translation locale** — Arabic edit on the left, English source on the right; RTL text in the translation column

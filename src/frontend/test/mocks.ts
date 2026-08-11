@@ -1,4 +1,6 @@
 import type {
+  ChapterBundle,
+  ChapterEditProps,
   FieldSpec,
   LanguageSpecification,
   LanguageTableItem,
@@ -7,6 +9,7 @@ import type {
   ResourceEditProps,
   ResourceIndexItem,
   Providers,
+  ChapterBlock,
   StorySpec,
   InvitationItem,
   UiConfig,
@@ -14,6 +17,11 @@ import type {
 } from '../../types.ts';
 import { StoryHandler } from '../shared/helpers.js';
 import { useSharedStore } from '../store/shared.js';
+import {
+  createEmptyContentBlock,
+  createEmptyScriptureBlock,
+  createEmptyTitleBlock,
+} from '../stories/components/chapter-blocks/chapter-block-utils';
 
 interface Address {
   street: string;
@@ -4527,6 +4535,83 @@ export const sampleAttachedResources: ResourceItem[] = availableResources.filter
   (resource) => attachedStoryResourceIds.includes(resource.id),
 );
 
+export const sampleMixedChapterBlocks: ChapterBlock[] = [
+  {
+    ...createEmptyTitleBlock(),
+    blockName: 'Session Title',
+    title: 'The Gospel of John',
+    subtitle: 'An introduction to the fourth gospel',
+    coverImage:
+      'https://res.cloudinary.com/journeys/image/upload/v1756121793/mountain-placeholder_yuflkz.jpg',
+    style: 'emphasis',
+  },
+  {
+    ...createEmptyContentBlock(),
+    blockName: 'Introduction',
+    displayName: 'Session Introduction',
+    blockRole: 'introduction',
+    content:
+      'Welcome to this session on the Gospel of John. We will explore how John presents Jesus as the Word made flesh.',
+  },
+  {
+    ...createEmptyScriptureBlock(),
+    blockName: 'Opening Passage',
+    displayName: 'Opening Scripture',
+    scripture: {
+      reference: 'John 1:1-3',
+      verse:
+        'In the beginning was the Word, and the Word was with God, and the Word was God. He was in the beginning with God. All things were made through him, and without him was not any thing made that was made.',
+    },
+  },
+  {
+    ...createEmptyTitleBlock(),
+    blockName: 'Part One: The Word',
+    title: 'The Word Became Flesh',
+    subtitle: 'Session 1 of 12',
+    style: 'subtle',
+  },
+  {
+    ...createEmptyContentBlock(),
+    blockName: 'Further Reading',
+    displayName: 'External Resource',
+    blockRole: 'summary',
+    blockType: 'url',
+    url: 'https://example.com/john-overview',
+    content: '',
+  },
+  {
+    ...createEmptyScriptureBlock(),
+    blockName: 'Key Verse',
+    displayName: 'Key Verse',
+    scripture: {
+      reference: 'John 3:16',
+      verse:
+        'For God so loved the world, that he gave his only Son, that whoever believes in him should not perish but have eternal life.',
+    },
+    leadersNotes:
+      'Pause here and invite the group to reflect on the scope of "the world" in this verse.',
+    showLeadersNotes: true,
+  },
+  {
+    ...createEmptyContentBlock(),
+    blockName: 'Summary',
+    displayName: 'Session Summary',
+    blockRole: 'summary',
+    style: 'emphasis',
+    content:
+      '**Key takeaways:** Jesus is the eternal Word; belief in him brings eternal life.',
+    visibility: { presenter: true, personal: false, hidden: false },
+  },
+  {
+    ...createEmptyContentBlock(),
+    blockName: 'Session Video',
+    displayName: 'Watch Session',
+    blockRole: 'introduction',
+    blockType: 'video',
+    content: '',
+  },
+];
+
 export const mockResourceProviders: Providers = {
   s3: {
     accessKeyId: '',
@@ -4542,7 +4627,7 @@ export const mockResourceProviders: Providers = {
     cloudName: 'almassira',
     defaultPreset: 'session_thumbnail',
   },
-  scripture: { bibleApiKey: 'tmp' },
+  scripture: { bibleApiKey: import.meta.env.VITE_BIBLE_API_KEY ?? '' },
   bunny: {
     accessKey: 'redacted',
     libraryId: '2ef0214d-b18',
@@ -4651,4 +4736,64 @@ export const mockEditUrlLinkResourceEmptyUsages: ResourceEditProps = {
 export const mockResourceEditErrors: Record<string, string[]> = {
   'bundle.title': ['A resource must have a title'],
   'bundle.url': ['URL resources must have a valid URL'],
+};
+
+export const sampleChapterDraft = {
+  id: 42,
+  number: 3,
+  status: 'started',
+  updatedAt: '2025-10-24T06:10:38.483+00:00',
+  createdAt: '2025-10-24T06:10:38.482+00:00',
+};
+
+export const emptyChapterBundle: ChapterBundle = {
+  number: '',
+  title: '',
+  description: '',
+  coverImage: '',
+  devotionAudio: '',
+  blocks: [],
+  resources: [],
+};
+
+export const sampleChapterBundle: ChapterBundle = {
+  number: '01',
+  title: 'Is there more to life than this?',
+  description: 'An introduction to the Christian faith.',
+  coverImage:
+    'https://res.cloudinary.com/journeys/image/upload/v1756121793/mountain-placeholder_yuflkz.jpg',
+  devotionAudio: '',
+  blocks: sampleMixedChapterBlocks,
+  resources: sampleAttachedResources.slice(0, 2),
+};
+
+export const chapterEditStory: StorySpec = {
+  ...story,
+  chapterType: 'Day',
+};
+
+export const chapterEditProps: Omit<ChapterEditProps, 'providers'> & {
+  providers: Providers;
+} = {
+  draft: sampleChapterDraft,
+  bundle: sampleChapterBundle,
+  story: chapterEditStory,
+  availableResources,
+  providers: mockResourceProviders,
+  hasEditReview: false,
+  lastPublished: '',
+};
+
+export const chapterEditCreateProps: Omit<ChapterEditProps, 'providers'> & {
+  providers: Providers;
+} = {
+  ...chapterEditProps,
+  bundle: emptyChapterBundle,
+  isCreate: true,
+};
+
+export const chapterEditValidationErrors: Record<string, string[]> = {
+  'bundle.title': ['The title field must have at least 1 character'],
+  'bundle.blocks.0.blockName': ['Block name is required'],
+  'bundle.resources.0': ['Invalid resource'],
 };

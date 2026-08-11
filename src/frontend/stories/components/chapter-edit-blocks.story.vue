@@ -1,28 +1,28 @@
 <template>
-  <Story title="Story Edit Blocks" group="stories" :setup-app="setupProviders">
+  <Story title="Chapter Edit Blocks" group="stories" :setup-app="setupProviders">
     <Variant title="Default">
-      <StoryEditBlocks
+      <ChapterEditBlocks
         v-model:blocks="defaultBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
       />
     </Variant>
 
     <Variant title="Empty">
-      <StoryEditBlocks
+      <ChapterEditBlocks
         v-model:blocks="emptyBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
       />
     </Variant>
 
     <Variant title="Multiple blocks">
-      <StoryEditBlocks
+      <ChapterEditBlocks
         v-model:blocks="multipleBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
       />
     </Variant>
 
     <Variant title="Mixed block kinds">
-      <StoryEditBlocks
+      <ChapterEditBlocks
         v-model:blocks="mixedBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
       />
@@ -33,28 +33,24 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import type { StoryBlock } from '../../../types';
-import { mockResourceProviders, sharedProps } from '../../test/mocks';
+import type { ChapterBlock } from '../../../types';
+import { mockResourceProviders, sampleMixedChapterBlocks, sharedProps } from '../../test/mocks';
 import { useWidgetsStore } from '../../store';
 import type { StoryHandler } from '../../shared/helpers';
-import StoryEditBlocks from './story-edit-blocks.vue';
-import {
-  createEmptyBlock,
-  createEmptyScriptureBlock,
-  createEmptyTitleBlock,
-} from './block-utils';
+import ChapterEditBlocks from './chapter-edit-blocks.vue';
+import { createEmptyContentBlock } from './chapter-blocks/chapter-block-utils';
 
 const setupProviders: StoryHandler = (): void => {
   useWidgetsStore().setProviders(mockResourceProviders);
 };
 
-const defaultBlocks = ref<StoryBlock[]>([createEmptyBlock()]);
+const defaultBlocks = ref<ChapterBlock[]>([createEmptyContentBlock()]);
 
-const emptyBlocks = ref<StoryBlock[]>([]);
+const emptyBlocks = ref<ChapterBlock[]>([]);
 
-const multipleBlocks = ref<StoryBlock[]>([
+const multipleBlocks = ref<ChapterBlock[]>([
   {
-    ...createEmptyBlock(),
+    ...createEmptyContentBlock(),
     blockName: 'Introduction',
     displayName: 'Session Introduction',
     blockRole: 'introduction',
@@ -63,7 +59,7 @@ const multipleBlocks = ref<StoryBlock[]>([
     content: 'Welcome to this session.',
   },
   {
-    ...createEmptyBlock(),
+    ...createEmptyContentBlock(),
     blockName: 'External Link',
     displayName: 'Further Reading',
     blockRole: 'summary',
@@ -72,7 +68,7 @@ const multipleBlocks = ref<StoryBlock[]>([
     url: 'https://example.com/article',
   },
   {
-    ...createEmptyBlock(),
+    ...createEmptyContentBlock(),
     blockName: 'Summary',
     displayName: 'Session Summary',
     blockRole: 'summary',
@@ -82,42 +78,21 @@ const multipleBlocks = ref<StoryBlock[]>([
     visibility: { presenter: true, personal: false, hidden: false },
   },
   {
-    ...createEmptyBlock(),
+    ...createEmptyContentBlock(),
     blockName: 'Session Video',
     displayName: 'Watch Session',
     blockRole: 'introduction',
     style: 'default',
     blockType: 'video',
   },
-  createEmptyBlock(),
+  createEmptyContentBlock(),
 ]);
 
-const mixedBlocks = ref<StoryBlock[]>([
-  {
-    ...createEmptyTitleBlock(),
-    blockName: 'Session Title',
-    title: 'The Gospel of John',
-    style: 'emphasis',
-  },
-  {
-    ...createEmptyBlock(),
-    blockName: 'Introduction',
-    displayName: 'Welcome',
-    content: 'Welcome to this session.',
-  },
-  {
-    ...createEmptyScriptureBlock(),
-    blockName: 'Opening Passage',
-    scripture: {
-      reference: 'John 1:1',
-      verse: 'In the beginning was the Word, and the Word was with God.',
-    },
-  },
-]);
+const mixedBlocks = ref<ChapterBlock[]>([...sampleMixedChapterBlocks]);
 </script>
 
 <docs lang="md">
-# Story Edit Blocks
+# Chapter Edit Blocks
 
-Content block editor for the Blocks tab on story create/edit pages. Supports content, title, and scripture blocks with add, remove, reorder, collapse, visibility toggles, and leaders notes.
+Content block editor for the Blocks tab on chapter create/edit pages. Supports content, title, and scripture blocks with add, remove, reorder, collapse, visibility toggles, and leaders notes.
 </docs>

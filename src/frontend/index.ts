@@ -8,6 +8,9 @@ import BooleanField from './fields/boolean-field.vue';
 import InvitationsEdit from './invitation/invitations-edit.vue';
 import InvitationsIndex from './invitation/invitations-index.vue';
 import ChapterPreview from './stories/chapter-preview.vue';
+import ChapterEdit from './stories/chapter-edit.vue';
+import ChapterEditDetails from './stories/components/chapter-edit-details.vue';
+import ChapterEditBlocks from './stories/components/chapter-edit-blocks.vue';
 import ContextMenu from './shared/context-menu.vue';
 import CreateAccount from './auth/create-account.vue';
 import DashboardIndex from './dashboard/dashboard-index.vue';
@@ -79,6 +82,9 @@ export {
   AudioField,
   BooleanField,
   ChapterPreview,
+  ChapterEdit,
+  ChapterEditBlocks,
+  ChapterEditDetails,
   ContextMenu,
   CreateAccount,
   DashboardIndex,

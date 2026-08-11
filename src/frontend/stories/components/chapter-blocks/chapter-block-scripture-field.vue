@@ -5,9 +5,9 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, watch } from 'vue';
 
-import type { FieldSpec, Scripture } from '../../../types';
-import ScriptureField from '../../fields/scripture-field.vue';
-import { useModelStore } from '../../store';
+import type { FieldSpec, Scripture } from '../../../../types';
+import ScriptureField from '../../../fields/scripture-field.vue';
+import { useModelStore } from '../../../store';
 
 const props = withDefaults(
   defineProps<{
@@ -25,7 +25,7 @@ const emit = defineEmits<{
 }>();
 
 const model = useModelStore();
-const rootPath = computed(() => `_contentBlocks.${props.blockId}`);
+const rootPath = computed(() => `_chapterBlocks.${props.blockId}`);
 const scripturePath = computed(() => `${rootPath.value}.scripture`);
 
 const fieldSpec = computed(
@@ -39,19 +39,35 @@ const fieldSpec = computed(
 const readScripture = (): Scripture =>
   model.getField(scripturePath.value, { reference: '', verse: '' }) as Scripture;
 
+const syncPropsToModel = (value: Scripture) => {
+  const current = readScripture();
+  if (current.reference === value.reference && current.verse === value.verse) {
+    return;
+  }
+  if (
+    current.reference === value.reference &&
+    current.verse.trim() &&
+    !value.verse.trim()
+  ) {
+    return;
+  }
+  model.setField(scripturePath.value, value);
+};
+
+watch(
+  () => props.blockId,
+  () => {
+    model.setField(scripturePath.value, { ...props.modelValue });
+  },
+  { immediate: true },
+);
+
 watch(
   () => props.modelValue,
   (value) => {
-    const current = readScripture();
-    if (
-      current.reference === value.reference &&
-      current.verse === value.verse
-    ) {
-      return;
-    }
-    model.setField(scripturePath.value, value);
+    syncPropsToModel(value);
   },
-  { immediate: true, deep: true },
+  { deep: true },
 );
 
 const unsubscribe = model.$subscribe(() => {

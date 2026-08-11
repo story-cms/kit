@@ -236,22 +236,22 @@ export interface StorySection {
   description?: string;
 }
 
-export interface BlockVisibility {
+export interface ChapterBlockVisibility {
   presenter: boolean;
   personal: boolean;
   hidden: boolean;
 }
 
-export type StoryBlockKind = 'content' | 'title' | 'scripture';
+export type ChapterBlockKind = 'content' | 'title' | 'scripture';
 
-interface StoryBlockBase {
+interface ChapterBlockBase {
   id: string;
-  kind: StoryBlockKind;
+  kind: ChapterBlockKind;
   blockName: string;
-  visibility: BlockVisibility;
+  visibility: ChapterBlockVisibility;
 }
 
-export interface StoryContentBlock extends StoryBlockBase {
+export interface ChapterContentBlock extends ChapterBlockBase {
   kind: 'content';
   displayName: string;
   blockRole: string;
@@ -264,20 +264,24 @@ export interface StoryContentBlock extends StoryBlockBase {
   showLeadersNotes: boolean;
 }
 
-export interface StoryTitleBlock extends StoryBlockBase {
+export interface ChapterTitleBlock extends ChapterBlockBase {
   kind: 'title';
   title: string;
+  subtitle: string;
+  coverImage?: string;
   style: string;
 }
 
-export interface StoryScriptureBlock extends StoryBlockBase {
+export interface ChapterScriptureBlock extends ChapterBlockBase {
   kind: 'scripture';
+  displayName: string;
   scripture: Scripture;
   leadersNotes: string;
   showLeadersNotes: boolean;
 }
 
-export type StoryBlock = StoryContentBlock | StoryTitleBlock | StoryScriptureBlock;
+export type ChapterBlock =
+  ChapterContentBlock | ChapterTitleBlock | ChapterScriptureBlock;
 
 export interface StorySpec {
   id: number;
@@ -479,6 +483,28 @@ export interface DraftEditProps {
   lastPublished: string; // drafts
   story: StorySpec;
   hasEditReview: boolean;
+}
+
+export interface ChapterBundle {
+  number: string;
+  title: string;
+  description: string;
+  coverImage: string;
+  devotionAudio: string;
+  blocks: ChapterBlock[];
+  resources: ResourceItem[];
+}
+
+export interface ChapterEditProps {
+  draft: DraftMeta;
+  bundle: ChapterBundle;
+  story: StorySpec;
+  availableResources: ResourceItem[];
+  providers: Providers;
+  hasEditReview: boolean;
+  lastPublished: string;
+  isCreate?: boolean;
+  source?: ChapterBundle;
 }
 
 export interface ChapterMeta {
