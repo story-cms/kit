@@ -36,7 +36,9 @@
       </span>
     </td>
     <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
-      <span class="rounded-xl bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700">
+      <span
+        class="rounded-xl bg-studio-lime px-2 py-1 text-xs font-medium text-green-800"
+      >
         {{ language }}
       </span>
     </td>

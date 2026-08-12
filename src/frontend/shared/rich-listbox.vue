@@ -71,7 +71,7 @@
             <li
               :class="[
                 selected && isInitialSelection
-                  ? 'bg-studio-green'
+                  ? 'bg-blue-100'
                   : selected
                     ? 'bg-gray-200'
                     : active
@@ -90,7 +90,9 @@
                   <p
                     class="font-medium"
                     :class="
-                      selected && isInitialSelection ? 'text-studio-forest' : 'text-gray-900'
+                      selected && isInitialSelection
+                        ? 'text-studio-forest'
+                        : 'text-gray-900'
                     "
                   >
                     {{ option.label }}

@@ -11,7 +11,10 @@
     </Variant>
 
     <Variant title="Secondary">
-      <StudioButton label="Save Changes" variant="secondary" @click="handleClick" />
+      <div class="flex flex-col gap-2">
+        <StudioButton label="Save Changes" variant="secondary" @click="handleClick" />
+        <StudioButton label="Save Changes" variant="secondary" disabled />
+      </div>
     </Variant>
 
     <Variant title="Tertiary">
@@ -39,7 +42,12 @@
     </Variant>
 
     <Variant title="CTA shape tertiary">
-      <StudioButton label="Learn more" variant="tertiary" shape="cta" @click="handleClick" />
+      <StudioButton
+        label="Learn more"
+        variant="tertiary"
+        shape="cta"
+        @click="handleClick"
+      />
     </Variant>
 
     <Variant title="Disabled">
