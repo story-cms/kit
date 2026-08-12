@@ -41,7 +41,7 @@
           <div class="flex min-w-0 flex-wrap items-center gap-1.5 overflow-hidden">
             <span
               v-if="isForAllRegions"
-              class="inline-flex items-center rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700"
+              class="inline-flex items-center rounded-full bg-studio-lime px-2 py-0.5 text-xs font-medium text-green-800"
             >
               All Regions
             </span>
@@ -49,7 +49,7 @@
               <span
                 v-for="region in parsedRegions?.slice(0, 3)"
                 :key="region"
-                class="inline-flex items-center rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700"
+                class="inline-flex items-center rounded-full bg-studio-lime px-2 py-0.5 text-xs font-medium text-green-800"
               >
                 {{ region }}
               </span>
@@ -73,7 +73,9 @@
         class="group/edit text-left"
         @click="emit('edit', invitation.id)"
       >
-        <span class="text-sm font-medium text-gray-900 transition-opacity group-hover/edit:opacity-70">
+        <span
+          class="text-sm font-medium text-gray-900 transition-opacity group-hover/edit:opacity-70"
+        >
           {{ invitationName }}
         </span>
       </button>

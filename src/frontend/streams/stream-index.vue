@@ -4,7 +4,9 @@
       <div class="flex items-center justify-center gap-x-6">
         <ListSwitcher :is-list="isList" @toggle="isList = !isList" />
 
-        <IconButton icon="plus" @tap="addDrop" />
+        <StudioButton label="Add Drop" @click="addDrop">
+          <Plus class="size-4" aria-hidden="true" />
+        </StudioButton>
       </div>
     </template>
     <template #controls>
@@ -72,7 +74,7 @@ import { SharedPageProps } from '../../types';
 
 import IndexFilter from '../shared/index-filter.vue';
 import TabButton from '../shared/tab-button.vue';
-import { ArrowDownWideNarrow, ArrowUpWideNarrow } from '@lucide/vue';
+import { ArrowDownWideNarrow, ArrowUpWideNarrow, Plus } from '@lucide/vue';
 
 import AppLayout from '../shared/app-layout.vue';
 import Icon from '../shared/icon.vue';
@@ -80,9 +82,9 @@ import { computed, ref } from 'vue';
 import type { DropIndexItem, StreamIndexProps } from '../../types';
 import DropItem from './components/drop-item.vue';
 import ListSwitcher from '../shared/list-switcher.vue';
-import IconButton from '../shared/icon-button.vue';
 import { router } from '@inertiajs/vue3';
 import { useSharedStore } from '../store';
+import StudioButton from '../shared/studio-button.vue';
 
 const props = defineProps<StreamIndexProps & SharedPageProps>();
 const shared = useSharedStore();
