@@ -26,6 +26,12 @@
       </div>
     </Variant>
 
+    <Variant title="Indicator">
+      <div class="inline-block rounded-full border border-gray-200 bg-gray-50 p-2">
+        <NavRailLanguageIndicator current-locale="en" />
+      </div>
+    </Variant>
+
     <Variant title="Read only">
       <div class="rounded-xl border border-gray-200 bg-gray-50 p-4">
         <NavRailLanguageSelector
@@ -42,6 +48,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import NavRailLanguageIndicator from './nav-rail-language-indicator.vue';
 import NavRailLanguageSelector from './nav-rail-language-selector.vue';
 import { english, german, spanish, ukrainian } from '../test/mocks';
 

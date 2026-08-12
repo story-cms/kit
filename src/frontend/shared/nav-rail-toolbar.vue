@@ -20,6 +20,10 @@
       :is-read-only="!shared.user.isManager"
       @change="onLanguage"
     />
+    <NavRailLanguageIndicator
+      v-if="variant === 'panel' && subscribed('language')"
+      :current-locale="locale"
+    />
     <button class="nav-icon" @click="toggleMenu">
       <ChevronsRight v-if="variant === 'pill'" class="size-6" aria-hidden="true" />
       <ChevronsLeft v-else class="size-6" aria-hidden="true" />
@@ -29,6 +33,7 @@
 
 <script setup lang="ts">
 import { ChevronsLeft, ChevronsRight, Home, Reply } from '@lucide/vue';
+import NavRailLanguageIndicator from './nav-rail-language-indicator.vue';
 import NavRailLanguageSelector from './nav-rail-language-selector.vue';
 import { useSidebarNav } from './use-sidebar-nav';
 
