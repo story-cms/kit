@@ -1,9 +1,10 @@
 <template>
-  <Listbox v-model="model" as="div" :class="variant === 'pill' ? 'relative inline-block' : 'relative'">
-    <ListboxButton
-      :disabled="isReadOnly"
-      :class="triggerClasses"
-    >
+  <Listbox
+    v-model="model"
+    as="div"
+    :class="variant === 'pill' ? 'relative inline-block' : 'relative'"
+  >
+    <ListboxButton :disabled="isReadOnly" :class="triggerClasses">
       <template v-if="variant === 'panel'">
         <div class="flex items-center gap-2">
           <Icon name="translate" class="size-6 shrink-0" />
@@ -22,7 +23,7 @@
       </template>
       <template v-else>
         <span
-          class="absolute right-2 top-4 rounded-xl bg-blue-100 px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-blue-800"
+          class="absolute right-2 top-4 rounded-xl bg-studio-lime px-1 py-[2px] text-[8px] font-medium uppercase leading-[9.36px] text-studio-forest"
         >
           {{ currentLocale }}
         </span>
@@ -31,7 +32,11 @@
     </ListboxButton>
 
     <transition
-      :leave-active-class="variant === 'pill' ? 'transition duration-75 ease-in' : 'transition duration-100 ease-in'"
+      :leave-active-class="
+        variant === 'pill'
+          ? 'transition duration-75 ease-in'
+          : 'transition duration-100 ease-in'
+      "
       leave-from-class="opacity-100"
       :leave-to-class="variant === 'pill' ? 'opacity-0 transform scale-95' : 'opacity-0'"
     >
@@ -121,10 +126,7 @@ const optionsClasses = computed(() => {
     ];
   }
 
-  return [
-    shared,
-    'left-0 top-full mt-1 max-h-[calc(100vh-240px)] w-56 origin-top-right',
-  ];
+  return [shared, 'left-0 top-full mt-1 max-h-[calc(100vh-240px)] w-56 origin-top-right'];
 });
 
 const rowClasses = (active: boolean, selected: boolean) => [
