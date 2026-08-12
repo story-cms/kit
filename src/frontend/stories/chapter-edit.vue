@@ -1,12 +1,28 @@
 <template>
   <AppLayout :title="pageTitle" :subtitle="headerSubtitle">
     <template #actions>
-      <StudioButton
-        :label="saveButtonLabel"
-        variant="primary"
-        :disabled="isSaving"
-        @click="saveChapter"
-      />
+      <div class="flex flex-col flex-wrap items-start gap-1 md:flex-row md:items-center">
+        <button
+          type="button"
+          class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
+          aria-label="Delete draft"
+          @click="deleteDraft"
+        >
+          <Trash2 class="size-5" aria-hidden="true" />
+        </button>
+        <WorkflowActions
+          :has-edit-review="props.hasEditReview"
+          @publish="publish"
+          @request-change="reject"
+          @submit="submit"
+        />
+        <StudioButton
+          :label="saveButtonLabel"
+          variant="primary"
+          :disabled="isSaving"
+          @click="saveChapter"
+        />
+      </div>
     </template>
     <template #controls>
       <TabNavigation
@@ -43,26 +59,34 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { router } from '@inertiajs/vue3';
-import { BookOpen, FolderClosed, LayoutGrid } from '@lucide/vue';
+import type { Errors } from '@inertiajs/core';
+import { BookOpen, FolderClosed, LayoutGrid, Trash2 } from '@lucide/vue';
 
 import type {
   ChapterEditProps,
+  DraftEditProps,
   NavigationPaneTab,
   ResourceItem,
   SharedPageProps,
   ChapterBlock,
 } from '../../types';
 import { ResponseStatus } from '../../types';
-import { useSharedStore, useWidgetsStore, useModelStore } from '../store';
+import {
+  useSharedStore,
+  useWidgetsStore,
+  useModelStore,
+  useDraftsStore,
+} from '../store';
 import AppLayout from '../shared/app-layout.vue';
 import StudioButton from '../shared/studio-button.vue';
 import TabNavigation from '../shared/tab-navigation.vue';
 import ChapterEditDetails from './components/chapter-edit-details.vue';
 import ChapterEditBlocks from './components/chapter-edit-blocks.vue';
 import StoryEditResources from './components/story-edit-resources.vue';
+import WorkflowActions from './components/workflow-actions.vue';
 import { resourceIds } from './components/resource-utils';
 import {
   chapterEditTabHasError,
@@ -83,7 +107,18 @@ shared.setFromProps(props);
 if (Object.keys(props.errors ?? {}).length === 0) {
   shared.clearErrors();
 }
-useWidgetsStore().setProviders(props.providers);
+
+const widgets = useWidgetsStore();
+widgets.setProviders(props.providers);
+
+const drafts = useDraftsStore();
+drafts.setFromProps(props as DraftEditProps);
+
+watch(
+  () => props.draft.updatedAt,
+  (updatedAt) => drafts.setUpdatedAt(updatedAt),
+  { immediate: true },
+);
 
 const model = useModelStore();
 model.setModel(props.bundle);
@@ -94,6 +129,9 @@ const blocks = ref<ChapterBlock[]>(
 const attachedResources = ref<ResourceItem[]>([...(props.bundle.resources ?? [])]);
 const availableResources = props.availableResources ?? [];
 const isSaving = ref(false);
+
+let isSettingErrors = false;
+let autosaveTimeout: ReturnType<typeof setTimeout> | null = null;
 
 watch(
   blocks,
@@ -119,11 +157,8 @@ if (attachResourceId) {
   }
 }
 
+const defaultTitle = computed(() => `New ${props.story.chapterType}`);
 const title = ref(props.bundle.title);
-
-model.$subscribe(() => {
-  title.value = model.getField('title', '');
-});
 
 const pageTitle = computed(() =>
   props.isCreate ? 'Add Chapter' : `Edit ${props.story.chapterType ?? 'Chapter'}`,
@@ -183,11 +218,142 @@ const validationFailureMessage = (validationErrors: Record<string, string | stri
     ? 'Some required fields are missing'
     : 'Something went wrong. Please try again.';
 
-onMounted(() => {
-  if (Object.keys(props.errors ?? {}).length > 0) {
-    focusFirstErroredTab();
-  }
+const getBundle = () => ({
+  number: model.getField('number', ''),
+  title: model.getField('title', ''),
+  description: model.getField('description', ''),
+  coverImage: model.getField('coverImage', ''),
+  devotionAudio: model.getField('devotionAudio', ''),
+  blocks: model.getField('blocks', []),
+  resources: resourceIds(attachedResources.value),
 });
+
+const getPayload = () => ({
+  feedback: '',
+  bundle: getBundle(),
+});
+
+const cancelAutosave = () => {
+  if (autosaveTimeout !== null) {
+    clearTimeout(autosaveTimeout);
+    autosaveTimeout = null;
+  }
+};
+
+const onSaveSuccess = (message?: string) => {
+  widgets.setIsDirty(false);
+  if (!message) return;
+  shared.addMessage(ResponseStatus.Confirmation, message);
+};
+
+const onSaveError = (_errors: Errors, message: string) => {
+  widgets.setIsDirty(false);
+  isSettingErrors = true;
+  shared.setErrors(props.errors);
+  shared.addMessage(ResponseStatus.Failure, message);
+};
+
+const postSave = (options?: { message?: string; focusErrors?: boolean }) => {
+  router.post(
+    `/${shared.locale}/story/${props.story.id}/draft/${props.draft.id}/save`,
+    getPayload(),
+    {
+      preserveScroll: true,
+      onSuccess: () => {
+        onSaveSuccess(options?.message);
+        if (props.user.role === 'admin') return;
+        drafts.setStatus('started');
+      },
+      onError: (validationErrors) => {
+        widgets.setIsDirty(false);
+        isSettingErrors = true;
+        shared.setErrors(validationErrors);
+        if (options?.focusErrors) {
+          focusFirstErroredTab();
+        }
+        shared.addMessage(
+          ResponseStatus.Failure,
+          options?.focusErrors
+            ? validationFailureMessage(validationErrors)
+            : `${props.story.chapterType} not saved`,
+        );
+      },
+      onFinish: () => {
+        isSaving.value = false;
+      },
+    },
+  );
+};
+
+const scheduleAutosave = () => {
+  cancelAutosave();
+  autosaveTimeout = setTimeout(() => {
+    autosaveTimeout = null;
+    postSave();
+  }, 2000);
+};
+
+const saveChapter = () => {
+  cancelAutosave();
+  shared.clearErrors();
+  isSaving.value = true;
+  postSave({
+    message: props.isCreate ? 'Chapter created successfully' : 'Chapter saved successfully',
+    focusErrors: true,
+  });
+};
+
+const deleteDraft = () => {
+  cancelAutosave();
+  router.delete(`/${shared.locale}/story/${props.story.id}/draft/${props.draft.id}`, {
+    onSuccess: () => onSaveSuccess('Draft successfully deleted'),
+    onError: (e) => onSaveError(e, 'Error deleting draft'),
+  });
+};
+
+const submit = () => {
+  cancelAutosave();
+  router.post(
+    `/${shared.locale}/story/${props.story.id}/draft/${props.draft.id}/submit`,
+    getPayload(),
+    {
+      onSuccess: () =>
+        onSaveSuccess(`${props.story.chapterType} submitted for review`),
+      onError: (e) =>
+        onSaveError(e, 'Draft not submitted. Please review and correct any errors.'),
+    },
+  );
+};
+
+const publish = () => {
+  cancelAutosave();
+  widgets.setIsDirty(true);
+  router.post(
+    `/${shared.locale}/story/${props.story.id}/draft/${props.draft.id}/publish`,
+    getPayload(),
+    {
+      onSuccess: () =>
+        onSaveSuccess(`${props.story.chapterType} published successfully`),
+      onError: (e) =>
+        onSaveError(
+          e,
+          `${props.story.chapterType} not published. Please review and correct any errors.`,
+        ),
+    },
+  );
+};
+
+const reject = () => {
+  cancelAutosave();
+  router.post(
+    `/${shared.locale}/story/${props.story.id}/draft/${props.draft.id}/reject`,
+    getPayload(),
+    {
+      onSuccess: () => onSaveSuccess('Draft sent back for fixing'),
+      onError: (e) => onSaveError(e, 'Error sending draft back'),
+    },
+  );
+};
 
 const createResource = () => {
   const params = new URLSearchParams(window.location.search);
@@ -197,48 +363,23 @@ const createResource = () => {
   router.visit(`/${shared.locale}/resource/create?returnTo=${encodedReturnTo}`);
 };
 
-const getPayload = () => ({
-  bundle: {
-    number: model.getField('number', ''),
-    title: model.getField('title', ''),
-    description: model.getField('description', ''),
-    coverImage: model.getField('coverImage', ''),
-    devotionAudio: model.getField('devotionAudio', ''),
-    blocks: model.getField('blocks', []),
-    resources: resourceIds(attachedResources.value),
-  },
+onMounted(() => {
+  if (Object.keys(props.errors ?? {}).length > 0) {
+    focusFirstErroredTab();
+  }
+
+  model.$subscribe(() => {
+    if (isSettingErrors) {
+      isSettingErrors = false;
+      return;
+    }
+    widgets.setIsDirty(true);
+    scheduleAutosave();
+    title.value = model.getField('title', defaultTitle.value);
+  });
 });
 
-const saveChapter = () => {
-  shared.clearErrors();
-  isSaving.value = true;
-
-  router.post(
-    `/${shared.locale}/story/${props.story.id}/draft/${props.draft.id}/save`,
-    getPayload(),
-    {
-      preserveScroll: true,
-
-      onSuccess: () => {
-        shared.addMessage(
-          ResponseStatus.Confirmation,
-          props.isCreate ? 'Chapter created successfully' : 'Chapter saved successfully',
-        );
-      },
-
-      onError: (validationErrors) => {
-        shared.setErrors(validationErrors);
-        focusFirstErroredTab();
-        shared.addMessage(
-          ResponseStatus.Failure,
-          validationFailureMessage(validationErrors),
-        );
-      },
-
-      onFinish: () => {
-        isSaving.value = false;
-      },
-    },
-  );
-};
+onUnmounted(() => {
+  cancelAutosave();
+});
 </script>

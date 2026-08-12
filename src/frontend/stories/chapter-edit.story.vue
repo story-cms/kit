@@ -86,6 +86,57 @@
         :providers="mockResourceProviders"
       />
     </Variant>
+
+    <Variant title="Edit review: Submit" :setup-app="loadEdit">
+      <ChapterEdit
+        :config="sharedProps.config"
+        :user="editorUser"
+        :language="sharedProps.language"
+        :errors="{}"
+        :bookmarks="sharedProps.bookmarks"
+        :draft="sampleChapterDraft"
+        :bundle="sampleChapterBundle"
+        :story="chapterEditStory"
+        :available-resources="availableResources"
+        :has-edit-review="true"
+        :last-published="''"
+        :providers="mockResourceProviders"
+      />
+    </Variant>
+
+    <Variant title="Edit review: Request change" :setup-app="loadEdit">
+      <ChapterEdit
+        :config="sharedProps.config"
+        :user="adminUser"
+        :language="sharedProps.language"
+        :errors="{}"
+        :bookmarks="sharedProps.bookmarks"
+        :draft="sampleChapterDraftSubmitted"
+        :bundle="sampleChapterBundle"
+        :story="chapterEditStory"
+        :available-resources="availableResources"
+        :has-edit-review="true"
+        :last-published="'2025-10-24T06:10:38.483+00:00'"
+        :providers="mockResourceProviders"
+      />
+    </Variant>
+
+    <Variant title="Mark Ready" :setup-app="loadEdit">
+      <ChapterEdit
+        :config="sharedProps.config"
+        :user="adminUser"
+        :language="sharedProps.language"
+        :errors="{}"
+        :bookmarks="sharedProps.bookmarks"
+        :draft="sampleChapterDraft"
+        :bundle="sampleChapterBundle"
+        :story="chapterEditStory"
+        :available-resources="availableResources"
+        :has-edit-review="true"
+        :last-published="''"
+        :providers="mockResourceProviders"
+      />
+    </Variant>
   </Story>
 </template>
 
@@ -93,13 +144,16 @@
 import ChapterEdit from './chapter-edit.vue';
 import ModelControl from '../test/model-control.vue';
 import {
+  adminUser,
   availableResources,
   chapterEditStory,
   chapterEditValidationErrors,
+  editorUser,
   emptyChapterBundle,
   mockResourceProviders,
   sampleChapterBundle,
   sampleChapterDraft,
+  sampleChapterDraftSubmitted,
   sharedProps,
   miniSidebar,
 } from '../test/mocks';
@@ -146,13 +200,16 @@ const loadValidationErrors: StoryHandler = (context): void => {
 <docs lang="md">
 # Chapter Edit
 
-Tabbed chapter create/edit page with Details, Blocks, and Resources. Blocks use the shared block editor; chapter metadata uses fixed fields labelled with the story chapter type.
+Tabbed chapter create/edit page with Details, Blocks, and Resources. Includes draft lifecycle actions (delete, submit, publish, request change), 2s autosave, and an explicit Save button. No sidebar meta/preview.
 
 ## Variants
 
 - **Create** — empty chapter with Create Chapter action
-- **Edit** — populated chapter with mixed blocks and attached resources
+- **Edit** — populated chapter with Publish changes (no edit-review)
 - **Blocks tab** — opens directly on the Blocks tab
 - **Resources tab** — opens directly on the Resources tab
 - **Validation errors on tabs** — error indicators on Details, Blocks, and Resources tabs
+- **Edit review: Submit** — editor with edit-review sees Submit
+- **Edit review: Request change** — admin reviewing a submitted draft
+- **Mark Ready** — admin publish label when never published
 </docs>

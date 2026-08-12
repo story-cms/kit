@@ -4746,6 +4746,11 @@ export const sampleChapterDraft = {
   createdAt: '2025-10-24T06:10:38.482+00:00',
 };
 
+export const sampleChapterDraftSubmitted = {
+  ...sampleChapterDraft,
+  status: 'submitted',
+};
+
 export const emptyChapterBundle: ChapterBundle = {
   number: '',
   title: '',
