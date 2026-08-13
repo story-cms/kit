@@ -15,6 +15,7 @@
         :block="block"
         :expanded="isExpanded(index)"
         :video-collection-id="videoCollectionId"
+        :chapter-type="chapterType"
         @update:block="updateBlock(index, $event)"
         @delete="deleteBlock(index)"
         @toggle="toggle(index)"
@@ -74,6 +75,7 @@ import {
 const props = defineProps<{
   blocks: ChapterBlock[];
   videoCollectionId?: string;
+  chapterType?: string | null;
 }>();
 
 const emit = defineEmits<{

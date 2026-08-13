@@ -79,14 +79,11 @@
       />
     </div>
 
-    <button
+    <ChapterAddLeadersNotesButton
       v-else
-      type="button"
-      class="text-sm font-medium text-studio-forest underline-offset-2 hover:underline"
+      class="mt-6"
       @click="updateField('showLeadersNotes', true)"
-    >
-      Add Leaders Notes
-    </button>
+    />
 
     <template #footer>
       <ChapterBlockVisibility v-model="visibilityModel" />
@@ -100,6 +97,7 @@ import { BookMarked, Crown, Trash2 } from '@lucide/vue';
 
 import type { ChapterScriptureBlock } from '../../../../types';
 import ChapterBlockCardShell from './chapter-block-card-shell.vue';
+import ChapterAddLeadersNotesButton from './chapter-add-leaders-notes-button.vue';
 import ChapterBlockScriptureField from './chapter-block-scripture-field.vue';
 import ChapterBlockVisibility from './chapter-block-visibility.vue';
 

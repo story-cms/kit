@@ -13,9 +13,11 @@ const props = withDefaults(
   defineProps<{
     modelValue: string;
     blockId: string;
+    itemId?: string;
     label?: string;
   }>(),
   {
+    itemId: undefined,
     label: 'Cover Image',
   },
 );
@@ -26,12 +28,15 @@ const emit = defineEmits<{
 
 const model = useModelStore();
 const rootPath = computed(() => `_chapterBlocks.${props.blockId}`);
-const coverImagePath = computed(() => `${rootPath.value}.coverImage`);
+const fieldName = computed(() =>
+  props.itemId ? `items.${props.itemId}.imageUrl` : 'coverImage',
+);
+const fieldPath = computed(() => `${rootPath.value}.${fieldName.value}`);
 
 const fieldSpec = computed(
   (): FieldSpec => ({
     label: props.label,
-    name: 'coverImage',
+    name: fieldName.value,
     widget: 'image',
     description: 'PNG, JPG • Recommended 1280x720px',
     extensions: ['.jpeg', '.jpg', '.png'],
@@ -39,20 +44,20 @@ const fieldSpec = computed(
   }),
 );
 
-const readCoverImage = (): string => model.getField(coverImagePath.value, '') as string;
+const readValue = (): string => model.getField(fieldPath.value, '') as string;
 
 watch(
   () => props.modelValue,
   (value) => {
-    const current = readCoverImage();
+    const current = readValue();
     if (current === value) return;
-    model.setField(coverImagePath.value, value);
+    model.setField(fieldPath.value, value);
   },
   { immediate: true },
 );
 
 const unsubscribe = model.$subscribe(() => {
-  const fresh = readCoverImage();
+  const fresh = readValue();
   if (fresh === props.modelValue) return;
   emit('update:modelValue', fresh);
 });

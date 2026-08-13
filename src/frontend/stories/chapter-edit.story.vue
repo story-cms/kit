@@ -53,6 +53,23 @@
       />
     </Variant>
 
+    <Variant title="Devotion" :setup-app="loadDevotionBlocksTab">
+      <ChapterEdit
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :errors="{}"
+        :bookmarks="sharedProps.bookmarks"
+        :draft="sampleChapterDraft"
+        :bundle="sampleDevotionChapterBundle"
+        :story="chapterEditDevotionStory"
+        :available-resources="availableResources"
+        :has-edit-review="false"
+        :last-published="''"
+        :providers="mockResourceProviders"
+      />
+    </Variant>
+
     <Variant title="Resources tab" :setup-app="loadResourcesTab">
       <ChapterEdit
         :config="sharedProps.config"
@@ -147,11 +164,13 @@ import {
   adminUser,
   availableResources,
   chapterEditStory,
+  chapterEditDevotionStory,
   chapterEditValidationErrors,
   editorUser,
   emptyChapterBundle,
   mockResourceProviders,
   sampleChapterBundle,
+  sampleDevotionChapterBundle,
   sampleChapterDraft,
   sampleChapterDraftSubmitted,
   sharedProps,
@@ -175,6 +194,13 @@ const loadEdit: StoryHandler = (context): void => {
 };
 
 const loadBlocksTab: StoryHandler = (context): void => {
+  miniSidebar(context);
+  const url = new URL(window.location.href);
+  url.searchParams.set('tab', 'Blocks');
+  window.history.replaceState({}, '', url.toString());
+};
+
+const loadDevotionBlocksTab: StoryHandler = (context): void => {
   miniSidebar(context);
   const url = new URL(window.location.href);
   url.searchParams.set('tab', 'Blocks');
@@ -207,6 +233,7 @@ Tabbed chapter create/edit page with Details, Blocks, and Resources. Includes dr
 - **Create** — empty chapter with Create Chapter action
 - **Edit** — populated chapter with Publish changes (no edit-review)
 - **Blocks tab** — opens directly on the Blocks tab
+- **Devotion** — Devotion chapter type with sample blocks, opens on the Blocks tab
 - **Resources tab** — opens directly on the Resources tab
 - **Validation errors on tabs** — error indicators on Details, Blocks, and Resources tabs
 - **Edit review: Submit** — editor with edit-review sees Submit

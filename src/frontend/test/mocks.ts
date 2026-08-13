@@ -21,6 +21,7 @@ import {
   createEmptyContentBlock,
   createEmptyScriptureBlock,
   createEmptyTitleBlock,
+  createContentItem,
 } from '../stories/components/chapter-blocks/chapter-block-utils';
 
 interface Address {
@@ -4543,13 +4544,13 @@ export const sampleMixedChapterBlocks: ChapterBlock[] = [
     subtitle: 'An introduction to the fourth gospel',
     coverImage:
       'https://res.cloudinary.com/journeys/image/upload/v1756121793/mountain-placeholder_yuflkz.jpg',
-    style: 'emphasis',
   },
   {
     ...createEmptyContentBlock(),
     blockName: 'Introduction',
     displayName: 'Session Introduction',
     blockRole: 'introduction',
+    style: 'secondary',
     content:
       'Welcome to this session on the Gospel of John. We will explore how John presents Jesus as the Word made flesh.',
   },
@@ -4568,16 +4569,13 @@ export const sampleMixedChapterBlocks: ChapterBlock[] = [
     blockName: 'Part One: The Word',
     title: 'The Word Became Flesh',
     subtitle: 'Session 1 of 12',
-    style: 'subtle',
   },
   {
     ...createEmptyContentBlock(),
     blockName: 'Further Reading',
     displayName: 'External Resource',
     blockRole: 'summary',
-    blockType: 'url',
-    url: 'https://example.com/john-overview',
-    content: '',
+    content: 'https://example.com/john-overview',
   },
   {
     ...createEmptyScriptureBlock(),
@@ -4597,7 +4595,7 @@ export const sampleMixedChapterBlocks: ChapterBlock[] = [
     blockName: 'Summary',
     displayName: 'Session Summary',
     blockRole: 'summary',
-    style: 'emphasis',
+    style: 'primary',
     content:
       '**Key takeaways:** Jesus is the eternal Word; belief in him brings eternal life.',
     visibility: { presenter: true, personal: false, inNavigation: true, hidden: false },
@@ -4607,8 +4605,8 @@ export const sampleMixedChapterBlocks: ChapterBlock[] = [
     blockName: 'Session Video',
     displayName: 'Watch Session',
     blockRole: 'introduction',
-    blockType: 'video',
     content: '',
+    items: [createContentItem('video')],
   },
 ];
 
@@ -4775,6 +4773,35 @@ export const sampleChapterBundle: ChapterBundle = {
 export const chapterEditStory: StorySpec = {
   ...story,
   chapterType: 'Day',
+};
+
+export const chapterEditDevotionStory: StorySpec = {
+  ...story,
+  chapterType: 'Devotion',
+};
+
+export const sampleDevotionChapterBundle: ChapterBundle = {
+  ...sampleChapterBundle,
+  number: '01',
+  title: 'Morning Devotion',
+  description: "A short daily devotion on God's love.",
+  blocks: [
+    {
+      ...createEmptyContentBlock(),
+      blockName: 'Opening',
+      displayName: 'Opening Devotion',
+      blockRole: 'introduction',
+      content: "Welcome to today's devotion.",
+    },
+    {
+      ...createEmptyContentBlock(),
+      blockName: 'Passage',
+      displayName: 'Scripture Reading',
+      blockRole: 'scripture',
+      content: '',
+      items: [createContentItem('scripture')],
+    },
+  ],
 };
 
 export const chapterEditProps: Omit<ChapterEditProps, 'providers'> & {

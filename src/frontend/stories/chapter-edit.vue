@@ -43,6 +43,7 @@
             <ChapterEditBlocks
               v-model:blocks="blocks"
               :video-collection-id="props.config.videoCollectionId"
+              :chapter-type="props.story.chapterType"
             />
           </div>
           <div v-if="currentChapterTab === 'Resources'" dir="ltr">
@@ -87,6 +88,7 @@ import {
   chapterEditTabHasError,
   firstChapterEditTabWithError,
 } from './chapter-edit-tab-errors';
+import { normalizeChapterBlocks } from './components/chapter-blocks/chapter-block-utils';
 
 const resolveChapterTab = (value: string | null, tabs: NavigationPaneTab[]): string => {
   if (!value) return 'Details';
@@ -119,7 +121,9 @@ const model = useModelStore();
 model.setModel(props.bundle);
 
 const blocks = ref<ChapterBlock[]>(
-  props.bundle.blocks?.length ? [...props.bundle.blocks] : [],
+  props.bundle.blocks?.length
+    ? normalizeChapterBlocks([...props.bundle.blocks])
+    : [],
 );
 const attachedResources = ref<ResourceItem[]>([...(props.bundle.resources ?? [])]);
 const availableResources = props.availableResources ?? [];

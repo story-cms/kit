@@ -2,7 +2,7 @@
   <div>
     <label v-if="label" class="input-label mb-2 block">{{ label }}</label>
     <div class="mt-1">
-      <div class="cm-s-easymde rounded-xl border border-gray-200">
+      <div class="cm-s-easymde rounded-xl">
         <textarea ref="textArea" data-testid="block-rich-text-editor" />
       </div>
     </div>

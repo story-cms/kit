@@ -252,15 +252,23 @@ interface ChapterBlockBase {
   visibility: ChapterBlockVisibility;
 }
 
+export type ChapterContentItemKind = 'image' | 'video' | 'scripture';
+
+export interface ChapterContentItem {
+  id: string;
+  kind: ChapterContentItemKind;
+  imageUrl?: string;
+  video?: { url: string | null };
+  scripture?: Scripture;
+}
+
 export interface ChapterContentBlock extends ChapterBlockBase {
   kind: 'content';
   displayName: string;
   blockRole: string;
   style: string;
-  blockType: ResourceType;
   content: string;
-  url?: string;
-  video?: { url: string | null };
+  items: ChapterContentItem[];
   leadersNotes: string;
   showLeadersNotes: boolean;
 }
@@ -270,7 +278,6 @@ export interface ChapterTitleBlock extends ChapterBlockBase {
   title: string;
   subtitle: string;
   coverImage?: string;
-  style: string;
 }
 
 export interface ChapterScriptureBlock extends ChapterBlockBase {

@@ -49,45 +49,109 @@
 
     <RichListbox
       :model-value="block.style"
-      label="Style"
-      :options="styleOptions"
+      label="Block Style"
+      :options="blockStyleOptions"
       @update:model-value="updateField('style', $event)"
     />
 
-    <RichListbox
-      :model-value="block.blockType"
-      label="Block Type"
-      :options="blockTypeOptions"
-      @update:model-value="setBlockType"
-    />
+    <div>
+      <label class="input-label block">Content Items</label>
+      <p class="text-sm text-gray-500">Add items that serve this block's role.</p>
 
-    <ChapterBlockRichTextEditor
-      v-if="block.blockType === 'text'"
-      v-model="contentModel"
-      label="Text Content"
-      placeholder="Enter your content..."
-    />
+      <div class="mt-4">
+        <div class="pb-6">
+          <div class="mb-3 flex items-center gap-2">
+            <FileText class="size-4 text-gray-500" aria-hidden="true" />
+            <span class="input-label mb-0">Text</span>
+          </div>
+          <ChapterBlockRichTextEditor
+            v-model="contentModel"
+            placeholder="Enter your content..."
+          />
+        </div>
 
-    <div v-if="block.blockType === 'url'">
-      <label :for="`${block.id}-url`" class="input-label">URL</label>
-      <input
-        :id="`${block.id}-url`"
-        type="url"
-        :value="block.url ?? ''"
-        placeholder="https://..."
-        class="input-field mt-[2px]"
-        @input="updateField('url', ($event.target as HTMLInputElement).value)"
+        <template v-for="item in block.items" :key="item.id">
+          <div v-if="item.kind === 'image'" class="border-t border-gray-100 pt-6">
+            <div class="mb-2 flex items-center justify-between gap-3">
+              <span class="input-label mb-0">Image</span>
+              <button
+                type="button"
+                class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                aria-label="Remove image item"
+                @click="removeItem(item.id)"
+              >
+                <Trash2 class="size-4" aria-hidden="true" />
+              </button>
+            </div>
+            <div class="[&>div]:mt-0">
+              <ChapterBlockImageField
+                :model-value="item.imageUrl ?? ''"
+                :block-id="block.id"
+                :item-id="item.id"
+                label=""
+                @update:model-value="updateItem(item.id, { imageUrl: $event })"
+              />
+            </div>
+          </div>
+
+          <div v-else-if="item.kind === 'video'" class="border-t border-gray-100 pt-6">
+            <div class="mb-2 flex items-center justify-between gap-3">
+              <span class="input-label mb-0">Video</span>
+              <button
+                type="button"
+                class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                aria-label="Remove video item"
+                @click="removeItem(item.id)"
+              >
+                <Trash2 class="size-4" aria-hidden="true" />
+              </button>
+            </div>
+            <div class="[&>div]:mt-0">
+              <ChapterBlockVideoField
+                :model-value="item.video ?? { url: null }"
+                :collection-id="videoCollectionId ?? ''"
+                :block-id="block.id"
+                :item-id="item.id"
+                label=""
+                @update:model-value="updateItem(item.id, { video: $event })"
+              />
+            </div>
+          </div>
+
+          <div v-else-if="item.kind === 'scripture'" class="border-t border-gray-100 pt-6">
+            <div class="mb-2 flex items-center justify-between gap-3">
+              <span class="input-label mb-0">Scripture</span>
+              <button
+                type="button"
+                class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                aria-label="Remove scripture item"
+                @click="removeItem(item.id)"
+              >
+                <Trash2 class="size-4" aria-hidden="true" />
+              </button>
+            </div>
+            <ChapterBlockScriptureField
+              :model-value="item.scripture ?? { reference: '', verse: '' }"
+              :block-id="block.id"
+              :item-id="item.id"
+              reference-label="Bible Reference"
+              passage-label="Scripture Text"
+              reference-placeholder="e.g., John 3:16, Romans 8:28–30"
+              passage-placeholder="Paste or type the scripture passage here..."
+              @update:model-value="updateItem(item.id, { scripture: $event })"
+            />
+          </div>
+        </template>
+      </div>
+
+      <ChapterContentAddItemsToolbar
+        :show-add-leaders-notes="!block.showLeadersNotes"
+        @add-image="addItem('image')"
+        @add-video="addItem('video')"
+        @add-scripture="addItem('scripture')"
+        @add-leaders-notes="updateField('showLeadersNotes', true)"
       />
     </div>
-
-    <ChapterBlockVideoField
-      v-if="block.blockType === 'video'"
-      :model-value="block.video ?? { url: null }"
-      :collection-id="videoCollectionId ?? ''"
-      :block-id="block.id"
-      label="Video"
-      @update:model-value="updateField('video', $event)"
-    />
 
     <div
       v-if="block.showLeadersNotes"
@@ -121,15 +185,6 @@
       />
     </div>
 
-    <button
-      v-else
-      type="button"
-      class="text-sm font-medium text-studio-forest underline-offset-2 hover:underline"
-      @click="updateField('showLeadersNotes', true)"
-    >
-      Add Leaders Notes
-    </button>
-
     <template #footer>
       <ChapterBlockVisibility v-model="visibilityModel" />
     </template>
@@ -138,29 +193,31 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { Component } from 'vue';
 import {
-  BookOpen,
   Crown,
-  ExternalLink,
   FileText,
-  Star,
-  Trash2,
-  Video,
   LayoutList,
+  Trash2,
 } from '@lucide/vue';
 
-import type { ResourceType, ChapterContentBlock } from '../../../../types';
+import type { ChapterContentBlock, ChapterContentItem } from '../../../../types';
 import RichListbox from '../../../shared/rich-listbox.vue';
 import ChapterBlockCardShell from './chapter-block-card-shell.vue';
+import ChapterBlockImageField from './chapter-block-image-field.vue';
 import ChapterBlockRichTextEditor from './chapter-block-rich-text-editor.vue';
+import ChapterBlockScriptureField from './chapter-block-scripture-field.vue';
 import ChapterBlockVideoField from './chapter-block-video-field.vue';
 import ChapterBlockVisibility from './chapter-block-visibility.vue';
+import ChapterContentAddItemsToolbar from './chapter-content-add-items-toolbar.vue';
+import { createContentItem } from './chapter-block-utils';
+import { getBlockRoleOptions } from './chapter-block-role-options';
+import { blockStyleOptions } from './chapter-block-style-options';
 
 const props = defineProps<{
   block: ChapterContentBlock;
   expanded: boolean;
   videoCollectionId?: string;
+  chapterType?: string | null;
 }>();
 
 const emit = defineEmits<{
@@ -193,106 +250,23 @@ const updateField = <K extends keyof ChapterContentBlock>(
   emit('update:block', { ...props.block, [key]: value });
 };
 
-const setBlockType = (type: string) => {
-  const blockType = type as ResourceType;
-  const next: ChapterContentBlock = { ...props.block, blockType };
-
-  if (blockType !== 'url') {
-    next.url = '';
-  } else if (next.url === undefined) {
-    next.url = '';
-  }
-
-  if (blockType !== 'video') {
-    next.video = { url: null };
-  } else if (!next.video) {
-    next.video = { url: null };
-  }
-
-  if (blockType !== 'text') {
-    next.content = '';
-  } else if (next.content === undefined) {
-    next.content = '';
-  }
-
-  emit('update:block', next);
+const addItem = (kind: ChapterContentItem['kind']) => {
+  updateField('items', [...props.block.items, createContentItem(kind)]);
 };
 
-const blockRoleOptions: {
-  value: string;
-  label: string;
-  description: string;
-  icon: Component;
-}[] = [
-  {
-    value: 'summary',
-    label: 'Summary',
-    description: 'Recap or overview of the session',
-    icon: BookOpen,
-  },
-  {
-    value: 'introduction',
-    label: 'Introduction',
-    description: 'Opening context for the content',
-    icon: BookOpen,
-  },
-  {
-    value: 'reflection',
-    label: 'Reflection',
-    description: 'Prompt for personal reflection',
-    icon: BookOpen,
-  },
-];
+const removeItem = (id: string) => {
+  updateField(
+    'items',
+    props.block.items.filter((item) => item.id !== id),
+  );
+};
 
-const styleOptions: {
-  value: string;
-  label: string;
-  description: string;
-  icon: Component;
-}[] = [
-  {
-    value: 'default',
-    label: 'Default',
-    description: 'Standard visual weight',
-    icon: Star,
-  },
-  {
-    value: 'emphasis',
-    label: 'Emphasis',
-    description: 'Draws more attention',
-    icon: Star,
-  },
-  {
-    value: 'subtle',
-    label: 'Subtle',
-    description: 'Lighter visual treatment',
-    icon: Star,
-  },
-];
+const updateItem = (id: string, patch: Partial<ChapterContentItem>) => {
+  updateField(
+    'items',
+    props.block.items.map((item) => (item.id === id ? { ...item, ...patch } : item)),
+  );
+};
 
-const blockTypeOptions: {
-  value: ResourceType;
-  label: string;
-  description: string;
-  icon: Component;
-}[] = [
-  {
-    value: 'text',
-    label: 'Text',
-    description: 'Rich formatted text content',
-    icon: FileText,
-  },
-  {
-    value: 'url',
-    label: 'URL',
-    description: 'Link to an external website or resource',
-    icon: ExternalLink,
-  },
-  {
-    value: 'video',
-    label: 'Video',
-    description: 'Upload a video file',
-    icon: Video,
-  },
-];
+const blockRoleOptions = computed(() => getBlockRoleOptions(props.chapterType));
 </script>

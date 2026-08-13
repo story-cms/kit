@@ -7,9 +7,7 @@
       :key="option.key"
       type="button"
       class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium transition-colors"
-      :class="
-        isActive(option.key) ? option.activeClasses : option.inactiveClasses
-      "
+      :class="isActive(option.key) ? option.activeClasses : option.inactiveClasses"
       :aria-pressed="isActive(option.key)"
       @click="toggleVisibility(option.key)"
     >
@@ -45,7 +43,9 @@ const isActive = (key: keyof ChapterBlockVisibility) => {
   if (key === 'hidden') {
     return (
       props.modelValue.hidden ||
-      (!props.modelValue.presenter && !props.modelValue.personal && !props.modelValue.inNavigation)
+      (!props.modelValue.presenter &&
+        !props.modelValue.personal &&
+        !props.modelValue.inNavigation)
     );
   }
   if (props.modelValue.hidden) {
@@ -66,28 +66,29 @@ const visibilityOptions: {
     label: 'Presenter',
     icon: Monitor,
     activeClasses: 'bg-studio-yellow text-studio-forest',
-    inactiveClasses: 'bg-studio-yellow/20 text-studio-forest',
+    inactiveClasses: 'bg-studio-yellow/20 text-studio-forest border border-studio-yellow',
   },
   {
     key: 'personal',
     label: 'Personal',
     icon: User,
     activeClasses: 'bg-studio-lime text-studio-forest',
-    inactiveClasses: 'bg-studio-lime/20 text-studio-forest',
+    inactiveClasses: 'bg-studio-lime/20 text-studio-forest border border-studio-lime',
   },
   {
     key: 'inNavigation',
     label: 'In navigation',
     icon: Send,
     activeClasses: 'bg-studio-forest text-white',
-    inactiveClasses: 'bg-studio-forest/20 text-white',
+    inactiveClasses:
+      'bg-studio-forest/20 text-studio-forest border border-studio-forest ',
   },
   {
     key: 'hidden',
     label: 'Hidden',
     icon: EyeOff,
     activeClasses: 'bg-error-light text-error',
-    inactiveClasses: 'bg-error-light/20 text-error',
+    inactiveClasses: 'bg-error-light/20 text-error border border-error-light',
   },
 ];
 </script>

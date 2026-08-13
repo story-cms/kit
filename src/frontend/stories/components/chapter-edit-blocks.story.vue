@@ -27,6 +27,14 @@
         :video-collection-id="sharedProps.config.videoCollectionId"
       />
     </Variant>
+
+    <Variant title="Devotion">
+      <ChapterEditBlocks
+        v-model:blocks="devotionBlocks"
+        :video-collection-id="sharedProps.config.videoCollectionId"
+        chapter-type="Devotion"
+      />
+    </Variant>
   </Story>
 </template>
 
@@ -38,7 +46,7 @@ import { mockResourceProviders, sampleMixedChapterBlocks, sharedProps } from '..
 import { useWidgetsStore } from '../../store';
 import type { StoryHandler } from '../../shared/helpers';
 import ChapterEditBlocks from './chapter-edit-blocks.vue';
-import { createEmptyContentBlock } from './chapter-blocks/chapter-block-utils';
+import { createEmptyContentBlock, createContentItem } from './chapter-blocks/chapter-block-utils';
 
 const setupProviders: StoryHandler = (): void => {
   useWidgetsStore().setProviders(mockResourceProviders);
@@ -54,8 +62,7 @@ const multipleBlocks = ref<ChapterBlock[]>([
     blockName: 'Introduction',
     displayName: 'Session Introduction',
     blockRole: 'introduction',
-    style: 'default',
-    blockType: 'text',
+    style: 'primary',
     content: 'Welcome to this session.',
   },
   {
@@ -63,17 +70,15 @@ const multipleBlocks = ref<ChapterBlock[]>([
     blockName: 'External Link',
     displayName: 'Further Reading',
     blockRole: 'summary',
-    style: 'default',
-    blockType: 'url',
-    url: 'https://example.com/article',
+    style: 'secondary',
+    content: 'https://example.com/article',
   },
   {
     ...createEmptyContentBlock(),
     blockName: 'Summary',
     displayName: 'Session Summary',
     blockRole: 'summary',
-    style: 'emphasis',
-    blockType: 'text',
+    style: 'primary',
     content: 'Key takeaways from today.',
     visibility: { presenter: true, personal: false, inNavigation: true, hidden: false },
   },
@@ -82,13 +87,32 @@ const multipleBlocks = ref<ChapterBlock[]>([
     blockName: 'Session Video',
     displayName: 'Watch Session',
     blockRole: 'introduction',
-    style: 'default',
-    blockType: 'video',
+    style: 'tertiary',
+    content: '',
+    items: [createContentItem('video')],
   },
   createEmptyContentBlock(),
 ]);
 
 const mixedBlocks = ref<ChapterBlock[]>([...sampleMixedChapterBlocks]);
+
+const devotionBlocks = ref<ChapterBlock[]>([
+  {
+    ...createEmptyContentBlock(),
+    blockName: 'Opening',
+    displayName: 'Opening Devotion',
+    blockRole: 'introduction',
+    content: 'Welcome to today\'s devotion.',
+  },
+  {
+    ...createEmptyContentBlock(),
+    blockName: 'Passage',
+    displayName: 'Scripture Reading',
+    blockRole: 'scripture',
+    content: '',
+    items: [createContentItem('scripture')],
+  },
+]);
 </script>
 
 <docs lang="md">

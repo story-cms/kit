@@ -14,9 +14,11 @@ const props = withDefaults(
     modelValue: { url: string | null };
     collectionId: string;
     blockId: string;
+    itemId?: string;
     label?: string;
   }>(),
   {
+    itemId: undefined,
     label: 'Video',
   },
 );
@@ -27,12 +29,15 @@ const emit = defineEmits<{
 
 const model = useModelStore();
 const rootPath = computed(() => `_chapterBlocks.${props.blockId}`);
-const videoPath = computed(() => `${rootPath.value}.video`);
+const fieldName = computed(() =>
+  props.itemId ? `items.${props.itemId}.video` : 'video',
+);
+const fieldPath = computed(() => `${rootPath.value}.${fieldName.value}`);
 
 const fieldSpec = computed(
   (): FieldSpec => ({
     label: props.label,
-    name: 'video',
+    name: fieldName.value,
     widget: 'video',
     description: 'MP4 and MOV files up to 500MB',
     extensions: ['.mp4', '.mov'],
@@ -42,14 +47,14 @@ const fieldSpec = computed(
 );
 
 const readVideo = (): { url: string | null } =>
-  model.getField(videoPath.value, { url: null }) as { url: string | null };
+  model.getField(fieldPath.value, { url: null }) as { url: string | null };
 
 watch(
   () => props.modelValue,
   (value) => {
     const current = readVideo();
     if (current.url === value.url) return;
-    model.setField(videoPath.value, value);
+    model.setField(fieldPath.value, value);
   },
   { immediate: true, deep: true },
 );

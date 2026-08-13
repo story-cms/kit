@@ -58,14 +58,7 @@
       label="Cover Image (Optional)"
       @update:model-value="updateField('coverImage', $event)"
     />
-
-    <RichListbox
-      :model-value="block.style"
-      label="Style"
-      :options="styleOptions"
-      @update:model-value="updateField('style', $event)"
-    />
-
+    <div class="mt-4"></div>
     <template #footer>
       <ChapterBlockVisibility v-model="visibilityModel" />
     </template>
@@ -74,11 +67,9 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { Component } from 'vue';
-import { PencilLine, Star } from '@lucide/vue';
+import { PencilLine } from '@lucide/vue';
 
 import type { ChapterTitleBlock } from '../../../../types';
-import RichListbox from '../../../shared/rich-listbox.vue';
 import ChapterBlockCardShell from './chapter-block-card-shell.vue';
 import ChapterBlockImageField from './chapter-block-image-field.vue';
 import ChapterBlockVisibility from './chapter-block-visibility.vue';
@@ -112,30 +103,4 @@ const updateField = <K extends keyof ChapterTitleBlock>(
 ) => {
   emit('update:block', { ...props.block, [key]: value });
 };
-
-const styleOptions: {
-  value: string;
-  label: string;
-  description: string;
-  icon: Component;
-}[] = [
-  {
-    value: 'default',
-    label: 'Default',
-    description: 'Standard visual weight',
-    icon: Star,
-  },
-  {
-    value: 'emphasis',
-    label: 'Emphasis',
-    description: 'Draws more attention',
-    icon: Star,
-  },
-  {
-    value: 'subtle',
-    label: 'Subtle',
-    description: 'Lighter visual treatment',
-    icon: Star,
-  },
-];
 </script>
