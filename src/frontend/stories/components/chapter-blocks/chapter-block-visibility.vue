@@ -1,36 +1,27 @@
 <template>
-  <section class="rounded-xl border border-gray-200 bg-gray-50 p-4">
-    <legend class="input-label mb-3">Visibility</legend>
-    <div class="flex items-center gap-6">
-      <label
-        v-for="option in visibilityOptions"
-        :key="option.key"
-        class="flex cursor-pointer items-center gap-3"
-      >
-        <input
-          type="checkbox"
-          class="size-[22px] rounded border-gray-300 text-studio-forest focus:ring-blue-500"
-          :checked="modelValue[option.key]"
-          @change="
-            updateVisibility(option.key, ($event.target as HTMLInputElement).checked)
-          "
-        />
-        <div class="flex items-center gap-2 rounded" :class="option.iconBackgroundClass">
-          <component
-            :is="option.icon"
-            class="size-[14px] text-studio-forest"
-            aria-hidden="true"
-          />
-        </div>
-        <span class="text-sm font-medium text-gray-900">{{ option.label }}</span>
-      </label>
-    </div>
-  </section>
+  <div class="flex flex-wrap items-center gap-2">
+    <span class="text-sm text-gray-500">Visible to</span>
+    <span class="h-4 w-px shrink-0 bg-gray-300" aria-hidden="true" />
+    <button
+      v-for="option in visibilityOptions"
+      :key="option.key"
+      type="button"
+      class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium transition-colors"
+      :class="
+        modelValue[option.key] ? option.activeClasses : option.inactiveClasses
+      "
+      :aria-pressed="modelValue[option.key]"
+      @click="toggleVisibility(option.key)"
+    >
+      <component :is="option.icon" class="size-[14px]" aria-hidden="true" />
+      {{ option.label }}
+    </button>
+  </div>
 </template>
 
 <script setup lang="ts">
 import type { Component } from 'vue';
-import { EyeOff, Monitor, User } from '@lucide/vue';
+import { EyeOff, Monitor, Send, User } from '@lucide/vue';
 
 import type { ChapterBlockVisibility } from '../../../../types';
 
@@ -42,33 +33,44 @@ const emit = defineEmits<{
   'update:modelValue': [value: ChapterBlockVisibility];
 }>();
 
-const updateVisibility = (key: keyof ChapterBlockVisibility, checked: boolean) => {
-  emit('update:modelValue', { ...props.modelValue, [key]: checked });
+const toggleVisibility = (key: keyof ChapterBlockVisibility) => {
+  emit('update:modelValue', { ...props.modelValue, [key]: !props.modelValue[key] });
 };
 
 const visibilityOptions: {
   key: keyof ChapterBlockVisibility;
   label: string;
   icon: Component;
-  iconBackgroundClass: string;
+  activeClasses: string;
+  inactiveClasses: string;
 }[] = [
   {
     key: 'presenter',
     label: 'Presenter',
     icon: Monitor,
-    iconBackgroundClass: 'bg-studio-yellow p-[5px]',
+    activeClasses: 'bg-studio-yellow text-studio-forest',
+    inactiveClasses: 'border border-gray-200 bg-white text-gray-400',
   },
   {
     key: 'personal',
     label: 'Personal',
     icon: User,
-    iconBackgroundClass: 'bg-studio-lime p-[5px]',
+    activeClasses: 'bg-studio-lime text-studio-forest',
+    inactiveClasses: 'border border-gray-200 bg-white text-gray-400',
+  },
+  {
+    key: 'inNavigation',
+    label: 'In navigation',
+    icon: Send,
+    activeClasses: 'bg-studio-forest text-white',
+    inactiveClasses: 'border border-gray-200 bg-white text-gray-400',
   },
   {
     key: 'hidden',
     label: 'Hidden',
     icon: EyeOff,
-    iconBackgroundClass: 'bg-red-200 p-[5px]',
+    activeClasses: 'bg-error-light text-error',
+    inactiveClasses: 'border border-gray-200 bg-white text-gray-400',
   },
 ];
 </script>

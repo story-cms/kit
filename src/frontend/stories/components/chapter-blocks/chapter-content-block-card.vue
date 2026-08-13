@@ -1,6 +1,7 @@
 <template>
   <ChapterBlockCardShell
     :title="blockTitle"
+    :kind-icon="LayoutList"
     :expanded="expanded"
     :presenter-visible="block.visibility.presenter"
     :personal-visible="block.visibility.personal"
@@ -87,8 +88,6 @@
       @update:model-value="updateField('video', $event)"
     />
 
-    <ChapterBlockVisibility v-model="visibilityModel" />
-
     <div
       v-if="block.showLeadersNotes"
       class="rounded-xl border border-studio-yellow/60 bg-studio-yellow/30 p-4"
@@ -129,6 +128,10 @@
     >
       Add Leaders Notes
     </button>
+
+    <template #footer>
+      <ChapterBlockVisibility v-model="visibilityModel" />
+    </template>
   </ChapterBlockCardShell>
 </template>
 
@@ -143,6 +146,7 @@ import {
   Star,
   Trash2,
   Video,
+  LayoutList,
 } from '@lucide/vue';
 
 import type { ResourceType, ChapterContentBlock } from '../../../../types';

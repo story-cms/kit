@@ -27,6 +27,11 @@
             class="inline-flex min-w-0 items-center gap-2 text-left text-sm font-semibold text-gray-800"
             @click="emit('toggle')"
           >
+            <component
+              :is="kindIcon"
+              class="size-4 shrink-0 text-gray-700"
+              aria-hidden="true"
+            />
             <span class="truncate">{{ title }}</span>
             <div
               v-if="presenterVisible"
@@ -54,7 +59,9 @@
           <button
             type="button"
             class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
-            :aria-label="expanded ? `Collapse ${kindLabel} block` : `Expand ${kindLabel} block`"
+            :aria-label="
+              expanded ? `Collapse ${kindLabel} block` : `Expand ${kindLabel} block`
+            "
             @click="emit('toggle')"
           >
             <ChevronDown
@@ -69,15 +76,23 @@
       <div v-if="expanded" class="space-y-6 p-6">
         <slot />
       </div>
+      <div
+        v-if="expanded && $slots.footer"
+        class="rounded-b-xl border-t border-gray-200 bg-gray-50 px-4 py-3"
+      >
+        <slot name="footer" />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import type { Component } from 'vue';
 import { ChevronDown, GripVertical, Monitor, Trash2, User } from '@lucide/vue';
 
 defineProps<{
   title: string;
+  kindIcon: Component;
   expanded: boolean;
   presenterVisible: boolean;
   personalVisible: boolean;

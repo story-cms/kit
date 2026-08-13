@@ -63,7 +63,7 @@ import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { router } from '@inertiajs/vue3';
 import type { Errors } from '@inertiajs/core';
-import { BookOpen, FolderClosed, LayoutGrid, Trash2 } from '@lucide/vue';
+import { BookOpen, FolderClosed, Blocks, Trash2 } from '@lucide/vue';
 
 import type {
   ChapterEditProps,
@@ -74,12 +74,7 @@ import type {
   ChapterBlock,
 } from '../../types';
 import { ResponseStatus } from '../../types';
-import {
-  useSharedStore,
-  useWidgetsStore,
-  useModelStore,
-  useDraftsStore,
-} from '../store';
+import { useSharedStore, useWidgetsStore, useModelStore, useDraftsStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
 import StudioButton from '../shared/studio-button.vue';
 import TabNavigation from '../shared/tab-navigation.vue';
@@ -149,7 +144,9 @@ watch(
   { deep: true, immediate: true },
 );
 
-const attachResourceId = new URLSearchParams(window.location.search).get('attachResource');
+const attachResourceId = new URLSearchParams(window.location.search).get(
+  'attachResource',
+);
 if (attachResourceId) {
   const resource = availableResources.find((item) => item.id === attachResourceId);
   if (resource && !attachedResources.value.some((item) => item.id === attachResourceId)) {
@@ -169,7 +166,9 @@ const headerSubtitle = computed(() => {
   return title.value?.trim() || `Edit ${props.story.chapterType ?? 'Chapter'}`;
 });
 
-const saveButtonLabel = computed(() => (props.isCreate ? 'Create Chapter' : 'Save Changes'));
+const saveButtonLabel = computed(() =>
+  props.isCreate ? 'Create Chapter' : 'Save Changes',
+);
 
 const chapterEditTabs = computed((): NavigationPaneTab[] => [
   {
@@ -188,7 +187,7 @@ const chapterEditTabs = computed((): NavigationPaneTab[] => [
 
 const chapterEditTabIcons = computed(() => ({
   Details: BookOpen,
-  Blocks: LayoutGrid,
+  Blocks: Blocks,
   Resources: FolderClosed,
 }));
 
@@ -298,7 +297,9 @@ const saveChapter = () => {
   shared.clearErrors();
   isSaving.value = true;
   postSave({
-    message: props.isCreate ? 'Chapter created successfully' : 'Chapter saved successfully',
+    message: props.isCreate
+      ? 'Chapter created successfully'
+      : 'Chapter saved successfully',
     focusErrors: true,
   });
 };
@@ -317,8 +318,7 @@ const submit = () => {
     `/${shared.locale}/story/${props.story.id}/draft/${props.draft.id}/submit`,
     getPayload(),
     {
-      onSuccess: () =>
-        onSaveSuccess(`${props.story.chapterType} submitted for review`),
+      onSuccess: () => onSaveSuccess(`${props.story.chapterType} submitted for review`),
       onError: (e) =>
         onSaveError(e, 'Draft not submitted. Please review and correct any errors.'),
     },
@@ -332,8 +332,7 @@ const publish = () => {
     `/${shared.locale}/story/${props.story.id}/draft/${props.draft.id}/publish`,
     getPayload(),
     {
-      onSuccess: () =>
-        onSaveSuccess(`${props.story.chapterType} published successfully`),
+      onSuccess: () => onSaveSuccess(`${props.story.chapterType} published successfully`),
       onError: (e) =>
         onSaveError(
           e,

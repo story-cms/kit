@@ -4600,7 +4600,7 @@ export const sampleMixedChapterBlocks: ChapterBlock[] = [
     style: 'emphasis',
     content:
       '**Key takeaways:** Jesus is the eternal Word; belief in him brings eternal life.',
-    visibility: { presenter: true, personal: false, hidden: false },
+    visibility: { presenter: true, personal: false, inNavigation: true, hidden: false },
   },
   {
     ...createEmptyContentBlock(),

@@ -1,6 +1,7 @@
 <template>
   <ChapterBlockCardShell
     :title="blockTitle"
+    :kind-icon="PencilLine"
     :expanded="expanded"
     :presenter-visible="block.visibility.presenter"
     :personal-visible="block.visibility.personal"
@@ -51,7 +52,7 @@
     </div>
 
     <ChapterBlockImageField
-      :model-value="block.coverImage"
+      :model-value="block.coverImage ?? ''"
       :block-id="block.id"
       label="Cover Image (Optional)"
       @update:model-value="updateField('coverImage', $event)"
@@ -64,14 +65,16 @@
       @update:model-value="updateField('style', $event)"
     />
 
-    <ChapterBlockVisibility v-model="visibilityModel" />
+    <template #footer>
+      <ChapterBlockVisibility v-model="visibilityModel" />
+    </template>
   </ChapterBlockCardShell>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { Component } from 'vue';
-import { Star } from '@lucide/vue';
+import { PencilLine, Star } from '@lucide/vue';
 
 import type { ChapterTitleBlock } from '../../../../types';
 import RichListbox from '../../../shared/rich-listbox.vue';

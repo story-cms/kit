@@ -11,6 +11,7 @@ export const DEFAULT_BLOCK_STYLE = 'default';
 const defaultVisibility = {
   presenter: true,
   personal: true,
+  inNavigation: true,
   hidden: false,
 };
 

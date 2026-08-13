@@ -75,7 +75,7 @@ const multipleBlocks = ref<ChapterBlock[]>([
     style: 'emphasis',
     blockType: 'text',
     content: 'Key takeaways from today.',
-    visibility: { presenter: true, personal: false, hidden: false },
+    visibility: { presenter: true, personal: false, inNavigation: true, hidden: false },
   },
   {
     ...createEmptyContentBlock(),

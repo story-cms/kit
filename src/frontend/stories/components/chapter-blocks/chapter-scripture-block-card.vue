@@ -1,6 +1,7 @@
 <template>
   <ChapterBlockCardShell
     :title="blockTitle"
+    :kind-icon="BookMarked"
     :expanded="expanded"
     :presenter-visible="block.visibility.presenter"
     :personal-visible="block.visibility.personal"
@@ -45,8 +46,6 @@
       @update:model-value="updateField('scripture', $event)"
     />
 
-    <ChapterBlockVisibility v-model="visibilityModel" />
-
     <div
       v-if="block.showLeadersNotes"
       class="rounded-xl border border-studio-yellow/60 bg-studio-yellow/30 p-4"
@@ -87,12 +86,16 @@
     >
       Add Leaders Notes
     </button>
+
+    <template #footer>
+      <ChapterBlockVisibility v-model="visibilityModel" />
+    </template>
   </ChapterBlockCardShell>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { Crown, Trash2 } from '@lucide/vue';
+import { BookMarked, Crown, Trash2 } from '@lucide/vue';
 
 import type { ChapterScriptureBlock } from '../../../../types';
 import ChapterBlockCardShell from './chapter-block-card-shell.vue';

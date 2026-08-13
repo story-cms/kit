@@ -239,6 +239,7 @@ export interface StorySection {
 export interface ChapterBlockVisibility {
   presenter: boolean;
   personal: boolean;
+  inNavigation: boolean;
   hidden: boolean;
 }
 

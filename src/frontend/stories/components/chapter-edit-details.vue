@@ -1,10 +1,14 @@
 <template>
-  <div class="form-panel space-y-6">
+  <div
+    class="flex flex-col gap-y-2 rounded-xl border border-gray-200 bg-white px-6 pb-11"
+  >
     <StringField :field="numberField" :is-nested="true" />
     <StringField :field="titleField" :is-nested="true" />
     <MarkdownField :field="descriptionField" :is-nested="true" />
     <ImageField :field="coverImageField" :is-nested="true" />
-    <AudioField :field="devotionAudioField" :is-nested="true" />
+    <div class="mt-4">
+      <AudioField :field="devotionAudioField" :is-nested="true" />
+    </div>
   </div>
 </template>
 
@@ -23,23 +27,19 @@ const props = defineProps<{
 
 const chapterLabel = computed(() => props.chapterType?.trim() || 'Chapter');
 
-const numberField = computed(
-  (): FieldSpec => ({
-    name: 'number',
-    label: `${chapterLabel.value} Number`,
-    widget: 'string',
-    placeholderText: 'e.g., 01',
-  }),
-);
+const numberField = computed((): FieldSpec => ({
+  name: 'number',
+  label: `${chapterLabel.value} Number`,
+  widget: 'string',
+  placeholderText: 'e.g., 01',
+}));
 
-const titleField = computed(
-  (): FieldSpec => ({
-    name: 'title',
-    label: `${chapterLabel.value} Title`,
-    widget: 'string',
-    placeholderText: 'e.g., Is there more to life than this?',
-  }),
-);
+const titleField = computed((): FieldSpec => ({
+  name: 'title',
+  label: `${chapterLabel.value} Title`,
+  widget: 'string',
+  placeholderText: 'e.g., Is there more to life than this?',
+}));
 
 const descriptionField: FieldSpec = {
   name: 'description',
