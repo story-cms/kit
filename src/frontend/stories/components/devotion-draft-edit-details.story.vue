@@ -1,24 +1,24 @@
 <template>
-  <Story title="Chapter Edit Details" group="stories">
+  <Story title="Devotion Draft Edit Details" group="stories">
     <Variant title="Create" :setup-app="loadCreate">
-      <ChapterEditDetails chapter-type="Day" />
+      <DevotionDraftEditDetails chapter-type="Day" />
       <ModelControl :model="emptyChapterModel" :is-inspect-only="true" />
     </Variant>
 
     <Variant title="Populated" :setup-app="loadPopulated">
-      <ChapterEditDetails chapter-type="Day" />
+      <DevotionDraftEditDetails chapter-type="Day" />
       <ModelControl :model="populatedChapterModel" :is-inspect-only="true" />
     </Variant>
 
     <Variant title="Episode chapter type" :setup-app="loadPopulated">
-      <ChapterEditDetails chapter-type="Episode" />
+      <DevotionDraftEditDetails chapter-type="Episode" />
       <ModelControl :model="populatedChapterModel" :is-inspect-only="true" />
     </Variant>
   </Story>
 </template>
 
 <script setup lang="ts">
-import ChapterEditDetails from './chapter-edit-details.vue';
+import DevotionDraftEditDetails from './devotion-draft-edit-details.vue';
 import ModelControl from '../../test/model-control.vue';
 import { useModelStore } from '../../store';
 import type { StoryHandler } from '../../shared/helpers';
@@ -50,7 +50,7 @@ const loadPopulated: StoryHandler = (): void => {
 </script>
 
 <docs lang="md">
-# Chapter Edit Details
+# Devotion Draft Edit Details
 
-Fixed metadata fields for the Details tab on chapter create/edit pages. Field labels use the story chapter type (e.g. Day Number, Episode Title).
+Fixed metadata fields for the Details tab on devotion draft edit pages. Field labels use the story chapter type (e.g. Day Number, Episode Title).
 </docs>

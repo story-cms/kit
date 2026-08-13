@@ -1,15 +1,15 @@
 <template>
-  <Story title="Chapter Edit" group="stories">
+  <Story title="Devotion Draft Edit" group="stories">
     <Variant title="Create" :setup-app="loadCreate">
-      <ChapterEdit
+      <DevotionDraftEdit
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
         :errors="{}"
         :bookmarks="sharedProps.bookmarks"
-        :draft="sampleChapterDraft"
-        :bundle="emptyChapterBundle"
-        :story="chapterEditStory"
+        :draft="sampleDevotionDraft"
+        :bundle="emptyDevotionDraftBundle"
+        :story="devotionDraftEditStory"
         :available-resources="availableResources"
         :has-edit-review="false"
         :last-published="''"
@@ -19,33 +19,33 @@
     </Variant>
 
     <Variant title="Edit" :setup-app="loadEdit">
-      <ChapterEdit
+      <DevotionDraftEdit
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
         :errors="{}"
         :bookmarks="sharedProps.bookmarks"
-        :draft="sampleChapterDraft"
-        :bundle="sampleChapterBundle"
-        :story="chapterEditStory"
+        :draft="sampleDevotionDraft"
+        :bundle="sampleDevotionDraftBundle"
+        :story="devotionDraftEditStory"
         :available-resources="availableResources"
         :has-edit-review="false"
         :last-published="'2025-10-24T06:10:38.483+00:00'"
         :providers="mockResourceProviders"
       />
-      <ModelControl :model="sampleChapterBundle" :is-inspect-only="true" />
+      <ModelControl :model="sampleDevotionDraftBundle" :is-inspect-only="true" />
     </Variant>
 
     <Variant title="Blocks tab" :setup-app="loadBlocksTab">
-      <ChapterEdit
+      <DevotionDraftEdit
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
         :errors="{}"
         :bookmarks="sharedProps.bookmarks"
-        :draft="sampleChapterDraft"
-        :bundle="sampleChapterBundle"
-        :story="chapterEditStory"
+        :draft="sampleDevotionDraft"
+        :bundle="sampleDevotionDraftBundle"
+        :story="devotionDraftEditStory"
         :available-resources="availableResources"
         :has-edit-review="false"
         :last-published="''"
@@ -54,15 +54,15 @@
     </Variant>
 
     <Variant title="Devotion" :setup-app="loadDevotionBlocksTab">
-      <ChapterEdit
+      <DevotionDraftEdit
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
         :errors="{}"
         :bookmarks="sharedProps.bookmarks"
-        :draft="sampleChapterDraft"
+        :draft="sampleDevotionDraft"
         :bundle="sampleDevotionChapterBundle"
-        :story="chapterEditDevotionStory"
+        :story="devotionDraftEditDevotionStory"
         :available-resources="availableResources"
         :has-edit-review="false"
         :last-published="''"
@@ -71,15 +71,15 @@
     </Variant>
 
     <Variant title="Resources tab" :setup-app="loadResourcesTab">
-      <ChapterEdit
+      <DevotionDraftEdit
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
         :errors="{}"
         :bookmarks="sharedProps.bookmarks"
-        :draft="sampleChapterDraft"
-        :bundle="sampleChapterBundle"
-        :story="chapterEditStory"
+        :draft="sampleDevotionDraft"
+        :bundle="sampleDevotionDraftBundle"
+        :story="devotionDraftEditStory"
         :available-resources="availableResources"
         :has-edit-review="false"
         :last-published="''"
@@ -88,15 +88,15 @@
     </Variant>
 
     <Variant title="Validation errors on tabs" :setup-app="loadValidationErrors">
-      <ChapterEdit
+      <DevotionDraftEdit
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
-        :errors="chapterEditValidationErrors"
+        :errors="devotionDraftEditValidationErrors"
         :bookmarks="sharedProps.bookmarks"
-        :draft="sampleChapterDraft"
-        :bundle="sampleChapterBundle"
-        :story="chapterEditStory"
+        :draft="sampleDevotionDraft"
+        :bundle="sampleDevotionDraftBundle"
+        :story="devotionDraftEditStory"
         :available-resources="availableResources"
         :has-edit-review="false"
         :last-published="''"
@@ -105,15 +105,15 @@
     </Variant>
 
     <Variant title="Edit review: Submit" :setup-app="loadEdit">
-      <ChapterEdit
+      <DevotionDraftEdit
         :config="sharedProps.config"
         :user="editorUser"
         :language="sharedProps.language"
         :errors="{}"
         :bookmarks="sharedProps.bookmarks"
-        :draft="sampleChapterDraft"
-        :bundle="sampleChapterBundle"
-        :story="chapterEditStory"
+        :draft="sampleDevotionDraft"
+        :bundle="sampleDevotionDraftBundle"
+        :story="devotionDraftEditStory"
         :available-resources="availableResources"
         :has-edit-review="true"
         :last-published="''"
@@ -122,15 +122,15 @@
     </Variant>
 
     <Variant title="Edit review: Request change" :setup-app="loadEdit">
-      <ChapterEdit
+      <DevotionDraftEdit
         :config="sharedProps.config"
         :user="adminUser"
         :language="sharedProps.language"
         :errors="{}"
         :bookmarks="sharedProps.bookmarks"
-        :draft="sampleChapterDraftSubmitted"
-        :bundle="sampleChapterBundle"
-        :story="chapterEditStory"
+        :draft="sampleDevotionDraftSubmitted"
+        :bundle="sampleDevotionDraftBundle"
+        :story="devotionDraftEditStory"
         :available-resources="availableResources"
         :has-edit-review="true"
         :last-published="'2025-10-24T06:10:38.483+00:00'"
@@ -139,15 +139,15 @@
     </Variant>
 
     <Variant title="Mark Ready" :setup-app="loadEdit">
-      <ChapterEdit
+      <DevotionDraftEdit
         :config="sharedProps.config"
         :user="adminUser"
         :language="sharedProps.language"
         :errors="{}"
         :bookmarks="sharedProps.bookmarks"
-        :draft="sampleChapterDraft"
-        :bundle="sampleChapterBundle"
-        :story="chapterEditStory"
+        :draft="sampleDevotionDraft"
+        :bundle="sampleDevotionDraftBundle"
+        :story="devotionDraftEditStory"
         :available-resources="availableResources"
         :has-edit-review="true"
         :last-published="''"
@@ -158,21 +158,21 @@
 </template>
 
 <script setup lang="ts">
-import ChapterEdit from './chapter-edit.vue';
+import DevotionDraftEdit from './devotion-draft-edit.vue';
 import ModelControl from '../test/model-control.vue';
 import {
   adminUser,
   availableResources,
-  chapterEditStory,
-  chapterEditDevotionStory,
-  chapterEditValidationErrors,
+  devotionDraftEditStory,
+  devotionDraftEditDevotionStory,
+  devotionDraftEditValidationErrors,
   editorUser,
-  emptyChapterBundle,
+  emptyDevotionDraftBundle,
   mockResourceProviders,
-  sampleChapterBundle,
+  sampleDevotionDraftBundle,
   sampleDevotionChapterBundle,
-  sampleChapterDraft,
-  sampleChapterDraftSubmitted,
+  sampleDevotionDraft,
+  sampleDevotionDraftSubmitted,
   sharedProps,
   miniSidebar,
 } from '../test/mocks';
@@ -216,7 +216,7 @@ const loadResourcesTab: StoryHandler = (context): void => {
 
 const loadValidationErrors: StoryHandler = (context): void => {
   miniSidebar(context);
-  useSharedStore().setErrors(chapterEditValidationErrors);
+  useSharedStore().setErrors(devotionDraftEditValidationErrors);
   const url = new URL(window.location.href);
   url.searchParams.delete('tab');
   window.history.replaceState({}, '', url.toString());
@@ -224,9 +224,9 @@ const loadValidationErrors: StoryHandler = (context): void => {
 </script>
 
 <docs lang="md">
-# Chapter Edit
+# Devotion Draft Edit
 
-Tabbed chapter create/edit page with Details, Blocks, and Resources. Includes draft lifecycle actions (delete, submit, publish, request change), 2s autosave, and an explicit Save button. No sidebar meta/preview.
+Tabbed devotion draft editor with Details, Blocks, and Resources. Includes draft lifecycle actions (delete, submit, publish, request change), 2s autosave, and an explicit Save button. No sidebar meta/preview.
 
 ## Variants
 

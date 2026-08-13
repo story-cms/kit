@@ -493,7 +493,7 @@ export interface DraftEditProps {
   hasEditReview: boolean;
 }
 
-export interface ChapterBundle {
+export interface DevotionDraftBundle {
   number: string;
   title: string;
   description: string;
@@ -503,16 +503,16 @@ export interface ChapterBundle {
   resources: ResourceItem[];
 }
 
-export interface ChapterEditProps {
+export interface DevotionDraftEditProps {
   draft: DraftMeta;
-  bundle: ChapterBundle;
+  bundle: DevotionDraftBundle;
   story: StorySpec;
   availableResources: ResourceItem[];
   providers: Providers;
   hasEditReview: boolean;
   lastPublished: string;
   isCreate?: boolean;
-  source?: ChapterBundle;
+  source?: DevotionDraftBundle;
 }
 
 export interface ChapterMeta {

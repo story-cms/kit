@@ -100,7 +100,7 @@ export default class DraftsController {
     const isTranslation = version.locale !== cms.sourceLocale;
 
     if (!isTranslation) {
-      // TODO: migrate to ChapterEdit once chapter-edit.vue is adopted
+      // TODO: use DevotionDraftEdit for devotion templates once adopted
       // @ts-expect-error Inertia page name
       return ctx.inertia.render('DraftIndex', data);
     }

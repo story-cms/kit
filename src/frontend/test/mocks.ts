@@ -1,6 +1,6 @@
 import type {
-  ChapterBundle,
-  ChapterEditProps,
+  DevotionDraftBundle,
+  DevotionDraftEditProps,
   FieldSpec,
   LanguageSpecification,
   LanguageTableItem,
@@ -4736,7 +4736,7 @@ export const mockResourceEditErrors: Record<string, string[]> = {
   'bundle.url': ['URL resources must have a valid URL'],
 };
 
-export const sampleChapterDraft = {
+export const sampleDevotionDraft = {
   id: 42,
   number: 3,
   status: 'started',
@@ -4744,12 +4744,12 @@ export const sampleChapterDraft = {
   createdAt: '2025-10-24T06:10:38.482+00:00',
 };
 
-export const sampleChapterDraftSubmitted = {
-  ...sampleChapterDraft,
+export const sampleDevotionDraftSubmitted = {
+  ...sampleDevotionDraft,
   status: 'submitted',
 };
 
-export const emptyChapterBundle: ChapterBundle = {
+export const emptyDevotionDraftBundle: DevotionDraftBundle = {
   number: '',
   title: '',
   description: '',
@@ -4759,7 +4759,7 @@ export const emptyChapterBundle: ChapterBundle = {
   resources: [],
 };
 
-export const sampleChapterBundle: ChapterBundle = {
+export const sampleDevotionDraftBundle: DevotionDraftBundle = {
   number: '01',
   title: 'Is there more to life than this?',
   description: 'An introduction to the Christian faith.',
@@ -4770,18 +4770,18 @@ export const sampleChapterBundle: ChapterBundle = {
   resources: sampleAttachedResources.slice(0, 2),
 };
 
-export const chapterEditStory: StorySpec = {
+export const devotionDraftEditStory: StorySpec = {
   ...story,
   chapterType: 'Day',
 };
 
-export const chapterEditDevotionStory: StorySpec = {
+export const devotionDraftEditDevotionStory: StorySpec = {
   ...story,
   chapterType: 'Devotion',
 };
 
-export const sampleDevotionChapterBundle: ChapterBundle = {
-  ...sampleChapterBundle,
+export const sampleDevotionChapterBundle: DevotionDraftBundle = {
+  ...sampleDevotionDraftBundle,
   number: '01',
   title: 'Morning Devotion',
   description: "A short daily devotion on God's love.",
@@ -4804,27 +4804,27 @@ export const sampleDevotionChapterBundle: ChapterBundle = {
   ],
 };
 
-export const chapterEditProps: Omit<ChapterEditProps, 'providers'> & {
+export const devotionDraftEditProps: Omit<DevotionDraftEditProps, 'providers'> & {
   providers: Providers;
 } = {
-  draft: sampleChapterDraft,
-  bundle: sampleChapterBundle,
-  story: chapterEditStory,
+  draft: sampleDevotionDraft,
+  bundle: sampleDevotionDraftBundle,
+  story: devotionDraftEditStory,
   availableResources,
   providers: mockResourceProviders,
   hasEditReview: false,
   lastPublished: '',
 };
 
-export const chapterEditCreateProps: Omit<ChapterEditProps, 'providers'> & {
+export const devotionDraftEditCreateProps: Omit<DevotionDraftEditProps, 'providers'> & {
   providers: Providers;
 } = {
-  ...chapterEditProps,
-  bundle: emptyChapterBundle,
+  ...devotionDraftEditProps,
+  bundle: emptyDevotionDraftBundle,
   isCreate: true,
 };
 
-export const chapterEditValidationErrors: Record<string, string[]> = {
+export const devotionDraftEditValidationErrors: Record<string, string[]> = {
   'bundle.title': ['The title field must have at least 1 character'],
   'bundle.blocks.0.blockName': ['Block name is required'],
   'bundle.resources.0': ['Invalid resource'],

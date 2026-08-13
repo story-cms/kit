@@ -1,35 +1,35 @@
 <template>
-  <Story title="Chapter Edit Blocks" group="stories" :setup-app="setupProviders">
+  <Story title="Devotion Draft Edit Blocks" group="stories" :setup-app="setupProviders">
     <Variant title="Default">
-      <ChapterEditBlocks
+      <DevotionDraftEditBlocks
         v-model:blocks="defaultBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
       />
     </Variant>
 
     <Variant title="Empty">
-      <ChapterEditBlocks
+      <DevotionDraftEditBlocks
         v-model:blocks="emptyBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
       />
     </Variant>
 
     <Variant title="Multiple blocks">
-      <ChapterEditBlocks
+      <DevotionDraftEditBlocks
         v-model:blocks="multipleBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
       />
     </Variant>
 
     <Variant title="Mixed block kinds">
-      <ChapterEditBlocks
+      <DevotionDraftEditBlocks
         v-model:blocks="mixedBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
       />
     </Variant>
 
     <Variant title="Devotion">
-      <ChapterEditBlocks
+      <DevotionDraftEditBlocks
         v-model:blocks="devotionBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
         chapter-type="Devotion"
@@ -42,11 +42,18 @@
 import { ref } from 'vue';
 
 import type { ChapterBlock } from '../../../types';
-import { mockResourceProviders, sampleMixedChapterBlocks, sharedProps } from '../../test/mocks';
+import {
+  mockResourceProviders,
+  sampleMixedChapterBlocks,
+  sharedProps,
+} from '../../test/mocks';
 import { useWidgetsStore } from '../../store';
 import type { StoryHandler } from '../../shared/helpers';
-import ChapterEditBlocks from './chapter-edit-blocks.vue';
-import { createEmptyContentBlock, createContentItem } from './chapter-blocks/chapter-block-utils';
+import DevotionDraftEditBlocks from './devotion-draft-edit-blocks.vue';
+import {
+  createEmptyContentBlock,
+  createContentItem,
+} from './chapter-blocks/chapter-block-utils';
 
 const setupProviders: StoryHandler = (): void => {
   useWidgetsStore().setProviders(mockResourceProviders);
@@ -102,7 +109,7 @@ const devotionBlocks = ref<ChapterBlock[]>([
     blockName: 'Opening',
     displayName: 'Opening Devotion',
     blockRole: 'introduction',
-    content: 'Welcome to today\'s devotion.',
+    content: "Welcome to today's devotion.",
   },
   {
     ...createEmptyContentBlock(),
@@ -116,7 +123,7 @@ const devotionBlocks = ref<ChapterBlock[]>([
 </script>
 
 <docs lang="md">
-# Chapter Edit Blocks
+# Devotion Draft Edit Blocks
 
-Content block editor for the Blocks tab on chapter create/edit pages. Supports content, title, and scripture blocks with add, remove, reorder, collapse, visibility toggles, and leaders notes.
+Content block editor for the Blocks tab on devotion draft edit pages. Supports content, title, and scripture blocks with add, remove, reorder, collapse, visibility toggles, and leaders notes.
 </docs>

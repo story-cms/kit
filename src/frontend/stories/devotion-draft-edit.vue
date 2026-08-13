@@ -20,33 +20,33 @@
           :label="saveButtonLabel"
           variant="primary"
           :disabled="isSaving"
-          @click="saveChapter"
+          @click="saveDevotionDraft"
         />
       </div>
     </template>
     <template #controls>
       <TabNavigation
-        :tabs="chapterEditTabs"
-        :icons="chapterEditTabIcons"
-        :current-tab="currentChapterTab"
-        @change="onChapterTabChange"
+        :tabs="devotionDraftEditTabs"
+        :icons="devotionDraftEditTabIcons"
+        :current-tab="currentDevotionDraftTab"
+        @change="onDevotionDraftTabChange"
       />
     </template>
     <template #main>
       <div class="relative">
         <form :dir="shared.isRtl ? 'rtl' : 'ltr'">
-          <ChapterEditDetails
-            v-if="currentChapterTab === 'Details'"
+          <DevotionDraftEditDetails
+            v-if="currentDevotionDraftTab === 'Details'"
             :chapter-type="props.story.chapterType"
           />
-          <div v-if="currentChapterTab === 'Blocks'" dir="ltr">
-            <ChapterEditBlocks
+          <div v-if="currentDevotionDraftTab === 'Blocks'" dir="ltr">
+            <DevotionDraftEditBlocks
               v-model:blocks="blocks"
               :video-collection-id="props.config.videoCollectionId"
               :chapter-type="props.story.chapterType"
             />
           </div>
-          <div v-if="currentChapterTab === 'Resources'" dir="ltr">
+          <div v-if="currentDevotionDraftTab === 'Resources'" dir="ltr">
             <StoryEditResources
               v-model:resources="attachedResources"
               :available-resources="availableResources"
@@ -67,7 +67,7 @@ import type { Errors } from '@inertiajs/core';
 import { BookOpen, FolderClosed, Blocks, Trash2 } from '@lucide/vue';
 
 import type {
-  ChapterEditProps,
+  DevotionDraftEditProps,
   DraftEditProps,
   NavigationPaneTab,
   ResourceItem,
@@ -79,24 +79,27 @@ import { useSharedStore, useWidgetsStore, useModelStore, useDraftsStore } from '
 import AppLayout from '../shared/app-layout.vue';
 import StudioButton from '../shared/studio-button.vue';
 import TabNavigation from '../shared/tab-navigation.vue';
-import ChapterEditDetails from './components/chapter-edit-details.vue';
-import ChapterEditBlocks from './components/chapter-edit-blocks.vue';
+import DevotionDraftEditDetails from './components/devotion-draft-edit-details.vue';
+import DevotionDraftEditBlocks from './components/devotion-draft-edit-blocks.vue';
 import StoryEditResources from './components/story-edit-resources.vue';
 import WorkflowActions from './components/workflow-actions.vue';
 import { resourceIds } from './components/resource-utils';
 import {
-  chapterEditTabHasError,
-  firstChapterEditTabWithError,
-} from './chapter-edit-tab-errors';
+  devotionDraftEditTabHasError,
+  firstDevotionDraftEditTabWithError,
+} from './devotion-draft-edit-tab-errors';
 import { normalizeChapterBlocks } from './components/chapter-blocks/chapter-block-utils';
 
-const resolveChapterTab = (value: string | null, tabs: NavigationPaneTab[]): string => {
+const resolveDevotionDraftTab = (
+  value: string | null,
+  tabs: NavigationPaneTab[],
+): string => {
   if (!value) return 'Details';
   const match = tabs.find((tab) => tab.label.toLowerCase() === value.toLowerCase());
   return match?.label ?? 'Details';
 };
 
-const props = defineProps<ChapterEditProps & SharedPageProps>();
+const props = defineProps<DevotionDraftEditProps & SharedPageProps>();
 
 const shared = useSharedStore();
 const { errors } = storeToRefs(shared);
@@ -121,9 +124,7 @@ const model = useModelStore();
 model.setModel(props.bundle);
 
 const blocks = ref<ChapterBlock[]>(
-  props.bundle.blocks?.length
-    ? normalizeChapterBlocks([...props.bundle.blocks])
-    : [],
+  props.bundle.blocks?.length ? normalizeChapterBlocks([...props.bundle.blocks]) : [],
 );
 const attachedResources = ref<ResourceItem[]>([...(props.bundle.resources ?? [])]);
 const availableResources = props.availableResources ?? [];
@@ -174,22 +175,22 @@ const saveButtonLabel = computed(() =>
   props.isCreate ? 'Create Chapter' : 'Save Changes',
 );
 
-const chapterEditTabs = computed((): NavigationPaneTab[] => [
+const devotionDraftEditTabs = computed((): NavigationPaneTab[] => [
   {
     label: 'Details',
-    hasError: chapterEditTabHasError('details', errors.value),
+    hasError: devotionDraftEditTabHasError('details', errors.value),
   },
   {
     label: 'Blocks',
-    hasError: chapterEditTabHasError('blocks', errors.value),
+    hasError: devotionDraftEditTabHasError('blocks', errors.value),
   },
   {
     label: 'Resources',
-    hasError: chapterEditTabHasError('resources', errors.value),
+    hasError: devotionDraftEditTabHasError('resources', errors.value),
   },
 ]);
 
-const chapterEditTabIcons = computed(() => ({
+const devotionDraftEditTabIcons = computed(() => ({
   Details: BookOpen,
   Blocks: Blocks,
   Resources: FolderClosed,
@@ -201,18 +202,21 @@ const initialTabs: NavigationPaneTab[] = [
   { label: 'Resources' },
 ];
 
-const currentChapterTab = ref(
-  resolveChapterTab(new URLSearchParams(window.location.search).get('tab'), initialTabs),
+const currentDevotionDraftTab = ref(
+  resolveDevotionDraftTab(
+    new URLSearchParams(window.location.search).get('tab'),
+    initialTabs,
+  ),
 );
 
-const onChapterTabChange = (tab: string) => {
-  currentChapterTab.value = tab;
+const onDevotionDraftTabChange = (tab: string) => {
+  currentDevotionDraftTab.value = tab;
 };
 
 const focusFirstErroredTab = () => {
-  const tab = firstChapterEditTabWithError(errors.value);
+  const tab = firstDevotionDraftEditTabWithError(errors.value);
   if (tab) {
-    currentChapterTab.value = tab;
+    currentDevotionDraftTab.value = tab;
   }
 };
 
@@ -296,7 +300,7 @@ const scheduleAutosave = () => {
   }, 2000);
 };
 
-const saveChapter = () => {
+const saveDevotionDraft = () => {
   cancelAutosave();
   shared.clearErrors();
   isSaving.value = true;
