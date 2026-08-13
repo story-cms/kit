@@ -33,16 +33,14 @@ const fieldName = computed(() =>
 );
 const fieldPath = computed(() => `${rootPath.value}.${fieldName.value}`);
 
-const fieldSpec = computed(
-  (): FieldSpec => ({
-    label: props.label,
-    name: fieldName.value,
-    widget: 'image',
-    description: 'PNG, JPG • Recommended 1280x720px',
-    extensions: ['.jpeg', '.jpg', '.png'],
-    maxSize: 5662310,
-  }),
-);
+const fieldSpec = computed((): FieldSpec => ({
+  label: props.label,
+  name: fieldName.value,
+  widget: 'image',
+  description: 'PNG, JPG • Recommended 1280x720px',
+  extensions: ['.jpeg', '.jpg', '.png'],
+  maxSize: 5662310,
+}));
 
 const readValue = (): string => model.getField(fieldPath.value, '') as string;
 

@@ -1,5 +1,5 @@
 <template>
-  <ChapterBlockCardShell
+  <BlockCardShell
     :title="blockTitle"
     :kind-icon="LayoutList"
     :expanded="expanded"
@@ -64,7 +64,7 @@
             <FileText class="size-4 text-gray-500" aria-hidden="true" />
             <span class="input-label mb-0">Text</span>
           </div>
-          <ChapterBlockRichTextEditor
+          <BlockRichTextEditor
             v-model="contentModel"
             placeholder="Enter your content..."
           />
@@ -84,7 +84,7 @@
               </button>
             </div>
             <div class="[&>div]:mt-0">
-              <ChapterBlockImageField
+              <BlockImageField
                 :model-value="item.imageUrl ?? ''"
                 :block-id="block.id"
                 :item-id="item.id"
@@ -107,7 +107,7 @@
               </button>
             </div>
             <div class="[&>div]:mt-0">
-              <ChapterBlockVideoField
+              <BlockVideoField
                 :model-value="item.video ?? { url: null }"
                 :collection-id="videoCollectionId ?? ''"
                 :block-id="block.id"
@@ -118,7 +118,10 @@
             </div>
           </div>
 
-          <div v-else-if="item.kind === 'scripture'" class="border-t border-gray-100 pt-6">
+          <div
+            v-else-if="item.kind === 'scripture'"
+            class="border-t border-gray-100 pt-6"
+          >
             <div class="mb-2 flex items-center justify-between gap-3">
               <span class="input-label mb-0">Scripture</span>
               <button
@@ -130,7 +133,7 @@
                 <Trash2 class="size-4" aria-hidden="true" />
               </button>
             </div>
-            <ChapterBlockScriptureField
+            <BlockScriptureField
               :model-value="item.scripture ?? { reference: '', verse: '' }"
               :block-id="block.id"
               :item-id="item.id"
@@ -144,7 +147,7 @@
         </template>
       </div>
 
-      <ChapterContentAddItemsToolbar
+      <ContentAddItemsToolbar
         :show-add-leaders-notes="!block.showLeadersNotes"
         @add-image="addItem('image')"
         @add-video="addItem('video')"
@@ -186,32 +189,27 @@
     </div>
 
     <template #footer>
-      <ChapterBlockVisibility v-model="visibilityModel" />
+      <BlockVisibility v-model="visibilityModel" />
     </template>
-  </ChapterBlockCardShell>
+  </BlockCardShell>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import {
-  Crown,
-  FileText,
-  LayoutList,
-  Trash2,
-} from '@lucide/vue';
+import { Crown, FileText, LayoutList, Trash2 } from '@lucide/vue';
 
 import type { ChapterContentBlock, ChapterContentItem } from '../../../../types';
 import RichListbox from '../../../shared/rich-listbox.vue';
-import ChapterBlockCardShell from './chapter-block-card-shell.vue';
-import ChapterBlockImageField from './chapter-block-image-field.vue';
-import ChapterBlockRichTextEditor from './chapter-block-rich-text-editor.vue';
-import ChapterBlockScriptureField from './chapter-block-scripture-field.vue';
-import ChapterBlockVideoField from './chapter-block-video-field.vue';
-import ChapterBlockVisibility from './chapter-block-visibility.vue';
-import ChapterContentAddItemsToolbar from './chapter-content-add-items-toolbar.vue';
-import { createContentItem } from './chapter-block-utils';
-import { getBlockRoleOptions } from './chapter-block-role-options';
-import { blockStyleOptions } from './chapter-block-style-options';
+import BlockCardShell from './block-card-shell.vue';
+import BlockImageField from './block-image-field.vue';
+import BlockRichTextEditor from './block-rich-text-editor.vue';
+import BlockScriptureField from './block-scripture-field.vue';
+import BlockVideoField from './block-video-field.vue';
+import BlockVisibility from './block-visibility.vue';
+import ContentAddItemsToolbar from './content-add-items-toolbar.vue';
+import { createContentItem } from './block-utils';
+import { getBlockRoleOptions } from './block-role-options';
+import { blockStyleOptions } from './block-style-options';
 
 const props = defineProps<{
   block: ChapterContentBlock;

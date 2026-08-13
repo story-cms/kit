@@ -1,16 +1,16 @@
 <template>
   <div class="min-w-0 space-y-6 overflow-x-clip">
-    <ChapterAddBlockToolbar
+    <AddBlockToolbar
       v-if="blocks.length === 0"
       @add-title="addTitleBlock"
       @add-scripture="addScriptureBlock"
       @add-content="addContentBlock"
     />
 
-    <ChapterBlockEmptyState v-if="blocks.length === 0" />
+    <BlockEmptyState v-if="blocks.length === 0" />
 
     <template v-for="(block, index) in blocks" :key="block.id">
-      <ChapterContentBlockCard
+      <ContentBlockCard
         v-if="isContentBlock(block)"
         :block="block"
         :expanded="isExpanded(index)"
@@ -23,7 +23,7 @@
         @drop="onDrop(index)"
         @dragend="onDragEnd"
       />
-      <ChapterTitleBlockCard
+      <TitleBlockCard
         v-else-if="block.kind === 'title'"
         :block="block"
         :expanded="isExpanded(index)"
@@ -34,7 +34,7 @@
         @drop="onDrop(index)"
         @dragend="onDragEnd"
       />
-      <ChapterScriptureBlockCard
+      <ScriptureBlockCard
         v-else-if="block.kind === 'scripture'"
         :block="block"
         :expanded="isExpanded(index)"
@@ -47,7 +47,7 @@
       />
     </template>
 
-    <ChapterAddBlockToolbar
+    <AddBlockToolbar
       v-if="blocks.length > 0"
       @add-title="addTitleBlock"
       @add-scripture="addScriptureBlock"
@@ -60,17 +60,17 @@
 import { computed, ref, watch } from 'vue';
 
 import type { ChapterBlock, ChapterContentBlock } from '../../../types';
-import ChapterAddBlockToolbar from './chapter-blocks/chapter-add-block-toolbar.vue';
-import ChapterBlockEmptyState from './chapter-blocks/chapter-block-empty-state.vue';
-import ChapterContentBlockCard from './chapter-blocks/chapter-content-block-card.vue';
-import ChapterScriptureBlockCard from './chapter-blocks/chapter-scripture-block-card.vue';
-import ChapterTitleBlockCard from './chapter-blocks/chapter-title-block-card.vue';
+import AddBlockToolbar from './blocks/add-block-toolbar.vue';
+import BlockEmptyState from './blocks/block-empty-state.vue';
+import ContentBlockCard from './blocks/content-block-card.vue';
+import ScriptureBlockCard from './blocks/scripture-block-card.vue';
+import TitleBlockCard from './blocks/title-block-card.vue';
 import {
   blockKind,
   createEmptyContentBlock,
   createEmptyScriptureBlock,
   createEmptyTitleBlock,
-} from './chapter-blocks/chapter-block-utils';
+} from './blocks/block-utils';
 
 const props = defineProps<{
   blocks: ChapterBlock[];

@@ -50,10 +50,7 @@ import {
 import { useWidgetsStore } from '../../store';
 import type { StoryHandler } from '../../shared/helpers';
 import DevotionDraftEditBlocks from './devotion-draft-edit-blocks.vue';
-import {
-  createEmptyContentBlock,
-  createContentItem,
-} from './chapter-blocks/chapter-block-utils';
+import { createEmptyContentBlock, createContentItem } from './blocks/block-utils';
 
 const setupProviders: StoryHandler = (): void => {
   useWidgetsStore().setProviders(mockResourceProviders);

@@ -1,5 +1,5 @@
 <template>
-  <ChapterBlockCardShell
+  <BlockCardShell
     :title="blockTitle"
     :kind-icon="PencilLine"
     :expanded="expanded"
@@ -52,7 +52,7 @@
       />
     </div>
 
-    <ChapterBlockImageField
+    <BlockImageField
       :model-value="block.coverImage ?? ''"
       :block-id="block.id"
       label="Cover Image (Optional)"
@@ -60,9 +60,9 @@
     />
     <div class="mt-4"></div>
     <template #footer>
-      <ChapterBlockVisibility v-model="visibilityModel" />
+      <BlockVisibility v-model="visibilityModel" />
     </template>
-  </ChapterBlockCardShell>
+  </BlockCardShell>
 </template>
 
 <script setup lang="ts">
@@ -70,9 +70,9 @@ import { computed } from 'vue';
 import { PencilLine } from '@lucide/vue';
 
 import type { ChapterTitleBlock } from '../../../../types';
-import ChapterBlockCardShell from './chapter-block-card-shell.vue';
-import ChapterBlockImageField from './chapter-block-image-field.vue';
-import ChapterBlockVisibility from './chapter-block-visibility.vue';
+import BlockCardShell from './block-card-shell.vue';
+import BlockImageField from './block-image-field.vue';
+import BlockVisibility from './block-visibility.vue';
 
 const props = defineProps<{
   block: ChapterTitleBlock;

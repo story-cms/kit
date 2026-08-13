@@ -44,9 +44,7 @@ export function createEmptyContentBlock(): ChapterContentBlock {
   };
 }
 
-export function createContentItem(
-  kind: ChapterContentItem['kind'],
-): ChapterContentItem {
+export function createContentItem(kind: ChapterContentItem['kind']): ChapterContentItem {
   const id = createBlockId();
 
   if (kind === 'image') {
@@ -95,7 +93,7 @@ export function normalizeContentBlock(block: ChapterContentBlock): ChapterConten
   return normalized;
 }
 
-export function normalizeChapterBlocks(blocks: ChapterBlock[]): ChapterBlock[] {
+export function normalizeBlocks(blocks: ChapterBlock[]): ChapterBlock[] {
   return blocks.map((block) =>
     block.kind === 'content' ? normalizeContentBlock(block) : block,
   );

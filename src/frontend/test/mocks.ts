@@ -22,7 +22,7 @@ import {
   createEmptyScriptureBlock,
   createEmptyTitleBlock,
   createContentItem,
-} from '../stories/components/chapter-blocks/chapter-block-utils';
+} from '../stories/components/blocks/block-utils';
 
 interface Address {
   street: string;

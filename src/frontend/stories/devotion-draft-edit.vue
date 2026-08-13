@@ -88,7 +88,7 @@ import {
   devotionDraftEditTabHasError,
   firstDevotionDraftEditTabWithError,
 } from './devotion-draft-edit-tab-errors';
-import { normalizeChapterBlocks } from './components/chapter-blocks/chapter-block-utils';
+import { normalizeBlocks } from './components/blocks/block-utils';
 
 const resolveDevotionDraftTab = (
   value: string | null,
@@ -124,7 +124,7 @@ const model = useModelStore();
 model.setModel(props.bundle);
 
 const blocks = ref<ChapterBlock[]>(
-  props.bundle.blocks?.length ? normalizeChapterBlocks([...props.bundle.blocks]) : [],
+  props.bundle.blocks?.length ? normalizeBlocks([...props.bundle.blocks]) : [],
 );
 const attachedResources = ref<ResourceItem[]>([...(props.bundle.resources ?? [])]);
 const availableResources = props.availableResources ?? [];

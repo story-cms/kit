@@ -34,17 +34,15 @@ const fieldName = computed(() =>
 );
 const fieldPath = computed(() => `${rootPath.value}.${fieldName.value}`);
 
-const fieldSpec = computed(
-  (): FieldSpec => ({
-    label: props.label,
-    name: fieldName.value,
-    widget: 'video',
-    description: 'MP4 and MOV files up to 500MB',
-    extensions: ['.mp4', '.mov'],
-    collectionId: props.collectionId,
-    maxSize: 500662310,
-  }),
-);
+const fieldSpec = computed((): FieldSpec => ({
+  label: props.label,
+  name: fieldName.value,
+  widget: 'video',
+  description: 'MP4 and MOV files up to 500MB',
+  extensions: ['.mp4', '.mov'],
+  collectionId: props.collectionId,
+  maxSize: 500662310,
+}));
 
 const readVideo = (): { url: string | null } =>
   model.getField(fieldPath.value, { url: null }) as { url: string | null };

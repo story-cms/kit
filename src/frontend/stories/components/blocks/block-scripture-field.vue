@@ -73,19 +73,17 @@ const fieldName = computed(() =>
   props.itemId ? `items.${props.itemId}.scripture` : 'scripture',
 );
 const scripturePath = computed(() => `${rootPath.value}.${fieldName.value}`);
-const useCustomLabels = computed(
-  () => Boolean(props.referenceLabel && props.passageLabel),
+const useCustomLabels = computed(() =>
+  Boolean(props.referenceLabel && props.passageLabel),
 );
 const referenceInputId = computed(() => `${props.blockId}-${fieldName.value}-reference`);
 const passageInputId = computed(() => `${props.blockId}-${fieldName.value}-passage`);
 
-const fieldSpec = computed(
-  (): FieldSpec => ({
-    label: props.label,
-    name: fieldName.value,
-    widget: 'scripture',
-  }),
-);
+const fieldSpec = computed((): FieldSpec => ({
+  label: props.label,
+  name: fieldName.value,
+  widget: 'scripture',
+}));
 
 const readScripture = (): Scripture =>
   model.getField(scripturePath.value, { reference: '', verse: '' }) as Scripture;

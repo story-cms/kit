@@ -1,5 +1,5 @@
 <template>
-  <ChapterBlockCardShell
+  <BlockCardShell
     :title="blockTitle"
     :kind-icon="BookMarked"
     :expanded="expanded"
@@ -40,7 +40,7 @@
       />
     </div>
 
-    <ChapterBlockScriptureField
+    <BlockScriptureField
       :model-value="block.scripture"
       :block-id="block.id"
       label="Scripture"
@@ -79,16 +79,16 @@
       />
     </div>
 
-    <ChapterAddLeadersNotesButton
+    <AddLeadersNotesButton
       v-else
       class="mt-6"
       @click="updateField('showLeadersNotes', true)"
     />
 
     <template #footer>
-      <ChapterBlockVisibility v-model="visibilityModel" />
+      <BlockVisibility v-model="visibilityModel" />
     </template>
-  </ChapterBlockCardShell>
+  </BlockCardShell>
 </template>
 
 <script setup lang="ts">
@@ -96,10 +96,10 @@ import { computed } from 'vue';
 import { BookMarked, Crown, Trash2 } from '@lucide/vue';
 
 import type { ChapterScriptureBlock } from '../../../../types';
-import ChapterBlockCardShell from './chapter-block-card-shell.vue';
-import ChapterAddLeadersNotesButton from './chapter-add-leaders-notes-button.vue';
-import ChapterBlockScriptureField from './chapter-block-scripture-field.vue';
-import ChapterBlockVisibility from './chapter-block-visibility.vue';
+import BlockCardShell from './block-card-shell.vue';
+import AddLeadersNotesButton from './add-leaders-notes-button.vue';
+import BlockScriptureField from './block-scripture-field.vue';
+import BlockVisibility from './block-visibility.vue';
 
 const props = defineProps<{
   block: ChapterScriptureBlock;
