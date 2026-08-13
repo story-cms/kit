@@ -45,6 +45,12 @@
             >
               <User class="size-[14px] text-studio-forest" aria-hidden="true" />
             </div>
+            <div
+              v-if="navigationVisible"
+              class="flex shrink-0 items-center rounded bg-studio-forest p-[5px]"
+            >
+              <Send class="size-[14px] text-white" aria-hidden="true" />
+            </div>
           </button>
         </div>
         <div class="flex items-center justify-center gap-1">
@@ -88,7 +94,7 @@
 
 <script setup lang="ts">
 import type { Component } from 'vue';
-import { ChevronDown, GripVertical, Monitor, Trash2, User } from '@lucide/vue';
+import { ChevronDown, GripVertical, Monitor, Send, Trash2, User } from '@lucide/vue';
 
 defineProps<{
   title: string;
@@ -96,6 +102,7 @@ defineProps<{
   expanded: boolean;
   presenterVisible: boolean;
   personalVisible: boolean;
+  navigationVisible: boolean;
   kindLabel: string;
 }>();
 

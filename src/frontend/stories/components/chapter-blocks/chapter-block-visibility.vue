@@ -8,9 +8,9 @@
       type="button"
       class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium transition-colors"
       :class="
-        modelValue[option.key] ? option.activeClasses : option.inactiveClasses
+        isActive(option.key) ? option.activeClasses : option.inactiveClasses
       "
-      :aria-pressed="modelValue[option.key]"
+      :aria-pressed="isActive(option.key)"
       @click="toggleVisibility(option.key)"
     >
       <component :is="option.icon" class="size-[14px]" aria-hidden="true" />
@@ -34,7 +34,24 @@ const emit = defineEmits<{
 }>();
 
 const toggleVisibility = (key: keyof ChapterBlockVisibility) => {
+  if (key !== 'hidden' && props.modelValue.hidden) {
+    emit('update:modelValue', { ...props.modelValue, hidden: false, [key]: true });
+    return;
+  }
   emit('update:modelValue', { ...props.modelValue, [key]: !props.modelValue[key] });
+};
+
+const isActive = (key: keyof ChapterBlockVisibility) => {
+  if (key === 'hidden') {
+    return (
+      props.modelValue.hidden ||
+      (!props.modelValue.presenter && !props.modelValue.personal && !props.modelValue.inNavigation)
+    );
+  }
+  if (props.modelValue.hidden) {
+    return false;
+  }
+  return props.modelValue[key];
 };
 
 const visibilityOptions: {
@@ -49,28 +66,28 @@ const visibilityOptions: {
     label: 'Presenter',
     icon: Monitor,
     activeClasses: 'bg-studio-yellow text-studio-forest',
-    inactiveClasses: 'border border-gray-200 bg-white text-gray-400',
+    inactiveClasses: 'bg-studio-yellow/20 text-studio-forest',
   },
   {
     key: 'personal',
     label: 'Personal',
     icon: User,
     activeClasses: 'bg-studio-lime text-studio-forest',
-    inactiveClasses: 'border border-gray-200 bg-white text-gray-400',
+    inactiveClasses: 'bg-studio-lime/20 text-studio-forest',
   },
   {
     key: 'inNavigation',
     label: 'In navigation',
     icon: Send,
     activeClasses: 'bg-studio-forest text-white',
-    inactiveClasses: 'border border-gray-200 bg-white text-gray-400',
+    inactiveClasses: 'bg-studio-forest/20 text-white',
   },
   {
     key: 'hidden',
     label: 'Hidden',
     icon: EyeOff,
     activeClasses: 'bg-error-light text-error',
-    inactiveClasses: 'border border-gray-200 bg-white text-gray-400',
+    inactiveClasses: 'bg-error-light/20 text-error',
   },
 ];
 </script>
