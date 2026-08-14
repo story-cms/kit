@@ -4356,6 +4356,7 @@ const availableResourceItems: Omit<ResourceItem, 'updatedAt'>[] = [
     title: 'Introduction to Biblical Archaeology',
     type: 'video',
     imageUrl: 'https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=400',
+    content: 'https://example.com/intro-archaeology.mp4',
     label: 'Supplementary Videos',
     visibility: 'public',
     description: 'A comprehensive overview of archaeological findings in the Holy Land',
@@ -4364,7 +4365,8 @@ const availableResourceItems: Omit<ResourceItem, 'updatedAt'>[] = [
     id: 'r2',
     title: 'The Historical Jesus: Scholarly Perspectives',
     type: 'text',
-    url: 'https://example.com/historical-jesus',
+    content:
+      '## Historical Evidence\n\nThis article surveys scholarly approaches to the historical Jesus, examining primary sources and archaeological context.',
     label: 'Academic Reading',
     visibility: 'public',
     description:
@@ -4374,7 +4376,8 @@ const availableResourceItems: Omit<ResourceItem, 'updatedAt'>[] = [
     id: 'r3',
     title: 'Understanding the Gospels',
     type: 'text',
-    url: 'https://example.com/gospels.pdf',
+    content:
+      '## The Four Gospels\n\nMatthew, Mark, Luke, and John each offer distinct perspectives on the life and ministry of Jesus.',
     label: 'Supplementary Reading',
     visibility: 'public',
     description: 'A detailed guide to the four Gospels and their contexts',
@@ -4383,7 +4386,7 @@ const availableResourceItems: Omit<ResourceItem, 'updatedAt'>[] = [
     id: 'r4',
     title: 'Early Church History Timeline',
     type: 'url',
-    url: 'https://example.com/timeline',
+    content: 'https://example.com/timeline',
     label: 'Reference Materials',
     visibility: 'public',
     description: 'Interactive timeline of the first 500 years of Christianity',
@@ -4393,6 +4396,7 @@ const availableResourceItems: Omit<ResourceItem, 'updatedAt'>[] = [
     title: 'Hebrew Language Basics',
     type: 'video',
     imageUrl: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400',
+    content: 'https://example.com/hebrew-basics.mp4',
     label: 'Language Resources',
     visibility: 'public',
     description: 'Learn the basics of Biblical Hebrew',
@@ -4402,6 +4406,7 @@ const availableResourceItems: Omit<ResourceItem, 'updatedAt'>[] = [
     title: 'Old Testament Survey',
     type: 'video',
     imageUrl: 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=400',
+    content: 'https://example.com/ot-survey.mp4',
     label: 'Supplementary Videos',
     visibility: 'public',
     description: 'Comprehensive overview of Old Testament books and themes',
@@ -4410,7 +4415,8 @@ const availableResourceItems: Omit<ResourceItem, 'updatedAt'>[] = [
     id: 'r7',
     title: 'The Sermon on the Mount Study Guide',
     type: 'text',
-    url: 'https://example.com/sermon-mount.pdf',
+    content:
+      '## Matthew 5–7\n\nStudy questions and reflection prompts for the Sermon on the Mount.',
     label: 'Study Guides',
     visibility: 'leaders',
     description: 'In-depth study guide for Matthew 5-7',
@@ -4420,6 +4426,7 @@ const availableResourceItems: Omit<ResourceItem, 'updatedAt'>[] = [
     title: 'Church History Documentary Series',
     type: 'video',
     imageUrl: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400',
+    content: 'https://example.com/church-history-series.mp4',
     label: 'Supplementary Videos',
     visibility: 'public',
     description: '10-part series on the history of Christianity',
@@ -4428,7 +4435,7 @@ const availableResourceItems: Omit<ResourceItem, 'updatedAt'>[] = [
     id: 'r9',
     title: 'Biblical Greek Resources',
     type: 'url',
-    url: 'https://example.com/greek',
+    content: 'https://example.com/greek',
     label: 'Language Resources',
     visibility: 'public',
     description: 'Collection of tools for learning Biblical Greek',
@@ -4437,7 +4444,7 @@ const availableResourceItems: Omit<ResourceItem, 'updatedAt'>[] = [
     id: 'r10',
     title: 'Theological Dictionary',
     type: 'url',
-    url: 'https://example.com/dictionary',
+    content: 'https://example.com/dictionary',
     label: 'Reference Materials',
     visibility: 'public',
     description: 'Comprehensive theological terms and definitions',
@@ -4446,7 +4453,8 @@ const availableResourceItems: Omit<ResourceItem, 'updatedAt'>[] = [
     id: 'r11',
     title: 'Leader Discussion Guide',
     type: 'text',
-    url: 'https://example.com/leader-guide.pdf',
+    content:
+      '## Facilitator Notes\n\nDiscussion questions and leader prompts for small group sessions.',
     label: 'Study Guides',
     visibility: 'leaders',
     description: 'Facilitator notes and discussion questions',
@@ -4455,7 +4463,8 @@ const availableResourceItems: Omit<ResourceItem, 'updatedAt'>[] = [
     id: 'r12',
     title: 'Parables of Jesus Explained',
     type: 'text',
-    url: 'https://example.com/parables',
+    content:
+      '## Major Parables\n\nAnalysis of the parables of the sower, the prodigal son, and the good Samaritan.',
     label: 'Academic Reading',
     visibility: 'public',
     description: 'Analysis of major parables in the Gospels',
@@ -4466,6 +4475,7 @@ const availableResourceItems: Omit<ResourceItem, 'updatedAt'>[] = [
       'Archaeological Discoveries and Their Impact on New Testament Historical Studies: A Case study of the Gospel of Luke and Acts while referencing the Gospel of John and ignoring the Gospel of Matthew',
     type: 'video',
     imageUrl: 'https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=400',
+    content: 'https://example.com/archaeology-nt-studies.mp4',
     label: 'Supplementary Videos',
     visibility: 'public',
     description:
@@ -4475,7 +4485,8 @@ const availableResourceItems: Omit<ResourceItem, 'updatedAt'>[] = [
     id: 'r14',
     title: 'A Critical Introduction to the Synoptic Problem and Gospel Source Criticism',
     type: 'text',
-    url: 'https://example.com/synoptic-problem',
+    content:
+      '## Overview\n\nThis article introduces the Synoptic Problem and compares major scholarly hypotheses.\n\n- Two-Source hypothesis\n- Farrer hypothesis\n- Augustinian hypothesis',
     label: 'Academic Reading',
     visibility: 'guests',
     description:
@@ -4486,7 +4497,7 @@ const availableResourceItems: Omit<ResourceItem, 'updatedAt'>[] = [
     title:
       'Patristic Writings on Scripture, Tradition, and the Formation of the Biblical Canon',
     type: 'url',
-    url: 'https://example.com/patristic-canon',
+    content: 'https://example.com/patristic-canon',
     label: 'Reference Materials',
     visibility: 'leaders',
     description:
@@ -4639,7 +4650,7 @@ export const mockEditUrlLinkResource: ResourceEditProps = toEditResource(
     description: availableResources[3].description ?? '',
     label: availableResources[3].label ?? '',
     visibility: availableResources[3].visibility,
-    url: availableResources[3].url ?? 'https://example.com/timeline',
+    url: availableResources[3].content ?? 'https://example.com/timeline',
   },
 );
 

@@ -178,7 +178,7 @@ export interface ResourceItem {
   title: string;
   type: ResourceType;
   imageUrl?: string | null;
-  url?: string;
+  content?: string;
   label: string | null;
   visibility: VisibilityType;
   description?: string | null;
