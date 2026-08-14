@@ -20,7 +20,7 @@ export type ResourceRow = {
   updatedAt?: DateTime | string | null;
 };
 
-export const extractResourceUrl = (
+export const extractResourceContent = (
   type: string,
   bundle: ResourceBundle,
 ): string | undefined => {
@@ -29,22 +29,20 @@ export const extractResourceUrl = (
       return 'video' in bundle ? bundle.video.url : undefined;
     case 'url':
       return 'url' in bundle ? bundle.url : undefined;
+    case 'text':
+      return 'content' in bundle ? bundle.content : undefined;
     default:
       return undefined;
   }
 };
 
-const formatResourceDate = (
-  value: DateTime | string | undefined | null,
-): string => {
+const formatResourceDate = (value: DateTime | string | undefined | null): string => {
   if (!value) return '';
   if (typeof value === 'string') return value.split('T')[0];
   return value.toISODate() ?? value.toISO()?.split('T')[0] ?? '';
 };
 
-const formatResourceDateTime = (
-  value: DateTime | string | undefined | null,
-): string => {
+const formatResourceDateTime = (value: DateTime | string | undefined | null): string => {
   if (!value) return '';
   if (typeof value === 'string') return value;
   return value.toUTC().toISO() ?? value.toUTC().toString();
@@ -58,7 +56,7 @@ export const toResourceItem = (model: ResourceRow): ResourceItem => {
     title: model.title,
     type: model.type as ResourceType,
     imageUrl: model.imageUrl,
-    url: extractResourceUrl(model.type, bundle),
+    content: extractResourceContent(model.type, bundle),
     label: model.label,
     visibility: model.visibility as VisibilityType,
     description: model.description,
