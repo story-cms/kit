@@ -59,6 +59,7 @@ export {
   createDevotionDraftBundle,
   normalizeDevotionDraftBundle,
 } from '../shared/devotion_draft.js';
+export { resolvePreviewBundle } from '../shared/preview_bundle.js';
 export { default as DropValidator } from './validators/drop.js';
 export { default as PageValidator } from './validators/page.js';
 export * from './validators/user.js';

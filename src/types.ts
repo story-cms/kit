@@ -507,6 +507,8 @@ export interface DevotionDraftBundle {
   resources: string[];
 }
 
+export type PreviewBundle = DevotionDraftBundle | Record<string, unknown>;
+
 export type DevotionDraftEditBundle = Omit<DevotionDraftBundle, 'resources'> & {
   resources: ResourceItem[];
 };
@@ -531,7 +533,7 @@ export interface ChapterMeta {
 
 export interface PreviewProps {
   chapter: ChapterMeta;
-  bundle: any;
+  bundle: PreviewBundle;
   bundleView: string;
   story: StorySpec;
   title: string;

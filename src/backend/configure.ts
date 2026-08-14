@@ -152,6 +152,7 @@ export async function configure(command: Configure) {
 
   await codemods.makeUsingStub(stubsRoot, 'resources/layout.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'resources/views/preview.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'resources/views/preview_devotion.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'resources/views/scripture.stub', {});
 
   await codemods.makeUsingStub(stubsRoot, 'commands/migrate.stub', {});
