@@ -7,12 +7,16 @@
       @add-content="addContentBlock"
     />
 
-    <BlockEmptyState v-if="blocks.length === 0" />
+    <BlockEmptyState
+      v-if="blocks.length === 0"
+      :error-message="blocksArrayError"
+    />
 
     <template v-for="(block, index) in blocks" :key="block.id">
       <ContentBlockCard
         v-if="isContentBlock(block)"
         :block="block"
+        :block-index="index"
         :expanded="isExpanded(index)"
         :video-collection-id="videoCollectionId"
         :chapter-type="chapterType"
@@ -26,6 +30,7 @@
       <TitleBlockCard
         v-else-if="block.kind === 'title'"
         :block="block"
+        :block-index="index"
         :expanded="isExpanded(index)"
         @update:block="updateBlock(index, $event)"
         @delete="deleteBlock(index)"
@@ -37,6 +42,7 @@
       <ScriptureBlockCard
         v-else-if="block.kind === 'scripture'"
         :block="block"
+        :block-index="index"
         :expanded="isExpanded(index)"
         @update:block="updateBlock(index, $event)"
         @delete="deleteBlock(index)"
@@ -58,10 +64,13 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 
 import type { ChapterBlock, ChapterContentBlock } from '../../../types';
+import { useSharedStore } from '../../store';
 import AddBlockToolbar from './blocks/add-block-toolbar.vue';
 import BlockEmptyState from './blocks/block-empty-state.vue';
+import { blockHasError, blocksArrayErrorMessages } from './blocks/block-field-errors';
 import ContentBlockCard from './blocks/content-block-card.vue';
 import ScriptureBlockCard from './blocks/scripture-block-card.vue';
 import TitleBlockCard from './blocks/title-block-card.vue';
@@ -82,10 +91,15 @@ const emit = defineEmits<{
   'update:blocks': [blocks: ChapterBlock[]];
 }>();
 
+const shared = useSharedStore();
+const { errors } = storeToRefs(shared);
+
 const blocks = computed({
   get: () => props.blocks,
   set: (value: ChapterBlock[]) => emit('update:blocks', value),
 });
+
+const blocksArrayError = computed(() => blocksArrayErrorMessages(errors.value)[0] ?? '');
 
 const expanded = ref<boolean[]>([]);
 const newlyAddedBlockId = ref<string | null>(null);
@@ -96,6 +110,26 @@ const expandSingleEmptyStarter = () => {
   const block = blocks.value[0];
   if (block.blockName.trim()) return;
   expanded.value = [true];
+};
+
+const expandErroredBlocks = () => {
+  const count = blocks.value.length;
+  if (count === 0) return;
+
+  const fresh = [...expanded.value];
+  while (fresh.length < count) fresh.push(false);
+
+  let changed = false;
+  for (let index = 0; index < count; index++) {
+    if (blockHasError(errors.value, index) && !fresh[index]) {
+      fresh[index] = true;
+      changed = true;
+    }
+  }
+
+  if (changed) {
+    expanded.value = fresh;
+  }
 };
 
 const syncExpanded = () => {
@@ -117,6 +151,7 @@ const syncExpanded = () => {
 };
 
 watch(blocks, syncExpanded, { deep: true, immediate: true });
+watch(errors, expandErroredBlocks, { deep: true, immediate: true });
 
 const isContentBlock = (block: ChapterBlock): block is ChapterContentBlock =>
   blockKind(block) === 'content';

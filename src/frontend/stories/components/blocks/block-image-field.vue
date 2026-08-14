@@ -12,12 +12,12 @@ import { useModelStore } from '../../../store';
 const props = withDefaults(
   defineProps<{
     modelValue: string;
-    blockId: string;
-    itemId?: string;
+    blockIndex: number;
+    itemIndex?: number;
     label?: string;
   }>(),
   {
-    itemId: undefined,
+    itemIndex: undefined,
     label: 'Cover Image',
   },
 );
@@ -27,9 +27,11 @@ const emit = defineEmits<{
 }>();
 
 const model = useModelStore();
-const rootPath = computed(() => `_chapterBlocks.${props.blockId}`);
+const rootPath = computed(() => `blocks.${props.blockIndex}`);
 const fieldName = computed(() =>
-  props.itemId ? `items.${props.itemId}.imageUrl` : 'coverImage',
+  props.itemIndex === undefined
+    ? 'coverImage'
+    : `items.${props.itemIndex}.imageUrl`,
 );
 const fieldPath = computed(() => `${rootPath.value}.${fieldName.value}`);
 

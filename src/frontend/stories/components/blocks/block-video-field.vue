@@ -13,12 +13,12 @@ const props = withDefaults(
   defineProps<{
     modelValue: { url: string | null };
     collectionId: string;
-    blockId: string;
-    itemId?: string;
+    blockIndex: number;
+    itemIndex?: number;
     label?: string;
   }>(),
   {
-    itemId: undefined,
+    itemIndex: undefined,
     label: 'Video',
   },
 );
@@ -28,9 +28,9 @@ const emit = defineEmits<{
 }>();
 
 const model = useModelStore();
-const rootPath = computed(() => `_chapterBlocks.${props.blockId}`);
+const rootPath = computed(() => `blocks.${props.blockIndex}`);
 const fieldName = computed(() =>
-  props.itemId ? `items.${props.itemId}.video` : 'video',
+  props.itemIndex === undefined ? 'video' : `items.${props.itemIndex}.video`,
 );
 const fieldPath = computed(() => `${rootPath.value}.${fieldName.value}`);
 

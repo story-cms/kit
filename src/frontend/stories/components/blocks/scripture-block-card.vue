@@ -3,6 +3,7 @@
     :title="blockTitle"
     :kind-icon="BookMarked"
     :expanded="expanded"
+    :has-error="hasError"
     :presenter-visible="block.visibility.presenter && !block.visibility.hidden"
     :personal-visible="block.visibility.personal && !block.visibility.hidden"
     :navigation-visible="block.visibility.inNavigation && !block.visibility.hidden"
@@ -21,9 +22,13 @@
         :value="block.blockName"
         placeholder="e.g., Opening Passage, Key Verse"
         class="input-field mt-[2px]"
+        :class="{ 'border-error': fieldHasError('blockName') }"
         @input="updateField('blockName', ($event.target as HTMLInputElement).value)"
       />
-      <p class="mt-1 text-sm italic text-gray-500">
+      <p v-if="fieldHasError('blockName')" class="text-sm text-error">
+        {{ fieldMessages('blockName')[0] }}
+      </p>
+      <p v-else class="mt-1 text-sm italic text-gray-500">
         This becomes the collapsible section name
       </p>
     </div>
@@ -36,13 +41,17 @@
         :value="block.displayName"
         placeholder="e.g., Opening Scripture"
         class="input-field mt-[2px]"
+        :class="{ 'border-error': fieldHasError('displayName') }"
         @input="updateField('displayName', ($event.target as HTMLInputElement).value)"
       />
+      <p v-if="fieldHasError('displayName')" class="text-sm text-error">
+        {{ fieldMessages('displayName')[0] }}
+      </p>
     </div>
 
     <BlockScriptureField
       :model-value="block.scripture"
-      :block-id="block.id"
+      :block-index="blockIndex"
       label="Scripture"
       @update:model-value="updateField('scripture', $event)"
     />
@@ -100,9 +109,11 @@ import BlockCardShell from './block-card-shell.vue';
 import AddLeadersNotesButton from './add-leaders-notes-button.vue';
 import BlockScriptureField from './block-scripture-field.vue';
 import BlockVisibility from './block-visibility.vue';
+import { useBlockFieldErrors } from './use-block-field-errors';
 
 const props = defineProps<{
   block: ChapterScriptureBlock;
+  blockIndex: number;
   expanded: boolean;
 }>();
 
@@ -114,6 +125,8 @@ const emit = defineEmits<{
   drop: [];
   dragend: [];
 }>();
+
+const { hasError, fieldMessages, fieldHasError } = useBlockFieldErrors(props.blockIndex);
 
 const blockTitle = computed(() =>
   props.block.blockName.trim() ? props.block.blockName.trim() : 'New Scripture Block',

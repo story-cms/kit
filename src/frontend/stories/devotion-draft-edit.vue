@@ -253,10 +253,11 @@ const onSaveSuccess = (message?: string) => {
   shared.addMessage(ResponseStatus.Confirmation, message);
 };
 
-const onSaveError = (_errors: Errors, message: string) => {
+const onSaveError = (validationErrors: Errors, message: string) => {
   widgets.setIsDirty(false);
   isSettingErrors = true;
-  shared.setErrors(props.errors);
+  shared.setErrors(validationErrors);
+  focusFirstErroredTab();
   shared.addMessage(ResponseStatus.Failure, message);
 };
 

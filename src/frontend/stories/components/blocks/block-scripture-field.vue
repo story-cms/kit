@@ -14,9 +14,13 @@
         type="text"
         :placeholder="referencePlaceholder"
         class="input-field mt-[2px]"
+        :class="{ 'border-error': referenceHasError }"
         @input="emitScripture"
         @blur="lookup"
       />
+      <p v-if="referenceHasError" class="text-sm text-error">
+        {{ referenceErrorMessage }}
+      </p>
     </div>
     <div>
       <label :for="passageInputId" class="input-label">{{ passageLabel }}</label>
@@ -26,8 +30,12 @@
         rows="6"
         :placeholder="passagePlaceholder"
         class="input-field mt-[2px] min-h-[120px] resize-y"
+        :class="{ 'border-error': verseHasError }"
         @input="emitScripture"
       />
+      <p v-if="verseHasError" class="text-sm text-error">
+        {{ verseErrorMessage }}
+      </p>
     </div>
   </div>
 </template>
@@ -39,12 +47,16 @@ import type { FieldSpec, Scripture } from '../../../../types';
 import ScriptureField from '../../../fields/scripture-field.vue';
 import { parseReference } from '../../../shared/helpers';
 import { useModelStore, useSharedStore, useWidgetsStore } from '../../../store';
+import {
+  blockFieldErrorMessages,
+  blockItemFieldErrorMessages,
+} from './block-field-errors';
 
 const props = withDefaults(
   defineProps<{
     modelValue: Scripture;
-    blockId: string;
-    itemId?: string;
+    blockIndex: number;
+    itemIndex?: number;
     label?: string;
     referenceLabel?: string;
     passageLabel?: string;
@@ -52,7 +64,7 @@ const props = withDefaults(
     passagePlaceholder?: string;
   }>(),
   {
-    itemId: undefined,
+    itemIndex: undefined,
     label: 'Scripture',
     referenceLabel: undefined,
     passageLabel: undefined,
@@ -68,16 +80,20 @@ const emit = defineEmits<{
 const model = useModelStore();
 const shared = useSharedStore();
 const provider = useWidgetsStore().providers.scripture;
-const rootPath = computed(() => `_chapterBlocks.${props.blockId}`);
+const rootPath = computed(() => `blocks.${props.blockIndex}`);
 const fieldName = computed(() =>
-  props.itemId ? `items.${props.itemId}.scripture` : 'scripture',
+  props.itemIndex === undefined
+    ? 'scripture'
+    : `items.${props.itemIndex}.scripture`,
 );
 const scripturePath = computed(() => `${rootPath.value}.${fieldName.value}`);
 const useCustomLabels = computed(() =>
   Boolean(props.referenceLabel && props.passageLabel),
 );
-const referenceInputId = computed(() => `${props.blockId}-${fieldName.value}-reference`);
-const passageInputId = computed(() => `${props.blockId}-${fieldName.value}-passage`);
+const referenceInputId = computed(
+  () => `${props.blockIndex}-${fieldName.value}-reference`,
+);
+const passageInputId = computed(() => `${props.blockIndex}-${fieldName.value}-verse`);
 
 const fieldSpec = computed((): FieldSpec => ({
   label: props.label,
@@ -90,6 +106,35 @@ const readScripture = (): Scripture =>
 
 const reference = ref(props.modelValue.reference);
 const verse = ref(props.modelValue.verse);
+
+const scriptureReferenceMessages = computed(() => {
+  if (props.itemIndex === undefined) {
+    return blockFieldErrorMessages(shared.errors, props.blockIndex, 'scripture.reference');
+  }
+  return blockItemFieldErrorMessages(
+    shared.errors,
+    props.blockIndex,
+    props.itemIndex,
+    'scripture.reference',
+  );
+});
+
+const scriptureVerseMessages = computed(() => {
+  if (props.itemIndex === undefined) {
+    return blockFieldErrorMessages(shared.errors, props.blockIndex, 'scripture.verse');
+  }
+  return blockItemFieldErrorMessages(
+    shared.errors,
+    props.blockIndex,
+    props.itemIndex,
+    'scripture.verse',
+  );
+});
+
+const referenceHasError = computed(() => scriptureReferenceMessages.value.length > 0);
+const verseHasError = computed(() => scriptureVerseMessages.value.length > 0);
+const referenceErrorMessage = computed(() => scriptureReferenceMessages.value[0] ?? '');
+const verseErrorMessage = computed(() => scriptureVerseMessages.value[0] ?? '');
 
 const syncPropsToModel = (value: Scripture) => {
   const current = readScripture();
@@ -146,7 +191,7 @@ const lookup = async () => {
 };
 
 watch(
-  () => props.blockId,
+  () => props.blockIndex,
   () => {
     model.setField(scripturePath.value, { ...props.modelValue });
   },

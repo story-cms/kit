@@ -218,7 +218,7 @@ const loadValidationErrors: StoryHandler = (context): void => {
   miniSidebar(context);
   useSharedStore().setErrors(devotionDraftEditValidationErrors);
   const url = new URL(window.location.href);
-  url.searchParams.delete('tab');
+  url.searchParams.set('tab', 'Blocks');
   window.history.replaceState({}, '', url.toString());
 };
 </script>
@@ -235,7 +235,7 @@ Tabbed devotion draft editor with Details, Blocks, and Resources. Includes draft
 - **Blocks tab** — opens directly on the Blocks tab
 - **Devotion** — Devotion chapter type with sample blocks, opens on the Blocks tab
 - **Resources tab** — opens directly on the Resources tab
-- **Validation errors on tabs** — error indicators on Details, Blocks, and Resources tabs
+- **Validation errors on tabs** — Blocks tab with inline field errors and tab indicators
 - **Edit review: Submit** — editor with edit-review sees Submit
 - **Edit review: Request change** — admin reviewing a submitted draft
 - **Mark Ready** — admin publish label when never published

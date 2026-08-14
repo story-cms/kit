@@ -3,6 +3,7 @@
     :title="blockTitle"
     :kind-icon="LayoutList"
     :expanded="expanded"
+    :has-error="hasError"
     :presenter-visible="block.visibility.presenter && !block.visibility.hidden"
     :personal-visible="block.visibility.personal && !block.visibility.hidden"
     :navigation-visible="block.visibility.inNavigation && !block.visibility.hidden"
@@ -21,9 +22,13 @@
         :value="block.blockName"
         placeholder="e.g., Summary, Introduction, Overview"
         class="input-field mt-[2px]"
+        :class="{ 'border-error': fieldHasError('blockName') }"
         @input="updateField('blockName', ($event.target as HTMLInputElement).value)"
       />
-      <p class="mt-1 text-sm italic text-gray-500">
+      <p v-if="fieldHasError('blockName')" class="text-sm text-error">
+        {{ fieldMessages('blockName')[0] }}
+      </p>
+      <p v-else class="mt-1 text-sm italic text-gray-500">
         This becomes the collapsible section name
       </p>
     </div>
@@ -36,27 +41,44 @@
         :value="block.displayName"
         placeholder="e.g., Session Summary"
         class="input-field mt-[2px]"
+        :class="{ 'border-error': fieldHasError('displayName') }"
         @input="updateField('displayName', ($event.target as HTMLInputElement).value)"
       />
+      <p v-if="fieldHasError('displayName')" class="text-sm text-error">
+        {{ fieldMessages('displayName')[0] }}
+      </p>
     </div>
 
-    <RichListbox
-      :model-value="block.blockRole"
-      label="Block Role"
-      :options="blockRoleOptions"
-      @update:model-value="updateField('blockRole', $event)"
-    />
+    <div>
+      <RichListbox
+        :model-value="block.blockRole"
+        label="Block Role"
+        :options="blockRoleOptions"
+        @update:model-value="updateField('blockRole', $event)"
+      />
+      <p v-if="fieldHasError('blockRole')" class="text-sm text-error">
+        {{ fieldMessages('blockRole')[0] }}
+      </p>
+    </div>
 
-    <RichListbox
-      :model-value="block.style"
-      label="Block Style"
-      :options="blockStyleOptions"
-      @update:model-value="updateField('style', $event)"
-    />
+    <div>
+      <RichListbox
+        :model-value="block.style"
+        label="Block Style"
+        :options="blockStyleOptions"
+        @update:model-value="updateField('style', $event)"
+      />
+      <p v-if="fieldHasError('style')" class="text-sm text-error">
+        {{ fieldMessages('style')[0] }}
+      </p>
+    </div>
 
     <div>
       <label class="input-label block">Content Items</label>
       <p class="text-sm text-gray-500">Add items that serve this block's role.</p>
+      <p v-if="blockLevelErrors.length" class="mt-2 text-sm text-error">
+        {{ blockLevelErrors[0] }}
+      </p>
 
       <div class="mt-4">
         <div class="pb-6">
@@ -70,7 +92,7 @@
           />
         </div>
 
-        <template v-for="item in block.items" :key="item.id">
+        <template v-for="(item, itemIndex) in block.items" :key="item.id">
           <div v-if="item.kind === 'image'" class="border-t border-gray-100 pt-6">
             <div class="mb-2 flex items-center justify-between gap-3">
               <span class="input-label mb-0">Image</span>
@@ -86,8 +108,8 @@
             <div class="[&>div]:mt-0">
               <BlockImageField
                 :model-value="item.imageUrl ?? ''"
-                :block-id="block.id"
-                :item-id="item.id"
+                :block-index="blockIndex"
+                :item-index="itemIndex"
                 label=""
                 @update:model-value="updateItem(item.id, { imageUrl: $event })"
               />
@@ -110,8 +132,8 @@
               <BlockVideoField
                 :model-value="item.video ?? { url: null }"
                 :collection-id="videoCollectionId ?? ''"
-                :block-id="block.id"
-                :item-id="item.id"
+                :block-index="blockIndex"
+                :item-index="itemIndex"
                 label=""
                 @update:model-value="updateItem(item.id, { video: $event })"
               />
@@ -135,8 +157,8 @@
             </div>
             <BlockScriptureField
               :model-value="item.scripture ?? { reference: '', verse: '' }"
-              :block-id="block.id"
-              :item-id="item.id"
+              :block-index="blockIndex"
+              :item-index="itemIndex"
               reference-label="Bible Reference"
               passage-label="Scripture Text"
               reference-placeholder="e.g., John 3:16, Romans 8:28–30"
@@ -210,9 +232,11 @@ import ContentAddItemsToolbar from './content-add-items-toolbar.vue';
 import { createContentItem } from './block-utils';
 import { getBlockRoleOptions } from './block-role-options';
 import { blockStyleOptions } from './block-style-options';
+import { useBlockFieldErrors } from './use-block-field-errors';
 
 const props = defineProps<{
   block: ChapterContentBlock;
+  blockIndex: number;
   expanded: boolean;
   videoCollectionId?: string;
   chapterType?: string | null;
@@ -226,6 +250,13 @@ const emit = defineEmits<{
   drop: [];
   dragend: [];
 }>();
+
+const {
+  hasError,
+  blockLevelErrors,
+  fieldMessages,
+  fieldHasError,
+} = useBlockFieldErrors(props.blockIndex);
 
 const blockTitle = computed(() =>
   props.block.blockName.trim() ? props.block.blockName.trim() : 'New Content Block',

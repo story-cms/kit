@@ -54,6 +54,9 @@
           </button>
         </div>
         <div class="flex items-center justify-center gap-1">
+          <div v-if="hasError" class="text-error">
+            <CircleAlert class="size-5" aria-hidden="true" />
+          </div>
           <button
             type="button"
             class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
@@ -94,7 +97,7 @@
 
 <script setup lang="ts">
 import type { Component } from 'vue';
-import { ChevronDown, GripVertical, Monitor, Send, Trash2, User } from '@lucide/vue';
+import { ChevronDown, CircleAlert, GripVertical, Monitor, Send, Trash2, User } from '@lucide/vue';
 
 defineProps<{
   title: string;
@@ -104,6 +107,7 @@ defineProps<{
   personalVisible: boolean;
   navigationVisible: boolean;
   kindLabel: string;
+  hasError?: boolean;
 }>();
 
 const emit = defineEmits<{

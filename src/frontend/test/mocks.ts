@@ -4827,6 +4827,9 @@ export const devotionDraftEditCreateProps: Omit<DevotionDraftEditProps, 'provide
 
 export const devotionDraftEditValidationErrors: Record<string, string[]> = {
   'bundle.title': ['The title field must have at least 1 character'],
-  'bundle.blocks.0.blockName': ['Block name is required'],
+  'bundle.blocks.0.blockName': ['Every block must have a name'],
+  'bundle.blocks.0': [
+    'A content block must have text or at least one media or scripture item',
+  ],
   'bundle.resources.0': ['Invalid resource'],
 };
