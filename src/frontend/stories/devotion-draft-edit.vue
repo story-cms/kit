@@ -42,6 +42,7 @@
           <div v-if="currentDevotionDraftTab === 'Blocks'" dir="ltr">
             <DevotionDraftEditBlocks
               v-model:blocks="blocks"
+              :previous-chapter-blocks="props.previousChapterBlocks ?? []"
               :video-collection-id="props.config.videoCollectionId"
               :chapter-type="props.story.chapterType"
             />

@@ -60,6 +60,11 @@ export {
   normalizeDevotionDraftBundle,
 } from '../shared/devotion_draft.js';
 export { resolvePreviewBundle } from '../shared/preview_bundle.js';
+export { cloneBlocksStructure } from '../shared/block_structure.js';
+export {
+  getPreviousDevotionChapterBlocks,
+  type StoryChapterSpecifier,
+} from '../shared/previous_chapter_blocks.js';
 export { default as DropValidator } from './validators/drop.js';
 export { default as PageValidator } from './validators/page.js';
 export * from './validators/user.js';

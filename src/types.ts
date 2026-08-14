@@ -523,6 +523,7 @@ export interface DevotionDraftEditProps {
   lastPublished: string;
   isCreate?: boolean;
   source?: DevotionDraftBundle;
+  previousChapterBlocks?: ChapterBlock[];
 }
 
 export interface ChapterMeta {

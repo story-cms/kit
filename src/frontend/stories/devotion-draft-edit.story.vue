@@ -18,6 +18,25 @@
       />
     </Variant>
 
+    <Variant title="Chapter 2 create" :setup-app="loadChapterTwoCreate">
+      <DevotionDraftEdit
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :errors="{}"
+        :bookmarks="sharedProps.bookmarks"
+        :draft="devotionDraftEditChapterTwoCreateProps.draft"
+        :bundle="devotionDraftEditChapterTwoCreateProps.bundle"
+        :story="devotionDraftEditDevotionStory"
+        :available-resources="availableResources"
+        :has-edit-review="false"
+        :last-published="''"
+        :is-create="true"
+        :previous-chapter-blocks="devotionDraftEditChapterTwoCreateProps.previousChapterBlocks"
+        :providers="mockResourceProviders"
+      />
+    </Variant>
+
     <Variant title="Edit" :setup-app="loadEdit">
       <DevotionDraftEdit
         :config="sharedProps.config"
@@ -165,6 +184,7 @@ import {
   availableResources,
   devotionDraftEditStory,
   devotionDraftEditDevotionStory,
+  devotionDraftEditChapterTwoCreateProps,
   devotionDraftEditValidationErrors,
   editorUser,
   emptyDevotionDraftBundle,
@@ -183,6 +203,13 @@ const loadCreate: StoryHandler = (context): void => {
   miniSidebar(context);
   const url = new URL(window.location.href);
   url.searchParams.delete('tab');
+  window.history.replaceState({}, '', url.toString());
+};
+
+const loadChapterTwoCreate: StoryHandler = (context): void => {
+  miniSidebar(context);
+  const url = new URL(window.location.href);
+  url.searchParams.set('tab', 'Blocks');
   window.history.replaceState({}, '', url.toString());
 };
 
@@ -231,6 +258,7 @@ Tabbed devotion draft editor with Details, Blocks, and Resources. Includes draft
 ## Variants
 
 - **Create** — empty chapter with Create Chapter action
+- **Chapter 2 create** — empty chapter 2 on Blocks tab with Reuse Previous Structure
 - **Edit** — populated chapter with Publish changes (no edit-review)
 - **Blocks tab** — opens directly on the Blocks tab
 - **Devotion** — Devotion chapter type with sample blocks, opens on the Blocks tab

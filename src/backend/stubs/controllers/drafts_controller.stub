@@ -14,6 +14,7 @@ import {
   StoryService,
   isDevotionTemplate,
   normalizeDevotionDraftBundle,
+  getPreviousDevotionChapterBlocks,
   type DevotionDraftEditProps,
   type DraftEditProps,
 } from '@story-cms/kit';
@@ -119,6 +120,21 @@ export default class DraftsController {
           resourceService.hydrate(bundle.resources),
         ]);
         const createdDraftId = ctx.session.flashMessages.get('newDevotionDraftId');
+        const previousChapterBlocks =
+          draft.number > 1
+            ? await getPreviousDevotionChapterBlocks(
+                { ...specifier, number: draft.number },
+                async (spec) => {
+                  const previousDraft = await Draft.query().where(spec).first();
+                  if (previousDraft) {
+                    return previousDraft.bundle;
+                  }
+
+                  const previousChapter = await Chapter.query().where(spec).first();
+                  return previousChapter?.bundle ?? null;
+                },
+              )
+            : [];
         const devotionData: DevotionDraftEditProps = {
           ...data,
           bundle: {
@@ -127,6 +143,7 @@ export default class DraftsController {
           },
           availableResources,
           isCreate: Number(createdDraftId) === draft.id,
+          previousChapterBlocks,
         };
 
         // @ts-expect-error Inertia page name

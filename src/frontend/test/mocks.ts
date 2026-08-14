@@ -4805,6 +4805,9 @@ export const sampleDevotionChapterBundle: DevotionDraftEditBundle = {
   ],
 };
 
+export const samplePreviousDevotionChapterBlocks: ChapterBlock[] =
+  sampleDevotionChapterBundle.blocks;
+
 export const devotionDraftEditProps: Omit<DevotionDraftEditProps, 'providers'> & {
   providers: Providers;
 } = {
@@ -4823,6 +4826,21 @@ export const devotionDraftEditCreateProps: Omit<DevotionDraftEditProps, 'provide
   ...devotionDraftEditProps,
   bundle: emptyDevotionDraftBundle,
   isCreate: true,
+};
+
+export const devotionDraftEditChapterTwoCreateProps: Omit<DevotionDraftEditProps, 'providers'> & {
+  providers: Providers;
+} = {
+  ...devotionDraftEditCreateProps,
+  draft: {
+    ...sampleDevotionDraft,
+    number: 2,
+  },
+  bundle: {
+    ...emptyDevotionDraftBundle,
+    number: '02',
+  },
+  previousChapterBlocks: samplePreviousDevotionChapterBlocks,
 };
 
 export const devotionDraftEditValidationErrors: Record<string, string[]> = {

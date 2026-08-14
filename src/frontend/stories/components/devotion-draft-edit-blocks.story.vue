@@ -35,6 +35,15 @@
         chapter-type="Devotion"
       />
     </Variant>
+
+    <Variant title="Reuse previous structure">
+      <DevotionDraftEditBlocks
+        v-model:blocks="emptyBlocks"
+        :previous-chapter-blocks="previousChapterBlocks"
+        :video-collection-id="sharedProps.config.videoCollectionId"
+        chapter-type="Devotion"
+      />
+    </Variant>
   </Story>
 </template>
 
@@ -45,6 +54,7 @@ import type { ChapterBlock } from '../../../types';
 import {
   mockResourceProviders,
   sampleMixedChapterBlocks,
+  samplePreviousDevotionChapterBlocks,
   sharedProps,
 } from '../../test/mocks';
 import { useWidgetsStore } from '../../store';
@@ -59,6 +69,8 @@ const setupProviders: StoryHandler = (): void => {
 const defaultBlocks = ref<ChapterBlock[]>([createEmptyContentBlock()]);
 
 const emptyBlocks = ref<ChapterBlock[]>([]);
+
+const previousChapterBlocks = samplePreviousDevotionChapterBlocks;
 
 const multipleBlocks = ref<ChapterBlock[]>([
   {
@@ -122,5 +134,5 @@ const devotionBlocks = ref<ChapterBlock[]>([
 <docs lang="md">
 # Devotion Draft Edit Blocks
 
-Content block editor for the Blocks tab on devotion draft edit pages. Supports content, title, and scripture blocks with add, remove, reorder, collapse, visibility toggles, and leaders notes.
+Content block editor for the Blocks tab on devotion draft edit pages. Supports content, title, and scripture blocks with add, remove, reorder, collapse, visibility toggles, leaders notes, and reuse previous structure on chapter 2+.
 </docs>

@@ -2,9 +2,11 @@
   <div class="min-w-0 space-y-6 overflow-x-clip">
     <AddBlockToolbar
       v-if="blocks.length === 0"
+      :show-reuse-previous="canReusePrevious"
       @add-title="addTitleBlock"
       @add-scripture="addScriptureBlock"
       @add-content="addContentBlock"
+      @reuse-previous="reusePreviousStructure"
     />
 
     <BlockEmptyState
@@ -79,12 +81,15 @@ import {
   createEmptyContentBlock,
   createEmptyScriptureBlock,
   createEmptyTitleBlock,
+  normalizeBlocks,
 } from './blocks/block-utils';
+import { cloneBlocksStructure } from '../../../shared/block_structure';
 
 const props = defineProps<{
   blocks: ChapterBlock[];
   videoCollectionId?: string;
   chapterType?: string | null;
+  previousChapterBlocks?: ChapterBlock[];
 }>();
 
 const emit = defineEmits<{
@@ -100,6 +105,10 @@ const blocks = computed({
 });
 
 const blocksArrayError = computed(() => blocksArrayErrorMessages(errors.value)[0] ?? '');
+
+const canReusePrevious = computed(
+  () => (props.previousChapterBlocks?.length ?? 0) > 0 && blocks.value.length === 0,
+);
 
 const expanded = ref<boolean[]>([]);
 const newlyAddedBlockId = ref<string | null>(null);
@@ -185,6 +194,15 @@ const addTitleBlock = () => {
 
 const addScriptureBlock = () => {
   appendBlock(createEmptyScriptureBlock());
+};
+
+const reusePreviousStructure = () => {
+  if (!props.previousChapterBlocks?.length) return;
+
+  const cloned = cloneBlocksStructure(normalizeBlocks([...props.previousChapterBlocks]));
+  blocks.value = cloned;
+  expanded.value = cloned.map((_, index) => index === 0);
+  hasInitialized.value = true;
 };
 
 const deleteBlock = (index: number) => {
