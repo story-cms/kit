@@ -28,7 +28,7 @@ const emptyChapterModel = {
   title: '',
   description: '',
   coverImage: '',
-  devotionAudio: '',
+  devotionAudio: { url: null, length: null },
 };
 
 const populatedChapterModel = {
@@ -37,7 +37,7 @@ const populatedChapterModel = {
   description: 'An introduction to the Christian faith.',
   coverImage:
     'https://res.cloudinary.com/journeys/image/upload/v1756121793/mountain-placeholder_yuflkz.jpg',
-  devotionAudio: '',
+  devotionAudio: { url: null, length: null },
 };
 
 const loadCreate: StoryHandler = (): void => {

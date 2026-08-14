@@ -429,6 +429,7 @@ export class StoryService {
     return {
       id: story.id,
       name: localisation?.title ?? '',
+      template: story.template,
       coverImage: localisation?.coverImage ?? '',
       chapterLimit: story.chapterLimit,
       chapterType: story.chapterType ?? '',

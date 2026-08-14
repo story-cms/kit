@@ -10,7 +10,11 @@ import {
   Draft,
   DraftService,
   IndexService,
+  ResourceService,
   StoryService,
+  isDevotionTemplate,
+  normalizeDevotionDraftBundle,
+  type DevotionDraftEditProps,
   type DraftEditProps,
 } from '@story-cms/kit';
 import cms from '#services/cms';
@@ -33,11 +37,18 @@ export default class DraftsController {
     const bundle = await service.getDraftBundle(version, number);
     if (bundle === null) return ctx.response.redirect('/');
 
-    await Draft.create({
+    const draft = await Draft.create({
       ...version,
       number,
       bundle,
     });
+
+    if (
+      version.locale === cms.sourceLocale &&
+      isDevotionTemplate(story.template)
+    ) {
+      ctx.session.flash('newDevotionDraftId', draft.id);
+    }
 
     await Activity.create({
       userId: ctx.auth.user?.id,
@@ -100,7 +111,28 @@ export default class DraftsController {
     const isTranslation = version.locale !== cms.sourceLocale;
 
     if (!isTranslation) {
-      // TODO: use DevotionDraftEdit for devotion templates once adopted
+      if (isDevotionTemplate(story.template)) {
+        const bundle = normalizeDevotionDraftBundle(draft.bundle, draft.number);
+        const resourceService = new ResourceService();
+        const [availableResources, resources] = await Promise.all([
+          resourceService.listForLocale(version.locale),
+          resourceService.hydrate(bundle.resources),
+        ]);
+        const createdDraftId = ctx.session.flashMessages.get('newDevotionDraftId');
+        const devotionData: DevotionDraftEditProps = {
+          ...data,
+          bundle: {
+            ...bundle,
+            resources,
+          },
+          availableResources,
+          isCreate: Number(createdDraftId) === draft.id,
+        };
+
+        // @ts-expect-error Inertia page name
+        return ctx.inertia.render('DevotionDraftEdit', devotionData);
+      }
+
       // @ts-expect-error Inertia page name
       return ctx.inertia.render('DraftIndex', data);
     }

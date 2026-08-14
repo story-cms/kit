@@ -122,6 +122,27 @@ test.describe('DraftService.getDraftBundle', () => {
     expect((mockQueryBuilder as any).lastWhereCall).toBeUndefined();
   });
 
+  test('returns the devotion bundle for a source-locale devotion story', async () => {
+    storySpec.template = 'devotion';
+    const draftService = new DraftService(storySpec, mockCms);
+
+    const result = await draftService.getDraftBundle(
+      { apiVersion: 1, locale: 'en', storyId: storySpec.id },
+      4,
+    );
+
+    expect(JSON.parse(result!)).toEqual({
+      number: '04',
+      title: '',
+      description: '',
+      coverImage: '',
+      devotionAudio: { url: null, length: null },
+      blocks: [],
+      resources: [],
+    });
+    expect((mockQueryBuilder as any).lastWhereCall).toBeUndefined();
+  });
+
   test('returns fresh bundle from source chapter for translation', async () => {
     // arrange
     const draftService = new DraftService(storySpec, mockCms);

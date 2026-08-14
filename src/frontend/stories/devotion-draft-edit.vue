@@ -230,7 +230,7 @@ const getBundle = () => ({
   title: model.getField('title', ''),
   description: model.getField('description', ''),
   coverImage: model.getField('coverImage', ''),
-  devotionAudio: model.getField('devotionAudio', ''),
+  devotionAudio: model.getField('devotionAudio', { url: null, length: null }),
   blocks: model.getField('blocks', []),
   resources: resourceIds(attachedResources.value),
 });

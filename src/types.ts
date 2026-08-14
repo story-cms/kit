@@ -294,6 +294,7 @@ export type ChapterBlock =
 export interface StorySpec {
   id: number;
   name: string;
+  template?: string;
   coverImage: string;
   chapterLimit: number;
   chapterType: string;
@@ -498,14 +499,21 @@ export interface DevotionDraftBundle {
   title: string;
   description: string;
   coverImage: string;
-  devotionAudio: string;
+  devotionAudio: {
+    url: string | null;
+    length: number | null;
+  };
   blocks: ChapterBlock[];
-  resources: ResourceItem[];
+  resources: string[];
 }
+
+export type DevotionDraftEditBundle = Omit<DevotionDraftBundle, 'resources'> & {
+  resources: ResourceItem[];
+};
 
 export interface DevotionDraftEditProps {
   draft: DraftMeta;
-  bundle: DevotionDraftBundle;
+  bundle: DevotionDraftEditBundle;
   story: StorySpec;
   availableResources: ResourceItem[];
   providers: Providers;

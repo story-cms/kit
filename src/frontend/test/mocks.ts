@@ -1,5 +1,5 @@
 import type {
-  DevotionDraftBundle,
+  DevotionDraftEditBundle,
   DevotionDraftEditProps,
   FieldSpec,
   LanguageSpecification,
@@ -4749,29 +4749,30 @@ export const sampleDevotionDraftSubmitted = {
   status: 'submitted',
 };
 
-export const emptyDevotionDraftBundle: DevotionDraftBundle = {
+export const emptyDevotionDraftBundle: DevotionDraftEditBundle = {
   number: '',
   title: '',
   description: '',
   coverImage: '',
-  devotionAudio: '',
+  devotionAudio: { url: null, length: null },
   blocks: [],
   resources: [],
 };
 
-export const sampleDevotionDraftBundle: DevotionDraftBundle = {
+export const sampleDevotionDraftBundle: DevotionDraftEditBundle = {
   number: '01',
   title: 'Is there more to life than this?',
   description: 'An introduction to the Christian faith.',
   coverImage:
     'https://res.cloudinary.com/journeys/image/upload/v1756121793/mountain-placeholder_yuflkz.jpg',
-  devotionAudio: '',
+  devotionAudio: { url: null, length: null },
   blocks: sampleMixedChapterBlocks,
   resources: sampleAttachedResources.slice(0, 2),
 };
 
 export const devotionDraftEditStory: StorySpec = {
   ...story,
+  template: 'devotion',
   chapterType: 'Day',
 };
 
@@ -4780,7 +4781,7 @@ export const devotionDraftEditDevotionStory: StorySpec = {
   chapterType: 'Devotion',
 };
 
-export const sampleDevotionChapterBundle: DevotionDraftBundle = {
+export const sampleDevotionChapterBundle: DevotionDraftEditBundle = {
   ...sampleDevotionDraftBundle,
   number: '01',
   title: 'Morning Devotion',

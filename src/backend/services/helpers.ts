@@ -8,6 +8,8 @@ export {
   canPublishStory,
   canPublishStoryMetadata,
   canPublishStoryReady,
+  DEVOTION_TEMPLATE_ID,
+  isDevotionTemplate,
   missingPublishedChapters,
   storyDetailsBlockedMessages,
   publishBlockedMessage,

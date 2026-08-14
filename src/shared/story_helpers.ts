@@ -6,6 +6,11 @@ export interface StoryPublishMetadata {
   visibility: string;
 }
 
+export const DEVOTION_TEMPLATE_ID = 'devotion';
+
+export const isDevotionTemplate = (template: string | null | undefined): boolean =>
+  template === DEVOTION_TEMPLATE_ID;
+
 const isBlank = (value: string | null | undefined): boolean => !value?.trim();
 
 export const storyTypeBlockedMessages = (

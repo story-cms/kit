@@ -2,6 +2,8 @@ import Chapter from '../models/chapter.js';
 import type { FieldMap, FieldSpec, StorySpec, StoryVersion, JSON } from '../../types';
 import { BundleService } from './bundle_service.js';
 import { CmsService } from './cms_service.js';
+import { createDevotionDraftBundle } from '../../shared/devotion_draft.js';
+import { isDevotionTemplate } from '../../shared/story_helpers.js';
 
 export class DraftService {
   public story: StorySpec;
@@ -25,6 +27,10 @@ export class DraftService {
   ): Promise<JSON<any> | null> {
     // is this the source language?
     if (version.locale === this.cms.sourceLocale) {
+      if (isDevotionTemplate(this.story.template)) {
+        return JSON.stringify(createDevotionDraftBundle(number));
+      }
+
       const bundleService = new BundleService(this.story.fields);
       return bundleService.defaultBundle;
     }

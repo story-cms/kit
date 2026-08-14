@@ -2,7 +2,12 @@
   exports({ to: app.makePath('app/validators/story_validator.ts') })
 }}}
 import vine, { SimpleMessagesProvider } from '@vinejs/vine';
-import type { StorySpec, ValidatorType } from '@story-cms/kit';
+import {
+  DevotionDraftValidator,
+  isDevotionTemplate,
+  type StorySpec,
+  type ValidatorType,
+} from '@story-cms/kit';
 
 // to save us from setting vine.string().trim().minLength(1) everywhere
 vine.convertEmptyStringsToNull = true;
@@ -41,6 +46,10 @@ export default class Story1 implements ValidatorType {
 }
 
 export const storyValidator = (story: StorySpec): ValidatorType => {
+  if (isDevotionTemplate(story.template)) {
+    return new DevotionDraftValidator();
+  }
+
   switch (story.id) {
     case 1:
       return new Story1();
