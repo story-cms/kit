@@ -1,6 +1,6 @@
 <template>
   <aside
-    class="glass-surface fixed inset-y-0 z-20 left-0 top-0 max-h-screen w-[320px] rounded-r-[20px] transition-all duration-75"
+    class="glass-surface fixed inset-y-0 left-0 top-0 z-20 max-h-screen w-[320px] rounded-r-[20px] transition-all duration-75"
   >
     <nav class="flex h-full flex-col">
       <div class="flex-1 overflow-y-auto">
@@ -146,6 +146,6 @@ const {
 
 <style lang="postcss" scoped>
 .nav-link {
-  @apply w-full rounded-full px-6 py-[18px] text-left text-sm font-semibold leading-5 transition-all duration-200 ease-in-out hover:bg-gray-100;
+  @apply w-full rounded-full px-6 py-[18px] text-left text-sm font-semibold leading-5 transition-all duration-200 ease-in-out hover:bg-slate-100;
 }
 </style>

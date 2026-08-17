@@ -130,7 +130,7 @@ const optionsClasses = computed(() => {
 });
 
 const rowClasses = (active: boolean, selected: boolean) => [
-  selected ? 'bg-blue-100' : active ? 'bg-gray-100' : '',
+  selected ? 'bg-slate-50' : active ? 'bg-slate-100' : '',
   'relative cursor-default select-none rounded-lg px-3 py-3 pr-10',
 ];
 
