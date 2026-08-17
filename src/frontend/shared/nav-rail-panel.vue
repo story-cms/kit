@@ -146,6 +146,6 @@ const {
 
 <style lang="postcss" scoped>
 .nav-link {
-  @apply w-full rounded-full px-6 py-[18px] text-left text-sm font-semibold leading-5 transition-all duration-200 ease-in-out hover:bg-slate-100;
+  @apply w-full rounded-full px-6 py-[18px] text-left text-sm font-semibold leading-5 transition-all duration-200 ease-in-out hover:bg-gray-100;
 }
 </style>
