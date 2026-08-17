@@ -2,13 +2,55 @@
   <div
     :class="[
       'min-w-0 overflow-x-clip',
-      isTranslation ? 'grid h-full gap-x-4' : 'space-y-6',
+      isTranslation ? 'grid h-full gap-x-4 gap-y-6' : 'space-y-6',
       translationGridClasses,
     ]"
   >
-    <div :class="isTranslation ? 'space-y-6' : 'contents'">
+    <template v-if="isTranslation">
+      <BlockEmptyState
+        v-if="blocks.length === 0"
+        :error-message="blocksArrayError"
+      />
+
+      <template v-for="(block, index) in blocks" :key="block.id">
+        <DraftEditBlockCard
+          :block="block"
+          :block-index="index"
+          :expanded="isExpanded(index)"
+          :video-collection-id="videoCollectionId"
+          :chapter-type="chapterType"
+          :template="template"
+          :translation-mode="true"
+          @update:block="updateBlock(index, $event)"
+          @delete="deleteBlock(index)"
+          @toggle="onToggle(index)"
+          @dragstart="onDragStart(index)"
+          @drop="onDrop(index)"
+          @dragend="onDragEnd"
+        />
+
+        <DraftEditBlockCard
+          v-if="showSourceColumn && sourceBlocks[index]"
+          :block="sourceBlocks[index]"
+          :block-index="index"
+          :expanded="isExpanded(index)"
+          :video-collection-id="videoCollectionId"
+          :chapter-type="chapterType"
+          :template="template"
+          :read-only="true"
+          dir="ltr"
+          @toggle="onToggle(index)"
+        />
+        <div
+          v-else-if="showSourceColumn"
+          aria-hidden="true"
+        />
+      </template>
+    </template>
+
+    <template v-else>
       <AddBlockToolbar
-        v-if="!isTranslation && blocks.length === 0"
+        v-if="blocks.length === 0"
         :show-reuse-previous="canReusePrevious"
         :show-scripture-block="false"
         @add-title="addTitleBlock"
@@ -29,7 +71,6 @@
           :video-collection-id="videoCollectionId"
           :chapter-type="chapterType"
           :template="template"
-          :translation-mode="isTranslation"
           @update:block="updateBlock(index, $event)"
           @delete="deleteBlock(index)"
           @toggle="onToggle(index)"
@@ -40,32 +81,12 @@
       </template>
 
       <AddBlockToolbar
-        v-if="!isTranslation && blocks.length > 0"
+        v-if="blocks.length > 0"
         :show-scripture-block="false"
         @add-title="addTitleBlock"
         @add-content="addContentBlock"
       />
-    </div>
-
-    <div
-      v-if="isTranslation && showSourceColumn"
-      class="space-y-6"
-      dir="ltr"
-    >
-      <template v-for="(block, index) in blocks" :key="`source-${block.id}`">
-        <DraftEditBlockCard
-          v-if="sourceBlocks[index]"
-          :block="sourceBlocks[index]"
-          :block-index="index"
-          :expanded="isExpanded(index)"
-          :video-collection-id="videoCollectionId"
-          :chapter-type="chapterType"
-          :template="template"
-          :read-only="true"
-          @toggle="onToggle(index)"
-        />
-      </template>
-    </div>
+    </template>
   </div>
 </template>
 
