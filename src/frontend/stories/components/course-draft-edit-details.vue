@@ -7,7 +7,7 @@
       :field="numberField"
       :is-nested="true"
     />
-    <div v-else>
+    <div v-else class="mt-4">
       <label :for="numberFieldId" class="input-label text-gray-600">
         {{ numberField.label }}
       </label>

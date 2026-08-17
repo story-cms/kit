@@ -1,6 +1,11 @@
 <template>
   <div class="space-y-3">
-    <div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
+    <div
+      :class="[
+        'grid grid-cols-1 gap-3 md:grid-cols-2',
+        { 'lg:grid-cols-3': showScriptureBlock },
+      ]"
+    >
       <button
         type="button"
         class="inline-flex w-full items-center justify-center rounded-xl border border-dashed border-studio-forest px-3 py-[18px] text-sm font-medium leading-4 text-studio-forest shadow-sm hover:bg-studio-lime"

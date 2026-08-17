@@ -2,7 +2,10 @@ import { computed, nextTick, onMounted, onUnmounted, watch, type Ref } from 'vue
 import { storeToRefs } from 'pinia';
 import { useSharedStore } from '../store';
 
-export function useTranslationDraftLayout(sourceSection: Ref<HTMLElement | null>) {
+export function useTranslationDraftLayout(
+  sourceSection: Ref<HTMLElement | null>,
+  enabled = true,
+) {
   const shared = useSharedStore();
   const { showSourceColumn } = storeToRefs(shared);
 
@@ -30,6 +33,7 @@ export function useTranslationDraftLayout(sourceSection: Ref<HTMLElement | null>
   };
 
   watch(showSourceColumn, async (isVisible) => {
+    if (!enabled) return;
     if (isVisible) {
       await nextTick();
       setDimensions();
@@ -37,6 +41,7 @@ export function useTranslationDraftLayout(sourceSection: Ref<HTMLElement | null>
   });
 
   onMounted(async () => {
+    if (!enabled) return;
     shared.setSingleColumn(true);
     shared.setShowMetaBox(false);
     if (shared.config.hasAppPreview) {
@@ -56,6 +61,7 @@ export function useTranslationDraftLayout(sourceSection: Ref<HTMLElement | null>
   });
 
   onUnmounted(() => {
+    if (!enabled) return;
     shared.setSingleColumn(false);
     shared.setShowMetaBox(true);
     if (shared.config.hasAppPreview) {

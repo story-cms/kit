@@ -253,11 +253,11 @@ const loadValidationErrors: StoryHandler = (context): void => {
 <docs lang="md">
 # Devotion Draft Edit
 
-Tabbed devotion draft editor with Details, Blocks, and Resources. Includes draft lifecycle actions (delete, submit, publish, request change), 2s autosave, and an explicit Save button. No sidebar meta/preview.
+Tabbed devotion draft editor with Details, Blocks, and Resources. Includes draft lifecycle actions (delete, submit, publish, request change) and a two-second autosave. No sidebar meta/preview.
 
 ## Variants
 
-- **Create** — empty chapter with Create Chapter action
+- **Create** — empty chapter that autosaves as it is edited
 - **Chapter 2 create** — empty chapter 2 on Blocks tab with Reuse Previous Structure
 - **Edit** — populated chapter with Publish changes (no edit-review)
 - **Blocks tab** — opens directly on the Blocks tab
