@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { DateTime } from 'luxon';
 import {
-  extractResourceUrl,
+  extractResourceContent,
   toResourceItem,
   toResourceIndexItem,
 } from '../../src/backend/services/resource_mapper.js';
@@ -9,19 +9,19 @@ import { compareResourcesByRecentlyEdited } from '../../src/frontend/stories/com
 import type { LinkBundle, TextBundle, VideoBundle } from '../../src/types.js';
 
 test.describe('Resource mapper', () => {
-  test('extractResourceUrl returns video url from bundle', () => {
+  test('extractResourceContent returns video url from bundle', () => {
     const bundle: VideoBundle = { video: { url: 'https://example.com/v.mp4' } };
-    expect(extractResourceUrl('video', bundle)).toBe('https://example.com/v.mp4');
+    expect(extractResourceContent('video', bundle)).toBe('https://example.com/v.mp4');
   });
 
-  test('extractResourceUrl returns url from bundle', () => {
+  test('extractResourceContent returns url from bundle', () => {
     const bundle: LinkBundle = { url: 'https://example.com/info' };
-    expect(extractResourceUrl('url', bundle)).toBe('https://example.com/info');
+    expect(extractResourceContent('url', bundle)).toBe('https://example.com/info');
   });
 
-  test('extractResourceUrl returns undefined for text type', () => {
+  test('extractResourceContent returns content from text bundle', () => {
     const bundle: TextBundle = { content: 'Hello world' };
-    expect(extractResourceUrl('text', bundle)).toBeUndefined();
+    expect(extractResourceContent('text', bundle)).toBe('Hello world');
   });
 
   test('toResourceDto maps model fields to Resource DTO', () => {
@@ -42,7 +42,7 @@ test.describe('Resource mapper', () => {
       title: 'Test Resource',
       type: 'url',
       imageUrl: 'https://example.com/img.jpg',
-      url: 'https://example.com/link',
+      content: 'https://example.com/link',
       label: 'Reading',
       visibility: 'guests',
       description: 'A description',
@@ -65,7 +65,7 @@ test.describe('Resource mapper', () => {
 
     expect(dto.label).toBeNull();
     expect(dto.description).toBeNull();
-    expect(dto.url).toBeUndefined();
+    expect(dto.content).toBe('Body text');
     expect(dto.type).toBe('text');
     expect(dto.updatedAt).toBe('2024-02-12T08:00:00.000Z');
   });
@@ -86,7 +86,7 @@ test.describe('Resource mapper', () => {
 
     expect(item.createdAt).toBe('2024-01-15');
     expect(item.updatedAt).toBe('2024-03-01T12:00:00.000Z');
-    expect(item.url).toBe('https://example.com/v.mp4');
+    expect(item.content).toBe('https://example.com/v.mp4');
   });
 
   test('toResourceIndexItem handles string timestamps', () => {
