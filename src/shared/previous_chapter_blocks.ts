@@ -1,5 +1,5 @@
 import type { ChapterBlock } from '../types.js';
-import { normalizeDevotionDraftBundle } from './devotion_draft.js';
+import { normalizedDevotionDraftBundle } from './devotion_draft.js';
 
 export interface StoryChapterSpecifier {
   apiVersion: number;
@@ -8,7 +8,7 @@ export interface StoryChapterSpecifier {
   number: number;
 }
 
-export const getPreviousDevotionChapterBlocks = async (
+export const previousDevotionChapterBlocks = async (
   specifier: StoryChapterSpecifier,
   loadBundle: (spec: StoryChapterSpecifier) => Promise<unknown | null>,
 ): Promise<ChapterBlock[]> => {
@@ -23,5 +23,5 @@ export const getPreviousDevotionChapterBlocks = async (
     return [];
   }
 
-  return normalizeDevotionDraftBundle(bundle, previousNumber).blocks;
+  return normalizedDevotionDraftBundle(bundle, previousNumber).blocks;
 };

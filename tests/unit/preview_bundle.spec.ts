@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-import { resolvePreviewBundle } from '../../src/shared/preview_bundle.js';
+import { previewBundleFrom } from '../../src/shared/preview_bundle.js';
 
 const contentBlock = (blockName: string) => ({
   id: blockName,
@@ -21,7 +21,7 @@ const contentBlock = (blockName: string) => ({
   showLeadersNotes: false,
 });
 
-test.describe('resolvePreviewBundle', () => {
+test.describe('previewBundleFrom', () => {
   test('prefers draft block order over published chapter for devotion', () => {
     const chapterBlocks = [
       contentBlock('Block-A'),
@@ -34,7 +34,7 @@ test.describe('resolvePreviewBundle', () => {
       contentBlock('Block-B'),
     ];
 
-    const result = resolvePreviewBundle({
+    const result = previewBundleFrom({
       chapter: { bundle: { blocks: chapterBlocks }, number: 1 },
       draft: { bundle: { blocks: draftBlocks }, number: 1 },
       template: 'devotion',
@@ -52,7 +52,7 @@ test.describe('resolvePreviewBundle', () => {
       contentBlock('Block-B'),
     ];
 
-    const result = resolvePreviewBundle({
+    const result = previewBundleFrom({
       chapter: { bundle: { blocks: chapterBlocks }, number: 2 },
       draft: null,
       template: 'devotion',
@@ -66,7 +66,7 @@ test.describe('resolvePreviewBundle', () => {
   test('returns parsed chapter bundle for non-devotion templates', () => {
     const chapterBundle = { title: 'Course chapter', screens: [{ screenName: 'Intro' }] };
 
-    const result = resolvePreviewBundle({
+    const result = previewBundleFrom({
       chapter: { bundle: chapterBundle, number: 1 },
       draft: { bundle: { title: 'Draft title' }, number: 1 },
       template: 'course',

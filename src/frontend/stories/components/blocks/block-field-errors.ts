@@ -1,6 +1,6 @@
 type ValidationErrors = Record<string, string | string[]>;
 
-function normalizeMessages(messages: string | string[] | undefined): string[] {
+function normalizedMessages(messages: string | string[] | undefined): string[] {
   if (!messages) return [];
   return Array.isArray(messages) ? messages : [messages];
 }
@@ -14,7 +14,7 @@ export function blockFieldErrorMessages(
   blockIndex: number,
   field: string,
 ): string[] {
-  return normalizeMessages(errors[`${blockPrefix(blockIndex)}.${field}`]);
+  return normalizedMessages(errors[`${blockPrefix(blockIndex)}.${field}`]);
 }
 
 export function blockItemFieldErrorMessages(
@@ -23,7 +23,7 @@ export function blockItemFieldErrorMessages(
   itemIndex: number,
   field: string,
 ): string[] {
-  return normalizeMessages(
+  return normalizedMessages(
     errors[`${blockPrefix(blockIndex)}.items.${itemIndex}.${field}`],
   );
 }
@@ -37,12 +37,12 @@ export function blockLevelErrorMessages(
   errors: ValidationErrors,
   blockIndex: number,
 ): string[] {
-  return normalizeMessages(errors[blockPrefix(blockIndex)]);
+  return normalizedMessages(errors[blockPrefix(blockIndex)]);
 }
 
 export function blocksArrayErrorMessages(errors: ValidationErrors): string[] {
   return [
-    ...normalizeMessages(errors['bundle.blocks']),
-    ...normalizeMessages(errors['bundle.blocks.minLength']),
+    ...normalizedMessages(errors['bundle.blocks']),
+    ...normalizedMessages(errors['bundle.blocks.minLength']),
   ];
 }

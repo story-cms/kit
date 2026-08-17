@@ -13,7 +13,7 @@ import {
   Draft,
   Story,
   StoryService,
-  resolvePreviewBundle,
+  previewBundleFrom,
 } from '@story-cms/kit';
 import cms from '#services/cms';
 
@@ -52,7 +52,7 @@ export default class ChaptersController {
     const chapter = await Chapter.query().where(specifier).firstOrFail();
     const draft = await Draft.query().where(specifier).first();
     const storyRecord = await Story.findOrFail(story.id);
-    const bundle = resolvePreviewBundle({
+    const bundle = previewBundleFrom({
       chapter,
       draft,
       template: storyRecord.template,

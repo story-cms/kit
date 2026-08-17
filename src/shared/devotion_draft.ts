@@ -46,7 +46,7 @@ const normalizedAudio = (
   };
 };
 
-export const normalizeDevotionDraftBundle = (
+export const normalizedDevotionDraftBundle = (
   value: unknown,
   draftNumber: number,
 ): DevotionDraftBundle => {

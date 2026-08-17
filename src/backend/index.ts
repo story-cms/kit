@@ -57,12 +57,12 @@ export * from './validators/course.js';
 export * from './validators/devotion_draft.js';
 export {
   createDevotionDraftBundle,
-  normalizeDevotionDraftBundle,
+  normalizedDevotionDraftBundle,
 } from '../shared/devotion_draft.js';
-export { resolvePreviewBundle } from '../shared/preview_bundle.js';
+export { previewBundleFrom } from '../shared/preview_bundle.js';
 export { cloneBlocksStructure } from '../shared/block_structure.js';
 export {
-  getPreviousDevotionChapterBlocks,
+  previousDevotionChapterBlocks,
   type StoryChapterSpecifier,
 } from '../shared/previous_chapter_blocks.js';
 export { default as DropValidator } from './validators/drop.js';

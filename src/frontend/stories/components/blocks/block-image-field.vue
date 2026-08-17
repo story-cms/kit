@@ -44,12 +44,12 @@ const fieldSpec = computed((): FieldSpec => ({
   maxSize: 5662310,
 }));
 
-const readValue = (): string => model.getField(fieldPath.value, '') as string;
+const getValue = (): string => model.getField(fieldPath.value, '') as string;
 
 watch(
   () => props.modelValue,
   (value) => {
-    const current = readValue();
+    const current = getValue();
     if (current === value) return;
     model.setField(fieldPath.value, value);
   },
@@ -57,7 +57,7 @@ watch(
 );
 
 const unsubscribe = model.$subscribe(() => {
-  const fresh = readValue();
+  const fresh = getValue();
   if (fresh === props.modelValue) return;
   emit('update:modelValue', fresh);
 });

@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import {
   createDevotionDraftBundle,
-  normalizeDevotionDraftBundle,
+  normalizedDevotionDraftBundle,
 } from '../../src/shared/devotion_draft.js';
 import { isDevotionTemplate } from '../../src/shared/story_helpers.js';
 import { resourceIds } from '../../src/frontend/stories/components/resource-utils.js';
@@ -43,7 +43,7 @@ test.describe('devotion draft helpers', () => {
     };
 
     expect(
-      normalizeDevotionDraftBundle(
+      normalizedDevotionDraftBundle(
         {
           title: 'Existing devotion',
           devotionAudio: '',
@@ -65,7 +65,7 @@ test.describe('devotion draft helpers', () => {
 
   test('normalizes a JSON string and nullable audio metadata', () => {
     expect(
-      normalizeDevotionDraftBundle(
+      normalizedDevotionDraftBundle(
         JSON.stringify({
           number: '07',
           devotionAudio: { url: 'https://example.com/audio.mp3', length: 120 },

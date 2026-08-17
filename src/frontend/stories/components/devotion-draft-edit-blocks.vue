@@ -24,7 +24,7 @@
         :chapter-type="chapterType"
         @update:block="updateBlock(index, $event)"
         @delete="deleteBlock(index)"
-        @toggle="toggle(index)"
+        @toggle="onToggle(index)"
         @dragstart="onDragStart(index)"
         @drop="onDrop(index)"
         @dragend="onDragEnd"
@@ -36,7 +36,7 @@
         :expanded="isExpanded(index)"
         @update:block="updateBlock(index, $event)"
         @delete="deleteBlock(index)"
-        @toggle="toggle(index)"
+        @toggle="onToggle(index)"
         @dragstart="onDragStart(index)"
         @drop="onDrop(index)"
         @dragend="onDragEnd"
@@ -48,7 +48,7 @@
         :expanded="isExpanded(index)"
         @update:block="updateBlock(index, $event)"
         @delete="deleteBlock(index)"
-        @toggle="toggle(index)"
+        @toggle="onToggle(index)"
         @dragstart="onDragStart(index)"
         @drop="onDrop(index)"
         @dragend="onDragEnd"
@@ -81,7 +81,7 @@ import {
   createEmptyContentBlock,
   createEmptyScriptureBlock,
   createEmptyTitleBlock,
-  normalizeBlocks,
+  normalizedBlocks,
 } from './blocks/block-utils';
 import { cloneBlocksStructure } from '../../../shared/block_structure';
 
@@ -167,7 +167,7 @@ const isContentBlock = (block: ChapterBlock): block is ChapterContentBlock =>
 
 const isExpanded = (index: number): boolean => expanded.value[index] ?? false;
 
-const toggle = (index: number) => {
+const onToggle = (index: number) => {
   const fresh = [...expanded.value];
   fresh[index] = !isExpanded(index);
   expanded.value = fresh;
@@ -199,7 +199,7 @@ const addScriptureBlock = () => {
 const reusePreviousStructure = () => {
   if (!props.previousChapterBlocks?.length) return;
 
-  const cloned = cloneBlocksStructure(normalizeBlocks([...props.previousChapterBlocks]));
+  const cloned = cloneBlocksStructure(normalizedBlocks([...props.previousChapterBlocks]));
   blocks.value = cloned;
   expanded.value = cloned.map((_, index) => index === 0);
   hasInitialized.value = true;

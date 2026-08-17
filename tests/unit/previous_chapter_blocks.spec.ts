@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test';
 
-import { getPreviousDevotionChapterBlocks } from '../../src/shared/previous_chapter_blocks.js';
+import { previousDevotionChapterBlocks } from '../../src/shared/previous_chapter_blocks.js';
 
-test.describe('getPreviousDevotionChapterBlocks', () => {
+test.describe('previousDevotionChapterBlocks', () => {
   test('returns empty array for the first chapter', async () => {
     let called = false;
     const loadBundle = async () => {
@@ -11,7 +11,7 @@ test.describe('getPreviousDevotionChapterBlocks', () => {
     };
 
     await expect(
-      getPreviousDevotionChapterBlocks(
+      previousDevotionChapterBlocks(
         { apiVersion: 1, locale: 'en', storyId: 1, number: 1 },
         loadBundle,
       ),
@@ -55,7 +55,7 @@ test.describe('getPreviousDevotionChapterBlocks', () => {
       };
     };
 
-    const blocks = await getPreviousDevotionChapterBlocks(
+    const blocks = await previousDevotionChapterBlocks(
       { apiVersion: 1, locale: 'en', storyId: 1, number: 2 },
       loadBundle,
     );

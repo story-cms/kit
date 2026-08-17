@@ -89,9 +89,9 @@ import {
   devotionDraftEditTabHasError,
   firstDevotionDraftEditTabWithError,
 } from './devotion-draft-edit-tab-errors';
-import { normalizeBlocks } from './components/blocks/block-utils';
+import { normalizedBlocks } from './components/blocks/block-utils';
 
-const resolveDevotionDraftTab = (
+const findDevotionDraftTab = (
   value: string | null,
   tabs: NavigationPaneTab[],
 ): string => {
@@ -125,7 +125,7 @@ const model = useModelStore();
 model.setModel(props.bundle);
 
 const blocks = ref<ChapterBlock[]>(
-  props.bundle.blocks?.length ? normalizeBlocks([...props.bundle.blocks]) : [],
+  props.bundle.blocks?.length ? normalizedBlocks([...props.bundle.blocks]) : [],
 );
 const attachedResources = ref<ResourceItem[]>([...(props.bundle.resources ?? [])]);
 const availableResources = props.availableResources ?? [];
@@ -204,7 +204,7 @@ const initialTabs: NavigationPaneTab[] = [
 ];
 
 const currentDevotionDraftTab = ref(
-  resolveDevotionDraftTab(
+  findDevotionDraftTab(
     new URLSearchParams(window.location.search).get('tab'),
     initialTabs,
   ),

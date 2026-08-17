@@ -1,19 +1,19 @@
 <template>
   <Story title="Index Tabs" group="shared">
     <Variant title="Default">
-      <IndexTabs :tabs="tabItems" :current-tab="currentTab" @change="changeTab" />
+      <IndexTabs :tabs="tabItems" :current-tab="currentTab" @change="onTabChange" />
     </Variant>
 
     <Variant title="Interactive">
       <div class="space-y-4">
-        <IndexTabs :tabs="tabItems" :current-tab="currentTab" @change="changeTab" />
+        <IndexTabs :tabs="tabItems" :current-tab="currentTab" @change="onTabChange" />
         <p class="text-sm text-gray-600">Selected: {{ currentTab }}</p>
       </div>
     </Variant>
 
     <Variant title="On white background">
       <div class="rounded-xl bg-white p-6">
-        <IndexTabs :tabs="publishedTabs" :current-tab="publishedTab" @change="changePublishedTab" />
+        <IndexTabs :tabs="publishedTabs" :current-tab="publishedTab" @change="onPublishedTabChange" />
       </div>
     </Variant>
   </Story>
@@ -26,7 +26,7 @@ import type { TabItem } from '../../types';
 
 const currentTab = ref('To Do');
 
-const changeTab = (tab: string) => {
+const onTabChange = (tab: string) => {
   currentTab.value = tab;
 };
 
@@ -37,7 +37,7 @@ const tabItems: TabItem[] = [
 
 const publishedTab = ref('Published');
 
-const changePublishedTab = (tab: string) => {
+const onPublishedTabChange = (tab: string) => {
   publishedTab.value = tab;
 };
 

@@ -9,7 +9,7 @@
       class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium transition-colors"
       :class="isActive(option.key) ? option.activeClasses : option.inactiveClasses"
       :aria-pressed="isActive(option.key)"
-      @click="toggleVisibility(option.key)"
+      @click="onToggleVisibility(option.key)"
     >
       <component :is="option.icon" class="size-[14px]" aria-hidden="true" />
       {{ option.label }}
@@ -31,7 +31,7 @@ const emit = defineEmits<{
   'update:modelValue': [value: ChapterBlockVisibility];
 }>();
 
-const toggleVisibility = (key: keyof ChapterBlockVisibility) => {
+const onToggleVisibility = (key: keyof ChapterBlockVisibility) => {
   if (key !== 'hidden' && props.modelValue.hidden) {
     emit('update:modelValue', { ...props.modelValue, hidden: false, [key]: true });
     return;

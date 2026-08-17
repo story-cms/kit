@@ -44,13 +44,13 @@ const fieldSpec = computed((): FieldSpec => ({
   maxSize: 500662310,
 }));
 
-const readVideo = (): { url: string | null } =>
+const getVideo = (): { url: string | null } =>
   model.getField(fieldPath.value, { url: null }) as { url: string | null };
 
 watch(
   () => props.modelValue,
   (value) => {
-    const current = readVideo();
+    const current = getVideo();
     if (current.url === value.url) return;
     model.setField(fieldPath.value, value);
   },
@@ -58,7 +58,7 @@ watch(
 );
 
 const unsubscribe = model.$subscribe(() => {
-  const fresh = readVideo();
+  const fresh = getVideo();
   if (fresh.url === props.modelValue.url) return;
   emit('update:modelValue', { ...fresh });
 });

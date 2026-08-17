@@ -58,7 +58,7 @@ export function createContentItem(kind: ChapterContentItem['kind']): ChapterCont
   return { id, kind, scripture: { reference: '', verse: '' } };
 }
 
-export function normalizeContentBlock(block: ChapterContentBlock): ChapterContentBlock {
+export function normalizedContentBlock(block: ChapterContentBlock): ChapterContentBlock {
   if (Array.isArray(block.items)) {
     return block;
   }
@@ -93,9 +93,9 @@ export function normalizeContentBlock(block: ChapterContentBlock): ChapterConten
   return normalized;
 }
 
-export function normalizeBlocks(blocks: ChapterBlock[]): ChapterBlock[] {
+export function normalizedBlocks(blocks: ChapterBlock[]): ChapterBlock[] {
   return blocks.map((block) =>
-    block.kind === 'content' ? normalizeContentBlock(block) : block,
+    block.kind === 'content' ? normalizedContentBlock(block) : block,
   );
 }
 

@@ -1,5 +1,5 @@
 import type { PreviewBundle } from '../types.js';
-import { normalizeDevotionDraftBundle } from './devotion_draft.js';
+import { normalizedDevotionDraftBundle } from './devotion_draft.js';
 import { isDevotionTemplate } from './story_helpers.js';
 
 const parseBundle = (value: unknown): Record<string, unknown> => {
@@ -19,7 +19,7 @@ const parseBundle = (value: unknown): Record<string, unknown> => {
     : {};
 };
 
-export function resolvePreviewBundle(options: {
+export function previewBundleFrom(options: {
   chapter: { bundle: unknown; number: number };
   draft?: { bundle: unknown; number: number } | null;
   template?: string;
@@ -28,7 +28,7 @@ export function resolvePreviewBundle(options: {
   const { number } = source;
 
   if (isDevotionTemplate(options.template)) {
-    return normalizeDevotionDraftBundle(source.bundle, number);
+    return normalizedDevotionDraftBundle(source.bundle, number);
   }
 
   return parseBundle(source.bundle);

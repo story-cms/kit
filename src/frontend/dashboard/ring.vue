@@ -132,7 +132,7 @@ function getRingGeometry(size: RingSize) {
   return { circleWidth, strokeWidth, center, circleRadius, circumference };
 }
 
-function computeRingProgress(
+function buildRingProgress(
   item: { done: number; draft: number; total: number },
   circumference: number,
 ): RingProgressData {
@@ -205,14 +205,14 @@ const displayItems = computed(() => {
   if (props.progress !== undefined) {
     return props.progress.map((item) => ({
       name: item.name,
-      data: computeRingProgress(item, geometry.value.circumference),
+      data: buildRingProgress(item, geometry.value.circumference),
     }));
   }
 
   return [
     {
       name: props.name ?? '',
-      data: computeRingProgress(
+      data: buildRingProgress(
         {
           done: props.done ?? 0,
           draft: props.draft ?? 0,

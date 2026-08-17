@@ -13,8 +13,8 @@ import {
   ResourceService,
   StoryService,
   isDevotionTemplate,
-  normalizeDevotionDraftBundle,
-  getPreviousDevotionChapterBlocks,
+  normalizedDevotionDraftBundle,
+  previousDevotionChapterBlocks,
   type DevotionDraftEditProps,
   type DraftEditProps,
 } from '@story-cms/kit';
@@ -113,7 +113,7 @@ export default class DraftsController {
 
     if (!isTranslation) {
       if (isDevotionTemplate(story.template)) {
-        const bundle = normalizeDevotionDraftBundle(draft.bundle, draft.number);
+        const bundle = normalizedDevotionDraftBundle(draft.bundle, draft.number);
         const resourceService = new ResourceService();
         const [availableResources, resources] = await Promise.all([
           resourceService.listForLocale(version.locale),
@@ -122,7 +122,7 @@ export default class DraftsController {
         const createdDraftId = ctx.session.flashMessages.get('newDevotionDraftId');
         const previousChapterBlocks =
           draft.number > 1
-            ? await getPreviousDevotionChapterBlocks(
+            ? await previousDevotionChapterBlocks(
                 { ...specifier, number: draft.number },
                 async (spec) => {
                   const previousDraft = await Draft.query().where(spec).first();

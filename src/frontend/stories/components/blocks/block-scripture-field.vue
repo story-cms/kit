@@ -15,8 +15,8 @@
         :placeholder="referencePlaceholder"
         class="input-field mt-[2px]"
         :class="{ 'border-error': referenceHasError }"
-        @input="emitScripture"
-        @blur="lookup"
+        @input="onScriptureInput"
+        @blur="onReferenceBlur"
       />
       <p v-if="referenceHasError" class="text-sm text-error">
         {{ referenceErrorMessage }}
@@ -31,7 +31,7 @@
         :placeholder="passagePlaceholder"
         class="input-field mt-[2px] min-h-[120px] resize-y"
         :class="{ 'border-error': verseHasError }"
-        @input="emitScripture"
+        @input="onScriptureInput"
       />
       <p v-if="verseHasError" class="text-sm text-error">
         {{ verseErrorMessage }}
@@ -101,7 +101,7 @@ const fieldSpec = computed((): FieldSpec => ({
   widget: 'scripture',
 }));
 
-const readScripture = (): Scripture =>
+const getScripture = (): Scripture =>
   model.getField(scripturePath.value, { reference: '', verse: '' }) as Scripture;
 
 const reference = ref(props.modelValue.reference);
@@ -137,7 +137,7 @@ const referenceErrorMessage = computed(() => scriptureReferenceMessages.value[0]
 const verseErrorMessage = computed(() => scriptureVerseMessages.value[0] ?? '');
 
 const syncPropsToModel = (value: Scripture) => {
-  const current = readScripture();
+  const current = getScripture();
   if (current.reference === value.reference && current.verse === value.verse) {
     return;
   }
@@ -151,13 +151,13 @@ const syncPropsToModel = (value: Scripture) => {
   model.setField(scripturePath.value, value);
 };
 
-const emitScripture = () => {
+const onScriptureInput = () => {
   const next = { reference: reference.value, verse: verse.value };
   syncPropsToModel(next);
   emit('update:modelValue', next);
 };
 
-const lookup = async () => {
+const fetchScripturePassage = async () => {
   if (!useCustomLabels.value || !provider?.bibleApiKey || !reference.value.trim()) {
     return;
   }
@@ -187,7 +187,11 @@ const lookup = async () => {
     .replace(/^\n/, '')
     .replace(/\n\s+\n/g, '\n\n')
     .replace(/\n+/g, '\n');
-  emitScripture();
+  onScriptureInput();
+};
+
+const onReferenceBlur = () => {
+  void fetchScripturePassage();
 };
 
 watch(
@@ -209,7 +213,7 @@ watch(
 );
 
 const unsubscribe = model.$subscribe(() => {
-  const fresh = readScripture();
+  const fresh = getScripture();
   if (
     fresh.reference === props.modelValue.reference &&
     fresh.verse === props.modelValue.verse

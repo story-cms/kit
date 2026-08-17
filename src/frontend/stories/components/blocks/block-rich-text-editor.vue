@@ -44,7 +44,7 @@ const toolbar = [
   'link',
 ];
 
-const update = (_editor: Editor, change: EditorChange) => {
+const onEditorChange = (_editor: Editor, change: EditorChange) => {
   if (change.origin === 'setValue' || isSettingValue) return;
   emit('update:modelValue', mde?.value() ?? '');
 };
@@ -76,13 +76,13 @@ onMounted(async () => {
     // @ts-expect-error toolbar is not typed
     toolbar,
   });
-  mde.codemirror.on('change', update);
+  mde.codemirror.on('change', onEditorChange);
   syncValue(props.modelValue);
 });
 
 onBeforeUnmount(() => {
   mde?.toTextArea();
-  mde?.codemirror.off('change', update);
+  mde?.codemirror.off('change', onEditorChange);
   mde = null;
 });
 </script>

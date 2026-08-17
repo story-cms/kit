@@ -3,7 +3,7 @@
     <template #main>
       <StatTiles :stats="stats" :is-loading="isLoading" :error="error" />
 
-      <ActionGrid :items="actionItems" @action="handleActionGrid" />
+      <ActionGrid :items="actionItems" @action="onActionGrid" />
 
       <section>
         <div>
@@ -118,7 +118,7 @@ const actionItems = computed<ActionGridItem[]>(() => {
   ];
 });
 
-const handleActionGrid = (url: string) => {
+const onActionGrid = (url: string) => {
   router.visit(url);
 };
 

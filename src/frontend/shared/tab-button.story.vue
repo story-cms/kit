@@ -43,7 +43,7 @@
           :key="tab.label"
           :label="tab.label"
           :is-active="sortField === tab.field"
-          @click="toggleSort(tab.field)"
+          @click="onToggleSort(tab.field)"
         >
           <ArrowDownWideNarrow
             v-if="sortField === tab.field && sortDescending"
@@ -167,7 +167,7 @@ const sortTabs: { label: string; field: 'lastEdited' | 'status' }[] = [
 ];
 const sortField = ref<'lastEdited' | 'status'>('lastEdited');
 const sortDescending = ref(true);
-const toggleSort = (field: 'lastEdited' | 'status') => {
+const onToggleSort = (field: 'lastEdited' | 'status') => {
   if (sortField.value === field) {
     sortDescending.value = !sortDescending.value;
     return;
