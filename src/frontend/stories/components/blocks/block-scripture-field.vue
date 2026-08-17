@@ -14,7 +14,11 @@
         type="text"
         :placeholder="referencePlaceholder"
         class="input-field mt-[2px]"
-        :class="{ 'border-error': referenceHasError }"
+        :class="{
+          'border-error': referenceHasError,
+          'text-gray-600 shadow-none': referenceReadOnly,
+        }"
+        :readonly="referenceReadOnly"
         @input="onScriptureInput"
         @blur="onReferenceBlur"
       />
@@ -30,7 +34,11 @@
         rows="6"
         :placeholder="passagePlaceholder"
         class="input-field mt-[2px] min-h-[120px] resize-y"
-        :class="{ 'border-error': verseHasError }"
+        :class="{
+          'border-error': verseHasError,
+          'text-gray-600 shadow-none': readOnly,
+        }"
+        :readonly="readOnly"
         @input="onScriptureInput"
       />
       <p v-if="verseHasError" class="text-sm text-error">
@@ -62,6 +70,8 @@ const props = withDefaults(
     passageLabel?: string;
     referencePlaceholder?: string;
     passagePlaceholder?: string;
+    readOnly?: boolean;
+    referenceReadOnly?: boolean;
   }>(),
   {
     itemIndex: undefined,
@@ -70,6 +80,8 @@ const props = withDefaults(
     passageLabel: undefined,
     referencePlaceholder: 'John 1 or John 1:3-4',
     passagePlaceholder: 'Verse',
+    readOnly: false,
+    referenceReadOnly: false,
   },
 );
 
@@ -152,6 +164,7 @@ const syncPropsToModel = (value: Scripture) => {
 };
 
 const onScriptureInput = () => {
+  if (props.readOnly) return;
   const next = { reference: reference.value, verse: verse.value };
   syncPropsToModel(next);
   emit('update:modelValue', next);
@@ -197,6 +210,7 @@ const onReferenceBlur = () => {
 watch(
   () => props.blockIndex,
   () => {
+    if (props.readOnly) return;
     model.setField(scripturePath.value, { ...props.modelValue });
   },
   { immediate: true },
@@ -207,12 +221,14 @@ watch(
   (value) => {
     reference.value = value.reference;
     verse.value = value.verse;
+    if (props.readOnly) return;
     syncPropsToModel(value);
   },
   { deep: true },
 );
 
 const unsubscribe = model.$subscribe(() => {
+  if (props.readOnly) return;
   const fresh = getScripture();
   if (
     fresh.reference === props.modelValue.reference &&

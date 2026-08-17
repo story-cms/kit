@@ -13,9 +13,13 @@ import {
   ResourceService,
   StoryService,
   isDevotionTemplate,
+  isCourseTemplate,
   normalizedDevotionDraftBundle,
+  normalizedCourseDraftBundle,
   previousDevotionChapterBlocks,
+  previousCourseChapterBlocks,
   type DevotionDraftEditProps,
+  type CourseDraftEditProps,
   type DraftEditProps,
 } from '@story-cms/kit';
 import cms from '#services/cms';
@@ -49,6 +53,13 @@ export default class DraftsController {
       isDevotionTemplate(story.template)
     ) {
       ctx.session.flash('newDevotionDraftId', draft.id);
+    }
+
+    if (
+      version.locale === cms.sourceLocale &&
+      isCourseTemplate(story.template)
+    ) {
+      ctx.session.flash('newCourseDraftId', draft.id);
     }
 
     await Activity.create({
@@ -150,6 +161,44 @@ export default class DraftsController {
         return ctx.inertia.render('DevotionDraftEdit', devotionData);
       }
 
+      if (isCourseTemplate(story.template)) {
+        const bundle = normalizedCourseDraftBundle(draft.bundle, draft.number);
+        const resourceService = new ResourceService();
+        const [availableResources, resources] = await Promise.all([
+          resourceService.listForLocale(version.locale),
+          resourceService.hydrate(bundle.resources),
+        ]);
+        const createdDraftId = ctx.session.flashMessages.get('newCourseDraftId');
+        const previousChapterBlocks =
+          draft.number > 1
+            ? await previousCourseChapterBlocks(
+                { ...specifier, number: draft.number },
+                async (spec) => {
+                  const previousDraft = await Draft.query().where(spec).first();
+                  if (previousDraft) {
+                    return previousDraft.bundle;
+                  }
+
+                  const previousChapter = await Chapter.query().where(spec).first();
+                  return previousChapter?.bundle ?? null;
+                },
+              )
+            : [];
+        const courseData: CourseDraftEditProps = {
+          ...data,
+          bundle: {
+            ...bundle,
+            resources,
+          },
+          availableResources,
+          isCreate: Number(createdDraftId) === draft.id,
+          previousChapterBlocks,
+        };
+
+        // @ts-expect-error Inertia page name
+        return ctx.inertia.render('CourseDraftEdit', courseData);
+      }
+
       // @ts-expect-error Inertia page name
       return ctx.inertia.render('DraftIndex', data);
     }
@@ -160,6 +209,52 @@ export default class DraftsController {
         locale: cms.sourceLocale,
       })
       .first();
+
+    if (isDevotionTemplate(story.template)) {
+      const bundle = normalizedDevotionDraftBundle(draft.bundle, draft.number);
+      const sourceBundle = normalizedDevotionDraftBundle(source?.bundle, draft.number);
+      const resourceService = new ResourceService();
+      const [availableResources, resources] = await Promise.all([
+        resourceService.listForLocale(version.locale),
+        resourceService.hydrate(bundle.resources),
+      ]);
+      const devotionData: DevotionDraftEditProps = {
+        ...data,
+        bundle: {
+          ...bundle,
+          resources,
+        },
+        source: sourceBundle,
+        availableResources,
+        previousChapterBlocks: [],
+      };
+
+      // @ts-expect-error Inertia page name
+      return ctx.inertia.render('DevotionDraftTranslationEdit', devotionData);
+    }
+
+    if (isCourseTemplate(story.template)) {
+      const bundle = normalizedCourseDraftBundle(draft.bundle, draft.number);
+      const sourceBundle = normalizedCourseDraftBundle(source?.bundle, draft.number);
+      const resourceService = new ResourceService();
+      const [availableResources, resources] = await Promise.all([
+        resourceService.listForLocale(version.locale),
+        resourceService.hydrate(bundle.resources),
+      ]);
+      const courseData: CourseDraftEditProps = {
+        ...data,
+        bundle: {
+          ...bundle,
+          resources,
+        },
+        source: sourceBundle,
+        availableResources,
+        previousChapterBlocks: [],
+      };
+
+      // @ts-expect-error Inertia page name
+      return ctx.inertia.render('CourseDraftTranslationEdit', courseData);
+    }
 
     // @ts-expect-error Inertia page name
     return ctx.inertia.render('TranslationIndex', {

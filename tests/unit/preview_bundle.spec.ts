@@ -63,15 +63,25 @@ test.describe('previewBundleFrom', () => {
     ).toEqual(['Block-A', 'Block-B']);
   });
 
-  test('returns parsed chapter bundle for non-devotion templates', () => {
-    const chapterBundle = { title: 'Course chapter', screens: [{ screenName: 'Intro' }] };
+  test('normalizes course template bundles with block order from draft', () => {
+    const chapterBlocks = [
+      contentBlock('Block-A'),
+      contentBlock('Block-B'),
+    ];
+    const draftBlocks = [
+      contentBlock('Block-B'),
+      contentBlock('Block-A'),
+    ];
 
     const result = previewBundleFrom({
-      chapter: { bundle: chapterBundle, number: 1 },
-      draft: { bundle: { title: 'Draft title' }, number: 1 },
+      chapter: { bundle: { blocks: chapterBlocks }, number: 1 },
+      draft: { bundle: { blocks: draftBlocks }, number: 1 },
       template: 'course',
     });
 
-    expect(result.title).toBe('Draft title');
+    expect(result.blocks).toHaveLength(2);
+    expect(
+      (result.blocks as Array<{ blockName: string }>).map((block) => block.blockName),
+    ).toEqual(['Block-B', 'Block-A']);
   });
 });

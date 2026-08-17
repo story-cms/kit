@@ -8,7 +8,12 @@ import BooleanField from './fields/boolean-field.vue';
 import InvitationsEdit from './invitation/invitations-edit.vue';
 import InvitationsIndex from './invitation/invitations-index.vue';
 import ChapterPreview from './stories/chapter-preview.vue';
+import CourseDraftEdit from './stories/course-draft-edit.vue';
+import CourseDraftTranslationEdit from './stories/course-draft-translation-edit.vue';
+import CourseDraftEditDetails from './stories/components/course-draft-edit-details.vue';
+import CourseDraftEditBlocks from './stories/components/course-draft-edit-blocks.vue';
 import DevotionDraftEdit from './stories/devotion-draft-edit.vue';
+import DevotionDraftTranslationEdit from './stories/devotion-draft-translation-edit.vue';
 import DevotionDraftEditDetails from './stories/components/devotion-draft-edit-details.vue';
 import DevotionDraftEditBlocks from './stories/components/devotion-draft-edit-blocks.vue';
 import ContextMenu from './shared/context-menu.vue';
@@ -82,7 +87,12 @@ export {
   AudioField,
   BooleanField,
   ChapterPreview,
+  CourseDraftEdit,
+  CourseDraftTranslationEdit,
+  CourseDraftEditBlocks,
+  CourseDraftEditDetails,
   DevotionDraftEdit,
+  DevotionDraftTranslationEdit,
   DevotionDraftEditBlocks,
   DevotionDraftEditDetails,
   ContextMenu,

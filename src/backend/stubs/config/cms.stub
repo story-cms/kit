@@ -2,7 +2,6 @@
   exports({ to: app.configPath('cms.ts') })
 }}}
 import type { FieldSpec, CmsConfig, mediaConfig, StreamSpec, Subscription } from '@story-cms/kit';
-import { courseFields } from '@story-cms/kit';
 
 // ---------------------------------------
 // Subscriptions
@@ -138,7 +137,7 @@ const cmsConfig: Partial<CmsConfig> = {
     {
       id: 'course',
       name: 'Course',
-      fields: [courseFields(videoUploadConfig, imageUploadConfig)],
+      fields: [],
     },
   ],
 

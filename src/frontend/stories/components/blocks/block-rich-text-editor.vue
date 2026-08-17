@@ -19,10 +19,12 @@ const props = withDefaults(
     modelValue: string;
     label?: string;
     placeholder?: string;
+    readOnly?: boolean;
   }>(),
   {
     label: '',
     placeholder: 'Enter your content...',
+    readOnly: false,
   },
 );
 
@@ -45,7 +47,7 @@ const toolbar = [
 ];
 
 const onEditorChange = (_editor: Editor, change: EditorChange) => {
-  if (change.origin === 'setValue' || isSettingValue) return;
+  if (props.readOnly || change.origin === 'setValue' || isSettingValue) return;
   emit('update:modelValue', mde?.value() ?? '');
 };
 
@@ -77,8 +79,16 @@ onMounted(async () => {
     toolbar,
   });
   mde.codemirror.on('change', onEditorChange);
+  mde.codemirror.setOption('readOnly', props.readOnly);
   syncValue(props.modelValue);
 });
+
+watch(
+  () => props.readOnly,
+  (value) => {
+    mde?.codemirror.setOption('readOnly', value);
+  },
+);
 
 onBeforeUnmount(() => {
   mde?.toTextArea();

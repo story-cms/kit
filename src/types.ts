@@ -507,7 +507,33 @@ export interface DevotionDraftBundle {
   resources: string[];
 }
 
-export type PreviewBundle = DevotionDraftBundle | Record<string, unknown>;
+export interface CourseDraftBundle {
+  number: string;
+  title: string;
+  description: string;
+  coverImage: string;
+  blocks: ChapterBlock[];
+  resources: string[];
+}
+
+export type PreviewBundle = DevotionDraftBundle | CourseDraftBundle | Record<string, unknown>;
+
+export type CourseDraftEditBundle = Omit<CourseDraftBundle, 'resources'> & {
+  resources: ResourceItem[];
+};
+
+export interface CourseDraftEditProps {
+  draft: DraftMeta;
+  bundle: CourseDraftEditBundle;
+  story: StorySpec;
+  availableResources: ResourceItem[];
+  providers: Providers;
+  hasEditReview: boolean;
+  lastPublished: string;
+  isCreate?: boolean;
+  source?: CourseDraftBundle;
+  previousChapterBlocks?: ChapterBlock[];
+}
 
 export type DevotionDraftEditBundle = Omit<DevotionDraftBundle, 'resources'> & {
   resources: ResourceItem[];

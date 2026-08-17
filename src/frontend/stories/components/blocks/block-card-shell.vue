@@ -1,11 +1,11 @@
 <template>
   <div
     class="relative my-2 list-none rounded-xl border border-gray-200 p-0"
-    draggable="true"
-    @dragstart="emit('dragstart')"
+    :draggable="!readOnly"
+    @dragstart="onDragStart"
     @dragover.prevent
-    @drop="emit('drop')"
-    @dragend="emit('dragend')"
+    @drop="onDrop"
+    @dragend="onDragEnd"
   >
     <div class="rounded-xl bg-white">
       <div
@@ -16,6 +16,7 @@
       >
         <div class="flex min-w-0 items-center gap-3">
           <button
+            v-if="!readOnly"
             type="button"
             class="cursor-move text-gray-400"
             :aria-label="`Reorder ${kindLabel} block`"
@@ -58,6 +59,7 @@
             <CircleAlert class="size-5" aria-hidden="true" />
           </div>
           <button
+            v-if="!readOnly"
             type="button"
             class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
             :aria-label="`Delete ${kindLabel} block`"
@@ -99,16 +101,22 @@
 import type { Component } from 'vue';
 import { ChevronDown, CircleAlert, GripVertical, Monitor, Send, Trash2, User } from '@lucide/vue';
 
-defineProps<{
-  title: string;
-  kindIcon: Component;
-  expanded: boolean;
-  presenterVisible: boolean;
-  personalVisible: boolean;
-  navigationVisible: boolean;
-  kindLabel: string;
-  hasError?: boolean;
-}>();
+const props = withDefaults(
+  defineProps<{
+    title: string;
+    kindIcon: Component;
+    expanded: boolean;
+    presenterVisible: boolean;
+    personalVisible: boolean;
+    navigationVisible: boolean;
+    kindLabel: string;
+    hasError?: boolean;
+    readOnly?: boolean;
+  }>(),
+  {
+    readOnly: false,
+  },
+);
 
 const emit = defineEmits<{
   toggle: [];
@@ -117,4 +125,19 @@ const emit = defineEmits<{
   drop: [];
   dragend: [];
 }>();
+
+const onDragStart = () => {
+  if (props.readOnly) return;
+  emit('dragstart');
+};
+
+const onDrop = () => {
+  if (props.readOnly) return;
+  emit('drop');
+};
+
+const onDragEnd = () => {
+  if (props.readOnly) return;
+  emit('dragend');
+};
 </script>

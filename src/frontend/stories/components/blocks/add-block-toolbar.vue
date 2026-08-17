@@ -12,6 +12,7 @@
         </div>
       </button>
       <button
+        v-if="showScriptureBlock"
         type="button"
         class="inline-flex w-full items-center justify-center rounded-xl border border-dashed border-studio-forest px-3 py-[18px] text-sm font-medium leading-4 text-studio-forest shadow-sm hover:bg-studio-lime"
         @click.prevent="$emit('addScripture')"
@@ -53,9 +54,11 @@ import { Plus } from '@lucide/vue';
 withDefaults(
   defineProps<{
     showReusePrevious?: boolean;
+    showScriptureBlock?: boolean;
   }>(),
   {
     showReusePrevious: false,
+    showScriptureBlock: true,
   },
 );
 

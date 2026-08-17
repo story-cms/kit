@@ -7,9 +7,13 @@ export interface StoryPublishMetadata {
 }
 
 export const DEVOTION_TEMPLATE_ID = 'devotion';
+export const COURSE_TEMPLATE_ID = 'course';
 
 export const isDevotionTemplate = (template: string | null | undefined): boolean =>
   template === DEVOTION_TEMPLATE_ID;
+
+export const isCourseTemplate = (template: string | null | undefined): boolean =>
+  template === COURSE_TEMPLATE_ID;
 
 const isBlank = (value: string | null | undefined): boolean => !value?.trim();
 

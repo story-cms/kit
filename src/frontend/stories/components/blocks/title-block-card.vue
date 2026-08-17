@@ -3,11 +3,12 @@
     :title="blockTitle"
     :kind-icon="PencilLine"
     :expanded="expanded"
-    :has-error="hasError"
+    :has-error="hasError && !readOnly"
     :presenter-visible="block.visibility.presenter && !block.visibility.hidden"
     :personal-visible="block.visibility.personal && !block.visibility.hidden"
     :navigation-visible="block.visibility.inNavigation && !block.visibility.hidden"
     kind-label="title"
+    :read-only="readOnly"
     @toggle="emit('toggle')"
     @delete="emit('delete')"
     @dragstart="emit('dragstart')"
@@ -22,13 +23,17 @@
         :value="block.blockName"
         placeholder="e.g., Session Title, Chapter Heading"
         class="input-field mt-[2px]"
-        :class="{ 'border-error': fieldHasError('blockName') }"
+        :class="{
+          'border-error': fieldHasError('blockName'),
+          'text-gray-600 shadow-none': isFieldReadOnly('blockName'),
+        }"
+        :readonly="isFieldReadOnly('blockName')"
         @input="updateField('blockName', ($event.target as HTMLInputElement).value)"
       />
-      <p v-if="fieldHasError('blockName')" class="text-sm text-error">
+      <p v-if="fieldHasError('blockName') && !readOnly" class="text-sm text-error">
         {{ fieldMessages('blockName')[0] }}
       </p>
-      <p v-else class="mt-1 text-sm italic text-gray-500">
+      <p v-else-if="!readOnly" class="mt-1 text-sm italic text-gray-500">
         This becomes the collapsible section name
       </p>
     </div>
@@ -41,10 +46,14 @@
         :value="block.title"
         placeholder="e.g., The Gospel of John"
         class="input-field mt-[2px]"
-        :class="{ 'border-error': fieldHasError('title') }"
+        :class="{
+          'border-error': fieldHasError('title'),
+          'text-gray-600 shadow-none': isFieldReadOnly('title'),
+        }"
+        :readonly="isFieldReadOnly('title')"
         @input="updateField('title', ($event.target as HTMLInputElement).value)"
       />
-      <p v-if="fieldHasError('title')" class="text-sm text-error">
+      <p v-if="fieldHasError('title') && !readOnly" class="text-sm text-error">
         {{ fieldMessages('title')[0] }}
       </p>
     </div>
@@ -57,10 +66,14 @@
         :value="block.subtitle"
         placeholder="e.g., Session 1 of 12"
         class="input-field mt-[2px]"
-        :class="{ 'border-error': fieldHasError('subtitle') }"
+        :class="{
+          'border-error': fieldHasError('subtitle'),
+          'text-gray-600 shadow-none': isFieldReadOnly('subtitle'),
+        }"
+        :readonly="isFieldReadOnly('subtitle')"
         @input="updateField('subtitle', ($event.target as HTMLInputElement).value)"
       />
-      <p v-if="fieldHasError('subtitle')" class="text-sm text-error">
+      <p v-if="fieldHasError('subtitle') && !readOnly" class="text-sm text-error">
         {{ fieldMessages('subtitle')[0] }}
       </p>
     </div>
@@ -69,11 +82,18 @@
       :model-value="block.coverImage ?? ''"
       :block-index="blockIndex"
       label="Cover Image (Optional)"
+      :read-only="isFieldReadOnly('coverImage')"
       @update:model-value="updateField('coverImage', $event)"
     />
     <div class="mt-4"></div>
-    <template #footer>
+    <template v-if="!readOnly && !translationMode" #footer>
       <BlockVisibility v-model="visibilityModel" />
+    </template>
+    <template v-else-if="translationMode && !readOnly" #footer>
+      <BlockVisibility v-model="visibilityModel" :read-only="true" />
+    </template>
+    <template v-else-if="readOnly" #footer>
+      <BlockVisibility v-model="visibilityModel" :read-only="true" />
     </template>
   </BlockCardShell>
 </template>
@@ -88,11 +108,19 @@ import BlockImageField from './block-image-field.vue';
 import BlockVisibility from './block-visibility.vue';
 import { useBlockFieldErrors } from './use-block-field-errors';
 
-const props = defineProps<{
-  block: ChapterTitleBlock;
-  blockIndex: number;
-  expanded: boolean;
-}>();
+const props = withDefaults(
+  defineProps<{
+    block: ChapterTitleBlock;
+    blockIndex: number;
+    expanded: boolean;
+    readOnly?: boolean;
+    translationMode?: boolean;
+  }>(),
+  {
+    readOnly: false,
+    translationMode: false,
+  },
+);
 
 const emit = defineEmits<{
   'update:block': [block: ChapterTitleBlock];
@@ -114,10 +142,18 @@ const visibilityModel = computed({
   set: (value: ChapterTitleBlock['visibility']) => updateField('visibility', value),
 });
 
+const isFieldReadOnly = (field: 'blockName' | 'title' | 'subtitle' | 'coverImage') => {
+  if (props.readOnly) return true;
+  if (!props.translationMode) return false;
+  return field === 'coverImage';
+};
+
 const updateField = <K extends keyof ChapterTitleBlock>(
   key: K,
   value: ChapterTitleBlock[K],
 ) => {
+  if (props.readOnly) return;
+  if (props.translationMode && key === 'coverImage') return;
   emit('update:block', { ...props.block, [key]: value });
 };
 </script>

@@ -3,7 +3,8 @@ import type { FieldMap, FieldSpec, StorySpec, StoryVersion, JSON } from '../../t
 import { BundleService } from './bundle_service.js';
 import { CmsService } from './cms_service.js';
 import { createDevotionDraftBundle } from '../../shared/devotion_draft.js';
-import { isDevotionTemplate } from '../../shared/story_helpers.js';
+import { createCourseDraftBundle } from '../../shared/course_draft.js';
+import { isCourseTemplate, isDevotionTemplate } from '../../shared/story_helpers.js';
 
 export class DraftService {
   public story: StorySpec;
@@ -29,6 +30,10 @@ export class DraftService {
     if (version.locale === this.cms.sourceLocale) {
       if (isDevotionTemplate(this.story.template)) {
         return JSON.stringify(createDevotionDraftBundle(number));
+      }
+
+      if (isCourseTemplate(this.story.template)) {
+        return JSON.stringify(createCourseDraftBundle(number));
       }
 
       const bundleService = new BundleService(this.story.fields);

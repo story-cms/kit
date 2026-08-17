@@ -1,4 +1,6 @@
 import type {
+  CourseDraftEditBundle,
+  CourseDraftEditProps,
   DevotionDraftEditBundle,
   DevotionDraftEditProps,
   FieldSpec,
@@ -4861,4 +4863,136 @@ export const devotionDraftEditValidationErrors: Record<string, string[]> = {
     'A content block must have text or at least one media or scripture item',
   ],
   'bundle.resources.0': ['Invalid resource'],
+};
+
+export const emptyCourseDraftBundle: CourseDraftEditBundle = {
+  number: '',
+  title: '',
+  description: '',
+  coverImage: '',
+  blocks: [],
+  resources: [],
+};
+
+export const sampleCourseDraftBundle: CourseDraftEditBundle = {
+  number: '01',
+  title: 'Is there more to life than this?',
+  description: 'An introduction to the Christian faith.',
+  coverImage:
+    'https://res.cloudinary.com/journeys/image/upload/v1756121793/mountain-placeholder_yuflkz.jpg',
+  blocks: sampleMixedChapterBlocks,
+  resources: sampleAttachedResources.slice(0, 2),
+};
+
+export const courseDraftEditStory: StorySpec = {
+  ...story,
+  template: 'course',
+  chapterType: 'Session',
+};
+
+export const sampleCourseChapterBundle: CourseDraftEditBundle = {
+  ...sampleCourseDraftBundle,
+  number: '01',
+  title: 'Session One',
+  description: 'Opening session for the course.',
+  blocks: [
+    {
+      ...createEmptyContentBlock(),
+      blockName: 'Welcome',
+      displayName: 'Session Introduction',
+      blockRole: 'introduction',
+      content: 'Welcome to this session.',
+    },
+    {
+      ...createEmptyContentBlock(),
+      blockName: 'Teaching',
+      displayName: 'Main Teaching',
+      blockRole: 'teaching',
+      content: 'Core teaching content for this session.',
+    },
+    {
+      ...createEmptyContentBlock(),
+      blockName: 'Recap',
+      displayName: 'Session Recap',
+      blockRole: 'recap',
+      content: 'Key points from today.',
+    },
+  ],
+};
+
+export const samplePreviousCourseChapterBlocks: ChapterBlock[] =
+  sampleCourseChapterBundle.blocks;
+
+export const courseDraftEditProps: Omit<CourseDraftEditProps, 'providers'> & {
+  providers: Providers;
+} = {
+  draft: sampleDevotionDraft,
+  bundle: sampleCourseDraftBundle,
+  story: courseDraftEditStory,
+  availableResources,
+  providers: mockResourceProviders,
+  hasEditReview: false,
+  lastPublished: '',
+};
+
+export const courseDraftEditCreateProps: Omit<CourseDraftEditProps, 'providers'> & {
+  providers: Providers;
+} = {
+  ...courseDraftEditProps,
+  bundle: emptyCourseDraftBundle,
+  isCreate: true,
+};
+
+export const courseDraftEditChapterTwoCreateProps: Omit<CourseDraftEditProps, 'providers'> & {
+  providers: Providers;
+} = {
+  ...courseDraftEditCreateProps,
+  draft: {
+    ...sampleDevotionDraft,
+    number: 2,
+  },
+  bundle: {
+    ...emptyCourseDraftBundle,
+    number: '02',
+  },
+  previousChapterBlocks: samplePreviousCourseChapterBlocks,
+};
+
+export const courseDraftEditValidationErrors: Record<string, string[]> = {
+  'bundle.title': ['The title field must have at least 1 character'],
+  'bundle.blocks.0.blockName': ['Every block must have a name'],
+  'bundle.blocks.0': [
+    'A content block must have text or at least one media or scripture item',
+  ],
+  'bundle.resources.0': ['Invalid resource'],
+};
+
+export const sampleCourseDraftSourceBundle: CourseDraftEditBundle = {
+  ...sampleCourseChapterBundle,
+  title: 'Session One',
+  description: 'Opening session for the course.',
+};
+
+export const sampleCourseDraftTranslationBundle: CourseDraftEditBundle = {
+  ...sampleCourseDraftSourceBundle,
+  title: 'Sesión uno',
+  description: 'Sesión de apertura del curso.',
+  blocks: sampleCourseDraftSourceBundle.blocks.map((block) => {
+    if (block.kind !== 'content') return { ...block };
+    return { ...block, content: '', displayName: '' };
+  }),
+};
+
+export const sampleDevotionDraftSourceBundle: DevotionDraftEditBundle = {
+  ...sampleDevotionChapterBundle,
+};
+
+export const sampleDevotionDraftTranslationBundle: DevotionDraftEditBundle = {
+  ...sampleDevotionDraftSourceBundle,
+  title: 'Devoción matutina',
+  description: 'Una breve devoción diaria sobre el amor de Dios.',
+  blocks: sampleDevotionDraftSourceBundle.blocks.map((block) => {
+    if (block.kind !== 'content') return { ...block };
+    return { ...block, content: '', displayName: '' };
+  }),
 };

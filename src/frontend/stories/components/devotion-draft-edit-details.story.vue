@@ -14,6 +14,10 @@
       <DevotionDraftEditDetails chapter-type="Episode" />
       <ModelControl :model="populatedChapterModel" :is-inspect-only="true" />
     </Variant>
+
+    <Variant title="Translation" :setup-app="loadTranslation">
+      <DevotionDraftEditDetails chapter-type="Day" :is-translation="true" />
+    </Variant>
   </Story>
 </template>
 
@@ -22,6 +26,10 @@ import DevotionDraftEditDetails from './devotion-draft-edit-details.vue';
 import ModelControl from '../../test/model-control.vue';
 import { useModelStore } from '../../store';
 import type { StoryHandler } from '../../shared/helpers';
+import {
+  sampleDevotionDraftSourceBundle,
+  sampleDevotionDraftTranslationBundle,
+} from '../../test/mocks';
 
 const emptyChapterModel = {
   number: '',
@@ -46,6 +54,12 @@ const loadCreate: StoryHandler = (): void => {
 
 const loadPopulated: StoryHandler = (): void => {
   useModelStore().setModel(populatedChapterModel);
+};
+
+const loadTranslation: StoryHandler = (): void => {
+  const store = useModelStore();
+  store.setModel({ ...sampleDevotionDraftTranslationBundle });
+  store.setSource({ ...sampleDevotionDraftSourceBundle });
 };
 </script>
 

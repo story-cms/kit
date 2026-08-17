@@ -59,10 +59,15 @@ export {
   createDevotionDraftBundle,
   normalizedDevotionDraftBundle,
 } from '../shared/devotion_draft.js';
+export {
+  createCourseDraftBundle,
+  normalizedCourseDraftBundle,
+} from '../shared/course_draft.js';
 export { previewBundleFrom } from '../shared/preview_bundle.js';
 export { cloneBlocksStructure } from '../shared/block_structure.js';
 export {
   previousDevotionChapterBlocks,
+  previousCourseChapterBlocks,
   type StoryChapterSpecifier,
 } from '../shared/previous_chapter_blocks.js';
 export { default as DropValidator } from './validators/drop.js';

@@ -20,34 +20,35 @@
           :label="saveButtonLabel"
           variant="primary"
           :disabled="isSaving"
-          @click="saveDevotionDraft"
+          @click="saveCourseDraft"
         />
       </div>
     </template>
     <template #controls>
       <TabNavigation
-        :tabs="devotionDraftEditTabs"
-        :icons="devotionDraftEditTabIcons"
-        :current-tab="currentDevotionDraftTab"
-        @change="onDevotionDraftTabChange"
+        :tabs="courseDraftEditTabs"
+        :icons="courseDraftEditTabIcons"
+        :current-tab="currentCourseDraftTab"
+        @change="onCourseDraftTabChange"
       />
     </template>
     <template #main>
       <div class="relative">
         <form :dir="shared.isRtl ? 'rtl' : 'ltr'">
-          <DevotionDraftEditDetails
-            v-if="currentDevotionDraftTab === 'Details'"
+          <CourseDraftEditDetails
+            v-if="currentCourseDraftTab === 'Details'"
             :chapter-type="props.story.chapterType"
           />
-          <div v-if="currentDevotionDraftTab === 'Blocks'" dir="ltr">
-            <DevotionDraftEditBlocks
+          <div v-if="currentCourseDraftTab === 'Blocks'" dir="ltr">
+            <CourseDraftEditBlocks
               v-model:blocks="blocks"
               :previous-chapter-blocks="props.previousChapterBlocks ?? []"
               :video-collection-id="props.config.videoCollectionId"
               :chapter-type="props.story.chapterType"
+              :template="props.story.template"
             />
           </div>
-          <div v-if="currentDevotionDraftTab === 'Resources'" dir="ltr">
+          <div v-if="currentCourseDraftTab === 'Resources'" dir="ltr">
             <StoryEditResources
               v-model:resources="attachedResources"
               :available-resources="availableResources"
@@ -68,7 +69,7 @@ import type { Errors } from '@inertiajs/core';
 import { BookOpen, FolderClosed, Blocks, Trash2 } from '@lucide/vue';
 
 import type {
-  DevotionDraftEditProps,
+  CourseDraftEditProps,
   DraftEditProps,
   NavigationPaneTab,
   ResourceItem,
@@ -80,8 +81,8 @@ import { useSharedStore, useWidgetsStore, useModelStore, useDraftsStore } from '
 import AppLayout from '../shared/app-layout.vue';
 import StudioButton from '../shared/studio-button.vue';
 import TabNavigation from '../shared/tab-navigation.vue';
-import DevotionDraftEditDetails from './components/devotion-draft-edit-details.vue';
-import DevotionDraftEditBlocks from './components/devotion-draft-edit-blocks.vue';
+import CourseDraftEditDetails from './components/course-draft-edit-details.vue';
+import CourseDraftEditBlocks from './components/course-draft-edit-blocks.vue';
 import StoryEditResources from './components/story-edit-resources.vue';
 import WorkflowActions from './components/workflow-actions.vue';
 import { resourceIds } from './components/resource-utils';
@@ -91,7 +92,7 @@ import {
 } from './chapter-draft-edit-tab-errors';
 import { normalizedBlocks } from './components/blocks/block-utils';
 
-const findDevotionDraftTab = (
+const findCourseDraftTab = (
   value: string | null,
   tabs: NavigationPaneTab[],
 ): string => {
@@ -100,7 +101,7 @@ const findDevotionDraftTab = (
   return match?.label ?? 'Details';
 };
 
-const props = defineProps<DevotionDraftEditProps & SharedPageProps>();
+const props = defineProps<CourseDraftEditProps & SharedPageProps>();
 
 const shared = useSharedStore();
 const { errors } = storeToRefs(shared);
@@ -176,7 +177,7 @@ const saveButtonLabel = computed(() =>
   props.isCreate ? 'Create Chapter' : 'Save Changes',
 );
 
-const devotionDraftEditTabs = computed((): NavigationPaneTab[] => [
+const courseDraftEditTabs = computed((): NavigationPaneTab[] => [
   {
     label: 'Details',
     hasError: chapterDraftEditTabHasError('details', errors.value),
@@ -191,7 +192,7 @@ const devotionDraftEditTabs = computed((): NavigationPaneTab[] => [
   },
 ]);
 
-const devotionDraftEditTabIcons = computed(() => ({
+const courseDraftEditTabIcons = computed(() => ({
   Details: BookOpen,
   Blocks: Blocks,
   Resources: FolderClosed,
@@ -203,21 +204,21 @@ const initialTabs: NavigationPaneTab[] = [
   { label: 'Resources' },
 ];
 
-const currentDevotionDraftTab = ref(
-  findDevotionDraftTab(
+const currentCourseDraftTab = ref(
+  findCourseDraftTab(
     new URLSearchParams(window.location.search).get('tab'),
     initialTabs,
   ),
 );
 
-const onDevotionDraftTabChange = (tab: string) => {
-  currentDevotionDraftTab.value = tab;
+const onCourseDraftTabChange = (tab: string) => {
+  currentCourseDraftTab.value = tab;
 };
 
 const focusFirstErroredTab = () => {
   const tab = firstChapterDraftEditTabWithError(errors.value);
   if (tab) {
-    currentDevotionDraftTab.value = tab;
+    currentCourseDraftTab.value = tab;
   }
 };
 
@@ -231,7 +232,6 @@ const getBundle = () => ({
   title: model.getField('title', ''),
   description: model.getField('description', ''),
   coverImage: model.getField('coverImage', ''),
-  devotionAudio: model.getField('devotionAudio', { url: null, length: null }),
   blocks: model.getField('blocks', []),
   resources: resourceIds(attachedResources.value),
 });
@@ -302,7 +302,7 @@ const scheduleAutosave = () => {
   }, 2000);
 };
 
-const saveDevotionDraft = () => {
+const saveCourseDraft = () => {
   cancelAutosave();
   shared.clearErrors();
   isSaving.value = true;

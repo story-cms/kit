@@ -1,6 +1,7 @@
 import type { PreviewBundle } from '../types.js';
+import { normalizedCourseDraftBundle } from './course_draft.js';
 import { normalizedDevotionDraftBundle } from './devotion_draft.js';
-import { isDevotionTemplate } from './story_helpers.js';
+import { isCourseTemplate, isDevotionTemplate } from './story_helpers.js';
 
 const parseBundle = (value: unknown): Record<string, unknown> => {
   if (typeof value === 'string') {
@@ -29,6 +30,10 @@ export function previewBundleFrom(options: {
 
   if (isDevotionTemplate(options.template)) {
     return normalizedDevotionDraftBundle(source.bundle, number);
+  }
+
+  if (isCourseTemplate(options.template)) {
+    return normalizedCourseDraftBundle(source.bundle, number);
   }
 
   return parseBundle(source.bundle);

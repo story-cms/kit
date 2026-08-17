@@ -1,5 +1,10 @@
 <template>
-  <ImageField :field="fieldSpec" :root-path="rootPath" :is-nested="true" />
+  <ImageField
+    :field="fieldSpec"
+    :root-path="rootPath"
+    :is-nested="true"
+    :is-read-only="readOnly"
+  />
 </template>
 
 <script setup lang="ts">
@@ -15,10 +20,12 @@ const props = withDefaults(
     blockIndex: number;
     itemIndex?: number;
     label?: string;
+    readOnly?: boolean;
   }>(),
   {
     itemIndex: undefined,
     label: 'Cover Image',
+    readOnly: false,
   },
 );
 
@@ -49,6 +56,7 @@ const getValue = (): string => model.getField(fieldPath.value, '') as string;
 watch(
   () => props.modelValue,
   (value) => {
+    if (props.readOnly) return;
     const current = getValue();
     if (current === value) return;
     model.setField(fieldPath.value, value);
@@ -57,6 +65,7 @@ watch(
 );
 
 const unsubscribe = model.$subscribe(() => {
+  if (props.readOnly) return;
   const fresh = getValue();
   if (fresh === props.modelValue) return;
   emit('update:modelValue', fresh);

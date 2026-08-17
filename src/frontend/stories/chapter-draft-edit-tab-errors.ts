@@ -1,12 +1,12 @@
-export type DevotionDraftEditTab = 'details' | 'blocks' | 'resources';
+export type ChapterDraftEditTab = 'details' | 'blocks' | 'resources';
 
-const DEVOTION_DRAFT_EDIT_TAB_ORDER: DevotionDraftEditTab[] = [
+const CHAPTER_DRAFT_EDIT_TAB_ORDER: ChapterDraftEditTab[] = [
   'details',
   'blocks',
   'resources',
 ];
 
-const DEVOTION_DRAFT_EDIT_TAB_LABELS: Record<DevotionDraftEditTab, string> = {
+const CHAPTER_DRAFT_EDIT_TAB_LABELS: Record<ChapterDraftEditTab, string> = {
   details: 'Details',
   blocks: 'Blocks',
   resources: 'Resources',
@@ -16,7 +16,7 @@ function matchesErrorPrefix(key: string, prefix: string): boolean {
   return key === prefix || key.startsWith(`${prefix}.`);
 }
 
-function errorKeyBelongsToTab(key: string, tab: DevotionDraftEditTab): boolean {
+function errorKeyBelongsToTab(key: string, tab: ChapterDraftEditTab): boolean {
   if (tab === 'blocks') {
     return matchesErrorPrefix(key, 'bundle.blocks');
   }
@@ -30,19 +30,19 @@ function errorKeyBelongsToTab(key: string, tab: DevotionDraftEditTab): boolean {
   );
 }
 
-export function devotionDraftEditTabHasError(
-  tab: DevotionDraftEditTab,
+export function chapterDraftEditTabHasError(
+  tab: ChapterDraftEditTab,
   errors: Record<string, string | string[]>,
 ): boolean {
   return Object.keys(errors).some((key) => errorKeyBelongsToTab(key, tab));
 }
 
-export function firstDevotionDraftEditTabWithError(
+export function firstChapterDraftEditTabWithError(
   errors: Record<string, string | string[]>,
 ): string | null {
-  for (const tab of DEVOTION_DRAFT_EDIT_TAB_ORDER) {
-    if (!devotionDraftEditTabHasError(tab, errors)) continue;
-    return DEVOTION_DRAFT_EDIT_TAB_LABELS[tab];
+  for (const tab of CHAPTER_DRAFT_EDIT_TAB_ORDER) {
+    if (!chapterDraftEditTabHasError(tab, errors)) continue;
+    return CHAPTER_DRAFT_EDIT_TAB_LABELS[tab];
   }
 
   return null;

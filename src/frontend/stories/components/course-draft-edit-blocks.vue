@@ -10,8 +10,8 @@
       <AddBlockToolbar
         v-if="!isTranslation && blocks.length === 0"
         :show-reuse-previous="canReusePrevious"
+        :show-scripture-block="false"
         @add-title="addTitleBlock"
-        @add-scripture="addScriptureBlock"
         @add-content="addContentBlock"
         @reuse-previous="reusePreviousStructure"
       />
@@ -28,6 +28,7 @@
           :expanded="isExpanded(index)"
           :video-collection-id="videoCollectionId"
           :chapter-type="chapterType"
+          :template="template"
           :translation-mode="isTranslation"
           @update:block="updateBlock(index, $event)"
           @delete="deleteBlock(index)"
@@ -40,8 +41,8 @@
 
       <AddBlockToolbar
         v-if="!isTranslation && blocks.length > 0"
+        :show-scripture-block="false"
         @add-title="addTitleBlock"
-        @add-scripture="addScriptureBlock"
         @add-content="addContentBlock"
       />
     </div>
@@ -59,6 +60,7 @@
           :expanded="isExpanded(index)"
           :video-collection-id="videoCollectionId"
           :chapter-type="chapterType"
+          :template="template"
           :read-only="true"
           @toggle="onToggle(index)"
         />
@@ -79,7 +81,6 @@ import { blockHasError, blocksArrayErrorMessages } from './blocks/block-field-er
 import DraftEditBlockCard from './draft-edit-block-card.vue';
 import {
   createEmptyContentBlock,
-  createEmptyScriptureBlock,
   createEmptyTitleBlock,
   normalizedBlocks,
 } from './blocks/block-utils';
@@ -90,6 +91,7 @@ const props = withDefaults(
     blocks: ChapterBlock[];
     videoCollectionId?: string;
     chapterType?: string | null;
+    template?: string | null;
     previousChapterBlocks?: ChapterBlock[];
     isTranslation?: boolean;
   }>(),
@@ -213,16 +215,12 @@ const addTitleBlock = () => {
   appendBlock(createEmptyTitleBlock());
 };
 
-const addScriptureBlock = () => {
-  appendBlock(createEmptyScriptureBlock());
-};
-
 const reusePreviousStructure = () => {
   if (!props.previousChapterBlocks?.length) return;
 
   const cloned = cloneBlocksStructure(normalizedBlocks([...props.previousChapterBlocks]));
-  blocks.value = cloned;
-  expanded.value = cloned.map((_, index) => index === 0);
+  blocks.value = cloned.filter((block) => block.kind !== 'scripture');
+  expanded.value = blocks.value.map((_, index) => index === 0);
   hasInitialized.value = true;
 };
 

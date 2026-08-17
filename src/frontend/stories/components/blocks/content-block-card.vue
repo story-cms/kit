@@ -3,11 +3,12 @@
     :title="blockTitle"
     :kind-icon="LayoutList"
     :expanded="expanded"
-    :has-error="hasError"
+    :has-error="hasError && !readOnly"
     :presenter-visible="block.visibility.presenter && !block.visibility.hidden"
     :personal-visible="block.visibility.personal && !block.visibility.hidden"
     :navigation-visible="block.visibility.inNavigation && !block.visibility.hidden"
     kind-label="content"
+    :read-only="readOnly"
     @toggle="emit('toggle')"
     @delete="emit('delete')"
     @dragstart="emit('dragstart')"
@@ -22,13 +23,17 @@
         :value="block.blockName"
         placeholder="e.g., Summary, Introduction, Overview"
         class="input-field mt-[2px]"
-        :class="{ 'border-error': fieldHasError('blockName') }"
+        :class="{
+          'border-error': fieldHasError('blockName'),
+          'text-gray-600 shadow-none': isFieldReadOnly('blockName'),
+        }"
+        :readonly="isFieldReadOnly('blockName')"
         @input="updateField('blockName', ($event.target as HTMLInputElement).value)"
       />
-      <p v-if="fieldHasError('blockName')" class="text-sm text-error">
+      <p v-if="fieldHasError('blockName') && !readOnly" class="text-sm text-error">
         {{ fieldMessages('blockName')[0] }}
       </p>
-      <p v-else class="mt-1 text-sm italic text-gray-500">
+      <p v-else-if="!readOnly" class="mt-1 text-sm italic text-gray-500">
         This becomes the collapsible section name
       </p>
     </div>
@@ -41,10 +46,14 @@
         :value="block.displayName"
         placeholder="e.g., Session Summary"
         class="input-field mt-[2px]"
-        :class="{ 'border-error': fieldHasError('displayName') }"
+        :class="{
+          'border-error': fieldHasError('displayName'),
+          'text-gray-600 shadow-none': isFieldReadOnly('displayName'),
+        }"
+        :readonly="isFieldReadOnly('displayName')"
         @input="updateField('displayName', ($event.target as HTMLInputElement).value)"
       />
-      <p v-if="fieldHasError('displayName')" class="text-sm text-error">
+      <p v-if="fieldHasError('displayName') && !readOnly" class="text-sm text-error">
         {{ fieldMessages('displayName')[0] }}
       </p>
     </div>
@@ -54,9 +63,10 @@
         :model-value="block.blockRole"
         label="Block Role"
         :options="blockRoleOptions"
+        :is-read-only="isFieldReadOnly('blockRole')"
         @update:model-value="updateField('blockRole', $event)"
       />
-      <p v-if="fieldHasError('blockRole')" class="text-sm text-error">
+      <p v-if="fieldHasError('blockRole') && !readOnly" class="text-sm text-error">
         {{ fieldMessages('blockRole')[0] }}
       </p>
     </div>
@@ -66,17 +76,20 @@
         :model-value="block.style"
         label="Block Style"
         :options="blockStyleOptions"
+        :is-read-only="isFieldReadOnly('style')"
         @update:model-value="updateField('style', $event)"
       />
-      <p v-if="fieldHasError('style')" class="text-sm text-error">
+      <p v-if="fieldHasError('style') && !readOnly" class="text-sm text-error">
         {{ fieldMessages('style')[0] }}
       </p>
     </div>
 
     <div>
       <label class="input-label block">Content Items</label>
-      <p class="text-sm text-gray-500">Add items that serve this block's role.</p>
-      <p v-if="blockLevelErrors.length" class="mt-2 text-sm text-error">
+      <p v-if="!readOnly" class="text-sm text-gray-500">
+        Add items that serve this block's role.
+      </p>
+      <p v-if="blockLevelErrors.length && !readOnly" class="mt-2 text-sm text-error">
         {{ blockLevelErrors[0] }}
       </p>
 
@@ -89,6 +102,7 @@
           <BlockRichTextEditor
             v-model="contentModel"
             placeholder="Enter your content..."
+            :read-only="isFieldReadOnly('content')"
           />
         </div>
 
@@ -97,6 +111,7 @@
             <div class="mb-2 flex items-center justify-between gap-3">
               <span class="input-label mb-0">Image</span>
               <button
+                v-if="!readOnly && !translationMode"
                 type="button"
                 class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
                 aria-label="Remove image item"
@@ -111,6 +126,7 @@
                 :block-index="blockIndex"
                 :item-index="itemIndex"
                 label=""
+                :read-only="readOnly || translationMode"
                 @update:model-value="updateItem(item.id, { imageUrl: $event })"
               />
             </div>
@@ -120,6 +136,7 @@
             <div class="mb-2 flex items-center justify-between gap-3">
               <span class="input-label mb-0">Video</span>
               <button
+                v-if="!readOnly && !translationMode"
                 type="button"
                 class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
                 aria-label="Remove video item"
@@ -135,6 +152,7 @@
                 :block-index="blockIndex"
                 :item-index="itemIndex"
                 label=""
+                :read-only="readOnly || translationMode"
                 @update:model-value="updateItem(item.id, { video: $event })"
               />
             </div>
@@ -147,6 +165,7 @@
             <div class="mb-2 flex items-center justify-between gap-3">
               <span class="input-label mb-0">Scripture</span>
               <button
+                v-if="!readOnly && !translationMode"
                 type="button"
                 class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
                 aria-label="Remove scripture item"
@@ -163,6 +182,8 @@
               passage-label="Scripture Text"
               reference-placeholder="e.g., John 3:16, Romans 8:28–30"
               passage-placeholder="Paste or type the scripture passage here..."
+              :read-only="readOnly"
+              :reference-read-only="readOnly || translationMode"
               @update:model-value="updateItem(item.id, { scripture: $event })"
             />
           </div>
@@ -170,6 +191,7 @@
       </div>
 
       <ContentAddItemsToolbar
+        v-if="!readOnly && !translationMode"
         :show-add-leaders-notes="!block.showLeadersNotes"
         @add-image="addItem('image')"
         @add-video="addItem('video')"
@@ -193,6 +215,7 @@
           </span>
         </div>
         <button
+          v-if="!readOnly && !translationMode"
           type="button"
           class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
           aria-label="Remove leaders notes"
@@ -206,12 +229,17 @@
         rows="3"
         placeholder="Add guidance and notes for leaders..."
         class="input-field min-h-[80px] resize-y"
+        :class="{ 'text-gray-600 shadow-none': isFieldReadOnly('leadersNotes') }"
+        :readonly="isFieldReadOnly('leadersNotes')"
         @input="updateField('leadersNotes', ($event.target as HTMLTextAreaElement).value)"
       />
     </div>
 
-    <template #footer>
+    <template v-if="!readOnly && !translationMode" #footer>
       <BlockVisibility v-model="visibilityModel" />
+    </template>
+    <template v-else #footer>
+      <BlockVisibility v-model="visibilityModel" :read-only="true" />
     </template>
   </BlockCardShell>
 </template>
@@ -234,13 +262,22 @@ import { getBlockRoleOptions } from './block-role-options';
 import { blockStyleOptions } from './block-style-options';
 import { useBlockFieldErrors } from './use-block-field-errors';
 
-const props = defineProps<{
-  block: ChapterContentBlock;
-  blockIndex: number;
-  expanded: boolean;
-  videoCollectionId?: string;
-  chapterType?: string | null;
-}>();
+const props = withDefaults(
+  defineProps<{
+    block: ChapterContentBlock;
+    blockIndex: number;
+    expanded: boolean;
+    videoCollectionId?: string;
+    chapterType?: string | null;
+    template?: string | null;
+    readOnly?: boolean;
+    translationMode?: boolean;
+  }>(),
+  {
+    readOnly: false,
+    translationMode: false,
+  },
+);
 
 const emit = defineEmits<{
   'update:block': [block: ChapterContentBlock];
@@ -272,18 +309,38 @@ const visibilityModel = computed({
   set: (value: ChapterContentBlock['visibility']) => updateField('visibility', value),
 });
 
+type EditableField =
+  | 'blockName'
+  | 'displayName'
+  | 'blockRole'
+  | 'style'
+  | 'content'
+  | 'leadersNotes';
+
+const isFieldReadOnly = (field: EditableField) => {
+  if (props.readOnly) return true;
+  if (!props.translationMode) return false;
+  return field === 'blockRole' || field === 'style';
+};
+
 const updateField = <K extends keyof ChapterContentBlock>(
   key: K,
   value: ChapterContentBlock[K],
 ) => {
+  if (props.readOnly) return;
+  if (props.translationMode && (key === 'blockRole' || key === 'style' || key === 'visibility')) {
+    return;
+  }
   emit('update:block', { ...props.block, [key]: value });
 };
 
 const addItem = (kind: ChapterContentItem['kind']) => {
+  if (props.readOnly || props.translationMode) return;
   updateField('items', [...props.block.items, createContentItem(kind)]);
 };
 
 const removeItem = (id: string) => {
+  if (props.readOnly || props.translationMode) return;
   updateField(
     'items',
     props.block.items.filter((item) => item.id !== id),
@@ -291,11 +348,16 @@ const removeItem = (id: string) => {
 };
 
 const updateItem = (id: string, patch: Partial<ChapterContentItem>) => {
+  if (props.readOnly) return;
+  if (props.translationMode && ('imageUrl' in patch || 'video' in patch)) return;
+  if (props.translationMode && patch.scripture && 'reference' in patch.scripture) return;
   updateField(
     'items',
     props.block.items.map((item) => (item.id === id ? { ...item, ...patch } : item)),
   );
 };
 
-const blockRoleOptions = computed(() => getBlockRoleOptions(props.chapterType));
+const blockRoleOptions = computed(() =>
+  getBlockRoleOptions(props.chapterType, props.template),
+);
 </script>

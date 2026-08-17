@@ -1,5 +1,10 @@
 <template>
-  <VideoField :field="fieldSpec" :root-path="rootPath" :is-nested="true" />
+  <VideoField
+    :field="fieldSpec"
+    :root-path="rootPath"
+    :is-nested="true"
+    :is-read-only="readOnly"
+  />
 </template>
 
 <script setup lang="ts">
@@ -16,10 +21,12 @@ const props = withDefaults(
     blockIndex: number;
     itemIndex?: number;
     label?: string;
+    readOnly?: boolean;
   }>(),
   {
     itemIndex: undefined,
     label: 'Video',
+    readOnly: false,
   },
 );
 
@@ -50,6 +57,7 @@ const getVideo = (): { url: string | null } =>
 watch(
   () => props.modelValue,
   (value) => {
+    if (props.readOnly) return;
     const current = getVideo();
     if (current.url === value.url) return;
     model.setField(fieldPath.value, value);
@@ -58,6 +66,7 @@ watch(
 );
 
 const unsubscribe = model.$subscribe(() => {
+  if (props.readOnly) return;
   const fresh = getVideo();
   if (fresh.url === props.modelValue.url) return;
   emit('update:modelValue', { ...fresh });

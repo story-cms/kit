@@ -9,6 +9,7 @@
       class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium transition-colors"
       :class="isActive(option.key) ? option.activeClasses : option.inactiveClasses"
       :aria-pressed="isActive(option.key)"
+      :disabled="readOnly"
       @click="onToggleVisibility(option.key)"
     >
       <component :is="option.icon" class="size-[14px]" aria-hidden="true" />
@@ -23,15 +24,22 @@ import { EyeOff, Monitor, Send, User } from '@lucide/vue';
 
 import type { ChapterBlockVisibility } from '../../../../types';
 
-const props = defineProps<{
-  modelValue: ChapterBlockVisibility;
-}>();
+const props = withDefaults(
+  defineProps<{
+    modelValue: ChapterBlockVisibility;
+    readOnly?: boolean;
+  }>(),
+  {
+    readOnly: false,
+  },
+);
 
 const emit = defineEmits<{
   'update:modelValue': [value: ChapterBlockVisibility];
 }>();
 
 const onToggleVisibility = (key: keyof ChapterBlockVisibility) => {
+  if (props.readOnly) return;
   if (key !== 'hidden' && props.modelValue.hidden) {
     emit('update:modelValue', { ...props.modelValue, hidden: false, [key]: true });
     return;

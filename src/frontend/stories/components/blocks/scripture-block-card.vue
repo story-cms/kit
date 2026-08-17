@@ -3,11 +3,12 @@
     :title="blockTitle"
     :kind-icon="BookMarked"
     :expanded="expanded"
-    :has-error="hasError"
+    :has-error="hasError && !readOnly"
     :presenter-visible="block.visibility.presenter && !block.visibility.hidden"
     :personal-visible="block.visibility.personal && !block.visibility.hidden"
     :navigation-visible="block.visibility.inNavigation && !block.visibility.hidden"
     kind-label="scripture"
+    :read-only="readOnly"
     @toggle="emit('toggle')"
     @delete="emit('delete')"
     @dragstart="emit('dragstart')"
@@ -22,13 +23,17 @@
         :value="block.blockName"
         placeholder="e.g., Opening Passage, Key Verse"
         class="input-field mt-[2px]"
-        :class="{ 'border-error': fieldHasError('blockName') }"
+        :class="{
+          'border-error': fieldHasError('blockName'),
+          'text-gray-600 shadow-none': readOnly,
+        }"
+        :readonly="readOnly"
         @input="updateField('blockName', ($event.target as HTMLInputElement).value)"
       />
-      <p v-if="fieldHasError('blockName')" class="text-sm text-error">
+      <p v-if="fieldHasError('blockName') && !readOnly" class="text-sm text-error">
         {{ fieldMessages('blockName')[0] }}
       </p>
-      <p v-else class="mt-1 text-sm italic text-gray-500">
+      <p v-else-if="!readOnly" class="mt-1 text-sm italic text-gray-500">
         This becomes the collapsible section name
       </p>
     </div>
@@ -41,10 +46,14 @@
         :value="block.displayName"
         placeholder="e.g., Opening Scripture"
         class="input-field mt-[2px]"
-        :class="{ 'border-error': fieldHasError('displayName') }"
+        :class="{
+          'border-error': fieldHasError('displayName'),
+          'text-gray-600 shadow-none': readOnly,
+        }"
+        :readonly="readOnly"
         @input="updateField('displayName', ($event.target as HTMLInputElement).value)"
       />
-      <p v-if="fieldHasError('displayName')" class="text-sm text-error">
+      <p v-if="fieldHasError('displayName') && !readOnly" class="text-sm text-error">
         {{ fieldMessages('displayName')[0] }}
       </p>
     </div>
@@ -53,6 +62,8 @@
       :model-value="block.scripture"
       :block-index="blockIndex"
       label="Scripture"
+      :read-only="readOnly"
+      :reference-read-only="readOnly || translationMode"
       @update:model-value="updateField('scripture', $event)"
     />
 
@@ -71,6 +82,7 @@
           </span>
         </div>
         <button
+          v-if="!readOnly && !translationMode"
           type="button"
           class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
           aria-label="Remove leaders notes"
@@ -84,18 +96,23 @@
         rows="3"
         placeholder="Add guidance and notes for leaders..."
         class="input-field min-h-[80px] resize-y"
+        :class="{ 'text-gray-600 shadow-none': readOnly }"
+        :readonly="readOnly"
         @input="updateField('leadersNotes', ($event.target as HTMLTextAreaElement).value)"
       />
     </div>
 
     <AddLeadersNotesButton
-      v-else
+      v-else-if="!readOnly && !translationMode"
       class="mt-6"
       @click="updateField('showLeadersNotes', true)"
     />
 
-    <template #footer>
+    <template v-if="!readOnly && !translationMode" #footer>
       <BlockVisibility v-model="visibilityModel" />
+    </template>
+    <template v-else #footer>
+      <BlockVisibility v-model="visibilityModel" :read-only="true" />
     </template>
   </BlockCardShell>
 </template>
@@ -111,11 +128,19 @@ import BlockScriptureField from './block-scripture-field.vue';
 import BlockVisibility from './block-visibility.vue';
 import { useBlockFieldErrors } from './use-block-field-errors';
 
-const props = defineProps<{
-  block: ChapterScriptureBlock;
-  blockIndex: number;
-  expanded: boolean;
-}>();
+const props = withDefaults(
+  defineProps<{
+    block: ChapterScriptureBlock;
+    blockIndex: number;
+    expanded: boolean;
+    readOnly?: boolean;
+    translationMode?: boolean;
+  }>(),
+  {
+    readOnly: false,
+    translationMode: false,
+  },
+);
 
 const emit = defineEmits<{
   'update:block': [block: ChapterScriptureBlock];
@@ -141,6 +166,8 @@ const updateField = <K extends keyof ChapterScriptureBlock>(
   key: K,
   value: ChapterScriptureBlock[K],
 ) => {
+  if (props.readOnly) return;
+  if (props.translationMode && key === 'visibility') return;
   emit('update:block', { ...props.block, [key]: value });
 };
 </script>
