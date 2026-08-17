@@ -22,7 +22,7 @@
         </p>
         <p
           v-if="formattedReleaseAt"
-          class="max-w-max rounded-xl bg-gray-100 px-2 py-1 text-xs font-medium leading-4 text-gray-800"
+          class="max-w-max rounded-xl bg-studio-lime px-2 py-1 text-xs font-medium leading-4 text-gray-800"
         >
           {{ formattedReleaseAt }}
         </p>
