@@ -113,7 +113,7 @@
     @apply [&>*]:border-2 [&>*]:border-red-500; /* debug class will be removed on production build */
   }
   .active {
-    @apply bg-blue-50 transition-all duration-200 ease-in-out;
+    @apply bg-slate-100 transition-all duration-200 ease-in-out;
   }
 
   .auth-input-field {

@@ -106,7 +106,7 @@ const triggerClasses = computed(() => {
   if (props.variant === 'panel') {
     return [
       'relative w-full cursor-default rounded-xl py-2 pl-3 pr-10 text-left focus:outline-none focus:ring-1',
-      props.isReadOnly ? 'bg-gray-100' : 'glass-surface',
+      props.isReadOnly ? 'bg-gray-100' : 'bg-slate-100',
     ];
   }
 
@@ -130,7 +130,7 @@ const optionsClasses = computed(() => {
 });
 
 const rowClasses = (active: boolean, selected: boolean) => [
-  selected ? 'bg-blue-100' : active ? 'bg-gray-100' : '',
+  selected ? 'bg-slate-100' : active ? 'bg-gray-50' : '',
   'relative cursor-default select-none rounded-lg px-3 py-3 pr-10',
 ];
 

@@ -11,6 +11,30 @@
         <Sidebar />
       </div>
     </Variant>
+
+    <Variant title="Active: Stories" :setup-app="loadActiveStories">
+      <div class="min-h-screen bg-gray-50">
+        <Sidebar />
+      </div>
+    </Variant>
+
+    <Variant title="Active: Pages" :setup-app="loadActivePages">
+      <div class="min-h-screen bg-gray-50">
+        <Sidebar />
+      </div>
+    </Variant>
+
+    <Variant title="Active: Resources" :setup-app="loadActiveResources">
+      <div class="min-h-screen bg-gray-50">
+        <Sidebar />
+      </div>
+    </Variant>
+
+    <Variant title="Active: Audience" :setup-app="loadActiveAudience">
+      <div class="min-h-screen bg-gray-50">
+        <Sidebar />
+      </div>
+    </Variant>
   </Story>
 </template>
 
@@ -29,8 +53,22 @@ const loadNav = (user: AppUserInterface): StoryHandler => {
   };
 };
 
+const loadNavAtPath = (user: AppUserInterface, path: string): StoryHandler => {
+  return (): void => {
+    const shared = useSharedStore();
+    shared.setFromProps({ ...sharedProps, user });
+    shared.setSidebarOpen(true);
+    history.replaceState(null, '', `/en/${path}`);
+  };
+};
+
 const loadAdmin = loadNav(adminUser);
 const loadEditor = loadNav(editorUser);
+
+const loadActiveStories = loadNavAtPath(editorUser, 'story');
+const loadActivePages = loadNavAtPath(editorUser, 'page');
+const loadActiveResources = loadNavAtPath(editorUser, 'resource');
+const loadActiveAudience = loadNavAtPath(editorUser, 'audience');
 </script>
 
 <docs lang="md">
@@ -56,4 +94,8 @@ Requires `isAdmin`:
 - **Team**
 
 Compare the **Admin** and **Editor** variants: editors see content links but not Invitations, Settings, or Team.
+
+## Active state
+
+**Active:** variants simulate the current route with `history.replaceState` (e.g. `/en/story`). The matching nav item receives the `.active` class (`bg-blue-50`).
 </docs>
