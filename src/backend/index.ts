@@ -38,6 +38,7 @@ export * from './services/bundle_service.js';
 export * from './services/invitation_service.js';
 export * from './services/cms_service.js';
 export * from './services/draft_service.js';
+export * from './draft_edit_page.js';
 export * from './services/index_service.js';
 export * from './services/page_service.js';
 export * from './services/progress_service.js';

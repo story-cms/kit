@@ -1,10 +1,46 @@
 import Chapter from '../models/chapter.js';
-import type { FieldMap, FieldSpec, StorySpec, StoryVersion, JSON } from '../../types';
+import Draft from '../models/draft.js';
+import type {
+  CourseDraftBundle,
+  CourseDraftEditProps,
+  DevotionDraftBundle,
+  DevotionDraftEditProps,
+  DraftEditProps,
+  FieldMap,
+  FieldSpec,
+  Providers,
+  ResourceItem,
+  StoryChapterSpecifier,
+  StorySpec,
+  StoryVersion,
+  JSON,
+} from '../../types.js';
 import { BundleService } from './bundle_service.js';
 import { CmsService } from './cms_service.js';
-import { createDevotionDraftBundle } from '../../shared/devotion_draft.js';
-import { createCourseDraftBundle } from '../../shared/course_draft.js';
+import {
+  createDevotionDraftBundle,
+  normalizedDevotionDraftBundle,
+} from '../../shared/devotion_draft.js';
+import {
+  createCourseDraftBundle,
+  normalizedCourseDraftBundle,
+} from '../../shared/course_draft.js';
 import { isCourseTemplate, isDevotionTemplate } from '../../shared/story_helpers.js';
+import {
+  previousCourseChapterBlocks,
+  previousDevotionChapterBlocks,
+} from '../../shared/previous_chapter_blocks.js';
+
+type BlockTemplate = 'devotion' | 'course';
+
+export interface DraftResourceService {
+  listForLocale(locale: string): Promise<ResourceItem[]>;
+  hydrate(ids: string[]): Promise<ResourceItem[]>;
+}
+
+export interface DraftServiceDependencies {
+  resourceService?: DraftResourceService;
+}
 
 export class DraftService {
   public story: StorySpec;
@@ -18,8 +54,74 @@ export class DraftService {
   constructor(
     story: StorySpec,
     protected cms: CmsService,
+    private readonly dependencies: DraftServiceDependencies = {},
   ) {
     this.story = story;
+  }
+
+  public async create(version: StoryVersion, number: number): Promise<Draft | null> {
+    const bundle = await this.getDraftBundle(version, number);
+    if (bundle === null) return null;
+
+    return Draft.create({
+      ...version,
+      number,
+      bundle,
+    });
+  }
+
+  public async editProps(options: {
+    version: StoryVersion;
+    number: number;
+    providers: Providers;
+    newDraftId?: number | string | null;
+  }): Promise<DraftEditProps | DevotionDraftEditProps | CourseDraftEditProps | null> {
+    const specifier: StoryChapterSpecifier = {
+      apiVersion: options.version.apiVersion,
+      locale: options.version.locale,
+      storyId: options.version.storyId,
+      number: options.number,
+    };
+
+    const resolved = await this.findOrCreateDraft(specifier);
+    if (resolved === null) return null;
+
+    const { draft, lastPublished } = resolved;
+
+    const isTranslation = options.version.locale !== this.cms.sourceLocale;
+    const base = this.baseDraftEditProps(draft, lastPublished, options.providers);
+
+    if (isDevotionTemplate(this.story.template)) {
+      return this.blockTemplateEditProps({
+        template: 'devotion',
+        isTranslation,
+        draft,
+        base,
+        specifier,
+        newDraftId: options.newDraftId,
+      });
+    }
+
+    if (isCourseTemplate(this.story.template)) {
+      return this.blockTemplateEditProps({
+        template: 'course',
+        isTranslation,
+        draft,
+        base,
+        specifier,
+        newDraftId: options.newDraftId,
+      });
+    }
+
+    if (!isTranslation) {
+      return base;
+    }
+
+    const sourceChapter = await this.loadSourceChapter(specifier);
+    return {
+      ...base,
+      source: sourceChapter?.bundle,
+    };
   }
 
   public async getDraftBundle(
@@ -167,5 +269,160 @@ export class DraftService {
       default:
         break;
     }
+  }
+
+  private async findOrCreateDraft(
+    specifier: StoryChapterSpecifier,
+  ): Promise<{ draft: Draft; lastPublished: string } | null> {
+    let draft = await Draft.query().where(specifier).first();
+    let lastPublished = '';
+
+    const chapter = await Chapter.query().where(specifier).first();
+
+    if (chapter) {
+      lastPublished = chapter.updatedAt ? chapter.updatedAt.toString() : '';
+    }
+
+    if (!draft) {
+      if (!chapter) {
+        return null;
+      }
+
+      lastPublished = chapter.updatedAt.toString();
+      draft = await Draft.create({
+        ...specifier,
+        bundle: chapter.bundle,
+      });
+    }
+
+    return { draft, lastPublished };
+  }
+
+  private async loadSourceChapter(specifier: StoryChapterSpecifier) {
+    return Chapter.query()
+      .where({
+        ...specifier,
+        locale: this.cms.sourceLocale,
+      })
+      .first();
+  }
+
+  private baseDraftEditProps(
+    draft: Draft,
+    lastPublished: string,
+    providers: Providers,
+  ): DraftEditProps {
+    return {
+      draft: draft.meta,
+      bundle: draft.bundle,
+      lastPublished,
+      providers,
+      story: this.story,
+      hasEditReview: this.cms.config.storiesHasEditReview,
+    };
+  }
+
+  private async blockTemplateEditProps(options: {
+    template: BlockTemplate;
+    isTranslation: boolean;
+    draft: Draft;
+    base: DraftEditProps;
+    specifier: StoryChapterSpecifier;
+    newDraftId?: number | string | null;
+  }): Promise<DevotionDraftEditProps | CourseDraftEditProps> {
+    const { template, isTranslation, draft, base, specifier, newDraftId } = options;
+    const normalized = this.normalizeBlockDraftBundle(
+      template,
+      draft.bundle,
+      draft.number,
+    );
+    const { availableResources, resources } = await this.hydrateBlockDraftResources(
+      specifier.locale,
+      normalized.resources,
+    );
+
+    const sourceChapter = isTranslation ? await this.loadSourceChapter(specifier) : null;
+    const sourceBundle = isTranslation
+      ? this.normalizeBlockDraftBundle(template, sourceChapter?.bundle, draft.number)
+      : undefined;
+
+    const previousChapterBlocks =
+      !isTranslation && draft.number > 1
+        ? await this.previousChapterBlocks(template, {
+            ...specifier,
+            number: draft.number,
+          })
+        : [];
+
+    const props = {
+      ...base,
+      bundle: {
+        ...normalized,
+        resources,
+      },
+      availableResources,
+      ...(isTranslation
+        ? { source: sourceBundle, previousChapterBlocks: [] }
+        : {
+            isCreate: Number(newDraftId) === draft.id,
+            previousChapterBlocks,
+          }),
+    };
+
+    if (template === 'devotion') {
+      return props as DevotionDraftEditProps;
+    }
+
+    return props as CourseDraftEditProps;
+  }
+
+  private normalizeBlockDraftBundle(
+    template: BlockTemplate,
+    bundle: unknown,
+    draftNumber: number,
+  ): DevotionDraftBundle | CourseDraftBundle {
+    if (template === 'devotion') {
+      return normalizedDevotionDraftBundle(bundle, draftNumber);
+    }
+
+    return normalizedCourseDraftBundle(bundle, draftNumber);
+  }
+
+  private async hydrateBlockDraftResources(locale: string, resourceIds: string[]) {
+    const resourceService = await this.getResourceService();
+    const [availableResources, resources] = await Promise.all([
+      resourceService.listForLocale(locale),
+      resourceService.hydrate(resourceIds),
+    ]);
+
+    return { availableResources, resources };
+  }
+
+  private async previousChapterBlocks(
+    template: BlockTemplate,
+    specifier: StoryChapterSpecifier,
+  ) {
+    const loadBundle = async (spec: StoryChapterSpecifier) => {
+      const previousDraft = await Draft.query().where(spec).first();
+      if (previousDraft) {
+        return previousDraft.bundle;
+      }
+
+      const previousChapter = await Chapter.query().where(spec).first();
+      return previousChapter?.bundle ?? null;
+    };
+
+    if (template === 'devotion') {
+      return previousDevotionChapterBlocks(specifier, loadBundle);
+    }
+
+    return previousCourseChapterBlocks(specifier, loadBundle);
+  }
+
+  private async getResourceService(): Promise<DraftResourceService> {
+    if (this.dependencies.resourceService) return this.dependencies.resourceService;
+
+    const { ResourceService } = await import('./resource_service.js');
+    return new ResourceService();
   }
 }
