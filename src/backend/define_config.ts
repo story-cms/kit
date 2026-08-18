@@ -1,4 +1,4 @@
-import type { CmsConfig, MediaUploadConfig } from '../types.js';
+import type { CmsConfig } from '../types.js';
 import { assertTemplateCollectionsMatchGlobals } from '../shared/media_helpers.js';
 
 /**
@@ -68,9 +68,4 @@ export function defineConfig(config: Partial<CmsConfig>): CmsConfig {
   assertTemplateCollectionsMatchGlobals(resolved);
 
   return resolved;
-}
-
-/** @deprecated Use MediaUploadConfig plus collection IDs on CmsConfig */
-export interface mediaConfig extends MediaUploadConfig {
-  collection: string;
 }
