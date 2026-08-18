@@ -1,10 +1,6 @@
 <template>
   <div class="pt-[30px]">
-    <h3
-      class="text-xl font-semibold leading-7 tracking-[-0.45px] text-[#182E33] [&>span]:text-gray-400"
-    >
-      Analytics
-    </h3>
+    <h1>Analytics</h1>
     <div>
       <div v-if="error" class="text-red-500">
         {{ error }}

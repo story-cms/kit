@@ -154,7 +154,7 @@
       <div class="flex w-full justify-end">
         <StudioButton
           label="Confirm"
-          variant="green"
+          variant="primary"
           :disabled="selectedReasons.length === 0"
           @click="confirm"
         />

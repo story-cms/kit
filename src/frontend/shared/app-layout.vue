@@ -34,7 +34,9 @@
           <main class="mt-6">
             <slot name="main" />
           </main>
-          <footer></footer>
+          <footer>
+            <AppFooter :show-brand="showBrand" />
+          </footer>
         </div>
       </div>
     </div>
@@ -55,10 +57,12 @@ import { usePage } from '@inertiajs/vue3';
 import { useSharedStore } from '../store';
 import AppLayoutHeader from './app-layout-header.vue';
 import type { SharedPageProps } from '../../types';
+import AppFooter from './app-footer.vue';
 
 defineProps<{
   title?: string;
   subtitle?: string;
+  showBrand?: boolean;
 }>();
 
 const shared = useSharedStore();

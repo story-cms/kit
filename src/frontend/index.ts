@@ -21,6 +21,7 @@ import IconButton from './shared/icon-button.vue';
 import ImageField from './fields/image-field.vue';
 import IndexCard from './stories/components/index-card.vue';
 import IndexFilter from './shared/index-filter.vue';
+import IndexTabs from './shared/index-tabs.vue';
 import LabelButton from './shared/label-button.vue';
 import PillButton from './shared/pill-button.vue';
 import LanguagesEdit from './settings/languages/languages-edit.vue';
@@ -57,7 +58,6 @@ import StreamGallery from './streams/stream-gallery.vue';
 import StreamIndex from './streams/stream-index.vue';
 import StringField from './fields/string-field.vue';
 import TagField from './fields/tag-field.vue';
-import ToggleButton from './shared/toggle-button.vue';
 import TranslationIndex from './stories/translation-index.vue';
 import UiPage from './ui/ui-page.vue';
 import UsersIndex from './team/users-index.vue';
@@ -93,6 +93,7 @@ export {
   ImageField,
   IndexCard,
   IndexFilter,
+  IndexTabs,
   InvitationsEdit,
   InvitationsIndex,
   LabelButton,
@@ -130,7 +131,6 @@ export {
   StreamIndex,
   StringField,
   TagField,
-  ToggleButton,
   TranslationIndex,
   UiPage,
   UsersIndex,

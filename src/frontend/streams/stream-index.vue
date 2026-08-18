@@ -4,7 +4,9 @@
       <div class="flex items-center justify-center gap-x-6">
         <ListSwitcher :is-list="isList" @toggle="isList = !isList" />
 
-        <IconButton icon="plus" @tap="addDrop" />
+        <StudioButton label="Add Drop" @click="addDrop">
+          <Plus class="size-4" aria-hidden="true" />
+        </StudioButton>
       </div>
     </template>
     <template #controls>
@@ -13,14 +15,18 @@
       >
         <div class="flex gap-x-4">
           <IndexFilter :tabs="tabs" :current-tab="currentTab" @change="onFilter" />
-          <ToggleButton
-            icon-on="sort"
-            icon-off="sort-asc"
+          <TabButton
             label="Release Date"
-            :is-on="sortDescending"
             :is-active="true"
-            @toggle="sortDescending = !sortDescending"
-          />
+            @click="sortDescending = !sortDescending"
+          >
+            <ArrowDownWideNarrow
+              v-if="sortDescending"
+              class="size-4"
+              aria-hidden="true"
+            />
+            <ArrowUpWideNarrow v-else class="size-4" aria-hidden="true" />
+          </TabButton>
         </div>
 
         <div class="grid grid-cols-1">
@@ -67,7 +73,8 @@
 import { SharedPageProps } from '../../types';
 
 import IndexFilter from '../shared/index-filter.vue';
-import ToggleButton from '../shared/toggle-button.vue';
+import TabButton from '../shared/tab-button.vue';
+import { ArrowDownWideNarrow, ArrowUpWideNarrow, Plus } from '@lucide/vue';
 
 import AppLayout from '../shared/app-layout.vue';
 import Icon from '../shared/icon.vue';
@@ -75,9 +82,9 @@ import { computed, ref } from 'vue';
 import type { DropIndexItem, StreamIndexProps } from '../../types';
 import DropItem from './components/drop-item.vue';
 import ListSwitcher from '../shared/list-switcher.vue';
-import IconButton from '../shared/icon-button.vue';
 import { router } from '@inertiajs/vue3';
 import { useSharedStore } from '../store';
+import StudioButton from '../shared/studio-button.vue';
 
 const props = defineProps<StreamIndexProps & SharedPageProps>();
 const shared = useSharedStore();

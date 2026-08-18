@@ -8,7 +8,7 @@
           label: 'Published',
           widget: 'boolean',
           default: false,
-          tintColor: 'green-400',
+          tintColor: 'studio-forest',
           labelOrder: 'start',
         }"
         :is-nested="true"

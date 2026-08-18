@@ -5,12 +5,12 @@
         <StudioButton
           v-if="isShowingPublished"
           label="Add divider"
-          variant="blue"
+          variant="primary"
           @click="addDivider"
         >
           <SeparatorHorizontal class="size-4" aria-hidden="true" />
         </StudioButton>
-        <StudioButton label="Add page" variant="blue" @click="addPage">
+        <StudioButton label="Add page" variant="primary" @click="addPage">
           <Plus class="size-4" aria-hidden="true" />
         </StudioButton>
       </div>

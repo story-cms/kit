@@ -2,20 +2,20 @@
   <StudioButton
     v-if="showRequestChangeButton"
     label="Request Change"
-    variant="red"
+    variant="destructive"
     @click="emit('request-change')"
   />
   <StudioButton
     v-if="showSubmitButton"
     label="Submit"
-    variant="blue"
+    variant="primary"
     :disabled="widgets.isDirty"
     @click="emit('submit')"
   />
   <StudioButton
     v-if="showPublishButton"
     :label="publishLabel"
-    variant="green"
+    variant="primary"
     :disabled="widgets.isDirty"
     @click="emit('publish')"
   />

@@ -8,7 +8,7 @@
     <template #actions>
       <StudioButton
         label="Add"
-        variant="blue"
+        variant="primary"
         :disabled="selectedLanguages.length === 0"
         @click="addLanguage"
       />

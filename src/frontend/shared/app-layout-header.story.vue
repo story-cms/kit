@@ -4,7 +4,7 @@
       <div class="bg-gray-50 p-6">
         <AppLayoutHeader title="Glass Header" subtitle="This is a subtitle">
           <template #actions>
-            <StudioButton label="Cancel" variant="outline" />
+            <StudioButton label="Cancel" variant="tertiary" />
             <StudioButton label="Request content update">
               <Plus class="size-6" />
             </StudioButton>
@@ -70,14 +70,14 @@
         <AppLayoutHeader title="Sticky Header">
           <template #actions>
             <div class="flex gap-2">
-              <StudioButton label="Confirm" variant="outline" @click.prevent="onConfirm" />
+              <StudioButton label="Confirm" variant="tertiary" @click.prevent="onConfirm" />
               <StudioButton
                 label="Accomplish"
-                variant="outline"
+                variant="tertiary"
                 @click.prevent="onAccomplish"
               />
-              <StudioButton label="Fail" variant="outline" @click.prevent="onFail" />
-              <StudioButton label="Neutral" variant="outline" @click.prevent="onNeutral" />
+              <StudioButton label="Fail" variant="tertiary" @click.prevent="onFail" />
+              <StudioButton label="Neutral" variant="tertiary" @click.prevent="onNeutral" />
             </div>
           </template>
         </AppLayoutHeader>

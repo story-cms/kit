@@ -3,7 +3,7 @@
     <template #actions>
       <StudioButton
         label="Request App Update"
-        variant="green"
+        variant="primary"
         :disabled="!props.requireAppUpdate"
         @click="showRequestAppUpdateModal = true"
       />
@@ -18,7 +18,7 @@
         </div>
         <button
           type="button"
-          class="rounded-xl p-1.5 text-blue-500 transition-colors hover:bg-blue-50 hover:text-blue-600"
+          class="rounded-xl p-1.5 text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-600"
           aria-label="Add language"
           @click="router.visit(`/${shared.locale}/settings/languages/edit`)"
         >

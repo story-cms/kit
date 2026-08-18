@@ -82,7 +82,7 @@
             </button>
             <StudioButton
               aria-label="Save translation"
-              variant="green"
+              variant="primary"
               :disabled="!model"
               @click="saveTranslation"
             >
@@ -119,7 +119,7 @@
             </div>
           </div>
           <div v-show="suggestion.length > 0" class="flex gap-x-6">
-            <StudioButton label="Discard" variant="outline" @click="discardSuggestion" />
+            <StudioButton label="Discard" variant="tertiary" @click="discardSuggestion" />
             <StudioButton
               label="Apply Suggestion"
               variant="secondary"

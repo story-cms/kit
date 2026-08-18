@@ -1,46 +1,16 @@
 <template>
-  <AppLayout title="Dashboard" :subtitle="greeting">
-    <template #actions>
-      <div class="flex flex-wrap gap-4">
-        <Link
-          :href="`/${shared.locale}/page/create`"
-          class="flex items-center gap-x-2 rounded-full bg-blue-50 px-3 py-[9px] text-sm font-medium leading-4 text-blue-700 shadow-[0px_1px_2px_0px_#0000000D] hover:bg-blue-100"
-        >
-          <Icon name="document-add" />
-          New Page
-        </Link>
-        <Link
-          v-if="shared.user.isAdmin"
-          :href="`/${shared.locale}/user`"
-          class="flex items-center gap-x-2 rounded-full bg-blue-50 px-3 py-[9px] text-sm font-medium leading-4 text-blue-700 shadow-[0px_1px_2px_0px_#0000000D] hover:bg-blue-100"
-        >
-          <Icon name="user-add" />
-          New User
-        </Link>
-        <a
-          v-if="shared.config.helpUrl"
-          class="flex items-center gap-x-2 rounded-full bg-blue-50 px-3 py-[9px] text-sm font-medium leading-4 text-blue-700 shadow-[0px_1px_2px_0px_#0000000D] hover:bg-blue-100"
-          :href="shared.config.helpUrl"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Icon name="question-mark-circle" />
-          Get Support
-        </a>
-      </div>
-    </template>
+  <AppLayout title="Dashboard" :subtitle="greeting" show-brand>
     <template #main>
-      <div>
-        <StatTiles :stats="stats" :is-loading="isLoading" :error="error" />
-      </div>
-      <div>
+      <StatTiles :stats="stats" :is-loading="isLoading" :error="error" />
+
+      <ActionGrid :items="actionItems" @action="handleActionGrid" />
+
+      <section>
         <div>
           <div class="flex items-center justify-between py-10">
-            <h3
-              class="text-xl font-semibold leading-7 tracking-[-0.45px] text-[#182E33] [&>span]:text-gray-400"
-            >
-              {{ isMultiLingual ? 'Language translation' : '' }}
-            </h3>
+            <h1>
+              {{ isMultiLingual ? 'Translations' : '' }}
+            </h1>
           </div>
         </div>
         <div
@@ -48,7 +18,7 @@
           class="mb-7 flex flex-col justify-between gap-y-4 md:flex-row md:items-center md:gap-x-4"
         >
           <div class="flex gap-x-4">
-            <IndexFilter
+            <IndexTabs
               :tabs="[
                 { label: 'To do', count: todoCount },
                 { label: 'All', count: allCount },
@@ -60,16 +30,16 @@
 
           <div class="flex gap-x-6">
             <div class="flex items-center justify-center gap-x-2">
-              <Icon name="pie-chart" class="size-5 text-green-500" />
-              <span class="text-sm font-medium leading-4">Done</span>
+              <Icon name="pie-chart" class="size-5 text-gray-800" />
+              <span class="text-sm font-medium leading-4 text-black">Done</span>
             </div>
             <div class="flex items-center justify-center gap-x-2">
-              <Icon name="pie-chart" class="size-5 text-blue-500" />
-              <span class="text-sm font-medium leading-4">Pending</span>
+              <Icon name="pie-chart" class="size-5 text-gray-400" />
+              <span class="text-sm font-medium leading-4 text-black">Pending</span>
             </div>
           </div>
         </div>
-      </div>
+      </section>
       <div
         v-if="isMultiLingual"
         class="grid grid-cols-[repeat(auto-fit,_minmax(207px,_207px))] justify-center gap-x-[34px] gap-y-[27px]"
@@ -92,11 +62,13 @@
 <script setup lang="ts">
 import AppLayout from '../shared/app-layout.vue';
 import StatTiles from './stat-tiles.vue';
-import IndexFilter from '../shared/index-filter.vue';
+import IndexTabs from '../shared/index-tabs.vue';
 import LanguageBlock from './language-block.vue';
+import ActionGrid, { ActionGridItem } from './action-grid.vue';
 import Icon from '../shared/icon.vue';
+import { BookOpen, FileText, Languages } from '@lucide/vue';
 import { ref, computed, onMounted } from 'vue';
-import { Link } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
 import axios from 'axios';
 
 import { SharedPageProps, DashboardProps, StatMetric } from '../../types';
@@ -113,6 +85,42 @@ const greeting = computed(() => {
   const firstName = shared.user.name.split(' ')[0];
   return `Hey ${firstName}!`;
 });
+
+const actionItems = computed<ActionGridItem[]>(() => {
+  const disabled = !shared.user.isAdmin;
+
+  return [
+    {
+      url: `/${shared.locale}/story/create`,
+      icon: BookOpen,
+      title: 'Create a story',
+      description: 'Build a devotional, course, or other structured content series.',
+      disabled,
+      label: 'Create story',
+    },
+    {
+      url: `/${shared.locale}/page/create`,
+      icon: FileText,
+      title: 'Create a page',
+      description:
+        'Share links, acknowledgements, and information about your organisation.',
+      disabled,
+      label: 'Create page',
+    },
+    {
+      url: `/${shared.locale}/settings/languages/edit`,
+      icon: Languages,
+      title: 'Add a user',
+      description: 'Invite teammates to create, edit, and manage content.',
+      disabled,
+      label: 'Add user',
+    },
+  ];
+});
+
+const handleActionGrid = (url: string) => {
+  router.visit(url);
+};
 
 const activeFilter = ref<'To do' | 'All'>('To do');
 

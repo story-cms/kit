@@ -13,6 +13,22 @@
     --primary-color: #39ccfb;
     --secondary-color: #34d399;
   }
+
+  h1 {
+    @apply font-dmsans text-2xl leading-8 font-semibold text-gray-800;
+  }
+
+  h2 {
+    @apply font-dmsans font-semibold text-xl leading-7;
+  }
+
+  h3 {
+    @apply font-dmsans font-bold text-base leading-5 text-gray-800;
+  }
+
+  p {
+    @apply font-dmsans font-normal text-sm leading-5 text-gray-500;
+  }
 }
 
 @layer components {
@@ -97,7 +113,7 @@
     @apply [&>*]:border-2 [&>*]:border-red-500; /* debug class will be removed on production build */
   }
   .active {
-    @apply bg-blue-50 transition-all duration-200 ease-in-out;
+    @apply bg-slate-100 transition-all duration-200 ease-in-out;
   }
 
   .auth-input-field {

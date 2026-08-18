@@ -11,20 +11,20 @@
           v-model="searchQuery"
           type="text"
           placeholder="Search resources to attach..."
-          class="w-full rounded-xl border border-gray-300 py-2.5 pl-11 pr-4 focus:border-transparent focus:ring-2 focus:ring-studio_forest_green"
+          class="focus:ring-studio-green w-full rounded-xl border border-gray-300 py-2.5 pl-11 pr-4 focus:border-transparent focus:ring-2"
           @focus="showSearch = true"
           @input="showSearch = true"
         />
       </div>
-      <button
+      <StudioButton
         v-if="allowCreate"
-        type="button"
-        class="inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-xl border border-studio_forest_green px-4 py-2.5 text-sm font-medium text-studio_forest_green transition-colors hover:bg-studio_forest_green/10"
+        class="shrink-0"
+        label="Create New Resource"
+        variant="secondary"
         @click="emit('create')"
       >
-        <Plus class="size-4" />
-        Create New Resource
-      </button>
+        <Plus class="size-4" aria-hidden="true" />
+      </StudioButton>
     </div>
 
     <div
@@ -97,6 +97,7 @@ import { computed, ref } from 'vue';
 import { Plus, Search, Tag, X } from '@lucide/vue';
 import ResourceThumbnail from './resource-thumbnail.vue';
 import ResourceTypeBadge from './resource-type-badge.vue';
+import StudioButton from '../../shared/studio-button.vue';
 import { compareResourcesByRecentlyEdited } from './resource-utils';
 import type { ResourceItem } from '../../../types';
 

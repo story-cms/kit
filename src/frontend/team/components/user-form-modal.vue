@@ -72,8 +72,8 @@
 
     <template #actions>
       <div class="mt-9 flex w-full justify-end gap-x-4">
-        <StudioButton :label="submitLabel" variant="blue" @click="emit('submit')" />
-        <StudioButton label="Cancel" variant="gray" @click="emit('cancel')" />
+        <StudioButton :label="submitLabel" variant="primary" @click="emit('submit')" />
+        <StudioButton label="Cancel" variant="secondary" @click="emit('cancel')" />
       </div>
     </template>
   </LanguageModal>

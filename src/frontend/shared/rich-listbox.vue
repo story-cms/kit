@@ -70,7 +70,13 @@
           >
             <li
               :class="[
-                selected ? 'bg-blue-50' : active ? 'bg-gray-50' : 'bg-white',
+                selected && isInitialSelection
+                  ? 'bg-blue-100'
+                  : selected
+                    ? 'bg-gray-200'
+                    : active
+                      ? 'bg-gray-100'
+                      : 'bg-white',
                 'relative cursor-default select-none py-3 pl-3 pr-10',
               ]"
             >
@@ -81,10 +87,25 @@
                   aria-hidden="true"
                 />
                 <div class="min-w-0">
-                  <p class="font-medium text-gray-900">
+                  <p
+                    class="font-medium"
+                    :class="
+                      selected && isInitialSelection
+                        ? 'text-studio-forest'
+                        : 'text-gray-900'
+                    "
+                  >
                     {{ option.label }}
                   </p>
-                  <p v-if="option.description" class="text-sm text-gray-500">
+                  <p
+                    v-if="option.description"
+                    class="text-sm"
+                    :class="
+                      selected && isInitialSelection
+                        ? 'text-studio-forest/70'
+                        : 'text-gray-500'
+                    "
+                  >
                     {{ option.description }}
                   </p>
                 </div>
@@ -93,7 +114,11 @@
                 v-if="selected"
                 class="absolute inset-y-0 right-0 flex items-center pr-4"
               >
-                <span class="size-2 rounded-full bg-blue-500" aria-hidden="true" />
+                <span
+                  class="size-2 rounded-full"
+                  :class="isInitialSelection ? 'bg-studio-forest' : 'bg-gray-800'"
+                  aria-hidden="true"
+                />
               </span>
             </li>
           </ListboxOption>
@@ -170,6 +195,12 @@ const emit = defineEmits<{
 
 const listboxRef = ref<HTMLElement | null>(null);
 const openUpward = ref(false);
+
+const initialModelValue = props.modelValue;
+
+const isInitialSelection = computed(
+  () => Boolean(initialModelValue) && props.modelValue === initialModelValue,
+);
 
 const selectedOption = computed(() =>
   props.options.find((option) => option.value === props.modelValue),

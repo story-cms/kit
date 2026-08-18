@@ -75,9 +75,36 @@
         }"
       />
     </Variant>
+    <Variant title="Last update yesterday">
+      <LanguageBlock
+        :progress="{
+          progress: [
+            {
+              name: 'Interface',
+              done: 10,
+              draft: 10,
+              total: 100,
+              lastUpdated: yesterday,
+            },
+            {
+              name: 'Content',
+              done: 200,
+              draft: 50,
+              total: 300,
+              lastUpdated: yesterday,
+            },
+          ],
+          language: 'Hausa',
+          locale: 'ha',
+          isReadOnly: false,
+        }"
+      />
+    </Variant>
   </Story>
 </template>
 
 <script setup lang="ts">
 import LanguageBlock from './language-block.vue';
+
+const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 </script>

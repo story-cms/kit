@@ -8,7 +8,7 @@
           <li
             v-for="language in selectedLanguages"
             :key="language.locale"
-            class="inline-flex items-center gap-2 rounded-full bg-gray-100 py-1.5 pl-3 pr-2 text-xs font-medium leading-4 text-gray-900"
+            class="inline-flex items-center gap-2 rounded-full bg-studio-yellow py-1.5 pl-3 pr-2 text-xs font-medium leading-4 text-gray-900"
           >
             {{ language.language }}
             <button
@@ -26,17 +26,13 @@
 
     <ul class="flex flex-row flex-wrap items-center gap-[10px] py-[9px] pl-2">
       <li>
-        <ExpandableSearch
-          v-model="searchFilter"
-          placeholder="Search"
-          clear-on-collapse
-        />
+        <ExpandableSearch v-model="searchFilter" placeholder="Search" clear-on-collapse />
       </li>
       <li v-for="letter in letters" :key="letter">
         <button
           type="button"
-          class="font-dmsans flex size-7 shrink-0 items-center justify-center rounded-full p-0 text-center text-[17px] font-medium leading-5 text-gray-500"
-          :class="{ 'bg-blue-100': letterFilter === letter }"
+          class="flex size-7 shrink-0 items-center justify-center rounded-full p-0 text-center font-dmsans text-[17px] font-medium leading-5 text-gray-500"
+          :class="{ 'bg-studio-yellow': letterFilter === letter }"
           @click="handleLetterFilter(letter)"
         >
           {{ letter }}

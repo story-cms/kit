@@ -38,7 +38,7 @@
         </p>
         <StudioButton
           label="Request Language"
-          variant="blue"
+          variant="primary"
           class="my-8"
           @click="handleRequestLanguage"
         />

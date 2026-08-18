@@ -2,7 +2,7 @@
   <AppLayout title="Team" subtitle="User Management">
     <template #actions>
       <div class="flex items-center gap-x-6">
-        <StudioButton label="Add user" variant="secondary" @click="onAdd">
+        <StudioButton label="Add user" variant="primary" @click="onAdd">
           <Plus class="size-4" aria-hidden="true" />
         </StudioButton>
       </div>

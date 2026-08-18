@@ -3,7 +3,7 @@
     :is="isAction ? 'button' : 'span'"
     :type="isAction ? 'button' : undefined"
     :disabled="isAction && disabled ? true : undefined"
-    class="font-dmsans box-border inline-flex flex-none items-center gap-2 rounded-full border-b border-white px-4 py-3 text-sm font-medium leading-[19px] tracking-[-0.15px] [&_svg]:size-4"
+    class="font-dmsans box-border inline-flex flex-none items-center gap-2 rounded-full border px-4 py-3 text-sm font-medium leading-[19px] tracking-[-0.15px] [&_svg]:size-4"
     :class="[
       stateClasses,
       isAction
@@ -55,13 +55,13 @@ const onClick = () => {
 const stateClasses = computed(() => {
   if (props.isActive) {
     if (props.hasError) {
-      return 'border border-error bg-[#F3F4F6] text-error [&_svg]:text-error';
+      return 'border-error bg-[#F3F4F6] text-error [&_svg]:text-error';
     }
-    return 'bg-[#F3F4F6] text-[#182E33] [&_svg]:text-[#111827]';
+    return 'border-studio-forest bg-studio-lime font-semibold text-studio-forest [&_svg]:text-studio-forest';
   }
   if (props.hasError) {
-    return 'bg-transparent text-error [&_svg]:text-error';
+    return 'border-transparent bg-transparent text-error [&_svg]:text-error';
   }
-  return 'bg-transparent text-[#6A7282] [&_svg]:text-[#6A7282]';
+  return 'border-gray-200 bg-white text-studio-forest [&_svg]:text-studio-forest';
 });
 </script>

@@ -7,8 +7,8 @@
   >
     <template #actions>
       <div class="mt-9 flex w-full justify-end gap-x-4">
-        <StudioButton label="Remove" variant="red" @click="emit('confirm')" />
-        <StudioButton label="Cancel" variant="gray" @click="emit('close')" />
+        <StudioButton label="Remove" variant="destructive" @click="emit('confirm')" />
+        <StudioButton label="Cancel" variant="secondary" @click="emit('close')" />
       </div>
     </template>
   </LanguageModal>

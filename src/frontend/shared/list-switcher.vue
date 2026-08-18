@@ -1,23 +1,23 @@
 <template>
   <div
-    class="flex items-center rounded-xl border border-gray-300 bg-white p-1"
+    class="flex items-center rounded-xl border border-gray-300 bg-gray-100 p-1"
     role="group"
     aria-label="View mode"
   >
     <button
       type="button"
-      class="rounded-xl p-2 transition-colors"
-      :class="isList ? 'text-gray-500 hover:text-gray-700' : 'bg-gray-100 text-gray-900'"
+      class="rounded-[4px] p-2 transition-colors"
+      :class="isList ? 'text-gray-500 hover:text-gray-700' : 'bg-gray-200 text-gray-900'"
       aria-label="Grid view"
       :aria-pressed="!isList"
       @click="selectGrid"
     >
-      <LayoutGrid class="size-4" aria-hidden="true" />
+      <Grid3X3 class="size-4" aria-hidden="true" />
     </button>
     <button
       type="button"
-      class="rounded-xl p-2 transition-colors"
-      :class="isList ? 'bg-gray-100 text-gray-900' : 'text-gray-500 hover:text-gray-700'"
+      class="rounded-[4px] p-2 transition-colors"
+      :class="isList ? 'bg-gray-200 text-gray-900' : 'text-gray-500 hover:text-gray-700'"
       aria-label="List view"
       :aria-pressed="isList"
       @click="selectList"
@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { LayoutGrid, List } from '@lucide/vue';
+import { Grid3X3, List } from '@lucide/vue';
 
 const props = defineProps<{
   isList: boolean;

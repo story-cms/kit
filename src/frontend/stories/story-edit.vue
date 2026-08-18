@@ -4,7 +4,7 @@
       <StudioButton
         v-if="props.hasNoContent"
         label="Delete"
-        variant="red"
+        variant="destructive"
         :disabled="isSaving"
         @click="deleteStory"
       >
@@ -12,7 +12,7 @@
       </StudioButton>
       <StudioButton
         label="Save Changes"
-        variant="secondary"
+        variant="primary"
         :disabled="isSaving"
         @click="saveStory"
       />

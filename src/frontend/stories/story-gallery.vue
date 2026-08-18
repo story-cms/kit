@@ -5,7 +5,7 @@
         <StudioButton
           v-if="canAddStories"
           label="Add story"
-          variant="secondary"
+          variant="primary"
           @click="addStory"
         >
           <Plus class="size-4" aria-hidden="true" />
