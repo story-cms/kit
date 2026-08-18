@@ -5,8 +5,6 @@
   "type": "module",
   "scripts": {
     "dev": "histoire dev",
-    "colors:usage": "node scripts/generate-color-usage.mjs",
-    "changelog:qa": "node scripts/generate-qa-changelog.mjs",
     "todo-lint": "eslint .",
     "clean": "del-cli dist",
     "types:build": "tsc -p tsconfig.types.json",
