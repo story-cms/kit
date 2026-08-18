@@ -1,7 +1,10 @@
 <template>
   <div
     class="relative my-2 list-none rounded-xl border border-gray-200 p-0"
-    :class="{ 'h-full': translationMode }"
+    :class="{
+      'h-full': stretchForAlignment,
+      'self-start': translationMode && !expanded,
+    }"
     :data-translation-block-index="translationMode ? blockIndex : undefined"
     :data-translation-block-side="
       translationMode ? (readOnly ? 'source' : 'translation') : undefined
@@ -12,7 +15,10 @@
     @drop="onDrop"
     @dragend="onDragEnd"
   >
-    <div class="rounded-xl bg-white" :class="{ 'flex h-full flex-col': translationMode }">
+    <div
+      class="rounded-xl bg-white"
+      :class="{ 'flex h-full flex-col': stretchForAlignment }"
+    >
       <div
         :class="[
           'flex items-center justify-between gap-3 overflow-hidden px-4 py-3',
@@ -89,7 +95,7 @@
         </div>
       </div>
 
-      <div v-if="expanded" class="space-y-6 p-6" :class="{ 'flex-1': translationMode }">
+      <div v-if="expanded" class="space-y-6 p-6" :class="{ 'flex-1': stretchForAlignment }">
         <slot />
       </div>
       <div
@@ -103,7 +109,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Component } from 'vue';
+import { computed, type Component } from 'vue';
 import {
   ChevronDown,
   CircleAlert,
@@ -134,6 +140,8 @@ const props = withDefaults(
     blockIndex: undefined,
   },
 );
+
+const stretchForAlignment = computed(() => props.translationMode && props.expanded);
 
 const emit = defineEmits<{
   toggle: [];
