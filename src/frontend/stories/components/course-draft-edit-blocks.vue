@@ -16,6 +16,7 @@
           :block-index="index"
           :expanded="isExpanded(index)"
           :video-collection-id="videoCollectionId"
+          :image-collection-id="imageCollectionId"
           :chapter-type="chapterType"
           :template="template"
           :translation-mode="true"
@@ -33,6 +34,7 @@
           :block-index="index"
           :expanded="isExpanded(index)"
           :video-collection-id="videoCollectionId"
+          :image-collection-id="imageCollectionId"
           :chapter-type="chapterType"
           :template="template"
           :read-only="true"
@@ -62,6 +64,7 @@
           :block-index="index"
           :expanded="isExpanded(index)"
           :video-collection-id="videoCollectionId"
+          :image-collection-id="imageCollectionId"
           :chapter-type="chapterType"
           :template="template"
           @update:block="updateBlock(index, $event)"
@@ -105,6 +108,7 @@ const props = withDefaults(
   defineProps<{
     blocks: ChapterBlock[];
     videoCollectionId?: string;
+    imageCollectionId?: string;
     chapterType?: string | null;
     template?: string | null;
     previousChapterBlocks?: ChapterBlock[];

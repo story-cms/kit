@@ -4,6 +4,7 @@
       <CourseDraftEditBlocks
         v-model:blocks="defaultBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
+        :image-collection-id="sharedProps.config.imageCollectionId"
         template="course"
         chapter-type="Session"
       />
@@ -13,6 +14,7 @@
       <CourseDraftEditBlocks
         v-model:blocks="emptyBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
+        :image-collection-id="sharedProps.config.imageCollectionId"
         template="course"
         chapter-type="Session"
       />
@@ -22,6 +24,7 @@
       <CourseDraftEditBlocks
         v-model:blocks="courseBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
+        :image-collection-id="sharedProps.config.imageCollectionId"
         template="course"
         chapter-type="Session"
       />
@@ -32,6 +35,7 @@
         v-model:blocks="emptyBlocks"
         :previous-chapter-blocks="previousChapterBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
+        :image-collection-id="sharedProps.config.imageCollectionId"
         template="course"
         chapter-type="Session"
       />

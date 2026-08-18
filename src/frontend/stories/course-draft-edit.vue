@@ -1,13 +1,17 @@
 <template>
   <chapter-draft-edit-shell v-bind="props">
     <template #details>
-      <course-draft-edit-details :chapter-type="props.story.chapterType" />
+      <course-draft-edit-details
+        :chapter-type="props.story.chapterType"
+        :image-collection-id="props.config.imageCollectionId"
+      />
     </template>
     <template #blocks="{ blocks, updateBlocks }">
       <course-draft-edit-blocks
         :blocks="blocks"
         :previous-chapter-blocks="props.previousChapterBlocks ?? []"
         :video-collection-id="props.config.videoCollectionId"
+        :image-collection-id="props.config.imageCollectionId"
         :chapter-type="props.story.chapterType"
         :template="props.story.template"
         @update:blocks="updateBlocks"

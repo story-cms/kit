@@ -1,10 +1,11 @@
-import type { CmsConfig } from '../types.js';
+import type { CmsConfig, MediaUploadConfig } from '../types.js';
+import { assertTemplateCollectionsMatchGlobals } from '../shared/media_helpers.js';
 
 /**
  * Define shield configuration
  */
 export function defineConfig(config: Partial<CmsConfig>): CmsConfig {
-  return {
+  const resolved = {
     name: config.name || 'Journeys Studio',
 
     logo:
@@ -20,6 +21,10 @@ export function defineConfig(config: Partial<CmsConfig>): CmsConfig {
     microcopySource: config.microcopySource || '',
 
     videoCollectionId: config.videoCollectionId || '',
+
+    imageCollectionId: config.imageCollectionId || '',
+
+    audioCollectionId: config.audioCollectionId || '',
 
     /**
      * A list of languages to be used in the app
@@ -59,11 +64,13 @@ export function defineConfig(config: Partial<CmsConfig>): CmsConfig {
 
     storyTemplates: config.storyTemplates || [],
   } satisfies CmsConfig;
+
+  assertTemplateCollectionsMatchGlobals(resolved);
+
+  return resolved;
 }
 
-export interface mediaConfig {
+/** @deprecated Use MediaUploadConfig plus collection IDs on CmsConfig */
+export interface mediaConfig extends MediaUploadConfig {
   collection: string;
-  description: string;
-  extensions: string[];
-  maxSize: number;
 }

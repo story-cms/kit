@@ -143,6 +143,7 @@
               <div class="[&>div]:mt-0">
                 <BlockImageField
                   :model-value="item.imageUrl ?? ''"
+                  :collection-id="imageCollectionId ?? ''"
                   :block-index="blockIndex"
                   :item-index="itemIndex"
                   label=""
@@ -300,6 +301,7 @@ const props = withDefaults(
     blockIndex: number;
     expanded: boolean;
     videoCollectionId?: string;
+    imageCollectionId?: string;
     chapterType?: string | null;
     template?: string | null;
     readOnly?: boolean;

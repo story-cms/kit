@@ -90,6 +90,7 @@
       <div data-block-field-content>
         <BlockImageField
           :model-value="block.coverImage ?? ''"
+          :collection-id="imageCollectionId ?? ''"
           :block-index="blockIndex"
           label="Cover Image (Optional)"
           :read-only="isFieldReadOnly('coverImage')"
@@ -125,6 +126,7 @@ const props = withDefaults(
     block: ChapterTitleBlock;
     blockIndex: number;
     expanded: boolean;
+    imageCollectionId?: string;
     readOnly?: boolean;
     translationMode?: boolean;
   }>(),

@@ -1753,6 +1753,8 @@ export const config: UiConfig = {
   helpUrl: 'https://www.theword121.com/',
   hasAppPreview: false,
   videoCollectionId: 'temporary-id',
+  imageCollectionId: 'journeys_template',
+  audioCollectionId: 'audio/default',
   languages,
   subscriptions: [
     'story',

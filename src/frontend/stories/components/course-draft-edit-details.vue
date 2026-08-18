@@ -66,6 +66,7 @@ import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import type { FieldSpec } from '../../../types';
+import { buildMediaFieldSpec } from '../../../shared/media_helpers';
 import { useModelStore, useSharedStore } from '../../store';
 import ImageField from '../../fields/image-field.vue';
 import MarkdownField from '../../fields/markdown-field.vue';
@@ -74,10 +75,12 @@ import StringField from '../../fields/string-field.vue';
 const props = withDefaults(
   defineProps<{
     chapterType?: string | null;
+    imageCollectionId?: string;
     isTranslation?: boolean;
   }>(),
   {
     isTranslation: false,
+    imageCollectionId: '',
   },
 );
 
@@ -117,12 +120,10 @@ const descriptionField: FieldSpec = {
   placeholderText: 'Brief overview of this session...',
 };
 
-const coverImageField: FieldSpec = {
-  label: 'Cover Image',
-  name: 'coverImage',
-  widget: 'image',
-  description: 'PNG, JPG • Recommended 1280x720px',
-  extensions: ['.jpeg', '.jpg', '.png'],
-  maxSize: 5662310,
-};
+const coverImageField = computed((): FieldSpec =>
+  buildMediaFieldSpec('image', props.imageCollectionId, {
+    label: 'Cover Image',
+    name: 'coverImage',
+  }),
+);
 </script>

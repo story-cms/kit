@@ -1,13 +1,18 @@
 <template>
   <chapter-draft-edit-shell v-bind="props">
     <template #details>
-      <devotion-draft-edit-details :chapter-type="props.story.chapterType" />
+      <devotion-draft-edit-details
+        :chapter-type="props.story.chapterType"
+        :image-collection-id="props.config.imageCollectionId"
+        :audio-collection-id="props.config.audioCollectionId"
+      />
     </template>
     <template #blocks="{ blocks, updateBlocks }">
       <devotion-draft-edit-blocks
         :blocks="blocks"
         :previous-chapter-blocks="props.previousChapterBlocks ?? []"
         :video-collection-id="props.config.videoCollectionId"
+        :image-collection-id="props.config.imageCollectionId"
         :chapter-type="props.story.chapterType"
         @update:blocks="updateBlocks"
       />

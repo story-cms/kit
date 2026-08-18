@@ -5,6 +5,7 @@
     :block-index="blockIndex"
     :expanded="expanded"
     :video-collection-id="videoCollectionId"
+    :image-collection-id="imageCollectionId"
     :chapter-type="chapterType"
     :template="template"
     :read-only="readOnly"
@@ -21,6 +22,7 @@
     :block="block"
     :block-index="blockIndex"
     :expanded="expanded"
+    :image-collection-id="imageCollectionId"
     :read-only="readOnly"
     :translation-mode="translationMode"
     @update:block="emit('update:block', $event)"
@@ -58,6 +60,7 @@ defineProps<{
   blockIndex: number;
   expanded: boolean;
   videoCollectionId?: string;
+  imageCollectionId?: string;
   chapterType?: string | null;
   template?: string | null;
   readOnly?: boolean;

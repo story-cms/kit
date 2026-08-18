@@ -3,12 +3,16 @@
     <Variant title="Source" :setup-app="loadDetails">
       <chapter-draft-edit-shell v-bind="sourceProps">
         <template #details>
-          <course-draft-edit-details :chapter-type="sourceProps.story.chapterType" />
+          <course-draft-edit-details
+            :chapter-type="sourceProps.story.chapterType"
+            :image-collection-id="sourceProps.config.imageCollectionId"
+          />
         </template>
         <template #blocks="{ blocks, updateBlocks }">
           <course-draft-edit-blocks
             :blocks="blocks"
             :video-collection-id="sourceProps.config.videoCollectionId"
+            :image-collection-id="sourceProps.config.imageCollectionId"
             :chapter-type="sourceProps.story.chapterType"
             :template="sourceProps.story.template"
             @update:blocks="updateBlocks"
@@ -22,6 +26,7 @@
         <template #details>
           <course-draft-edit-details
             :chapter-type="translationProps.story.chapterType"
+            :image-collection-id="translationProps.config.imageCollectionId"
             :is-translation="true"
           />
         </template>
@@ -29,6 +34,7 @@
           <course-draft-edit-blocks
             :blocks="blocks"
             :video-collection-id="translationProps.config.videoCollectionId"
+            :image-collection-id="translationProps.config.imageCollectionId"
             :chapter-type="translationProps.story.chapterType"
             :template="translationProps.story.template"
             :is-translation="true"

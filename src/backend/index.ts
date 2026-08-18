@@ -66,6 +66,17 @@ export {
 export { previewBundleFrom } from '../shared/preview_bundle.js';
 export { cloneBlocksStructure } from '../shared/block_structure.js';
 export {
+  audioUploadConfig,
+  imageUploadConfig,
+  videoUploadConfig,
+} from '../shared/media_upload_configs.js';
+export {
+  assertTemplateCollectionsMatchGlobals,
+  buildMediaFieldSpec,
+  globalMediaCollections,
+  mediaCollectionsForTemplate,
+} from '../shared/media_helpers.js';
+export {
   previousDevotionChapterBlocks,
   previousCourseChapterBlocks,
   type StoryChapterSpecifier,

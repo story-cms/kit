@@ -819,6 +819,16 @@ export interface InvitationForApi {
 ///  configuration
 /// ----------------------------------------------------
 
+export type MediaKind = 'video' | 'image' | 'audio';
+
+export interface MediaUploadConfig {
+  description: string;
+  extensions: string[];
+  maxSize: number;
+}
+
+export type MediaCollectionMap = Partial<Record<MediaKind, string>>;
+
 // trackable settings should not be nested
 // no optional settings in the type definition
 export type CmsConfig = {
@@ -829,6 +839,8 @@ export type CmsConfig = {
   hasAppPreview: boolean;
   microcopySource: string;
   videoCollectionId: string;
+  imageCollectionId: string;
+  audioCollectionId: string;
   languages: LanguageSpecification[];
   subscriptions: Subscription[];
 
@@ -856,6 +868,8 @@ export interface UiConfig {
   supportEmail: string;
   hasAppPreview: boolean;
   videoCollectionId: string;
+  imageCollectionId: string;
+  audioCollectionId: string;
   languages: LanguageSpecification[];
   subscriptions: Subscription[];
 }
@@ -876,6 +890,7 @@ export interface BundleTemplate {
   id: string;
   name: string;
   fields: FieldSpec[];
+  collections?: MediaCollectionMap;
 }
 
 export interface LanguageSpecification {

@@ -3,6 +3,7 @@
     <template #details>
       <course-draft-edit-details
         :chapter-type="props.story.chapterType"
+        :image-collection-id="props.config.imageCollectionId"
         :is-translation="true"
       />
     </template>
@@ -10,6 +11,7 @@
       <course-draft-edit-blocks
         :blocks="blocks"
         :video-collection-id="props.config.videoCollectionId"
+        :image-collection-id="props.config.imageCollectionId"
         :chapter-type="props.story.chapterType"
         :template="props.story.template"
         :is-translation="true"

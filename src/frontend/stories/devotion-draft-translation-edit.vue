@@ -3,6 +3,8 @@
     <template #details>
       <devotion-draft-edit-details
         :chapter-type="props.story.chapterType"
+        :image-collection-id="props.config.imageCollectionId"
+        :audio-collection-id="props.config.audioCollectionId"
         :is-translation="true"
       />
     </template>
@@ -10,6 +12,7 @@
       <devotion-draft-edit-blocks
         :blocks="blocks"
         :video-collection-id="props.config.videoCollectionId"
+        :image-collection-id="props.config.imageCollectionId"
         :chapter-type="props.story.chapterType"
         :is-translation="true"
         @update:blocks="updateBlocks"

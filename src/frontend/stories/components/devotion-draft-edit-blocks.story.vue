@@ -4,6 +4,7 @@
       <DevotionDraftEditBlocks
         v-model:blocks="defaultBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
+        :image-collection-id="sharedProps.config.imageCollectionId"
       />
     </Variant>
 
@@ -11,6 +12,7 @@
       <DevotionDraftEditBlocks
         v-model:blocks="emptyBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
+        :image-collection-id="sharedProps.config.imageCollectionId"
       />
     </Variant>
 
@@ -18,6 +20,7 @@
       <DevotionDraftEditBlocks
         v-model:blocks="multipleBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
+        :image-collection-id="sharedProps.config.imageCollectionId"
       />
     </Variant>
 
@@ -25,6 +28,7 @@
       <DevotionDraftEditBlocks
         v-model:blocks="mixedBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
+        :image-collection-id="sharedProps.config.imageCollectionId"
       />
     </Variant>
 
@@ -32,6 +36,7 @@
       <DevotionDraftEditBlocks
         v-model:blocks="devotionBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
+        :image-collection-id="sharedProps.config.imageCollectionId"
         chapter-type="Devotion"
       />
     </Variant>
@@ -41,6 +46,7 @@
         v-model:blocks="emptyBlocks"
         :previous-chapter-blocks="previousChapterBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
+        :image-collection-id="sharedProps.config.imageCollectionId"
         chapter-type="Devotion"
       />
     </Variant>

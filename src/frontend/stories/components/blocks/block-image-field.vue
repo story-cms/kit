@@ -11,12 +11,14 @@
 import { computed, onBeforeUnmount, watch } from 'vue';
 
 import type { FieldSpec } from '../../../../types';
+import { buildMediaFieldSpec } from '../../../../shared/media_helpers';
 import ImageField from '../../../fields/image-field.vue';
 import { useModelStore } from '../../../store';
 
 const props = withDefaults(
   defineProps<{
     modelValue: string;
+    collectionId: string;
     blockIndex: number;
     itemIndex?: number;
     label?: string;
@@ -42,14 +44,12 @@ const fieldName = computed(() =>
 );
 const fieldPath = computed(() => `${rootPath.value}.${fieldName.value}`);
 
-const fieldSpec = computed((): FieldSpec => ({
-  label: props.label,
-  name: fieldName.value,
-  widget: 'image',
-  description: 'PNG, JPG • Recommended 1280x720px',
-  extensions: ['.jpeg', '.jpg', '.png'],
-  maxSize: 5662310,
-}));
+const fieldSpec = computed((): FieldSpec =>
+  buildMediaFieldSpec('image', props.collectionId, {
+    label: props.label,
+    name: fieldName.value,
+  }),
+);
 
 const getValue = (): string => model.getField(fieldPath.value, '') as string;
 

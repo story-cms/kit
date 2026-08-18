@@ -81,6 +81,7 @@ import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import type { FieldSpec } from '../../../types';
+import { buildMediaFieldSpec } from '../../../shared/media_helpers';
 import { useModelStore, useSharedStore } from '../../store';
 import AudioField from '../../fields/audio-field.vue';
 import ImageField from '../../fields/image-field.vue';
@@ -90,10 +91,14 @@ import StringField from '../../fields/string-field.vue';
 const props = withDefaults(
   defineProps<{
     chapterType?: string | null;
+    imageCollectionId?: string;
+    audioCollectionId?: string;
     isTranslation?: boolean;
   }>(),
   {
     isTranslation: false,
+    imageCollectionId: '',
+    audioCollectionId: '',
   },
 );
 
@@ -133,21 +138,17 @@ const descriptionField: FieldSpec = {
   placeholderText: 'Brief overview of this session...',
 };
 
-const coverImageField: FieldSpec = {
-  label: 'Cover Image',
-  name: 'coverImage',
-  widget: 'image',
-  description: 'PNG, JPG • Recommended 1280x720px',
-  extensions: ['.jpeg', '.jpg', '.png'],
-  maxSize: 5662310,
-};
+const coverImageField = computed((): FieldSpec =>
+  buildMediaFieldSpec('image', props.imageCollectionId, {
+    label: 'Cover Image',
+    name: 'coverImage',
+  }),
+);
 
-const devotionAudioField: FieldSpec = {
-  label: 'Devotion Audio',
-  name: 'devotionAudio',
-  widget: 'audio',
-  description: 'MP3, M4A, WAV up to 200 MB',
-  extensions: ['.mp3', '.m4a', '.wav'],
-  maxSize: 209715200,
-};
+const devotionAudioField = computed((): FieldSpec =>
+  buildMediaFieldSpec('audio', props.audioCollectionId, {
+    label: 'Devotion Audio',
+    name: 'devotionAudio',
+  }),
+);
 </script>

@@ -11,6 +11,7 @@
 import { computed, onBeforeUnmount, watch } from 'vue';
 
 import type { FieldSpec } from '../../../../types';
+import { buildMediaFieldSpec } from '../../../../shared/media_helpers';
 import VideoField from '../../../fields/video-field.vue';
 import { useModelStore } from '../../../store';
 
@@ -41,15 +42,12 @@ const fieldName = computed(() =>
 );
 const fieldPath = computed(() => `${rootPath.value}.${fieldName.value}`);
 
-const fieldSpec = computed((): FieldSpec => ({
-  label: props.label,
-  name: fieldName.value,
-  widget: 'video',
-  description: 'MP4 and MOV files up to 500MB',
-  extensions: ['.mp4', '.mov'],
-  collectionId: props.collectionId,
-  maxSize: 500662310,
-}));
+const fieldSpec = computed((): FieldSpec =>
+  buildMediaFieldSpec('video', props.collectionId, {
+    label: props.label,
+    name: fieldName.value,
+  }),
+);
 
 const getVideo = (): { url: string | null } =>
   model.getField(fieldPath.value, { url: null }) as { url: string | null };

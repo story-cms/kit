@@ -54,6 +54,8 @@ const draftEditProps: DraftEditProps & SharedPageProps = {
     supportEmail: 'support@example.com',
     hasAppPreview: false,
     videoCollectionId: '',
+    imageCollectionId: '',
+    audioCollectionId: '',
     languages: [],
     subscriptions: [],
   },
