@@ -9,82 +9,94 @@
     :navigation-visible="block.visibility.inNavigation && !block.visibility.hidden"
     kind-label="title"
     :read-only="readOnly"
+    :translation-mode="translationMode"
+    :block-index="blockIndex"
     @toggle="emit('toggle')"
     @delete="emit('delete')"
     @dragstart="emit('dragstart')"
     @drop="emit('drop')"
     @dragend="emit('dragend')"
   >
-    <div>
-      <label :for="`${block.id}-block-name`" class="input-label">Block Name</label>
-      <input
-        :id="`${block.id}-block-name`"
-        type="text"
-        :value="block.blockName"
-        placeholder="e.g., Session Title, Chapter Heading"
-        class="input-field mt-[2px]"
-        :class="{
-          'border-error': fieldHasError('blockName'),
-          'text-gray-600 shadow-none': isFieldReadOnly('blockName'),
-        }"
-        :readonly="isFieldReadOnly('blockName')"
-        @input="updateField('blockName', ($event.target as HTMLInputElement).value)"
-      />
-      <p v-if="fieldHasError('blockName') && !readOnly" class="text-sm text-error">
-        {{ fieldMessages('blockName')[0] }}
-      </p>
-      <p v-else-if="!readOnly" class="mt-1 text-sm italic text-gray-500">
-        This becomes the collapsible section name
-      </p>
+    <div data-block-field-row="block-name">
+      <div data-block-field-content>
+        <label :for="`${block.id}-block-name`" class="input-label">Block Name</label>
+        <input
+          :id="`${block.id}-block-name`"
+          type="text"
+          :value="block.blockName"
+          placeholder="e.g., Session Title, Chapter Heading"
+          class="input-field mt-[2px]"
+          :class="{
+            'border-error': fieldHasError('blockName'),
+            'text-gray-600 shadow-none': isFieldReadOnly('blockName'),
+          }"
+          :readonly="isFieldReadOnly('blockName')"
+          @input="updateField('blockName', ($event.target as HTMLInputElement).value)"
+        />
+        <p v-if="fieldHasError('blockName') && !readOnly" class="text-sm text-error">
+          {{ fieldMessages('blockName')[0] }}
+        </p>
+        <p v-else-if="!readOnly" class="mt-1 text-sm italic text-gray-500">
+          This becomes the collapsible section name
+        </p>
+      </div>
     </div>
 
-    <div>
-      <label :for="`${block.id}-title`" class="input-label">Title</label>
-      <input
-        :id="`${block.id}-title`"
-        type="text"
-        :value="block.title"
-        placeholder="e.g., The Gospel of John"
-        class="input-field mt-[2px]"
-        :class="{
-          'border-error': fieldHasError('title'),
-          'text-gray-600 shadow-none': isFieldReadOnly('title'),
-        }"
-        :readonly="isFieldReadOnly('title')"
-        @input="updateField('title', ($event.target as HTMLInputElement).value)"
-      />
-      <p v-if="fieldHasError('title') && !readOnly" class="text-sm text-error">
-        {{ fieldMessages('title')[0] }}
-      </p>
+    <div data-block-field-row="title">
+      <div data-block-field-content>
+        <label :for="`${block.id}-title`" class="input-label">Title</label>
+        <input
+          :id="`${block.id}-title`"
+          type="text"
+          :value="block.title"
+          placeholder="e.g., The Gospel of John"
+          class="input-field mt-[2px]"
+          :class="{
+            'border-error': fieldHasError('title'),
+            'text-gray-600 shadow-none': isFieldReadOnly('title'),
+          }"
+          :readonly="isFieldReadOnly('title')"
+          @input="updateField('title', ($event.target as HTMLInputElement).value)"
+        />
+        <p v-if="fieldHasError('title') && !readOnly" class="text-sm text-error">
+          {{ fieldMessages('title')[0] }}
+        </p>
+      </div>
     </div>
 
-    <div>
-      <label :for="`${block.id}-subtitle`" class="input-label">Subtitle</label>
-      <input
-        :id="`${block.id}-subtitle`"
-        type="text"
-        :value="block.subtitle"
-        placeholder="e.g., Session 1 of 12"
-        class="input-field mt-[2px]"
-        :class="{
-          'border-error': fieldHasError('subtitle'),
-          'text-gray-600 shadow-none': isFieldReadOnly('subtitle'),
-        }"
-        :readonly="isFieldReadOnly('subtitle')"
-        @input="updateField('subtitle', ($event.target as HTMLInputElement).value)"
-      />
-      <p v-if="fieldHasError('subtitle') && !readOnly" class="text-sm text-error">
-        {{ fieldMessages('subtitle')[0] }}
-      </p>
+    <div data-block-field-row="subtitle">
+      <div data-block-field-content>
+        <label :for="`${block.id}-subtitle`" class="input-label">Subtitle</label>
+        <input
+          :id="`${block.id}-subtitle`"
+          type="text"
+          :value="block.subtitle"
+          placeholder="e.g., Session 1 of 12"
+          class="input-field mt-[2px]"
+          :class="{
+            'border-error': fieldHasError('subtitle'),
+            'text-gray-600 shadow-none': isFieldReadOnly('subtitle'),
+          }"
+          :readonly="isFieldReadOnly('subtitle')"
+          @input="updateField('subtitle', ($event.target as HTMLInputElement).value)"
+        />
+        <p v-if="fieldHasError('subtitle') && !readOnly" class="text-sm text-error">
+          {{ fieldMessages('subtitle')[0] }}
+        </p>
+      </div>
     </div>
 
-    <BlockImageField
-      :model-value="block.coverImage ?? ''"
-      :block-index="blockIndex"
-      label="Cover Image (Optional)"
-      :read-only="isFieldReadOnly('coverImage')"
-      @update:model-value="updateField('coverImage', $event)"
-    />
+    <div data-block-field-row="cover-image">
+      <div data-block-field-content>
+        <BlockImageField
+          :model-value="block.coverImage ?? ''"
+          :block-index="blockIndex"
+          label="Cover Image (Optional)"
+          :read-only="isFieldReadOnly('coverImage')"
+          @update:model-value="updateField('coverImage', $event)"
+        />
+      </div>
+    </div>
     <div class="mt-4"></div>
     <template v-if="!readOnly && !translationMode" #footer>
       <BlockVisibility v-model="visibilityModel" />

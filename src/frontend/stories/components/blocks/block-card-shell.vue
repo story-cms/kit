@@ -1,13 +1,18 @@
 <template>
   <div
     class="relative my-2 list-none rounded-xl border border-gray-200 p-0"
+    :class="{ 'h-full': translationMode }"
+    :data-translation-block-index="translationMode ? blockIndex : undefined"
+    :data-translation-block-side="
+      translationMode ? (readOnly ? 'source' : 'translation') : undefined
+    "
     :draggable="!readOnly"
     @dragstart="onDragStart"
     @dragover.prevent
     @drop="onDrop"
     @dragend="onDragEnd"
   >
-    <div class="rounded-xl bg-white">
+    <div class="rounded-xl bg-white" :class="{ 'flex h-full flex-col': translationMode }">
       <div
         :class="[
           'flex items-center justify-between gap-3 overflow-hidden px-4 py-3',
@@ -84,7 +89,7 @@
         </div>
       </div>
 
-      <div v-if="expanded" class="space-y-6 p-6">
+      <div v-if="expanded" class="space-y-6 p-6" :class="{ 'flex-1': translationMode }">
         <slot />
       </div>
       <div
@@ -99,7 +104,15 @@
 
 <script setup lang="ts">
 import type { Component } from 'vue';
-import { ChevronDown, CircleAlert, GripVertical, Monitor, Send, Trash2, User } from '@lucide/vue';
+import {
+  ChevronDown,
+  CircleAlert,
+  GripVertical,
+  Monitor,
+  Send,
+  Trash2,
+  User,
+} from '@lucide/vue';
 
 const props = withDefaults(
   defineProps<{
@@ -112,9 +125,13 @@ const props = withDefaults(
     kindLabel: string;
     hasError?: boolean;
     readOnly?: boolean;
+    translationMode?: boolean;
+    blockIndex?: number;
   }>(),
   {
     readOnly: false,
+    translationMode: false,
+    blockIndex: undefined,
   },
 );
 

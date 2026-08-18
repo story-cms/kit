@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="translationGrid"
     :class="[
       'min-w-0 overflow-x-clip',
       isTranslation ? 'grid h-full gap-x-4 gap-y-6' : 'space-y-6',
@@ -7,10 +8,7 @@
     ]"
   >
     <template v-if="isTranslation">
-      <BlockEmptyState
-        v-if="blocks.length === 0"
-        :error-message="blocksArrayError"
-      />
+      <BlockEmptyState v-if="blocks.length === 0" :error-message="blocksArrayError" />
 
       <template v-for="(block, index) in blocks" :key="block.id">
         <DraftEditBlockCard
@@ -36,13 +34,11 @@
           :video-collection-id="videoCollectionId"
           :chapter-type="chapterType"
           :read-only="true"
+          :translation-mode="true"
           dir="ltr"
           @toggle="onToggle(index)"
         />
-        <div
-          v-else-if="showSourceColumn"
-          aria-hidden="true"
-        />
+        <div v-else-if="showSourceColumn" aria-hidden="true" />
       </template>
     </template>
 
@@ -56,10 +52,7 @@
         @reuse-previous="reusePreviousStructure"
       />
 
-      <BlockEmptyState
-        v-if="blocks.length === 0"
-        :error-message="blocksArrayError"
-      />
+      <BlockEmptyState v-if="blocks.length === 0" :error-message="blocksArrayError" />
 
       <template v-for="(block, index) in blocks" :key="block.id">
         <DraftEditBlockCard
@@ -104,6 +97,7 @@ import {
   normalizedBlocks,
 } from './blocks/block-utils';
 import { cloneBlocksStructure } from '../../../shared/block_structure';
+import { useTranslationBlockFieldAlignment } from './blocks/use-translation-block-field-alignment';
 
 const props = withDefaults(
   defineProps<{
@@ -125,6 +119,12 @@ const emit = defineEmits<{
 const shared = useSharedStore();
 const model = useModelStore();
 const { errors, showSourceColumn, isLargeScreen } = storeToRefs(shared);
+const translationGrid = ref<HTMLElement | null>(null);
+
+useTranslationBlockFieldAlignment(
+  translationGrid,
+  computed(() => props.isTranslation && showSourceColumn.value),
+);
 
 const blocks = computed({
   get: () => props.blocks,
