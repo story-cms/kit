@@ -21,7 +21,6 @@ This repo is the **kit library**, not a full CMS app. Client apps (e.g. `@bnap/c
 | `src/types.ts` | Shared TypeScript types |
 | `tests/unit/` | Playwright unit tests |
 | `tests/e2e/` | Playwright end-to-end tests |
-| `scripts/` | Build helpers (e.g. color usage generator) |
 | `.cursor/rules/` | Detailed, file-scoped Cursor rules (see index below) |
 
 Full directory tree: `.cursor/rules/project-structure.mdc`
@@ -37,12 +36,9 @@ npm run lint             # ESLint
 npm run lint:fix         # ESLint with auto-fix
 npm run test             # Playwright unit tests
 npm run test:e2e         # Playwright e2e tests
-npm run colors:usage     # Regenerate colors.palette.ts + colors.usage.ts
 npm run story:build      # Build Histoire static site
 npm run story:preview    # Preview built Histoire site
 ```
-
-Run `npm run colors:usage` after changing theme tokens in `tailwind.config.js` or color-class usage in the frontend.
 
 ## Frontend conventions
 
@@ -56,13 +52,6 @@ Run `npm run colors:usage` after changing theme tokens in `tailwind.config.js` o
 - Export public components from `src/frontend/index.ts` when adding package surface
 
 Field widgets live under `src/frontend/fields/` and use `commonProps` from `shared/helpers.ts`.
-
-## Generated files — do not edit manually
-
-| File | Regenerate with |
-|------|-----------------|
-| `src/frontend/shared/colors.palette.ts` | `npm run colors:usage` |
-| `src/frontend/shared/colors.usage.ts` | `npm run colors:usage` |
 
 ## Backend conventions
 
