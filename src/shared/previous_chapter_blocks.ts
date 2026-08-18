@@ -1,13 +1,6 @@
-import type { ChapterBlock } from '../types.js';
+import type { ChapterBlock, StoryChapterSpecifier } from '../types.js';
 import { normalizedCourseDraftBundle } from './course_draft.js';
 import { normalizedDevotionDraftBundle } from './devotion_draft.js';
-
-export interface StoryChapterSpecifier {
-  apiVersion: number;
-  locale: string;
-  storyId: number;
-  number: number;
-}
 
 export const previousDevotionChapterBlocks = async (
   specifier: StoryChapterSpecifier,

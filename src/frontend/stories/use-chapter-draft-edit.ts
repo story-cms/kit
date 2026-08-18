@@ -5,17 +5,10 @@ import type { Errors } from '@inertiajs/core';
 
 import type {
   ChapterBlock,
-  CourseDraftBundle,
-  CourseDraftEditBundle,
-  DevotionDraftBundle,
-  DevotionDraftEditBundle,
+  ChapterDraftEditProps,
   DraftEditProps,
-  DraftMeta,
   NavigationPaneTab,
-  Providers,
   ResourceItem,
-  SharedPageProps,
-  StorySpec,
 } from '../../types';
 import { ResponseStatus } from '../../types';
 import { formatDate, padZero, safeChapterTitle } from '../shared/helpers';
@@ -32,21 +25,8 @@ import {
 } from './chapter-draft-edit-controller';
 import { normalizedBlocks } from './components/blocks/block-utils';
 
-export interface ChapterDraftEditControllerProps extends SharedPageProps {
-  draft: DraftMeta;
-  bundle: CourseDraftEditBundle | DevotionDraftEditBundle;
-  source?: CourseDraftBundle | DevotionDraftBundle;
-  story: StorySpec;
-  availableResources: ResourceItem[];
-  providers: Providers;
-  hasEditReview: boolean;
-  lastPublished: string;
-  isCreate?: boolean;
-  previousChapterBlocks?: ChapterBlock[];
-}
-
 export function useChapterDraftEdit(
-  props: ChapterDraftEditControllerProps,
+  props: ChapterDraftEditProps,
   isTranslation: boolean,
 ) {
   const shared = useSharedStore();

@@ -79,7 +79,6 @@ export {
 export {
   previousDevotionChapterBlocks,
   previousCourseChapterBlocks,
-  type StoryChapterSpecifier,
 } from '../shared/previous_chapter_blocks.js';
 export { default as DropValidator } from './validators/drop.js';
 export { default as PageValidator } from './validators/page.js';

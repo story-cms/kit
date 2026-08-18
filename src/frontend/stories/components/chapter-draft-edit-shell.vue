@@ -129,15 +129,13 @@ import MobileAppPreview from '../../shared/mobile-app-preview.vue';
 import TabButton from '../../shared/tab-button.vue';
 import TabNavigation from '../../shared/tab-navigation.vue';
 import { useTranslationDraftLayout } from '../use-translation-draft-layout';
-import {
-  useChapterDraftEdit,
-  type ChapterDraftEditControllerProps,
-} from '../use-chapter-draft-edit';
+import type { ChapterDraftEditProps } from '../../../types';
+import { useChapterDraftEdit } from '../use-chapter-draft-edit';
 import DraftEditActions from './draft-edit-actions.vue';
 import StoryEditResources from './story-edit-resources.vue';
 
 const props = withDefaults(
-  defineProps<ChapterDraftEditControllerProps & { isTranslation?: boolean }>(),
+  defineProps<ChapterDraftEditProps & { isTranslation?: boolean }>(),
   {
     isTranslation: false,
   },

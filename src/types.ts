@@ -30,6 +30,11 @@ export interface Version {
   locale: string;
 }
 
+export interface StoryChapterSpecifier extends Version {
+  storyId: number;
+  number: number;
+}
+
 export type VisibilityType = 'public' | 'guests' | 'leaders';
 
 export interface LabelHintSection {
@@ -551,6 +556,10 @@ export interface DevotionDraftEditProps {
   source?: DevotionDraftBundle;
   previousChapterBlocks?: ChapterBlock[];
 }
+
+export type ChapterDraftEditProps =
+  | (CourseDraftEditProps & SharedPageProps)
+  | (DevotionDraftEditProps & SharedPageProps);
 
 export interface ChapterMeta {
   number: number;
