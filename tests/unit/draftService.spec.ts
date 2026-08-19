@@ -191,6 +191,64 @@ test.describe('DraftService.getDraftBundle', () => {
     });
   });
 
+  test('returns a verbatim copy of the source blocks for a devotion translation', async () => {
+    // arrange
+    storySpec.template = 'devotion';
+    const draftService = new DraftService(storySpec, mockCms);
+    const sourceBundle = {
+      number: '01',
+      title: 'Source Title',
+      description: 'Source Description',
+      coverImage: 'https://example.com/cover.jpg',
+      devotionAudio: { url: null, length: null },
+      blocks: [
+        {
+          id: 'block-1',
+          kind: 'content',
+          blockName: 'Welcome',
+          displayName: 'Welcome',
+          blockRole: 'introduction',
+          style: 'primary',
+          content: 'Source content',
+          items: [],
+          visibility: {
+            presenter: false,
+            personal: false,
+            inNavigation: false,
+            hidden: false,
+          },
+          leadersNotes: '',
+          showLeadersNotes: false,
+        },
+      ],
+      resources: [],
+    };
+    const mockChapter = { bundle: sourceBundle } as any;
+    (mockQueryBuilder as any).firstResult = mockChapter;
+
+    const version: StoryVersion = {
+      apiVersion: 1,
+      locale: 'es', // translation locale
+      storyId: 1,
+    };
+    const number = 1;
+
+    // act
+    const result = await draftService.getDraftBundle(version, number);
+
+    // assert
+    expect(result).not.toBeNull();
+    const parsed = JSON.parse(result!);
+    // Unlike the generic field-blanking path, block content and kind must
+    // survive verbatim so the translator starts from the source's blocks
+    // instead of a corrupted, unrenderable bundle.
+    expect(parsed.title).toBe('Source Title');
+    expect(parsed.blocks).toHaveLength(1);
+    expect(parsed.blocks[0].kind).toBe('content');
+    expect(parsed.blocks[0].blockName).toBe('Welcome');
+    expect(parsed.blocks[0].content).toBe('Source content');
+  });
+
   test('returns null when source chapter not found for translation', async () => {
     // arrange
     const draftService = new DraftService(storySpec, mockCms);

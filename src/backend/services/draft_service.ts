@@ -152,6 +152,14 @@ export class DraftService {
     const source = await Chapter.query().where(specifier).first();
     if (!source) return null;
 
+    if (isDevotionTemplate(this.story.template)) {
+      return JSON.stringify(normalizedDevotionDraftBundle(source.bundle, number));
+    }
+
+    if (isCourseTemplate(this.story.template)) {
+      return JSON.stringify(normalizedCourseDraftBundle(source.bundle, number));
+    }
+
     const fresh = this.getFreshBundleFrom(source.bundle as any);
     return JSON.stringify(fresh);
   }
