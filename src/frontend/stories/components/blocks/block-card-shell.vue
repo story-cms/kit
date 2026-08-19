@@ -9,7 +9,7 @@
     :data-translation-block-side="
       translationMode ? (readOnly ? 'source' : 'translation') : undefined
     "
-    :draggable="!readOnly"
+    :draggable="!readOnly && !translationMode"
     @dragstart="onDragStart"
     @dragover.prevent
     @drop="onDrop"
@@ -27,7 +27,7 @@
       >
         <div class="flex min-w-0 items-center gap-3">
           <button
-            v-if="!readOnly"
+            v-if="!readOnly && !translationMode"
             type="button"
             class="cursor-move text-gray-400"
             :aria-label="`Reorder ${kindLabel} block`"
@@ -152,17 +152,17 @@ const emit = defineEmits<{
 }>();
 
 const onDragStart = () => {
-  if (props.readOnly) return;
+  if (props.readOnly || props.translationMode) return;
   emit('dragstart');
 };
 
 const onDrop = () => {
-  if (props.readOnly) return;
+  if (props.readOnly || props.translationMode) return;
   emit('drop');
 };
 
 const onDragEnd = () => {
-  if (props.readOnly) return;
+  if (props.readOnly || props.translationMode) return;
   emit('dragend');
 };
 </script>
