@@ -26,6 +26,7 @@ import {
   normalizedCourseDraftBundle,
 } from '../../shared/course_draft.js';
 import { isCourseTemplate, isDevotionTemplate } from '../../shared/story_helpers.js';
+import { cloneBlocksStructure } from '../../shared/block_structure.js';
 import {
   previousCourseChapterBlocks,
   previousDevotionChapterBlocks,
@@ -153,11 +154,28 @@ export class DraftService {
     if (!source) return null;
 
     if (isDevotionTemplate(this.story.template)) {
-      return JSON.stringify(normalizedDevotionDraftBundle(source.bundle, number));
+      const normalized = normalizedDevotionDraftBundle(source.bundle, number);
+      const translationBundle: DevotionDraftBundle = {
+        ...normalized,
+        title: '',
+        description: '',
+        devotionAudio: { url: null, length: null },
+        blocks: cloneBlocksStructure(normalized.blocks),
+        resources: [],
+      };
+      return JSON.stringify(translationBundle);
     }
 
     if (isCourseTemplate(this.story.template)) {
-      return JSON.stringify(normalizedCourseDraftBundle(source.bundle, number));
+      const normalized = normalizedCourseDraftBundle(source.bundle, number);
+      const translationBundle: CourseDraftBundle = {
+        ...normalized,
+        title: '',
+        description: '',
+        blocks: cloneBlocksStructure(normalized.blocks),
+        resources: [],
+      };
+      return JSON.stringify(translationBundle);
     }
 
     const fresh = this.getFreshBundleFrom(source.bundle as any);

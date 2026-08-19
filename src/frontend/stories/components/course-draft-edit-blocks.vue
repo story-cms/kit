@@ -103,6 +103,7 @@ import {
 } from './blocks/block-utils';
 import { cloneBlocksStructure } from '../../../shared/block_structure';
 import { useTranslationBlockFieldAlignment } from './blocks/use-translation-block-field-alignment';
+import { getDefaultBlockRole } from './blocks/block-role-options';
 
 const props = withDefaults(
   defineProps<{
@@ -233,7 +234,9 @@ const appendBlock = (block: ChapterBlock) => {
 };
 
 const addContentBlock = () => {
-  appendBlock(createEmptyContentBlock());
+  appendBlock(
+    createEmptyContentBlock(getDefaultBlockRole(props.chapterType, props.template)),
+  );
 };
 
 const addTitleBlock = () => {

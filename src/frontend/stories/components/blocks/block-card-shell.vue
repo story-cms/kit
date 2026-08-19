@@ -70,7 +70,7 @@
             <CircleAlert class="size-5" aria-hidden="true" />
           </div>
           <button
-            v-if="!readOnly"
+            v-if="!readOnly && !translationMode"
             type="button"
             class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
             :aria-label="`Delete ${kindLabel} block`"

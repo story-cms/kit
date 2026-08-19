@@ -28,13 +28,15 @@ export function createBlockId(): string {
   return crypto.randomUUID();
 }
 
-export function createEmptyContentBlock(): ChapterContentBlock {
+export function createEmptyContentBlock(
+  blockRole: string = DEFAULT_BLOCK_ROLE,
+): ChapterContentBlock {
   return {
     id: createBlockId(),
     kind: 'content',
     blockName: '',
     displayName: '',
-    blockRole: DEFAULT_BLOCK_ROLE,
+    blockRole,
     style: DEFAULT_BLOCK_STYLE,
     content: '',
     items: [],

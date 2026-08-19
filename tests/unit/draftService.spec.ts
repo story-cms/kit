@@ -191,7 +191,7 @@ test.describe('DraftService.getDraftBundle', () => {
     });
   });
 
-  test('returns a verbatim copy of the source blocks for a devotion translation', async () => {
+  test('returns the source structure but not its content for a devotion translation', async () => {
     // arrange
     storySpec.template = 'devotion';
     const draftService = new DraftService(storySpec, mockCms);
@@ -200,7 +200,7 @@ test.describe('DraftService.getDraftBundle', () => {
       title: 'Source Title',
       description: 'Source Description',
       coverImage: 'https://example.com/cover.jpg',
-      devotionAudio: { url: null, length: null },
+      devotionAudio: { url: 'https://example.com/audio.mp3', length: 42 },
       blocks: [
         {
           id: 'block-1',
@@ -221,7 +221,7 @@ test.describe('DraftService.getDraftBundle', () => {
           showLeadersNotes: false,
         },
       ],
-      resources: [],
+      resources: ['source-resource-1'],
     };
     const mockChapter = { bundle: sourceBundle } as any;
     (mockQueryBuilder as any).firstResult = mockChapter;
@@ -239,14 +239,24 @@ test.describe('DraftService.getDraftBundle', () => {
     // assert
     expect(result).not.toBeNull();
     const parsed = JSON.parse(result!);
-    // Unlike the generic field-blanking path, block content and kind must
-    // survive verbatim so the translator starts from the source's blocks
-    // instead of a corrupted, unrenderable bundle.
-    expect(parsed.title).toBe('Source Title');
+    // Block kind/role/style survive so the translator gets the same
+    // structure as the source, but its kind must not render as an
+    // unrenderable empty-kind block.
     expect(parsed.blocks).toHaveLength(1);
     expect(parsed.blocks[0].kind).toBe('content');
-    expect(parsed.blocks[0].blockName).toBe('Welcome');
-    expect(parsed.blocks[0].content).toBe('Source content');
+    expect(parsed.blocks[0].blockRole).toBe('introduction');
+    expect(parsed.blocks[0].style).toBe('primary');
+    // Source-language text must not leak into the translation draft.
+    expect(parsed.title).toBe('');
+    expect(parsed.description).toBe('');
+    expect(parsed.blocks[0].blockName).toBe('');
+    expect(parsed.blocks[0].displayName).toBe('');
+    expect(parsed.blocks[0].content).toBe('');
+    // Cover image is a shared visual asset, kept as-is.
+    expect(parsed.coverImage).toBe('https://example.com/cover.jpg');
+    // Audio and resources are locale-specific and must not carry over.
+    expect(parsed.devotionAudio).toEqual({ url: null, length: null });
+    expect(parsed.resources).toEqual([]);
   });
 
   test('returns null when source chapter not found for translation', async () => {
