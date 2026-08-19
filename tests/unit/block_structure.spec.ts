@@ -4,7 +4,7 @@ import { cloneBlocksStructure } from '../../src/shared/block_structure.js';
 import { createContentItem } from '../../src/frontend/stories/components/blocks/block-utils.js';
 
 test.describe('cloneBlocksStructure', () => {
-  test('preserves block order, kinds, labels, roles, styles, and visibility', () => {
+  test('preserves block order, kinds, roles, styles, and visibility, but clears labels', () => {
     const source = cloneBlocksStructure([
       {
         id: 'title-1',
@@ -56,11 +56,7 @@ test.describe('cloneBlocksStructure', () => {
     ]);
 
     expect(source).toHaveLength(3);
-    expect(source.map((block) => block.blockName)).toEqual([
-      'Heading',
-      'Opening',
-      'Passage',
-    ]);
+    expect(source.map((block) => block.blockName)).toEqual(['', '', '']);
     expect(source.map((block) => block.kind ?? 'content')).toEqual([
       'title',
       'content',
@@ -68,7 +64,7 @@ test.describe('cloneBlocksStructure', () => {
     ]);
 
     const contentBlock = source[1] as Extract<(typeof source)[number], { kind: 'content' }>;
-    expect(contentBlock.displayName).toBe('Opening Devotion');
+    expect(contentBlock.displayName).toBe('');
     expect(contentBlock.blockRole).toBe('introduction');
     expect(contentBlock.style).toBe('secondary');
     expect(contentBlock.visibility).toEqual({
@@ -112,6 +108,8 @@ test.describe('cloneBlocksStructure', () => {
 
     const block = cloned[0] as Extract<(typeof cloned)[number], { kind: 'content' }>;
     expect(block.id).not.toBe(originalIds[0]);
+    expect(block.blockName).toBe('');
+    expect(block.displayName).toBe('');
     expect(block.content).toBe('');
     expect(block.leadersNotes).toBe('');
     expect(block.showLeadersNotes).toBe(false);
