@@ -4,17 +4,19 @@ globs: src/**/*.{ts,vue}
 alwaysApply: false
 ---
 
-# Function Naming
+# Function Naming Rules
 
-Summary for agents writing or reviewing code:
+**Function** in this context is any function or class method
+These rules signal intent; do not mass-rename legacy code
 
-## Principles
+## Rules
 
-- camelCase for all functions/methods
-- Class/module name supplies the noun; methods use verbs
-- Prefix signals intent; do not mass-rename legacy code
+- Use camelCase
+- Names for **Functions** that don't return a value, start with a verb
+- **Functions** that match any of the **Common Prefixes** patterns below, use the prescribed prefix
+- Other **Functions** start with a noun describing the value they return
 
-## Shared
+## Common Prefixes
 
 | Prefix                                              | Use                                                                                                         |
 | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
@@ -22,9 +24,6 @@ Summary for agents writing or reviewing code:
 | `toX`                                               | Pure converters                                                                                             |
 | `getX` / `fetchX` / `loadX` / `findX`               | Retrieval; omit `get`/`fetch` when bare domain name is clear (`blockKind`, `previousDevotionChapterBlocks`) |
 | `parseX` / `normalizeX` / `normalizedX` / `formatX` | Parse; `normalizedX` = pure return transform; `normalizeX` = in-place/async processing                      |
-| `buildX`                                            | Assemble complex objects                                                                                    |
-| `XFromY` / `XForY`                                  | Derive from source / scoped to context                                                                      |
-| `*BlockedMessages` / `blockingX`                    | Validation blockers                                                                                         |
 | `compareX` / `sortX`                                | Sort helpers                                                                                                |
 
 ## Frontend
@@ -33,7 +32,7 @@ Summary for agents writing or reviewing code:
 - **Composables:** export `useX()` matching `use-*.ts` filename
 - **Template handlers:** `onX` (`onFilter`, `onDragStart`, `onRemove`) — not `handleX`
 - **Page commands:** bare verbs (`saveStory`, `addPage`, `publishDraft`)
-- **Form payloads:** `getPayload()` or `buildXPayload()`
+- **Form payloads:** `getPayload()`
 - **Avoid:** `setIsDirty` → prefer `setDirty` or `markDirty`
 
 ## Backend
