@@ -57,7 +57,7 @@ export default class ChaptersController {
       draft,
       template: storyRecord.template,
     });
-    const bundleView = await edge.render(`preview_${storyRecord.template}`, {
+    const bundleView = await edge.render({{ '`preview_${storyRecord.template}`' }}, {
       bundle,
       marked: marked,
       number: chapter.number,
