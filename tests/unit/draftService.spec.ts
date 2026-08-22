@@ -1081,3 +1081,25 @@ test.describe('DraftService.editProps', () => {
     expect(result?.bundle).toEqual(devotionBundle);
   });
 });
+
+test.describe('DraftService.editPage', () => {
+  const cms = createMockCms();
+
+  test('selects the default editor pages', () => {
+    const service = new DraftService(createStorySpec(1), cms);
+    expect(service.editPage(false)).toBe('DraftIndex');
+    expect(service.editPage(true)).toBe('TranslationIndex');
+  });
+
+  test('selects the chapter draft editor for devotion and course', () => {
+    const devotion = createStorySpec(1);
+    devotion.template = 'devotion';
+    expect(new DraftService(devotion, cms).editPage(false)).toBe('ChapterDraftEdit');
+    expect(new DraftService(devotion, cms).editPage(true)).toBe('ChapterDraftEdit');
+
+    const course = createStorySpec(1);
+    course.template = 'course';
+    expect(new DraftService(course, cms).editPage(false)).toBe('ChapterDraftEdit');
+    expect(new DraftService(course, cms).editPage(true)).toBe('ChapterDraftEdit');
+  });
+});

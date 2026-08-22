@@ -32,6 +32,11 @@ export interface DraftServiceDependencies {
   resourceService?: DraftResourceService;
 }
 
+export type DraftEditPage =
+  | 'DraftIndex'
+  | 'TranslationIndex'
+  | 'ChapterDraftEdit';
+
 export class DraftService {
   public story: StorySpec;
 
@@ -47,6 +52,14 @@ export class DraftService {
     private readonly dependencies: DraftServiceDependencies = {},
   ) {
     this.story = story;
+  }
+
+  public editPage(isTranslation: boolean): DraftEditPage {
+    if (isChapterDraftTemplate(this.story.template)) {
+      return 'ChapterDraftEdit';
+    }
+
+    return isTranslation ? 'TranslationIndex' : 'DraftIndex';
   }
 
   public async create(version: StoryVersion, number: number): Promise<Draft | null> {

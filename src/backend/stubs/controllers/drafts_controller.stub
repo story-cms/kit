@@ -11,7 +11,6 @@ import {
   DraftService,
   IndexService,
   StoryService,
-  draftEditPage,
 } from '@story-cms/kit';
 import cms from '#services/cms';
 import providers from '#config/providers';
@@ -72,7 +71,7 @@ export default class DraftsController {
     await indexService.buildIndex(version);
 
     // @ts-expect-error Inertia page name
-    return ctx.inertia.render(draftEditPage(story.template, isTranslation), props);
+    return ctx.inertia.render(draftService.editPage(isTranslation), props);
   }
 
   // Only saving the draft without performing any validation
