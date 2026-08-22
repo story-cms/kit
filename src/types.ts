@@ -499,30 +499,30 @@ export interface DraftEditProps {
   hasEditReview: boolean;
 }
 
-export interface ChapterDraftAudio {
+export interface StandardChapterAudio {
   url: string | null;
   length: number | null;
 }
 
-export interface ChapterDraftBundle {
+export interface StandardChapterBundle {
   number: string;
   title: string;
   description: string;
   coverImage: string;
   blocks: ChapterBlock[];
   resources: string[];
-  devotionAudio?: ChapterDraftAudio;
+  devotionAudio?: StandardChapterAudio;
 }
 
-export type PreviewBundle = ChapterDraftBundle | Record<string, unknown>;
+export type PreviewBundle = StandardChapterBundle | Record<string, unknown>;
 
-export type ChapterDraftEditBundle = Omit<ChapterDraftBundle, 'resources'> & {
+export type StandardChapterEditBundle = Omit<StandardChapterBundle, 'resources'> & {
   resources: ResourceItem[];
 };
 
-export interface ChapterDraftEditProps {
+export interface StandardChapterEditProps {
   draft: DraftMeta;
-  bundle: ChapterDraftEditBundle;
+  bundle: StandardChapterEditBundle;
   story: StorySpec;
   availableResources: ResourceItem[];
   providers: Providers;
@@ -530,7 +530,7 @@ export interface ChapterDraftEditProps {
   lastPublished: string;
   isCreate?: boolean;
   isTranslation?: boolean;
-  source?: ChapterDraftBundle;
+  source?: StandardChapterBundle;
   previousChapterBlocks?: ChapterBlock[];
 }
 

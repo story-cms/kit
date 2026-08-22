@@ -53,15 +53,15 @@ export * from './validators/auth.js';
 export * from './validators/invitation.js';
 export * from './validators/bundle.js';
 export * from './validators/chapter.js';
-export * from './validators/chapter_draft.js';
+export * from './validators/standard_chapter.js';
 export {
-  createChapterDraftBundle,
-  normalizedChapterDraftBundle,
-  translationChapterDraftBundle,
-  isChapterDraftTemplate,
-  chapterDraftTemplate,
-  chapterDraftTemplates,
-} from '../shared/chapter_draft.js';
+  createStandardChapterBundle,
+  normalizedStandardChapterBundle,
+  translationStandardChapterBundle,
+  isStandardChapterTemplate,
+  standardChapterTemplate,
+  standardChapterTemplates,
+} from '../shared/standard_chapter.js';
 export { previewBundleFrom } from '../shared/preview_bundle.js';
 export { cloneBlocksStructure, createBlockId, blockKind } from '../shared/block_structure.js';
 export {

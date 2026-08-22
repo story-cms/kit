@@ -1,15 +1,15 @@
 import type { ChapterBlock, StoryChapterSpecifier } from '../types.js';
 import {
-  isChapterDraftTemplate,
-  normalizedChapterDraftBundle,
-} from './chapter_draft.js';
+  isStandardChapterTemplate,
+  normalizedStandardChapterBundle,
+} from './standard_chapter.js';
 
 export const previousChapterBlocks = async (
   template: string | null | undefined,
   specifier: StoryChapterSpecifier,
   loadBundle: (spec: StoryChapterSpecifier) => Promise<unknown | null>,
 ): Promise<ChapterBlock[]> => {
-  if (specifier.number <= 1 || !isChapterDraftTemplate(template)) {
+  if (specifier.number <= 1 || !isStandardChapterTemplate(template)) {
     return [];
   }
 
@@ -20,5 +20,5 @@ export const previousChapterBlocks = async (
     return [];
   }
 
-  return normalizedChapterDraftBundle(template, bundle, previousNumber).blocks;
+  return normalizedStandardChapterBundle(template, bundle, previousNumber).blocks;
 };

@@ -19,9 +19,9 @@ import {
 
 import type { RichListboxOption } from '../../../shared/rich-listbox.vue';
 import {
-  chapterDraftTemplate,
-  type ChapterDraftTemplateId,
-} from '../../../../shared/chapter_draft';
+  standardChapterTemplate,
+  type StandardChapterTemplateId,
+} from '../../../../shared/standard_chapter';
 import { COURSE_TEMPLATE_ID, DEVOTION_TEMPLATE_ID } from '../../../../shared/story_helpers';
 
 export type BlockRoleOption = RichListboxOption;
@@ -180,7 +180,7 @@ const courseBlockRoleOptions: BlockRoleOption[] = [
   },
 ];
 
-const blockRoleOptionsByTemplate: Record<ChapterDraftTemplateId, BlockRoleOption[]> = {
+const blockRoleOptionsByTemplate: Record<StandardChapterTemplateId, BlockRoleOption[]> = {
   [COURSE_TEMPLATE_ID]: courseBlockRoleOptions,
   [DEVOTION_TEMPLATE_ID]: devotionBlockRoleOptions,
 };
@@ -198,7 +198,7 @@ export function isCourseChapterType(chapterType?: string | null): boolean {
 
 const templateIdFromChapterType = (
   chapterType?: string | null,
-): ChapterDraftTemplateId | undefined => {
+): StandardChapterTemplateId | undefined => {
   if (isCourseChapterType(chapterType)) return COURSE_TEMPLATE_ID;
   if (isDevotionChapterType(chapterType)) return DEVOTION_TEMPLATE_ID;
   return undefined;
@@ -209,8 +209,8 @@ export function getBlockRoleOptions(
   template?: string | null,
 ): BlockRoleOption[] {
   const spec =
-    chapterDraftTemplate(template) ??
-    chapterDraftTemplate(templateIdFromChapterType(chapterType));
+    standardChapterTemplate(template) ??
+    standardChapterTemplate(templateIdFromChapterType(chapterType));
 
   if (spec) {
     return blockRoleOptionsByTemplate[spec.id];
@@ -224,8 +224,8 @@ export function getDefaultBlockRole(
   template?: string | null,
 ): string {
   const spec =
-    chapterDraftTemplate(template) ??
-    chapterDraftTemplate(templateIdFromChapterType(chapterType));
+    standardChapterTemplate(template) ??
+    standardChapterTemplate(templateIdFromChapterType(chapterType));
 
   return spec?.defaultBlockRole ?? 'summary';
 }

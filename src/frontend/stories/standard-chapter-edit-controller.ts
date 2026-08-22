@@ -1,16 +1,16 @@
-export type ChapterDraftTab = 'Details' | 'Blocks' | 'Resources';
+export type StandardChapterTab = 'Details' | 'Blocks' | 'Resources';
 
-const CHAPTER_DRAFT_TABS: ChapterDraftTab[] = ['Details', 'Blocks', 'Resources'];
+const STANDARD_CHAPTER_TABS: StandardChapterTab[] = ['Details', 'Blocks', 'Resources'];
 
-export function findChapterDraftTab(value: string | null): ChapterDraftTab {
+export function findStandardChapterTab(value: string | null): StandardChapterTab {
   if (!value) return 'Details';
   return (
-    CHAPTER_DRAFT_TABS.find((tab) => tab.toLowerCase() === value.toLowerCase()) ??
+    STANDARD_CHAPTER_TABS.find((tab) => tab.toLowerCase() === value.toLowerCase()) ??
     'Details'
   );
 }
 
-export function buildChapterDraftPayload(
+export function buildStandardChapterPayload(
   model: Record<string, unknown>,
   resources: Array<{ id: string }>,
 ) {

@@ -5,7 +5,7 @@ import type { Errors } from '@inertiajs/core';
 
 import type {
   ChapterBlock,
-  ChapterDraftEditProps,
+  StandardChapterEditProps,
   DraftEditProps,
   NavigationPaneTab,
   ResourceItem,
@@ -15,19 +15,19 @@ import { ResponseStatus } from '../../types';
 import { formatDate, padZero, safeChapterTitle } from '../shared/helpers';
 import { useDraftsStore, useModelStore, useSharedStore, useWidgetsStore } from '../store';
 import {
-  chapterDraftEditTabHasError,
-  firstChapterDraftEditTabWithError,
-} from './chapter-draft-edit-tab-errors';
+  standardChapterEditTabHasError,
+  firstStandardChapterEditTabWithError,
+} from './standard-chapter-edit-tab-errors';
 import {
-  buildChapterDraftPayload,
+  buildStandardChapterPayload,
   createAutosaveScheduler,
-  findChapterDraftTab,
+  findStandardChapterTab,
   withAttachedResource,
-} from './chapter-draft-edit-controller';
+} from './standard-chapter-edit-controller';
 import { normalizedBlocks } from './components/blocks/block-utils';
 
-export function useChapterDraftEdit(
-  props: ChapterDraftEditProps & SharedPageProps,
+export function useStandardChapterEdit(
+  props: StandardChapterEditProps & SharedPageProps,
   isTranslation: boolean,
 ) {
   const shared = useSharedStore();
@@ -122,35 +122,35 @@ export function useChapterDraftEdit(
   const tabs = computed((): NavigationPaneTab[] => [
     {
       label: 'Details',
-      hasError: chapterDraftEditTabHasError('details', errors.value),
+      hasError: standardChapterEditTabHasError('details', errors.value),
     },
     {
       label: 'Blocks',
-      hasError: chapterDraftEditTabHasError('blocks', errors.value),
+      hasError: standardChapterEditTabHasError('blocks', errors.value),
     },
     {
       label: 'Resources',
-      hasError: chapterDraftEditTabHasError('resources', errors.value),
+      hasError: standardChapterEditTabHasError('resources', errors.value),
     },
   ]);
 
   const currentTab = ref(
-    findChapterDraftTab(new URLSearchParams(window.location.search).get('tab')),
+    findStandardChapterTab(new URLSearchParams(window.location.search).get('tab')),
   );
 
   const onTabChange = (tab: string) => {
-    currentTab.value = findChapterDraftTab(tab);
+    currentTab.value = findStandardChapterTab(tab);
   };
 
   const focusFirstErroredTab = () => {
-    const tab = firstChapterDraftEditTabWithError(errors.value);
+    const tab = firstStandardChapterEditTabWithError(errors.value);
     if (tab) {
-      currentTab.value = findChapterDraftTab(tab);
+      currentTab.value = findStandardChapterTab(tab);
     }
   };
 
   const getPayload = () =>
-    buildChapterDraftPayload(
+    buildStandardChapterPayload(
       model.model as Record<string, unknown>,
       attachedResources.value,
     );

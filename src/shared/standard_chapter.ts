@@ -1,20 +1,20 @@
-import type { ChapterBlock, ChapterDraftAudio, ChapterDraftBundle } from '../types.js';
+import type { ChapterBlock, StandardChapterAudio, StandardChapterBundle } from '../types.js';
 import { cloneBlocksStructure } from './block_structure.js';
 import { COURSE_TEMPLATE_ID, DEVOTION_TEMPLATE_ID } from './story_helpers.js';
 
-export type ChapterDraftExtraField = 'devotionAudio';
+export type StandardChapterExtraField = 'devotionAudio';
 
-export type ChapterDraftTemplateId =
+export type StandardChapterTemplateId =
   typeof COURSE_TEMPLATE_ID | typeof DEVOTION_TEMPLATE_ID;
 
-export interface ChapterDraftTemplate {
-  id: ChapterDraftTemplateId;
+export interface StandardChapterTemplate {
+  id: StandardChapterTemplateId;
   includeScriptureBlock: boolean;
-  extraFields: readonly ChapterDraftExtraField[];
+  extraFields: readonly StandardChapterExtraField[];
   defaultBlockRole: string;
 }
 
-export const chapterDraftTemplates: Record<ChapterDraftTemplateId, ChapterDraftTemplate> =
+export const standardChapterTemplates: Record<StandardChapterTemplateId, StandardChapterTemplate> =
   {
     [COURSE_TEMPLATE_ID]: {
       id: COURSE_TEMPLATE_ID,
@@ -30,16 +30,16 @@ export const chapterDraftTemplates: Record<ChapterDraftTemplateId, ChapterDraftT
     },
   };
 
-export const isChapterDraftTemplate = (
+export const isStandardChapterTemplate = (
   template: string | null | undefined,
-): template is ChapterDraftTemplateId =>
-  typeof template === 'string' && template in chapterDraftTemplates;
+): template is StandardChapterTemplateId =>
+  typeof template === 'string' && template in standardChapterTemplates;
 
-export const chapterDraftTemplate = (
+export const standardChapterTemplate = (
   template: string | null | undefined,
-): ChapterDraftTemplate | undefined => {
-  if (!isChapterDraftTemplate(template)) return undefined;
-  return chapterDraftTemplates[template];
+): StandardChapterTemplate | undefined => {
+  if (!isStandardChapterTemplate(template)) return undefined;
+  return standardChapterTemplates[template];
 };
 
 const paddedDraftNumber = (number: number): string => String(number).padStart(2, '0');
@@ -64,9 +64,9 @@ export const parsedBundle = (value: unknown): Record<string, unknown> => {
 const stringValue = (value: unknown, fallback = ''): string =>
   typeof value === 'string' ? value : fallback;
 
-const emptyAudio = (): ChapterDraftAudio => ({ url: null, length: null });
+const emptyAudio = (): StandardChapterAudio => ({ url: null, length: null });
 
-const normalizedAudio = (value: unknown): ChapterDraftAudio => {
+const normalizedAudio = (value: unknown): StandardChapterAudio => {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
     return emptyAudio();
   }
@@ -79,10 +79,10 @@ const normalizedAudio = (value: unknown): ChapterDraftAudio => {
 };
 
 const extraFieldsFrom = (
-  template: ChapterDraftTemplate,
+  template: StandardChapterTemplate,
   bundle: Record<string, unknown>,
-): Partial<ChapterDraftBundle> => {
-  const extras: Partial<ChapterDraftBundle> = {};
+): Partial<StandardChapterBundle> => {
+  const extras: Partial<StandardChapterBundle> = {};
   if (template.extraFields.includes('devotionAudio')) {
     extras.devotionAudio = normalizedAudio(bundle.devotionAudio);
   }
@@ -90,30 +90,30 @@ const extraFieldsFrom = (
 };
 
 const emptyExtraFields = (
-  template: ChapterDraftTemplate,
-): Partial<ChapterDraftBundle> => {
-  const extras: Partial<ChapterDraftBundle> = {};
+  template: StandardChapterTemplate,
+): Partial<StandardChapterBundle> => {
+  const extras: Partial<StandardChapterBundle> = {};
   if (template.extraFields.includes('devotionAudio')) {
     extras.devotionAudio = emptyAudio();
   }
   return extras;
 };
 
-const requireChapterDraftTemplate = (
+const requireStandardChapterTemplate = (
   template: string | null | undefined,
-): ChapterDraftTemplate => {
-  const spec = chapterDraftTemplate(template);
+): StandardChapterTemplate => {
+  const spec = standardChapterTemplate(template);
   if (!spec) {
-    throw new Error(`Unknown chapter draft template: ${String(template)}`);
+    throw new Error(`Unknown standard chapter template: ${String(template)}`);
   }
   return spec;
 };
 
-export const createChapterDraftBundle = (
+export const createStandardChapterBundle = (
   template: string | null | undefined,
   number: number,
-): ChapterDraftBundle => {
-  const spec = requireChapterDraftTemplate(template);
+): StandardChapterBundle => {
+  const spec = requireStandardChapterTemplate(template);
 
   return {
     number: paddedDraftNumber(number),
@@ -126,14 +126,14 @@ export const createChapterDraftBundle = (
   };
 };
 
-export const normalizedChapterDraftBundle = (
+export const normalizedStandardChapterBundle = (
   template: string | null | undefined,
   value: unknown,
   draftNumber: number,
-): ChapterDraftBundle => {
-  const spec = requireChapterDraftTemplate(template);
+): StandardChapterBundle => {
+  const spec = requireStandardChapterTemplate(template);
   const bundle = parsedBundle(value);
-  const fallback = createChapterDraftBundle(spec.id, draftNumber);
+  const fallback = createStandardChapterBundle(spec.id, draftNumber);
 
   return {
     number: stringValue(bundle.number).trim() || fallback.number,
@@ -148,11 +148,11 @@ export const normalizedChapterDraftBundle = (
   };
 };
 
-export const translationChapterDraftBundle = (
+export const translationStandardChapterBundle = (
   template: string | null | undefined,
-  source: ChapterDraftBundle,
-): ChapterDraftBundle => {
-  const spec = requireChapterDraftTemplate(template);
+  source: StandardChapterBundle,
+): StandardChapterBundle => {
+  const spec = requireStandardChapterTemplate(template);
 
   return {
     ...source,

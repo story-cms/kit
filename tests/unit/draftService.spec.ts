@@ -1091,15 +1091,15 @@ test.describe('DraftService.editPage', () => {
     expect(service.editPage(true)).toBe('TranslationIndex');
   });
 
-  test('selects the chapter draft editor for devotion and course', () => {
+  test('selects the standard chapter editor for devotion and course', () => {
     const devotion = createStorySpec(1);
     devotion.template = 'devotion';
-    expect(new DraftService(devotion, cms).editPage(false)).toBe('ChapterDraftEdit');
-    expect(new DraftService(devotion, cms).editPage(true)).toBe('ChapterDraftEdit');
+    expect(new DraftService(devotion, cms).editPage(false)).toBe('StandardChapterEdit');
+    expect(new DraftService(devotion, cms).editPage(true)).toBe('StandardChapterEdit');
 
     const course = createStorySpec(1);
     course.template = 'course';
-    expect(new DraftService(course, cms).editPage(false)).toBe('ChapterDraftEdit');
-    expect(new DraftService(course, cms).editPage(true)).toBe('ChapterDraftEdit');
+    expect(new DraftService(course, cms).editPage(false)).toBe('StandardChapterEdit');
+    expect(new DraftService(course, cms).editPage(true)).toBe('StandardChapterEdit');
   });
 });

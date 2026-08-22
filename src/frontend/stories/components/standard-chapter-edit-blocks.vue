@@ -93,7 +93,7 @@ import { computed, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import type { ChapterBlock } from '../../../types';
-import { chapterDraftTemplate } from '../../../shared/chapter_draft';
+import { standardChapterTemplate } from '../../../shared/standard_chapter';
 import { cloneBlocksStructure } from '../../../shared/block_structure';
 import { useModelStore, useSharedStore } from '../../store';
 import AddBlockToolbar from './blocks/add-block-toolbar.vue';
@@ -143,7 +143,7 @@ useTranslationBlockFieldAlignment(
   computed(() => props.isTranslation && showSourceColumn.value),
 );
 
-const templateSpec = computed(() => chapterDraftTemplate(props.template));
+const templateSpec = computed(() => standardChapterTemplate(props.template));
 const includeScriptureBlock = computed(
   () => templateSpec.value?.includeScriptureBlock ?? false,
 );

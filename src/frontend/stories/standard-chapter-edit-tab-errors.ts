@@ -1,12 +1,12 @@
-export type ChapterDraftEditTab = 'details' | 'blocks' | 'resources';
+export type StandardChapterEditTab = 'details' | 'blocks' | 'resources';
 
-const CHAPTER_DRAFT_EDIT_TAB_ORDER: ChapterDraftEditTab[] = [
+const STANDARD_CHAPTER_EDIT_TAB_ORDER: StandardChapterEditTab[] = [
   'details',
   'blocks',
   'resources',
 ];
 
-const CHAPTER_DRAFT_EDIT_TAB_LABELS: Record<ChapterDraftEditTab, string> = {
+const STANDARD_CHAPTER_EDIT_TAB_LABELS: Record<StandardChapterEditTab, string> = {
   details: 'Details',
   blocks: 'Blocks',
   resources: 'Resources',
@@ -16,7 +16,7 @@ function matchesErrorPrefix(key: string, prefix: string): boolean {
   return key === prefix || key.startsWith(`${prefix}.`);
 }
 
-function errorKeyBelongsToTab(key: string, tab: ChapterDraftEditTab): boolean {
+function errorKeyBelongsToTab(key: string, tab: StandardChapterEditTab): boolean {
   if (tab === 'blocks') {
     return matchesErrorPrefix(key, 'bundle.blocks');
   }
@@ -30,19 +30,19 @@ function errorKeyBelongsToTab(key: string, tab: ChapterDraftEditTab): boolean {
   );
 }
 
-export function chapterDraftEditTabHasError(
-  tab: ChapterDraftEditTab,
+export function standardChapterEditTabHasError(
+  tab: StandardChapterEditTab,
   errors: Record<string, string | string[]>,
 ): boolean {
   return Object.keys(errors).some((key) => errorKeyBelongsToTab(key, tab));
 }
 
-export function firstChapterDraftEditTabWithError(
+export function firstStandardChapterEditTabWithError(
   errors: Record<string, string | string[]>,
 ): string | null {
-  for (const tab of CHAPTER_DRAFT_EDIT_TAB_ORDER) {
-    if (!chapterDraftEditTabHasError(tab, errors)) continue;
-    return CHAPTER_DRAFT_EDIT_TAB_LABELS[tab];
+  for (const tab of STANDARD_CHAPTER_EDIT_TAB_ORDER) {
+    if (!standardChapterEditTabHasError(tab, errors)) continue;
+    return STANDARD_CHAPTER_EDIT_TAB_LABELS[tab];
   }
 
   return null;

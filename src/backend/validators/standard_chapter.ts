@@ -1,11 +1,11 @@
 import vine, { SimpleMessagesProvider } from '@vinejs/vine';
 import type { SchemaTypes } from '@vinejs/vine/types';
-import type { ChapterDraftExtraField } from '../../shared/chapter_draft.js';
+import type { StandardChapterExtraField } from '../../shared/standard_chapter.js';
 import {
-  chapterDraftTemplate,
-  isChapterDraftTemplate,
-  type ChapterDraftTemplate,
-} from '../../shared/chapter_draft.js';
+  standardChapterTemplate,
+  isStandardChapterTemplate,
+  type StandardChapterTemplate,
+} from '../../shared/standard_chapter.js';
 import type { ValidatorType } from '../../types.js';
 import audioRule from './audio_rule.js';
 import {
@@ -14,7 +14,7 @@ import {
   requiredString,
 } from './chapter_blocks_validator.js';
 
-const extraFieldSchemas: Record<ChapterDraftExtraField, SchemaTypes> = {
+const extraFieldSchemas: Record<StandardChapterExtraField, SchemaTypes> = {
   devotionAudio: vine
     .object({
       url: vine.string().nullable(),
@@ -29,17 +29,17 @@ const chapterNoun = (chapterType?: string | null): string => {
   return noun || 'chapter';
 };
 
-const extraFieldSchema = (spec: ChapterDraftTemplate): Record<string, SchemaTypes> =>
+const extraFieldSchema = (spec: StandardChapterTemplate): Record<string, SchemaTypes> =>
   Object.fromEntries(spec.extraFields.map((field) => [field, extraFieldSchemas[field]]));
 
-export class ChapterDraftValidator implements ValidatorType {
-  readonly spec: ChapterDraftTemplate;
+export class StandardChapterValidator implements ValidatorType {
+  readonly spec: StandardChapterTemplate;
   readonly noun: string;
 
   constructor(template: string, chapterType?: string | null) {
-    const spec = chapterDraftTemplate(template);
+    const spec = standardChapterTemplate(template);
     if (!spec) {
-      throw new Error(`Unknown chapter draft template: ${template}`);
+      throw new Error(`Unknown standard chapter template: ${template}`);
     }
 
     this.spec = spec;
@@ -75,10 +75,10 @@ export class ChapterDraftValidator implements ValidatorType {
   }
 }
 
-export const chapterDraftValidator = (story: {
+export const standardChapterValidator = (story: {
   template?: string | null;
   chapterType?: string | null;
-}): ChapterDraftValidator | undefined => {
-  if (!isChapterDraftTemplate(story.template)) return undefined;
-  return new ChapterDraftValidator(story.template, story.chapterType);
+}): StandardChapterValidator | undefined => {
+  if (!isStandardChapterTemplate(story.template)) return undefined;
+  return new StandardChapterValidator(story.template, story.chapterType);
 };

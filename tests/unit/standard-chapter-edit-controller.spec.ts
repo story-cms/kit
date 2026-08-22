@@ -1,22 +1,22 @@
 import { expect, test } from '@playwright/test';
 import {
-  buildChapterDraftPayload,
+  buildStandardChapterPayload,
   createAutosaveScheduler,
-  findChapterDraftTab,
+  findStandardChapterTab,
   withAttachedResource,
-} from '../../src/frontend/stories/chapter-draft-edit-controller.js';
+} from '../../src/frontend/stories/standard-chapter-edit-controller.js';
 
-test.describe('chapter draft editor controller helpers', () => {
+test.describe('standard chapter editor controller helpers', () => {
   test('selects a known tab from the query and falls back to Details', () => {
-    expect(findChapterDraftTab('blocks')).toBe('Blocks');
-    expect(findChapterDraftTab('RESOURCES')).toBe('Resources');
-    expect(findChapterDraftTab('unknown')).toBe('Details');
-    expect(findChapterDraftTab(null)).toBe('Details');
+    expect(findStandardChapterTab('blocks')).toBe('Blocks');
+    expect(findStandardChapterTab('RESOURCES')).toBe('Resources');
+    expect(findStandardChapterTab('unknown')).toBe('Details');
+    expect(findStandardChapterTab(null)).toBe('Details');
   });
 
   test('builds course and devotion payloads without losing bundle-specific fields', () => {
     expect(
-      buildChapterDraftPayload(
+      buildStandardChapterPayload(
         {
           number: '03',
           title: 'Morning Devotion',
@@ -36,7 +36,7 @@ test.describe('chapter draft editor controller helpers', () => {
     });
 
     expect(
-      buildChapterDraftPayload(
+      buildStandardChapterPayload(
         {
           number: '04',
           title: 'Course Session',

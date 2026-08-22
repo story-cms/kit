@@ -1,7 +1,7 @@
 import Chapter from '../models/chapter.js';
 import Draft from '../models/draft.js';
 import type {
-  ChapterDraftEditProps,
+  StandardChapterEditProps,
   DraftEditProps,
   FieldMap,
   FieldSpec,
@@ -15,12 +15,12 @@ import type {
 import { BundleService } from './bundle_service.js';
 import { CmsService } from './cms_service.js';
 import {
-  createChapterDraftBundle,
-  isChapterDraftTemplate,
-  normalizedChapterDraftBundle,
-  translationChapterDraftBundle,
-  type ChapterDraftTemplateId,
-} from '../../shared/chapter_draft.js';
+  createStandardChapterBundle,
+  isStandardChapterTemplate,
+  normalizedStandardChapterBundle,
+  translationStandardChapterBundle,
+  type StandardChapterTemplateId,
+} from '../../shared/standard_chapter.js';
 import { previousChapterBlocks as loadPreviousChapterBlocks } from '../../shared/previous_chapter_blocks.js';
 
 export interface DraftResourceService {
@@ -35,7 +35,7 @@ export interface DraftServiceDependencies {
 export type DraftEditPage =
   | 'DraftIndex'
   | 'TranslationIndex'
-  | 'ChapterDraftEdit';
+  | 'StandardChapterEdit';
 
 export class DraftService {
   public story: StorySpec;
@@ -55,8 +55,8 @@ export class DraftService {
   }
 
   public editPage(isTranslation: boolean): DraftEditPage {
-    if (isChapterDraftTemplate(this.story.template)) {
-      return 'ChapterDraftEdit';
+    if (isStandardChapterTemplate(this.story.template)) {
+      return 'StandardChapterEdit';
     }
 
     return isTranslation ? 'TranslationIndex' : 'DraftIndex';
@@ -78,7 +78,7 @@ export class DraftService {
     number: number;
     providers: Providers;
     newDraftId?: number | string | null;
-  }): Promise<DraftEditProps | ChapterDraftEditProps | null> {
+  }): Promise<DraftEditProps | StandardChapterEditProps | null> {
     const specifier: StoryChapterSpecifier = {
       apiVersion: options.version.apiVersion,
       locale: options.version.locale,
@@ -94,7 +94,7 @@ export class DraftService {
     const isTranslation = options.version.locale !== this.cms.sourceLocale;
     const base = this.baseDraftEditProps(draft, lastPublished, options.providers);
 
-    if (isChapterDraftTemplate(this.story.template)) {
+    if (isStandardChapterTemplate(this.story.template)) {
       return this.blockTemplateEditProps({
         template: this.story.template,
         isTranslation,
@@ -122,8 +122,8 @@ export class DraftService {
   ): Promise<JSON<any> | null> {
     // is this the source language?
     if (version.locale === this.cms.sourceLocale) {
-      if (isChapterDraftTemplate(this.story.template)) {
-        return JSON.stringify(createChapterDraftBundle(this.story.template, number));
+      if (isStandardChapterTemplate(this.story.template)) {
+        return JSON.stringify(createStandardChapterBundle(this.story.template, number));
       }
 
       const bundleService = new BundleService(this.story.fields);
@@ -140,14 +140,14 @@ export class DraftService {
     const source = await Chapter.query().where(specifier).first();
     if (!source) return null;
 
-    if (isChapterDraftTemplate(this.story.template)) {
-      const normalized = normalizedChapterDraftBundle(
+    if (isStandardChapterTemplate(this.story.template)) {
+      const normalized = normalizedStandardChapterBundle(
         this.story.template,
         source.bundle,
         number,
       );
       return JSON.stringify(
-        translationChapterDraftBundle(this.story.template, normalized),
+        translationStandardChapterBundle(this.story.template, normalized),
       );
     }
 
@@ -322,15 +322,15 @@ export class DraftService {
   }
 
   private async blockTemplateEditProps(options: {
-    template: ChapterDraftTemplateId;
+    template: StandardChapterTemplateId;
     isTranslation: boolean;
     draft: Draft;
     base: DraftEditProps;
     specifier: StoryChapterSpecifier;
     newDraftId?: number | string | null;
-  }): Promise<ChapterDraftEditProps> {
+  }): Promise<StandardChapterEditProps> {
     const { template, isTranslation, draft, base, specifier, newDraftId } = options;
-    const normalized = normalizedChapterDraftBundle(
+    const normalized = normalizedStandardChapterBundle(
       template,
       draft.bundle,
       draft.number,
@@ -342,7 +342,7 @@ export class DraftService {
 
     const sourceChapter = isTranslation ? await this.loadSourceChapter(specifier) : null;
     const sourceBundle = isTranslation
-      ? normalizedChapterDraftBundle(template, sourceChapter?.bundle, draft.number)
+      ? normalizedStandardChapterBundle(template, sourceChapter?.bundle, draft.number)
       : undefined;
 
     const previousBlocks =
@@ -381,7 +381,7 @@ export class DraftService {
   }
 
   private async previousChapterBlocks(
-    template: ChapterDraftTemplateId,
+    template: StandardChapterTemplateId,
     specifier: StoryChapterSpecifier,
   ) {
     const loadBundle = async (spec: StoryChapterSpecifier) => {

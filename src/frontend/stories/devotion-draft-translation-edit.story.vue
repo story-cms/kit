@@ -1,7 +1,7 @@
 <template>
   <Story title="Devotion Draft Translation Edit" group="stories">
     <Variant title="Details tab" :setup-app="loadDetails">
-      <ChapterDraftEdit
+      <StandardChapterEdit
         :is-translation="true"
         :config="sharedProps.config"
         :user="sharedProps.user"
@@ -20,7 +20,7 @@
     </Variant>
 
     <Variant title="Blocks tab" :setup-app="loadBlocks">
-      <ChapterDraftEdit
+      <StandardChapterEdit
         :is-translation="true"
         :config="sharedProps.config"
         :user="sharedProps.user"
@@ -39,7 +39,7 @@
     </Variant>
 
     <Variant title="Spurgeon devotion · German" :setup-app="loadGermanDevotion">
-      <ChapterDraftEdit
+      <StandardChapterEdit
         :is-translation="true"
         :config="sharedProps.config"
         :user="sharedProps.user"
@@ -58,7 +58,7 @@
     </Variant>
 
     <Variant title="Validation errors on tabs" :setup-app="loadValidationErrors">
-      <ChapterDraftEdit
+      <StandardChapterEdit
         :is-translation="true"
         :config="sharedProps.config"
         :user="sharedProps.user"
@@ -79,7 +79,7 @@
 </template>
 
 <script setup lang="ts">
-import ChapterDraftEdit from './chapter-draft-edit.vue';
+import StandardChapterEdit from './standard-chapter-edit.vue';
 import {
   availableResources,
   devotionDraftEditStory,
@@ -95,7 +95,7 @@ import {
 } from '../test/mocks';
 import { useModelStore, useSharedStore } from '../store';
 import type { StoryHandler } from '../shared/helpers';
-import type { ChapterDraftEditBundle } from '../../types';
+import type { StandardChapterEditBundle } from '../../types';
 
 const realisticDevotionDraft = {
   ...sampleDevotionDraft,
@@ -109,7 +109,7 @@ const devotionVisibility = () => ({
   hidden: false,
 });
 
-const englishDevotionBundle: ChapterDraftEditBundle = {
+const englishDevotionBundle: StandardChapterEditBundle = {
   ...sampleDevotionDraftSourceBundle,
   number: '07',
   title: 'Looking Unto Jesus',
@@ -214,7 +214,7 @@ const englishDevotionBundle: ChapterDraftEditBundle = {
   ],
 };
 
-const germanDevotionBundle: ChapterDraftEditBundle = {
+const germanDevotionBundle: StandardChapterEditBundle = {
   ...englishDevotionBundle,
   title: 'Auf Jesus schauen',
   description:

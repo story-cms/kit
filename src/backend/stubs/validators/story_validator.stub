@@ -3,7 +3,7 @@
 }}}
 import vine, { SimpleMessagesProvider } from '@vinejs/vine';
 import {
-  chapterDraftValidator,
+  standardChapterValidator,
   type StorySpec,
   type ValidatorType,
 } from '@story-cms/kit';
@@ -45,8 +45,8 @@ export default class Story1 implements ValidatorType {
 }
 
 export const storyValidator = (story: StorySpec): ValidatorType => {
-  const chapterDraft = chapterDraftValidator(story);
-  if (chapterDraft) return chapterDraft;
+  const standardChapter = standardChapterValidator(story);
+  if (standardChapter) return standardChapter;
 
   switch (story.id) {
     case 1:

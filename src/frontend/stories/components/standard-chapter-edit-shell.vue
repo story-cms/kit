@@ -129,7 +129,7 @@
 import { ref, type VNode } from 'vue';
 import { Blocks, BookOpen, Eye, EyeOff, FolderClosed } from '@lucide/vue';
 
-import type { ChapterBlock, ChapterDraftEditProps, SharedPageProps } from '../../../types';
+import type { ChapterBlock, StandardChapterEditProps, SharedPageProps } from '../../../types';
 import { formatDate } from '../../shared/helpers';
 import AppLayout from '../../shared/app-layout.vue';
 import ContentSidebar from '../../shared/content-sidebar.vue';
@@ -138,12 +138,12 @@ import MobileAppPreview from '../../shared/mobile-app-preview.vue';
 import TabButton from '../../shared/tab-button.vue';
 import TabNavigation from '../../shared/tab-navigation.vue';
 import { useTranslationDraftLayout } from '../use-translation-draft-layout';
-import { useChapterDraftEdit } from '../use-chapter-draft-edit';
+import { useStandardChapterEdit } from '../use-standard-chapter-edit';
 import DraftEditActions from './draft-edit-actions.vue';
 import StoryEditResources from './story-edit-resources.vue';
 
 const props = withDefaults(
-  defineProps<ChapterDraftEditProps & SharedPageProps & { isTranslation?: boolean }>(),
+  defineProps<StandardChapterEditProps & SharedPageProps & { isTranslation?: boolean }>(),
   {
     isTranslation: false,
   },
@@ -177,7 +177,7 @@ const {
   submitDraft,
   tabs,
   updateBlocks,
-} = useChapterDraftEdit(props, props.isTranslation);
+} = useStandardChapterEdit(props, props.isTranslation);
 
 const tabIcons = {
   Details: BookOpen,

@@ -1,7 +1,7 @@
 <template>
-  <Story title="Chapter Draft Edit Blocks" group="stories" :setup-app="setupProviders">
+  <Story title="Standard Chapter Edit Blocks" group="stories" :setup-app="setupProviders">
     <Variant title="Default">
-      <ChapterDraftEditBlocks
+      <StandardChapterEditBlocks
         v-model:blocks="defaultBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
         :image-collection-id="sharedProps.config.imageCollectionId"
@@ -11,7 +11,7 @@
     </Variant>
 
     <Variant title="Empty">
-      <ChapterDraftEditBlocks
+      <StandardChapterEditBlocks
         v-model:blocks="emptyBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
         :image-collection-id="sharedProps.config.imageCollectionId"
@@ -21,7 +21,7 @@
     </Variant>
 
     <Variant title="Course">
-      <ChapterDraftEditBlocks
+      <StandardChapterEditBlocks
         v-model:blocks="courseBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
         :image-collection-id="sharedProps.config.imageCollectionId"
@@ -31,7 +31,7 @@
     </Variant>
 
     <Variant title="Devotion">
-      <ChapterDraftEditBlocks
+      <StandardChapterEditBlocks
         v-model:blocks="devotionBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
         :image-collection-id="sharedProps.config.imageCollectionId"
@@ -41,7 +41,7 @@
     </Variant>
 
     <Variant title="Mixed block kinds">
-      <ChapterDraftEditBlocks
+      <StandardChapterEditBlocks
         v-model:blocks="mixedBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
         :image-collection-id="sharedProps.config.imageCollectionId"
@@ -51,7 +51,7 @@
     </Variant>
 
     <Variant title="Reuse previous structure">
-      <ChapterDraftEditBlocks
+      <StandardChapterEditBlocks
         v-model:blocks="emptyBlocks"
         :previous-chapter-blocks="previousChapterBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
@@ -76,7 +76,7 @@ import {
 } from '../../test/mocks';
 import { useWidgetsStore } from '../../store';
 import type { StoryHandler } from '../../shared/helpers';
-import ChapterDraftEditBlocks from './chapter-draft-edit-blocks.vue';
+import StandardChapterEditBlocks from './standard-chapter-edit-blocks.vue';
 import { createEmptyContentBlock, createContentItem } from './blocks/block-utils';
 
 const setupProviders: StoryHandler = (): void => {
@@ -109,8 +109,8 @@ const devotionBlocks = ref<ChapterBlock[]>([
 </script>
 
 <docs lang="md">
-# Chapter Draft Edit Blocks
+# Standard Chapter Edit Blocks
 
-Shared block editor for chapter draft templates. Pass `template` to choose
+Shared block editor for standard chapter templates. Pass `template` to choose
 scripture-block support and block roles (`course` vs `devotion`).
 </docs>

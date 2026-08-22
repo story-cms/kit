@@ -15,6 +15,9 @@ _Avoid_: Chapter template (the template belongs to the Story; every chapter shar
 **Standard template**:
 A story template whose chapters use the shared block editor rather than a bespoke field schema. Course and devotion are the current members of this expandable set.
 
+**Standard Chapter**:
+A chapter whose story uses a standard template.
+
 **Chapter**:
 An ordered unit of a Story. The story's chapter type is the display noun (Session, Day, Episode).
 _Avoid_: Session, devotion, lesson (those are chapter types or story types)

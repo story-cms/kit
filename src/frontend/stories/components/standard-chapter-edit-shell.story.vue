@@ -1,16 +1,16 @@
 <template>
-  <Story title="Chapter Draft Edit Shell" group="stories">
+  <Story title="Standard Chapter Edit Shell" group="stories">
     <Variant title="Source" :setup-app="loadDetails">
-      <chapter-draft-edit-shell v-bind="sourceProps">
+      <StandardChapterEditShell v-bind="sourceProps">
         <template #details>
-          <chapter-draft-edit-details
+          <StandardChapterEditDetails
             :chapter-type="sourceProps.story.chapterType"
             :image-collection-id="sourceProps.config.imageCollectionId"
             :template="sourceProps.story.template"
           />
         </template>
         <template #blocks="{ blocks, updateBlocks }">
-          <chapter-draft-edit-blocks
+          <StandardChapterEditBlocks
             :blocks="blocks"
             :video-collection-id="sourceProps.config.videoCollectionId"
             :image-collection-id="sourceProps.config.imageCollectionId"
@@ -19,13 +19,13 @@
             @update:blocks="updateBlocks"
           />
         </template>
-      </chapter-draft-edit-shell>
+      </StandardChapterEditShell>
     </Variant>
 
     <Variant title="Translation" :setup-app="loadDetails">
-      <chapter-draft-edit-shell v-bind="translationProps" is-translation>
+      <StandardChapterEditShell v-bind="translationProps" is-translation>
         <template #details>
-          <chapter-draft-edit-details
+          <StandardChapterEditDetails
             :chapter-type="translationProps.story.chapterType"
             :image-collection-id="translationProps.config.imageCollectionId"
             :template="translationProps.story.template"
@@ -33,7 +33,7 @@
           />
         </template>
         <template #blocks="{ blocks, updateBlocks }">
-          <chapter-draft-edit-blocks
+          <StandardChapterEditBlocks
             :blocks="blocks"
             :video-collection-id="translationProps.config.videoCollectionId"
             :image-collection-id="translationProps.config.imageCollectionId"
@@ -43,7 +43,7 @@
             @update:blocks="updateBlocks"
           />
         </template>
-      </chapter-draft-edit-shell>
+      </StandardChapterEditShell>
     </Variant>
   </Story>
 </template>
@@ -58,9 +58,9 @@ import {
   sharedProps,
   spanish,
 } from '../../test/mocks';
-import ChapterDraftEditShell from './chapter-draft-edit-shell.vue';
-import ChapterDraftEditBlocks from './chapter-draft-edit-blocks.vue';
-import ChapterDraftEditDetails from './chapter-draft-edit-details.vue';
+import StandardChapterEditShell from './standard-chapter-edit-shell.vue';
+import StandardChapterEditBlocks from './standard-chapter-edit-blocks.vue';
+import StandardChapterEditDetails from './standard-chapter-edit-details.vue';
 
 const sourceProps = {
   ...sharedProps,
@@ -83,7 +83,7 @@ const loadDetails: StoryHandler = (context): void => {
 </script>
 
 <docs lang="md">
-# Chapter Draft Edit Shell
+# Standard Chapter Edit Shell
 
 Shared source and translation layout for course and devotion draft editors. The
 page wrappers provide their Details and Blocks implementations through scoped slots.

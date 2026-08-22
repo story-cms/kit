@@ -83,7 +83,7 @@ import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import type { FieldSpec } from '../../../types';
-import { chapterDraftTemplate } from '../../../shared/chapter_draft';
+import { standardChapterTemplate } from '../../../shared/standard_chapter';
 import { buildMediaFieldSpec } from '../../../shared/media_helpers';
 import { useModelStore, useSharedStore } from '../../store';
 import AudioField from '../../fields/audio-field.vue';
@@ -116,12 +116,12 @@ const translationDir = computed(() => (shared.isRtl ? 'rtl' : 'ltr'));
 
 const chapterLabel = computed(() => props.chapterType?.trim() || 'Chapter');
 
-const numberFieldId = computed(() => 'chapter-draft-number');
+const numberFieldId = computed(() => 'standard-chapter-number');
 
 const chapterNumber = computed(() => model.getField('number', ''));
 
 const showDevotionAudio = computed(
-  () => chapterDraftTemplate(props.template)?.extraFields.includes('devotionAudio') ?? false,
+  () => standardChapterTemplate(props.template)?.extraFields.includes('devotionAudio') ?? false,
 );
 
 const numberField = computed((): FieldSpec => ({

@@ -1,7 +1,7 @@
 <template>
   <Story title="Devotion Draft Edit" group="stories">
     <Variant title="Create" :setup-app="loadCreate">
-      <ChapterDraftEdit
+      <StandardChapterEdit
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
@@ -19,7 +19,7 @@
     </Variant>
 
     <Variant title="Chapter 2 create" :setup-app="loadChapterTwoCreate">
-      <ChapterDraftEdit
+      <StandardChapterEdit
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
@@ -38,7 +38,7 @@
     </Variant>
 
     <Variant title="Edit" :setup-app="loadEdit">
-      <ChapterDraftEdit
+      <StandardChapterEdit
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
@@ -56,7 +56,7 @@
     </Variant>
 
     <Variant title="Blocks tab" :setup-app="loadBlocksTab">
-      <ChapterDraftEdit
+      <StandardChapterEdit
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
@@ -73,7 +73,7 @@
     </Variant>
 
     <Variant title="Devotion" :setup-app="loadDevotionBlocksTab">
-      <ChapterDraftEdit
+      <StandardChapterEdit
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
@@ -90,7 +90,7 @@
     </Variant>
 
     <Variant title="Resources tab" :setup-app="loadResourcesTab">
-      <ChapterDraftEdit
+      <StandardChapterEdit
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
@@ -107,7 +107,7 @@
     </Variant>
 
     <Variant title="Validation errors on tabs" :setup-app="loadValidationErrors">
-      <ChapterDraftEdit
+      <StandardChapterEdit
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
@@ -124,7 +124,7 @@
     </Variant>
 
     <Variant title="Edit review: Submit" :setup-app="loadEdit">
-      <ChapterDraftEdit
+      <StandardChapterEdit
         :config="sharedProps.config"
         :user="editorUser"
         :language="sharedProps.language"
@@ -141,7 +141,7 @@
     </Variant>
 
     <Variant title="Edit review: Request change" :setup-app="loadEdit">
-      <ChapterDraftEdit
+      <StandardChapterEdit
         :config="sharedProps.config"
         :user="adminUser"
         :language="sharedProps.language"
@@ -158,7 +158,7 @@
     </Variant>
 
     <Variant title="Mark Ready" :setup-app="loadEdit">
-      <ChapterDraftEdit
+      <StandardChapterEdit
         :config="sharedProps.config"
         :user="adminUser"
         :language="sharedProps.language"
@@ -177,7 +177,7 @@
 </template>
 
 <script setup lang="ts">
-import ChapterDraftEdit from './chapter-draft-edit.vue';
+import StandardChapterEdit from './standard-chapter-edit.vue';
 import ModelControl from '../test/model-control.vue';
 import {
   adminUser,

@@ -1,11 +1,11 @@
 import { expect, test } from '@playwright/test';
 import {
-  chapterDraftTemplate,
-  createChapterDraftBundle,
-  isChapterDraftTemplate,
-  normalizedChapterDraftBundle,
-  translationChapterDraftBundle,
-} from '../../src/shared/chapter_draft.js';
+  standardChapterTemplate,
+  createStandardChapterBundle,
+  isStandardChapterTemplate,
+  normalizedStandardChapterBundle,
+  translationStandardChapterBundle,
+} from '../../src/shared/standard_chapter.js';
 import { isCourseTemplate, isDevotionTemplate } from '../../src/shared/story_helpers.js';
 import { resourceIds } from '../../src/frontend/stories/components/resource-utils.js';
 
@@ -23,20 +23,20 @@ const titleBlock = {
   },
 };
 
-test.describe('chapter draft templates', () => {
-  test('recognises only registered chapter draft templates', () => {
-    expect(isChapterDraftTemplate('course')).toBe(true);
-    expect(isChapterDraftTemplate('devotion')).toBe(true);
-    expect(isChapterDraftTemplate('Course')).toBe(false);
-    expect(isChapterDraftTemplate('custom-template')).toBe(false);
-    expect(isChapterDraftTemplate(undefined)).toBe(false);
+test.describe('standard chapter templates', () => {
+  test('recognises only registered standard chapter templates', () => {
+    expect(isStandardChapterTemplate('course')).toBe(true);
+    expect(isStandardChapterTemplate('devotion')).toBe(true);
+    expect(isStandardChapterTemplate('Course')).toBe(false);
+    expect(isStandardChapterTemplate('custom-template')).toBe(false);
+    expect(isStandardChapterTemplate(undefined)).toBe(false);
   });
 
   test('describes scripture and extra fields per template', () => {
-    expect(chapterDraftTemplate('course')?.includeScriptureBlock).toBe(false);
-    expect(chapterDraftTemplate('course')?.extraFields).toEqual([]);
-    expect(chapterDraftTemplate('devotion')?.includeScriptureBlock).toBe(true);
-    expect(chapterDraftTemplate('devotion')?.extraFields).toEqual(['devotionAudio']);
+    expect(standardChapterTemplate('course')?.includeScriptureBlock).toBe(false);
+    expect(standardChapterTemplate('course')?.extraFields).toEqual([]);
+    expect(standardChapterTemplate('devotion')?.includeScriptureBlock).toBe(true);
+    expect(standardChapterTemplate('devotion')?.extraFields).toEqual(['devotionAudio']);
   });
 
   test('matches only the exact course and devotion identifiers', () => {
@@ -47,9 +47,9 @@ test.describe('chapter draft templates', () => {
   });
 });
 
-test.describe('createChapterDraftBundle', () => {
+test.describe('createStandardChapterBundle', () => {
   test('creates a course bundle without extra fields', () => {
-    expect(createChapterDraftBundle('course', 1)).toEqual({
+    expect(createStandardChapterBundle('course', 1)).toEqual({
       number: '01',
       title: '',
       description: '',
@@ -57,11 +57,11 @@ test.describe('createChapterDraftBundle', () => {
       blocks: [],
       resources: [],
     });
-    expect(createChapterDraftBundle('course', 12).number).toBe('12');
+    expect(createStandardChapterBundle('course', 12).number).toBe('12');
   });
 
   test('creates a devotion bundle with empty audio', () => {
-    expect(createChapterDraftBundle('devotion', 1)).toEqual({
+    expect(createStandardChapterBundle('devotion', 1)).toEqual({
       number: '01',
       title: '',
       description: '',
@@ -70,14 +70,14 @@ test.describe('createChapterDraftBundle', () => {
       blocks: [],
       resources: [],
     });
-    expect(createChapterDraftBundle('devotion', 12).number).toBe('12');
+    expect(createStandardChapterBundle('devotion', 12).number).toBe('12');
   });
 });
 
-test.describe('normalizedChapterDraftBundle', () => {
+test.describe('normalizedStandardChapterBundle', () => {
   test('normalizes a partial course bundle without discarding content', () => {
     expect(
-      normalizedChapterDraftBundle(
+      normalizedStandardChapterBundle(
         'course',
         {
           title: 'Existing session',
@@ -98,7 +98,7 @@ test.describe('normalizedChapterDraftBundle', () => {
 
   test('normalizes a JSON string course bundle', () => {
     expect(
-      normalizedChapterDraftBundle(
+      normalizedStandardChapterBundle(
         'course',
         JSON.stringify({
           number: '07',
@@ -114,7 +114,7 @@ test.describe('normalizedChapterDraftBundle', () => {
 
   test('normalizes a partial devotion bundle and legacy audio', () => {
     expect(
-      normalizedChapterDraftBundle(
+      normalizedStandardChapterBundle(
         'devotion',
         {
           title: 'Existing devotion',
@@ -137,7 +137,7 @@ test.describe('normalizedChapterDraftBundle', () => {
 
   test('normalizes a JSON string and nullable audio metadata', () => {
     expect(
-      normalizedChapterDraftBundle(
+      normalizedStandardChapterBundle(
         'devotion',
         JSON.stringify({
           number: '07',
@@ -152,9 +152,9 @@ test.describe('normalizedChapterDraftBundle', () => {
   });
 });
 
-test.describe('translationChapterDraftBundle', () => {
+test.describe('translationStandardChapterBundle', () => {
   test('keeps cover image and block structure, clears locale-specific content', () => {
-    const source = normalizedChapterDraftBundle(
+    const source = normalizedStandardChapterBundle(
       'devotion',
       {
         number: '01',
@@ -187,7 +187,7 @@ test.describe('translationChapterDraftBundle', () => {
       1,
     );
 
-    const translated = translationChapterDraftBundle('devotion', source);
+    const translated = translationStandardChapterBundle('devotion', source);
 
     expect(translated.title).toBe('');
     expect(translated.description).toBe('');

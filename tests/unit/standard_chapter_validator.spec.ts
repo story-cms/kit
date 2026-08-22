@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test';
 import vine from '@vinejs/vine';
 import {
-  ChapterDraftValidator,
-  chapterDraftValidator,
-} from '../../src/backend/validators/chapter_draft.js';
+  StandardChapterValidator,
+  standardChapterValidator,
+} from '../../src/backend/validators/standard_chapter.js';
 import { COURSE_TEMPLATE_ID, DEVOTION_TEMPLATE_ID } from '../../src/shared/story_helpers.js';
 
 const visibility = {
@@ -76,7 +76,7 @@ type ValidationError = {
 };
 
 async function validationErrors(
-  validator: ChapterDraftValidator,
+  validator: StandardChapterValidator,
   data: unknown,
 ): Promise<Array<{ message: string; field: string }>> {
   try {
@@ -91,29 +91,29 @@ async function validationErrors(
 }
 
 async function validationFields(
-  validator: ChapterDraftValidator,
+  validator: StandardChapterValidator,
   data: unknown,
 ): Promise<string[]> {
   return (await validationErrors(validator, data)).map((error) => error.field);
 }
 
-test.describe('ChapterDraftValidator', () => {
+test.describe('StandardChapterValidator', () => {
   test.beforeEach(() => {
     vine.convertEmptyStringsToNull = false;
   });
 
-  test('returns a validator for chapter draft templates only', () => {
+  test('returns a validator for standard chapter templates only', () => {
     expect(
-      chapterDraftValidator({ template: COURSE_TEMPLATE_ID, chapterType: 'Session' }),
-    ).toBeInstanceOf(ChapterDraftValidator);
+      standardChapterValidator({ template: COURSE_TEMPLATE_ID, chapterType: 'Session' }),
+    ).toBeInstanceOf(StandardChapterValidator);
     expect(
-      chapterDraftValidator({ template: DEVOTION_TEMPLATE_ID, chapterType: 'Day' }),
-    ).toBeInstanceOf(ChapterDraftValidator);
-    expect(chapterDraftValidator({ template: 'stations' })).toBeUndefined();
+      standardChapterValidator({ template: DEVOTION_TEMPLATE_ID, chapterType: 'Day' }),
+    ).toBeInstanceOf(StandardChapterValidator);
+    expect(standardChapterValidator({ template: 'stations' })).toBeUndefined();
   });
 
   test('uses the chapter type in required-field messages', async () => {
-    const validator = new ChapterDraftValidator(COURSE_TEMPLATE_ID, 'Session');
+    const validator = new StandardChapterValidator(COURSE_TEMPLATE_ID, 'Session');
     const errors = await validationErrors(validator, {
       bundle: {
         ...validCourseBundle().bundle,
@@ -133,7 +133,7 @@ test.describe('ChapterDraftValidator', () => {
   });
 
   test.describe('course template', () => {
-    const validator = () => new ChapterDraftValidator(COURSE_TEMPLATE_ID, 'Session');
+    const validator = () => new StandardChapterValidator(COURSE_TEMPLATE_ID, 'Session');
 
     test('accepts a valid block-based bundle', async () => {
       const result = await validator().validate(validCourseBundle());
@@ -178,7 +178,7 @@ test.describe('ChapterDraftValidator', () => {
   });
 
   test.describe('devotion template', () => {
-    const validator = () => new ChapterDraftValidator(DEVOTION_TEMPLATE_ID, 'Devotion');
+    const validator = () => new StandardChapterValidator(DEVOTION_TEMPLATE_ID, 'Devotion');
 
     test('accepts valid mixed blocks and optional fields', async () => {
       const result = await validator().validate(validDevotionBundle());
