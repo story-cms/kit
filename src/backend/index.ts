@@ -53,8 +53,7 @@ export * from './validators/auth.js';
 export * from './validators/invitation.js';
 export * from './validators/bundle.js';
 export * from './validators/chapter.js';
-export * from './validators/course.js';
-export * from './validators/devotion_draft.js';
+export * from './validators/chapter_draft.js';
 export {
   createChapterDraftBundle,
   normalizedChapterDraftBundle,

@@ -5,8 +5,7 @@ import { COURSE_TEMPLATE_ID, DEVOTION_TEMPLATE_ID } from './story_helpers.js';
 export type ChapterDraftExtraField = 'devotionAudio';
 
 export type ChapterDraftTemplateId =
-  | typeof COURSE_TEMPLATE_ID
-  | typeof DEVOTION_TEMPLATE_ID;
+  typeof COURSE_TEMPLATE_ID | typeof DEVOTION_TEMPLATE_ID;
 
 export interface ChapterDraftTemplate {
   id: ChapterDraftTemplateId;
@@ -15,23 +14,21 @@ export interface ChapterDraftTemplate {
   defaultBlockRole: string;
 }
 
-export const chapterDraftTemplates: Record<
-  ChapterDraftTemplateId,
-  ChapterDraftTemplate
-> = {
-  [COURSE_TEMPLATE_ID]: {
-    id: COURSE_TEMPLATE_ID,
-    includeScriptureBlock: false,
-    extraFields: [],
-    defaultBlockRole: 'introduction',
-  },
-  [DEVOTION_TEMPLATE_ID]: {
-    id: DEVOTION_TEMPLATE_ID,
-    includeScriptureBlock: true,
-    extraFields: ['devotionAudio'],
-    defaultBlockRole: 'introduction',
-  },
-};
+export const chapterDraftTemplates: Record<ChapterDraftTemplateId, ChapterDraftTemplate> =
+  {
+    [COURSE_TEMPLATE_ID]: {
+      id: COURSE_TEMPLATE_ID,
+      includeScriptureBlock: false,
+      extraFields: [],
+      defaultBlockRole: 'introduction',
+    },
+    [DEVOTION_TEMPLATE_ID]: {
+      id: DEVOTION_TEMPLATE_ID,
+      includeScriptureBlock: true,
+      extraFields: ['devotionAudio'],
+      defaultBlockRole: 'introduction',
+    },
+  };
 
 export const isChapterDraftTemplate = (
   template: string | null | undefined,
