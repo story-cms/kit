@@ -1,53 +1,63 @@
 <template>
-  <Story title="Devotion Draft Edit Blocks" group="stories" :setup-app="setupProviders">
+  <Story title="Chapter Draft Edit Blocks" group="stories" :setup-app="setupProviders">
     <Variant title="Default">
-      <DevotionDraftEditBlocks
+      <ChapterDraftEditBlocks
         v-model:blocks="defaultBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
         :image-collection-id="sharedProps.config.imageCollectionId"
+        template="devotion"
+        chapter-type="Day"
       />
     </Variant>
 
     <Variant title="Empty">
-      <DevotionDraftEditBlocks
+      <ChapterDraftEditBlocks
         v-model:blocks="emptyBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
         :image-collection-id="sharedProps.config.imageCollectionId"
+        template="devotion"
+        chapter-type="Day"
       />
     </Variant>
 
-    <Variant title="Multiple blocks">
-      <DevotionDraftEditBlocks
-        v-model:blocks="multipleBlocks"
+    <Variant title="Course">
+      <ChapterDraftEditBlocks
+        v-model:blocks="courseBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
         :image-collection-id="sharedProps.config.imageCollectionId"
-      />
-    </Variant>
-
-    <Variant title="Mixed block kinds">
-      <DevotionDraftEditBlocks
-        v-model:blocks="mixedBlocks"
-        :video-collection-id="sharedProps.config.videoCollectionId"
-        :image-collection-id="sharedProps.config.imageCollectionId"
+        template="course"
+        chapter-type="Session"
       />
     </Variant>
 
     <Variant title="Devotion">
-      <DevotionDraftEditBlocks
+      <ChapterDraftEditBlocks
         v-model:blocks="devotionBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
         :image-collection-id="sharedProps.config.imageCollectionId"
+        template="devotion"
         chapter-type="Devotion"
       />
     </Variant>
 
+    <Variant title="Mixed block kinds">
+      <ChapterDraftEditBlocks
+        v-model:blocks="mixedBlocks"
+        :video-collection-id="sharedProps.config.videoCollectionId"
+        :image-collection-id="sharedProps.config.imageCollectionId"
+        template="devotion"
+        chapter-type="Day"
+      />
+    </Variant>
+
     <Variant title="Reuse previous structure">
-      <DevotionDraftEditBlocks
+      <ChapterDraftEditBlocks
         v-model:blocks="emptyBlocks"
         :previous-chapter-blocks="previousChapterBlocks"
         :video-collection-id="sharedProps.config.videoCollectionId"
         :image-collection-id="sharedProps.config.imageCollectionId"
-        chapter-type="Devotion"
+        template="devotion"
+        chapter-type="Day"
       />
     </Variant>
   </Story>
@@ -60,12 +70,13 @@ import type { ChapterBlock } from '../../../types';
 import {
   mockResourceProviders,
   sampleMixedChapterBlocks,
+  samplePreviousCourseChapterBlocks,
   samplePreviousDevotionChapterBlocks,
   sharedProps,
 } from '../../test/mocks';
 import { useWidgetsStore } from '../../store';
 import type { StoryHandler } from '../../shared/helpers';
-import DevotionDraftEditBlocks from './devotion-draft-edit-blocks.vue';
+import ChapterDraftEditBlocks from './chapter-draft-edit-blocks.vue';
 import { createEmptyContentBlock, createContentItem } from './blocks/block-utils';
 
 const setupProviders: StoryHandler = (): void => {
@@ -73,49 +84,9 @@ const setupProviders: StoryHandler = (): void => {
 };
 
 const defaultBlocks = ref<ChapterBlock[]>([createEmptyContentBlock()]);
-
 const emptyBlocks = ref<ChapterBlock[]>([]);
-
 const previousChapterBlocks = samplePreviousDevotionChapterBlocks;
-
-const multipleBlocks = ref<ChapterBlock[]>([
-  {
-    ...createEmptyContentBlock(),
-    blockName: 'Introduction',
-    displayName: 'Session Introduction',
-    blockRole: 'introduction',
-    style: 'primary',
-    content: 'Welcome to this session.',
-  },
-  {
-    ...createEmptyContentBlock(),
-    blockName: 'External Link',
-    displayName: 'Further Reading',
-    blockRole: 'summary',
-    style: 'secondary',
-    content: 'https://example.com/article',
-  },
-  {
-    ...createEmptyContentBlock(),
-    blockName: 'Summary',
-    displayName: 'Session Summary',
-    blockRole: 'summary',
-    style: 'primary',
-    content: 'Key takeaways from today.',
-    visibility: { presenter: true, personal: false, inNavigation: true, hidden: false },
-  },
-  {
-    ...createEmptyContentBlock(),
-    blockName: 'Session Video',
-    displayName: 'Watch Session',
-    blockRole: 'introduction',
-    style: 'tertiary',
-    content: '',
-    items: [createContentItem('video')],
-  },
-  createEmptyContentBlock(),
-]);
-
+const courseBlocks = ref<ChapterBlock[]>([...samplePreviousCourseChapterBlocks]);
 const mixedBlocks = ref<ChapterBlock[]>([...sampleMixedChapterBlocks]);
 
 const devotionBlocks = ref<ChapterBlock[]>([
@@ -138,7 +109,8 @@ const devotionBlocks = ref<ChapterBlock[]>([
 </script>
 
 <docs lang="md">
-# Devotion Draft Edit Blocks
+# Chapter Draft Edit Blocks
 
-Content block editor for the Blocks tab on devotion draft edit pages. Supports content, title, and scripture blocks with add, remove, reorder, collapse, visibility toggles, leaders notes, and reuse previous structure on chapter 2+.
+Shared block editor for chapter draft templates. Pass `template` to choose
+scripture-block support and block roles (`course` vs `devotion`).
 </docs>

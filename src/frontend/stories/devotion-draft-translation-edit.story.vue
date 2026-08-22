@@ -1,7 +1,8 @@
 <template>
   <Story title="Devotion Draft Translation Edit" group="stories">
     <Variant title="Details tab" :setup-app="loadDetails">
-      <DevotionDraftTranslationEdit
+      <ChapterDraftEdit
+        :is-translation="true"
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="spanish"
@@ -19,7 +20,8 @@
     </Variant>
 
     <Variant title="Blocks tab" :setup-app="loadBlocks">
-      <DevotionDraftTranslationEdit
+      <ChapterDraftEdit
+        :is-translation="true"
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="spanish"
@@ -37,7 +39,8 @@
     </Variant>
 
     <Variant title="Spurgeon devotion · German" :setup-app="loadGermanDevotion">
-      <DevotionDraftTranslationEdit
+      <ChapterDraftEdit
+        :is-translation="true"
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="german"
@@ -55,7 +58,8 @@
     </Variant>
 
     <Variant title="Validation errors on tabs" :setup-app="loadValidationErrors">
-      <DevotionDraftTranslationEdit
+      <ChapterDraftEdit
+        :is-translation="true"
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="spanish"
@@ -75,7 +79,7 @@
 </template>
 
 <script setup lang="ts">
-import DevotionDraftTranslationEdit from './devotion-draft-translation-edit.vue';
+import ChapterDraftEdit from './chapter-draft-edit.vue';
 import {
   availableResources,
   devotionDraftEditStory,
@@ -91,7 +95,7 @@ import {
 } from '../test/mocks';
 import { useModelStore, useSharedStore } from '../store';
 import type { StoryHandler } from '../shared/helpers';
-import type { DevotionDraftEditBundle } from '../../types';
+import type { ChapterDraftEditBundle } from '../../types';
 
 const realisticDevotionDraft = {
   ...sampleDevotionDraft,
@@ -105,7 +109,7 @@ const devotionVisibility = () => ({
   hidden: false,
 });
 
-const englishDevotionBundle: DevotionDraftEditBundle = {
+const englishDevotionBundle: ChapterDraftEditBundle = {
   ...sampleDevotionDraftSourceBundle,
   number: '07',
   title: 'Looking Unto Jesus',
@@ -210,7 +214,7 @@ const englishDevotionBundle: DevotionDraftEditBundle = {
   ],
 };
 
-const germanDevotionBundle: DevotionDraftEditBundle = {
+const germanDevotionBundle: ChapterDraftEditBundle = {
   ...englishDevotionBundle,
   title: 'Auf Jesus schauen',
   description:

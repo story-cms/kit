@@ -1,8 +1,9 @@
 import type { ChapterBlock, ChapterContentBlock, ChapterContentItem } from '../types.js';
 
-const createBlockId = (): string => crypto.randomUUID();
+export const createBlockId = (): string => crypto.randomUUID();
 
-const blockKind = (block: ChapterBlock): ChapterBlock['kind'] => block.kind ?? 'content';
+export const blockKind = (block: ChapterBlock): ChapterBlock['kind'] =>
+  block.kind ?? 'content';
 
 const cloneContentItemStructure = (item: ChapterContentItem): ChapterContentItem => {
   const id = createBlockId();

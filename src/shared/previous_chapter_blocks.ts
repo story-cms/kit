@@ -1,12 +1,15 @@
 import type { ChapterBlock, StoryChapterSpecifier } from '../types.js';
-import { normalizedCourseDraftBundle } from './course_draft.js';
-import { normalizedDevotionDraftBundle } from './devotion_draft.js';
+import {
+  isChapterDraftTemplate,
+  normalizedChapterDraftBundle,
+} from './chapter_draft.js';
 
-export const previousDevotionChapterBlocks = async (
+export const previousChapterBlocks = async (
+  template: string | null | undefined,
   specifier: StoryChapterSpecifier,
   loadBundle: (spec: StoryChapterSpecifier) => Promise<unknown | null>,
 ): Promise<ChapterBlock[]> => {
-  if (specifier.number <= 1) {
+  if (specifier.number <= 1 || !isChapterDraftTemplate(template)) {
     return [];
   }
 
@@ -17,23 +20,5 @@ export const previousDevotionChapterBlocks = async (
     return [];
   }
 
-  return normalizedDevotionDraftBundle(bundle, previousNumber).blocks;
-};
-
-export const previousCourseChapterBlocks = async (
-  specifier: StoryChapterSpecifier,
-  loadBundle: (spec: StoryChapterSpecifier) => Promise<unknown | null>,
-): Promise<ChapterBlock[]> => {
-  if (specifier.number <= 1) {
-    return [];
-  }
-
-  const previousNumber = specifier.number - 1;
-  const bundle = await loadBundle({ ...specifier, number: previousNumber });
-
-  if (bundle === null || bundle === undefined) {
-    return [];
-  }
-
-  return normalizedCourseDraftBundle(bundle, previousNumber).blocks;
+  return normalizedChapterDraftBundle(template, bundle, previousNumber).blocks;
 };

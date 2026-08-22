@@ -22,7 +22,7 @@ These rules signal intent; do not mass-rename legacy code
 | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | `isX` / `hasX` / `canX`                             | Boolean predicates                                                                                          |
 | `toX`                                               | Pure converters                                                                                             |
-| `getX` / `fetchX` / `loadX` / `findX`               | Retrieval; omit `get`/`fetch` when bare domain name is clear (`blockKind`, `previousDevotionChapterBlocks`) |
+| `getX` / `fetchX` / `loadX` / `findX`               | Retrieval; omit `get`/`fetch` when bare domain name is clear (`blockKind`, `previousChapterBlocks`) |
 | `parseX` / `normalizeX` / `normalizedX` / `formatX` | Parse; `normalizedX` = pure return transform; `normalizeX` = in-place/async processing                      |
 | `compareX` / `sortX`                                | Sort helpers                                                                                                |
 

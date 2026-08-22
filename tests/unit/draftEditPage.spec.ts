@@ -7,14 +7,11 @@ test.describe('draftEditPage', () => {
     expect(draftEditPage('custom-template', true)).toBe('TranslationIndex');
   });
 
-  test('selects devotion editor pages', () => {
-    expect(draftEditPage('devotion', false)).toBe('DevotionDraftEdit');
-    expect(draftEditPage('devotion', true)).toBe('DevotionDraftTranslationEdit');
-  });
-
-  test('selects course editor pages', () => {
-    expect(draftEditPage('course', false)).toBe('CourseDraftEdit');
-    expect(draftEditPage('course', true)).toBe('CourseDraftTranslationEdit');
+  test('selects the shared chapter draft editor for devotion and course', () => {
+    expect(draftEditPage('devotion', false)).toBe('ChapterDraftEdit');
+    expect(draftEditPage('devotion', true)).toBe('ChapterDraftEdit');
+    expect(draftEditPage('course', false)).toBe('ChapterDraftEdit');
+    expect(draftEditPage('course', true)).toBe('ChapterDraftEdit');
   });
 
   test('falls back to the default editor for missing templates', () => {

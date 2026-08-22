@@ -58,6 +58,23 @@
       <ImageField :field="coverImageField" :is-nested="true" />
     </div>
     <ImageField v-else :field="coverImageField" :is-nested="true" />
+
+    <template v-if="showDevotionAudio">
+      <div v-if="isTranslation && showSourceColumn" class="mt-4 grid grid-cols-2 gap-x-4" dir="ltr">
+        <div :dir="translationDir">
+          <AudioField :field="devotionAudioField" :is-nested="true" />
+        </div>
+        <div dir="ltr">
+          <AudioField :field="devotionAudioField" :is-nested="true" :is-read-only="true" />
+        </div>
+      </div>
+      <div v-else-if="isTranslation" class="mt-4" :dir="translationDir">
+        <AudioField :field="devotionAudioField" :is-nested="true" />
+      </div>
+      <div v-else class="mt-4">
+        <AudioField :field="devotionAudioField" :is-nested="true" />
+      </div>
+    </template>
   </div>
 </template>
 
@@ -66,8 +83,10 @@ import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import type { FieldSpec } from '../../../types';
+import { chapterDraftTemplate } from '../../../shared/chapter_draft';
 import { buildMediaFieldSpec } from '../../../shared/media_helpers';
 import { useModelStore, useSharedStore } from '../../store';
+import AudioField from '../../fields/audio-field.vue';
 import ImageField from '../../fields/image-field.vue';
 import MarkdownField from '../../fields/markdown-field.vue';
 import StringField from '../../fields/string-field.vue';
@@ -76,11 +95,16 @@ const props = withDefaults(
   defineProps<{
     chapterType?: string | null;
     imageCollectionId?: string;
+    audioCollectionId?: string;
+    template?: string | null;
     isTranslation?: boolean;
   }>(),
   {
     isTranslation: false,
+    chapterType: null,
     imageCollectionId: '',
+    audioCollectionId: '',
+    template: null,
   },
 );
 
@@ -92,9 +116,13 @@ const translationDir = computed(() => (shared.isRtl ? 'rtl' : 'ltr'));
 
 const chapterLabel = computed(() => props.chapterType?.trim() || 'Chapter');
 
-const numberFieldId = computed(() => 'course-draft-number');
+const numberFieldId = computed(() => 'chapter-draft-number');
 
 const chapterNumber = computed(() => model.getField('number', ''));
+
+const showDevotionAudio = computed(
+  () => chapterDraftTemplate(props.template)?.extraFields.includes('devotionAudio') ?? false,
+);
 
 const numberField = computed((): FieldSpec => ({
   name: 'number',
@@ -124,6 +152,13 @@ const coverImageField = computed((): FieldSpec =>
   buildMediaFieldSpec('image', props.imageCollectionId, {
     label: 'Cover Image',
     name: 'coverImage',
+  }),
+);
+
+const devotionAudioField = computed((): FieldSpec =>
+  buildMediaFieldSpec('audio', props.audioCollectionId, {
+    label: 'Devotion Audio',
+    name: 'devotionAudio',
   }),
 );
 </script>

@@ -1,8 +1,6 @@
 import type {
-  CourseDraftEditBundle,
-  CourseDraftEditProps,
-  DevotionDraftEditBundle,
-  DevotionDraftEditProps,
+  ChapterDraftEditBundle,
+  ChapterDraftEditProps,
   FieldSpec,
   LanguageSpecification,
   LanguageTableItem,
@@ -4764,7 +4762,7 @@ export const sampleDevotionDraftSubmitted = {
   status: 'submitted',
 };
 
-export const emptyDevotionDraftBundle: DevotionDraftEditBundle = {
+export const emptyDevotionDraftBundle: ChapterDraftEditBundle = {
   number: '',
   title: '',
   description: '',
@@ -4774,7 +4772,7 @@ export const emptyDevotionDraftBundle: DevotionDraftEditBundle = {
   resources: [],
 };
 
-export const sampleDevotionDraftBundle: DevotionDraftEditBundle = {
+export const sampleDevotionDraftBundle: ChapterDraftEditBundle = {
   number: '01',
   title: 'Is there more to life than this?',
   description: 'An introduction to the Christian faith.',
@@ -4796,7 +4794,7 @@ export const devotionDraftEditDevotionStory: StorySpec = {
   chapterType: 'Devotion',
 };
 
-export const sampleDevotionChapterBundle: DevotionDraftEditBundle = {
+export const sampleDevotionChapterBundle: ChapterDraftEditBundle = {
   ...sampleDevotionDraftBundle,
   number: '01',
   title: 'Morning Devotion',
@@ -4823,7 +4821,7 @@ export const sampleDevotionChapterBundle: DevotionDraftEditBundle = {
 export const samplePreviousDevotionChapterBlocks: ChapterBlock[] =
   sampleDevotionChapterBundle.blocks;
 
-export const devotionDraftEditProps: Omit<DevotionDraftEditProps, 'providers'> & {
+export const devotionDraftEditProps: Omit<ChapterDraftEditProps, 'providers'> & {
   providers: Providers;
 } = {
   draft: sampleDevotionDraft,
@@ -4835,7 +4833,7 @@ export const devotionDraftEditProps: Omit<DevotionDraftEditProps, 'providers'> &
   lastPublished: '',
 };
 
-export const devotionDraftEditCreateProps: Omit<DevotionDraftEditProps, 'providers'> & {
+export const devotionDraftEditCreateProps: Omit<ChapterDraftEditProps, 'providers'> & {
   providers: Providers;
 } = {
   ...devotionDraftEditProps,
@@ -4843,7 +4841,7 @@ export const devotionDraftEditCreateProps: Omit<DevotionDraftEditProps, 'provide
   isCreate: true,
 };
 
-export const devotionDraftEditChapterTwoCreateProps: Omit<DevotionDraftEditProps, 'providers'> & {
+export const devotionDraftEditChapterTwoCreateProps: Omit<ChapterDraftEditProps, 'providers'> & {
   providers: Providers;
 } = {
   ...devotionDraftEditCreateProps,
@@ -4867,7 +4865,7 @@ export const devotionDraftEditValidationErrors: Record<string, string[]> = {
   'bundle.resources.0': ['Invalid resource'],
 };
 
-export const emptyCourseDraftBundle: CourseDraftEditBundle = {
+export const emptyCourseDraftBundle: ChapterDraftEditBundle = {
   number: '',
   title: '',
   description: '',
@@ -4876,7 +4874,7 @@ export const emptyCourseDraftBundle: CourseDraftEditBundle = {
   resources: [],
 };
 
-export const sampleCourseDraftBundle: CourseDraftEditBundle = {
+export const sampleCourseDraftBundle: ChapterDraftEditBundle = {
   number: '01',
   title: 'Is there more to life than this?',
   description: 'An introduction to the Christian faith.',
@@ -4892,7 +4890,7 @@ export const courseDraftEditStory: StorySpec = {
   chapterType: 'Session',
 };
 
-export const sampleCourseChapterBundle: CourseDraftEditBundle = {
+export const sampleCourseChapterBundle: ChapterDraftEditBundle = {
   ...sampleCourseDraftBundle,
   number: '01',
   title: 'Session One',
@@ -4925,7 +4923,7 @@ export const sampleCourseChapterBundle: CourseDraftEditBundle = {
 export const samplePreviousCourseChapterBlocks: ChapterBlock[] =
   sampleCourseChapterBundle.blocks;
 
-export const courseDraftEditProps: Omit<CourseDraftEditProps, 'providers'> & {
+export const courseDraftEditProps: Omit<ChapterDraftEditProps, 'providers'> & {
   providers: Providers;
 } = {
   draft: sampleDevotionDraft,
@@ -4937,7 +4935,7 @@ export const courseDraftEditProps: Omit<CourseDraftEditProps, 'providers'> & {
   lastPublished: '',
 };
 
-export const courseDraftEditCreateProps: Omit<CourseDraftEditProps, 'providers'> & {
+export const courseDraftEditCreateProps: Omit<ChapterDraftEditProps, 'providers'> & {
   providers: Providers;
 } = {
   ...courseDraftEditProps,
@@ -4945,7 +4943,7 @@ export const courseDraftEditCreateProps: Omit<CourseDraftEditProps, 'providers'>
   isCreate: true,
 };
 
-export const courseDraftEditChapterTwoCreateProps: Omit<CourseDraftEditProps, 'providers'> & {
+export const courseDraftEditChapterTwoCreateProps: Omit<ChapterDraftEditProps, 'providers'> & {
   providers: Providers;
 } = {
   ...courseDraftEditCreateProps,
@@ -4969,13 +4967,13 @@ export const courseDraftEditValidationErrors: Record<string, string[]> = {
   'bundle.resources.0': ['Invalid resource'],
 };
 
-export const sampleCourseDraftSourceBundle: CourseDraftEditBundle = {
+export const sampleCourseDraftSourceBundle: ChapterDraftEditBundle = {
   ...sampleCourseChapterBundle,
   title: 'Session One',
   description: 'Opening session for the course.',
 };
 
-export const sampleCourseDraftTranslationBundle: CourseDraftEditBundle = {
+export const sampleCourseDraftTranslationBundle: ChapterDraftEditBundle = {
   ...sampleCourseDraftSourceBundle,
   title: 'Sesión uno',
   description: 'Sesión de apertura del curso.',
@@ -4985,11 +4983,11 @@ export const sampleCourseDraftTranslationBundle: CourseDraftEditBundle = {
   }),
 };
 
-export const sampleDevotionDraftSourceBundle: DevotionDraftEditBundle = {
+export const sampleDevotionDraftSourceBundle: ChapterDraftEditBundle = {
   ...sampleDevotionChapterBundle,
 };
 
-export const sampleDevotionDraftTranslationBundle: DevotionDraftEditBundle = {
+export const sampleDevotionDraftTranslationBundle: ChapterDraftEditBundle = {
   ...sampleDevotionDraftSourceBundle,
   title: 'Devoción matutina',
   description: 'Una breve devoción diaria sobre el amor de Dios.',

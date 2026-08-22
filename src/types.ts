@@ -499,67 +499,40 @@ export interface DraftEditProps {
   hasEditReview: boolean;
 }
 
-export interface DevotionDraftBundle {
-  number: string;
-  title: string;
-  description: string;
-  coverImage: string;
-  devotionAudio: {
-    url: string | null;
-    length: number | null;
-  };
-  blocks: ChapterBlock[];
-  resources: string[];
+export interface ChapterDraftAudio {
+  url: string | null;
+  length: number | null;
 }
 
-export interface CourseDraftBundle {
+export interface ChapterDraftBundle {
   number: string;
   title: string;
   description: string;
   coverImage: string;
   blocks: ChapterBlock[];
   resources: string[];
+  devotionAudio?: ChapterDraftAudio;
 }
 
-export type PreviewBundle = DevotionDraftBundle | CourseDraftBundle | Record<string, unknown>;
+export type PreviewBundle = ChapterDraftBundle | Record<string, unknown>;
 
-export type CourseDraftEditBundle = Omit<CourseDraftBundle, 'resources'> & {
+export type ChapterDraftEditBundle = Omit<ChapterDraftBundle, 'resources'> & {
   resources: ResourceItem[];
 };
 
-export interface CourseDraftEditProps {
+export interface ChapterDraftEditProps {
   draft: DraftMeta;
-  bundle: CourseDraftEditBundle;
+  bundle: ChapterDraftEditBundle;
   story: StorySpec;
   availableResources: ResourceItem[];
   providers: Providers;
   hasEditReview: boolean;
   lastPublished: string;
   isCreate?: boolean;
-  source?: CourseDraftBundle;
+  isTranslation?: boolean;
+  source?: ChapterDraftBundle;
   previousChapterBlocks?: ChapterBlock[];
 }
-
-export type DevotionDraftEditBundle = Omit<DevotionDraftBundle, 'resources'> & {
-  resources: ResourceItem[];
-};
-
-export interface DevotionDraftEditProps {
-  draft: DraftMeta;
-  bundle: DevotionDraftEditBundle;
-  story: StorySpec;
-  availableResources: ResourceItem[];
-  providers: Providers;
-  hasEditReview: boolean;
-  lastPublished: string;
-  isCreate?: boolean;
-  source?: DevotionDraftBundle;
-  previousChapterBlocks?: ChapterBlock[];
-}
-
-export type ChapterDraftEditProps =
-  | (CourseDraftEditProps & SharedPageProps)
-  | (DevotionDraftEditProps & SharedPageProps);
 
 export interface ChapterMeta {
   number: number;

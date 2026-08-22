@@ -43,7 +43,7 @@ npm run story:preview    # Preview built documentation
 
 | Prefix                                              | Use                                                                                                         |
 | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `getX` / `fetchX` / `loadX` / `findX`               | Retrieval; omit `get`/`fetch` when bare domain name is clear (`blockKind`, `previousDevotionChapterBlocks`) |
+| `getX` / `fetchX` / `loadX` / `findX`               | Retrieval; omit `get`/`fetch` when bare domain name is clear (`blockKind`, `previousChapterBlocks`) |
 | `parseX` / `normalizeX` / `normalizedX` / `formatX` | Parse; `normalizedX` = pure return transform; `normalizeX` = in-place/async processing                      |
 | `isX` / `hasX` / `canX`                             | Boolean predicates                                                                                          |
 | `toX`                                               | Pure converters                                                                                             |

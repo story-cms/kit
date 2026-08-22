@@ -1,24 +1,9 @@
 import type { PreviewBundle } from '../types.js';
-import { normalizedCourseDraftBundle } from './course_draft.js';
-import { normalizedDevotionDraftBundle } from './devotion_draft.js';
-import { isCourseTemplate, isDevotionTemplate } from './story_helpers.js';
-
-const parseBundle = (value: unknown): Record<string, unknown> => {
-  if (typeof value === 'string') {
-    try {
-      const parsed = JSON.parse(value) as unknown;
-      return parsed && typeof parsed === 'object' && !Array.isArray(parsed)
-        ? (parsed as Record<string, unknown>)
-        : {};
-    } catch {
-      return {};
-    }
-  }
-
-  return value && typeof value === 'object' && !Array.isArray(value)
-    ? (value as Record<string, unknown>)
-    : {};
-};
+import {
+  isChapterDraftTemplate,
+  normalizedChapterDraftBundle,
+  parsedBundle,
+} from './chapter_draft.js';
 
 export function previewBundleFrom(options: {
   chapter: { bundle: unknown; number: number };
@@ -28,13 +13,9 @@ export function previewBundleFrom(options: {
   const source = options.draft ?? options.chapter;
   const { number } = source;
 
-  if (isDevotionTemplate(options.template)) {
-    return normalizedDevotionDraftBundle(source.bundle, number);
+  if (isChapterDraftTemplate(options.template)) {
+    return normalizedChapterDraftBundle(options.template, source.bundle, number);
   }
 
-  if (isCourseTemplate(options.template)) {
-    return normalizedCourseDraftBundle(source.bundle, number);
-  }
-
-  return parseBundle(source.bundle);
+  return parsedBundle(source.bundle);
 }

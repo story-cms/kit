@@ -18,6 +18,7 @@
           :video-collection-id="videoCollectionId"
           :image-collection-id="imageCollectionId"
           :chapter-type="chapterType"
+          :template="template"
           :translation-mode="true"
           @update:block="updateBlock(index, $event)"
           @delete="deleteBlock(index)"
@@ -35,6 +36,7 @@
           :video-collection-id="videoCollectionId"
           :image-collection-id="imageCollectionId"
           :chapter-type="chapterType"
+          :template="template"
           :read-only="true"
           :translation-mode="true"
           dir="ltr"
@@ -48,6 +50,7 @@
       <AddBlockToolbar
         v-if="blocks.length === 0"
         :show-reuse-previous="canReusePrevious"
+        :show-scripture-block="includeScriptureBlock"
         @add-title="addTitleBlock"
         @add-scripture="addScriptureBlock"
         @add-content="addContentBlock"
@@ -64,6 +67,7 @@
           :video-collection-id="videoCollectionId"
           :image-collection-id="imageCollectionId"
           :chapter-type="chapterType"
+          :template="template"
           @update:block="updateBlock(index, $event)"
           @delete="deleteBlock(index)"
           @toggle="onToggle(index)"
@@ -75,6 +79,7 @@
 
       <AddBlockToolbar
         v-if="blocks.length > 0"
+        :show-scripture-block="includeScriptureBlock"
         @add-title="addTitleBlock"
         @add-scripture="addScriptureBlock"
         @add-content="addContentBlock"
@@ -88,6 +93,8 @@ import { computed, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import type { ChapterBlock } from '../../../types';
+import { chapterDraftTemplate } from '../../../shared/chapter_draft';
+import { cloneBlocksStructure } from '../../../shared/block_structure';
 import { useModelStore, useSharedStore } from '../../store';
 import AddBlockToolbar from './blocks/add-block-toolbar.vue';
 import BlockEmptyState from './blocks/block-empty-state.vue';
@@ -99,7 +106,6 @@ import {
   createEmptyTitleBlock,
   normalizedBlocks,
 } from './blocks/block-utils';
-import { cloneBlocksStructure } from '../../../shared/block_structure';
 import { useTranslationBlockFieldAlignment } from './blocks/use-translation-block-field-alignment';
 import { getDefaultBlockRole } from './blocks/block-role-options';
 
@@ -109,10 +115,16 @@ const props = withDefaults(
     videoCollectionId?: string;
     imageCollectionId?: string;
     chapterType?: string | null;
+    template?: string | null;
     previousChapterBlocks?: ChapterBlock[];
     isTranslation?: boolean;
   }>(),
   {
+    videoCollectionId: '',
+    imageCollectionId: '',
+    chapterType: null,
+    template: null,
+    previousChapterBlocks: () => [],
     isTranslation: false,
   },
 );
@@ -129,6 +141,11 @@ const translationGrid = ref<HTMLElement | null>(null);
 useTranslationBlockFieldAlignment(
   translationGrid,
   computed(() => props.isTranslation && showSourceColumn.value),
+);
+
+const templateSpec = computed(() => chapterDraftTemplate(props.template));
+const includeScriptureBlock = computed(
+  () => templateSpec.value?.includeScriptureBlock ?? false,
 );
 
 const blocks = computed({
@@ -231,7 +248,9 @@ const appendBlock = (block: ChapterBlock) => {
 };
 
 const addContentBlock = () => {
-  appendBlock(createEmptyContentBlock(getDefaultBlockRole(props.chapterType, 'devotion')));
+  appendBlock(
+    createEmptyContentBlock(getDefaultBlockRole(props.chapterType, props.template)),
+  );
 };
 
 const addTitleBlock = () => {
@@ -239,6 +258,7 @@ const addTitleBlock = () => {
 };
 
 const addScriptureBlock = () => {
+  if (!includeScriptureBlock.value) return;
   appendBlock(createEmptyScriptureBlock());
 };
 
@@ -246,8 +266,10 @@ const reusePreviousStructure = () => {
   if (!props.previousChapterBlocks?.length) return;
 
   const cloned = cloneBlocksStructure(normalizedBlocks([...props.previousChapterBlocks]));
-  blocks.value = cloned;
-  expanded.value = cloned.map((_, index) => index === 0);
+  blocks.value = includeScriptureBlock.value
+    ? cloned
+    : cloned.filter((block) => block.kind !== 'scripture');
+  expanded.value = blocks.value.map((_, index) => index === 0);
   hasInitialized.value = true;
 };
 

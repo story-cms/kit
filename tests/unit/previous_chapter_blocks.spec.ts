@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test';
 
-import { previousDevotionChapterBlocks } from '../../src/shared/previous_chapter_blocks.js';
+import { previousChapterBlocks } from '../../src/shared/previous_chapter_blocks.js';
 
-test.describe('previousDevotionChapterBlocks', () => {
+test.describe('previousChapterBlocks', () => {
   test('returns empty array for the first chapter', async () => {
     let called = false;
     const loadBundle = async () => {
@@ -11,12 +11,25 @@ test.describe('previousDevotionChapterBlocks', () => {
     };
 
     await expect(
-      previousDevotionChapterBlocks(
+      previousChapterBlocks(
+        'devotion',
         { apiVersion: 1, locale: 'en', storyId: 1, number: 1 },
         loadBundle,
       ),
     ).resolves.toEqual([]);
     expect(called).toBe(false);
+  });
+
+  test('returns empty array for unknown templates', async () => {
+    const loadBundle = async () => ({ blocks: [{ id: 'block-1' }] });
+
+    await expect(
+      previousChapterBlocks(
+        'custom-template',
+        { apiVersion: 1, locale: 'en', storyId: 1, number: 2 },
+        loadBundle,
+      ),
+    ).resolves.toEqual([]);
   });
 
   test('loads blocks from the immediately previous chapter', async () => {
@@ -55,7 +68,8 @@ test.describe('previousDevotionChapterBlocks', () => {
       };
     };
 
-    const blocks = await previousDevotionChapterBlocks(
+    const blocks = await previousChapterBlocks(
+      'course',
       { apiVersion: 1, locale: 'en', storyId: 1, number: 2 },
       loadBundle,
     );

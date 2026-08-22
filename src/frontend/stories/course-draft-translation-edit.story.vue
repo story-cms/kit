@@ -1,7 +1,8 @@
 <template>
   <Story title="Course Draft Translation Edit" group="stories">
     <Variant title="Details tab" :setup-app="loadDetails">
-      <CourseDraftTranslationEdit
+      <ChapterDraftEdit
+        :is-translation="true"
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="spanish"
@@ -19,7 +20,8 @@
     </Variant>
 
     <Variant title="Blocks tab" :setup-app="loadBlocks">
-      <CourseDraftTranslationEdit
+      <ChapterDraftEdit
+        :is-translation="true"
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="spanish"
@@ -37,7 +39,8 @@
     </Variant>
 
     <Variant title="Validation errors on tabs" :setup-app="loadValidationErrors">
-      <CourseDraftTranslationEdit
+      <ChapterDraftEdit
+        :is-translation="true"
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="spanish"
@@ -57,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import CourseDraftTranslationEdit from './course-draft-translation-edit.vue';
+import ChapterDraftEdit from './chapter-draft-edit.vue';
 import {
   availableResources,
   courseDraftEditStory,

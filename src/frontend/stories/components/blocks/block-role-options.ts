@@ -18,7 +18,11 @@ import {
 } from '@lucide/vue';
 
 import type { RichListboxOption } from '../../../shared/rich-listbox.vue';
-import { isCourseTemplate, isDevotionTemplate } from '../../../../shared/story_helpers';
+import {
+  chapterDraftTemplate,
+  type ChapterDraftTemplateId,
+} from '../../../../shared/chapter_draft';
+import { COURSE_TEMPLATE_ID, DEVOTION_TEMPLATE_ID } from '../../../../shared/story_helpers';
 
 export type BlockRoleOption = RichListboxOption;
 
@@ -176,6 +180,11 @@ const courseBlockRoleOptions: BlockRoleOption[] = [
   },
 ];
 
+const blockRoleOptionsByTemplate: Record<ChapterDraftTemplateId, BlockRoleOption[]> = {
+  [COURSE_TEMPLATE_ID]: courseBlockRoleOptions,
+  [DEVOTION_TEMPLATE_ID]: devotionBlockRoleOptions,
+};
+
 const normalizeChapterType = (chapterType?: string | null): string =>
   chapterType?.trim().toLowerCase() ?? '';
 
@@ -187,16 +196,24 @@ export function isCourseChapterType(chapterType?: string | null): boolean {
   return normalizeChapterType(chapterType) === 'session';
 }
 
+const templateIdFromChapterType = (
+  chapterType?: string | null,
+): ChapterDraftTemplateId | undefined => {
+  if (isCourseChapterType(chapterType)) return COURSE_TEMPLATE_ID;
+  if (isDevotionChapterType(chapterType)) return DEVOTION_TEMPLATE_ID;
+  return undefined;
+};
+
 export function getBlockRoleOptions(
   chapterType?: string | null,
   template?: string | null,
 ): BlockRoleOption[] {
-  if (isCourseTemplate(template) || isCourseChapterType(chapterType)) {
-    return courseBlockRoleOptions;
-  }
+  const spec =
+    chapterDraftTemplate(template) ??
+    chapterDraftTemplate(templateIdFromChapterType(chapterType));
 
-  if (isDevotionTemplate(template) || isDevotionChapterType(chapterType)) {
-    return devotionBlockRoleOptions;
+  if (spec) {
+    return blockRoleOptionsByTemplate[spec.id];
   }
 
   return fallbackBlockRoleOptions;
@@ -206,13 +223,9 @@ export function getDefaultBlockRole(
   chapterType?: string | null,
   template?: string | null,
 ): string {
-  if (isCourseTemplate(template) || isCourseChapterType(chapterType)) {
-    return 'introduction';
-  }
+  const spec =
+    chapterDraftTemplate(template) ??
+    chapterDraftTemplate(templateIdFromChapterType(chapterType));
 
-  if (isDevotionTemplate(template) || isDevotionChapterType(chapterType)) {
-    return 'introduction';
-  }
-
-  return 'summary';
+  return spec?.defaultBlockRole ?? 'summary';
 }

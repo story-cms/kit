@@ -69,9 +69,18 @@
             :dir="shared.isRtl ? 'rtl' : 'ltr'"
             :class="{ 'subgrid row-[span_1000] gap-y-4': props.isTranslation }"
           >
-            <slot v-if="currentTab === 'Details'" name="details" />
+            <slot
+              v-if="currentTab === 'Details'"
+              name="details"
+              :is-translation="props.isTranslation"
+            />
             <div v-if="currentTab === 'Blocks'" dir="ltr">
-              <slot name="blocks" :blocks="blocks" :update-blocks="updateBlocks" />
+              <slot
+                name="blocks"
+                :blocks="blocks"
+                :update-blocks="updateBlocks"
+                :is-translation="props.isTranslation"
+              />
             </div>
             <div v-if="currentTab === 'Resources'" dir="ltr">
               <StoryEditResources
@@ -120,7 +129,7 @@
 import { ref, type VNode } from 'vue';
 import { Blocks, BookOpen, Eye, EyeOff, FolderClosed } from '@lucide/vue';
 
-import type { ChapterBlock } from '../../../types';
+import type { ChapterBlock, ChapterDraftEditProps, SharedPageProps } from '../../../types';
 import { formatDate } from '../../shared/helpers';
 import AppLayout from '../../shared/app-layout.vue';
 import ContentSidebar from '../../shared/content-sidebar.vue';
@@ -129,23 +138,23 @@ import MobileAppPreview from '../../shared/mobile-app-preview.vue';
 import TabButton from '../../shared/tab-button.vue';
 import TabNavigation from '../../shared/tab-navigation.vue';
 import { useTranslationDraftLayout } from '../use-translation-draft-layout';
-import type { ChapterDraftEditProps } from '../../../types';
 import { useChapterDraftEdit } from '../use-chapter-draft-edit';
 import DraftEditActions from './draft-edit-actions.vue';
 import StoryEditResources from './story-edit-resources.vue';
 
 const props = withDefaults(
-  defineProps<ChapterDraftEditProps & { isTranslation?: boolean }>(),
+  defineProps<ChapterDraftEditProps & SharedPageProps & { isTranslation?: boolean }>(),
   {
     isTranslation: false,
   },
 );
 
 defineSlots<{
-  details: () => VNode[];
+  details: (props: { isTranslation: boolean }) => VNode[];
   blocks: (props: {
     blocks: ChapterBlock[];
     updateBlocks: (blocks: ChapterBlock[]) => void;
+    isTranslation: boolean;
   }) => VNode[];
 }>();
 

@@ -9,6 +9,7 @@ import type {
   DraftEditProps,
   NavigationPaneTab,
   ResourceItem,
+  SharedPageProps,
 } from '../../types';
 import { ResponseStatus } from '../../types';
 import { formatDate, padZero, safeChapterTitle } from '../shared/helpers';
@@ -26,7 +27,7 @@ import {
 import { normalizedBlocks } from './components/blocks/block-utils';
 
 export function useChapterDraftEdit(
-  props: ChapterDraftEditProps,
+  props: ChapterDraftEditProps & SharedPageProps,
   isTranslation: boolean,
 ) {
   const shared = useSharedStore();

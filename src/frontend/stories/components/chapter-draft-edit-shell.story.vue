@@ -3,13 +3,14 @@
     <Variant title="Source" :setup-app="loadDetails">
       <chapter-draft-edit-shell v-bind="sourceProps">
         <template #details>
-          <course-draft-edit-details
+          <chapter-draft-edit-details
             :chapter-type="sourceProps.story.chapterType"
             :image-collection-id="sourceProps.config.imageCollectionId"
+            :template="sourceProps.story.template"
           />
         </template>
         <template #blocks="{ blocks, updateBlocks }">
-          <course-draft-edit-blocks
+          <chapter-draft-edit-blocks
             :blocks="blocks"
             :video-collection-id="sourceProps.config.videoCollectionId"
             :image-collection-id="sourceProps.config.imageCollectionId"
@@ -24,14 +25,15 @@
     <Variant title="Translation" :setup-app="loadDetails">
       <chapter-draft-edit-shell v-bind="translationProps" is-translation>
         <template #details>
-          <course-draft-edit-details
+          <chapter-draft-edit-details
             :chapter-type="translationProps.story.chapterType"
             :image-collection-id="translationProps.config.imageCollectionId"
+            :template="translationProps.story.template"
             :is-translation="true"
           />
         </template>
         <template #blocks="{ blocks, updateBlocks }">
-          <course-draft-edit-blocks
+          <chapter-draft-edit-blocks
             :blocks="blocks"
             :video-collection-id="translationProps.config.videoCollectionId"
             :image-collection-id="translationProps.config.imageCollectionId"
@@ -57,8 +59,8 @@ import {
   spanish,
 } from '../../test/mocks';
 import ChapterDraftEditShell from './chapter-draft-edit-shell.vue';
-import CourseDraftEditBlocks from './course-draft-edit-blocks.vue';
-import CourseDraftEditDetails from './course-draft-edit-details.vue';
+import ChapterDraftEditBlocks from './chapter-draft-edit-blocks.vue';
+import ChapterDraftEditDetails from './chapter-draft-edit-details.vue';
 
 const sourceProps = {
   ...sharedProps,

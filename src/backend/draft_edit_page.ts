@@ -1,23 +1,16 @@
-import { isCourseTemplate, isDevotionTemplate } from '../shared/story_helpers.js';
+import { isChapterDraftTemplate } from '../shared/chapter_draft.js';
 
 export type DraftEditPage =
   | 'DraftIndex'
   | 'TranslationIndex'
-  | 'DevotionDraftEdit'
-  | 'DevotionDraftTranslationEdit'
-  | 'CourseDraftEdit'
-  | 'CourseDraftTranslationEdit';
+  | 'ChapterDraftEdit';
 
 export const draftEditPage = (
   template: string | null | undefined,
   isTranslation: boolean,
 ): DraftEditPage => {
-  if (isDevotionTemplate(template)) {
-    return isTranslation ? 'DevotionDraftTranslationEdit' : 'DevotionDraftEdit';
-  }
-
-  if (isCourseTemplate(template)) {
-    return isTranslation ? 'CourseDraftTranslationEdit' : 'CourseDraftEdit';
+  if (isChapterDraftTemplate(template)) {
+    return 'ChapterDraftEdit';
   }
 
   return isTranslation ? 'TranslationIndex' : 'DraftIndex';

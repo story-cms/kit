@@ -7,6 +7,9 @@ import type {
   ResourceType,
   Scripture,
 } from '../../../../types';
+import { blockKind, createBlockId } from '../../../../shared/block_structure';
+
+export { blockKind, createBlockId };
 
 export const DEFAULT_BLOCK_ROLE = 'summary';
 export const DEFAULT_BLOCK_STYLE = 'primary';
@@ -23,10 +26,6 @@ type LegacyChapterContentBlock = ChapterContentBlock & {
   url?: string;
   video?: { url: string | null };
 };
-
-export function createBlockId(): string {
-  return crypto.randomUUID();
-}
 
 export function createEmptyContentBlock(
   blockRole: string = DEFAULT_BLOCK_ROLE,
@@ -126,6 +125,3 @@ export function createEmptyScriptureBlock(): ChapterScriptureBlock {
   };
 }
 
-export function blockKind(block: ChapterBlock): ChapterBlock['kind'] {
-  return block.kind ?? 'content';
-}

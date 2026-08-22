@@ -1,7 +1,7 @@
 <template>
   <Story title="Course Draft Edit" group="stories">
     <Variant title="Create" :setup-app="loadCreate">
-      <CourseDraftEdit
+      <ChapterDraftEdit
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
@@ -19,7 +19,7 @@
     </Variant>
 
     <Variant title="Chapter 2 create" :setup-app="loadChapterTwoCreate">
-      <CourseDraftEdit
+      <ChapterDraftEdit
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
@@ -38,7 +38,7 @@
     </Variant>
 
     <Variant title="Edit" :setup-app="loadEdit">
-      <CourseDraftEdit
+      <ChapterDraftEdit
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
@@ -56,7 +56,7 @@
     </Variant>
 
     <Variant title="Blocks tab" :setup-app="loadBlocksTab">
-      <CourseDraftEdit
+      <ChapterDraftEdit
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
@@ -73,7 +73,7 @@
     </Variant>
 
     <Variant title="Resources tab" :setup-app="loadResourcesTab">
-      <CourseDraftEdit
+      <ChapterDraftEdit
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
@@ -90,7 +90,7 @@
     </Variant>
 
     <Variant title="Validation errors on tabs" :setup-app="loadValidationErrors">
-      <CourseDraftEdit
+      <ChapterDraftEdit
         :config="sharedProps.config"
         :user="sharedProps.user"
         :language="sharedProps.language"
@@ -109,7 +109,7 @@
 </template>
 
 <script setup lang="ts">
-import CourseDraftEdit from './course-draft-edit.vue';
+import ChapterDraftEdit from './chapter-draft-edit.vue';
 import ModelControl from '../test/model-control.vue';
 import {
   availableResources,

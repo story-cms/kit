@@ -57,15 +57,15 @@ export * from './validators/chapter.js';
 export * from './validators/course.js';
 export * from './validators/devotion_draft.js';
 export {
-  createDevotionDraftBundle,
-  normalizedDevotionDraftBundle,
-} from '../shared/devotion_draft.js';
-export {
-  createCourseDraftBundle,
-  normalizedCourseDraftBundle,
-} from '../shared/course_draft.js';
+  createChapterDraftBundle,
+  normalizedChapterDraftBundle,
+  translationChapterDraftBundle,
+  isChapterDraftTemplate,
+  chapterDraftTemplate,
+  chapterDraftTemplates,
+} from '../shared/chapter_draft.js';
 export { previewBundleFrom } from '../shared/preview_bundle.js';
-export { cloneBlocksStructure } from '../shared/block_structure.js';
+export { cloneBlocksStructure, createBlockId, blockKind } from '../shared/block_structure.js';
 export {
   audioUploadConfig,
   imageUploadConfig,
@@ -77,10 +77,7 @@ export {
   globalMediaCollections,
   mediaCollectionsForTemplate,
 } from '../shared/media_helpers.js';
-export {
-  previousDevotionChapterBlocks,
-  previousCourseChapterBlocks,
-} from '../shared/previous_chapter_blocks.js';
+export { previousChapterBlocks } from '../shared/previous_chapter_blocks.js';
 export { default as DropValidator } from './validators/drop.js';
 export { default as PageValidator } from './validators/page.js';
 export * from './validators/user.js';
