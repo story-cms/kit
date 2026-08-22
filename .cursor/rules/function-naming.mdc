@@ -6,7 +6,6 @@ alwaysApply: false
 
 # Function Naming
 
-Follow [docs/function-naming.md](../../docs/function-naming.md) for full detail.
 Summary for agents writing or reviewing code:
 
 ## Principles
@@ -17,16 +16,16 @@ Summary for agents writing or reviewing code:
 
 ## Shared
 
-| Prefix | Use |
-|---|---|
-| `isX` / `hasX` / `canX` | Boolean predicates |
-| `toX` | Pure converters |
-| `getX` / `fetchX` / `loadX` / `findX` | Retrieval; omit `get`/`fetch` when bare domain name is clear (`blockKind`, `previousDevotionChapterBlocks`) |
-| `parseX` / `normalizeX` / `normalizedX` / `formatX` | Parse; `normalizedX` = pure return transform; `normalizeX` = in-place/async processing |
-| `buildX` | Assemble complex objects |
-| `XFromY` / `XForY` | Derive from source / scoped to context |
-| `*BlockedMessages` / `blockingX` | Validation blockers |
-| `compareX` / `sortX` | Sort helpers |
+| Prefix                                              | Use                                                                                                         |
+| --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `isX` / `hasX` / `canX`                             | Boolean predicates                                                                                          |
+| `toX`                                               | Pure converters                                                                                             |
+| `getX` / `fetchX` / `loadX` / `findX`               | Retrieval; omit `get`/`fetch` when bare domain name is clear (`blockKind`, `previousDevotionChapterBlocks`) |
+| `parseX` / `normalizeX` / `normalizedX` / `formatX` | Parse; `normalizedX` = pure return transform; `normalizeX` = in-place/async processing                      |
+| `buildX`                                            | Assemble complex objects                                                                                    |
+| `XFromY` / `XForY`                                  | Derive from source / scoped to context                                                                      |
+| `*BlockedMessages` / `blockingX`                    | Validation blockers                                                                                         |
+| `compareX` / `sortX`                                | Sort helpers                                                                                                |
 
 ## Frontend
 
