@@ -9,7 +9,8 @@
     :data-translation-block-side="
       translationMode ? (readOnly ? 'source' : 'translation') : undefined
     "
-    :draggable="!readOnly && !translationMode"
+    ref="cardEl"
+    :draggable="isDragHandleActive"
     @dragstart="onDragStart"
     @dragover.prevent
     @drop="onDrop"
@@ -27,10 +28,11 @@
       >
         <div class="flex min-w-0 items-center gap-3">
           <button
-            v-if="!readOnly && !translationMode"
+            v-if="canDrag"
             type="button"
             class="cursor-move text-gray-400"
             :aria-label="`Reorder ${kindLabel} block`"
+            @pointerdown="onHandlePointerDown"
           >
             <GripVertical class="size-4" aria-hidden="true" />
           </button>
@@ -109,7 +111,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, type Component } from 'vue';
+import { computed, onUnmounted, ref, type Component } from 'vue';
 import {
   ChevronDown,
   CircleAlert,
@@ -142,6 +144,10 @@ const props = withDefaults(
 );
 
 const stretchForAlignment = computed(() => props.translationMode && props.expanded);
+const canDrag = computed(() => !props.readOnly && !props.translationMode);
+const cardEl = ref<HTMLElement | null>(null);
+const isDragHandleActive = ref(false);
+const isDragging = ref(false);
 
 const emit = defineEmits<{
   toggle: [];
@@ -151,18 +157,53 @@ const emit = defineEmits<{
   dragend: [];
 }>();
 
-const onDragStart = () => {
-  if (props.readOnly || props.translationMode) return;
+const setCardDraggable = (value: boolean) => {
+  isDragHandleActive.value = value;
+  if (cardEl.value) cardEl.value.draggable = value;
+};
+
+const clearDragHandle = () => {
+  window.removeEventListener('pointerup', onWindowPointerUp);
+  setCardDraggable(false);
+  isDragging.value = false;
+};
+
+const onWindowPointerUp = () => {
+  window.removeEventListener('pointerup', onWindowPointerUp);
+  if (isDragging.value) return;
+  requestAnimationFrame(() => {
+    if (!isDragging.value) setCardDraggable(false);
+  });
+};
+
+const onHandlePointerDown = () => {
+  if (!canDrag.value) return;
+  setCardDraggable(true);
+  window.addEventListener('pointerup', onWindowPointerUp);
+};
+
+const onDragStart = (event: DragEvent) => {
+  if (!isDragHandleActive.value) {
+    event.preventDefault();
+    return;
+  }
+  isDragging.value = true;
+  event.dataTransfer?.setData('text/plain', 'block');
+  if (event.dataTransfer) event.dataTransfer.effectAllowed = 'move';
   emit('dragstart');
 };
 
 const onDrop = () => {
-  if (props.readOnly || props.translationMode) return;
+  if (!canDrag.value) return;
   emit('drop');
 };
 
 const onDragEnd = () => {
-  if (props.readOnly || props.translationMode) return;
+  const wasDragging = isDragging.value;
+  clearDragHandle();
+  if (!wasDragging || !canDrag.value) return;
   emit('dragend');
 };
+
+onUnmounted(clearDragHandle);
 </script>
