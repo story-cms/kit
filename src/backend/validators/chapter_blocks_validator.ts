@@ -139,5 +139,8 @@ export const chapterBlockErrorMessages = {
   'bundle.blocks.*.id.minLength': 'Every block must have an ID',
   'bundle.blocks.*.blockName.required': 'Every block must have a name',
   'bundle.blocks.*.blockName.minLength': 'Every block must have a name',
+  'bundle.blocks.*.kind.enum':
+    "This block type isn't supported for this chapter template",
+  'bundle.blocks.*.items.*.kind.enum': "This item type isn't supported here",
   'bundle.resources.*.uuid': 'Invalid resource',
 };

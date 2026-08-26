@@ -29,6 +29,10 @@ export function useBlockFieldErrors(blockIndex: number) {
   const itemFieldHasError = (itemIndex: number, field: string) =>
     itemFieldMessages(itemIndex, field).length > 0;
 
+  const primaryErrorMessage = computed(
+    () => blockLevelErrors.value[0] ?? fieldMessages('kind')[0] ?? '',
+  );
+
   return {
     hasError,
     blockLevelErrors,
@@ -36,5 +40,6 @@ export function useBlockFieldErrors(blockIndex: number) {
     fieldHasError,
     itemFieldMessages,
     itemFieldHasError,
+    primaryErrorMessage,
   };
 }

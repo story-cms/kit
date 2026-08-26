@@ -154,15 +154,19 @@ test.describe('StandardChapterValidator', () => {
       expect(result.bundle.coverImage).toBe('https://example.com/cover.png');
     });
 
-    test('rejects a scripture block kind', async () => {
-      await expect(
-        validator().validate({
-          bundle: {
-            ...validCourseBundle().bundle,
-            blocks: [contentBlock(), scriptureBlock()],
-          },
-        }),
-      ).rejects.toBeDefined();
+    test('rejects a scripture block kind with a friendly message', async () => {
+      const errors = await validationErrors(validator(), {
+        bundle: {
+          ...validCourseBundle().bundle,
+          blocks: [contentBlock(), scriptureBlock()],
+        },
+      });
+
+      expect(errors.map((error) => error.message)).toEqual(
+        expect.arrayContaining([
+          "This block type isn't supported for this chapter template",
+        ]),
+      );
     });
 
     test('requires at least one block', async () => {

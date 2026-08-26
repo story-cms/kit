@@ -68,7 +68,13 @@
           </button>
         </div>
         <div class="flex items-center justify-center gap-1">
-          <div v-if="hasError" class="text-error">
+          <div
+            v-if="hasError"
+            class="text-error"
+            role="img"
+            :title="errorMessage"
+            :aria-label="errorMessage || 'This block has an error'"
+          >
             <CircleAlert class="size-5" aria-hidden="true" />
           </div>
           <button
@@ -132,6 +138,7 @@ const props = withDefaults(
     navigationVisible: boolean;
     kindLabel: string;
     hasError?: boolean;
+    errorMessage?: string;
     readOnly?: boolean;
     translationMode?: boolean;
     blockIndex?: number;

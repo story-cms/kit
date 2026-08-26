@@ -4,6 +4,7 @@
     :kind-icon="LayoutList"
     :expanded="expanded"
     :has-error="hasError && !readOnly"
+    :error-message="primaryErrorMessage"
     :presenter-visible="block.visibility.presenter && !block.visibility.hidden"
     :personal-visible="block.visibility.personal && !block.visibility.hidden"
     :navigation-visible="block.visibility.inNavigation && !block.visibility.hidden"
@@ -322,9 +323,8 @@ const emit = defineEmits<{
   dragend: [];
 }>();
 
-const { hasError, blockLevelErrors, fieldMessages, fieldHasError } = useBlockFieldErrors(
-  props.blockIndex,
-);
+const { hasError, blockLevelErrors, fieldMessages, fieldHasError, primaryErrorMessage } =
+  useBlockFieldErrors(props.blockIndex);
 
 const blockTitle = computed(() =>
   props.block.blockName.trim() ? props.block.blockName.trim() : 'New Content Block',
