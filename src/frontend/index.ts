@@ -9,8 +9,6 @@ import InvitationsEdit from './invitation/invitations-edit.vue';
 import InvitationsIndex from './invitation/invitations-index.vue';
 import ChapterPreview from './stories/chapter-preview.vue';
 import StandardChapterEdit from './stories/standard-chapter-edit.vue';
-import StandardChapterEditBlocks from './stories/components/standard-chapter-edit-blocks.vue';
-import StandardChapterEditDetails from './stories/components/standard-chapter-edit-details.vue';
 import ContextMenu from './shared/context-menu.vue';
 import CreateAccount from './auth/create-account.vue';
 import DashboardIndex from './dashboard/dashboard-index.vue';
@@ -83,8 +81,6 @@ export {
   BooleanField,
   ChapterPreview,
   StandardChapterEdit,
-  StandardChapterEditBlocks,
-  StandardChapterEditDetails,
   ContextMenu,
   CreateAccount,
   DashboardIndex,
