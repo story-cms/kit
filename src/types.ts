@@ -872,6 +872,7 @@ export interface BundleTemplate {
   id: string;
   name: string;
   fields: FieldSpec[];
+  /** Bespoke-only override of the global media collection IDs. Not used by storyTemplates. */
   collections?: MediaCollectionMap;
 }
 

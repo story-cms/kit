@@ -1,5 +1,4 @@
 import type { CmsConfig } from '../types.js';
-import { assertTemplateCollectionsMatchGlobals } from '../shared/media_helpers.js';
 
 /**
  * Define shield configuration
@@ -64,8 +63,6 @@ export function defineConfig(config: Partial<CmsConfig>): CmsConfig {
 
     storyTemplates: config.storyTemplates || [],
   } satisfies CmsConfig;
-
-  assertTemplateCollectionsMatchGlobals(resolved);
 
   return resolved;
 }

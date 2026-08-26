@@ -70,7 +70,6 @@ export {
   videoUploadConfig,
 } from '../shared/media_upload_configs.js';
 export {
-  assertTemplateCollectionsMatchGlobals,
   buildMediaFieldSpec,
   globalMediaCollections,
   mediaCollectionsForTemplate,

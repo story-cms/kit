@@ -49,11 +49,11 @@
 </template>
 
 <script setup lang="ts">
-import type { ChapterBlock, ChapterContentBlock } from '../../../types';
-import ContentBlockCard from './blocks/content-block-card.vue';
-import ScriptureBlockCard from './blocks/scripture-block-card.vue';
-import TitleBlockCard from './blocks/title-block-card.vue';
-import { blockKind } from './blocks/block-utils';
+import type { ChapterBlock, ChapterContentBlock } from '../../../../types';
+import ContentBlockCard from './content-block-card.vue';
+import ScriptureBlockCard from './scripture-block-card.vue';
+import TitleBlockCard from './title-block-card.vue';
+import { blockKind } from './block-utils';
 
 defineProps<{
   block: ChapterBlock;

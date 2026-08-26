@@ -99,7 +99,7 @@ import { useModelStore, useSharedStore } from '../../store';
 import AddBlockToolbar from './blocks/add-block-toolbar.vue';
 import BlockEmptyState from './blocks/block-empty-state.vue';
 import { blockHasError, blocksArrayErrorMessages } from './blocks/block-field-errors';
-import DraftEditBlockCard from './draft-edit-block-card.vue';
+import DraftEditBlockCard from './blocks/draft-edit-block-card.vue';
 import {
   createEmptyContentBlock,
   createEmptyScriptureBlock,

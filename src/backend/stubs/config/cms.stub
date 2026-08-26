@@ -125,17 +125,11 @@ const cmsConfig: Partial<CmsConfig> = {
       id: 'course',
       name: 'Course',
       fields: [],
-      collections: { video: videoCollectionId, image: imageCollectionId },
     },
     {
       id: 'devotion',
       name: 'Devotion',
       fields: [],
-      collections: {
-        video: videoCollectionId,
-        image: imageCollectionId,
-        audio: audioCollectionId,
-      },
     },
   ],
 

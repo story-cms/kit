@@ -81,26 +81,9 @@ export function mediaCollectionsForTemplate(
   config: CmsConfig,
   templateId: string,
 ): MediaCollectionMap {
-  const template = config.storyTemplates.find((entry) => entry.id === templateId);
-  return template?.collections ?? {};
-}
-
-export function assertTemplateCollectionsMatchGlobals(config: CmsConfig): void {
-  const globals = globalMediaCollections(config);
-
-  for (const template of config.storyTemplates) {
-    if (!template.collections) continue;
-
-    for (const kind of ['video', 'image', 'audio'] as MediaKind[]) {
-      const templateValue = template.collections[kind];
-      if (templateValue === undefined) continue;
-
-      const globalValue = globals[kind] ?? '';
-      if (templateValue !== globalValue) {
-        throw new Error(
-          `Template "${template.id}" collections.${kind} does not match global ${kind}CollectionId`,
-        );
-      }
-    }
-  }
+  const bespoke = config.bespokeTemplates.find((entry) => entry.id === templateId);
+  return {
+    ...globalMediaCollections(config),
+    ...(bespoke?.collections ?? {}),
+  };
 }

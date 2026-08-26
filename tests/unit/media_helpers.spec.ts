@@ -2,7 +2,6 @@ import { test, expect } from '@playwright/test';
 
 import type { CmsConfig } from '../../src/types.js';
 import {
-  assertTemplateCollectionsMatchGlobals,
   buildMediaFieldSpec,
   globalMediaCollections,
   mediaCollectionsForTemplate,
@@ -66,7 +65,14 @@ test.describe('media collection helpers', () => {
     languages: [],
     subscriptions: [],
     pagesTracking: '',
-    bespokeTemplates: [],
+    bespokeTemplates: [
+      {
+        id: 'daily-grace',
+        name: 'Daily Grace',
+        fields: [],
+        collections: { video: 'bespoke-video-id' },
+      },
+    ],
     streams: [],
     storiesHasEditReview: false,
     storyTemplates: [
@@ -74,17 +80,11 @@ test.describe('media collection helpers', () => {
         id: 'course',
         name: 'Course',
         fields: [],
-        collections: { video: 'video-id', image: 'image-id' },
       },
       {
         id: 'devotion',
         name: 'Devotion',
         fields: [],
-        collections: {
-          video: 'video-id',
-          image: 'image-id',
-          audio: 'audio-id',
-        },
       },
     ],
   };
@@ -97,34 +97,27 @@ test.describe('media collection helpers', () => {
     });
   });
 
-  test('mediaCollectionsForTemplate returns template collections', () => {
-    expect(mediaCollectionsForTemplate(baseConfig, 'devotion')).toEqual({
+  test('mediaCollectionsForTemplate returns globals for built-in templates', () => {
+    expect(mediaCollectionsForTemplate(baseConfig, 'course')).toEqual({
       video: 'video-id',
       image: 'image-id',
       audio: 'audio-id',
     });
-    expect(mediaCollectionsForTemplate(baseConfig, 'missing')).toEqual({});
   });
 
-  test('assertTemplateCollectionsMatchGlobals passes when values match', () => {
-    expect(() => assertTemplateCollectionsMatchGlobals(baseConfig)).not.toThrow();
+  test('mediaCollectionsForTemplate returns globals for unknown template ids', () => {
+    expect(mediaCollectionsForTemplate(baseConfig, 'missing')).toEqual({
+      video: 'video-id',
+      image: 'image-id',
+      audio: 'audio-id',
+    });
   });
 
-  test('assertTemplateCollectionsMatchGlobals throws when values mismatch', () => {
-    const invalidConfig: CmsConfig = {
-      ...baseConfig,
-      storyTemplates: [
-        {
-          id: 'course',
-          name: 'Course',
-          fields: [],
-          collections: { video: 'wrong-id', image: 'image-id' },
-        },
-      ],
-    };
-
-    expect(() => assertTemplateCollectionsMatchGlobals(invalidConfig)).toThrow(
-      'Template "course" collections.video does not match global videoCollectionId',
-    );
+  test('mediaCollectionsForTemplate overlays bespoke collections on globals', () => {
+    expect(mediaCollectionsForTemplate(baseConfig, 'daily-grace')).toEqual({
+      video: 'bespoke-video-id',
+      image: 'image-id',
+      audio: 'audio-id',
+    });
   });
 });
