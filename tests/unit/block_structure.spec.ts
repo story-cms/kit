@@ -112,7 +112,7 @@ test.describe('cloneBlocksStructure', () => {
     expect(block.displayName).toBe('');
     expect(block.content).toBe('');
     expect(block.leadersNotes).toBe('');
-    expect(block.showLeadersNotes).toBe(false);
+    expect(block.showLeadersNotes).toBe(true);
     expect(block.items[0]?.id).not.toBe(originalIds[1]);
     expect(block.items[0]?.imageUrl).toBe('');
   });
