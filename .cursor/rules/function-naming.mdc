@@ -1,0 +1,51 @@
+---
+description: Function and method naming conventions for backend, frontend, and shared code
+globs: src/**/*.{ts,vue}
+alwaysApply: false
+---
+
+# Function Naming Rules
+
+**Function** in this context is any function or class method
+These rules signal intent; do not mass-rename legacy code
+
+## Rules
+
+- Use camelCase
+- Names for **Functions** that don't return a value, start with a verb
+- **Functions** that match any of the **Common Prefixes** patterns below, use the prescribed prefix
+- Other **Functions** start with a noun describing the value they return
+
+## Common Prefixes
+
+| Prefix                                              | Use                                                                                                         |
+| --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `isX` / `hasX` / `canX`                             | Boolean predicates                                                                                          |
+| `toX`                                               | Pure converters                                                                                             |
+| `getX` / `fetchX` / `loadX` / `findX`               | Retrieval; omit `get`/`fetch` when bare domain name is clear (`blockKind`, `previousChapterBlocks`) |
+| `parseX` / `normalizeX` / `normalizedX` / `formatX` | Parse; `normalizedX` = pure return transform; `normalizeX` = in-place/async processing                      |
+| `compareX` / `sortX`                                | Sort helpers                                                                                                |
+
+## Frontend
+
+- **Pinia:** `setX`, `clearX`, `addX`, `removeX`, `toggleX`; boolean state as `isX`/`hasX` computed refs
+- **Composables:** export `useX()` matching `use-*.ts` filename
+- **Template handlers:** `onX` (`onFilter`, `onDragStart`, `onRemove`) — not `handleX`
+- **Page commands:** bare verbs (`saveStory`, `addPage`, `publishDraft`)
+- **Form payloads:** `getPayload()`
+- **Avoid:** `setIsDirty` → prefer `setDirty` or `markDirty`
+
+## Backend
+
+- **Services:** bare CRUD on `*Service` classes; `listX`, `fetchX`, shared derivation patterns
+- **Controllers:** REST (`index`, `store`, `destroy`) + domain verbs (`publish`, `toggleBookmark`); prefer `destroy` over `delete` for new resources
+- **Validators:** `*Validator.validate()` or camelCase vine exports
+- **Middleware:** `handle(ctx, next)`
+- **Models:** getters for derived shape; instance methods for mutations
+
+## Legacy (do not copy in new code)
+
+- `handle*` event handlers → use `onX`
+- `subscribed()` → `isSubscribed()`
+- `Analytics` class name (not `*Service`)
+- Stories `delete` action (prefer `destroy`)

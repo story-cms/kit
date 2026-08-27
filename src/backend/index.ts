@@ -53,7 +53,28 @@ export * from './validators/auth.js';
 export * from './validators/invitation.js';
 export * from './validators/bundle.js';
 export * from './validators/chapter.js';
-export * from './validators/course.js';
+export * from './validators/standard_chapter.js';
+export {
+  createStandardChapterBundle,
+  normalizedStandardChapterBundle,
+  translationStandardChapterBundle,
+  isStandardChapterTemplate,
+  standardChapterTemplate,
+  standardChapterTemplates,
+} from '../shared/standard_chapter.js';
+export { previewBundleFrom } from '../shared/preview_bundle.js';
+export { cloneBlocksStructure, createBlockId, blockKind } from '../shared/block_structure.js';
+export {
+  audioUploadConfig,
+  imageUploadConfig,
+  videoUploadConfig,
+} from '../shared/media_upload_configs.js';
+export {
+  buildMediaFieldSpec,
+  globalMediaCollections,
+  mediaCollectionsForTemplate,
+} from '../shared/media_helpers.js';
+export { previousChapterBlocks } from '../shared/previous_chapter_blocks.js';
 export { default as DropValidator } from './validators/drop.js';
 export { default as PageValidator } from './validators/page.js';
 export * from './validators/user.js';

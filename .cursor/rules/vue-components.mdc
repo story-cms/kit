@@ -58,6 +58,23 @@ const emit = defineEmits<{
 }>();
 ```
 
+### Event Handlers
+
+Follow [function-naming.md](../../docs/function-naming.md) for full conventions.
+
+- Use **`onX`** for handlers bound in the template (`@click`, `@keydown`, drag/drop, child emits)
+- Use **bare domain verbs** for page-level commands not tied to a single DOM event (`saveStory`, `addPage`)
+- Do not introduce new **`handleX`** handlers; rename to `onX` when editing legacy code
+
+```typescript
+// template-bound
+const onFilter = (query: string) => { /* ... */ };
+const onDragStart = () => { /* ... */ };
+
+// page command
+const saveStory = () => router.post(/* ... */);
+```
+
 ## State Management
 
 ### Store Usage

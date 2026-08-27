@@ -5,7 +5,7 @@
         :icon="Languages"
         title="New Language"
         description="Engage your audience morning, noon, and night. Create healthy daily rhythms with content that reaches them throughout the day."
-        @action="handleAction"
+        @action="onAction"
       />
     </Variant>
 
@@ -14,7 +14,7 @@
         :icon="BookOpen"
         title="New Story"
         description="Engage your audience morning, noon, and night. Create healthy daily rhythms with content that reaches them throughout the day."
-        @action="handleAction"
+        @action="onAction"
       />
     </Variant>
 
@@ -23,7 +23,7 @@
         :icon="FileText"
         title="New Page"
         description="Engage your audience morning, noon, and night. Create healthy daily rhythms with content that reaches them throughout the day."
-        @action="handleAction"
+        @action="onAction"
       />
     </Variant>
     <Variant title="New Page disabled">
@@ -31,8 +31,8 @@
         :icon="FileText"
         title="New Page"
         description="Engage your audience morning, noon, and night. Create healthy daily rhythms with content that reaches them throughout the day."
-        @action="handleAction"
         disabled
+        @action="onAction"
       />
     </Variant>
   </Story>
@@ -42,7 +42,7 @@
 import { BookOpen, FileText, Languages } from '@lucide/vue';
 import ActionCard from './action-card.vue';
 
-const handleAction = () => {
+const onAction = () => {
   console.log('Action card clicked');
 };
 </script>

@@ -11,6 +11,7 @@
         : 'cursor-default',
     ]"
     :aria-invalid="hasError ? true : undefined"
+    :title="hasError ? 'This tab has unresolved errors' : undefined"
     @click="onClick"
   >
     <slot />

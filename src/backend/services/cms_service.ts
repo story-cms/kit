@@ -150,6 +150,8 @@ export class CmsService {
         supportEmail: this.#config.supportEmail,
         hasAppPreview: this.#config.hasAppPreview,
         videoCollectionId: this.#config.videoCollectionId,
+        imageCollectionId: this.#config.imageCollectionId,
+        audioCollectionId: this.#config.audioCollectionId,
         languages: this.#config.languages,
         subscriptions: this.#config.subscriptions,
       } as UiConfig,

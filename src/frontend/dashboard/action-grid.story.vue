@@ -1,7 +1,7 @@
 <template>
   <Story title="Action grid" group="dashboard">
     <Variant title="Default">
-      <ActionGrid :items="items" @action="handleAction" />
+      <ActionGrid :items="items" @action="onAction" />
     </Variant>
   </Story>
 </template>
@@ -35,7 +35,7 @@ const items: ActionGridItem[] = [
   },
 ];
 
-const handleAction = (url: string) => {
+const onAction = (url: string) => {
   console.log('Action grid action:', url);
 };
 </script>

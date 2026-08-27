@@ -10,7 +10,10 @@ import {
   type AddStatus,
   IndexService,
   Chapter,
+  Draft,
+  Story,
   StoryService,
+  previewBundleFrom,
 } from '@story-cms/kit';
 import cms from '#services/cms';
 
@@ -47,8 +50,15 @@ export default class ChaptersController {
     };
 
     const chapter = await Chapter.query().where(specifier).firstOrFail();
-    const bundleView = await edge.render({{ '`preview_${story.id}`' }}, {
-      bundle: chapter.bundle,
+    const draft = await Draft.query().where(specifier).first();
+    const storyRecord = await Story.findOrFail(story.id);
+    const bundle = previewBundleFrom({
+      chapter,
+      draft,
+      template: storyRecord.template,
+    });
+    const bundleView = await edge.render({{ '`preview_${storyRecord.template}`' }}, {
+      bundle,
       marked: marked,
       number: chapter.number,
     });
@@ -56,8 +66,8 @@ export default class ChaptersController {
     const props: PreviewProps = {
       chapter: chapter.meta,
       bundleView: bundleView,
-      title: chapter.index.title,
-      bundle: chapter.bundle,
+      title: (typeof bundle.title === 'string' ? bundle.title : '') || chapter.index.title,
+      bundle,
       story,
     };
 

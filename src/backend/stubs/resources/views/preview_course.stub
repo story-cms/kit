@@ -1,0 +1,85 @@
+{{{
+  exports({ to: app.makePath('resources/views/preview_course.edge') })
+}}}
+<section>
+  @if(bundle.number)
+  <div class="mb-1 text-sm font-medium leading-5 text-gray-400">Number</div>
+  <div class="text-lg">\{\{ bundle.number \}\}</div>
+  @end
+
+  @if(bundle.title)
+  <div class="mt-6 mb-1 text-sm font-medium leading-5 text-gray-400">Title</div>
+  <div class="text-2xl">\{\{ bundle.title \}\}</div>
+  @end
+
+  @if(bundle.description)
+  <div class="mt-6 mb-1 text-sm font-medium leading-5 text-gray-400">Description</div>
+  <div class="max-w-none prose prose-sm">\{\{\{ marked.parse(bundle.description) \}\}\}</div>
+  @end
+
+  @if(bundle.coverImage)
+  <div class="mt-6 mb-1 text-sm font-medium leading-5 text-gray-400">Cover Image</div>
+  <img src="\{\{ bundle.coverImage \}\}" alt="\{\{ bundle.title \}\}" class="w-full max-w-xl h-auto rounded" />
+  @end
+
+  @if(bundle.blocks)
+  @each(block in bundle.blocks)
+  @if(!block.visibility || !block.visibility.hidden)
+  <div class="pt-8 mt-8 border-t border-gray-200">
+    @if(block.blockName)
+    <div class="mb-1 text-xs font-medium tracking-wide text-gray-400 uppercase">\{\{ block.blockName \}\}</div>
+    @end
+
+    @if(block.kind === 'title')
+    @if(block.title)
+    <div class="text-2xl font-semibold">\{\{ block.title \}\}</div>
+    @end
+    @if(block.subtitle)
+    <div class="mt-2 text-lg text-gray-600">\{\{ block.subtitle \}\}</div>
+    @end
+    @if(block.coverImage)
+    <img src="\{\{ block.coverImage \}\}" alt="\{\{ block.title \}\}" class="mt-4 w-full max-w-xl h-auto rounded">
+    @end
+    @end
+
+    @if(block.kind === 'scripture')
+    @if(block.displayName)
+    <div class="mb-2 text-xl font-semibold">\{\{ block.displayName \}\}</div>
+    @end
+    @if(block.scripture)
+    @!component('components/scripture', {passage: block.scripture})
+    @end
+    @end
+
+    @if(!block.kind || block.kind === 'content')
+    @if(block.displayName)
+    <div class="mb-2 text-xl font-semibold">\{\{ block.displayName \}\}</div>
+    @end
+    @if(block.content)
+    <div class="max-w-none prose prose-sm">\{\{\{ marked.parse(block.content) \}\}\}</div>
+    @end
+    @if(block.items)
+    @each(item in block.items)
+    @if(item.kind === 'image' && item.imageUrl)
+    <div class="mt-4">
+      <img src="\{\{ item.imageUrl \}\}" alt="" class="w-full max-w-xl h-auto rounded">
+    </div>
+    @end
+    @if(item.kind === 'video' && item.video && item.video.url)
+    <div class="mt-4 w-full max-w-xl">
+      @!component('components/video', {url: item.video.url, librayId: librayId})
+    </div>
+    @end
+    @if(item.kind === 'scripture' && item.scripture)
+    <div class="mt-4">
+      @!component('components/scripture', {passage: item.scripture})
+    </div>
+    @end
+    @endeach
+    @end
+    @end
+  </div>
+  @end
+  @endeach
+  @end
+</section>

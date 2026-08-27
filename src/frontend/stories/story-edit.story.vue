@@ -429,6 +429,7 @@ Saving posts attached resource IDs to the story localisation.
 - **Delete and save** — empty story, published; shows Delete (`red`) and Save Changes (`secondary`)
 - **Delete and save draft** — empty story, unpublished; shows Delete (`red`) and Save Changes (`secondary`)
 - **Without sections** — English source locale with no sections (Sections tab disabled in UI)
+- **Resources tab** — opens directly on the Resources tab
 - **Validation errors on tabs** — failed publish validation; Details tab shows error indicators and inline field messages
 - **Translation locale** — Spanish edit with English source column; source tags shown in read-only column only on Details tab
 - **Arabic translation locale** — Arabic edit on the left, English source on the right; RTL text in the translation column

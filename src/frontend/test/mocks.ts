@@ -1,4 +1,6 @@
 import type {
+  StandardChapterEditBundle,
+  StandardChapterEditProps,
   FieldSpec,
   LanguageSpecification,
   LanguageTableItem,
@@ -7,6 +9,7 @@ import type {
   ResourceEditProps,
   ResourceIndexItem,
   Providers,
+  ChapterBlock,
   StorySpec,
   InvitationItem,
   UiConfig,
@@ -14,6 +17,12 @@ import type {
 } from '../../types.ts';
 import { StoryHandler } from '../shared/helpers.js';
 import { useSharedStore } from '../store/shared.js';
+import {
+  createEmptyContentBlock,
+  createEmptyScriptureBlock,
+  createEmptyTitleBlock,
+  createContentItem,
+} from '../stories/components/blocks/block-utils';
 
 interface Address {
   street: string;
@@ -1742,6 +1751,8 @@ export const config: UiConfig = {
   helpUrl: 'https://www.theword121.com/',
   hasAppPreview: false,
   videoCollectionId: 'temporary-id',
+  imageCollectionId: 'journeys_template',
+  audioCollectionId: 'audio/default',
   languages,
   subscriptions: [
     'story',
@@ -4538,6 +4549,80 @@ export const sampleAttachedResources: ResourceItem[] = availableResources.filter
   (resource) => attachedStoryResourceIds.includes(resource.id),
 );
 
+export const sampleMixedChapterBlocks: ChapterBlock[] = [
+  {
+    ...createEmptyTitleBlock(),
+    blockName: 'Session Title',
+    title: 'The Gospel of John',
+    subtitle: 'An introduction to the fourth gospel',
+    coverImage:
+      'https://res.cloudinary.com/journeys/image/upload/v1756121793/mountain-placeholder_yuflkz.jpg',
+  },
+  {
+    ...createEmptyContentBlock(),
+    blockName: 'Introduction',
+    displayName: 'Session Introduction',
+    blockRole: 'introduction',
+    style: 'secondary',
+    content:
+      'Welcome to this session on the Gospel of John. We will explore how John presents Jesus as the Word made flesh.',
+  },
+  {
+    ...createEmptyScriptureBlock(),
+    blockName: 'Opening Passage',
+    displayName: 'Opening Scripture',
+    scripture: {
+      reference: 'John 1:1-3',
+      verse:
+        'In the beginning was the Word, and the Word was with God, and the Word was God. He was in the beginning with God. All things were made through him, and without him was not any thing made that was made.',
+    },
+  },
+  {
+    ...createEmptyTitleBlock(),
+    blockName: 'Part One: The Word',
+    title: 'The Word Became Flesh',
+    subtitle: 'Session 1 of 12',
+  },
+  {
+    ...createEmptyContentBlock(),
+    blockName: 'Further Reading',
+    displayName: 'External Resource',
+    blockRole: 'summary',
+    content: 'https://example.com/john-overview',
+  },
+  {
+    ...createEmptyScriptureBlock(),
+    blockName: 'Key Verse',
+    displayName: 'Key Verse',
+    scripture: {
+      reference: 'John 3:16',
+      verse:
+        'For God so loved the world, that he gave his only Son, that whoever believes in him should not perish but have eternal life.',
+    },
+    leadersNotes:
+      'Pause here and invite the group to reflect on the scope of "the world" in this verse.',
+    showLeadersNotes: true,
+  },
+  {
+    ...createEmptyContentBlock(),
+    blockName: 'Summary',
+    displayName: 'Session Summary',
+    blockRole: 'summary',
+    style: 'primary',
+    content:
+      '**Key takeaways:** Jesus is the eternal Word; belief in him brings eternal life.',
+    visibility: { presenter: true, personal: false, inNavigation: true, hidden: false },
+  },
+  {
+    ...createEmptyContentBlock(),
+    blockName: 'Session Video',
+    displayName: 'Watch Session',
+    blockRole: 'introduction',
+    content: '',
+    items: [createContentItem('video')],
+  },
+];
+
 export const mockResourceProviders: Providers = {
   s3: {
     accessKeyId: '',
@@ -4553,7 +4638,7 @@ export const mockResourceProviders: Providers = {
     cloudName: 'almassira',
     defaultPreset: 'session_thumbnail',
   },
-  scripture: { bibleApiKey: 'tmp' },
+  scripture: { bibleApiKey: import.meta.env.VITE_BIBLE_API_KEY ?? '' },
   bunny: {
     accessKey: 'redacted',
     libraryId: '2ef0214d-b18',
@@ -4662,4 +4747,252 @@ export const mockEditUrlLinkResourceEmptyUsages: ResourceEditProps = {
 export const mockResourceEditErrors: Record<string, string[]> = {
   'bundle.title': ['A resource must have a title'],
   'bundle.url': ['URL resources must have a valid URL'],
+};
+
+export const sampleDevotionDraft = {
+  id: 42,
+  number: 3,
+  status: 'started',
+  updatedAt: '2025-10-24T06:10:38.483+00:00',
+  createdAt: '2025-10-24T06:10:38.482+00:00',
+};
+
+export const sampleDevotionDraftSubmitted = {
+  ...sampleDevotionDraft,
+  status: 'submitted',
+};
+
+export const emptyDevotionDraftBundle: StandardChapterEditBundle = {
+  number: '',
+  title: '',
+  description: '',
+  coverImage: '',
+  devotionAudio: { url: null, length: null },
+  blocks: [],
+  resources: [],
+};
+
+export const sampleDevotionDraftBundle: StandardChapterEditBundle = {
+  number: '01',
+  title: 'Is there more to life than this?',
+  description: 'An introduction to the Christian faith.',
+  coverImage:
+    'https://res.cloudinary.com/journeys/image/upload/v1756121793/mountain-placeholder_yuflkz.jpg',
+  devotionAudio: { url: null, length: null },
+  blocks: sampleMixedChapterBlocks,
+  resources: sampleAttachedResources.slice(0, 2),
+};
+
+export const devotionDraftEditStory: StorySpec = {
+  ...story,
+  template: 'devotion',
+  chapterType: 'Day',
+};
+
+export const devotionDraftEditDevotionStory: StorySpec = {
+  ...story,
+  chapterType: 'Devotion',
+};
+
+export const sampleDevotionChapterBundle: StandardChapterEditBundle = {
+  ...sampleDevotionDraftBundle,
+  number: '01',
+  title: 'Morning Devotion',
+  description: "A short daily devotion on God's love.",
+  blocks: [
+    {
+      ...createEmptyContentBlock(),
+      blockName: 'Opening',
+      displayName: 'Opening Devotion',
+      blockRole: 'introduction',
+      content: "Welcome to today's devotion.",
+    },
+    {
+      ...createEmptyContentBlock(),
+      blockName: 'Passage',
+      displayName: 'Scripture Reading',
+      blockRole: 'scripture',
+      content: '',
+      items: [createContentItem('scripture')],
+    },
+  ],
+};
+
+export const samplePreviousDevotionChapterBlocks: ChapterBlock[] =
+  sampleDevotionChapterBundle.blocks;
+
+export const devotionDraftEditProps: Omit<StandardChapterEditProps, 'providers'> & {
+  providers: Providers;
+} = {
+  draft: sampleDevotionDraft,
+  bundle: sampleDevotionDraftBundle,
+  story: devotionDraftEditStory,
+  availableResources,
+  providers: mockResourceProviders,
+  hasEditReview: false,
+  lastPublished: '',
+};
+
+export const devotionDraftEditCreateProps: Omit<StandardChapterEditProps, 'providers'> & {
+  providers: Providers;
+} = {
+  ...devotionDraftEditProps,
+  bundle: emptyDevotionDraftBundle,
+  isCreate: true,
+};
+
+export const devotionDraftEditChapterTwoCreateProps: Omit<StandardChapterEditProps, 'providers'> & {
+  providers: Providers;
+} = {
+  ...devotionDraftEditCreateProps,
+  draft: {
+    ...sampleDevotionDraft,
+    number: 2,
+  },
+  bundle: {
+    ...emptyDevotionDraftBundle,
+    number: '02',
+  },
+  previousChapterBlocks: samplePreviousDevotionChapterBlocks,
+};
+
+export const devotionDraftEditValidationErrors: Record<string, string[]> = {
+  'bundle.title': ['The title field must have at least 1 character'],
+  'bundle.blocks.0.blockName': ['Every block must have a name'],
+  'bundle.blocks.0': [
+    'A content block must have text or at least one media or scripture item',
+  ],
+  'bundle.resources.0': ['Invalid resource'],
+};
+
+export const emptyCourseDraftBundle: StandardChapterEditBundle = {
+  number: '',
+  title: '',
+  description: '',
+  coverImage: '',
+  blocks: [],
+  resources: [],
+};
+
+export const sampleCourseDraftBundle: StandardChapterEditBundle = {
+  number: '01',
+  title: 'Is there more to life than this?',
+  description: 'An introduction to the Christian faith.',
+  coverImage:
+    'https://res.cloudinary.com/journeys/image/upload/v1756121793/mountain-placeholder_yuflkz.jpg',
+  blocks: sampleMixedChapterBlocks,
+  resources: sampleAttachedResources.slice(0, 2),
+};
+
+export const courseDraftEditStory: StorySpec = {
+  ...story,
+  template: 'course',
+  chapterType: 'Session',
+};
+
+export const sampleCourseChapterBundle: StandardChapterEditBundle = {
+  ...sampleCourseDraftBundle,
+  number: '01',
+  title: 'Session One',
+  description: 'Opening session for the course.',
+  blocks: [
+    {
+      ...createEmptyContentBlock(),
+      blockName: 'Welcome',
+      displayName: 'Session Introduction',
+      blockRole: 'introduction',
+      content: 'Welcome to this session.',
+    },
+    {
+      ...createEmptyContentBlock(),
+      blockName: 'Teaching',
+      displayName: 'Main Teaching',
+      blockRole: 'teaching',
+      content: 'Core teaching content for this session.',
+    },
+    {
+      ...createEmptyContentBlock(),
+      blockName: 'Recap',
+      displayName: 'Session Recap',
+      blockRole: 'recap',
+      content: 'Key points from today.',
+    },
+  ],
+};
+
+export const samplePreviousCourseChapterBlocks: ChapterBlock[] =
+  sampleCourseChapterBundle.blocks;
+
+export const courseDraftEditProps: Omit<StandardChapterEditProps, 'providers'> & {
+  providers: Providers;
+} = {
+  draft: sampleDevotionDraft,
+  bundle: sampleCourseDraftBundle,
+  story: courseDraftEditStory,
+  availableResources,
+  providers: mockResourceProviders,
+  hasEditReview: false,
+  lastPublished: '',
+};
+
+export const courseDraftEditCreateProps: Omit<StandardChapterEditProps, 'providers'> & {
+  providers: Providers;
+} = {
+  ...courseDraftEditProps,
+  bundle: emptyCourseDraftBundle,
+  isCreate: true,
+};
+
+export const courseDraftEditChapterTwoCreateProps: Omit<StandardChapterEditProps, 'providers'> & {
+  providers: Providers;
+} = {
+  ...courseDraftEditCreateProps,
+  draft: {
+    ...sampleDevotionDraft,
+    number: 2,
+  },
+  bundle: {
+    ...emptyCourseDraftBundle,
+    number: '02',
+  },
+  previousChapterBlocks: samplePreviousCourseChapterBlocks,
+};
+
+export const courseDraftEditValidationErrors: Record<string, string[]> = {
+  'bundle.title': ['The title field must have at least 1 character'],
+  'bundle.blocks.0.blockName': ['Every block must have a name'],
+  'bundle.blocks.0': [
+    'A content block must have text or at least one media or scripture item',
+  ],
+  'bundle.resources.0': ['Invalid resource'],
+};
+
+export const sampleCourseDraftSourceBundle: StandardChapterEditBundle = {
+  ...sampleCourseChapterBundle,
+  title: 'Session One',
+  description: 'Opening session for the course.',
+};
+
+export const sampleCourseDraftTranslationBundle: StandardChapterEditBundle = {
+  ...sampleCourseDraftSourceBundle,
+  title: 'Sesión uno',
+  description: 'Sesión de apertura del curso.',
+  blocks: sampleCourseDraftSourceBundle.blocks.map((block) => {
+    if (block.kind !== 'content') return { ...block };
+    return { ...block, content: '', displayName: '' };
+  }),
+};
+
+export const sampleDevotionDraftSourceBundle: StandardChapterEditBundle = {
+  ...sampleDevotionChapterBundle,
+};
+
+export const sampleDevotionDraftTranslationBundle: StandardChapterEditBundle = {
+  ...sampleDevotionDraftSourceBundle,
+  title: 'Devoción matutina',
+  description: 'Una breve devoción diaria sobre el amor de Dios.',
+  blocks: sampleDevotionDraftSourceBundle.blocks.map((block) => {
+    if (block.kind !== 'content') return { ...block };
+    return { ...block, content: '', displayName: '' };
+  }),
 };

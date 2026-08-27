@@ -1,7 +1,41 @@
 import Chapter from '../models/chapter.js';
-import type { FieldMap, FieldSpec, StorySpec, StoryVersion, JSON } from '../../types';
+import Draft from '../models/draft.js';
+import type {
+  StandardChapterEditProps,
+  DraftEditProps,
+  FieldMap,
+  FieldSpec,
+  Providers,
+  ResourceItem,
+  StoryChapterSpecifier,
+  StorySpec,
+  StoryVersion,
+  JSON,
+} from '../../types.js';
 import { BundleService } from './bundle_service.js';
 import { CmsService } from './cms_service.js';
+import {
+  createStandardChapterBundle,
+  isStandardChapterTemplate,
+  normalizedStandardChapterBundle,
+  translationStandardChapterBundle,
+  type StandardChapterTemplateId,
+} from '../../shared/standard_chapter.js';
+import { previousChapterBlocks as loadPreviousChapterBlocks } from '../../shared/previous_chapter_blocks.js';
+
+export interface DraftResourceService {
+  listForLocale(locale: string): Promise<ResourceItem[]>;
+  hydrate(ids: string[]): Promise<ResourceItem[]>;
+}
+
+export interface DraftServiceDependencies {
+  resourceService?: DraftResourceService;
+}
+
+export type DraftEditPage =
+  | 'DraftIndex'
+  | 'TranslationIndex'
+  | 'StandardChapterEdit';
 
 export class DraftService {
   public story: StorySpec;
@@ -15,8 +49,71 @@ export class DraftService {
   constructor(
     story: StorySpec,
     protected cms: CmsService,
+    private readonly dependencies: DraftServiceDependencies = {},
   ) {
     this.story = story;
+  }
+
+  public editPage(isTranslation: boolean): DraftEditPage {
+    if (isStandardChapterTemplate(this.story.template)) {
+      return 'StandardChapterEdit';
+    }
+
+    return isTranslation ? 'TranslationIndex' : 'DraftIndex';
+  }
+
+  public async create(version: StoryVersion, number: number): Promise<Draft | null> {
+    const bundle = await this.getDraftBundle(version, number);
+    if (bundle === null) return null;
+
+    return Draft.create({
+      ...version,
+      number,
+      bundle,
+    });
+  }
+
+  public async editProps(options: {
+    version: StoryVersion;
+    number: number;
+    providers: Providers;
+    newDraftId?: number | string | null;
+  }): Promise<DraftEditProps | StandardChapterEditProps | null> {
+    const specifier: StoryChapterSpecifier = {
+      apiVersion: options.version.apiVersion,
+      locale: options.version.locale,
+      storyId: options.version.storyId,
+      number: options.number,
+    };
+
+    const resolved = await this.findOrCreateDraft(specifier);
+    if (resolved === null) return null;
+
+    const { draft, lastPublished } = resolved;
+
+    const isTranslation = options.version.locale !== this.cms.sourceLocale;
+    const base = this.baseDraftEditProps(draft, lastPublished, options.providers);
+
+    if (isStandardChapterTemplate(this.story.template)) {
+      return this.blockTemplateEditProps({
+        template: this.story.template,
+        isTranslation,
+        draft,
+        base,
+        specifier,
+        newDraftId: options.newDraftId,
+      });
+    }
+
+    if (!isTranslation) {
+      return base;
+    }
+
+    const sourceChapter = await this.loadSourceChapter(specifier);
+    return {
+      ...base,
+      source: sourceChapter?.bundle,
+    };
   }
 
   public async getDraftBundle(
@@ -25,6 +122,10 @@ export class DraftService {
   ): Promise<JSON<any> | null> {
     // is this the source language?
     if (version.locale === this.cms.sourceLocale) {
+      if (isStandardChapterTemplate(this.story.template)) {
+        return JSON.stringify(createStandardChapterBundle(this.story.template, number));
+      }
+
       const bundleService = new BundleService(this.story.fields);
       return bundleService.defaultBundle;
     }
@@ -38,6 +139,17 @@ export class DraftService {
     };
     const source = await Chapter.query().where(specifier).first();
     if (!source) return null;
+
+    if (isStandardChapterTemplate(this.story.template)) {
+      const normalized = normalizedStandardChapterBundle(
+        this.story.template,
+        source.bundle,
+        number,
+      );
+      return JSON.stringify(
+        translationStandardChapterBundle(this.story.template, normalized),
+      );
+    }
 
     const fresh = this.getFreshBundleFrom(source.bundle as any);
     return JSON.stringify(fresh);
@@ -156,5 +268,139 @@ export class DraftService {
       default:
         break;
     }
+  }
+
+  private async findOrCreateDraft(
+    specifier: StoryChapterSpecifier,
+  ): Promise<{ draft: Draft; lastPublished: string } | null> {
+    let draft = await Draft.query().where(specifier).first();
+    let lastPublished = '';
+
+    const chapter = await Chapter.query().where(specifier).first();
+
+    if (chapter) {
+      lastPublished = chapter.updatedAt ? chapter.updatedAt.toString() : '';
+    }
+
+    if (!draft) {
+      if (!chapter) {
+        return null;
+      }
+
+      lastPublished = chapter.updatedAt.toString();
+      draft = await Draft.create({
+        ...specifier,
+        bundle: chapter.bundle,
+      });
+    }
+
+    return { draft, lastPublished };
+  }
+
+  private async loadSourceChapter(specifier: StoryChapterSpecifier) {
+    return Chapter.query()
+      .where({
+        ...specifier,
+        locale: this.cms.sourceLocale,
+      })
+      .first();
+  }
+
+  private baseDraftEditProps(
+    draft: Draft,
+    lastPublished: string,
+    providers: Providers,
+  ): DraftEditProps {
+    return {
+      draft: draft.meta,
+      bundle: draft.bundle,
+      lastPublished,
+      providers,
+      story: this.story,
+      hasEditReview: this.cms.config.storiesHasEditReview,
+    };
+  }
+
+  private async blockTemplateEditProps(options: {
+    template: StandardChapterTemplateId;
+    isTranslation: boolean;
+    draft: Draft;
+    base: DraftEditProps;
+    specifier: StoryChapterSpecifier;
+    newDraftId?: number | string | null;
+  }): Promise<StandardChapterEditProps> {
+    const { template, isTranslation, draft, base, specifier, newDraftId } = options;
+    const normalized = normalizedStandardChapterBundle(
+      template,
+      draft.bundle,
+      draft.number,
+    );
+    const { availableResources, resources } = await this.hydrateBlockDraftResources(
+      specifier.locale,
+      normalized.resources,
+    );
+
+    const sourceChapter = isTranslation ? await this.loadSourceChapter(specifier) : null;
+    const sourceBundle = isTranslation
+      ? normalizedStandardChapterBundle(template, sourceChapter?.bundle, draft.number)
+      : undefined;
+
+    const previousBlocks =
+      !isTranslation && draft.number > 1
+        ? await this.previousChapterBlocks(template, {
+            ...specifier,
+            number: draft.number,
+          })
+        : [];
+
+    return {
+      ...base,
+      isTranslation,
+      bundle: {
+        ...normalized,
+        resources,
+      },
+      availableResources,
+      ...(isTranslation
+        ? { source: sourceBundle, previousChapterBlocks: [] }
+        : {
+            isCreate: Number(newDraftId) === draft.id,
+            previousChapterBlocks: previousBlocks,
+          }),
+    };
+  }
+
+  private async hydrateBlockDraftResources(locale: string, resourceIds: string[]) {
+    const resourceService = await this.getResourceService();
+    const [availableResources, resources] = await Promise.all([
+      resourceService.listForLocale(locale),
+      resourceService.hydrate(resourceIds),
+    ]);
+
+    return { availableResources, resources };
+  }
+
+  private async previousChapterBlocks(
+    template: StandardChapterTemplateId,
+    specifier: StoryChapterSpecifier,
+  ) {
+    const loadBundle = async (spec: StoryChapterSpecifier) => {
+      const previousDraft = await Draft.query().where(spec).first();
+      if (previousDraft) {
+        return previousDraft.bundle;
+      }
+
+      const previousChapter = await Chapter.query().where(spec).first();
+      return previousChapter?.bundle ?? null;
+    };
+
+    return loadPreviousChapterBlocks(template, specifier, loadBundle);
+  }
+
+  private async getResourceService(): Promise<DraftResourceService> {
+    if (this.dependencies.resourceService) return this.dependencies.resourceService;
+
+    const { ResourceService } = await import('./resource_service.js');
+    return new ResourceService();
   }
 }

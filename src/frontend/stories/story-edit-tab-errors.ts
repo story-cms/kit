@@ -2,11 +2,34 @@ export type StoryEditTab = 'details' | 'sections' | 'resources';
 
 const STORY_EDIT_TAB_ORDER: StoryEditTab[] = ['details', 'sections', 'resources'];
 
-const STORY_EDIT_TAB_LABELS: Record<StoryEditTab, string | ((sectionTabLabel: string) => string)> = {
+const STORY_EDIT_TAB_LABELS: Record<
+  StoryEditTab,
+  string | ((sectionTabLabel: string) => string)
+> = {
   details: 'Details',
   sections: (sectionTabLabel) => sectionTabLabel,
   resources: 'Resources',
 };
+
+const STORY_DETAILS_ERROR_PREFIXES = [
+  'bundle.title',
+  'bundle.coverImage',
+  'bundle.description',
+  'bundle.chapterLimit',
+  'bundle.tags',
+  'bundle.storyType',
+  'bundle.chapterType',
+  'bundle.sectionType',
+  'bundle.visibility',
+  'bundle.template',
+  'bundle.isPublished',
+] as const;
+
+function isStoryDetailsError(key: string): boolean {
+  return STORY_DETAILS_ERROR_PREFIXES.some(
+    (prefix) => key === prefix || key.startsWith(`${prefix}.`),
+  );
+}
 
 function errorKeyBelongsToTab(key: string, tab: StoryEditTab): boolean {
   if (tab === 'sections') {
@@ -15,11 +38,7 @@ function errorKeyBelongsToTab(key: string, tab: StoryEditTab): boolean {
   if (tab === 'resources') {
     return key.startsWith('bundle.resources');
   }
-  return (
-    key.startsWith('bundle.') &&
-    !key.startsWith('bundle.sections') &&
-    !key.startsWith('bundle.resources')
-  );
+  return isStoryDetailsError(key);
 }
 
 export function storyEditTabHasError(

@@ -3,7 +3,7 @@
     <template #main>
       <StatTiles :stats="stats" :is-loading="isLoading" :error="error" />
 
-      <ActionGrid :items="actionItems" @action="handleActionGrid" />
+      <ActionGrid :items="actionItems" @action="onActionGrid" />
 
       <section>
         <div>
@@ -66,7 +66,7 @@ import IndexTabs from '../shared/index-tabs.vue';
 import LanguageBlock from './language-block.vue';
 import ActionGrid, { ActionGridItem } from './action-grid.vue';
 import Icon from '../shared/icon.vue';
-import { BookOpen, FileText, Languages } from '@lucide/vue';
+import { BookOpen, FileText, UserRoundPlus } from '@lucide/vue';
 import { ref, computed, onMounted } from 'vue';
 import { router } from '@inertiajs/vue3';
 import axios from 'axios';
@@ -108,8 +108,8 @@ const actionItems = computed<ActionGridItem[]>(() => {
       label: 'Create page',
     },
     {
-      url: `/${shared.locale}/settings/languages/edit`,
-      icon: Languages,
+      url: `/${shared.locale}/user`,
+      icon: UserRoundPlus,
       title: 'Add a user',
       description: 'Invite teammates to create, edit, and manage content.',
       disabled,
@@ -118,7 +118,7 @@ const actionItems = computed<ActionGridItem[]>(() => {
   ];
 });
 
-const handleActionGrid = (url: string) => {
+const onActionGrid = (url: string) => {
   router.visit(url);
 };
 

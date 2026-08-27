@@ -114,14 +114,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, onUnmounted, nextTick, watch } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { Eye, EyeOff } from '@lucide/vue';
 import { router } from '@inertiajs/vue3';
 import type { Errors } from '@inertiajs/core';
 import type { FieldSpec, DraftEditProps, SharedPageProps } from '../../types';
 import { ResponseStatus } from '../../types';
 import { useSharedStore, useModelStore, useWidgetsStore, useDraftsStore } from '../store';
-import { storeToRefs } from 'pinia';
+import { useTranslationDraftLayout } from './use-translation-draft-layout';
 import AppLayout from '../shared/app-layout.vue';
 import DraftEditActions from './components/draft-edit-actions.vue';
 import TabButton from '../shared/tab-button.vue';
@@ -149,9 +149,8 @@ widgets.setProviders(props.providers);
 const shared = useSharedStore();
 const model = useModelStore();
 
-const sourceLanguageName = computed(
-  () => shared.config.languages?.[0]?.language ?? 'English',
-);
+const sourceSection = ref<HTMLElement | null>(null);
+const { sourceLanguageName, marginRight } = useTranslationDraftLayout(sourceSection);
 
 const defaultTitle = computed(() => {
   return `New ${props.story.chapterType}`;
@@ -267,38 +266,7 @@ const reject = () => {
   );
 };
 
-const marginRight = computed(() => {
-  if (shared.isLargeScreen && shared.hasOpenSidebar) {
-    return (shared.layoutWidth - shared.headerWidth - 264) / 2 - 12;
-  }
-  if (shared.isLargeScreen && !shared.hasOpenSidebar) {
-    return (shared.layoutWidth - shared.headerWidth - 84) / 2 - 12;
-  }
-  return 0;
-});
-
-const sourceLength = ref(0);
-
-const sourceSection = ref<HTMLElement | null>(null);
-let resizeObserver: ResizeObserver | null = null;
-
-const setDimensions = () => {
-  if (sourceSection.value) {
-    const sourceSectionRect = sourceSection.value.getBoundingClientRect();
-    shared.setSourceSectionWidth(sourceSectionRect.width);
-  }
-};
-
-const { showSourceColumn } = storeToRefs(shared);
-
-watch(showSourceColumn, async (isVisible) => {
-  if (isVisible) {
-    await nextTick();
-    setDimensions();
-  }
-});
-
-onMounted(async () => {
+onMounted(() => {
   model.$subscribe(() => {
     if (isSettingErrors) {
       isSettingErrors = false;
@@ -308,38 +276,5 @@ onMounted(async () => {
     title.value = model.getField('title', defaultTitle.value);
     saveDraft();
   });
-
-  shared.setSingleColumn(true);
-  shared.setShowMetaBox(false);
-  if (shared.config.hasAppPreview) {
-    shared.setShowAppPreview(false);
-  }
-
-  sourceLength.value = Object.keys(model.source).length;
-
-  await nextTick();
-  setDimensions();
-
-  if (sourceSection.value) {
-    resizeObserver = new ResizeObserver(() => {
-      setDimensions();
-    });
-    resizeObserver.observe(sourceSection.value);
-  }
-  window.addEventListener('resize', setDimensions);
-});
-
-onUnmounted(() => {
-  shared.setSingleColumn(false);
-  shared.setShowMetaBox(true);
-  if (shared.config.hasAppPreview) {
-    shared.setShowAppPreview(true);
-  }
-
-  if (resizeObserver) {
-    resizeObserver.disconnect();
-    resizeObserver = null;
-  }
-  window.removeEventListener('resize', setDimensions);
 });
 </script>

@@ -30,6 +30,11 @@ export interface Version {
   locale: string;
 }
 
+export interface StoryChapterSpecifier extends Version {
+  storyId: number;
+  number: number;
+}
+
 export type VisibilityType = 'public' | 'guests' | 'leaders';
 
 export interface LabelHintSection {
@@ -236,9 +241,65 @@ export interface StorySection {
   description?: string;
 }
 
+export interface ChapterBlockVisibility {
+  presenter: boolean;
+  personal: boolean;
+  inNavigation: boolean;
+  hidden: boolean;
+}
+
+export type ChapterBlockKind = 'content' | 'title' | 'scripture';
+
+interface ChapterBlockBase {
+  id: string;
+  kind: ChapterBlockKind;
+  blockName: string;
+  visibility: ChapterBlockVisibility;
+}
+
+export type ChapterContentItemKind = 'image' | 'video' | 'scripture';
+
+export interface ChapterContentItem {
+  id: string;
+  kind: ChapterContentItemKind;
+  imageUrl?: string;
+  video?: { url: string | null };
+  scripture?: Scripture;
+}
+
+export interface ChapterContentBlock extends ChapterBlockBase {
+  kind: 'content';
+  displayName: string;
+  blockRole: string;
+  style: string;
+  content: string;
+  items: ChapterContentItem[];
+  leadersNotes: string;
+  showLeadersNotes: boolean;
+}
+
+export interface ChapterTitleBlock extends ChapterBlockBase {
+  kind: 'title';
+  title: string;
+  subtitle: string;
+  coverImage?: string;
+}
+
+export interface ChapterScriptureBlock extends ChapterBlockBase {
+  kind: 'scripture';
+  displayName: string;
+  scripture: Scripture;
+  leadersNotes: string;
+  showLeadersNotes: boolean;
+}
+
+export type ChapterBlock =
+  ChapterContentBlock | ChapterTitleBlock | ChapterScriptureBlock;
+
 export interface StorySpec {
   id: number;
   name: string;
+  template?: string;
   coverImage: string;
   chapterLimit: number;
   chapterType: string;
@@ -438,6 +499,41 @@ export interface DraftEditProps {
   hasEditReview: boolean;
 }
 
+export interface StandardChapterAudio {
+  url: string | null;
+  length: number | null;
+}
+
+export interface StandardChapterBundle {
+  number: string;
+  title: string;
+  description: string;
+  coverImage: string;
+  blocks: ChapterBlock[];
+  resources: string[];
+  devotionAudio?: StandardChapterAudio;
+}
+
+export type PreviewBundle = StandardChapterBundle | Record<string, unknown>;
+
+export type StandardChapterEditBundle = Omit<StandardChapterBundle, 'resources'> & {
+  resources: ResourceItem[];
+};
+
+export interface StandardChapterEditProps {
+  draft: DraftMeta;
+  bundle: StandardChapterEditBundle;
+  story: StorySpec;
+  availableResources: ResourceItem[];
+  providers: Providers;
+  hasEditReview: boolean;
+  lastPublished: string;
+  isCreate?: boolean;
+  isTranslation?: boolean;
+  source?: StandardChapterBundle;
+  previousChapterBlocks?: ChapterBlock[];
+}
+
 export interface ChapterMeta {
   number: number;
   createdAt: string;
@@ -446,7 +542,7 @@ export interface ChapterMeta {
 
 export interface PreviewProps {
   chapter: ChapterMeta;
-  bundle: any;
+  bundle: PreviewBundle;
   bundleView: string;
   story: StorySpec;
   title: string;
@@ -705,6 +801,16 @@ export interface InvitationForApi {
 ///  configuration
 /// ----------------------------------------------------
 
+export type MediaKind = 'video' | 'image' | 'audio';
+
+export interface MediaUploadConfig {
+  description: string;
+  extensions: string[];
+  maxSize: number;
+}
+
+export type MediaCollectionMap = Partial<Record<MediaKind, string>>;
+
 // trackable settings should not be nested
 // no optional settings in the type definition
 export type CmsConfig = {
@@ -715,6 +821,8 @@ export type CmsConfig = {
   hasAppPreview: boolean;
   microcopySource: string;
   videoCollectionId: string;
+  imageCollectionId: string;
+  audioCollectionId: string;
   languages: LanguageSpecification[];
   subscriptions: Subscription[];
 
@@ -742,6 +850,8 @@ export interface UiConfig {
   supportEmail: string;
   hasAppPreview: boolean;
   videoCollectionId: string;
+  imageCollectionId: string;
+  audioCollectionId: string;
   languages: LanguageSpecification[];
   subscriptions: Subscription[];
 }
@@ -762,6 +872,8 @@ export interface BundleTemplate {
   id: string;
   name: string;
   fields: FieldSpec[];
+  /** Bespoke-only override of the global media collection IDs. Not used by storyTemplates. */
+  collections?: MediaCollectionMap;
 }
 
 export interface LanguageSpecification {

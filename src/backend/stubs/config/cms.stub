@@ -1,8 +1,7 @@
 {{{
   exports({ to: app.configPath('cms.ts') })
 }}}
-import type { FieldSpec, CmsConfig, mediaConfig, StreamSpec, Subscription } from '@story-cms/kit';
-import { courseFields } from '@story-cms/kit';
+import type { FieldSpec, CmsConfig, StreamSpec, Subscription } from '@story-cms/kit';
 
 // ---------------------------------------
 // Subscriptions
@@ -22,22 +21,12 @@ const subscriptions: Subscription[] = [
 ];
 
 // ---------------------------------------
-// Media upload configurations
+// Media collection IDs
 // ---------------------------------------
 
-const videoUploadConfig: mediaConfig = {
-  collection: 'ceaec8fa-9293-48b0-948e-1ae49c9f3a4b',
-  description: 'MP4 and MOV files up to 4GB',
-  extensions: ['.mp4', '.mov'],
-  maxSize: 4000000000,
-};
-
-const imageUploadConfig: mediaConfig = {
-  collection: 'journeys_template',
-  description: 'SVG, PNG, JPG, GIF up to 5MB',
-  extensions: ['.jpeg', '.jpg', '.png', '.svg'],
-  maxSize: 5000000,
-};
+const videoCollectionId = 'ceaec8fa-9293-48b0-948e-1ae49c9f3a4b';
+const imageCollectionId = 'journeys_template';
+const audioCollectionId = 'audio/default';
 
 // ---------------------------------------
 // Custom templates
@@ -108,12 +97,9 @@ const cmsConfig: Partial<CmsConfig> = {
     */
   microcopySource: '',
 
-  /**
-    * Bunny collection ID for resource video uploads
-    * example: videoUploadConfig.collection
-    */
-   videoCollectionId: videoUploadConfig.collection,
-
+  videoCollectionId,
+  imageCollectionId,
+  audioCollectionId,
 
   streams: [devotionStream],
 
@@ -138,7 +124,12 @@ const cmsConfig: Partial<CmsConfig> = {
     {
       id: 'course',
       name: 'Course',
-      fields: [courseFields(videoUploadConfig, imageUploadConfig)],
+      fields: [],
+    },
+    {
+      id: 'devotion',
+      name: 'Devotion',
+      fields: [],
     },
   ],
 

@@ -8,6 +8,7 @@ import BooleanField from './fields/boolean-field.vue';
 import InvitationsEdit from './invitation/invitations-edit.vue';
 import InvitationsIndex from './invitation/invitations-index.vue';
 import ChapterPreview from './stories/chapter-preview.vue';
+import StandardChapterEdit from './stories/standard-chapter-edit.vue';
 import ContextMenu from './shared/context-menu.vue';
 import CreateAccount from './auth/create-account.vue';
 import DashboardIndex from './dashboard/dashboard-index.vue';
@@ -79,6 +80,7 @@ export {
   AudioField,
   BooleanField,
   ChapterPreview,
+  StandardChapterEdit,
   ContextMenu,
   CreateAccount,
   DashboardIndex,
