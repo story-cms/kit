@@ -61,6 +61,15 @@
       />
     </Variant>
 
+    <Variant title="Stacked content items">
+      <StandardChapterEditBlocks
+        v-model:blocks="stackedItemBlocks"
+        :video-collection-id="sharedProps.config.videoCollectionId"
+        :image-collection-id="sharedProps.config.imageCollectionId"
+        template="devotion"
+        chapter-type="Day"
+      />
+    </Variant>
   </Story>
 </template>
 
@@ -86,6 +95,17 @@ const setupProviders: StoryHandler = (): void => {
 
 const defaultBlocks = ref<ChapterBlock[]>([createEmptyContentBlock()]);
 const emptyBlocks = ref<ChapterBlock[]>([]);
+const stackedItemBlocks = ref<ChapterBlock[]>([
+  {
+    ...createEmptyContentBlock(),
+    items: [
+      createContentItem('text'),
+      createContentItem('image'),
+      createContentItem('video'),
+      createContentItem('scripture'),
+    ],
+  },
+]);
 const previousChapterBlocks = samplePreviousDevotionChapterBlocks;
 const courseBlocks = ref<ChapterBlock[]>([...samplePreviousCourseChapterBlocks]);
 const mixedBlocks = ref<ChapterBlock[]>([...sampleMixedChapterBlocks]);

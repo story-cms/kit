@@ -7,7 +7,7 @@
     :error-message="primaryErrorMessage"
     :presenter-visible="block.visibility.presenter && !block.visibility.hidden"
     :personal-visible="block.visibility.personal && !block.visibility.hidden"
-    :navigation-visible="block.visibility.inNavigation && !block.visibility.hidden"
+    :navigation-visible="block.visibility.inNavigation"
     kind-label="title"
     :read-only="readOnly"
     :translation-mode="translationMode"
@@ -101,7 +101,10 @@
     </div>
     <div class="mt-4"></div>
     <template v-if="!readOnly && !translationMode" #footer>
-      <BlockVisibility v-model="visibilityModel" :simplified="isDevotionTemplate(props.template)" />
+      <BlockVisibility
+        v-model="visibilityModel"
+        :simplified="isDevotionTemplate(props.template)"
+      />
     </template>
     <template v-else-if="translationMode && !readOnly" #footer>
       <BlockVisibility

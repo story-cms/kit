@@ -1,7 +1,7 @@
 <template>
   <div
     dir="ltr"
-    class="relative h-48 w-full p-9"
+    class="relative flex h-full w-full items-center justify-center p-9"
     :class="dropStyle"
     @dragover.prevent="onDragOver"
     @dragenter="onDragEnter"

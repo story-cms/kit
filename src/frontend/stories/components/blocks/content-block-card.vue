@@ -7,7 +7,7 @@
     :error-message="primaryErrorMessage"
     :presenter-visible="block.visibility.presenter && !block.visibility.hidden"
     :personal-visible="block.visibility.personal && !block.visibility.hidden"
-    :navigation-visible="block.visibility.inNavigation && !block.visibility.hidden"
+    :navigation-visible="block.visibility.inNavigation"
     kind-label="content"
     :read-only="readOnly"
     :translation-mode="translationMode"
@@ -108,21 +108,19 @@
         </div>
       </div>
 
-      <div class="mt-4">
+      <div class="mt-4 space-y-3">
         <template v-for="(item, itemIndex) in block.items" :key="item.id">
           <div
             :data-block-field-row="`content-item-${itemIndex}`"
+            class="rounded-xl border border-gray-200 px-4 pt-2"
+            :class="{ 'pb-4': !isItemCollapsed(item.id) }"
             :draggable="canDragItems && activeItemDragId === item.id"
             @dragstart.stop="onItemDragStart(itemIndex)"
             @dragover.prevent.stop
             @drop.stop="onItemDrop(itemIndex)"
             @dragend.stop="onItemDragEndHandler"
           >
-            <div
-              class="pt-6"
-              :class="{ 'border-t border-gray-100': itemIndex > 0 }"
-              data-block-field-content
-            >
+            <div data-block-field-content>
               <div class="mb-2 flex items-center justify-between gap-3">
                 <div class="flex items-center gap-2">
                   <button
@@ -134,64 +132,95 @@
                   >
                     <GripVertical class="size-4" aria-hidden="true" />
                   </button>
-                  <span class="input-label mb-0">{{ itemLabel(item.kind) }}</span>
+                  <button
+                    type="button"
+                    class="input-label mb-0 inline-flex items-center gap-2 text-left"
+                    @click="toggleItemExpanded(item.id)"
+                  >
+                    <component
+                      :is="itemIcon(item.kind)"
+                      class="size-4 shrink-0 text-gray-700"
+                      aria-hidden="true"
+                    />
+                    {{ itemLabel(item.kind) }}
+                  </button>
                 </div>
-                <button
-                  v-if="!readOnly && !translationMode"
-                  type="button"
-                  class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
-                  :aria-label="`Remove ${itemLabel(item.kind).toLowerCase()} item`"
-                  @click="removeItem(item.id)"
-                >
-                  <Trash2 class="size-4" aria-hidden="true" />
-                </button>
+                <div class="flex items-center gap-1">
+                  <button
+                    v-if="!readOnly && !translationMode"
+                    type="button"
+                    class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                    :aria-label="`Remove ${itemLabel(item.kind).toLowerCase()} item`"
+                    @click="removeItem(item.id)"
+                  >
+                    <Trash2 class="size-4" aria-hidden="true" />
+                  </button>
+                  <button
+                    type="button"
+                    class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+                    :aria-label="
+                      isItemCollapsed(item.id)
+                        ? `Expand ${itemLabel(item.kind).toLowerCase()} item`
+                        : `Collapse ${itemLabel(item.kind).toLowerCase()} item`
+                    "
+                    @click="toggleItemExpanded(item.id)"
+                  >
+                    <ChevronDown
+                      class="size-4 origin-center transition-transform duration-200 ease-out"
+                      :class="{ 'rotate-180': !isItemCollapsed(item.id) }"
+                      aria-hidden="true"
+                    />
+                  </button>
+                </div>
               </div>
 
-              <BlockRichTextEditor
-                v-if="item.kind === 'text'"
-                :model-value="item.content ?? ''"
-                placeholder="Enter your content..."
-                :read-only="readOnly"
-                @update:model-value="updateItem(item.id, { content: $event })"
-              />
+              <div v-if="!isItemCollapsed(item.id)">
+                <BlockRichTextEditor
+                  v-if="item.kind === 'text'"
+                  :model-value="item.content ?? ''"
+                  placeholder="Enter your content..."
+                  :read-only="readOnly"
+                  @update:model-value="updateItem(item.id, { content: $event })"
+                />
 
-              <div v-else-if="item.kind === 'image'" class="[&>div]:mt-0">
-                <BlockImageField
-                  :model-value="item.imageUrl ?? ''"
-                  :collection-id="imageCollectionId ?? ''"
+                <div v-else-if="item.kind === 'image'" class="[&>div]:mt-0">
+                  <BlockImageField
+                    :model-value="item.imageUrl ?? ''"
+                    :collection-id="imageCollectionId ?? ''"
+                    :block-index="blockIndex"
+                    :item-index="itemIndex"
+                    label=""
+                    :read-only="readOnly || translationMode"
+                    @update:model-value="updateItem(item.id, { imageUrl: $event })"
+                  />
+                </div>
+
+                <div v-else-if="item.kind === 'video'" class="[&>div]:mt-0">
+                  <BlockVideoField
+                    :model-value="item.video ?? { url: null }"
+                    :collection-id="videoCollectionId ?? ''"
+                    :block-index="blockIndex"
+                    :item-index="itemIndex"
+                    label=""
+                    :read-only="readOnly || translationMode"
+                    @update:model-value="updateItem(item.id, { video: $event })"
+                  />
+                </div>
+
+                <BlockScriptureField
+                  v-else-if="item.kind === 'scripture'"
+                  :model-value="item.scripture ?? { reference: '', verse: '' }"
                   :block-index="blockIndex"
                   :item-index="itemIndex"
-                  label=""
-                  :read-only="readOnly || translationMode"
-                  @update:model-value="updateItem(item.id, { imageUrl: $event })"
+                  reference-label="Bible Reference"
+                  passage-label="Scripture Text"
+                  reference-placeholder="e.g., John 3:16, Romans 8:28–30"
+                  passage-placeholder="Paste or type the scripture passage here..."
+                  :read-only="readOnly"
+                  :reference-read-only="readOnly || translationMode"
+                  @update:model-value="updateItem(item.id, { scripture: $event })"
                 />
               </div>
-
-              <div v-else-if="item.kind === 'video'" class="[&>div]:mt-0">
-                <BlockVideoField
-                  :model-value="item.video ?? { url: null }"
-                  :collection-id="videoCollectionId ?? ''"
-                  :block-index="blockIndex"
-                  :item-index="itemIndex"
-                  label=""
-                  :read-only="readOnly || translationMode"
-                  @update:model-value="updateItem(item.id, { video: $event })"
-                />
-              </div>
-
-              <BlockScriptureField
-                v-else-if="item.kind === 'scripture'"
-                :model-value="item.scripture ?? { reference: '', verse: '' }"
-                :block-index="blockIndex"
-                :item-index="itemIndex"
-                reference-label="Bible Reference"
-                passage-label="Scripture Text"
-                reference-placeholder="e.g., John 3:16, Romans 8:28–30"
-                passage-placeholder="Paste or type the scripture passage here..."
-                :read-only="readOnly"
-                :reference-read-only="readOnly || translationMode"
-                @update:model-value="updateItem(item.id, { scripture: $event })"
-              />
             </div>
           </div>
         </template>
@@ -199,7 +228,9 @@
 
       <ContentAddItemsToolbar
         v-if="!readOnly && !translationMode"
-        :show-add-leaders-notes="!isDevotionTemplate(props.template) && !block.showLeadersNotes"
+        :show-add-leaders-notes="
+          !isDevotionTemplate(props.template) && !block.showLeadersNotes
+        "
         @add-text="addItem('text')"
         @add-image="addItem('image')"
         @add-video="addItem('video')"
@@ -248,7 +279,10 @@
     </div>
 
     <template v-if="!readOnly && !translationMode" #footer>
-      <BlockVisibility v-model="visibilityModel" :simplified="isDevotionTemplate(props.template)" />
+      <BlockVisibility
+        v-model="visibilityModel"
+        :simplified="isDevotionTemplate(props.template)"
+      />
     </template>
     <template v-else #footer>
       <BlockVisibility
@@ -261,8 +295,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { Crown, GripVertical, LayoutList, Trash2 } from '@lucide/vue';
+import { computed, ref, type Component } from 'vue';
+import {
+  BookMarked,
+  ChevronDown,
+  Crown,
+  FileText,
+  GripVertical,
+  Image,
+  LayoutList,
+  Trash2,
+  Video,
+} from '@lucide/vue';
 
 import type { ChapterContentBlock, ChapterContentItem } from '../../../../types';
 import { isDevotionTemplate } from '../../../../shared/story_helpers';
@@ -352,6 +396,11 @@ const removeItem = (id: string) => {
     'items',
     props.block.items.filter((item) => item.id !== id),
   );
+  if (collapsedItemIds.value.has(id)) {
+    const next = new Set(collapsedItemIds.value);
+    next.delete(id);
+    collapsedItemIds.value = next;
+  }
 };
 
 const updateItem = (id: string, patch: Partial<ChapterContentItem>) => {
@@ -375,15 +424,40 @@ const itemLabels: Record<ChapterContentItem['kind'], string> = {
   scripture: 'Scripture',
 };
 
+const itemIcons: Record<ChapterContentItem['kind'], Component> = {
+  text: FileText,
+  image: Image,
+  video: Video,
+  scripture: BookMarked,
+};
+
 const itemLabel = (kind: ChapterContentItem['kind']): string => itemLabels[kind];
+const itemIcon = (kind: ChapterContentItem['kind']) => itemIcons[kind];
 
 const canDragItems = computed(() => !props.readOnly && !props.translationMode);
 
-const { onDragStart: onItemDragStart, onDrop: onItemDrop, onDragEnd: onItemDragEnd } =
-  useIndexReorder(
-    () => props.block.items,
-    (items) => updateField('items', items),
-  );
+const collapsedItemIds = ref<Set<string>>(new Set());
+
+const isItemCollapsed = (id: string) => collapsedItemIds.value.has(id);
+
+const toggleItemExpanded = (id: string) => {
+  const next = new Set(collapsedItemIds.value);
+  if (next.has(id)) {
+    next.delete(id);
+  } else {
+    next.add(id);
+  }
+  collapsedItemIds.value = next;
+};
+
+const {
+  onDragStart: onItemDragStart,
+  onDrop: onItemDrop,
+  onDragEnd: onItemDragEnd,
+} = useIndexReorder(
+  () => props.block.items,
+  (items) => updateField('items', items),
+);
 
 const activeItemDragId = ref<string | null>(null);
 
