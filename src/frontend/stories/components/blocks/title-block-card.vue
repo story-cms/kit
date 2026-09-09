@@ -101,13 +101,21 @@
     </div>
     <div class="mt-4"></div>
     <template v-if="!readOnly && !translationMode" #footer>
-      <BlockVisibility v-model="visibilityModel" />
+      <BlockVisibility v-model="visibilityModel" :simplified="isDevotionTemplate(props.template)" />
     </template>
     <template v-else-if="translationMode && !readOnly" #footer>
-      <BlockVisibility v-model="visibilityModel" :read-only="true" />
+      <BlockVisibility
+        v-model="visibilityModel"
+        :read-only="true"
+        :simplified="isDevotionTemplate(props.template)"
+      />
     </template>
     <template v-else-if="readOnly" #footer>
-      <BlockVisibility v-model="visibilityModel" :read-only="true" />
+      <BlockVisibility
+        v-model="visibilityModel"
+        :read-only="true"
+        :simplified="isDevotionTemplate(props.template)"
+      />
     </template>
   </BlockCardShell>
 </template>
@@ -117,6 +125,7 @@ import { computed } from 'vue';
 import { PencilLine } from '@lucide/vue';
 
 import type { ChapterTitleBlock } from '../../../../types';
+import { isDevotionTemplate } from '../../../../shared/story_helpers';
 import BlockCardShell from './block-card-shell.vue';
 import BlockImageField from './block-image-field.vue';
 import BlockVisibility from './block-visibility.vue';
@@ -128,10 +137,12 @@ const props = withDefaults(
     blockIndex: number;
     expanded: boolean;
     imageCollectionId?: string;
+    template?: string | null;
     readOnly?: boolean;
     translationMode?: boolean;
   }>(),
   {
+    template: null,
     readOnly: false,
     translationMode: false,
   },

@@ -19,7 +19,6 @@ import { StoryHandler } from '../shared/helpers.js';
 import { useSharedStore } from '../store/shared.js';
 import {
   createEmptyContentBlock,
-  createEmptyScriptureBlock,
   createEmptyTitleBlock,
   createContentItem,
 } from '../stories/components/blocks/block-utils';
@@ -4564,18 +4563,29 @@ export const sampleMixedChapterBlocks: ChapterBlock[] = [
     displayName: 'Session Introduction',
     blockRole: 'introduction',
     style: 'secondary',
-    content:
-      'Welcome to this session on the Gospel of John. We will explore how John presents Jesus as the Word made flesh.',
+    items: [
+      {
+        ...createContentItem('text'),
+        content:
+          'Welcome to this session on the Gospel of John. We will explore how John presents Jesus as the Word made flesh.',
+      },
+    ],
   },
   {
-    ...createEmptyScriptureBlock(),
+    ...createEmptyContentBlock(),
     blockName: 'Opening Passage',
     displayName: 'Opening Scripture',
-    scripture: {
-      reference: 'John 1:1-3',
-      verse:
-        'In the beginning was the Word, and the Word was with God, and the Word was God. He was in the beginning with God. All things were made through him, and without him was not any thing made that was made.',
-    },
+    blockRole: 'scripture',
+    items: [
+      {
+        ...createContentItem('scripture'),
+        scripture: {
+          reference: 'John 1:1-3',
+          verse:
+            'In the beginning was the Word, and the Word was with God, and the Word was God. He was in the beginning with God. All things were made through him, and without him was not any thing made that was made.',
+        },
+      },
+    ],
   },
   {
     ...createEmptyTitleBlock(),
@@ -4588,17 +4598,23 @@ export const sampleMixedChapterBlocks: ChapterBlock[] = [
     blockName: 'Further Reading',
     displayName: 'External Resource',
     blockRole: 'summary',
-    content: 'https://example.com/john-overview',
+    items: [{ ...createContentItem('text'), content: 'https://example.com/john-overview' }],
   },
   {
-    ...createEmptyScriptureBlock(),
+    ...createEmptyContentBlock(),
     blockName: 'Key Verse',
     displayName: 'Key Verse',
-    scripture: {
-      reference: 'John 3:16',
-      verse:
-        'For God so loved the world, that he gave his only Son, that whoever believes in him should not perish but have eternal life.',
-    },
+    blockRole: 'scripture',
+    items: [
+      {
+        ...createContentItem('scripture'),
+        scripture: {
+          reference: 'John 3:16',
+          verse:
+            'For God so loved the world, that he gave his only Son, that whoever believes in him should not perish but have eternal life.',
+        },
+      },
+    ],
     leadersNotes:
       'Pause here and invite the group to reflect on the scope of "the world" in this verse.',
     showLeadersNotes: true,
@@ -4609,8 +4625,12 @@ export const sampleMixedChapterBlocks: ChapterBlock[] = [
     displayName: 'Session Summary',
     blockRole: 'summary',
     style: 'primary',
-    content:
-      '**Key takeaways:** Jesus is the eternal Word; belief in him brings eternal life.',
+    items: [
+      {
+        ...createContentItem('text'),
+        content: '**Key takeaways:** Jesus is the eternal Word; belief in him brings eternal life.',
+      },
+    ],
     visibility: { presenter: true, personal: false, inNavigation: true, hidden: false },
   },
   {
@@ -4618,7 +4638,6 @@ export const sampleMixedChapterBlocks: ChapterBlock[] = [
     blockName: 'Session Video',
     displayName: 'Watch Session',
     blockRole: 'introduction',
-    content: '',
     items: [createContentItem('video')],
   },
 ];
@@ -4805,14 +4824,13 @@ export const sampleDevotionChapterBundle: StandardChapterEditBundle = {
       blockName: 'Opening',
       displayName: 'Opening Devotion',
       blockRole: 'introduction',
-      content: "Welcome to today's devotion.",
+      items: [{ ...createContentItem('text'), content: "Welcome to today's devotion." }],
     },
     {
       ...createEmptyContentBlock(),
       blockName: 'Passage',
       displayName: 'Scripture Reading',
       blockRole: 'scripture',
-      content: '',
       items: [createContentItem('scripture')],
     },
   ],
@@ -4859,9 +4877,7 @@ export const devotionDraftEditChapterTwoCreateProps: Omit<StandardChapterEditPro
 export const devotionDraftEditValidationErrors: Record<string, string[]> = {
   'bundle.title': ['The title field must have at least 1 character'],
   'bundle.blocks.0.blockName': ['Every block must have a name'],
-  'bundle.blocks.0': [
-    'A content block must have text or at least one media or scripture item',
-  ],
+  'bundle.blocks.0': ['A content block must have at least one item'],
   'bundle.resources.0': ['Invalid resource'],
 };
 
@@ -4901,21 +4917,23 @@ export const sampleCourseChapterBundle: StandardChapterEditBundle = {
       blockName: 'Welcome',
       displayName: 'Session Introduction',
       blockRole: 'introduction',
-      content: 'Welcome to this session.',
+      items: [{ ...createContentItem('text'), content: 'Welcome to this session.' }],
     },
     {
       ...createEmptyContentBlock(),
       blockName: 'Teaching',
       displayName: 'Main Teaching',
       blockRole: 'teaching',
-      content: 'Core teaching content for this session.',
+      items: [
+        { ...createContentItem('text'), content: 'Core teaching content for this session.' },
+      ],
     },
     {
       ...createEmptyContentBlock(),
       blockName: 'Recap',
       displayName: 'Session Recap',
       blockRole: 'recap',
-      content: 'Key points from today.',
+      items: [{ ...createContentItem('text'), content: 'Key points from today.' }],
     },
   ],
 };
@@ -4961,9 +4979,7 @@ export const courseDraftEditChapterTwoCreateProps: Omit<StandardChapterEditProps
 export const courseDraftEditValidationErrors: Record<string, string[]> = {
   'bundle.title': ['The title field must have at least 1 character'],
   'bundle.blocks.0.blockName': ['Every block must have a name'],
-  'bundle.blocks.0': [
-    'A content block must have text or at least one media or scripture item',
-  ],
+  'bundle.blocks.0': ['A content block must have at least one item'],
   'bundle.resources.0': ['Invalid resource'],
 };
 
@@ -4979,7 +4995,13 @@ export const sampleCourseDraftTranslationBundle: StandardChapterEditBundle = {
   description: 'Sesión de apertura del curso.',
   blocks: sampleCourseDraftSourceBundle.blocks.map((block) => {
     if (block.kind !== 'content') return { ...block };
-    return { ...block, content: '', displayName: '' };
+    return {
+      ...block,
+      displayName: '',
+      items: block.items.map((item) =>
+        item.kind === 'text' ? { ...item, content: '' } : item,
+      ),
+    };
   }),
 };
 
@@ -4993,6 +5015,12 @@ export const sampleDevotionDraftTranslationBundle: StandardChapterEditBundle = {
   description: 'Una breve devoción diaria sobre el amor de Dios.',
   blocks: sampleDevotionDraftSourceBundle.blocks.map((block) => {
     if (block.kind !== 'content') return { ...block };
-    return { ...block, content: '', displayName: '' };
+    return {
+      ...block,
+      displayName: '',
+      items: block.items.map((item) =>
+        item.kind === 'text' ? { ...item, content: '' } : item,
+      ),
+    };
   }),
 };

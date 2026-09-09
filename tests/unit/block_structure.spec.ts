@@ -27,8 +27,7 @@ test.describe('cloneBlocksStructure', () => {
         displayName: 'Opening Devotion',
         blockRole: 'introduction',
         style: 'secondary',
-        content: 'Old content',
-        items: [createContentItem('video')],
+        items: [createContentItem('video'), createContentItem('text')],
         visibility: {
           presenter: false,
           personal: true,
@@ -38,30 +37,11 @@ test.describe('cloneBlocksStructure', () => {
         leadersNotes: 'Secret notes',
         showLeadersNotes: true,
       },
-      {
-        id: 'scripture-1',
-        kind: 'scripture',
-        blockName: 'Passage',
-        displayName: 'Scripture Reading',
-        scripture: { reference: 'John 3:16', verse: 'For God so loved...' },
-        visibility: {
-          presenter: false,
-          personal: false,
-          inNavigation: false,
-          hidden: false,
-        },
-        leadersNotes: 'More notes',
-        showLeadersNotes: true,
-      },
     ]);
 
-    expect(source).toHaveLength(3);
-    expect(source.map((block) => block.blockName)).toEqual(['', '', '']);
-    expect(source.map((block) => block.kind ?? 'content')).toEqual([
-      'title',
-      'content',
-      'scripture',
-    ]);
+    expect(source).toHaveLength(2);
+    expect(source.map((block) => block.blockName)).toEqual(['', '']);
+    expect(source.map((block) => block.kind ?? 'content')).toEqual(['title', 'content']);
 
     const contentBlock = source[1] as Extract<(typeof source)[number], { kind: 'content' }>;
     expect(contentBlock.displayName).toBe('');
@@ -73,8 +53,10 @@ test.describe('cloneBlocksStructure', () => {
       inNavigation: false,
       hidden: false,
     });
-    expect(contentBlock.items).toHaveLength(1);
+    expect(contentBlock.items).toHaveLength(2);
     expect(contentBlock.items[0]?.kind).toBe('video');
+    expect(contentBlock.items[1]?.kind).toBe('text');
+    expect(contentBlock.items[1]?.content).toBe('');
   });
 
   test('clears content fields and assigns fresh ids', () => {
@@ -87,7 +69,6 @@ test.describe('cloneBlocksStructure', () => {
         displayName: 'Media Block',
         blockRole: 'commentary',
         style: 'primary',
-        content: 'Filled content',
         items: [
           {
             id: originalIds[1],
@@ -110,7 +91,6 @@ test.describe('cloneBlocksStructure', () => {
     expect(block.id).not.toBe(originalIds[0]);
     expect(block.blockName).toBe('');
     expect(block.displayName).toBe('');
-    expect(block.content).toBe('');
     expect(block.leadersNotes).toBe('');
     expect(block.showLeadersNotes).toBe(true);
     expect(block.items[0]?.id).not.toBe(originalIds[1]);

@@ -248,7 +248,7 @@ export interface ChapterBlockVisibility {
   hidden: boolean;
 }
 
-export type ChapterBlockKind = 'content' | 'title' | 'scripture';
+export type ChapterBlockKind = 'content' | 'title';
 
 interface ChapterBlockBase {
   id: string;
@@ -257,7 +257,7 @@ interface ChapterBlockBase {
   visibility: ChapterBlockVisibility;
 }
 
-export type ChapterContentItemKind = 'image' | 'video' | 'scripture';
+export type ChapterContentItemKind = 'image' | 'video' | 'scripture' | 'text';
 
 export interface ChapterContentItem {
   id: string;
@@ -265,6 +265,7 @@ export interface ChapterContentItem {
   imageUrl?: string;
   video?: { url: string | null };
   scripture?: Scripture;
+  content?: string;
 }
 
 export interface ChapterContentBlock extends ChapterBlockBase {
@@ -272,7 +273,6 @@ export interface ChapterContentBlock extends ChapterBlockBase {
   displayName: string;
   blockRole: string;
   style: string;
-  content: string;
   items: ChapterContentItem[];
   leadersNotes: string;
   showLeadersNotes: boolean;
@@ -285,16 +285,7 @@ export interface ChapterTitleBlock extends ChapterBlockBase {
   coverImage?: string;
 }
 
-export interface ChapterScriptureBlock extends ChapterBlockBase {
-  kind: 'scripture';
-  displayName: string;
-  scripture: Scripture;
-  leadersNotes: string;
-  showLeadersNotes: boolean;
-}
-
-export type ChapterBlock =
-  ChapterContentBlock | ChapterTitleBlock | ChapterScriptureBlock;
+export type ChapterBlock = ChapterContentBlock | ChapterTitleBlock;
 
 export interface StorySpec {
   id: number;

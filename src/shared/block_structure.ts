@@ -1,9 +1,4 @@
-import type {
-  ChapterBlock,
-  ChapterContentBlock,
-  ChapterContentItem,
-  ChapterScriptureBlock,
-} from '../types.js';
+import type { ChapterBlock, ChapterContentBlock, ChapterContentItem } from '../types.js';
 
 export const createBlockId = (): string => crypto.randomUUID();
 
@@ -19,6 +14,10 @@ const cloneContentItemStructure = (item: ChapterContentItem): ChapterContentItem
 
   if (item.kind === 'video') {
     return { id, kind: 'video', video: { url: null } };
+  }
+
+  if (item.kind === 'text') {
+    return { id, kind: 'text', content: '' };
   }
 
   return { id, kind: 'scripture', scripture: { reference: '', verse: '' } };
@@ -40,20 +39,6 @@ const cloneBlockStructure = (block: ChapterBlock): ChapterBlock => {
     };
   }
 
-  if (kind === 'scripture') {
-    const scriptureBlock = block as ChapterScriptureBlock;
-    return {
-      id: createBlockId(),
-      kind: 'scripture',
-      blockName: '',
-      displayName: '',
-      scripture: { reference: '', verse: '' },
-      visibility,
-      leadersNotes: '',
-      showLeadersNotes: scriptureBlock.showLeadersNotes,
-    };
-  }
-
   const contentBlock = block as ChapterContentBlock;
   return {
     id: createBlockId(),
@@ -62,7 +47,6 @@ const cloneBlockStructure = (block: ChapterBlock): ChapterBlock => {
     displayName: '',
     blockRole: contentBlock.blockRole,
     style: contentBlock.style,
-    content: '',
     items: (contentBlock.items ?? []).map(cloneContentItemStructure),
     visibility,
     leadersNotes: '',

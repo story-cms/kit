@@ -2,10 +2,8 @@ import type {
   ChapterBlock,
   ChapterContentBlock,
   ChapterContentItem,
-  ChapterScriptureBlock,
   ChapterTitleBlock,
   ResourceType,
-  Scripture,
 } from '../../../../types';
 import { blockKind, createBlockId } from '../../../../shared/block_structure';
 
@@ -37,7 +35,6 @@ export function createEmptyContentBlock(
     displayName: '',
     blockRole,
     style: DEFAULT_BLOCK_STYLE,
-    content: '',
     items: [],
     visibility: { ...defaultVisibility },
     leadersNotes: '',
@@ -56,6 +53,10 @@ export function createContentItem(kind: ChapterContentItem['kind']): ChapterCont
     return { id, kind, video: { url: null } };
   }
 
+  if (kind === 'text') {
+    return { id, kind, content: '' };
+  }
+
   return { id, kind, scripture: { reference: '', verse: '' } };
 }
 
@@ -66,15 +67,12 @@ export function normalizedContentBlock(block: ChapterContentBlock): ChapterConte
 
   const legacy = block as LegacyChapterContentBlock;
   const items: ChapterContentItem[] = [];
-  let content = block.content ?? '';
 
   if (legacy.blockType === 'video') {
     items.push(createContentItem('video'));
     if (items[0]?.video) {
       items[0].video = legacy.video ?? { url: null };
     }
-  } else if (legacy.blockType === 'url' && legacy.url) {
-    content = legacy.url;
   }
 
   const normalized: ChapterContentBlock = {
@@ -84,7 +82,6 @@ export function normalizedContentBlock(block: ChapterContentBlock): ChapterConte
     displayName: block.displayName,
     blockRole: block.blockRole,
     style: block.style,
-    content,
     items,
     visibility: block.visibility,
     leadersNotes: block.leadersNotes,
@@ -109,19 +106,6 @@ export function createEmptyTitleBlock(): ChapterTitleBlock {
     subtitle: '',
     coverImage: '',
     visibility: { ...defaultVisibility },
-  };
-}
-
-export function createEmptyScriptureBlock(): ChapterScriptureBlock {
-  return {
-    id: createBlockId(),
-    kind: 'scripture',
-    blockName: '',
-    displayName: '',
-    scripture: { reference: '', verse: '' } satisfies Scripture,
-    visibility: { ...defaultVisibility },
-    leadersNotes: '',
-    showLeadersNotes: false,
   };
 }
 

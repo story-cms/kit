@@ -1,15 +1,37 @@
 import vine from '@vinejs/vine';
 import type { FieldContext } from '@vinejs/vine/types';
+import type { StandardChapterTemplateId } from '../../shared/standard_chapter.js';
+import { DEVOTION_TEMPLATE_ID } from '../../shared/story_helpers.js';
 import videoRule from './video_rule.js';
 
 export const requiredString = () => vine.string().trim().minLength(1);
 
-const visibilitySchema = vine.object({
+const fullVisibilitySchema = vine.object({
   presenter: vine.boolean({ strict: true }),
   personal: vine.boolean({ strict: true }),
   inNavigation: vine.boolean({ strict: true }),
   hidden: vine.boolean({ strict: true }),
 });
+
+const devotionVisibilityRule = vine.createRule(
+  (value: unknown, _options: undefined, field: FieldContext) => {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return;
+
+    const visibility = value as Record<string, unknown>;
+    if (visibility.presenter === true || visibility.personal === true || visibility.hidden === true) {
+      field.report(
+        'Presenter, Personal, and Hidden visibility are not available for this template',
+        'devotionVisibility',
+        field,
+      );
+    }
+  },
+);
+
+const simplifiedVisibilitySchema = fullVisibilitySchema.clone().use(devotionVisibilityRule());
+
+const visibilitySchema = (templateId?: StandardChapterTemplateId) =>
+  templateId === DEVOTION_TEMPLATE_ID ? simplifiedVisibilitySchema : fullVisibilitySchema;
 
 const scriptureSchema = vine.object({
   reference: requiredString(),
@@ -38,97 +60,75 @@ const scriptureItemSchema = vine.object({
   scripture: scriptureSchema,
 });
 
+const textItemSchema = vine.object({
+  id: requiredString(),
+  kind: vine.literal('text'),
+  content: requiredString(),
+});
+
 const itemSchema = vine.union([
   vine.union.if((value) => value.kind === 'image', imageItemSchema),
   vine.union.if((value) => value.kind === 'video', videoItemSchema),
   vine.union.if((value) => value.kind === 'scripture', scriptureItemSchema),
+  vine.union.if((value) => value.kind === 'text', textItemSchema),
   vine.union.else(
     vine.object({
       id: requiredString(),
-      kind: vine.enum(['image', 'video', 'scripture'] as const),
+      kind: vine.enum(['image', 'video', 'scripture', 'text'] as const),
     }),
   ),
 ]);
 
-const blockBase = {
+const blockBase = (templateId?: StandardChapterTemplateId) => ({
   id: requiredString(),
   blockName: requiredString(),
-  visibility: visibilitySchema,
-};
+  visibility: visibilitySchema(templateId),
+});
 
 const contentOrItemRule = vine.createRule(
   (value: unknown, _options: undefined, field: FieldContext) => {
     if (!value || typeof value !== 'object' || Array.isArray(value)) return;
 
     const block = value as Record<string, unknown>;
-    const hasContent = typeof block.content === 'string' && block.content.trim().length > 0;
     const hasItems = Array.isArray(block.items) && block.items.length > 0;
-    if (!hasContent && !hasItems) {
-      field.report(
-        'A content block must have text or at least one media or scripture item',
-        'contentOrItem',
-        field,
-      );
+    if (!hasItems) {
+      field.report('A content block must have at least one item', 'contentOrItem', field);
     }
   },
 );
 
-export const contentBlockSchema = vine
-  .object({
-    ...blockBase,
-    kind: vine.literal('content'),
-    displayName: requiredString(),
-    blockRole: requiredString(),
-    style: requiredString(),
-    content: vine.string().optional(),
-    items: vine.array(itemSchema).optional(),
-    leadersNotes: vine.string().optional(),
-    showLeadersNotes: vine.boolean({ strict: true }).optional(),
-  })
-  .bail(false)
-  .use(contentOrItemRule());
+const contentBlockSchema = (templateId?: StandardChapterTemplateId) =>
+  vine
+    .object({
+      ...blockBase(templateId),
+      kind: vine.literal('content'),
+      displayName: requiredString(),
+      blockRole: requiredString(),
+      style: requiredString(),
+      items: vine.array(itemSchema).optional(),
+      leadersNotes: vine.string().optional(),
+      showLeadersNotes: vine.boolean({ strict: true }).optional(),
+    })
+    .bail(false)
+    .use(contentOrItemRule());
 
-export const titleBlockSchema = vine.object({
-  ...blockBase,
-  kind: vine.literal('title'),
-  title: requiredString(),
-  subtitle: vine.string().optional(),
-  coverImage: vine.string().optional(),
-});
+const titleBlockSchema = (templateId?: StandardChapterTemplateId) =>
+  vine.object({
+    ...blockBase(templateId),
+    kind: vine.literal('title'),
+    title: requiredString(),
+    subtitle: vine.string().optional(),
+    coverImage: vine.string().optional(),
+  });
 
-export const scriptureBlockSchema = vine.object({
-  ...blockBase,
-  kind: vine.literal('scripture'),
-  displayName: requiredString(),
-  scripture: scriptureSchema,
-  leadersNotes: vine.string().optional(),
-  showLeadersNotes: vine.boolean({ strict: true }).optional(),
-});
-
-export function chapterBlockSchema(options?: { includeScriptureBlock?: boolean }) {
-  const includeScriptureBlock = options?.includeScriptureBlock ?? true;
-
-  if (!includeScriptureBlock) {
-    return vine.union([
-      vine.union.if((value) => value.kind === 'content', contentBlockSchema),
-      vine.union.if((value) => value.kind === 'title', titleBlockSchema),
-      vine.union.else(
-        vine.object({
-          ...blockBase,
-          kind: vine.enum(['content', 'title'] as const),
-        }),
-      ),
-    ]);
-  }
-
+export function chapterBlockSchema(templateId?: StandardChapterTemplateId) {
   return vine.union([
-    vine.union.if((value) => value.kind === 'content', contentBlockSchema),
-    vine.union.if((value) => value.kind === 'title', titleBlockSchema),
-    vine.union.if((value) => value.kind === 'scripture', scriptureBlockSchema),
+    vine.union.if((value) => value.kind === 'content', contentBlockSchema(templateId)),
+    vine.union.if((value) => value.kind === 'title', titleBlockSchema(templateId)),
     vine.union.else(
       vine.object({
-        ...blockBase,
-        kind: vine.enum(['content', 'title', 'scripture'] as const),
+        ...blockBase(templateId),
+        kind: vine.enum(['content', 'title'] as const),
       }),
     ),
   ]);
@@ -142,5 +142,7 @@ export const chapterBlockErrorMessages = {
   'bundle.blocks.*.kind.enum':
     "This block type isn't supported for this chapter template",
   'bundle.blocks.*.items.*.kind.enum': "This item type isn't supported here",
+  'bundle.blocks.*.visibility.devotionVisibility':
+    'Presenter, Personal, and Hidden visibility are not available for this template',
   'bundle.resources.*.uuid': 'Invalid resource',
 };

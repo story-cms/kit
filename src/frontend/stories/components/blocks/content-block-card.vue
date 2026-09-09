@@ -109,39 +109,53 @@
       </div>
 
       <div class="mt-4">
-        <div data-block-field-row="content-text">
-          <div class="pb-6" data-block-field-content>
-            <div class="mb-3 flex items-center gap-2">
-              <FileText class="size-4 text-gray-500" aria-hidden="true" />
-              <span class="input-label mb-0">Text</span>
-            </div>
-            <BlockRichTextEditor
-              v-model="contentModel"
-              placeholder="Enter your content..."
-              :read-only="isFieldReadOnly('content')"
-            />
-          </div>
-        </div>
-
         <template v-for="(item, itemIndex) in block.items" :key="item.id">
           <div
-            v-if="item.kind === 'image'"
             :data-block-field-row="`content-item-${itemIndex}`"
+            :draggable="canDragItems && activeItemDragId === item.id"
+            @dragstart.stop="onItemDragStart(itemIndex)"
+            @dragover.prevent.stop
+            @drop.stop="onItemDrop(itemIndex)"
+            @dragend.stop="onItemDragEndHandler"
           >
-            <div class="border-t border-gray-100 pt-6" data-block-field-content>
+            <div
+              class="pt-6"
+              :class="{ 'border-t border-gray-100': itemIndex > 0 }"
+              data-block-field-content
+            >
               <div class="mb-2 flex items-center justify-between gap-3">
-                <span class="input-label mb-0">Image</span>
+                <div class="flex items-center gap-2">
+                  <button
+                    v-if="canDragItems"
+                    type="button"
+                    class="cursor-move text-gray-400"
+                    aria-label="Reorder item"
+                    @pointerdown="onItemHandlePointerDown(item.id)"
+                  >
+                    <GripVertical class="size-4" aria-hidden="true" />
+                  </button>
+                  <span class="input-label mb-0">{{ itemLabel(item.kind) }}</span>
+                </div>
                 <button
                   v-if="!readOnly && !translationMode"
                   type="button"
                   class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
-                  aria-label="Remove image item"
+                  :aria-label="`Remove ${itemLabel(item.kind).toLowerCase()} item`"
                   @click="removeItem(item.id)"
                 >
                   <Trash2 class="size-4" aria-hidden="true" />
                 </button>
               </div>
-              <div class="[&>div]:mt-0">
+
+              <BlockRichTextEditor
+                v-if="item.kind === 'text'"
+                :model-value="item.content ?? ''"
+                placeholder="Enter your content..."
+                :read-only="readOnly"
+                @update:model-value="updateItem(item.id, { content: $event })"
+              />
+
+              <div v-else-if="item.kind === 'image'" class="[&>div]:mt-0">
                 <BlockImageField
                   :model-value="item.imageUrl ?? ''"
                   :collection-id="imageCollectionId ?? ''"
@@ -152,27 +166,8 @@
                   @update:model-value="updateItem(item.id, { imageUrl: $event })"
                 />
               </div>
-            </div>
-          </div>
 
-          <div
-            v-else-if="item.kind === 'video'"
-            :data-block-field-row="`content-item-${itemIndex}`"
-          >
-            <div class="border-t border-gray-100 pt-6" data-block-field-content>
-              <div class="mb-2 flex items-center justify-between gap-3">
-                <span class="input-label mb-0">Video</span>
-                <button
-                  v-if="!readOnly && !translationMode"
-                  type="button"
-                  class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
-                  aria-label="Remove video item"
-                  @click="removeItem(item.id)"
-                >
-                  <Trash2 class="size-4" aria-hidden="true" />
-                </button>
-              </div>
-              <div class="[&>div]:mt-0">
+              <div v-else-if="item.kind === 'video'" class="[&>div]:mt-0">
                 <BlockVideoField
                   :model-value="item.video ?? { url: null }"
                   :collection-id="videoCollectionId ?? ''"
@@ -183,27 +178,9 @@
                   @update:model-value="updateItem(item.id, { video: $event })"
                 />
               </div>
-            </div>
-          </div>
 
-          <div
-            v-else-if="item.kind === 'scripture'"
-            :data-block-field-row="`content-item-${itemIndex}`"
-          >
-            <div class="border-t border-gray-100 pt-6" data-block-field-content>
-              <div class="mb-2 flex items-center justify-between gap-3">
-                <span class="input-label mb-0">Scripture</span>
-                <button
-                  v-if="!readOnly && !translationMode"
-                  type="button"
-                  class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
-                  aria-label="Remove scripture item"
-                  @click="removeItem(item.id)"
-                >
-                  <Trash2 class="size-4" aria-hidden="true" />
-                </button>
-              </div>
               <BlockScriptureField
+                v-else-if="item.kind === 'scripture'"
                 :model-value="item.scripture ?? { reference: '', verse: '' }"
                 :block-index="blockIndex"
                 :item-index="itemIndex"
@@ -222,7 +199,8 @@
 
       <ContentAddItemsToolbar
         v-if="!readOnly && !translationMode"
-        :show-add-leaders-notes="!block.showLeadersNotes"
+        :show-add-leaders-notes="!isDevotionTemplate(props.template) && !block.showLeadersNotes"
+        @add-text="addItem('text')"
         @add-image="addItem('image')"
         @add-video="addItem('video')"
         @add-scripture="addItem('scripture')"
@@ -270,19 +248,24 @@
     </div>
 
     <template v-if="!readOnly && !translationMode" #footer>
-      <BlockVisibility v-model="visibilityModel" />
+      <BlockVisibility v-model="visibilityModel" :simplified="isDevotionTemplate(props.template)" />
     </template>
     <template v-else #footer>
-      <BlockVisibility v-model="visibilityModel" :read-only="true" />
+      <BlockVisibility
+        v-model="visibilityModel"
+        :read-only="true"
+        :simplified="isDevotionTemplate(props.template)"
+      />
     </template>
   </BlockCardShell>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { Crown, FileText, LayoutList, Trash2 } from '@lucide/vue';
+import { computed, ref } from 'vue';
+import { Crown, GripVertical, LayoutList, Trash2 } from '@lucide/vue';
 
 import type { ChapterContentBlock, ChapterContentItem } from '../../../../types';
+import { isDevotionTemplate } from '../../../../shared/story_helpers';
 import RichListbox from '../../../shared/rich-listbox.vue';
 import BlockCardShell from './block-card-shell.vue';
 import BlockImageField from './block-image-field.vue';
@@ -295,6 +278,7 @@ import { createContentItem } from './block-utils';
 import { getBlockRoleOptions } from './block-role-options';
 import { blockStyleOptions } from './block-style-options';
 import { useBlockFieldErrors } from './use-block-field-errors';
+import { useIndexReorder } from './use-index-reorder';
 
 const props = withDefaults(
   defineProps<{
@@ -330,18 +314,12 @@ const blockTitle = computed(() =>
   props.block.blockName.trim() ? props.block.blockName.trim() : 'New Content Block',
 );
 
-const contentModel = computed({
-  get: () => props.block.content,
-  set: (value: string) => updateField('content', value),
-});
-
 const visibilityModel = computed({
   get: () => props.block.visibility,
   set: (value: ChapterContentBlock['visibility']) => updateField('visibility', value),
 });
 
-type EditableField =
-  'blockName' | 'displayName' | 'blockRole' | 'style' | 'content' | 'leadersNotes';
+type EditableField = 'blockName' | 'displayName' | 'blockRole' | 'style' | 'leadersNotes';
 
 const isFieldReadOnly = (field: EditableField) => {
   if (props.readOnly) return true;
@@ -389,4 +367,40 @@ const updateItem = (id: string, patch: Partial<ChapterContentItem>) => {
 const blockRoleOptions = computed(() =>
   getBlockRoleOptions(props.chapterType, props.template),
 );
+
+const itemLabels: Record<ChapterContentItem['kind'], string> = {
+  text: 'Text',
+  image: 'Image',
+  video: 'Video',
+  scripture: 'Scripture',
+};
+
+const itemLabel = (kind: ChapterContentItem['kind']): string => itemLabels[kind];
+
+const canDragItems = computed(() => !props.readOnly && !props.translationMode);
+
+const { onDragStart: onItemDragStart, onDrop: onItemDrop, onDragEnd: onItemDragEnd } =
+  useIndexReorder(
+    () => props.block.items,
+    (items) => updateField('items', items),
+  );
+
+const activeItemDragId = ref<string | null>(null);
+
+const onItemWindowPointerUp = () => {
+  window.removeEventListener('pointerup', onItemWindowPointerUp);
+  activeItemDragId.value = null;
+};
+
+const onItemHandlePointerDown = (id: string) => {
+  if (!canDragItems.value) return;
+  activeItemDragId.value = id;
+  window.addEventListener('pointerup', onItemWindowPointerUp);
+};
+
+const onItemDragEndHandler = () => {
+  window.removeEventListener('pointerup', onItemWindowPointerUp);
+  activeItemDragId.value = null;
+  onItemDragEnd();
+};
 </script>

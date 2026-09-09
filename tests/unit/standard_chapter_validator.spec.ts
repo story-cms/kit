@@ -13,7 +13,14 @@ const visibility = {
   hidden: false,
 };
 
-const contentBlock = () => ({
+const devotionVisibility = {
+  presenter: false,
+  personal: false,
+  inNavigation: true,
+  hidden: false,
+};
+
+const contentBlock = (overrides: Record<string, unknown> = {}) => ({
   id: 'content-1',
   kind: 'content',
   blockName: 'Introduction',
@@ -21,13 +28,13 @@ const contentBlock = () => ({
   displayName: 'Welcome',
   blockRole: 'introduction',
   style: 'primary',
-  content: 'A short introduction.',
-  items: [],
+  items: [{ id: 'text-1', kind: 'text', content: 'A short introduction.' }],
   leadersNotes: '',
   showLeadersNotes: false,
+  ...overrides,
 });
 
-const titleBlock = () => ({
+const titleBlock = (overrides: Record<string, unknown> = {}) => ({
   id: 'title-1',
   kind: 'title',
   blockName: 'Title',
@@ -35,9 +42,13 @@ const titleBlock = () => ({
   title: 'God is faithful',
   subtitle: '',
   coverImage: '',
+  ...overrides,
 });
 
-const scriptureBlock = () => ({
+// A legacy top-level scripture block. This kind no longer exists in the
+// schema for any template - kept only to verify it's rejected as an
+// unsupported block kind.
+const scriptureBlock = (overrides: Record<string, unknown> = {}) => ({
   id: 'scripture-1',
   kind: 'scripture',
   blockName: 'Scripture',
@@ -46,6 +57,25 @@ const scriptureBlock = () => ({
   scripture: { reference: 'John 3:16', verse: 'For God so loved the world.' },
   leadersNotes: '',
   showLeadersNotes: false,
+  ...overrides,
+});
+
+// The current way to author scripture: a content block with a scripture
+// item (and, conventionally, the 'scripture' block role).
+const scriptureContentBlock = (overrides: Record<string, unknown> = {}) => ({
+  ...contentBlock(),
+  id: 'scripture-content-1',
+  blockName: 'Scripture',
+  displayName: 'Read the passage',
+  blockRole: 'scripture',
+  items: [
+    {
+      id: 'verse-1',
+      kind: 'scripture',
+      scripture: { reference: 'John 3:16', verse: 'For God so loved the world.' },
+    },
+  ],
+  ...overrides,
 });
 
 const validCourseBundle = () => ({
@@ -66,7 +96,11 @@ const validDevotionBundle = () => ({
     description: '',
     coverImage: '',
     devotionAudio: { url: null, length: null },
-    blocks: [contentBlock(), titleBlock(), scriptureBlock()],
+    blocks: [
+      contentBlock({ visibility: devotionVisibility }),
+      titleBlock({ visibility: devotionVisibility }),
+      scriptureContentBlock({ visibility: devotionVisibility }),
+    ],
     resources: ['00000000-0000-4000-8000-000000000001'],
   },
 });
@@ -154,6 +188,22 @@ test.describe('StandardChapterValidator', () => {
       expect(result.bundle.coverImage).toBe('https://example.com/cover.png');
     });
 
+    test('accepts presenter, personal, and hidden visibility', async () => {
+      const result = await validator().validate({
+        bundle: {
+          ...validCourseBundle().bundle,
+          blocks: [
+            contentBlock({
+              visibility: { presenter: true, personal: true, inNavigation: false, hidden: true },
+            }),
+            titleBlock(),
+          ],
+        },
+      });
+
+      expect(result.bundle.blocks).toHaveLength(2);
+    });
+
     test('rejects a scripture block kind with a friendly message', async () => {
       const errors = await validationErrors(validator(), {
         bundle: {
@@ -207,36 +257,79 @@ test.describe('StandardChapterValidator', () => {
       await expect(validator().validate(data)).resolves.toBeDefined();
     });
 
-    test('accepts content supplied by a valid image, video, or scripture item', async () => {
+    test('accepts content supplied by a valid image, video, text, or scripture item', async () => {
       const itemBlocks = [
         { id: 'image-1', kind: 'image', imageUrl: 'https://example.com/image.jpg' },
         { id: 'video-1', kind: 'video', video: { url: 'https://example.com/video.mp4' } },
+        { id: 'text-1', kind: 'text', content: 'Some text' },
         {
           id: 'verse-1',
           kind: 'scripture',
           scripture: { reference: 'Psalm 23:1', verse: 'The Lord is my shepherd.' },
         },
-      ].map((item, index) => ({
-        ...contentBlock(),
-        id: `content-${index}`,
-        content: '',
-        items: [item],
-      }));
+      ].map((item, index) =>
+        contentBlock({ id: `content-${index}`, visibility: devotionVisibility, items: [item] }),
+      );
       const data = validDevotionBundle();
       data.bundle.blocks = itemBlocks;
 
       await expect(validator().validate(data)).resolves.toBeDefined();
     });
 
-    test('accepts content text without an items property', async () => {
-      const withoutItems: Partial<ReturnType<typeof contentBlock>> = {
-        ...contentBlock(),
-      };
-      delete withoutItems.items;
+    test('rejects a content block with no items', async () => {
       const data = validDevotionBundle();
-      data.bundle.blocks = [withoutItems] as typeof data.bundle.blocks;
+      data.bundle.blocks = [
+        contentBlock({ visibility: devotionVisibility, items: [] }),
+      ];
 
-      await expect(validator().validate(data)).resolves.toBeDefined();
+      expect(await validationFields(validator(), data)).toContain('bundle.blocks.0');
+    });
+
+    test('rejects an empty text item', async () => {
+      const data = validDevotionBundle();
+      data.bundle.blocks = [
+        contentBlock({
+          visibility: devotionVisibility,
+          items: [{ id: 'text-1', kind: 'text', content: '' }],
+        }),
+      ];
+
+      expect(await validationFields(validator(), data)).toContain(
+        'bundle.blocks.0.items.0.content',
+      );
+    });
+
+    test('rejects a scripture block kind with a friendly message', async () => {
+      const errors = await validationErrors(validator(), {
+        bundle: {
+          ...validDevotionBundle().bundle,
+          blocks: [contentBlock({ visibility: devotionVisibility }), scriptureBlock()],
+        },
+      });
+
+      expect(errors.map((error) => error.message)).toEqual(
+        expect.arrayContaining([
+          "This block type isn't supported for this chapter template",
+        ]),
+      );
+    });
+
+    test('rejects presenter, personal, and hidden visibility', async () => {
+      const data = validDevotionBundle();
+      data.bundle.blocks = [
+        contentBlock({
+          visibility: { presenter: true, personal: true, inNavigation: true, hidden: true },
+        }),
+      ];
+
+      const fields = await validationFields(validator(), data);
+      expect(fields).toContain('bundle.blocks.0.visibility');
+    });
+
+    test('accepts in-navigation-only visibility', async () => {
+      const result = await validator().validate(validDevotionBundle());
+
+      expect(result.bundle.blocks[0]?.visibility).toEqual(devotionVisibility);
     });
 
     test('requires number, title, and at least one block', async () => {
@@ -253,12 +346,7 @@ test.describe('StandardChapterValidator', () => {
     test('requires the shared fields on every block', async () => {
       const data = validDevotionBundle();
       data.bundle.blocks = [
-        {
-          ...contentBlock(),
-          id: '',
-          blockName: '',
-          visibility: undefined as never,
-        },
+        contentBlock({ id: '', blockName: '', visibility: undefined as never }),
       ];
 
       expect(await validationFields(validator(), data)).toEqual(
@@ -270,23 +358,22 @@ test.describe('StandardChapterValidator', () => {
       );
     });
 
-    test('requires complete content, title, and scripture block details', async () => {
+    test('requires complete content and title block details', async () => {
       const data = validDevotionBundle();
       data.bundle.blocks = [
-        {
-          ...contentBlock(),
+        contentBlock({
+          visibility: devotionVisibility,
           displayName: '',
           blockRole: '',
           style: '',
-          content: '',
           items: [],
-        },
-        { ...titleBlock(), title: '' },
-        {
-          ...scriptureBlock(),
+        }),
+        titleBlock({ visibility: devotionVisibility, title: '' }),
+        scriptureContentBlock({
+          visibility: devotionVisibility,
           displayName: '',
-          scripture: { reference: '', verse: '' },
-        },
+          items: [{ id: 'verse-1', kind: 'scripture', scripture: { reference: '', verse: '' } }],
+        }),
       ];
 
       expect(await validationFields(validator(), data)).toEqual(
@@ -297,8 +384,8 @@ test.describe('StandardChapterValidator', () => {
           'bundle.blocks.0',
           'bundle.blocks.1.title',
           'bundle.blocks.2.displayName',
-          'bundle.blocks.2.scripture.reference',
-          'bundle.blocks.2.scripture.verse',
+          'bundle.blocks.2.items.0.scripture.reference',
+          'bundle.blocks.2.items.0.scripture.verse',
         ]),
       );
     });
@@ -307,11 +394,10 @@ test.describe('StandardChapterValidator', () => {
       const data = validDevotionBundle();
       data.bundle.resources = ['not-a-resource-id'];
       data.bundle.blocks = [
-        {
-          ...contentBlock(),
-          content: '',
+        contentBlock({
+          visibility: devotionVisibility,
           items: [{ id: 'image-1', kind: 'image', imageUrl: 'not-a-url' }],
-        },
+        }),
       ];
 
       expect(await validationFields(validator(), data)).toEqual(

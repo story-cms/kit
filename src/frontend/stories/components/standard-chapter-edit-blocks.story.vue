@@ -61,15 +61,6 @@
       />
     </Variant>
 
-    <Variant title="Course with unsupported block" :setup-app="loadWithUnsupportedBlockError">
-      <StandardChapterEditBlocks
-        v-model:blocks="courseBlocksWithError"
-        :video-collection-id="sharedProps.config.videoCollectionId"
-        :image-collection-id="sharedProps.config.imageCollectionId"
-        template="course"
-        chapter-type="Session"
-      />
-    </Variant>
   </Story>
 </template>
 
@@ -84,14 +75,10 @@ import {
   samplePreviousDevotionChapterBlocks,
   sharedProps,
 } from '../../test/mocks';
-import { useSharedStore, useWidgetsStore } from '../../store';
+import { useWidgetsStore } from '../../store';
 import type { StoryHandler } from '../../shared/helpers';
 import StandardChapterEditBlocks from './standard-chapter-edit-blocks.vue';
-import {
-  createContentItem,
-  createEmptyContentBlock,
-  createEmptyScriptureBlock,
-} from './blocks/block-utils';
+import { createContentItem, createEmptyContentBlock } from './blocks/block-utils';
 
 const setupProviders: StoryHandler = (): void => {
   useWidgetsStore().setProviders(mockResourceProviders);
@@ -103,38 +90,19 @@ const previousChapterBlocks = samplePreviousDevotionChapterBlocks;
 const courseBlocks = ref<ChapterBlock[]>([...samplePreviousCourseChapterBlocks]);
 const mixedBlocks = ref<ChapterBlock[]>([...sampleMixedChapterBlocks]);
 
-// Course chapters don't allow scripture blocks (only devotion chapters do). This
-// mirrors data saved before that restriction existed, which fails validation on
-// publish with a `bundle.blocks.<index>.kind` error.
-const courseBlocksWithError = ref<ChapterBlock[]>([
-  ...samplePreviousCourseChapterBlocks,
-  createEmptyScriptureBlock(),
-]);
-
-const loadWithUnsupportedBlockError: StoryHandler = (): void => {
-  useWidgetsStore().setProviders(mockResourceProviders);
-  const errorBlockIndex = courseBlocksWithError.value.length - 1;
-  useSharedStore().setErrors({
-    [`bundle.blocks.${errorBlockIndex}.kind`]: [
-      "This block type isn't supported for this chapter template",
-    ],
-  });
-};
-
 const devotionBlocks = ref<ChapterBlock[]>([
   {
     ...createEmptyContentBlock(),
     blockName: 'Opening',
     displayName: 'Opening Devotion',
     blockRole: 'introduction',
-    content: "Welcome to today's devotion.",
+    items: [{ ...createContentItem('text'), content: "Welcome to today's devotion." }],
   },
   {
     ...createEmptyContentBlock(),
     blockName: 'Passage',
     displayName: 'Scripture Reading',
     blockRole: 'scripture',
-    content: '',
     items: [createContentItem('scripture')],
   },
 ]);
@@ -144,13 +112,6 @@ const devotionBlocks = ref<ChapterBlock[]>([
 # Standard Chapter Edit Blocks
 
 Shared block editor for standard chapter templates. Pass `template` to choose
-scripture-block support and block roles (`course` vs `devotion`).
-
-## Variants
-
-- **Course with unsupported block** — a course chapter carrying a leftover
-  scripture block (course chapters only allow content/title blocks). Publish
-  validation reports a `bundle.blocks.<index>.kind` error; the block card's
-  alert icon now surfaces that message via `title`/`aria-label` instead of
-  showing no text at all.
+block roles and the Devotion-simplified visibility controls (`course` vs
+`devotion`).
 </docs>

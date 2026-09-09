@@ -40,7 +40,7 @@ test.describe('blockHasError', () => {
   test('matches block-level and nested keys', () => {
     const errors = {
       'bundle.blocks.0': [
-        'A content block must have text or at least one media or scripture item',
+        'A content block must have at least one item',
       ],
       'bundle.blocks.1.displayName': ['Display name is required'],
     };
@@ -55,13 +55,13 @@ test.describe('blockLevelErrorMessages', () => {
   test('reads exact block-level contentOrItem errors', () => {
     const errors = {
       'bundle.blocks.0': [
-        'A content block must have text or at least one media or scripture item',
+        'A content block must have at least one item',
       ],
       'bundle.blocks.0.blockName': ['Every block must have a name'],
     };
 
     expect(blockLevelErrorMessages(errors, 0)).toEqual([
-      'A content block must have text or at least one media or scripture item',
+      'A content block must have at least one item',
     ]);
   });
 });

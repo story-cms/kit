@@ -2,12 +2,7 @@
   <div
     class="flex flex-col gap-y-2 rounded-xl border border-gray-200 bg-white px-6 pb-11"
   >
-    <StringField
-      v-if="!isTranslation"
-      :field="numberField"
-      :is-nested="true"
-    />
-    <div v-else class="mt-4">
+    <div class="mt-4">
       <label :for="numberFieldId" class="input-label text-gray-600">
         {{ numberField.label }}
       </label>

@@ -50,9 +50,7 @@
       <AddBlockToolbar
         v-if="blocks.length === 0"
         :show-reuse-previous="canReusePrevious"
-        :show-scripture-block="includeScriptureBlock"
         @add-title="addTitleBlock"
-        @add-scripture="addScriptureBlock"
         @add-content="addContentBlock"
         @reuse-previous="reusePreviousStructure"
       />
@@ -79,9 +77,7 @@
 
       <AddBlockToolbar
         v-if="blocks.length > 0"
-        :show-scripture-block="includeScriptureBlock"
         @add-title="addTitleBlock"
-        @add-scripture="addScriptureBlock"
         @add-content="addContentBlock"
       />
     </template>
@@ -93,7 +89,6 @@ import { computed, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import type { ChapterBlock } from '../../../types';
-import { standardChapterTemplate } from '../../../shared/standard_chapter';
 import { cloneBlocksStructure } from '../../../shared/block_structure';
 import { useModelStore, useSharedStore } from '../../store';
 import AddBlockToolbar from './blocks/add-block-toolbar.vue';
@@ -102,11 +97,11 @@ import { blockHasError, blocksArrayErrorMessages } from './blocks/block-field-er
 import DraftEditBlockCard from './blocks/draft-edit-block-card.vue';
 import {
   createEmptyContentBlock,
-  createEmptyScriptureBlock,
   createEmptyTitleBlock,
   normalizedBlocks,
 } from './blocks/block-utils';
 import { useTranslationBlockFieldAlignment } from './blocks/use-translation-block-field-alignment';
+import { useIndexReorder } from './blocks/use-index-reorder';
 import { getDefaultBlockRole } from './blocks/block-role-options';
 
 const props = withDefaults(
@@ -141,11 +136,6 @@ const translationGrid = ref<HTMLElement | null>(null);
 useTranslationBlockFieldAlignment(
   translationGrid,
   computed(() => props.isTranslation && showSourceColumn.value),
-);
-
-const templateSpec = computed(() => standardChapterTemplate(props.template));
-const includeScriptureBlock = computed(
-  () => templateSpec.value?.includeScriptureBlock ?? false,
 );
 
 const blocks = computed({
@@ -257,18 +247,11 @@ const addTitleBlock = () => {
   appendBlock(createEmptyTitleBlock());
 };
 
-const addScriptureBlock = () => {
-  if (!includeScriptureBlock.value) return;
-  appendBlock(createEmptyScriptureBlock());
-};
-
 const reusePreviousStructure = () => {
   if (!props.previousChapterBlocks?.length) return;
 
   const cloned = cloneBlocksStructure(normalizedBlocks([...props.previousChapterBlocks]));
-  blocks.value = includeScriptureBlock.value
-    ? cloned
-    : cloned.filter((block) => block.kind !== 'scripture');
+  blocks.value = cloned;
   expanded.value = blocks.value.map((_, index) => index === 0);
   hasInitialized.value = true;
 };
@@ -283,30 +266,14 @@ const deleteBlock = (index: number) => {
   expanded.value = toggles;
 };
 
-const dragFromIndex = ref<number | null>(null);
-
-const onDragStart = (index: number) => {
-  dragFromIndex.value = index;
-};
-
-const onDragEnd = () => {
-  dragFromIndex.value = null;
-};
-
-const onDrop = (toIndex: number) => {
-  if (dragFromIndex.value === null) return;
-  if (dragFromIndex.value === toIndex) return;
-
-  const items = [...blocks.value];
-  const [moved] = items.splice(dragFromIndex.value, 1);
-  if (!moved) return;
-  items.splice(toIndex, 0, moved);
-  blocks.value = items;
-
-  const toggles = [...expanded.value];
-  const [movedToggle] = toggles.splice(dragFromIndex.value, 1);
-  toggles.splice(toIndex, 0, movedToggle ?? false);
-  expanded.value = toggles;
-  dragFromIndex.value = null;
-};
+const { onDragStart, onDrop, onDragEnd } = useIndexReorder(
+  () => blocks.value,
+  (value) => {
+    blocks.value = value;
+  },
+  () => expanded.value,
+  (value) => {
+    expanded.value = value;
+  },
+);
 </script>

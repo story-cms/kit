@@ -9,7 +9,6 @@ export type StandardChapterTemplateId =
 
 export interface StandardChapterTemplate {
   id: StandardChapterTemplateId;
-  includeScriptureBlock: boolean;
   extraFields: readonly StandardChapterExtraField[];
   defaultBlockRole: string;
 }
@@ -18,13 +17,11 @@ export const standardChapterTemplates: Record<StandardChapterTemplateId, Standar
   {
     [COURSE_TEMPLATE_ID]: {
       id: COURSE_TEMPLATE_ID,
-      includeScriptureBlock: false,
       extraFields: [],
       defaultBlockRole: 'introduction',
     },
     [DEVOTION_TEMPLATE_ID]: {
       id: DEVOTION_TEMPLATE_ID,
-      includeScriptureBlock: true,
       extraFields: ['devotionAudio'],
       defaultBlockRole: 'introduction',
     },
