@@ -209,7 +209,6 @@ test.describe('DraftService.getDraftBundle', () => {
           displayName: 'Welcome',
           blockRole: 'introduction',
           style: 'primary',
-          content: 'Source content',
           items: [],
           visibility: {
             presenter: false,
@@ -251,7 +250,6 @@ test.describe('DraftService.getDraftBundle', () => {
     expect(parsed.description).toBe('');
     expect(parsed.blocks[0].blockName).toBe('');
     expect(parsed.blocks[0].displayName).toBe('');
-    expect(parsed.blocks[0].content).toBe('');
     // Cover image is a shared visual asset, kept as-is.
     expect(parsed.coverImage).toBe('https://example.com/cover.jpg');
     // Audio and resources are locale-specific and must not carry over.

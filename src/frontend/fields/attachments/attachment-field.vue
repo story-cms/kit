@@ -22,23 +22,25 @@
         <slot></slot>
       </div>
 
-      <div v-else class="h-48">
-        <div
+      <div
+        v-else
+        class="relative mt-[2px] h-48 w-full rounded-xl"
+        :class="{
+          'border-2 border-dashed border-gray-300 bg-white': !props.isReadOnly,
+        }"
+      >
+        <FileUpload
           v-if="!props.isReadOnly"
-          class="relative mt-[2px] rounded-xl border-2 border-dashed border-gray-300 bg-white p-2"
+          :description="defaults.description"
+          :extensions="defaults.extensions"
+          :max-size="defaults.maxSize"
+          @file="onFile"
+        />
+        <div
+          v-if="isUploading"
+          class="absolute left-0 top-0 h-full w-full rounded-xl bg-gray-400 bg-opacity-30"
         >
-          <FileUpload
-            :description="defaults.description"
-            :extensions="defaults.extensions"
-            :max-size="defaults.maxSize"
-            @file="onFile"
-          />
-          <div
-            v-if="isUploading"
-            class="absolute left-0 top-0 h-full w-full rounded-xl bg-gray-400 bg-opacity-30"
-          >
-            <div class="h-full bg-accent opacity-30" :style="progress"></div>
-          </div>
+          <div class="h-full bg-accent opacity-30" :style="progress"></div>
         </div>
       </div>
     </div>

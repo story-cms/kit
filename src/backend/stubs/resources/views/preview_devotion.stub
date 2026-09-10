@@ -49,24 +49,15 @@
     @end
     @end
 
-    @if(block.kind === 'scripture')
-    @if(block.displayName)
-    <div class="mb-2 text-xl font-semibold">\{\{ block.displayName \}\}</div>
-    @end
-    @if(block.scripture)
-    @!component('components/scripture', {passage: block.scripture})
-    @end
-    @end
-
     @if(!block.kind || block.kind === 'content')
     @if(block.displayName)
     <div class="mb-2 text-xl font-semibold">\{\{ block.displayName \}\}</div>
     @end
-    @if(block.content)
-    <div class="max-w-none prose prose-sm">\{\{\{ marked.parse(block.content) \}\}\}</div>
-    @end
     @if(block.items)
     @each(item in block.items)
+    @if(item.kind === 'text' && item.content)
+    <div class="mt-4 max-w-none prose prose-sm">\{\{\{ marked.parse(item.content) \}\}\}</div>
+    @end
     @if(item.kind === 'image' && item.imageUrl)
     <div class="mt-4">
       <img src="\{\{ item.imageUrl \}\}" alt="" class="w-full max-w-xl h-auto rounded">

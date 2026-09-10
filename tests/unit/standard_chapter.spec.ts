@@ -32,10 +32,8 @@ test.describe('standard chapter templates', () => {
     expect(isStandardChapterTemplate(undefined)).toBe(false);
   });
 
-  test('describes scripture and extra fields per template', () => {
-    expect(standardChapterTemplate('course')?.includeScriptureBlock).toBe(false);
+  test('describes extra fields per template', () => {
     expect(standardChapterTemplate('course')?.extraFields).toEqual([]);
-    expect(standardChapterTemplate('devotion')?.includeScriptureBlock).toBe(true);
     expect(standardChapterTemplate('devotion')?.extraFields).toEqual(['devotionAudio']);
   });
 
@@ -170,7 +168,6 @@ test.describe('translationStandardChapterBundle', () => {
             displayName: 'Welcome',
             blockRole: 'introduction',
             style: 'primary',
-            content: 'Source content',
             items: [],
             visibility: {
               presenter: false,

@@ -23,20 +23,7 @@
     :block-index="blockIndex"
     :expanded="expanded"
     :image-collection-id="imageCollectionId"
-    :read-only="readOnly"
-    :translation-mode="translationMode"
-    @update:block="emit('update:block', $event)"
-    @delete="emit('delete')"
-    @toggle="emit('toggle')"
-    @dragstart="emit('dragstart')"
-    @drop="emit('drop')"
-    @dragend="emit('dragend')"
-  />
-  <ScriptureBlockCard
-    v-else-if="block.kind === 'scripture'"
-    :block="block"
-    :block-index="blockIndex"
-    :expanded="expanded"
+    :template="template"
     :read-only="readOnly"
     :translation-mode="translationMode"
     @update:block="emit('update:block', $event)"
@@ -51,7 +38,6 @@
 <script setup lang="ts">
 import type { ChapterBlock, ChapterContentBlock } from '../../../../types';
 import ContentBlockCard from './content-block-card.vue';
-import ScriptureBlockCard from './scripture-block-card.vue';
 import TitleBlockCard from './title-block-card.vue';
 import { blockKind } from './block-utils';
 

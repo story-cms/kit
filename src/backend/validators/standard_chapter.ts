@@ -64,9 +64,7 @@ export class StandardChapterValidator implements ValidatorType {
         description: vine.string().optional(),
         coverImage: vine.string().optional(),
         ...extraFieldSchema(this.spec),
-        blocks: vine
-          .array(chapterBlockSchema({ includeScriptureBlock: this.spec.includeScriptureBlock }))
-          .minLength(1),
+        blocks: vine.array(chapterBlockSchema(this.spec.id)).minLength(1),
         resources: vine.array(vine.string().uuid()).optional(),
       }),
     });

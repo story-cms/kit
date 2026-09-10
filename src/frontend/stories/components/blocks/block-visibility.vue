@@ -1,20 +1,26 @@
 <template>
   <div class="flex flex-wrap items-center gap-2">
-    <span class="text-sm text-gray-500">Visible to</span>
-    <span class="h-4 w-px shrink-0 bg-gray-300" aria-hidden="true" />
-    <button
-      v-for="option in visibilityOptions"
-      :key="option.key"
-      type="button"
-      class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium transition-colors"
-      :class="isActive(option.key) ? option.activeClasses : option.inactiveClasses"
-      :aria-pressed="isActive(option.key)"
-      :disabled="readOnly"
-      @click="onToggleVisibility(option.key)"
-    >
-      <component :is="option.icon" class="size-[14px]" aria-hidden="true" />
-      {{ option.label }}
-    </button>
+    <span class="text-sm text-gray-500">Visibility</span>
+    <template v-for="(group, index) in chipGroups" :key="index">
+      <span
+        v-if="index > 0 && group.length"
+        class="h-4 w-px shrink-0 bg-gray-300"
+        aria-hidden="true"
+      />
+      <button
+        v-for="option in group"
+        :key="option.key"
+        type="button"
+        class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium transition-colors"
+        :class="isActive(option.key) ? option.activeClasses : option.inactiveClasses"
+        :aria-pressed="isActive(option.key)"
+        :disabled="readOnly"
+        @click="onToggleVisibility(option.key)"
+      >
+        <component :is="option.icon" class="size-[14px]" aria-hidden="true" />
+        {{ optionLabel(option) }}
+      </button>
+    </template>
   </div>
 </template>
 
@@ -28,9 +34,11 @@ const props = withDefaults(
   defineProps<{
     modelValue: ChapterBlockVisibility;
     readOnly?: boolean;
+    simplified?: boolean;
   }>(),
   {
     readOnly: false,
+    simplified: false,
   },
 );
 
@@ -40,7 +48,20 @@ const emit = defineEmits<{
 
 const onToggleVisibility = (key: keyof ChapterBlockVisibility) => {
   if (props.readOnly) return;
-  if (key !== 'hidden' && props.modelValue.hidden) {
+  if (props.simplified) {
+    emit('update:modelValue', { ...props.modelValue, inNavigation: !props.modelValue.inNavigation });
+    return;
+  }
+  if (key === 'hidden') {
+    const nextHidden = !props.modelValue.hidden;
+    emit('update:modelValue', {
+      ...props.modelValue,
+      hidden: nextHidden,
+      ...(nextHidden ? { presenter: false, personal: false } : {}),
+    });
+    return;
+  }
+  if (key !== 'inNavigation' && props.modelValue.hidden) {
     emit('update:modelValue', { ...props.modelValue, hidden: false, [key]: true });
     return;
   }
@@ -48,13 +69,17 @@ const onToggleVisibility = (key: keyof ChapterBlockVisibility) => {
 };
 
 const isActive = (key: keyof ChapterBlockVisibility) => {
+  if (props.simplified) {
+    return props.modelValue.inNavigation;
+  }
   if (key === 'hidden') {
     return (
       props.modelValue.hidden ||
-      (!props.modelValue.presenter &&
-        !props.modelValue.personal &&
-        !props.modelValue.inNavigation)
+      (!props.modelValue.presenter && !props.modelValue.personal)
     );
+  }
+  if (key === 'inNavigation') {
+    return props.modelValue.inNavigation;
   }
   if (props.modelValue.hidden) {
     return false;
@@ -62,13 +87,15 @@ const isActive = (key: keyof ChapterBlockVisibility) => {
   return props.modelValue[key];
 };
 
-const visibilityOptions: {
+type VisibilityOption = {
   key: keyof ChapterBlockVisibility;
   label: string;
   icon: Component;
   activeClasses: string;
   inactiveClasses: string;
-}[] = [
+};
+
+const allVisibilityOptions: VisibilityOption[] = [
   {
     key: 'presenter',
     label: 'Presenter',
@@ -99,4 +126,21 @@ const visibilityOptions: {
     inactiveClasses: 'bg-error-light/20 text-error border border-error-light',
   },
 ];
+
+const audienceOptions = props.simplified
+  ? []
+  : allVisibilityOptions.filter((option) => option.key !== 'inNavigation');
+
+const navigationOption = allVisibilityOptions.find(
+  (option) => option.key === 'inNavigation',
+);
+
+const chipGroups = [audienceOptions, navigationOption ? [navigationOption] : []].filter(
+  (group) => group.length > 0,
+);
+
+const optionLabel = (option: VisibilityOption): string => {
+  if (option.key !== 'inNavigation') return option.label;
+  return props.modelValue.inNavigation ? 'In Navigation' : 'Not in Navigation';
+};
 </script>
