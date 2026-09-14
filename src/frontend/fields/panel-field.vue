@@ -17,9 +17,6 @@
         <span>{{ field.label }}</span>
       </button>
     </div>
-    <div v-if="hasError" class="my-2 flex items-center justify-center">
-      <p class="text-sm text-error">{{ errors[0] }}</p>
-    </div>
     <div
       :class="[
         'subgrid',
