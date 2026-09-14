@@ -27,7 +27,7 @@
           'flex flex-wrap': field.isRow,
         },
       ]"
-      :style="{ gridRow: `span ${fields.length + 1}` }"
+      :style="{ gridRow: `span ${fields.length}` }"
     >
       <div
         v-for="(item, index) in fields"
