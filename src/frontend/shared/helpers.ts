@@ -1,5 +1,9 @@
 import type { App, Component, PropType } from 'vue';
-import { type FieldSpec, type LanguageSpecification } from '../../types';
+import {
+  type FieldMap,
+  type FieldSpec,
+  type LanguageSpecification,
+} from '../../types';
 import {
   LANGUAGE_LABEL_SEPARATOR,
   parseLanguageSpecification,
@@ -458,5 +462,16 @@ export function replaceLocaleInPath(
 
 export function isLucideIcon(icon: string | Component): icon is Component {
   return typeof icon === 'object' || typeof icon === 'function';
+}
+
+export function hasNestedListWidget(field: FieldSpec): boolean {
+  if (field.widget === 'list') return true;
+  if (!field.fields) return false;
+
+  const children = Array.isArray(field.fields)
+    ? field.fields
+    : Object.values(field.fields as FieldMap);
+
+  return children.some(hasNestedListWidget);
 }
 

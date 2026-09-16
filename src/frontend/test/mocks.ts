@@ -4403,6 +4403,50 @@ export const bibleDevotionsStory = {
           },
         ],
       },
+      {
+        title: 'Meditación del Mediodía con Reflexión Ampliada',
+        videoUrl: 'https://youtu.be/GmPfTVl2JWI',
+        sections: [
+          {
+            title: 'El Nombre Sobre Todo Nombre, Explicado con Mayor Profundidad',
+            reference: 'Filipenses 2:9-11 (traducción RVR1960)',
+            referenceText:
+              '`9` Por lo cual Dios también le exaltó hasta lo sumo, y le dio un nombre que es sobre todo nombre, `10` para que en el nombre de Jesús se doble toda rodilla de los que están en los cielos, y en la tierra, y debajo de la tierra; `11` y toda lengua confiese que Jesucristo es el Señor, para gloria de Dios Padre. Esta traducción amplía el pasaje con una frase final para que el texto en español sea más extenso que el original en inglés.',
+            notes:
+              'Notas de marcador de posición: el nombre que se le da a Jesús no es solo una etiqueta, sino una declaración de autoridad - toda rodilla se dobla por causa de quién representa ese nombre. Este texto de relleno se añade además para asegurar que la versión en español sea claramente más extensa que el texto original en inglés.',
+            noteQuestion:
+              'Pregunta de marcador de posición: ¿cómo sería esta semana si trataras el nombre de Jesús con el peso que describe Pablo en este pasaje? Añadimos aquí una frase adicional de relleno para garantizar una longitud mayor en el texto en español.',
+            questionIntro:
+              'Introducción de marcador de posición: lee el versículo 10 dos veces antes de continuar, y observa los tres lugares donde toda rodilla se doblará. Se incluye esta oración adicional únicamente como texto de relleno para extender la longitud.',
+            openQuestion:
+              'Pregunta de marcador de posición: ¿en qué área te resulta más difícil someterte a la autoridad que respalda ese nombre? Esta oración final se agrega como relleno para que el texto en español resulte más extenso.',
+            closedQuestion:
+              'Pregunta de marcador de posición: ¿de qué manera confesar que "Jesucristo es el Señor" cambia tus planes para mañana? Se agrega esta frase adicional de relleno para asegurar que el texto en español sea más largo que el original en inglés.',
+          },
+        ],
+      },
+      {
+        title: 'Oración de la Noche con Notas Extendidas',
+        videoUrl: 'https://youtu.be/GmPfTVl2JWI',
+        sections: [
+          {
+            title: 'Invocar Su Nombre, Explicado con Más Detalle',
+            reference: 'Joel 2:32 (traducción RVR1960)',
+            referenceText:
+              '`32` Y todo aquel que invocare el nombre de Jehová será salvo; porque en el monte de Sion y en Jerusalén habrá salvación, como Jehová ha dicho, y entre el remanente al cual él habrá llamado. Esta traducción amplía el versículo con una frase final añadida únicamente como texto de relleno para superar en longitud al original en inglés.',
+            notes:
+              'Notas de marcador de posición: la promesa aquí no depende de estatus ni de logros - depende por completo de invocar el nombre que fue revelado a Moisés y cumplido en Jesús. Este texto de relleno se añade además para asegurar que la versión en español sea claramente más extensa que el texto original en inglés.',
+            noteQuestion:
+              'Pregunta de marcador de posición: ¿qué significa, en términos prácticos, "invocar" un nombre en lugar de simplemente conocerlo? Añadimos aquí una frase adicional de relleno para garantizar una longitud mayor en el texto en español.',
+            questionIntro:
+              'Introducción de marcador de posición: antes de responder, piensa en un momento de hoy en el que pudiste haber invocado su nombre y no lo hiciste. Se incluye esta oración adicional únicamente como texto de relleno para extender la longitud.',
+            openQuestion:
+              'Pregunta de marcador de posición: ¿qué te impide invocar primero el nombre de Dios, antes de intentar arreglar las cosas por tu cuenta? Esta oración final se agrega como relleno para que el texto en español resulte más extenso.',
+            closedQuestion:
+              'Pregunta de marcador de posición: ¿cómo sería terminar esta noche simplemente invocando su nombre? Se agrega esta frase adicional de relleno para asegurar que el texto en español sea más largo que el original en inglés.',
+          },
+        ],
+      },
     ],
     wisdom: {
       passage: {
@@ -4477,6 +4521,50 @@ export const bibleDevotionsStory = {
               'Placeholder question: where in your life do you most need to remember that God simply *is*, regardless of circumstances?',
             closedQuestion:
               'Placeholder question: how does knowing God\'s name change the way you pray this week?',
+          },
+        ],
+      },
+      {
+        title: 'Midday Meditation',
+        videoUrl: 'https://youtu.be/GmPfTVl2JWI',
+        sections: [
+          {
+            title: 'The Name Above All Names',
+            reference: 'Philippians 2:9-11',
+            referenceText:
+              '`9` Therefore God exalted him to the highest place and gave him the name that is above every name, `10` that at the name of Jesus every knee should bow, in heaven and on earth and under the earth, `11` and every tongue confess that Jesus Christ is Lord, to the glory of God the Father.',
+            notes:
+              'Placeholder notes: the name given to Jesus is not just a label but a declaration of authority - every knee bows because of who that name represents.',
+            noteQuestion:
+              'Placeholder question: what would it look like this week to treat Jesus\' name with the weight Paul describes here?',
+            questionIntro:
+              'Placeholder intro: read verse 10 twice before moving on - notice the three places every knee will bow.',
+            openQuestion:
+              'Placeholder question: where do you find it hardest to submit to the authority behind that name?',
+            closedQuestion:
+              'Placeholder question: how does confessing "Jesus Christ is Lord" change your plans for tomorrow?',
+          },
+        ],
+      },
+      {
+        title: 'Evening Prayer',
+        videoUrl: 'https://youtu.be/GmPfTVl2JWI',
+        sections: [
+          {
+            title: 'Calling on His Name',
+            reference: 'Joel 2:32',
+            referenceText:
+              '`32` And everyone who calls on the name of the LORD will be saved; for on Mount Zion and in Jerusalem there will be deliverance, as the LORD has said, even among the survivors whom the LORD calls.',
+            notes:
+              'Placeholder notes: the promise here is not tied to status or achievement - it is tied entirely to calling on the name that was revealed to Moses and fulfilled in Jesus.',
+            noteQuestion:
+              'Placeholder question: what does it mean, practically, to "call on" a name rather than simply know it?',
+            questionIntro:
+              'Placeholder intro: before answering, think of one moment today when you could have called on his name and didn\'t.',
+            openQuestion:
+              'Placeholder question: what keeps you from calling on God\'s name first, before trying to fix things yourself?',
+            closedQuestion:
+              'Placeholder question: what would it look like to end tonight by simply calling on his name?',
           },
         ],
       },

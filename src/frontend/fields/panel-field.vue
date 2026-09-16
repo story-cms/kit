@@ -64,7 +64,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { commonProps } from '../shared/helpers';
+import { commonProps, hasNestedListWidget } from '../shared/helpers';
 import type { FieldSpec } from '../../types';
 import { useWidgetsStore, useSharedStore } from '../store';
 import LabelHint from '../shared/label-hint.vue';
@@ -107,5 +107,7 @@ const errors = computed(() => {
 const panelMessage = computed(
   () => field.value.panelErrorMessage ?? errors.value[0] ?? '',
 );
-const hasError = computed(() => errors.value.length > 0 && !props.isReadOnly);
+const hasError = computed(
+  () => errors.value.length > 0 && !props.isReadOnly && hasNestedListWidget(field.value),
+);
 </script>
