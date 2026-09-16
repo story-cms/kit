@@ -148,6 +148,26 @@
         :bookmarks="sharedProps.bookmarks"
       />
     </Variant>
+    <Variant title="Bible Devotions Errors" :setup-app="miniSidebar">
+      <TranslationIndex
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="spanish"
+        :errors="bibleDevotionsErrors"
+        :draft="bibleDevotionsStory.draft"
+        :bundle="bibleDevotionsStory.bundle"
+        :source="bibleDevotionsStory.source"
+        :providers="{}"
+        :last-published="'2021-10-10T14:48:00.000000Z'"
+        :story="{
+          ...bibleDevotionsStory.story,
+          fields: bibleDevotionsStory.story.fields as FieldSpec[],
+          chapterLimit: 1,
+        }"
+        :has-edit-review="false"
+        :bookmarks="sharedProps.bookmarks"
+      />
+    </Variant>
     <Variant title="Simple Flexible List" :setup-app="miniSidebar">
       <TranslationIndex
         :config="sharedProps.config"
@@ -187,6 +207,7 @@ import {
   alphaCourseStory,
   afsCourseStory,
   bibleDevotionsStory,
+  bibleDevotionsErrors,
 } from '../test/mocks';
 import { FieldSpec } from '../../types';
 

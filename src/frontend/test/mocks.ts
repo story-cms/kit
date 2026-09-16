@@ -4218,6 +4218,58 @@ const bibleDevotionsFields: FieldSpec[] = [
     ],
   },
   {
+    label: '',
+    name: 'notes',
+    widget: 'panel',
+    fields: [
+      {
+        label: 'Segments',
+        name: 'segments',
+        widget: 'list',
+        canFold: true,
+        fields: [
+          { label: 'Segment Title', name: 'title', widget: 'string' },
+          { label: 'Video URL', name: 'videoUrl', widget: 'string' },
+          {
+            label: 'Sections',
+            name: 'sections',
+            widget: 'list',
+            fields: [
+              { label: 'Title', name: 'title', widget: 'string' },
+              { label: 'Reference', name: 'reference', widget: 'string' },
+              {
+                label: 'Reference Text',
+                name: 'referenceText',
+                widget: 'markdown',
+              },
+              { label: 'Notes', name: 'notes', widget: 'markdown' },
+              {
+                label: 'Note Question',
+                name: 'noteQuestion',
+                widget: 'markdown',
+              },
+              {
+                label: 'Question Intro',
+                name: 'questionIntro',
+                widget: 'markdown',
+              },
+              {
+                label: 'Question One',
+                name: 'openQuestion',
+                widget: 'markdown',
+              },
+              {
+                label: 'Question Two',
+                name: 'closedQuestion',
+                widget: 'markdown',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
     widget: 'object',
     label: '',
     name: 'wisdom',
@@ -4321,28 +4373,81 @@ export const bibleDevotionsStory = {
     createdAt: '2025-10-24T06:10:38.482+00:00',
   },
   bundle: {
-    title: '',
-    introduction: '',
-    audio: { url: '', length: 0 },
+    title: 'El Nombre del Pacto de Dios: Una Reflexión',
+    introduction:
+      'Hoy examinaremos cómo Dios se revela a sí mismo por medio de su nombre, y lo que eso significa para la forma en que nos relacionamos con él. Esta reflexión también nos invita a considerar por qué los nombres bíblicos siguen teniendo tanto peso espiritual en nuestros días.',
+    audio: {
+      url: 'https://res.cloudinary.com/onesheep/raw/upload/v1685641667/devotions/soundtrack.mp3',
+      length: 182,
+    },
+    segments: [
+      {
+        title: 'Reflexión de la Mañana con Notas Adicionales',
+        videoUrl: 'https://youtu.be/GmPfTVl2JWI',
+        sections: [
+          {
+            title: 'Quién Dice Dios Que Él Es, Explicado con Más Detalle',
+            reference: 'Éxodo 3:13-15 (traducción RVR1960)',
+            referenceText:
+              '`13` Moisés dijo a Dios: "He aquí que llego a los hijos de Israel, y les digo: El Dios de vuestros padres me ha enviado a vosotros; si ellos me preguntan: ¿Cuál es su nombre? ¿Qué les responderé?" `14` Y respondió Dios a Moisés: "YO SOY EL QUE SOY." `15` Y dijo además Dios a Moisés: "Así dirás a los hijos de Israel: Jehová, el Dios de vuestros padres... me ha enviado a vosotros. Este es mi nombre para siempre." Esta traducción amplía ligeramente cada versículo para mayor claridad del lector hispanohablante.',
+            notes:
+              'Notas de marcador de posición: cuando Moisés pide un nombre, Dios le da un nombre que significa presencia misma - no un título prestado de los dioses que lo rodeaban, sino una declaración de que él simplemente *es*. Este texto de relleno se añade además para asegurar que la versión en español sea claramente más extensa que el texto original en inglés.',
+            noteQuestion:
+              'Pregunta de marcador de posición: ¿qué diferencia representa para ti que el nombre de Dios apunte a su presencia constante, y no solamente a su poder? Añadimos aquí una frase adicional de relleno para garantizar una longitud mayor en el texto en español.',
+            questionIntro:
+              'Introducción de marcador de posición: antes de responder, vuelve a leer el versículo 14 lentamente y observa con atención lo que Dios no dice. Se incluye esta oración adicional únicamente como texto de relleno para extender la longitud.',
+            openQuestion:
+              'Pregunta de marcador de posición: ¿en qué área de tu vida necesitas recordar con mayor urgencia que Dios simplemente *es*, sin importar las circunstancias? Esta oración final se agrega como relleno para que el texto en español resulte más extenso.',
+            closedQuestion:
+              'Pregunta de marcador de posición: ¿de qué manera conocer el nombre de Dios transforma tu forma de orar esta semana? Se agrega esta frase adicional de relleno para asegurar que el texto en español sea más largo que el original en inglés.',
+          },
+        ],
+      },
+    ],
     wisdom: {
-      passage: { reference: '', verse: '' },
-      comment: '',
-      prayer: '',
+      passage: {
+        reference: 'Proverbios 9:10 (traducción RVR1960)',
+        verse:
+          'El principio de la sabiduría es el temor de Jehová, y el conocimiento del Santísimo es la inteligencia. Esta ampliación final se añade como texto de relleno para que la versión en español supere en longitud al texto original.',
+      },
+      comment:
+        'La sabiduría comienza con una relación correcta con Dios, y no simplemente con la acumulación de datos o información. Agregamos esta oración adicional como relleno para extender el texto en español.',
+      prayer:
+        'Señor, dame un corazón que te busque por encima de todas las cosas, cada día y en cada circunstancia de mi vida. Esta frase final se incluye como relleno adicional.',
     },
     newTestament: {
-      passage: { reference: '', verse: '' },
-      comment: '',
-      prayer: '',
+      passage: {
+        reference: 'Juan 1:1-3 (traducción RVR1960)',
+        verse:
+          'En el principio era el Verbo, y el Verbo era con Dios, y el Verbo era Dios. Añadimos esta oración adicional únicamente como texto de relleno para que la traducción resulte más extensa.',
+      },
+      comment:
+        'Juan identifica a Jesús como el Verbo eterno, presente con Dios desde el principio de todas las cosas. Esta oración final se agrega como relleno para extender el texto en español.',
+      prayer:
+        'Gracias, Jesús, por darnos a conocer al Padre de una manera tan clara y personal. Se añade esta frase adicional como relleno para asegurar mayor longitud.',
     },
     oldTestament: {
-      passage: { reference: '', verse: '' },
-      comment: '',
-      prayer: '',
+      passage: {
+        reference: 'Éxodo 3:14 (traducción RVR1960)',
+        verse:
+          'Dios le dijo a Moisés: "YO SOY EL QUE SOY." Esta oración adicional se incluye únicamente como texto de relleno para que la versión en español sea más extensa que el original en inglés.',
+      },
+      comment:
+        'Dios revela su nombre personal y de pacto a Moisés en la zarza ardiente, un momento decisivo en la historia de la redención. Añadimos esta frase final como relleno.',
+      prayer:
+        'Señor, ayúdame a confiar plenamente en quién dices que eres, incluso cuando no lo comprendo del todo. Esta oración final se agrega como texto de relleno adicional.',
     },
-    pippa: '',
-    verseOfTheDay: { reference: '', verse: '' },
-    summary: '',
-    references: '',
+    pippa:
+      'Me encanta lo personal que Dios quiere ser con nosotros: ¡nos da su propio nombre! Añadimos esta frase adicional únicamente como texto de relleno para extender la longitud de la traducción.',
+    verseOfTheDay: {
+      reference: 'Éxodo 3:15 (traducción RVR1960)',
+      verse:
+        'Este es mi nombre para siempre, y con él seré recordado por todas las generaciones venideras. Esta frase adicional se incluye como relleno para que el texto en español sea más largo que el original.',
+    },
+    summary:
+      'Dios no es distante ni carece de nombre: se ha revelado a sí mismo para que podamos conocerlo y clamar a él en toda circunstancia. Esta oración final se añade como relleno para asegurar una mayor longitud en español.',
+    references:
+      'Éxodo 3, Juan 1, Proverbios 9 (además de otras referencias relacionadas incluidas aquí como texto de relleno adicional)',
   },
   source: {
     title: 'The Covenant Name of God',
@@ -4352,6 +4457,30 @@ export const bibleDevotionsStory = {
       url: 'https://res.cloudinary.com/onesheep/raw/upload/v1685641667/devotions/soundtrack.mp3',
       length: 182,
     },
+    segments: [
+      {
+        title: 'Morning Reflection',
+        videoUrl: 'https://youtu.be/GmPfTVl2JWI',
+        sections: [
+          {
+            title: 'Who God Says He Is',
+            reference: 'Exodus 3:13-15',
+            referenceText:
+              '`13` Moses said to God, "Suppose I go to the Israelites and say to them, \'The God of your fathers has sent me to you,\' and they ask me, \'What is his name?\' Then what shall I tell them?" `14` God said to Moses, "I am who I am." `15` God also said to Moses, "Say to the Israelites, \'The LORD, the God of your fathers... has sent me to you.\' This is my name forever."',
+            notes:
+              'Placeholder notes: when Moses asks for a name, God gives him a name that means presence itself - not a title borrowed from the gods around them, but a declaration that he simply *is*.',
+            noteQuestion:
+              'Placeholder question: what difference does it make to you that God\'s name points to his constant presence, not just his power?',
+            questionIntro:
+              'Placeholder intro: before you answer, reread verse 14 slowly and notice what God does not say.',
+            openQuestion:
+              'Placeholder question: where in your life do you most need to remember that God simply *is*, regardless of circumstances?',
+            closedQuestion:
+              'Placeholder question: how does knowing God\'s name change the way you pray this week?',
+          },
+        ],
+      },
+    ],
     wisdom: {
       passage: {
         reference: 'Proverbs 9:10',
@@ -4398,6 +4527,15 @@ export const bibleDevotionsStory = {
     schemaVersion: 1,
     fields: bibleDevotionsFields,
   } as StorySpec,
+};
+
+export const bibleDevotionsErrors: Record<string, string[]> = {
+  'bundle.title': ['required validation failed'],
+  'bundle.introduction': ['required validation failed'],
+  'bundle.segments': ['required validation failed'],
+  'bundle.segments.0.title': ['required validation failed'],
+  'bundle.segments.0.sections.0.title': ['required validation failed'],
+  'bundle.wisdom.passage': ['required validation failed'],
 };
 
 export const mockInvitations: InvitationItem[] = [
