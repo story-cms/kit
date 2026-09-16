@@ -28,6 +28,32 @@
         :providers="{}"
         :last-published="'2021-10-10T14:48:00.000000Z'"
         :story="{
+          visibility: 'public',
+          isPublished: true,
+          sections: [],
+          ...alMassira.story,
+          fields: alMassira.story.fields as FieldSpec[],
+          chapterLimit: 21,
+        }"
+        :has-edit-review="false"
+        :bookmarks="sharedProps.bookmarks"
+      />
+    </Variant>
+    <Variant title="Al Massira Errors" :setup-app="miniSidebar">
+      <TranslationIndex
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="spanish"
+        :errors="alMassiraErrors"
+        :draft="draft"
+        :bundle="alMassira.bundle"
+        :source="alMassira.source"
+        :providers="{}"
+        :last-published="'2021-10-10T14:48:00.000000Z'"
+        :story="{
+          visibility: 'public',
+          isPublished: true,
+          sections: [],
           ...alMassira.story,
           fields: alMassira.story.fields as FieldSpec[],
           chapterLimit: 21,
@@ -48,6 +74,9 @@
         :providers="{}"
         :last-published="'2021-10-10T14:48:00.000000Z'"
         :story="{
+          visibility: 'public',
+          isPublished: true,
+          sections: [],
           ...flexibleListStory.story,
           fields: flexibleListStory.story.fields as FieldSpec[],
           chapterLimit: 21,
@@ -68,6 +97,9 @@
         :providers="{}"
         :last-published="'2021-10-10T14:48:00.000000Z'"
         :story="{
+          visibility: 'public',
+          isPublished: true,
+          sections: [],
           ...alphaCourseStory.story,
           fields: alphaCourseStory.story.fields as FieldSpec[],
           chapterLimit: 21,
@@ -91,6 +123,26 @@
           ...afsCourseStory.story,
           fields: afsCourseStory.story.fields as FieldSpec[],
           chapterLimit: 16,
+        }"
+        :has-edit-review="false"
+        :bookmarks="sharedProps.bookmarks"
+      />
+    </Variant>
+    <Variant title="Bible Devotions" :setup-app="miniSidebar">
+      <TranslationIndex
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="spanish"
+        :errors="sharedProps.errors"
+        :draft="bibleDevotionsStory.draft"
+        :bundle="bibleDevotionsStory.bundle"
+        :source="bibleDevotionsStory.source"
+        :providers="{}"
+        :last-published="'2021-10-10T14:48:00.000000Z'"
+        :story="{
+          ...bibleDevotionsStory.story,
+          fields: bibleDevotionsStory.story.fields as FieldSpec[],
+          chapterLimit: 1,
         }"
         :has-edit-review="false"
         :bookmarks="sharedProps.bookmarks"
@@ -129,10 +181,12 @@ import {
   story,
   miniSidebar,
   alMassira,
+  alMassiraErrors,
   flexibleListStory,
   simpleFlexibleListStory,
   alphaCourseStory,
   afsCourseStory,
+  bibleDevotionsStory,
 } from '../test/mocks';
 import { FieldSpec } from '../../types';
 
