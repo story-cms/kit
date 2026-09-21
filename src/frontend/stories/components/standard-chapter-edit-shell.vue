@@ -4,6 +4,7 @@
       <DraftEditActions
         :has-edit-review="props.hasEditReview"
         :show-auto-translate="props.isTranslation"
+        :is-auto-translating="isAutoTranslating"
         @auto-translate="autoTranslate"
         @delete="deleteDraft"
         @publish="publishDraft"

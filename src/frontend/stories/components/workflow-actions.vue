@@ -1,12 +1,19 @@
 <template>
   <StudioButton
-    v-if="showAutoTranslate"
+    v-if="showAutoTranslate && !isAutoTranslating"
     label="Auto translate"
     variant="tertiary"
     @click="emit('auto-translate')"
   >
     <Sparkles class="size-4" aria-hidden="true" />
   </StudioButton>
+  <span
+    v-if="showAutoTranslate && isAutoTranslating"
+    class="inline-flex items-center gap-2 rounded-full bg-studio-lime px-6 py-3 font-dmsans text-[15px] font-semibold text-studio-forest"
+  >
+    <LoaderCircle class="size-4 animate-spin" aria-hidden="true" />
+    Translation in progress
+  </span>
   <StudioButton
     v-if="showRequestChangeButton"
     label="Request Change"
@@ -30,7 +37,7 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
-import { Sparkles } from '@lucide/vue';
+import { LoaderCircle, Sparkles } from '@lucide/vue';
 import StudioButton from '../../shared/studio-button.vue';
 import { useWidgetsStore, useSharedStore, useDraftsStore } from '../../store';
 
@@ -38,9 +45,11 @@ const props = withDefaults(
   defineProps<{
     hasEditReview: boolean;
     showAutoTranslate?: boolean;
+    isAutoTranslating?: boolean;
   }>(),
   {
     showAutoTranslate: false,
+    isAutoTranslating: false,
   },
 );
 

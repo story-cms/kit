@@ -39,6 +39,13 @@
     <Variant title="Translation draft" :setup-app="loadData">
       <WorkflowActions :has-edit-review="false" :show-auto-translate="true" />
     </Variant>
+    <Variant title="Translating" :setup-app="loadData">
+      <WorkflowActions
+        :has-edit-review="false"
+        :show-auto-translate="true"
+        :is-auto-translating="true"
+      />
+    </Variant>
   </Story>
 </template>
 

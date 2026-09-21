@@ -4,6 +4,7 @@
     <WorkflowActions
       :has-edit-review="hasEditReview"
       :show-auto-translate="showAutoTranslate"
+      :is-auto-translating="isAutoTranslating"
       @auto-translate="emit('auto-translate')"
       @publish="emit('publish')"
       @request-change="emit('request-change')"
@@ -20,9 +21,11 @@ withDefaults(
   defineProps<{
     hasEditReview: boolean;
     showAutoTranslate?: boolean;
+    isAutoTranslating?: boolean;
   }>(),
   {
     showAutoTranslate: false,
+    isAutoTranslating: false,
   },
 );
 
