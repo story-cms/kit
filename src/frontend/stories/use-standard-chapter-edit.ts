@@ -2,6 +2,7 @@ import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { router } from '@inertiajs/vue3';
 import type { Errors } from '@inertiajs/core';
+import axios from 'axios';
 
 import type {
   ChapterBlock,
@@ -235,9 +236,66 @@ export function useStandardChapterEdit(
     );
   };
 
+  // Placeholder until a real token/credit balance system exists.
+  const tokenBalance = 5000;
+
+  const targetLanguageName = computed(() => shared.language.language);
+
+  const estimatedTokens = computed(() => {
+    const texts: (string | undefined)[] = [];
+    const source = props.source;
+    if (source) {
+      texts.push(source.title, source.description);
+      for (const block of source.blocks) {
+        if (block.kind === 'title') {
+          texts.push(block.title, block.subtitle);
+        } else {
+          texts.push(block.leadersNotes);
+          for (const item of block.items) {
+            if (item.kind === 'text') texts.push(item.content);
+          }
+        }
+      }
+    }
+    const characters = texts.reduce((total, text) => total + (text?.length ?? 0), 0);
+    const low = Math.max(1, Math.round(characters / 4));
+    const high = Math.round(low * 1.5);
+    return { low, high };
+  });
+
+  const showAutoTranslateModal = ref(false);
+  const isAutoTranslating = ref(false);
+
   const autoTranslate = () => {
-    // TODO: wire up AI translation backend call
-    shared.addMessage(ResponseStatus.Confirmation, 'Auto translate coming soon');
+    showAutoTranslateModal.value = true;
+  };
+
+  const closeAutoTranslateModal = () => {
+    showAutoTranslateModal.value = false;
+  };
+
+  const confirmAutoTranslate = async () => {
+    showAutoTranslateModal.value = false;
+    isAutoTranslating.value = true;
+
+    try {
+      const response = await axios.post(
+        `/${shared.locale}/story/${props.story.id}/draft/${props.draft.id}/auto-translate`,
+        { source: props.source, targetLocale: shared.locale },
+      );
+      model.setField('title', response.data.title);
+      model.setField('description', response.data.description);
+      blocks.value = normalizedBlocks(response.data.blocks);
+      shared.addMessage(
+        ResponseStatus.Confirmation,
+        'Translation complete. Review and save.',
+      );
+    } catch (error) {
+      console.error('use-standard-chapter-edit.confirmAutoTranslate', error);
+      shared.addMessage(ResponseStatus.Failure, 'Auto translate failed');
+    } finally {
+      isAutoTranslating.value = false;
+    }
   };
 
   const rejectDraft = () => {
@@ -291,9 +349,13 @@ export function useStandardChapterEdit(
     autoTranslate,
     availableResources,
     blocks,
+    closeAutoTranslateModal,
+    confirmAutoTranslate,
     createResource,
     currentTab,
     deleteDraft,
+    estimatedTokens,
+    isAutoTranslating,
     layoutSubtitle,
     layoutTitle,
     metaChapter,
@@ -302,8 +364,11 @@ export function useStandardChapterEdit(
     publishedWhen,
     rejectDraft,
     shared,
+    showAutoTranslateModal,
     submitDraft,
     tabs,
+    targetLanguageName,
+    tokenBalance,
     onTabChange,
     updateBlocks,
   };

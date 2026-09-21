@@ -125,6 +125,19 @@
       </div>
     </template>
   </AppLayout>
+
+  <TranslationTokenEstimateModal
+    v-if="props.isTranslation"
+    :open="showAutoTranslateModal"
+    :source-locale="sourceLanguageName"
+    :target-locale="targetLanguageName"
+    :estimated-tokens-low="estimatedTokens.low"
+    :estimated-tokens-high="estimatedTokens.high"
+    :balance="tokenBalance"
+    :is-translating="isAutoTranslating"
+    @close="closeAutoTranslateModal"
+    @confirm="confirmAutoTranslate"
+  />
 </template>
 
 <script setup lang="ts">
@@ -143,6 +156,7 @@ import { useTranslationDraftLayout } from '../use-translation-draft-layout';
 import { useStandardChapterEdit } from '../use-standard-chapter-edit';
 import DraftEditActions from './draft-edit-actions.vue';
 import StoryEditResources from './story-edit-resources.vue';
+import TranslationTokenEstimateModal from './translation-token-estimate-modal.vue';
 
 const props = withDefaults(
   defineProps<StandardChapterEditProps & SharedPageProps & { isTranslation?: boolean }>(),
@@ -165,9 +179,13 @@ const {
   autoTranslate,
   availableResources,
   blocks,
+  closeAutoTranslateModal,
+  confirmAutoTranslate,
   createResource,
   currentTab,
   deleteDraft,
+  estimatedTokens,
+  isAutoTranslating,
   layoutSubtitle,
   layoutTitle,
   metaChapter,
@@ -177,8 +195,11 @@ const {
   publishedWhen,
   rejectDraft,
   shared,
+  showAutoTranslateModal,
   submitDraft,
   tabs,
+  targetLanguageName,
+  tokenBalance,
   updateBlocks,
 } = useStandardChapterEdit(props, props.isTranslation);
 
