@@ -1826,8 +1826,7 @@ export const alMassira = {
         reference: 'Génesis 6:9-22',
         noteQuestion:
           '¿Tiene Dios un plan de rescate para hoy? Si es así, ¿estoy listo para seguirlo?',
-        openQuestion:
-          '¿Qué hizo diferente a Noé de la gente que lo rodeaba?',
+        openQuestion: '¿Qué hizo diferente a Noé de la gente que lo rodeaba?',
         questionIntro:
           'Noé era un hombre justo y caminaba con Dios. Dios comparte su plan de destruir el mundo – y de salvar a Noé y a su familia.',
         referenceText:
@@ -2003,8 +2002,7 @@ export const alMassira = {
       },
       {
         key: 'Holiness',
-        description:
-          'Una pasión y amor consumidor por Dios que impide pecar.',
+        description: 'Una pasión y amor consumidor por Dios que impide pecar.',
       },
       {
         key: 'Altar',
@@ -4202,7 +4200,7 @@ export const afsCourseStory = {
 const bibleDevotionsFields: FieldSpec[] = [
   {
     name: 'title',
-    label: 'Devotion Title',
+    label: 'Devotion',
     widget: 'panel',
     fields: [
       {
@@ -4514,13 +4512,13 @@ export const bibleDevotionsStory = {
             notes:
               'Placeholder notes: when Moses asks for a name, God gives him a name that means presence itself - not a title borrowed from the gods around them, but a declaration that he simply *is*.',
             noteQuestion:
-              'Placeholder question: what difference does it make to you that God\'s name points to his constant presence, not just his power?',
+              "Placeholder question: what difference does it make to you that God's name points to his constant presence, not just his power?",
             questionIntro:
               'Placeholder intro: before you answer, reread verse 14 slowly and notice what God does not say.',
             openQuestion:
               'Placeholder question: where in your life do you most need to remember that God simply *is*, regardless of circumstances?',
             closedQuestion:
-              'Placeholder question: how does knowing God\'s name change the way you pray this week?',
+              "Placeholder question: how does knowing God's name change the way you pray this week?",
           },
         ],
       },
@@ -4536,7 +4534,7 @@ export const bibleDevotionsStory = {
             notes:
               'Placeholder notes: the name given to Jesus is not just a label but a declaration of authority - every knee bows because of who that name represents.',
             noteQuestion:
-              'Placeholder question: what would it look like this week to treat Jesus\' name with the weight Paul describes here?',
+              "Placeholder question: what would it look like this week to treat Jesus' name with the weight Paul describes here?",
             questionIntro:
               'Placeholder intro: read verse 10 twice before moving on - notice the three places every knee will bow.',
             openQuestion:
@@ -4560,9 +4558,9 @@ export const bibleDevotionsStory = {
             noteQuestion:
               'Placeholder question: what does it mean, practically, to "call on" a name rather than simply know it?',
             questionIntro:
-              'Placeholder intro: before answering, think of one moment today when you could have called on his name and didn\'t.',
+              "Placeholder intro: before answering, think of one moment today when you could have called on his name and didn't.",
             openQuestion:
-              'Placeholder question: what keeps you from calling on God\'s name first, before trying to fix things yourself?',
+              "Placeholder question: what keeps you from calling on God's name first, before trying to fix things yourself?",
             closedQuestion:
               'Placeholder question: what would it look like to end tonight by simply calling on his name?',
           },

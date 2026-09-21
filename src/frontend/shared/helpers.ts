@@ -33,6 +33,12 @@ export const commonProps = {
     required: false,
     default: false,
   },
+
+  isCompact: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 };
 
 export const expandShortcuts = (text: string) => {
