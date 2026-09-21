@@ -241,33 +241,32 @@ export function useStandardChapterEdit(
 
   const targetLanguageName = computed(() => shared.language.language);
 
-  const estimatedTokens = computed(() => {
-    const texts: (string | undefined)[] = [];
-    const source = props.source;
-    if (source) {
-      texts.push(source.title, source.description);
-      for (const block of source.blocks) {
-        if (block.kind === 'title') {
-          texts.push(block.title, block.subtitle);
-        } else {
-          texts.push(block.leadersNotes);
-          for (const item of block.items) {
-            if (item.kind === 'text') texts.push(item.content);
-          }
-        }
-      }
-    }
-    const characters = texts.reduce((total, text) => total + (text?.length ?? 0), 0);
-    const low = Math.max(1, Math.round(characters / 4));
-    const high = Math.round(low * 1.5);
-    return { low, high };
-  });
-
   const showAutoTranslateModal = ref(false);
   const isAutoTranslating = ref(false);
+  const isEstimating = ref(false);
+  const inputTokens = ref<number | null>(null);
+  const outputTokens = ref<number | null>(null);
 
-  const autoTranslate = () => {
+  const autoTranslate = async () => {
     showAutoTranslateModal.value = true;
+    isEstimating.value = true;
+    inputTokens.value = null;
+    outputTokens.value = null;
+
+    try {
+      const response = await axios.post(
+        `/${shared.locale}/story/${props.story.id}/draft/${props.draft.id}/estimate-translation`,
+        { source: props.source, targetLocale: shared.locale },
+      );
+      inputTokens.value = response.data.inputTokens;
+      outputTokens.value = response.data.outputTokens;
+    } catch (error) {
+      console.error('use-standard-chapter-edit.autoTranslate', error);
+      showAutoTranslateModal.value = false;
+      shared.addMessage(ResponseStatus.Failure, 'Could not estimate translation cost');
+    } finally {
+      isEstimating.value = false;
+    }
   };
 
   const closeAutoTranslateModal = () => {
@@ -354,11 +353,13 @@ export function useStandardChapterEdit(
     createResource,
     currentTab,
     deleteDraft,
-    estimatedTokens,
+    inputTokens,
     isAutoTranslating,
+    isEstimating,
     layoutSubtitle,
     layoutTitle,
     metaChapter,
+    outputTokens,
     previewBundle,
     publishDraft,
     publishedWhen,

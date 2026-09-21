@@ -131,9 +131,10 @@
     :open="showAutoTranslateModal"
     :source-locale="sourceLanguageName"
     :target-locale="targetLanguageName"
-    :estimated-tokens-low="estimatedTokens.low"
-    :estimated-tokens-high="estimatedTokens.high"
+    :input-tokens="inputTokens"
+    :output-tokens="outputTokens"
     :balance="tokenBalance"
+    :is-estimating="isEstimating"
     :is-translating="isAutoTranslating"
     @close="closeAutoTranslateModal"
     @confirm="confirmAutoTranslate"
@@ -184,12 +185,14 @@ const {
   createResource,
   currentTab,
   deleteDraft,
-  estimatedTokens,
+  inputTokens,
   isAutoTranslating,
+  isEstimating,
   layoutSubtitle,
   layoutTitle,
   metaChapter,
   onTabChange,
+  outputTokens,
   previewBundle,
   publishDraft,
   publishedWhen,

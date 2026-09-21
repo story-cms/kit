@@ -1,20 +1,39 @@
 <template>
   <Story title="Translation Token Estimate Modal" group="stories">
-    <Variant title="Default">
+    <Variant title="Loaded">
       <button
         class="rounded-xl bg-blue-500 px-4 py-2 text-white"
-        @click="showModal = true"
+        @click="showLoadedModal = true"
       >
         Auto translate
       </button>
       <TranslationTokenEstimateModal
-        :open="showModal"
+        :open="showLoadedModal"
         source-locale="English"
         target-locale="German"
-        :estimated-tokens-low="1200"
-        :estimated-tokens-high="1800"
+        :input-tokens="820"
+        :output-tokens="1230"
         :balance="5000"
-        @close="showModal = false"
+        @close="showLoadedModal = false"
+        @confirm="onConfirm"
+      />
+    </Variant>
+    <Variant title="Loading">
+      <button
+        class="rounded-xl bg-blue-500 px-4 py-2 text-white"
+        @click="showLoadingModal = true"
+      >
+        Auto translate
+      </button>
+      <TranslationTokenEstimateModal
+        :open="showLoadingModal"
+        source-locale="English"
+        target-locale="German"
+        :input-tokens="null"
+        :output-tokens="null"
+        :balance="5000"
+        :is-estimating="true"
+        @close="showLoadingModal = false"
         @confirm="onConfirm"
       />
     </Variant>
@@ -25,10 +44,12 @@
 import { ref } from 'vue';
 import TranslationTokenEstimateModal from './translation-token-estimate-modal.vue';
 
-const showModal = ref(false);
+const showLoadedModal = ref(false);
+const showLoadingModal = ref(false);
 
 const onConfirm = () => {
-  showModal.value = false;
+  showLoadedModal.value = false;
+  showLoadingModal.value = false;
   alert('Translation started');
 };
 </script>
