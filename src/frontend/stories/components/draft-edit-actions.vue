@@ -3,6 +3,8 @@
     <DraftActions @delete="emit('delete')" />
     <WorkflowActions
       :has-edit-review="hasEditReview"
+      :show-auto-translate="showAutoTranslate"
+      @auto-translate="emit('auto-translate')"
       @publish="emit('publish')"
       @request-change="emit('request-change')"
       @submit="emit('submit')"
@@ -14,9 +16,15 @@
 import DraftActions from '../../shared/draft-actions.vue';
 import WorkflowActions from './workflow-actions.vue';
 
-defineProps<{
-  hasEditReview: boolean;
-}>();
+withDefaults(
+  defineProps<{
+    hasEditReview: boolean;
+    showAutoTranslate?: boolean;
+  }>(),
+  {
+    showAutoTranslate: false,
+  },
+);
 
-const emit = defineEmits(['delete', 'publish', 'request-change', 'submit']);
+const emit = defineEmits(['auto-translate', 'delete', 'publish', 'request-change', 'submit']);
 </script>

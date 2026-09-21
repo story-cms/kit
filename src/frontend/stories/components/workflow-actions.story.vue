@@ -36,6 +36,9 @@
     <Variant title="Admin publish — republish" :setup-app="loadData">
       <WorkflowActions :has-edit-review="false" />
     </Variant>
+    <Variant title="Translation draft" :setup-app="loadData">
+      <WorkflowActions :has-edit-review="false" :show-auto-translate="true" />
+    </Variant>
   </Story>
 </template>
 

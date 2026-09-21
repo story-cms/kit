@@ -3,6 +3,8 @@
     <template #actions>
       <DraftEditActions
         :has-edit-review="props.hasEditReview"
+        :show-auto-translate="props.isTranslation"
+        @auto-translate="autoTranslate"
         @delete="deleteDraft"
         @publish="publishDraft"
         @request-change="rejectDraft"
@@ -160,6 +162,7 @@ defineSlots<{
 
 const {
   attachedResources,
+  autoTranslate,
   availableResources,
   blocks,
   createResource,

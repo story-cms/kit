@@ -235,6 +235,11 @@ export function useStandardChapterEdit(
     );
   };
 
+  const autoTranslate = () => {
+    // TODO: wire up AI translation backend call
+    shared.addMessage(ResponseStatus.Confirmation, 'Auto translate coming soon');
+  };
+
   const rejectDraft = () => {
     autosave.cancel();
     router.post(
@@ -283,6 +288,7 @@ export function useStandardChapterEdit(
 
   return {
     attachedResources,
+    autoTranslate,
     availableResources,
     blocks,
     createResource,

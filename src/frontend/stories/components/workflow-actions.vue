@@ -1,5 +1,13 @@
 <template>
   <StudioButton
+    v-if="showAutoTranslate"
+    label="Auto translate"
+    variant="tertiary"
+    @click="emit('auto-translate')"
+  >
+    <Sparkles class="size-4" aria-hidden="true" />
+  </StudioButton>
+  <StudioButton
     v-if="showRequestChangeButton"
     label="Request Change"
     variant="destructive"
@@ -22,14 +30,21 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
+import { Sparkles } from '@lucide/vue';
 import StudioButton from '../../shared/studio-button.vue';
 import { useWidgetsStore, useSharedStore, useDraftsStore } from '../../store';
 
-const props = defineProps<{
-  hasEditReview: boolean;
-}>();
+const props = withDefaults(
+  defineProps<{
+    hasEditReview: boolean;
+    showAutoTranslate?: boolean;
+  }>(),
+  {
+    showAutoTranslate: false,
+  },
+);
 
-const emit = defineEmits(['publish', 'request-change', 'submit']);
+const emit = defineEmits(['auto-translate', 'publish', 'request-change', 'submit']);
 
 const widgets = useWidgetsStore();
 const shared = useSharedStore();
