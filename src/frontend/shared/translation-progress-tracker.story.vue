@@ -3,14 +3,10 @@
     <Variant title="Mixed statuses">
       <div class="relative h-96 w-full">
         <p class="text-sm text-gray-500">
-          Closing only clears the complete/failed rows — the pending and
-          processing ones stay put.
+          Closing minimizes into a floating button — nothing is removed. Click
+          it again to restore the panel.
         </p>
-        <TranslationProgressTrackerCard
-          :jobs="mixedJobs"
-          @undo="onUndo(mixedJobs, $event)"
-          @dismiss="onDismiss(mixedJobs, $event)"
-        />
+        <TranslationProgressTrackerCard :jobs="mixedJobs" @undo="onUndo(mixedJobs, $event)" />
       </div>
     </Variant>
     <Variant title="Single locale, all in progress">
@@ -18,7 +14,6 @@
         <TranslationProgressTrackerCard
           :jobs="inProgressJobs"
           @undo="onUndo(inProgressJobs, $event)"
-          @dismiss="onDismiss(inProgressJobs, $event)"
         />
       </div>
     </Variant>
@@ -31,14 +26,13 @@
           :jobs="mixedJobs"
           :current-draft-id="3"
           @undo="onUndo(mixedJobs, $event)"
-          @dismiss="onDismiss(mixedJobs, $event)"
         />
       </div>
     </Variant>
     <Variant title="Empty">
       <div class="relative h-96 w-full">
         <p class="text-sm text-gray-500">No jobs — the card renders nothing.</p>
-        <TranslationProgressTrackerCard :jobs="[]" @undo="() => {}" @dismiss="() => {}" />
+        <TranslationProgressTrackerCard :jobs="[]" @undo="() => {}" />
       </div>
     </Variant>
   </Story>
@@ -130,12 +124,5 @@ const inProgressJobs = reactive<TranslationJob[]>([
 const onUndo = (jobs: TranslationJob[], jobId: number) => {
   const index = jobs.findIndex((job) => job.id === jobId);
   if (index !== -1) jobs.splice(index, 1);
-};
-
-const onDismiss = (jobs: TranslationJob[], jobIds: number[]) => {
-  jobIds.forEach((jobId) => {
-    const index = jobs.findIndex((job) => job.id === jobId);
-    if (index !== -1) jobs.splice(index, 1);
-  });
 };
 </script>
