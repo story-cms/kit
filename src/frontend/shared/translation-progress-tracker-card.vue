@@ -1,7 +1,18 @@
 <template>
   <Teleport to="body">
+    <button
+      v-if="jobs.length > 0 && minimized"
+      type="button"
+      aria-label="Show translation progress"
+      class="fixed bottom-32 right-6 z-40 flex size-12 items-center justify-center rounded-full bg-studio-forest text-white shadow-xl transition-colors hover:bg-studio-forest/90"
+      @click="minimized = false"
+    >
+      <LoaderCircle v-if="hasActiveJobs" class="size-5 animate-spin" aria-hidden="true" />
+      <Check v-else class="size-5" aria-hidden="true" />
+    </button>
+
     <div
-      v-if="jobs.length > 0 && !closed"
+      v-if="jobs.length > 0 && !minimized"
       class="fixed bottom-32 right-6 z-40 w-80 rounded-2xl border border-gray-200 bg-white p-5 shadow-xl"
     >
       <div class="flex items-center justify-between">
@@ -10,9 +21,9 @@
         </h2>
         <button
           type="button"
-          aria-label="Close"
+          aria-label="Minimize"
           class="rounded-lg p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
-          @click="closed = true"
+          @click="minimized = true"
         >
           <X class="size-4" aria-hidden="true" />
         </button>
@@ -96,19 +107,23 @@ const emit = defineEmits<{
   undo: [jobId: number];
 }>();
 
-const closed = ref(false);
+const minimized = ref(false);
 let seenJobIds = new Set(props.jobs.map((job) => job.id));
 
-// A newly started translation should surface the panel again, even if it
-// was previously closed for stale content.
+// A newly started translation should un-minimize the panel, even if it
+// was previously minimized for older content.
 watch(
   () => props.jobs.map((job) => job.id),
   (ids) => {
     if (ids.some((id) => !seenJobIds.has(id))) {
-      closed.value = false;
+      minimized.value = false;
     }
     seenJobIds = new Set(ids);
   },
+);
+
+const hasActiveJobs = computed(() =>
+  props.jobs.some((job) => job.status === 'pending' || job.status === 'processing'),
 );
 
 const localeGroups = computed(() => {

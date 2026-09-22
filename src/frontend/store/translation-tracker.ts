@@ -24,6 +24,7 @@ export interface UndoneTranslation {
 }
 
 const POLL_INTERVAL_MS = 3000;
+const AUTO_DISMISS_DELAY_MS = 60_000;
 
 export const useTranslationTrackerStore = defineStore('translation-tracker', () => {
   const shared = useSharedStore();
@@ -31,6 +32,27 @@ export const useTranslationTrackerStore = defineStore('translation-tracker', () 
   const lastUndone = ref<UndoneTranslation | null>(null);
   let pollTimer: ReturnType<typeof setInterval> | null = null;
   let subscriberCount = 0;
+  const autoDismissTimers = new Map<number, ReturnType<typeof setTimeout>>();
+
+  const clearAutoDismiss = (jobId: number) => {
+    const timer = autoDismissTimers.get(jobId);
+    if (timer === undefined) return;
+    clearTimeout(timer);
+    autoDismissTimers.delete(jobId);
+  };
+
+  const scheduleAutoDismiss = (job: TranslationJob) => {
+    if (job.status !== 'complete' && job.status !== 'failed') return;
+    if (autoDismissTimers.has(job.id)) return;
+
+    autoDismissTimers.set(
+      job.id,
+      setTimeout(() => {
+        autoDismissTimers.delete(job.id);
+        dismiss(job.id);
+      }, AUTO_DISMISS_DELAY_MS),
+    );
+  };
 
   const hasActiveJobs = computed(() =>
     jobs.value.some((job) => job.status === 'pending' || job.status === 'processing'),
@@ -40,6 +62,7 @@ export const useTranslationTrackerStore = defineStore('translation-tracker', () 
     try {
       const response = await axios.get(`/${shared.locale}/translation-jobs`);
       jobs.value = response.data;
+      jobs.value.forEach(scheduleAutoDismiss);
     } catch (error) {
       console.error('translation-tracker.fetchJobs', error);
     }
@@ -50,6 +73,7 @@ export const useTranslationTrackerStore = defineStore('translation-tracker', () 
   };
 
   const dismiss = async (jobId: number) => {
+    clearAutoDismiss(jobId);
     jobs.value = jobs.value.filter((job) => job.id !== jobId);
     try {
       await axios.delete(`/${shared.locale}/translation-jobs/${jobId}`);
@@ -59,6 +83,7 @@ export const useTranslationTrackerStore = defineStore('translation-tracker', () 
   };
 
   const undo = async (jobId: number) => {
+    clearAutoDismiss(jobId);
     const job = jobs.value.find((existing) => existing.id === jobId);
     jobs.value = jobs.value.filter((existing) => existing.id !== jobId);
     try {
