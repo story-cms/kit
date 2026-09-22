@@ -13,6 +13,18 @@
         />
       </div>
     </Variant>
+    <Variant title="Viewing the draft being translated">
+      <div class="relative h-96 w-full">
+        <p class="text-sm text-gray-500">
+          "Hope has come" (draft 3) has no open-chapter link — the viewer is already there.
+        </p>
+        <TranslationProgressTrackerCard
+          :jobs="mixedJobs"
+          :current-draft-id="3"
+          @undo="onUndo(mixedJobs, $event)"
+        />
+      </div>
+    </Variant>
     <Variant title="Empty">
       <div class="relative h-96 w-full">
         <p class="text-sm text-gray-500">No jobs — the card renders nothing.</p>

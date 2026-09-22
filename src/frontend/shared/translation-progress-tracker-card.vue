@@ -69,7 +69,7 @@
           </div>
 
           <a
-            v-if="job.chapterNumber !== null"
+            v-if="job.chapterNumber !== null && job.draftId !== currentDraftId"
             :href="editUrl(job)"
             aria-label="Open chapter"
             class="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
@@ -89,6 +89,7 @@ import type { TranslationJob } from '../store/translation-tracker';
 
 const props = defineProps<{
   jobs: TranslationJob[];
+  currentDraftId?: number | null;
 }>();
 
 const emit = defineEmits<{
