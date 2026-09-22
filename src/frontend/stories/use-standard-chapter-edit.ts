@@ -284,6 +284,7 @@ export function useStandardChapterEdit(
       );
       model.setField('title', response.data.title);
       model.setField('description', response.data.description);
+      blocks.value = normalizedBlocks(response.data.blocks);
       shared.addMessage(
         ResponseStatus.Confirmation,
         'Translation complete. Review and save.',
