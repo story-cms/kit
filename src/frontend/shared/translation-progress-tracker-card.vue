@@ -2,7 +2,7 @@
   <Teleport to="body">
     <div
       v-if="jobs.length > 0"
-      class="fixed bottom-6 right-6 z-40 w-80 rounded-2xl border border-gray-200 bg-white p-5 shadow-xl"
+      class="fixed bottom-32 right-6 z-40 w-80 rounded-2xl border border-gray-200 bg-white p-5 shadow-xl"
     >
       <h2 class="text-center font-dmsans text-base font-semibold text-black">
         Translation in progress
