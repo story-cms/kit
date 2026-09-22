@@ -18,11 +18,17 @@ export interface TranslationJob {
   actualTokens: number | null;
 }
 
+export interface UndoneTranslation {
+  jobId: number;
+  draftId: number;
+}
+
 const POLL_INTERVAL_MS = 3000;
 
 export const useTranslationTrackerStore = defineStore('translation-tracker', () => {
   const shared = useSharedStore();
   const jobs = ref<TranslationJob[]>([]);
+  const lastUndone = ref<UndoneTranslation | null>(null);
   let pollTimer: ReturnType<typeof setInterval> | null = null;
   let subscriberCount = 0;
 
@@ -53,9 +59,11 @@ export const useTranslationTrackerStore = defineStore('translation-tracker', () 
   };
 
   const undo = async (jobId: number) => {
-    jobs.value = jobs.value.filter((job) => job.id !== jobId);
+    const job = jobs.value.find((existing) => existing.id === jobId);
+    jobs.value = jobs.value.filter((existing) => existing.id !== jobId);
     try {
       await axios.post(`/${shared.locale}/translation-jobs/${jobId}/undo`);
+      if (job) lastUndone.value = { jobId, draftId: job.draftId };
     } catch (error) {
       console.error('translation-tracker.undo', error);
     }
@@ -81,6 +89,7 @@ export const useTranslationTrackerStore = defineStore('translation-tracker', () 
 
   return {
     jobs,
+    lastUndone,
     hasActiveJobs,
     fetchJobs,
     addOptimisticJob,

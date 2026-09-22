@@ -246,6 +246,7 @@ export function useStandardChapterEdit(
 
   const tracker = useTranslationTrackerStore();
   const notifiedCompleteJobIds = new Set<number>();
+  const handledUndoJobIds = new Set<number>();
 
   const isAutoTranslating = computed(() =>
     tracker.jobs.some(
@@ -254,6 +255,32 @@ export function useStandardChapterEdit(
         (job.status === 'pending' || job.status === 'processing'),
     ),
   );
+
+  // The composable only reads props.bundle/source once at setup, so a
+  // partial reload alone wouldn't update the visible form — re-apply the
+  // freshly-saved content into model/blocks/title once it lands.
+  const resyncBundleAfterTranslationChange = (
+    responseStatus: ResponseStatus,
+    messageTitle: string,
+    messageDescription: string,
+  ) => {
+    router.reload({
+      only: ['bundle', 'source'],
+      onSuccess: () => {
+        model.setModel({ ...props.bundle });
+        if (isTranslation && props.source) {
+          model.setSource(props.source);
+        }
+        blocks.value = props.bundle.blocks?.length
+          ? normalizedBlocks([...props.bundle.blocks])
+          : [];
+        title.value = props.bundle.title;
+        autosave.cancel();
+        widgets.setIsDirty(false);
+        shared.addMessage(responseStatus, messageTitle, messageDescription);
+      },
+    });
+  };
 
   watch(
     () => tracker.jobs,
@@ -268,31 +295,30 @@ export function useStandardChapterEdit(
 
       notifiedCompleteJobIds.add(completedHere.id);
 
-      // The composable only reads props.bundle/source once at setup, so a
-      // partial reload alone wouldn't update the visible form — re-apply the
-      // freshly-saved content into model/blocks/title once it lands.
-      router.reload({
-        only: ['bundle', 'source'],
-        onSuccess: () => {
-          model.setModel({ ...props.bundle });
-          if (isTranslation && props.source) {
-            model.setSource(props.source);
-          }
-          blocks.value = props.bundle.blocks?.length
-            ? normalizedBlocks([...props.bundle.blocks])
-            : [];
-          title.value = props.bundle.title;
-          autosave.cancel();
-          widgets.setIsDirty(false);
-          shared.addMessage(
-            ResponseStatus.Confirmation,
-            'Translation complete',
-            `Your content has been translated, using ${(completedHere.actualTokens ?? 0).toLocaleString()} tokens.`,
-          );
-        },
-      });
+      resyncBundleAfterTranslationChange(
+        ResponseStatus.Confirmation,
+        'Translation complete',
+        `Your content has been translated, using ${(completedHere.actualTokens ?? 0).toLocaleString()} tokens.`,
+      );
     },
     { deep: true },
+  );
+
+  watch(
+    () => tracker.lastUndone,
+    (undone) => {
+      if (!undone) return;
+      if (undone.draftId !== props.draft.id) return;
+      if (handledUndoJobIds.has(undone.jobId)) return;
+
+      handledUndoJobIds.add(undone.jobId);
+
+      resyncBundleAfterTranslationChange(
+        ResponseStatus.Confirmation,
+        'Translation undone',
+        'The original content has been restored.',
+      );
+    },
   );
 
   const showAutoTranslateModal = ref(false);
