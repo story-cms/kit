@@ -267,10 +267,29 @@ export function useStandardChapterEdit(
       if (!completedHere) return;
 
       notifiedCompleteJobIds.add(completedHere.id);
-      shared.addMessage(
-        ResponseStatus.Confirmation,
-        'Translation complete — reload this page to see the changes.',
-      );
+
+      // The composable only reads props.bundle/source once at setup, so a
+      // partial reload alone wouldn't update the visible form — re-apply the
+      // freshly-saved content into model/blocks/title once it lands.
+      router.reload({
+        only: ['bundle', 'source'],
+        onSuccess: () => {
+          model.setModel({ ...props.bundle });
+          if (isTranslation && props.source) {
+            model.setSource(props.source);
+          }
+          blocks.value = props.bundle.blocks?.length
+            ? normalizedBlocks([...props.bundle.blocks])
+            : [];
+          title.value = props.bundle.title;
+          autosave.cancel();
+          widgets.setIsDirty(false);
+          shared.addMessage(
+            ResponseStatus.Confirmation,
+            'Translation complete. The content below has been updated.',
+          );
+        },
+      });
     },
     { deep: true },
   );
