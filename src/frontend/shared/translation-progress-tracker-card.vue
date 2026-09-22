@@ -71,8 +71,6 @@
           <a
             v-if="job.chapterNumber !== null"
             :href="editUrl(job)"
-            target="_blank"
-            rel="noopener"
             aria-label="Open chapter"
             class="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
           >
