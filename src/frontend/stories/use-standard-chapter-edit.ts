@@ -286,7 +286,8 @@ export function useStandardChapterEdit(
           widgets.setIsDirty(false);
           shared.addMessage(
             ResponseStatus.Confirmation,
-            'Translation complete. The content below has been updated.',
+            'Translation complete',
+            `Your content has been translated, using ${(completedHere.actualTokens ?? 0).toLocaleString()} tokens.`,
           );
         },
       });
@@ -342,9 +343,11 @@ export function useStandardChapterEdit(
         draftId: props.draft.id,
         chapterNumber: props.draft.number,
         locale: shared.locale,
+        localeName: targetLanguageName.value,
         chapterTitle: props.source?.title ?? '',
         status: 'pending',
         canUndo: false,
+        actualTokens: null,
       });
       shared.addMessage(
         ResponseStatus.Confirmation,

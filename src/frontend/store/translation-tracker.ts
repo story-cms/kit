@@ -11,9 +11,11 @@ export interface TranslationJob {
   draftId: number;
   chapterNumber: number | null;
   locale: string;
+  localeName: string;
   chapterTitle: string;
   status: TranslationJobStatus;
   canUndo: boolean;
+  actualTokens: number | null;
 }
 
 const POLL_INTERVAL_MS = 3000;

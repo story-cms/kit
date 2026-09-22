@@ -19,7 +19,7 @@
       </div>
 
       <div v-for="group in localeGroups" :key="group.locale" class="mt-4">
-        <p class="font-dmsans text-sm font-semibold text-black">{{ group.locale }}</p>
+        <p class="font-dmsans text-sm font-semibold text-black">{{ group.localeName }}</p>
 
         <div
           v-for="job in group.jobs"
@@ -113,13 +113,13 @@ watch(
 );
 
 const localeGroups = computed(() => {
-  const byLocale = new Map<string, TranslationJob[]>();
+  const byLocale = new Map<string, { localeName: string; jobs: TranslationJob[] }>();
   for (const job of props.jobs) {
-    const list = byLocale.get(job.locale) ?? [];
-    list.push(job);
-    byLocale.set(job.locale, list);
+    const group = byLocale.get(job.locale) ?? { localeName: job.localeName, jobs: [] };
+    group.jobs.push(job);
+    byLocale.set(job.locale, group);
   }
-  return [...byLocale.entries()].map(([locale, jobs]) => ({ locale, jobs }));
+  return [...byLocale.entries()].map(([locale, group]) => ({ locale, ...group }));
 });
 
 const editUrl = (job: TranslationJob) =>
