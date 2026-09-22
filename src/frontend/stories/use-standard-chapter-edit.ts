@@ -344,6 +344,7 @@ export function useStandardChapterEdit(
         locale: shared.locale,
         chapterTitle: props.source?.title ?? '',
         status: 'pending',
+        canUndo: false,
       });
       shared.addMessage(
         ResponseStatus.Confirmation,

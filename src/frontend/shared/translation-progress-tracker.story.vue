@@ -2,18 +2,21 @@
   <Story title="Translation Progress Tracker" group="shared">
     <Variant title="Mixed statuses">
       <div class="relative h-96 w-full">
-        <TranslationProgressTrackerCard :jobs="mixedJobs" @dismiss="onDismiss(mixedJobs, $event)" />
+        <TranslationProgressTrackerCard :jobs="mixedJobs" @undo="onUndo(mixedJobs, $event)" />
       </div>
     </Variant>
     <Variant title="Single locale, all in progress">
       <div class="relative h-96 w-full">
-        <TranslationProgressTrackerCard :jobs="inProgressJobs" @dismiss="onDismiss(inProgressJobs, $event)" />
+        <TranslationProgressTrackerCard
+          :jobs="inProgressJobs"
+          @undo="onUndo(inProgressJobs, $event)"
+        />
       </div>
     </Variant>
     <Variant title="Empty">
       <div class="relative h-96 w-full">
         <p class="text-sm text-gray-500">No jobs — the card renders nothing.</p>
-        <TranslationProgressTrackerCard :jobs="[]" @dismiss="() => {}" />
+        <TranslationProgressTrackerCard :jobs="[]" @undo="() => {}" />
       </div>
     </Variant>
   </Story>
@@ -33,6 +36,7 @@ const mixedJobs = reactive<TranslationJob[]>([
     locale: 'German',
     chapterTitle: 'Jesus is risen',
     status: 'processing',
+    canUndo: false,
   },
   {
     id: 2,
@@ -42,6 +46,7 @@ const mixedJobs = reactive<TranslationJob[]>([
     locale: 'German',
     chapterTitle: 'Finding the King',
     status: 'pending',
+    canUndo: false,
   },
   {
     id: 3,
@@ -51,6 +56,7 @@ const mixedJobs = reactive<TranslationJob[]>([
     locale: 'German',
     chapterTitle: 'Hope has come',
     status: 'complete',
+    canUndo: true,
   },
   {
     id: 4,
@@ -60,6 +66,7 @@ const mixedJobs = reactive<TranslationJob[]>([
     locale: 'French',
     chapterTitle: 'A New Beginning',
     status: 'failed',
+    canUndo: false,
   },
 ]);
 
@@ -72,6 +79,7 @@ const inProgressJobs = reactive<TranslationJob[]>([
     locale: 'Spanish',
     chapterTitle: 'The Good Shepherd',
     status: 'processing',
+    canUndo: false,
   },
   {
     id: 6,
@@ -81,10 +89,11 @@ const inProgressJobs = reactive<TranslationJob[]>([
     locale: 'Spanish',
     chapterTitle: 'Living Water',
     status: 'pending',
+    canUndo: false,
   },
 ]);
 
-const onDismiss = (jobs: TranslationJob[], jobId: number) => {
+const onUndo = (jobs: TranslationJob[], jobId: number) => {
   const index = jobs.findIndex((job) => job.id === jobId);
   if (index !== -1) jobs.splice(index, 1);
 };

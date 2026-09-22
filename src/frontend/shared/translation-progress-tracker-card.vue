@@ -1,12 +1,22 @@
 <template>
   <Teleport to="body">
     <div
-      v-if="jobs.length > 0"
+      v-if="jobs.length > 0 && !closed"
       class="fixed bottom-32 right-6 z-40 w-80 rounded-2xl border border-gray-200 bg-white p-5 shadow-xl"
     >
-      <h2 class="text-center font-dmsans text-base font-semibold text-black">
-        Translation in progress
-      </h2>
+      <div class="flex items-center justify-between">
+        <h2 class="font-dmsans text-base font-semibold text-black">
+          Translation in progress
+        </h2>
+        <button
+          type="button"
+          aria-label="Close"
+          class="rounded-lg p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+          @click="closed = true"
+        >
+          <X class="size-4" aria-hidden="true" />
+        </button>
+      </div>
 
       <div v-for="group in localeGroups" :key="group.locale" class="mt-4">
         <p class="font-dmsans text-sm font-semibold text-black">{{ group.locale }}</p>
@@ -36,7 +46,7 @@
               v-else
               class="flex size-6 items-center justify-center rounded-full bg-red-100"
             >
-              <X class="size-4 text-red-600" aria-hidden="true" />
+              <XCircle class="size-4 text-red-600" aria-hidden="true" />
             </span>
 
             <div>
@@ -47,12 +57,12 @@
                 Translation failed
               </p>
               <button
-                v-else-if="job.status === 'complete'"
+                v-else-if="job.status === 'complete' && job.canUndo"
                 type="button"
                 class="font-dmsans text-xs text-gray-500 underline"
-                @click="emit('dismiss', job.id)"
+                @click="emit('undo', job.id)"
               >
-                Dismiss
+                Undo translation
               </button>
               <p v-else class="font-dmsans text-xs text-gray-500">Translating…</p>
             </div>
@@ -75,8 +85,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { Check, ExternalLink, LoaderCircle, X } from '@lucide/vue';
+import { computed, ref, watch } from 'vue';
+import { Check, ExternalLink, LoaderCircle, X, XCircle } from '@lucide/vue';
 import type { TranslationJob } from '../store/translation-tracker';
 
 const props = defineProps<{
@@ -84,8 +94,23 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  dismiss: [jobId: number];
+  undo: [jobId: number];
 }>();
+
+const closed = ref(false);
+let seenJobIds = new Set(props.jobs.map((job) => job.id));
+
+// A newly started translation should surface the panel again, even if it
+// was previously closed for stale content.
+watch(
+  () => props.jobs.map((job) => job.id),
+  (ids) => {
+    if (ids.some((id) => !seenJobIds.has(id))) {
+      closed.value = false;
+    }
+    seenJobIds = new Set(ids);
+  },
+);
 
 const localeGroups = computed(() => {
   const byLocale = new Map<string, TranslationJob[]>();

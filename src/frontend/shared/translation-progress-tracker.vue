@@ -1,5 +1,5 @@
 <template>
-  <TranslationProgressTrackerCard :jobs="tracker.jobs" @dismiss="tracker.dismiss" />
+  <TranslationProgressTrackerCard :jobs="tracker.jobs" @undo="tracker.undo" />
 </template>
 
 <script setup lang="ts">

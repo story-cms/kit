@@ -13,6 +13,7 @@ export interface TranslationJob {
   locale: string;
   chapterTitle: string;
   status: TranslationJobStatus;
+  canUndo: boolean;
 }
 
 const POLL_INTERVAL_MS = 3000;
@@ -49,6 +50,15 @@ export const useTranslationTrackerStore = defineStore('translation-tracker', () 
     }
   };
 
+  const undo = async (jobId: number) => {
+    jobs.value = jobs.value.filter((job) => job.id !== jobId);
+    try {
+      await axios.post(`/${shared.locale}/translation-jobs/${jobId}/undo`);
+    } catch (error) {
+      console.error('translation-tracker.undo', error);
+    }
+  };
+
   // Multiple widget instances can mount across page navigations; only the
   // first subscriber starts polling, the last one to unmount stops it.
   const subscribe = () => {
@@ -73,6 +83,7 @@ export const useTranslationTrackerStore = defineStore('translation-tracker', () 
     fetchJobs,
     addOptimisticJob,
     dismiss,
+    undo,
     subscribe,
     unsubscribe,
   };
