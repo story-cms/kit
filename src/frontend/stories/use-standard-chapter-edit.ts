@@ -236,9 +236,6 @@ export function useStandardChapterEdit(
     );
   };
 
-  // Placeholder until a real token/credit balance system exists.
-  const tokenBalance = 5000;
-
   const targetLanguageName = computed(() => shared.language.language);
 
   const showAutoTranslateModal = ref(false);
@@ -246,12 +243,14 @@ export function useStandardChapterEdit(
   const isEstimating = ref(false);
   const inputTokens = ref<number | null>(null);
   const outputTokens = ref<number | null>(null);
+  const balance = ref<number | null>(null);
 
   const autoTranslate = async () => {
     showAutoTranslateModal.value = true;
     isEstimating.value = true;
     inputTokens.value = null;
     outputTokens.value = null;
+    balance.value = null;
 
     try {
       const response = await axios.post(
@@ -260,6 +259,7 @@ export function useStandardChapterEdit(
       );
       inputTokens.value = response.data.inputTokens;
       outputTokens.value = response.data.outputTokens;
+      balance.value = response.data.balance;
     } catch (error) {
       console.error('use-standard-chapter-edit.autoTranslate', error);
       showAutoTranslateModal.value = false;
@@ -346,6 +346,7 @@ export function useStandardChapterEdit(
     attachedResources,
     autoTranslate,
     availableResources,
+    balance,
     blocks,
     closeAutoTranslateModal,
     confirmAutoTranslate,
@@ -368,7 +369,6 @@ export function useStandardChapterEdit(
     submitDraft,
     tabs,
     targetLanguageName,
-    tokenBalance,
     onTabChange,
     updateBlocks,
   };

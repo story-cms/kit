@@ -11,6 +11,9 @@
         :is-estimating="true"
       />
     </Variant>
+    <Variant title="Insufficient balance">
+      <TranslationTokenEstimate :input-tokens="820" :output-tokens="1230" :balance="0" />
+    </Variant>
   </Story>
 </template>
 

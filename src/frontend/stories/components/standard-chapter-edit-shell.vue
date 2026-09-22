@@ -134,7 +134,7 @@
     :target-locale="targetLanguageName"
     :input-tokens="inputTokens"
     :output-tokens="outputTokens"
-    :balance="tokenBalance"
+    :balance="balance"
     :is-estimating="isEstimating"
     :is-translating="isAutoTranslating"
     @close="closeAutoTranslateModal"
@@ -180,6 +180,7 @@ const {
   attachedResources,
   autoTranslate,
   availableResources,
+  balance,
   blocks,
   closeAutoTranslateModal,
   confirmAutoTranslate,
@@ -203,7 +204,6 @@ const {
   submitDraft,
   tabs,
   targetLanguageName,
-  tokenBalance,
   updateBlocks,
 } = useStandardChapterEdit(props, props.isTranslation);
 

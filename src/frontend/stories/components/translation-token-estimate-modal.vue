@@ -32,7 +32,12 @@
           label="Start Translation"
           variant="primary"
           :disabled="
-            isTranslating || isEstimating || inputTokens === null || outputTokens === null
+            isTranslating ||
+            isEstimating ||
+            inputTokens === null ||
+            outputTokens === null ||
+            balance === null ||
+            isInsufficient
           "
           @click="emit('confirm')"
         >
@@ -44,19 +49,21 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import { Languages } from '@lucide/vue';
 import LanguageModal from '../../settings/languages/components/language-modal.vue';
 import StudioButton from '../../shared/studio-button.vue';
 import TranslationTokenEstimate from './translation-token-estimate.vue';
+import { hasSufficientBalance } from '../standard-chapter-edit-controller';
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     open: boolean;
     sourceLocale: string;
     targetLocale: string;
     inputTokens: number | null;
     outputTokens: number | null;
-    balance: number;
+    balance: number | null;
     isEstimating?: boolean;
     isTranslating?: boolean;
   }>(),
@@ -70,4 +77,9 @@ const emit = defineEmits<{
   close: [];
   confirm: [];
 }>();
+
+const isInsufficient = computed(
+  () =>
+    !hasSufficientBalance(props.balance ?? 0, props.inputTokens ?? 0, props.outputTokens ?? 0),
+);
 </script>
