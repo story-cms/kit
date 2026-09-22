@@ -14,7 +14,13 @@ import type {
 } from '../../types';
 import { ResponseStatus } from '../../types';
 import { formatDate, padZero, safeChapterTitle } from '../shared/helpers';
-import { useDraftsStore, useModelStore, useSharedStore, useWidgetsStore } from '../store';
+import {
+  useDraftsStore,
+  useModelStore,
+  useSharedStore,
+  useTranslationTrackerStore,
+  useWidgetsStore,
+} from '../store';
 import {
   standardChapterEditTabHasError,
   firstStandardChapterEditTabWithError,
@@ -238,8 +244,38 @@ export function useStandardChapterEdit(
 
   const targetLanguageName = computed(() => shared.language.language);
 
+  const tracker = useTranslationTrackerStore();
+  const notifiedCompleteJobIds = new Set<number>();
+
+  const isAutoTranslating = computed(() =>
+    tracker.jobs.some(
+      (job) =>
+        job.draftId === props.draft.id &&
+        (job.status === 'pending' || job.status === 'processing'),
+    ),
+  );
+
+  watch(
+    () => tracker.jobs,
+    (jobs) => {
+      const completedHere = jobs.find(
+        (job) =>
+          job.draftId === props.draft.id &&
+          job.status === 'complete' &&
+          !notifiedCompleteJobIds.has(job.id),
+      );
+      if (!completedHere) return;
+
+      notifiedCompleteJobIds.add(completedHere.id);
+      shared.addMessage(
+        ResponseStatus.Confirmation,
+        'Translation complete — reload this page to see the changes.',
+      );
+    },
+    { deep: true },
+  );
+
   const showAutoTranslateModal = ref(false);
-  const isAutoTranslating = ref(false);
   const isEstimating = ref(false);
   const inputTokens = ref<number | null>(null);
   const outputTokens = ref<number | null>(null);
@@ -275,25 +311,30 @@ export function useStandardChapterEdit(
 
   const confirmAutoTranslate = async () => {
     showAutoTranslateModal.value = false;
-    isAutoTranslating.value = true;
 
     try {
       const response = await axios.post(
         `/${shared.locale}/story/${props.story.id}/draft/${props.draft.id}/auto-translate`,
         { source: props.source, targetLocale: shared.locale },
       );
-      model.setField('title', response.data.title);
-      model.setField('description', response.data.description);
-      blocks.value = normalizedBlocks(response.data.blocks);
+      tracker.addOptimisticJob({
+        id: response.data.jobId,
+        storyId: props.story.id,
+        draftId: props.draft.id,
+        chapterNumber: props.draft.number,
+        locale: shared.locale,
+        chapterTitle: props.source?.title ?? '',
+        status: 'pending',
+      });
       shared.addMessage(
         ResponseStatus.Confirmation,
-        'Translation complete. Review and save.',
+        'Translation started — track its progress in the corner. You can navigate away.',
       );
     } catch (error) {
       console.error('use-standard-chapter-edit.confirmAutoTranslate', error);
-      shared.addMessage(ResponseStatus.Failure, 'Auto translate failed');
-    } finally {
-      isAutoTranslating.value = false;
+      const message =
+        (axios.isAxiosError(error) && error.response?.data?.error) || 'Auto translate failed';
+      shared.addMessage(ResponseStatus.Failure, message);
     }
   };
 
