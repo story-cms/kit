@@ -6,6 +6,8 @@ import router from '@adonisjs/core/services/router';
 const StoriesController = () => import('#controllers/stories_controller');
 const ChaptersController = () => import('#controllers/chapters_controller');
 const DraftsController = () => import('#controllers/drafts_controller');
+const TranslationJobsController = () =>
+  import('#controllers/translation_jobs_controller');
 
 export default () => {
   // stories
@@ -33,4 +35,17 @@ export default () => {
   router.post(':locale/story/:storyId/draft/:id/submit', [DraftsController, 'submit']);
   router.post(':locale/story/:storyId/draft/:id/publish', [DraftsController, 'publish']);
   router.post(':locale/story/:storyId/draft/:id/reject', [DraftsController, 'reject']);
+  router.post(':locale/story/:storyId/draft/:id/auto-translate', [
+    DraftsController,
+    'autoTranslate',
+  ]);
+  router.post(':locale/story/:storyId/draft/:id/estimate-translation', [
+    DraftsController,
+    'estimateTranslation',
+  ]);
+
+  // translation jobs (background translation tracker)
+  router.get(':locale/translation-jobs', [TranslationJobsController, 'index']);
+  router.delete(':locale/translation-jobs/:id', [TranslationJobsController, 'destroy']);
+  router.post(':locale/translation-jobs/:id/undo', [TranslationJobsController, 'undo']);
 };

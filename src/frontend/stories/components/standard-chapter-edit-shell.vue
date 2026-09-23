@@ -3,6 +3,9 @@
     <template #actions>
       <DraftEditActions
         :has-edit-review="props.hasEditReview"
+        :show-auto-translate="props.isTranslation"
+        :is-auto-translating="isAutoTranslating"
+        @auto-translate="autoTranslate"
         @delete="deleteDraft"
         @publish="publishDraft"
         @request-change="rejectDraft"
@@ -123,6 +126,20 @@
       </div>
     </template>
   </AppLayout>
+
+  <TranslationTokenEstimateModal
+    v-if="props.isTranslation"
+    :open="showAutoTranslateModal"
+    :source-locale="sourceLanguageName"
+    :target-locale="targetLanguageName"
+    :input-tokens="inputTokens"
+    :output-tokens="outputTokens"
+    :balance="balance"
+    :is-estimating="isEstimating"
+    :is-translating="isAutoTranslating"
+    @close="closeAutoTranslateModal"
+    @confirm="confirmAutoTranslate"
+  />
 </template>
 
 <script setup lang="ts">
@@ -141,6 +158,7 @@ import { useTranslationDraftLayout } from '../use-translation-draft-layout';
 import { useStandardChapterEdit } from '../use-standard-chapter-edit';
 import DraftEditActions from './draft-edit-actions.vue';
 import StoryEditResources from './story-edit-resources.vue';
+import TranslationTokenEstimateModal from './translation-token-estimate-modal.vue';
 
 const props = withDefaults(
   defineProps<StandardChapterEditProps & SharedPageProps & { isTranslation?: boolean }>(),
@@ -160,22 +178,32 @@ defineSlots<{
 
 const {
   attachedResources,
+  autoTranslate,
   availableResources,
+  balance,
   blocks,
+  closeAutoTranslateModal,
+  confirmAutoTranslate,
   createResource,
   currentTab,
   deleteDraft,
+  inputTokens,
+  isAutoTranslating,
+  isEstimating,
   layoutSubtitle,
   layoutTitle,
   metaChapter,
   onTabChange,
+  outputTokens,
   previewBundle,
   publishDraft,
   publishedWhen,
   rejectDraft,
   shared,
+  showAutoTranslateModal,
   submitDraft,
   tabs,
+  targetLanguageName,
   updateBlocks,
 } = useStandardChapterEdit(props, props.isTranslation);
 

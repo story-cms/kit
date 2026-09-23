@@ -2,7 +2,9 @@ import { expect, test } from '@playwright/test';
 import {
   buildStandardChapterPayload,
   createAutosaveScheduler,
+  estimatedTokenRange,
   findStandardChapterTab,
+  hasSufficientBalance,
   withAttachedResource,
 } from '../../src/frontend/stories/standard-chapter-edit-controller.js';
 
@@ -106,5 +108,25 @@ test.describe('standard chapter editor controller helpers', () => {
     scheduler.cancel();
     expect(pending.size).toBe(0);
     expect(saves).toBe(1);
+  });
+});
+
+test.describe('estimatedTokenRange', () => {
+  test('spreads +-20% around the input+output sum', () => {
+    expect(estimatedTokenRange(500, 500)).toEqual({ low: 800, high: 1200 });
+    expect(estimatedTokenRange(0, 0)).toEqual({ low: 0, high: 0 });
+  });
+});
+
+test.describe('hasSufficientBalance', () => {
+  test('is insufficient when balance is below the high end of the range', () => {
+    // sum = 1000 -> high = 1200
+    expect(hasSufficientBalance(1199, 500, 500)).toBe(false);
+    expect(hasSufficientBalance(0, 500, 500)).toBe(false);
+  });
+
+  test('is sufficient once balance reaches the high end of the range', () => {
+    expect(hasSufficientBalance(1200, 500, 500)).toBe(true);
+    expect(hasSufficientBalance(5000, 500, 500)).toBe(true);
   });
 });

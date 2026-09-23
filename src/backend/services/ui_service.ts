@@ -26,7 +26,7 @@ export class UiService {
       translationSources: missing,
     };
 
-    const result = await aiService.translate(input);
+    const { output: result } = await aiService.translate(input);
     if (!result[locale] || result[locale].length === 0) return fillCount;
 
     // persist the result
@@ -140,7 +140,7 @@ export class UiService {
         },
       ],
     };
-    const result = await aiService.translate(input);
+    const { output: result } = await aiService.translate(input);
     return result[locale][0].text;
   }
 

@@ -2,6 +2,7 @@ import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { router } from '@inertiajs/vue3';
 import type { Errors } from '@inertiajs/core';
+import axios from 'axios';
 
 import type {
   ChapterBlock,
@@ -13,7 +14,13 @@ import type {
 } from '../../types';
 import { ResponseStatus } from '../../types';
 import { formatDate, padZero, safeChapterTitle } from '../shared/helpers';
-import { useDraftsStore, useModelStore, useSharedStore, useWidgetsStore } from '../store';
+import {
+  useDraftsStore,
+  useModelStore,
+  useSharedStore,
+  useTranslationTrackerStore,
+  useWidgetsStore,
+} from '../store';
 import {
   standardChapterEditTabHasError,
   firstStandardChapterEditTabWithError,
@@ -235,6 +242,151 @@ export function useStandardChapterEdit(
     );
   };
 
+  const targetLanguageName = computed(() => shared.language.language);
+
+  const tracker = useTranslationTrackerStore();
+  const notifiedCompleteJobIds = new Set<number>();
+  const handledUndoJobIds = new Set<number>();
+
+  const isAutoTranslating = computed(() =>
+    tracker.jobs.some(
+      (job) =>
+        job.draftId === props.draft.id &&
+        (job.status === 'pending' || job.status === 'processing'),
+    ),
+  );
+
+  // The composable only reads props.bundle/source once at setup, so a
+  // partial reload alone wouldn't update the visible form — re-apply the
+  // freshly-saved content into model/blocks/title once it lands.
+  const resyncBundleAfterTranslationChange = (
+    responseStatus: ResponseStatus,
+    messageTitle: string,
+    messageDescription: string,
+  ) => {
+    router.reload({
+      only: ['bundle', 'source'],
+      onSuccess: () => {
+        model.setModel({ ...props.bundle });
+        if (isTranslation && props.source) {
+          model.setSource(props.source);
+        }
+        blocks.value = props.bundle.blocks?.length
+          ? normalizedBlocks([...props.bundle.blocks])
+          : [];
+        title.value = props.bundle.title;
+        autosave.cancel();
+        widgets.setIsDirty(false);
+        shared.addMessage(responseStatus, messageTitle, messageDescription);
+      },
+    });
+  };
+
+  watch(
+    () => tracker.jobs,
+    (jobs) => {
+      const completedHere = jobs.find(
+        (job) =>
+          job.draftId === props.draft.id &&
+          job.status === 'complete' &&
+          !notifiedCompleteJobIds.has(job.id),
+      );
+      if (!completedHere) return;
+
+      notifiedCompleteJobIds.add(completedHere.id);
+
+      resyncBundleAfterTranslationChange(
+        ResponseStatus.Confirmation,
+        'Translation complete',
+        `Your content has been translated, using ${(completedHere.actualTokens ?? 0).toLocaleString()} tokens.`,
+      );
+    },
+    { deep: true },
+  );
+
+  watch(
+    () => tracker.lastUndone,
+    (undone) => {
+      if (!undone) return;
+      if (undone.draftId !== props.draft.id) return;
+      if (handledUndoJobIds.has(undone.jobId)) return;
+
+      handledUndoJobIds.add(undone.jobId);
+
+      resyncBundleAfterTranslationChange(
+        ResponseStatus.Confirmation,
+        'Translation undone',
+        'The original content has been restored.',
+      );
+    },
+  );
+
+  const showAutoTranslateModal = ref(false);
+  const isEstimating = ref(false);
+  const inputTokens = ref<number | null>(null);
+  const outputTokens = ref<number | null>(null);
+  const balance = ref<number | null>(null);
+
+  const autoTranslate = async () => {
+    showAutoTranslateModal.value = true;
+    isEstimating.value = true;
+    inputTokens.value = null;
+    outputTokens.value = null;
+    balance.value = null;
+
+    try {
+      const response = await axios.post(
+        `/${shared.locale}/story/${props.story.id}/draft/${props.draft.id}/estimate-translation`,
+        { source: props.source, targetLocale: shared.locale },
+      );
+      inputTokens.value = response.data.inputTokens;
+      outputTokens.value = response.data.outputTokens;
+      balance.value = response.data.balance;
+    } catch (error) {
+      console.error('use-standard-chapter-edit.autoTranslate', error);
+      showAutoTranslateModal.value = false;
+      shared.addMessage(ResponseStatus.Failure, 'Could not estimate translation cost');
+    } finally {
+      isEstimating.value = false;
+    }
+  };
+
+  const closeAutoTranslateModal = () => {
+    showAutoTranslateModal.value = false;
+  };
+
+  const confirmAutoTranslate = async () => {
+    showAutoTranslateModal.value = false;
+
+    try {
+      const response = await axios.post(
+        `/${shared.locale}/story/${props.story.id}/draft/${props.draft.id}/auto-translate`,
+        { source: props.source, targetLocale: shared.locale },
+      );
+      tracker.addOptimisticJob({
+        id: response.data.jobId,
+        storyId: props.story.id,
+        draftId: props.draft.id,
+        chapterNumber: props.draft.number,
+        locale: shared.locale,
+        localeName: targetLanguageName.value,
+        chapterTitle: props.source?.title ?? '',
+        status: 'pending',
+        canUndo: false,
+        actualTokens: null,
+      });
+      shared.addMessage(
+        ResponseStatus.Confirmation,
+        'Translation started — track its progress in the corner. You can navigate away.',
+      );
+    } catch (error) {
+      console.error('use-standard-chapter-edit.confirmAutoTranslate', error);
+      const message =
+        (axios.isAxiosError(error) && error.response?.data?.error) || 'Auto translate failed';
+      shared.addMessage(ResponseStatus.Failure, message);
+    }
+  };
+
   const rejectDraft = () => {
     autosave.cancel();
     router.post(
@@ -283,21 +435,31 @@ export function useStandardChapterEdit(
 
   return {
     attachedResources,
+    autoTranslate,
     availableResources,
+    balance,
     blocks,
+    closeAutoTranslateModal,
+    confirmAutoTranslate,
     createResource,
     currentTab,
     deleteDraft,
+    inputTokens,
+    isAutoTranslating,
+    isEstimating,
     layoutSubtitle,
     layoutTitle,
     metaChapter,
+    outputTokens,
     previewBundle,
     publishDraft,
     publishedWhen,
     rejectDraft,
     shared,
+    showAutoTranslateModal,
     submitDraft,
     tabs,
+    targetLanguageName,
     onTabChange,
     updateBlocks,
   };

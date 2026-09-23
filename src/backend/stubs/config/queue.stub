@@ -1,0 +1,22 @@
+{{{
+  exports({ to: app.configPath('queue.ts') })
+}}}
+import { defineConfig, drivers } from '@adonisjs/queue';
+
+export default defineConfig({
+  default: 'database',
+
+  adapters: {
+    database: drivers.database({
+      connectionName: 'pg',
+    }),
+    sync: drivers.sync(),
+  },
+
+  worker: {
+    concurrency: 5,
+    idleDelay: '2s',
+  },
+
+  locations: ['./app/jobs/**/*.{ts,js}'],
+});

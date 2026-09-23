@@ -1,0 +1,144 @@
+{{{
+  exports({ to: app.makePath('tests/functional/chapter_translation_service.spec.ts') })
+}}}
+import testUtils from '@adonisjs/core/services/test_utils';
+import { test } from '@japa/runner';
+import type { StandardChapterBundle } from '@story-cms/kit';
+import {
+  ChapterTranslationService,
+  TokenTopUp,
+  TokenUsage,
+  TranslationJob,
+} from '@story-cms/kit';
+
+const source: StandardChapterBundle = {
+  number: '01',
+  title: 'A short chapter title',
+  description: '',
+  coverImage: '',
+  blocks: [],
+  resources: [],
+};
+
+async function balanceFor(locale: string) {
+  const service = new ChapterTranslationService();
+  const { balance } = await service.estimate(source, locale);
+  return balance;
+}
+
+test.group('ChapterTranslationService.getBalance (via estimate)', (group) => {
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
+
+  test('balance is top-ups minus actual usage for that locale', async ({ assert }) => {
+    await TokenTopUp.create({ locale: 'fr', tokens: 1000, userId: 1 });
+    await TokenUsage.create({
+      storyId: 1,
+      draftId: 1,
+      locale: 'fr',
+      translationJobId: null,
+      inputTokens: 100,
+      outputTokens: 50,
+    });
+
+    assert.equal(await balanceFor('fr'), 850);
+  });
+
+  test('top-ups and usage for other locales do not affect this locale', async ({
+    assert,
+  }) => {
+    await TokenTopUp.create({ locale: 'fr', tokens: 1000, userId: 1 });
+    await TokenTopUp.create({ locale: 'de', tokens: 5000, userId: 1 });
+    await TokenUsage.create({
+      storyId: 1,
+      draftId: 1,
+      locale: 'de',
+      translationJobId: null,
+      inputTokens: 4000,
+      outputTokens: 500,
+    });
+
+    assert.equal(await balanceFor('fr'), 1000);
+  });
+
+  test('a pending job reserves its estimated tokens against the balance', async ({
+    assert,
+  }) => {
+    await TokenTopUp.create({ locale: 'fr', tokens: 1000, userId: 1 });
+    await TranslationJob.create({
+      storyId: 1,
+      draftId: 1,
+      locale: 'fr',
+      chapterTitle: 'Other chapter',
+      userId: 1,
+      estimatedTokens: 200,
+      status: 'pending',
+    });
+
+    assert.equal(await balanceFor('fr'), 800);
+  });
+
+  test('a processing job also reserves its estimated tokens', async ({ assert }) => {
+    await TokenTopUp.create({ locale: 'fr', tokens: 1000, userId: 1 });
+    await TranslationJob.create({
+      storyId: 1,
+      draftId: 1,
+      locale: 'fr',
+      chapterTitle: 'Other chapter',
+      userId: 1,
+      estimatedTokens: 200,
+      status: 'processing',
+    });
+
+    assert.equal(await balanceFor('fr'), 800);
+  });
+
+  test('complete and failed jobs no longer reserve tokens', async ({ assert }) => {
+    await TokenTopUp.create({ locale: 'fr', tokens: 1000, userId: 1 });
+    await TranslationJob.create({
+      storyId: 1,
+      draftId: 1,
+      locale: 'fr',
+      chapterTitle: 'Finished chapter',
+      userId: 1,
+      estimatedTokens: 200,
+      status: 'complete',
+    });
+    await TranslationJob.create({
+      storyId: 1,
+      draftId: 2,
+      locale: 'fr',
+      chapterTitle: 'Failed chapter',
+      userId: 1,
+      estimatedTokens: 300,
+      status: 'failed',
+    });
+
+    assert.equal(await balanceFor('fr'), 1000);
+  });
+
+  test('multiple concurrent pending jobs stack their reservations', async ({
+    assert,
+  }) => {
+    await TokenTopUp.create({ locale: 'fr', tokens: 1000, userId: 1 });
+    await TranslationJob.create({
+      storyId: 1,
+      draftId: 1,
+      locale: 'fr',
+      chapterTitle: 'First',
+      userId: 1,
+      estimatedTokens: 200,
+      status: 'pending',
+    });
+    await TranslationJob.create({
+      storyId: 1,
+      draftId: 2,
+      locale: 'fr',
+      chapterTitle: 'Second',
+      userId: 1,
+      estimatedTokens: 150,
+      status: 'processing',
+    });
+
+    assert.equal(await balanceFor('fr'), 650);
+  });
+});

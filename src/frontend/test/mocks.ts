@@ -1791,154 +1791,232 @@ export const alMassira = {
   },
   bundle: {
     extra: '',
-    title: 'The Story of Noah and the Flood',
+    title: 'La Historia de Noé y el Diluvio',
     number: '',
     imageUrl:
       'http://res.cloudinary.com/almassira/image/upload/v1634652071/session_thumbnails/ujntltmyu5sgetlwhwma.png',
     keyTruth:
-      '**The Covenant Name of God**\n\nExodus 3:15 / Genesis 4:26\n\nSeth also had a son, and he named him Enosh. At that time men began to call on the name of the **LORD** (YHWH).\n\nLiterally the word YHWH means: ‘He who is’ – the self-existent, eternal being. It is the personal name of God which distinguishes him from all other false gods. YHWH is used over 6500 times and the most common name for God in the Old Testament. This name was so holy that the Jewish people made a rule never to pronounce it. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Hendrerit gravida rutrum quisque non tellus orci. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Fermentum leo vel orci porta non pulvinar. In hendrerit gravida rutrum quisque. Morbi tincidunt ornare massa eget egestas purus viverra. Nulla pellentesque dignissim enim sit amet venenatis urna. Et ligula ullamcorper malesuada proin libero nunc. Venenatis cras sed felis eget velit. Viverra nam libero justo laoreet sit amet cursus sit amet. Eleifend donec pretium vulputate sapien nec sagittis. Amet risus nullam eget felis eget nunc lobortis mattis. Est pellentesque elit ullamcorper dignissim cras tincidunt. Auctor neque vitae tempus quam pellentesque nec nam aliquam. Sed risus pretium quam vulputate dignissim. Lectus arcu bibendum at varius vel. Sed velit dignissim sodales ut eu sem integer. Ullamcorper morbi tincidunt ornare massa eget egestas purus. Nulla malesuada pellentesque elit eget gravida cum sociis natoque penatibus. A diam sollicitudin tempor id eu nisl nunc. Amet facilisis magna etiam tempor orci eu lobortis elementum nibh. In pellentesque massa placerat duis ultricies. Quam lacus suspendisse faucibus interdum. Lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt. Nunc aliquet bibendum enim facilisis gravida. Magna fermentum iaculis eu non diam phasellus. Sed ullamcorper morbi tincidunt ornare massa eget egestas purus. Elit duis tristique sollicitudin nibh sit amet commodo nulla facilisi. Odio euismod lacinia at quis risus.',
+      '**El Nombre del Pacto de Dios**\n\nÉxodo 3:15 / Génesis 4:26\n\nSet también tuvo un hijo, y lo llamó Enós. En aquel tiempo los hombres comenzaron a invocar el nombre del **SEÑOR** (YHWH).\n\nLiteralmente la palabra YHWH significa: ‘El que es’ – el ser autoexistente y eterno. Es el nombre personal de Dios que lo distingue de todos los demás falsos dioses. YHWH se usa más de 6500 veces y es el nombre más común para Dios en el Antiguo Testamento. Este nombre era tan santo que el pueblo judío hizo una regla de nunca pronunciarlo.',
     nextStop: {
       intro:
-        'If you get the chance, read the following passages in preparation for the next stop on Al Massira',
-      reference: 'Genesis 12:1-8, Genesis 15-18 &amp; 21-22',
+        'Si tienes la oportunidad, lee los siguientes pasajes en preparación para la próxima parada en Al Massira',
+      reference: 'Génesis 12:1-8, Génesis 15-18 y 21-22',
       referenceText: '',
     },
     sections: [
       {
         notes:
-          'Die letzte Woche beendeten wir damit, wie Adam und Eva aus dem Garten vertrieben wurden. Acht Generationen und Hunderte von Jahren vergingen, bevor Noah geboren wurde. Im Verlauf dieser Zeit vervielfachte sich die Bosheit der Menschheit von der Sünde des ersten\nMenschen zu einer Welt beherrscht von Korruption und Gewalt. Nicht nur das, sondern auch die Denkart des Menschen war dauernd böse. Ein richtiger Albtraum breitete sich auf der Erde aus! Was würde die Reaktion vom Himmel sein?\n\n## Gottes Antwort\nGottes Herz trauert. Der Mensch, die Krone seiner Schöpfung, hat sich vollständig von ihm abgewendet. Gottes Trauer ist derart gross, dass er es sogar bedauert, jemals die Erde erschaffen zu haben. Er beschliesst deshalb, alles Leben, nicht nur die Menschheit, sondern auch die Tierwelt, zu vernichten.\n\nWas lernen wir davon?\n* Dass Gott in seiner grossen [Heiligkeit](^Heiligkeit) Sünde leidenschaftlich hasst. Sie erfüllt ihn mit einem göttlichen Zorn.\n* Dass Gott in seinem Wesen emotional ist. Sein Herz wurde mit Schmerz erfüllt. Wenn du liebst, wirst du leiden.\n* Dass Gott seinem Wesen nach Beziehung will – aber Sünde zerstört Beziehungen.\n\nWie aber steht es um den Bund, den Gott im Anfang mit Adam und Eva geschlossen hat? \nHat er ihn aufgegeben?\n\nInmitten aller Verderbnis auf der Erde findet er einen [gerechten](^gerecht) Menschen namens Noah.',
-        title: 'Die Entfesselung der Bosheit',
-        reference: '1. Mose 6,1-8',
+          'La semana pasada terminamos cuando Adán y Eva fueron expulsados del jardín.\n\nOcho generaciones y cientos de años pasan antes de que nazca Noé. Durante este tiempo, la maldad del hombre se ha multiplicado desde el único pecado del primer hombre hasta un mundo sumido en la corrupción y la violencia. No solo esto, sino que incluso la forma de pensar de la humanidad es constantemente mala. ¡Una pesadilla se ha desatado sobre la tierra! ¿Cuál será la reacción del cielo?\n\n## La respuesta de Dios\nEl corazón de Dios se entristece. El hombre, la cumbre de su creación, le ha dado la espalda por completo. La tristeza de Dios es tal que se arrepiente de haber creado la tierra. Por eso determina que destruirá toda carne, no solo a la humanidad sino también al mundo animal.\n\n¿Qué entendemos de esto?\n* Que Dios, en su gran [santidad](^Holiness), odia el pecado con pasión – esto lo llena de una ira divina.\n* Que Dios, en su naturaleza, es emocional; su corazón se llenó de dolor. Si amas, sufrirás.\n* Que Dios, en su naturaleza, busca relación – pero el pecado rompe esa relación.\n\nPero, ¿qué pasa con el pacto que Dios le dio primero a Adán y Eva? ¿Lo ha abandonado Dios?\n\nEn medio de toda la corrupción de la tierra, encuentra a un hombre [justo](^righteous) llamado Noé.',
+        title: 'El Desencadenamiento de la Maldad',
+        reference: 'Génesis 6:1-8',
         noteQuestion:
-          'Heute hat sich die Sünde auch vervielfacht. Unsere Gegenwart schaut ähnlich aus wie die Zeit von Noah. Denkst du, dass Gott mit uns gleich verfahren wird wie mit Noah?\n',
-        openQuestion: 'Warum war Gott so zornig?',
+          'Hoy en día, el pecado se multiplica y nuestra época se parece a la de Noé.\n\n¿Crees que Dios hará con nosotros lo que hizo con Noé?\n',
+        openQuestion: '¿Por qué estaba Dios tan afligido?',
         questionIntro:
-          'Zur Zeit Noahs erfüllte Bosheit die Erde. Gottes Herz war bekümmert, und er bedauerte, den Menschen erschaffen zu haben.\n',
+          'En el tiempo de Noé, la maldad había llenado la tierra. El corazón de Dios se entristeció y se arrepintió de haber creado al hombre.\n',
         referenceText:
-          '## 1. Mose 6,1-8\n\n`1` Als aber die Menschen sich zu mehren begannen auf Erden und ihnen Töchter geboren wurden,... `5` Als aber der Herr sah, dass der Menschen Bosheit groß war auf Erden und alles Dichten und Trachten ihres Herzens nur böse war immerdar, `6` da reute es ihn, dass er die Menschen gemacht hatte auf Erden, und es bekümmerte ihn in seinem Herzen `7` und er sprach: Ich will die Menschen, die ich geschaffen habe, vertilgen von der Erde, vom Menschen an bis hin zum Vieh und bis zum Gewürm und bis zu den Vögeln unter dem Himmel; denn es reut mich, dass ich sie gemacht habe. `8` Aber Noah fand Gnade vor dem Herrn. (Luther)\n\n\n',
+          '**Génesis 6:1-8**\n\n`1` Aconteció que cuando los hombres comenzaron a multiplicarse sobre la faz de la tierra, y les nacieron hijas... `5` Y vio Jehová que la maldad de los hombres era mucha en la tierra, y que todo designio de los pensamientos del corazón de ellos era de continuo solamente el mal. `6` Y se arrepintió Jehová de haber hecho hombre en la tierra, y le dolió en su corazón. `7` Y dijo Jehová: Raeré de sobre la faz de la tierra al hombre que he hecho, desde el hombre hasta la bestia, y hasta el reptil y las aves del cielo; porque me pesa haberlos hecho. `8` Pero Noé halló gracia ante los ojos de Jehová.',
         closedQuestion:
-          'Warum denkst du, ergriff Gott so drastische Maßnahmen gegenüber der Sünde?\n\nWarum erlaubte es Gott, dass die Rebellion des Menschen sich so vervielfachen konnte, bis diese vernichtende Lösung angewendet werden musste?',
+          '¿Por qué crees que Dios tomó una acción tan drástica contra el pecado?\n\n¿Por qué permitió Dios que la rebelión del hombre se multiplicara hasta que tuvo que aplicarse esta solución devastadora?',
       },
       {
         notes:
-          'Noah war ein Mensch und daher nicht vollkommen. Aber er wurde beschrieben als [gerecht](^gerecht) und tadellos in Bezug auf seine Umgebung. Er wandelte mit Gott und pflegte eine offene Beziehung zu ihm. Zudem wurde es von seinem spätern Verhalten her klar, dass er treu und gehorsam war.\n\n## Gott teilt sein Herz mit Noah\nZum ersten Mal in der Geschichte öffnet Gott sein Herz und teilt mit einem Menschen, wie\ner fühlt und was er zu tun gedenkt. \n\nEr teilt zwei wichtige Dinge mit: \n* Er wird alles Fleisch zerstören in einer weltweiten Flut.\n* Er hat einen Rettungsplan für die Menschheit, den er durch Noah ausführen will.\n\nDieser Plan bezieht Noah ein – welche Ehre, dass Gott den Menschen an seinem grossen Plan beteiligt. ABER er hat eine höchst ungewöhnliche Aufgabe zu übernehmen. Er soll das grösste Schiff\nder Welt bauen, und das weit weg vom Meer! Du kannst dir vorstellen, was seine Nachbarn dazu zu sagen hatten! Doch trotz ihres Spottes, den er zweifellos ertragen musste, blieb Noah gegenüber\nGottes Auftrag treu. \n\nIhm wurde aufgetragen, ein Schiff aus Holz zu bauen, das ihn und seine Familie und Vertreter des ganzen Tierreichs retten würde. Das würde die nächste Phase von Gottes verheissenem Bund mit der Menschheit darstellen.',
-        title: 'Noah – eine andere Art Mensch',
-        reference: '1. Mose 6,9-22',
+          'Noé era humano, por lo que no podía ser perfecto. Sin embargo, fue descrito como [justo](^righteous) e intachable entre su gente. Caminaba con Dios y se relacionaba abiertamente con él. Además, sus acciones posteriores dejan claro que fue fiel y obediente.\n\n## Dios comparte su corazón con Noé\nPor primera vez en la historia, Dios abre su corazón y comparte con el hombre tanto lo que siente como lo que va a hacer.\n\nComparte dos cosas importantes: \n* Va a destruir toda carne mediante un diluvio universal.\n* Que tiene un plan de rescate para la humanidad que se llevará a cabo a través de Noé.\n\nEse plan involucra a Noé – ¡qué honor que Dios incluya al hombre en su gran plan! – PERO tiene que asumir la tarea sumamente inusual de construir el barco más grande del mundo, lejos del mar. ¡Puedes imaginar lo que sus vecinos tenían que decir al respecto! Sin embargo, a pesar del ridículo que sin duda soportó, Noé fue fiel al mandato de Dios. \n\nSe le instruyó construir una embarcación de madera que lo salvaría a él, a su familia y a representantes de todo el reino animal. Esto cumpliría la siguiente etapa de la promesa del pacto de Dios con la humanidad.',
+        title: '¿Noé, un Hombre Diferente?',
+        reference: 'Génesis 6:9-22',
         noteQuestion:
-          'Hat Gott einen Rettungsplan für heute? Wenn ja, bin ich bereit, ihn zu befolgen?',
-        openQuestion:
-          'Worin bestand der Unterschied zwischen Noah und den Leuten um ihn herum?',
+          '¿Tiene Dios un plan de rescate para hoy? Si es así, ¿estoy listo para seguirlo?',
+        openQuestion: '¿Qué hizo diferente a Noé de la gente que lo rodeaba?',
         questionIntro:
-          'Noah war gerecht und wandelte mit Gott. Gott teilte Noah seinen Plan mit, die Welt zu zerstören – und Noah und seine Familie zu retten.',
+          'Noé era un hombre justo y caminaba con Dios. Dios comparte su plan de destruir el mundo – y de salvar a Noé y a su familia.',
         referenceText:
-          '## 1. Mose 6,9-22\n\n`9` Das ist die Geschlechterfolge nach Noah: Noah war ein gerechter, untadeliger Mann unter seinen Zeitgenossen; er ging seinen Weg mit Gott. ... `13` Da sprach Gott zu Noah: Ich sehe, das Ende aller Wesen aus Fleisch ist da; denn durch sie ist die Erde voller Gewalttat. Nun will ich sie zugleich mit der Erde verderben. `14` Mach dir eine Arche aus Zypressenholz! Statte sie mit Kammern aus, und dichte sie innen und aussen mit Pech ab! ... `17` Ich will nämlich die Flut über die Erde bringen, um alle Wesen aus Fleisch unter dem Himmel, alles, was Lebensgeist in sich hat, zu verderben. Alles auif Erden soll verenden.`18` Mit dir aber schliesse ich meinen Bund. Geh in die Arche, du, deine Söhne, deine Frau und die Frauen deiner Söhne! `19` Von allem, was lebt, von allen Wesen aus Fleisch, führe je zwei in die Arche, damit sie mit dir am Leben bleiben; je ein Männchen und ein Weibchen sollen es sein. `20` Von allen Arten der Vögel, von allen Arten des Viehs, von allen Arten der Kriechtiere auf dem Erdboden sollen je zwei zu dir kommen, damit sie am Leben bleiben. ... `22` Noah tat alles genau so, wie ihm Gott aufgetragen hatte. (EÜ)',
+          '**Génesis 6:9-22**\n\n`9` Estas son las generaciones de Noé: Noé, varón justo, era perfecto en sus generaciones; y Noé caminaba con Dios... `13` Y dijo Dios a Noé: He decidido el fin de todo ser, porque la tierra está llena de violencia a causa de ellos; y he aquí que yo los destruiré con la tierra. `14` Hazte un arca de madera de gofer; harás aposentos en el arca, y la calafatearás con brea por dentro y por fuera... `17` Porque yo traigo un diluvio de aguas sobre la tierra, para destruir toda carne en que haya espíritu de vida debajo del cielo; todo lo que hay en la tierra morirá. `18` Mas estableceré mi pacto contigo, y entrarás en el arca tú, tus hijos, tu mujer, y las mujeres de tus hijos contigo. `19` Y de todo lo que vive, de toda carne, dos de cada especie meterás en el arca, para que tengan vida contigo; macho y hembra serán. `20` De las aves según su especie, y de las bestias según su especie, y de todo reptil de la tierra según su especie, dos de cada especie entrarán contigo para que tengan vida... `22` Así lo hizo Noé; hizo conforme a todo lo que Dios le mandó.',
         closedQuestion:
-          'Als Gott ihm seinen Plan mitteilte, glaubte Noah ihm und begann daran zu arbeiten, obwohl es wie eine unmögliche Aufgabe aussah. Wenn Gott dir seine Pläne mitteilen würde, wärest du bereit zu glauben und sie auszuführen?\n\nWir können uns vorstellen, dass Noah Spott und Hohn begegnet sein müssen, während er die Arche baute. Glaubst du, dass das auch heute geschehen kann – wenn der Herr gläubigen Menschen scheinbar merkwürdige Aufträge erteilt?',
+          'Cuando Dios compartió su plan, Noé creyó en él y comenzó a trabajar aunque parecía una tarea imposible. \n\nSi Dios compartiera sus planes contigo, ¿estarías listo para creer y andar en ellos?\n\nCreemos que Noé debió enfrentar burla y ridículo mientras construía el arca. ¿Crees que esto sucede hoy, cuando el Señor les pide a los creyentes hacer lo que parecen tareas inusuales?',
       },
       {
         notes:
-          'Nach Gottes Befehl gingen Noah, seine Familie und alle die Tiere in die Arche. Sie vertrauten ihre Rettung dieser Arche aus Holz an. Gott schloss die Tür, der Regen fiel und die Fluten stiegen während 40 Tagen, bis alles Leben zerstört war. Diese kleine Familie lebte isoliert in der Arche während über einem Jahr. Sie hatten sich vollständig Gott und seinem Rettungsplan anvertraut und schwammen in der Arche – wörtlich auf den [Gnadenhänden](^Gnade) Gottes.\n',
-        title: 'Regen, Regen und noch mehr Regen!',
-        reference: '1. Mose 7',
+          'Siguiendo el mandato de Dios, Noé, su familia y todos los animales entraron en el arca, confiando su salvación a esta arca de madera. Dios cerró la puerta, cayó la lluvia, y las aguas subieron durante 40 días hasta que todo ser viviente fue destruido. \n\nEsta pequeña familia vivió aislada en el arca durante más de un año. Estaban completamente entregados a Dios y a su plan de rescate, flotando en el Arca – literalmente en las [manos de misericordia](^Mercy) de Dios.',
+        title: '¡Lluvia, Lluvia y Más Lluvia!',
+        reference: 'Génesis 7',
         noteQuestion:
-          'Manchmal bedeutet Gottes Rettungsplan, dass wir unsere ‚alte Welt’ hinter uns lassen müssen. Sind wir bereit, diese Herausforderung anzunehmen, falls Gott sie von uns verlangen sollte?',
+          'A veces, el plan de rescate de Dios significa que debemos dejar atrás nuestro ‘viejo mundo’. ¿Estamos listos para asumir este desafío si Dios nos lo pide?',
         openQuestion:
-          'Wie mögen sich Noah und seine Familie in dem Schiff gefühlt haben, so isoliert von allem und allen? ',
+          '¿Cómo se habrán sentido Noé y su familia en el barco, aislados de todo y de todos? ',
         questionIntro:
-          'Noah, seine Familie und Vertreter des Tierreichs verbrachten über ein Jahr eingeschlossen in der Arche, die auf den Fluten des Wassers schwamm.',
+          'Noé, su familia y representantes del reino animal pasaron más de un año encerrados en el arca, flotando sobre las aguas del diluvio.',
         referenceText:
-          '## 1. Mose 7,1-24\n\n`1` Und der Herr sprach zu Noah: Geh in die Arche, du und dein ganzes Haus; denn dich habe ich gerecht erfunden vor mir zu dieser Zeit. ... `5` Und Noah tat alles, was ihm der Herr gebot. `6` Er war aber sechshundert Jahre alt, als die Sintflut auf Erden kam. `7` Und er ging in die Arche mit seinen Söhnen, seiner Frau und den Frauen seiner Söhne vor den Wassern der Sintflut. `8` Von den reinen Tieren und von den unreinen, von den Vögeln und von allem Gewürm auf Erden `9` gingen sie zu ihm in die Arche paarweise, je ein Männchen und Weibchen, wie ihm Gott geboten hatte. `10` Und als die sieben Tage vergangen waren, kamen die Wasser der Sintflut auf Erden. `11` In dem sechshundertsten Lebensjahr Noahs am siebzehnten Tag des zweiten Monats, an diesem Tag brachen alle Brunnen der großen Tiefe auf und taten sich die Fenster des Himmels auf, `12` und ein\nRegen kam auf Erden vierzig Tage und vierzig Nächte. \n\n... `17` Und die Sintflut war vierzig Tage auf Erden, und die Wasser wuchsen und hoben die Arche auf und trugen sie empor über die Erde. ... `23` So wurde vertilgt alles, was auf dem Erdboden war, vom Menschen an bis hin zum Vieh und zum Gewürm und zu den Vögeln unter dem Himmel; das wurde alles von der Erde vertilgt. Allein Noah blieb übrig und was mit ihm in der Arche war. `24` Und die Wasser wuchsen gewaltig auf Erden hundertundfünfzig Tage. (Luther)',
+          '**Génesis 7:1-24**\n\n`1` Luego Jehová dijo a Noé: Entra en el arca, tú y toda tu familia, porque a ti he visto justo delante de mí en esta generación... `5` E hizo Noé conforme a todo lo que Jehová le mandó. `6` Y era Noé de seiscientos años cuando el diluvio de las aguas vino sobre la tierra. `7` Y entraron Noé, y sus hijos, y su mujer, y las mujeres de sus hijos con él en el arca, a causa de las aguas del diluvio. `8` De los animales limpios, y de los animales que no eran limpios, y de las aves, y de todo lo que se arrastra sobre la tierra, `9` de dos en dos entraron a Noé en el arca, macho y hembra, como Dios lo había mandado a Noé. `10` Y sucedió que al séptimo día las aguas del diluvio fueron sobre la tierra. `11` El año seiscientos de la vida de Noé, en el mes segundo, a los diecisiete días del mes, aquel día fueron rotas todas las fuentes del grande abismo, y las cataratas de los cielos fueron abiertas. `12` Y hubo lluvia sobre la tierra cuarenta días y cuarenta noches. \n\n... `17` Y hubo diluvio cuarenta días sobre la tierra; y las aguas crecieron, y alzaron el arca, y se elevó sobre la tierra... `23` Así fue destruido todo ser que vivía sobre la faz de la tierra, desde el hombre hasta la bestia, hasta el reptil, y las aves del cielo; y fueron raídos de la tierra, y quedó solamente Noé, y los que con él estaban en el arca. `24` Y prevalecieron las aguas sobre la tierra ciento cincuenta días.',
         closedQuestion:
-          'Wie leicht fällt es uns, uns Gott und seinen Wegen anzuvertrauen und uns ihm hinzugeben?',
+          '¿Qué tan fácil nos resulta entregarnos y abandonarnos por completo a Dios y a su camino?',
       },
       {
         notes:
-          '## Warum ist Sünde so ein grosses Thema bei Gott?\n\nWarum ist die Strafe so hart? Warum kann Gott nicht einfach vergeben, ohne eine Strafe aufzuerlegen? Wir sind entrüstet, wenn wir sehen, dass Ungerechtigkeit übersehen und ignoriert wird von menschlichen Autoritäten. Warum sollten wir vom heiligen Gott erwarten, dass er\nsich gleich verhält? \n\nDer Herr unser Gott ist heilig, [gerecht](^gerecht) und vollkommen ohne Sünde. Das Zuhause, das Gott für die Ewigkeit bereitet hat, wo er angebetet werden wird und wo er seine Güte mitteilt, ist ein heiliger und vollkommener Ort, ein Ort, wo Sünde, Leiden, Bosheit, Schmerz und Tod keinen Platz haben! [Heiligkeit](^Heiligkeit) und Sünde können nicht zusammen existieren – in gleicher Weise wie Feuer und Benzin. Es muss zu einer Reaktion kommen. Sei gewarnt! Wo Gott wohnt haben nur Reine Zugang!\n\nDas ist der Grund, warum es Gott ernst ist und er keine Kompromisse mit Sünde duldet. Er will uns warnen und uns zeigen, dass er Sünde immer verurteilen und bestrafen wird. Die Strafe ist ernsthaft. Sie ist der Tod. Die Flut ist ein Bild, ein Zeichen, ein Hinweis auf den Zorn Gottes über alle Bosheit am Tag des Gerichts. Die Taten und sogar die unreinen Gedanken der Menschen werden gerichtet werden. Und es gibt nur eine Strafe – der Tod. \n\nABER – Gott ist auch geduldig und sein Mitleid für Menschen ist grenzenlos. Er wird immer denen nachgehen, die ihn mit Demut und Bußbereitschaft suchen. Für diese Menschen hat er aus grossem Erbarmen einen Rettungsplan bereit gestellt.\nIn Psalm 85 lesen wir von diesem Ort der Rettung, wo Gottes Zorn sich trifft mit seiner grossen Liebe, wo Gerechtigkeit, Wahrheit und Recht sich mit [Gnade](^Gnade), Liebe und Frieden vereinigen.',
-        title: 'Das Göttliche Paradox – Gerechtigkeit und Gnade!',
-        reference: 'Psalm 85',
+          '## ¿Por qué el pecado es un asunto tan grave para Dios?\n\n¿Por qué es tan severo el castigo? ¿Por qué no puede Dios simplemente perdonar sin imponer un castigo? Nos indignamos cuando vemos que gobernantes humanos ignoran y pasan por alto la injusticia, así que, ¿por qué no habríamos de esperar que el Dios santo hiciera lo mismo?\n\nEl Señor nuestro Dios es santo, [justo](^righteous) y completamente sin pecado. El hogar que Dios ha preparado para la eternidad, donde será adorado y donde comparte su bondad, es un lugar santo y perfecto, ¡un lugar donde el pecado, el sufrimiento, la maldad, el dolor y la muerte no tienen cabida! La [santidad](^Holiness) y el pecado no pueden coexistir – de manera similar al fuego y la gasolina. Tiene que haber una reacción. ¡Sé advertido de que donde Dios habita, solo los puros pueden entrar!\n\nPor eso Dios es serio e intransigente con el pecado. Quiere advertirnos y mostrarnos que siempre juzgará y castigará el pecado. El juicio es serio y el castigo es la muerte. El diluvio es una imagen, una señal que apunta a la ira de Dios sobre toda maldad en el día del juicio. Las acciones y hasta los pensamientos impuros del hombre serán juzgados, y solo hay una pena: la muerte. \n\nPERO – Dios también es paciente y su compasión por las personas no tiene medida. Siempre buscará a los que lo buscan a él con humildad y arrepentimiento. Para estos, por su gran misericordia, provee un plan de rescate.\nEn el Salmo 85 leemos que el lugar de la salvación es donde la ira de Dios se encuentra con su gran amor, donde la justicia, la verdad y la rectitud se encuentran con la [misericordia](^Mercy), el amor y la paz.',
+        title: '¿Paradoja Divina – Justicia o Misericordia?',
+        reference: 'Salmo 85',
         noteQuestion:
-          'Habe ich diesen Ort gefunden, wo Gottes Gericht und Gnade sich treffen?',
+          '¿He encontrado el lugar donde se encuentran el juicio y la misericordia de Dios?',
         openQuestion:
-          'Warum ist Sünde eine so wichtige Angelegenheit?\n\nWarum kann Gott nicht einfach vergeben, ohne eine so strenge Strafe auferlegen zu müssen?\n\nKann jemand Gottes Strafe entgehen?\n\nKann ein heiliger Gott mit einem sündigen Menschen im Himmel wirklich koexistieren?',
+          '¿Cómo se habrán sentido Noé y su familia en el barco, aislados de todo y de todos?',
         questionIntro:
-          'Sünde ist für den heiligen Gott ein Problem. Rettung und Befreiung: die Arche ist der Ort, wo Gericht und Gnade sich treffen.',
+          'Noé, su familia y representantes del reino animal pasaron más de un año encerrados en el arca, flotando sobre las aguas del diluvio.',
         referenceText:
-          '## Psalm 85,3-13\n\n`3` Du hast deinem Volk die Schuld vergeben, all seine Sünden zugedeckt,\n`4` hast zurückgezogen deinen ganzen Grimm und deinen glühenden Zorn gedämpft.\n`5` Gott, unser Retter, richte uns wieder auf, lass von deinem Unmut gegen uns ab!\n`6` Willst du uns ewig zürnen, soll dein Zorn dauern von Geschlecht zu Geschelcht?\n`7` Willst du uns nicht wieder beleben, so dass dein Volk sich an dir freuen kann?\n`8` Erweise uns, Herr, deine Huld, und gewähre uns dein Heil!\n`9` Ich will hören, was Gott redet, Frieden verkündet der Herr seinem Volk \nund seinen Frommen, den Menschen mit redlichem Herzen.\n`10` Sein Heil ist denen nahe, die ihn fürchten. Seine Herrlichkeit wohne in unserm Land.\n`11` Es begegnen einander Huld und Treue; Gerechtigkeit und Friede küssen sich.\n`12` Treue sprosst aus der Erde hervor. Gerechtigkeit blickt vom Himmel hernieder.\n`13` Auch spendet der Herr dann Segen, und unser Land gibt seinen Ertrag.\n(Luther)',
+          '**Salmo 85**\n\n`2` Perdonaste la iniquidad de tu pueblo; cubriste todo su pecado. Selah\n`3` Quitaste todo tu furor;\nHiciste cesar el ardor de tu ira.\n`4`  Vuélvenos, oh Dios de nuestra salvación,\nY haz cesar tu ira de sobre nosotros.\n`5`  ¿Estarás enojado contra nosotros para siempre?\n¿Extenderás tu ira de generación en generación?\n`6`  ¿No volverás a darnos vida,\nPara que tu pueblo se regocije en ti?\n`7`  Muéstranos, oh Jehová, tu misericordia,\nY danos tu salvación.\n`8`  Escucharé lo que hablará Jehová Dios; Porque hablará paz\na su pueblo y a sus santos,\nPara que no se vuelvan a la locura.\n`9`  Ciertamente cercana está su salvación a los que le temen, Para que habite la gloria en nuestra tierra.\n`10`  La misericordia y la verdad se encontraron; La justicia y la paz se besaron.\n`11`  La verdad brotará de la tierra,\nY la justicia mirará desde los cielos.\n`12`  Jehová dará también el bien,\nY nuestra tierra dará su fruto.',
         closedQuestion:
-          'Warum ist der Tod die Strafe für die Sünde?\n\nWie kann Gottes Lösung gleichzeitig seine Gnade und seinen Zorn gegenüber der Menschheit zeigen?',
+          '¿Qué tan fácil nos resulta entregarnos y abandonarnos por completo a Dios y a su camino?',
       },
       {
         notes:
-          'Die Wasser weichen, die Arche landet,  der Boden wird trocken und Noah und seine Familie verlassen die Arche. Ohne einen Auftrag vom Herrn baut Noah sogleich einen [Altar](^Altar), um Gott anzubeten und opfert (verbrennt) eines von allen ‚reinen’ Tieren auf ihm. Gott riecht den Geruch des Opfers mit Wohlgefallen. Er antwortet mit einer Verheissung, die bis zum heutigen Tag gilt – er wird die ganze Menschheit nie wieder zerstören!\n\n## Was geschieht da eigentlich?\n\nNoah versteht das Zeichen seines Vorvater Abels, dass \n* Anbetung Gottes mittels eines Tieropfers ein Gehorsamszeichen ist, das Gott gefällt\n* Anbetung Gottes den Tod eines ‚reinen’ Tieres erfordert, welches den Platz des Menschen einnimmt.\n\nSpäter lesen wir beim Propheten Mose, dass das [Brandopfer ](^Brandopfer )die totale Hingabe an Gott bedeutet. Es verschafft [Sühne](^Suehne) (oder Bedecken) für die Sünde des Menschen. Das Tieropfer entfernt die Sünde selber nicht, aber es ist ein Bild dafür, was nötig wäre und weist auf ein zukünftiges Geschehnis.\n\nGott riecht dieses Opfer und sein Zorn / Gericht wird besänftigt. Seine Beziehung zur Menschheit kann wieder hergestellt werden. Das setzt eine Verheissung und eine Bestätigung eines ewigen Bundes frei.',
-        title: 'Die Arche verlassen',
-        reference: '1. Mose 8',
+          'Las aguas se retiran, el arca se posa, la tierra se seca y Noé y su familia salen del arca. Sin ninguna instrucción del Señor, Noé de inmediato construye un [altar](^Altar) para adorar a Dios y sacrifica (quema) uno de cada uno de los animales ‘limpios’ sobre él. Dios percibe la ofrenda con placer y responde con una promesa que sigue vigente hasta hoy: ¡nunca más volverá a destruir a toda la humanidad!\n\n## ¿Qué está sucediendo realmente aquí?\n\nNoé entiende la señal de su antepasado Abel, de que la adoración:\n* A través del sacrificio, es una señal de obediencia que agrada a Dios\n* Requiere la muerte de un animal ‘limpio’, que se necesita para tomar el lugar del hombre.\n\nMás adelante leemos del profeta Moisés que la [ofrenda quemada](^Burnt) significa una entrega total a Dios, proveyendo una expiación (o cobertura) para el pecado del hombre. El sacrificio de un animal no quita el pecado en sí, pero es una imagen de lo que se necesita y apunta hacia un evento futuro.\n\nDios percibe este sacrificio y su ira/juicio se aplaca; su relación con la humanidad puede ser restaurada. Esto libera una promesa y la afirmación de un pacto eterno.',
+        title: 'Saliendo del Arca',
+        reference: 'Génesis 8',
         noteQuestion:
-          'Wie kann der Tod eines Tieres den Platz einer Person einnehmen? Was bedeutet das heute – und was (oder wer) hat meinen Platz eingenommen?',
+          '¿Cómo puede la muerte de un animal tomar el lugar de una persona? \n\n¿Qué hay de hoy – y qué (o quién) ha tomado mi lugar?',
         openQuestion:
-          'Was wäre deine erste Tätigkeit gewesen nach einem Jahr auf einem Schiff mit einer Ladung von Tieren?\n\nWarum baut Noah einen Altar?',
+          '¿Cuál habría sido tu primera actividad después de un año en un barco con una carga de animales?\n\n¿Por qué construye Noé el altar?',
         questionIntro:
-          'Die Fluten gehen zurück; Noah und seine Familie verlassen die Arche. Er baut einen Altar, um ein Opfer darzubringen und den Herrn anzubeten. Gott antwortet auf Noahs Brandopfer.',
+          'Las aguas se retiran; Noé y su familia salen del arca, construyen un altar para el sacrificio y adoran al Señor. Dios responde a la ofrenda quemada de Noé.',
         referenceText:
-          '## 1. Mose 8,1-21\n\n`1` Da gedachte Gott an Noah und an alles wilde Getier und an alles Vieh, das mit ihm in der Arche war, und ließ Wind auf Erden kommen und die Wasser fielen. ...`15` Da redete Gott mit Noah und sprach: 16 Geh aus der Arche, du und deine Frau, deine Söhne und die Frauen deiner Söhne mit dir. `17` Alles Getier, das bei dir ist, von allem Fleisch, an Vögeln, an Vieh und allem Gewürm, das auf Erden kriecht, das gehe heraus mit dir, dass sie sich regen auf Erden und fruchtbar seien und sich mehren auf Erden. `18` So ging Noah heraus mit seinen Söhnen und mit seiner Frau und den Frauen seiner Söhne, `19` dazu alle wilden Tiere, alles Vieh, alle Vögel und alles Gewürm, das auf Erden kriecht; das ging aus der Arche, ein jedes mit seinesgleichen. `20` Noah aber baute dem HERRN einen Altar und nahm von allem reinen Vieh und von allen reinen Vögeln und opferte Brandopfer auf dem Altar. `21`  Und der HERR roch den lieblichen Geruch und sprach in seinem Herzen: Ich will hinfort nicht mehr die Erde verfluchen um der Menschen willen; denn das Dichten und Trachten des menschlichen Herzens ist böse von Jugend auf. Und ich will hinfort nicht mehr schlagen alles, was da lebt, wie ich getan habe. (Luther)',
+          '**Génesis 8**\n\n`1` Y se acordó Dios de Noé, y de todos los animales, y de todas las bestias que estaban con él en el arca; e hizo pasar Dios un viento sobre la tierra, y las aguas disminuyeron... `15` Y habló Dios a Noé diciendo: 16 Sal del arca tú, y tu mujer, y tus hijos, y las mujeres de tus hijos contigo. `17` Todos los animales que están contigo de toda carne, de aves y de bestias y de todo reptil que anda arrastrándose sobre la tierra, sácalos contigo; y vayan por la tierra, y fructifiquen, y multiplíquense sobre la tierra. `18` Entonces salió Noé, y sus hijos, su mujer, y las mujeres de sus hijos con él. `19` Y todos los animales, y toda bestia, y todo reptil, y todo ser que se mueve sobre la tierra, según sus especies, salieron del arca. `20` Y edificó Noé un altar a Jehová, y tomó de todo animal limpio y de toda ave limpia, y ofreció holocausto en el altar. `21`  Y percibió Jehová olor grato; y dijo Jehová en su corazón: No volveré más a maldecir la tierra por causa del hombre; porque el intento del corazón del hombre es malo desde su juventud; y no volveré más a destruir todo ser viviente, como he hecho.',
         closedQuestion:
-          'Warum freut sich Gott am Geruch von geopferten Tieren?\n\nWarum ist es wichtig, „reine” Tiere zu opfern?',
+          '¿Por qué se complace Dios con el olor de los animales quemados?\n\n¿Por qué es importante sacrificar un animal ‘limpio’?',
       },
       {
         notes:
-          'Gott gibt Noah einen Bund oder ein Zeichen mit folgendem Inhalt:\n\n* Er befiehlt Noah, fruchtbar zu sein und die Erde zu bevölkern.\n\n* Es misst dem Menschenleben den höchsten Wert zu, weil der Mensch nach dem Bild Gottes gemacht ist.\n\n* Er schliesst seinen Bund durch Noah mit allen Völkern der Erde.\n\n* Nie wieder wird er alle Lebenwesen zerstören.\n\n* Der Regenbogen ist das Zeichen dieses Bundes.\n\nGott wird seine Verheissung einhalten und der Bund wird weitergehen zur nächsten Generation. Wir haben von Noah mehr über Gottes Herz, seine Antwort auf das Böse und seinen göttlichen\nRettungsplan gelernt. Weiter gilt auch immer noch die Verheissung des ‚Samen der Frau’, des [Erlösers](^Erloeser), die auf ein zukünftiges Geschehnis weist.',
-        title: 'Der Bund wieder erneuert',
-        reference: '1. Mose 9,1-15',
+          'Este es el pacto, o señal, que Dios le da a Noé:\n\n* Le manda a Noé ser fecundo, multiplicarse y llenar la tierra.\n\n* Le da el valor más alto a la vida del hombre, porque el hombre es hecho a imagen de Dios.\n\n* Establece su pacto a través de Noé con todos los pueblos de la tierra.\n\n* Nunca más volverá a destruir todo ser viviente.\n\n* El arco iris será la señal de este pacto.\n\nDios cumplirá su promesa y el pacto pasará a la siguiente generación. Hemos aprendido a través de Noé más sobre el corazón de Dios, su respuesta a la maldad y su plan divino de rescate. También la promesa de la ‘simiente de la mujer’, el [Redentor](^Redeemer), sigue vigente, señalando hacia un tiempo futuro.',
+        title: 'El Pacto Renovado de Nuevo',
+        reference: 'Génesis 9:1-15',
         noteQuestion:
-          'Gibt es eine Arche für mich – einen Ort der Rettung vor der Strafe Gottes? \nWo ist er?',
+          '¿Hay un arca para mí – un lugar de rescate del castigo de Dios? \n¿Dónde está?',
         openQuestion:
-          'Was sind die verschiedenen Teile des Bundes, den Gott mit Noah bestätigt?\n\nNachdem wir die Geschichte von Noah kennen gelernt haben, glaubst du, dass es eine Tiefe der Sünde gibt, die Gottes Rettungsplan nicht erreicht?',
+          '¿Cuáles son las diferentes partes del pacto que Dios afirma a Noé?\n\nDespués de conocer la historia de Noé, ¿crees que existe alguna profundidad de pecado a la que el plan de rescate de Dios no pueda alcanzar?',
         questionIntro:
-          'Gott der Herr verspricht, die Erde nie wieder zu zerstören. Er erneuert seinen Bund mit der Menschheit.',
+          'El Señor Dios promete no volver a destruir jamás la tierra y renueva su pacto con la humanidad.',
         referenceText:
-          '## 1. Mose 9,1-15\n\n`1` Dann segnete Gott Noah und seine Söhne und sprach zu ihnen: Seid fruchtbar, vermehrt euch, und bevölkert die Erde! ... `3` Alles übergebe ich euch wie die grünen Pflanzen. ... `6` Wer Menschenblut vergiesst, dessen Blut wird durch Menschen vergossen. Denn: Als Abbild Gottes hat er den Menschen gemacht. ... `8` Dann sprach Gott zu Noah und seinen Söhnen, die bei ihm waren: `9` Hiermit schliesse ich meinen Bund mit euch und mit euren Nachkommen `10` und mit allen Lebewesen bei euch, mit den Vögeln, dem Vieh und allen Tieren des Feldes, mit allen Tieren der Erde, die mit euch aus der Arche gekommen sind. `11` Ich habe meinen Bund mit euch geschlossen: Nie wieder sollen alle Wesen aus Fleisch vom Wasser der Flut ausgerottet werden; nie wieder soll eine Flut kommen und die Erde verderben. `12` Und Gott sprach: Das ist das Zeichen des Bundes, den ich stifte zwischen mir und euch und den lebendigen Wesen bei euch für alle kommenden Generationen: `13` Meinen Bogen setze ich in die Wolken; er soll das Bundeszeichen sein zwischen mir und der Erde. `14` Balle ich Wolken über der Erde zusammen und erscheint der Bogen in den Wolken, `15` dann gedenke ich des Bundes, der besteht zwischen mir und euch und allen Lebewesen, allen Wesen aus Fleisch, und das Wasser wird nie wieder zur Flut werden, die alle Wesen aus Fleisch vernichtet. (EÜ)',
+          '**Génesis 9:1-17**\n\n`1` Y bendijo Dios a Noé y a sus hijos, y les dijo: Fructificad, y multiplicaos, y llenad la tierra... `3` Todo lo que se mueve y vive, os será para mantenimiento; así como las legumbres de la hierba, os lo he dado todo. `6` El que derramare sangre de hombre, por el hombre su sangre será derramada; porque a imagen de Dios es hecho el hombre... `8` Y habló Dios a Noé y a sus hijos con él, diciendo: `9` He aquí que yo establezco mi pacto con vosotros, y con vuestros descendientes después de vosotros; `10` y con toda alma viviente que está con vosotros, aves, animales, y toda bestia de la tierra que está con vosotros; con todos los que salieron del arca, hasta todo animal de la tierra. `11` Estableceré mi pacto con vosotros, y no volverá a ser exterminada toda carne con aguas de diluvio, ni habrá más diluvio para destruir la tierra. `12` Y dijo Dios: Esta será la señal del pacto que yo establezco entre mí y vosotros y todo ser viviente que está con vosotros, por siglos perpetuos: `13` Mi arco he puesto en las nubes, el cual será por señal del pacto entre mí y la tierra. `14` Y sucederá que cuando haga venir nubes sobre la tierra, se dejará ver entonces el arco en las nubes, `15` y me acordaré del pacto mío, el cual hay entre mí y vosotros y todo ser viviente de toda carne; y no serán más las aguas en diluvio para destruir toda carne. (EÜ)',
         closedQuestion:
-          'Ist Gottes Rettungsplan stark genug, uns in den Problemen der heutigen Welt zu erreichen?',
+          '¿Es el plan de rescate de Dios lo suficientemente poderoso para alcanzarnos en los problemas del mundo de hoy?',
+      },
+    ],
+    resources: [
+      {
+        link: 'https://vimeo.com/996190128?share=copy',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1723127230/alpha-course/be9dhtveafx4axdt43um.png',
+        title: 'Saciando Nuestra Sed Más Profunda',
+        author: 'Katherine Chow & Streams Studio',
+        partner: {
+          url: 'https://www.streams-studio.com/',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747136561/alpha-course/bddlccqcvsqvng9eh3kj.jpg',
+          name: 'Streams Studio',
+        },
+        description: 'Katherine Chow & Streams Studio',
+      },
+      {
+        link: 'https://vimeo.com/996398533?share=copy',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1723192175/alpha-course/nucvlwt93varvvnc2n0k.jpg',
+        title: 'Historias de Alpha: Scott, Sarah y Steve',
+        author: 'Filmed live at the Leadership Conference, 2024',
+        partner: {
+          url: 'https://www.leadershipconference.org.uk/',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747655045/alpha-course/wjodafqzkqksalaloje4.png',
+          name: 'Leadership Conference',
+        },
+        description: 'Historias de Alpha: Scott, Sarah y Steve',
+      },
+      {
+        link: 'https://vimeo.com/996186148?share=copy',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1723192399/alpha-course/fbgwtvs9d4lnrygea4ih.png',
+        title: 'Espiritual pero no Religioso',
+        author: 'Amanda Giannakos & Streams Studio',
+        partner: {
+          url: 'https://www.streams-studio.com/',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747136840/alpha-course/o5drc4rvrdwirqzavcge.jpg',
+          name: 'Streams Studio',
+        },
+        description: 'Espiritual pero no Religioso',
+      },
+      {
+        link: 'https://alpha.org/leadership-conversations-with-nicky-gumbel-podcast-francis-collins/',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1724851801/alpha-course/ovn6wb6pjf2sq2p8bfvx.png',
+        title: 'Podcast: Reconciliando la Fe con la Ciencia',
+        author: 'Nicky Gumbel and Francis Collins',
+        partner: {
+          url: 'https://www.leadershipconference.org.uk',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747655065/alpha-course/q17pbh9eghnoggfbgatk.png',
+          name: 'Leadership Conference',
+        },
+        description: 'Podcast: Reconciliando la Fe con la Ciencia',
+      },
+      {
+        link: 'https://guest-cdn.alpha.org/QoL%201%20Is%20There%20More%20To%20Life%20Than%20This.pdf',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1725537437/alpha-course/ad094e7i1y6bo356wt2l.png',
+        title: 'Preguntas de la Vida: ¿Hay Algo Más en la Vida que Esto?',
+        author: 'Nicky Gumbel',
+        partner: {
+          url: 'https://www.hodder.co.uk/',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747137372/alpha-course/sxrbvxzbrg5n4krkwcpj.jpg',
+          name: 'Hodder & Stoughton Publishers',
+        },
+        description: 'Preguntas de la Vida: ¿Hay Algo Más en la Vida que Esto?',
+      },
+      {
+        link: 'https://vimeo.com/1009224911?share=copy',
+        image:
+          'https://res.cloudinary.com/ddks6yqbn/image/upload/v1726242030/alpha-course/vhsu1gb9sfxvuhlj5sj3.png',
+        title: 'Para los Curiosos',
+        author: 'Alpha Stories',
+        partner: {
+          url: 'alpha.org',
+          logo: 'https://res.cloudinary.com/ddks6yqbn/image/upload/v1747137521/alpha-course/uyfjbnizmrsa89kn6wk8.png',
+          name: 'Alpha International',
+          description: 'Alpha International',
+        },
+        description: 'Para los Curiosos',
       },
     ],
     videoUrl: 'https://youtu.be/GmPfTVl2JWI',
     footnotes: [
       {
-        key: 'gerecht',
+        key: 'righteous',
         description:
-          'Ein gerechter Mann oder eine Frau ist jemand, der in allem, was er tut, Gott zu gefallen sucht. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Hendrerit gravida rutrum quisque non tellus orci. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Fermentum leo vel orci porta non pulvinar. In hendrerit gravida rutrum quisque. Morbi tincidunt ornare massa eget egestas purus viverra. Nulla pellentesque dignissim enim sit amet venenatis urna. Et ligula ullamcorper malesuada proin libero nunc. Venenatis cras sed felis eget velit. Viverra nam libero justo laoreet sit amet cursus sit amet. Eleifend donec pretium vulputate sapien nec sagittis. Amet risus nullam eget felis eget nunc lobortis mattis. Est pellentesque elit ullamcorper dignissim cras tincidunt. Auctor neque vitae tempus quam pellentesque nec nam aliquam. Sed risus pretium quam vulputate dignissim. Lectus arcu bibendum at varius vel. Sed velit dignissim sodales ut eu sem integer. Ullamcorper morbi tincidunt ornare massa eget egestas purus. Nulla malesuada pellentesque elit eget gravida cum sociis natoque penatibus. A diam sollicitudin tempor id eu nisl nunc. Amet facilisis magna etiam tempor orci eu lobortis elementum nibh. In pellentesque massa placerat duis ultricies. Quam lacus suspendisse faucibus interdum. Lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt. Nunc aliquet bibendum enim facilisis gravida. Magna fermentum iaculis eu non diam phasellus. Sed ullamcorper morbi tincidunt ornare massa eget egestas purus. Elit duis tristique sollicitudin nibh sit amet commodo nulla facilisi. Odio euismod lacinia at quis risus.',
+          'Un hombre o mujer justo es alguien que busca agradar a Dios en todo lo que hace.',
       },
       {
-        key: 'Gnade',
-        description: 'Gottes unwandelbare Liebe, ausgedrückt gegenüber der Menschheit.',
+        key: 'Mercy',
+        description: 'El amor inmutable de Dios expresado hacia la humanidad.',
       },
       {
-        key: 'Erloeser',
+        key: 'Redeemer',
         description:
-          'Erlöser\nEiner, der die Fähigkeit und den Willen hat, jemanden zu retten, und dann die Rettung auch ausführt.',
+          'Alguien que tiene la capacidad y la disposición de rescatar a otra persona, y que efectivamente viene a rescatarla.',
       },
       {
-        key: 'Suehne',
-        description:
-          'Sühne\nDie Tat des Zudeckens und Auslöschens von Sünde. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Hendrerit gravida rutrum quisque non tellus orci. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Fermentum leo vel orci porta non pulvinar. In hendrerit gravida rutrum quisque.',
+        key: 'Atonement',
+        description: 'El acto de cubrir o borrar los pecados.',
       },
       {
-        key: 'Heiligkeit',
-        description:
-          'Eine verzehrende Leidenschaft und Liebe zu Gott, die einen abhält zu sündigen.',
+        key: 'Holiness',
+        description: 'Una pasión y amor consumidor por Dios que impide pecar.',
       },
       {
         key: 'Altar',
         description:
-          'Ein Ort, gewöhnlich aus Stein oder aus Holz, das mit einer Metallschicht geschützt ist, auf dem  Opfer verbrannt werden.',
+          'Un lugar, generalmente de piedra o madera cubierta con una capa de metal, donde se queman los sacrificios; un altar —a menudo elevado o apartado como sagrado— utilizado para ofrendas en ritos religiosos, ceremonias o actos de adoración, que a veces también sirve como punto focal para la oración, la dedicación o la formalización de pactos. A lo largo del Antiguo Testamento encontramos altares construidos por los patriarcas en distintos lugares como señal de encuentro con Dios: Noé después del diluvio, Abraham en Betel y en Moria, Isaac y Jacob en varias etapas de su peregrinaje. Cada altar marcaba un momento de revelación, gratitud o consagración, y servía como recordatorio visible de un pacto o una promesa recibida. En el sistema levítico, los altares tenían medidas y materiales específicos, y solo podían ser atendidos por los sacerdotes designados, subrayando la seriedad con la que Dios trataba la aproximación a su presencia. Con el paso de los siglos, distintas culturas del Antiguo Cercano Oriente construyeron también sus propios altares, aunque con propósitos y rituales muy diferentes a los prescritos por la ley de Moisés. Aunque las formas de adoración han cambiado a lo largo de la historia, el principio permanece: acercarse a Dios requiere reverencia, sacrificio y un corazón dispuesto a la obediencia, y cada piedra de un altar antiguo nos recuerda hoy que la adoración siempre tiene un costo.',
       },
       {
-        key: 'Brandopfer',
+        key: 'Burnt',
         description:
-          'Ein Opfer für Gott, das die vollständige Hingabe an ihn bedeutet. Dieses Opfer versinnbildlicht unsere Buße, Abwendung von der Sünde und Hinwendung zum Herrn.',
+          'Ofrenda quemada\nUn sacrificio hecho a Dios que simboliza nuestra entrega total a él. Esta ofrenda simboliza nuestro arrepentimiento y el volvernos del pecado hacia el Señor.',
       },
     ],
     conclusion:
-      '# Link\nFrom Noah people spread out to fill the earth. However, when men reached the plain of Shinar (present-day Iraq), they decided to build a city and a high tower. They wanted to gather and make a name for themselves and rebelled against God’s command to spread out and fill the earth. Therefore God came down from heaven, confused their language and scattered them across the face of the earth (Genesis 10-11). Nearly 300 years after the flood and 10 generations in direct line from Shem the son of Noah, a man named Abraham was born. He is known by many as the ‘friend of God’. His name means ‘father of many’. His story is the next stop on our journey.',
+      '# Enlace\nDesde Noé, la gente se dispersó para llenar la tierra. Sin embargo, cuando los hombres llegaron a la llanura de Sinar (el actual Irak), decidieron construir una ciudad y una torre alta. Querían reunirse y hacerse un nombre, y se rebelaron contra el mandato de Dios de dispersarse y llenar la tierra. Por eso Dios descendió del cielo, confundió su idioma y los dispersó por toda la faz de la tierra (Génesis 10-11). Casi 300 años después del diluvio, y 10 generaciones en línea directa desde Sem, hijo de Noé, nació un hombre llamado Abraham. Muchos lo conocen como el ‘amigo de Dios’. Su nombre significa ‘padre de multitudes’. Su historia es la siguiente parada en nuestro viaje.',
   },
   lastPublished: '2025-03-06T22:51:06.741+00:00',
   providers: {
@@ -2531,6 +2609,16 @@ export const alMassira = {
       '# Link\nFrom Noah people spread out to fill the earth. However, when men reached the plain of Shinar (present-day Iraq), they decided to build a city and a high tower. They wanted to gather and make a name for themselves and rebelled against God’s command to spread out and fill the earth. Therefore God came down from heaven, confused their language and scattered them across the face of the earth (Genesis 10-11). Nearly 300 years after the flood and 10 generations in direct line from Shem the son of Noah, a man named Abraham was born. He is known by many as the ‘friend of God’. His name means ‘father of many’. His story is the next stop on our journey.',
   },
 };
+
+export const alMassiraErrors: Record<string, string[]> = {
+  'bundle.title': ['required validation failed'],
+  'bundle.imageUrl': ['required validation failed'],
+  'bundle.videoUrl': ['required validation failed'],
+  'bundle.keyTruth': ['required validation failed'],
+  'bundle.nextStop.reference': ['required validation failed'],
+  'bundle.sections.0.title': ['required validation failed'],
+};
+
 export const flexibleListStory = {
   draft: {
     id: 1912,
@@ -4109,6 +4197,433 @@ export const afsCourseStory = {
   } as StorySpec,
 };
 
+const bibleDevotionsFields: FieldSpec[] = [
+  {
+    name: 'title',
+    label: 'Devotion',
+    widget: 'panel',
+    fields: [
+      {
+        label: 'Devotion Title',
+        name: 'title',
+        widget: 'string',
+      },
+      {
+        label: 'Introduction',
+        name: 'introduction',
+        widget: 'markdown',
+      },
+    ],
+  },
+  {
+    label: '',
+    name: 'notes',
+    widget: 'panel',
+    fields: [
+      {
+        label: 'Segments',
+        name: 'segments',
+        widget: 'list',
+        canFold: true,
+        fields: [
+          { label: 'Segment Title', name: 'title', widget: 'string' },
+          { label: 'Video URL', name: 'videoUrl', widget: 'string' },
+          {
+            label: 'Sections',
+            name: 'sections',
+            widget: 'list',
+            fields: [
+              { label: 'Title', name: 'title', widget: 'string' },
+              { label: 'Reference', name: 'reference', widget: 'string' },
+              {
+                label: 'Reference Text',
+                name: 'referenceText',
+                widget: 'markdown',
+              },
+              { label: 'Notes', name: 'notes', widget: 'markdown' },
+              {
+                label: 'Note Question',
+                name: 'noteQuestion',
+                widget: 'markdown',
+              },
+              {
+                label: 'Question Intro',
+                name: 'questionIntro',
+                widget: 'markdown',
+              },
+              {
+                label: 'Question One',
+                name: 'openQuestion',
+                widget: 'markdown',
+              },
+              {
+                label: 'Question Two',
+                name: 'closedQuestion',
+                widget: 'markdown',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    widget: 'object',
+    label: '',
+    name: 'wisdom',
+    fields: {
+      passage: {
+        label: 'Wisdom Scripture',
+        name: 'passage',
+        widget: 'scripture',
+      },
+      comment: {
+        label: 'Wisdom Commentary',
+        name: 'comment',
+        widget: 'markdown',
+      },
+      prayer: {
+        label: 'Prayer',
+        name: 'prayer',
+        widget: 'markdown',
+        minimal: true,
+        toolbar: [],
+      },
+    },
+  },
+  {
+    widget: 'object',
+    label: '',
+    name: 'newTestament',
+    fields: {
+      passage: {
+        label: 'New Testament Scripture',
+        name: 'passage',
+        widget: 'scripture',
+      },
+      comment: {
+        label: 'New Testament Commentary',
+        name: 'comment',
+        widget: 'markdown',
+      },
+      prayer: {
+        label: 'Prayer',
+        name: 'prayer',
+        widget: 'markdown',
+        minimal: true,
+        toolbar: [],
+      },
+    },
+  },
+  {
+    widget: 'object',
+    label: '',
+    name: 'oldTestament',
+    fields: {
+      passage: {
+        label: 'Old Testament Scripture',
+        name: 'passage',
+        widget: 'scripture',
+      },
+      comment: {
+        label: 'Old Testament Commentary',
+        name: 'comment',
+        widget: 'markdown',
+      },
+      prayer: {
+        label: 'Prayer',
+        name: 'prayer',
+        widget: 'markdown',
+        minimal: true,
+        toolbar: [],
+      },
+    },
+  },
+  {
+    label: 'Pippa Adds',
+    name: 'pippa',
+    widget: 'markdown',
+    minimal: true,
+  },
+  {
+    label: 'Verse of the Day',
+    name: 'verseOfTheDay',
+    widget: 'scripture',
+  },
+  {
+    label: 'Summary',
+    name: 'summary',
+    widget: 'markdown',
+  },
+  {
+    label: 'References',
+    name: 'references',
+    widget: 'markdown',
+  },
+];
+
+export const bibleDevotionsStory = {
+  draft: {
+    id: 1915,
+    number: 1,
+    status: 'started',
+    updatedAt: '2025-10-24T06:10:38.483+00:00',
+    createdAt: '2025-10-24T06:10:38.482+00:00',
+  },
+  bundle: {
+    title: 'El Nombre del Pacto de Dios: Una Reflexión',
+    introduction:
+      'Hoy examinaremos cómo Dios se revela a sí mismo por medio de su nombre, y lo que eso significa para la forma en que nos relacionamos con él. Esta reflexión también nos invita a considerar por qué los nombres bíblicos siguen teniendo tanto peso espiritual en nuestros días.',
+    audio: {
+      url: 'https://res.cloudinary.com/onesheep/raw/upload/v1685641667/devotions/soundtrack.mp3',
+      length: 182,
+    },
+    segments: [
+      {
+        title: 'Reflexión de la Mañana con Notas Adicionales',
+        videoUrl: 'https://youtu.be/GmPfTVl2JWI',
+        sections: [
+          {
+            title: 'Quién Dice Dios Que Él Es, Explicado con Más Detalle',
+            reference: 'Éxodo 3:13-15 (traducción RVR1960)',
+            referenceText:
+              '`13` Moisés dijo a Dios: "He aquí que llego a los hijos de Israel, y les digo: El Dios de vuestros padres me ha enviado a vosotros; si ellos me preguntan: ¿Cuál es su nombre? ¿Qué les responderé?" `14` Y respondió Dios a Moisés: "YO SOY EL QUE SOY." `15` Y dijo además Dios a Moisés: "Así dirás a los hijos de Israel: Jehová, el Dios de vuestros padres... me ha enviado a vosotros. Este es mi nombre para siempre." Esta traducción amplía ligeramente cada versículo para mayor claridad del lector hispanohablante.',
+            notes:
+              'Notas de marcador de posición: cuando Moisés pide un nombre, Dios le da un nombre que significa presencia misma - no un título prestado de los dioses que lo rodeaban, sino una declaración de que él simplemente *es*. Este texto de relleno se añade además para asegurar que la versión en español sea claramente más extensa que el texto original en inglés.',
+            noteQuestion:
+              'Pregunta de marcador de posición: ¿qué diferencia representa para ti que el nombre de Dios apunte a su presencia constante, y no solamente a su poder? Añadimos aquí una frase adicional de relleno para garantizar una longitud mayor en el texto en español.',
+            questionIntro:
+              'Introducción de marcador de posición: antes de responder, vuelve a leer el versículo 14 lentamente y observa con atención lo que Dios no dice. Se incluye esta oración adicional únicamente como texto de relleno para extender la longitud.',
+            openQuestion:
+              'Pregunta de marcador de posición: ¿en qué área de tu vida necesitas recordar con mayor urgencia que Dios simplemente *es*, sin importar las circunstancias? Esta oración final se agrega como relleno para que el texto en español resulte más extenso.',
+            closedQuestion:
+              'Pregunta de marcador de posición: ¿de qué manera conocer el nombre de Dios transforma tu forma de orar esta semana? Se agrega esta frase adicional de relleno para asegurar que el texto en español sea más largo que el original en inglés.',
+          },
+        ],
+      },
+      {
+        title: 'Meditación del Mediodía con Reflexión Ampliada',
+        videoUrl: 'https://youtu.be/GmPfTVl2JWI',
+        sections: [
+          {
+            title: 'El Nombre Sobre Todo Nombre, Explicado con Mayor Profundidad',
+            reference: 'Filipenses 2:9-11 (traducción RVR1960)',
+            referenceText:
+              '`9` Por lo cual Dios también le exaltó hasta lo sumo, y le dio un nombre que es sobre todo nombre, `10` para que en el nombre de Jesús se doble toda rodilla de los que están en los cielos, y en la tierra, y debajo de la tierra; `11` y toda lengua confiese que Jesucristo es el Señor, para gloria de Dios Padre. Esta traducción amplía el pasaje con una frase final para que el texto en español sea más extenso que el original en inglés.',
+            notes:
+              'Notas de marcador de posición: el nombre que se le da a Jesús no es solo una etiqueta, sino una declaración de autoridad - toda rodilla se dobla por causa de quién representa ese nombre. Este texto de relleno se añade además para asegurar que la versión en español sea claramente más extensa que el texto original en inglés.',
+            noteQuestion:
+              'Pregunta de marcador de posición: ¿cómo sería esta semana si trataras el nombre de Jesús con el peso que describe Pablo en este pasaje? Añadimos aquí una frase adicional de relleno para garantizar una longitud mayor en el texto en español.',
+            questionIntro:
+              'Introducción de marcador de posición: lee el versículo 10 dos veces antes de continuar, y observa los tres lugares donde toda rodilla se doblará. Se incluye esta oración adicional únicamente como texto de relleno para extender la longitud.',
+            openQuestion:
+              'Pregunta de marcador de posición: ¿en qué área te resulta más difícil someterte a la autoridad que respalda ese nombre? Esta oración final se agrega como relleno para que el texto en español resulte más extenso.',
+            closedQuestion:
+              'Pregunta de marcador de posición: ¿de qué manera confesar que "Jesucristo es el Señor" cambia tus planes para mañana? Se agrega esta frase adicional de relleno para asegurar que el texto en español sea más largo que el original en inglés.',
+          },
+        ],
+      },
+      {
+        title: 'Oración de la Noche con Notas Extendidas',
+        videoUrl: 'https://youtu.be/GmPfTVl2JWI',
+        sections: [
+          {
+            title: 'Invocar Su Nombre, Explicado con Más Detalle',
+            reference: 'Joel 2:32 (traducción RVR1960)',
+            referenceText:
+              '`32` Y todo aquel que invocare el nombre de Jehová será salvo; porque en el monte de Sion y en Jerusalén habrá salvación, como Jehová ha dicho, y entre el remanente al cual él habrá llamado. Esta traducción amplía el versículo con una frase final añadida únicamente como texto de relleno para superar en longitud al original en inglés.',
+            notes:
+              'Notas de marcador de posición: la promesa aquí no depende de estatus ni de logros - depende por completo de invocar el nombre que fue revelado a Moisés y cumplido en Jesús. Este texto de relleno se añade además para asegurar que la versión en español sea claramente más extensa que el texto original en inglés.',
+            noteQuestion:
+              'Pregunta de marcador de posición: ¿qué significa, en términos prácticos, "invocar" un nombre en lugar de simplemente conocerlo? Añadimos aquí una frase adicional de relleno para garantizar una longitud mayor en el texto en español.',
+            questionIntro:
+              'Introducción de marcador de posición: antes de responder, piensa en un momento de hoy en el que pudiste haber invocado su nombre y no lo hiciste. Se incluye esta oración adicional únicamente como texto de relleno para extender la longitud.',
+            openQuestion:
+              'Pregunta de marcador de posición: ¿qué te impide invocar primero el nombre de Dios, antes de intentar arreglar las cosas por tu cuenta? Esta oración final se agrega como relleno para que el texto en español resulte más extenso.',
+            closedQuestion:
+              'Pregunta de marcador de posición: ¿cómo sería terminar esta noche simplemente invocando su nombre? Se agrega esta frase adicional de relleno para asegurar que el texto en español sea más largo que el original en inglés.',
+          },
+        ],
+      },
+    ],
+    wisdom: {
+      passage: {
+        reference: 'Proverbios 9:10 (traducción RVR1960)',
+        verse:
+          'El principio de la sabiduría es el temor de Jehová, y el conocimiento del Santísimo es la inteligencia. Esta ampliación final se añade como texto de relleno para que la versión en español supere en longitud al texto original.',
+      },
+      comment:
+        'La sabiduría comienza con una relación correcta con Dios, y no simplemente con la acumulación de datos o información. Agregamos esta oración adicional como relleno para extender el texto en español.',
+      prayer:
+        'Señor, dame un corazón que te busque por encima de todas las cosas, cada día y en cada circunstancia de mi vida. Esta frase final se incluye como relleno adicional.',
+    },
+    newTestament: {
+      passage: {
+        reference: 'Juan 1:1-3 (traducción RVR1960)',
+        verse:
+          'En el principio era el Verbo, y el Verbo era con Dios, y el Verbo era Dios. Añadimos esta oración adicional únicamente como texto de relleno para que la traducción resulte más extensa.',
+      },
+      comment:
+        'Juan identifica a Jesús como el Verbo eterno, presente con Dios desde el principio de todas las cosas. Esta oración final se agrega como relleno para extender el texto en español.',
+      prayer:
+        'Gracias, Jesús, por darnos a conocer al Padre de una manera tan clara y personal. Se añade esta frase adicional como relleno para asegurar mayor longitud.',
+    },
+    oldTestament: {
+      passage: {
+        reference: 'Éxodo 3:14 (traducción RVR1960)',
+        verse:
+          'Dios le dijo a Moisés: "YO SOY EL QUE SOY." Esta oración adicional se incluye únicamente como texto de relleno para que la versión en español sea más extensa que el original en inglés.',
+      },
+      comment:
+        'Dios revela su nombre personal y de pacto a Moisés en la zarza ardiente, un momento decisivo en la historia de la redención. Añadimos esta frase final como relleno.',
+      prayer:
+        'Señor, ayúdame a confiar plenamente en quién dices que eres, incluso cuando no lo comprendo del todo. Esta oración final se agrega como texto de relleno adicional.',
+    },
+    pippa:
+      'Me encanta lo personal que Dios quiere ser con nosotros: ¡nos da su propio nombre! Añadimos esta frase adicional únicamente como texto de relleno para extender la longitud de la traducción.',
+    verseOfTheDay: {
+      reference: 'Éxodo 3:15 (traducción RVR1960)',
+      verse:
+        'Este es mi nombre para siempre, y con él seré recordado por todas las generaciones venideras. Esta frase adicional se incluye como relleno para que el texto en español sea más largo que el original.',
+    },
+    summary:
+      'Dios no es distante ni carece de nombre: se ha revelado a sí mismo para que podamos conocerlo y clamar a él en toda circunstancia. Esta oración final se añade como relleno para asegurar una mayor longitud en español.',
+    references:
+      'Éxodo 3, Juan 1, Proverbios 9 (además de otras referencias relacionadas incluidas aquí como texto de relleno adicional)',
+  },
+  source: {
+    title: 'The Covenant Name of God',
+    introduction:
+      'Today we look at how God reveals himself by name, and what that means for how we relate to him.',
+    audio: {
+      url: 'https://res.cloudinary.com/onesheep/raw/upload/v1685641667/devotions/soundtrack.mp3',
+      length: 182,
+    },
+    segments: [
+      {
+        title: 'Morning Reflection',
+        videoUrl: 'https://youtu.be/GmPfTVl2JWI',
+        sections: [
+          {
+            title: 'Who God Says He Is',
+            reference: 'Exodus 3:13-15',
+            referenceText:
+              '`13` Moses said to God, "Suppose I go to the Israelites and say to them, \'The God of your fathers has sent me to you,\' and they ask me, \'What is his name?\' Then what shall I tell them?" `14` God said to Moses, "I am who I am." `15` God also said to Moses, "Say to the Israelites, \'The LORD, the God of your fathers... has sent me to you.\' This is my name forever."',
+            notes:
+              'Placeholder notes: when Moses asks for a name, God gives him a name that means presence itself - not a title borrowed from the gods around them, but a declaration that he simply *is*.',
+            noteQuestion:
+              "Placeholder question: what difference does it make to you that God's name points to his constant presence, not just his power?",
+            questionIntro:
+              'Placeholder intro: before you answer, reread verse 14 slowly and notice what God does not say.',
+            openQuestion:
+              'Placeholder question: where in your life do you most need to remember that God simply *is*, regardless of circumstances?',
+            closedQuestion:
+              "Placeholder question: how does knowing God's name change the way you pray this week?",
+          },
+        ],
+      },
+      {
+        title: 'Midday Meditation',
+        videoUrl: 'https://youtu.be/GmPfTVl2JWI',
+        sections: [
+          {
+            title: 'The Name Above All Names',
+            reference: 'Philippians 2:9-11',
+            referenceText:
+              '`9` Therefore God exalted him to the highest place and gave him the name that is above every name, `10` that at the name of Jesus every knee should bow, in heaven and on earth and under the earth, `11` and every tongue confess that Jesus Christ is Lord, to the glory of God the Father.',
+            notes:
+              'Placeholder notes: the name given to Jesus is not just a label but a declaration of authority - every knee bows because of who that name represents.',
+            noteQuestion:
+              "Placeholder question: what would it look like this week to treat Jesus' name with the weight Paul describes here?",
+            questionIntro:
+              'Placeholder intro: read verse 10 twice before moving on - notice the three places every knee will bow.',
+            openQuestion:
+              'Placeholder question: where do you find it hardest to submit to the authority behind that name?',
+            closedQuestion:
+              'Placeholder question: how does confessing "Jesus Christ is Lord" change your plans for tomorrow?',
+          },
+        ],
+      },
+      {
+        title: 'Evening Prayer',
+        videoUrl: 'https://youtu.be/GmPfTVl2JWI',
+        sections: [
+          {
+            title: 'Calling on His Name',
+            reference: 'Joel 2:32',
+            referenceText:
+              '`32` And everyone who calls on the name of the LORD will be saved; for on Mount Zion and in Jerusalem there will be deliverance, as the LORD has said, even among the survivors whom the LORD calls.',
+            notes:
+              'Placeholder notes: the promise here is not tied to status or achievement - it is tied entirely to calling on the name that was revealed to Moses and fulfilled in Jesus.',
+            noteQuestion:
+              'Placeholder question: what does it mean, practically, to "call on" a name rather than simply know it?',
+            questionIntro:
+              "Placeholder intro: before answering, think of one moment today when you could have called on his name and didn't.",
+            openQuestion:
+              "Placeholder question: what keeps you from calling on God's name first, before trying to fix things yourself?",
+            closedQuestion:
+              'Placeholder question: what would it look like to end tonight by simply calling on his name?',
+          },
+        ],
+      },
+    ],
+    wisdom: {
+      passage: {
+        reference: 'Proverbs 9:10',
+        verse:
+          'The fear of the Lord is the beginning of wisdom, and knowledge of the Holy One is understanding.',
+      },
+      comment:
+        'Wisdom begins with a right relationship to God, not just accumulated facts.',
+      prayer: 'Lord, give me a heart that seeks you above all else.',
+    },
+    newTestament: {
+      passage: {
+        reference: 'John 1:1-3',
+        verse:
+          'In the beginning was the Word, and the Word was with God, and the Word was God.',
+      },
+      comment:
+        'John identifies Jesus as the eternal Word, present with God from the beginning.',
+      prayer: 'Thank you, Jesus, for making the Father known to us.',
+    },
+    oldTestament: {
+      passage: { reference: 'Exodus 3:14', verse: 'God said to Moses, "I am who I am."' },
+      comment: 'God reveals his personal, covenant name to Moses at the burning bush.',
+      prayer: 'Lord, help me to trust in who you say you are.',
+    },
+    pippa: 'I love how personal God wants to be with us - he gives us his name!',
+    verseOfTheDay: {
+      reference: 'Exodus 3:15',
+      verse:
+        'This is my name forever, the name you shall call me from generation to generation.',
+    },
+    summary:
+      'God is not distant or nameless - he has revealed himself so that we can know and call on him.',
+    references: 'Exodus 3, John 1, Proverbs 9',
+  },
+  story: {
+    id: 1,
+    name: 'Bible Devotions',
+    coverImage:
+      'https://res.cloudinary.com/redeem/image/upload/v1752849347/story-cms-ui/placeholder_bafmfz.jpg',
+    chapterType: 'Devotion',
+    storyType: 'Devotion',
+    chapterLimit: 1,
+    schemaVersion: 1,
+    fields: bibleDevotionsFields,
+  } as StorySpec,
+};
+
+export const bibleDevotionsErrors: Record<string, string[]> = {
+  'bundle.title': ['required validation failed'],
+  'bundle.introduction': ['required validation failed'],
+  'bundle.segments': ['required validation failed'],
+  'bundle.segments.0.title': ['required validation failed'],
+  'bundle.segments.0.sections.0.title': ['required validation failed'],
+  'bundle.wisdom.passage': ['required validation failed'],
+};
+
 export const mockInvitations: InvitationItem[] = [
   {
     id: 1,
@@ -4598,7 +5113,9 @@ export const sampleMixedChapterBlocks: ChapterBlock[] = [
     blockName: 'Further Reading',
     displayName: 'External Resource',
     blockRole: 'summary',
-    items: [{ ...createContentItem('text'), content: 'https://example.com/john-overview' }],
+    items: [
+      { ...createContentItem('text'), content: 'https://example.com/john-overview' },
+    ],
   },
   {
     ...createEmptyContentBlock(),
@@ -4628,7 +5145,8 @@ export const sampleMixedChapterBlocks: ChapterBlock[] = [
     items: [
       {
         ...createContentItem('text'),
-        content: '**Key takeaways:** Jesus is the eternal Word; belief in him brings eternal life.',
+        content:
+          '**Key takeaways:** Jesus is the eternal Word; belief in him brings eternal life.',
       },
     ],
     visibility: { presenter: true, personal: false, inNavigation: true, hidden: false },
@@ -4859,7 +5377,10 @@ export const devotionDraftEditCreateProps: Omit<StandardChapterEditProps, 'provi
   isCreate: true,
 };
 
-export const devotionDraftEditChapterTwoCreateProps: Omit<StandardChapterEditProps, 'providers'> & {
+export const devotionDraftEditChapterTwoCreateProps: Omit<
+  StandardChapterEditProps,
+  'providers'
+> & {
   providers: Providers;
 } = {
   ...devotionDraftEditCreateProps,
@@ -4925,7 +5446,10 @@ export const sampleCourseChapterBundle: StandardChapterEditBundle = {
       displayName: 'Main Teaching',
       blockRole: 'teaching',
       items: [
-        { ...createContentItem('text'), content: 'Core teaching content for this session.' },
+        {
+          ...createContentItem('text'),
+          content: 'Core teaching content for this session.',
+        },
       ],
     },
     {
@@ -4961,7 +5485,10 @@ export const courseDraftEditCreateProps: Omit<StandardChapterEditProps, 'provide
   isCreate: true,
 };
 
-export const courseDraftEditChapterTwoCreateProps: Omit<StandardChapterEditProps, 'providers'> & {
+export const courseDraftEditChapterTwoCreateProps: Omit<
+  StandardChapterEditProps,
+  'providers'
+> & {
   providers: Providers;
 } = {
   ...courseDraftEditCreateProps,
