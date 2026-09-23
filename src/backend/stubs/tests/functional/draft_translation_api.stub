@@ -1,0 +1,145 @@
+{{{
+  exports({ to: app.makePath('tests/functional/draft_translation_api.spec.ts') })
+}}}
+import testUtils from '@adonisjs/core/services/test_utils';
+import { test } from '@japa/runner';
+import type { StandardChapterBundle } from '@story-cms/kit';
+import { DraftFactory, TokenTopUp, TranslationJob, UserFactory } from '@story-cms/kit';
+import { setupMockCms, cleanupMockCms } from '#tests/helpers/cms_mock';
+import { seedTestStory } from '#tests/helpers/story_test_helper';
+
+const source: StandardChapterBundle = {
+  number: '01',
+  title: 'A short chapter title',
+  description: '',
+  coverImage: '',
+  blocks: [],
+  resources: [],
+};
+
+test.group('DraftsController translation endpoints', (group) => {
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
+  group.each.setup(() => setupMockCms());
+  group.each.teardown(() => cleanupMockCms());
+
+  test('estimate-translation returns token estimates and the current balance', async ({
+    client,
+    assert,
+  }) => {
+    const user = await UserFactory.create();
+    await seedTestStory();
+    const draft = await DraftFactory.merge({
+      storyId: 1,
+      number: 1,
+      locale: 'en',
+    }).create();
+    await TokenTopUp.create({ locale: 'fr', tokens: 1000, userId: user.id });
+
+    const response = await client
+      .post(`/en/story/1/draft/${draft.id}/estimate-translation`)
+      .json({ source, targetLocale: 'fr' })
+      .loginAs(user)
+      .withCsrfToken();
+
+    response.assertStatus(200);
+    assert.equal(response.body().balance, 1000);
+    assert.isAbove(response.body().inputTokens, 0);
+    assert.isAbove(response.body().outputTokens, 0);
+  });
+
+  test('estimate-translation requires a source and target locale', async ({ client }) => {
+    const user = await UserFactory.create();
+    await seedTestStory();
+    const draft = await DraftFactory.merge({
+      storyId: 1,
+      number: 1,
+      locale: 'en',
+    }).create();
+
+    const response = await client
+      .post(`/en/story/1/draft/${draft.id}/estimate-translation`)
+      .json({})
+      .loginAs(user)
+      .withCsrfToken();
+
+    response.assertStatus(400);
+  });
+
+  test('auto-translate creates a pending job and dispatches it when the balance is sufficient', async ({
+    client,
+    assert,
+  }) => {
+    const user = await UserFactory.create();
+    await seedTestStory();
+    const draft = await DraftFactory.merge({
+      storyId: 1,
+      number: 1,
+      locale: 'en',
+    }).create();
+    await TokenTopUp.create({ locale: 'fr', tokens: 1_000_000, userId: user.id });
+
+    const response = await client
+      .post(`/en/story/1/draft/${draft.id}/auto-translate`)
+      .json({ source, targetLocale: 'fr' })
+      .loginAs(user)
+      .withCsrfToken();
+
+    response.assertStatus(200);
+    const { jobId } = response.body();
+    assert.exists(jobId);
+
+    const job = await TranslationJob.findOrFail(jobId);
+    assert.equal(job.status, 'pending');
+    assert.equal(job.storyId, 1);
+    assert.equal(job.draftId, draft.id);
+    assert.equal(job.locale, 'fr');
+    assert.equal(job.userId, user.id);
+
+    const jobsResponse = await client.get('/fr/translation-jobs').loginAs(user);
+    const queuedJob = jobsResponse.body().find((j: { id: number }) => j.id === jobId);
+    assert.exists(queuedJob);
+  });
+
+  test('auto-translate rejects the request when the balance is insufficient', async ({
+    client,
+    assert,
+  }) => {
+    const user = await UserFactory.create();
+    await seedTestStory();
+    const draft = await DraftFactory.merge({
+      storyId: 1,
+      number: 1,
+      locale: 'en',
+    }).create();
+
+    const response = await client
+      .post(`/en/story/1/draft/${draft.id}/auto-translate`)
+      .json({ source, targetLocale: 'fr' })
+      .loginAs(user)
+      .withCsrfToken();
+
+    response.assertStatus(400);
+    response.assertBodyContains({ error: 'Insufficient token balance' });
+
+    const jobs = await TranslationJob.query().where('draftId', draft.id);
+    assert.lengthOf(jobs, 0);
+  });
+
+  test('auto-translate requires a source and target locale', async ({ client }) => {
+    const user = await UserFactory.create();
+    await seedTestStory();
+    const draft = await DraftFactory.merge({
+      storyId: 1,
+      number: 1,
+      locale: 'en',
+    }).create();
+
+    const response = await client
+      .post(`/en/story/1/draft/${draft.id}/auto-translate`)
+      .json({})
+      .loginAs(user)
+      .withCsrfToken();
+
+    response.assertStatus(400);
+  });
+});

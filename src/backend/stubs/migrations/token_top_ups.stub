@@ -1,0 +1,34 @@
+{{{
+  exports({
+    to: app.makePath(migration.folder, migration.fileName)
+  })
+}}}
+import { BaseSchema } from '@adonisjs/lucid/schema';
+
+export default class extends BaseSchema {
+  protected tableName = 'token_top_ups';
+
+  async up() {
+    this.schema.createTable(this.tableName, (table) => {
+      table.increments('id');
+
+      table
+        .string('locale', 15)
+        .notNullable()
+        .comment('IETF BCP 47 locale this top-up applies to');
+      table.integer('tokens').unsigned().notNullable().comment('lump-sum tokens added');
+      table
+        .integer('user_id')
+        .unsigned()
+        .notNullable()
+        .comment('who performed the top-up');
+
+      table.timestamp('created_at', { useTz: true });
+      table.timestamp('updated_at', { useTz: true });
+    });
+  }
+
+  async down() {
+    this.schema.dropTable(this.tableName);
+  }
+}

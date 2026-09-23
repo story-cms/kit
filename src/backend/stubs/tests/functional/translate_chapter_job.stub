@@ -1,0 +1,113 @@
+{{{
+  exports({ to: app.makePath('tests/functional/translate_chapter_job.spec.ts') })
+}}}
+import testUtils from '@adonisjs/core/services/test_utils';
+import { test } from '@japa/runner';
+import { Draft, DraftFactory, type StandardChapterBundle } from '@story-cms/kit';
+import TranslateChapter from '#jobs/translate_chapter';
+import { TranslationJob } from '@story-cms/kit';
+import { setupMockAiService, cleanupMockAiService } from '#tests/helpers/ai_service_mock';
+
+function fakeContext() {
+  return {
+    jobId: 'test-job',
+    name: 'TranslateChapter',
+    attempt: 1,
+    queue: 'default',
+    priority: 0,
+    acquiredAt: new Date(),
+    stalledCount: 0,
+  };
+}
+
+const source: StandardChapterBundle = {
+  number: '01',
+  title: 'Original title',
+  description: 'Original description',
+  coverImage: '',
+  blocks: [],
+  resources: [],
+};
+
+test.group('TranslateChapter job', (group) => {
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
+  group.each.teardown(() => cleanupMockAiService());
+
+  test('execute() snapshots the previous bundle, translates content, and marks the job complete', async ({
+    assert,
+  }) => {
+    const draft = await DraftFactory.merge({
+      storyId: 1,
+      number: 1,
+      locale: 'en',
+      bundle: source,
+    }).create();
+
+    const translationJob = await TranslationJob.create({
+      storyId: 1,
+      draftId: draft.id,
+      locale: 'fr',
+      chapterTitle: source.title,
+      userId: 1,
+      estimatedTokens: 100,
+      status: 'pending',
+    });
+
+    const { calls } = setupMockAiService();
+
+    const job = new TranslateChapter();
+    job.$hydrate(
+      {
+        translationJobId: translationJob.id,
+        storyId: 1,
+        draftId: draft.id,
+        locale: 'fr',
+        source,
+      },
+      fakeContext(),
+    );
+
+    await job.execute();
+
+    assert.lengthOf(calls, 1);
+    assert.deepEqual(calls[0].outputLocales, ['fr']);
+
+    const updatedJob = await TranslationJob.findOrFail(translationJob.id);
+    assert.equal(updatedJob.status, 'complete');
+    assert.deepEqual(updatedJob.previousBundle, source);
+
+    const updatedDraft = await Draft.findOrFail(draft.id);
+    const bundle = updatedDraft.bundle as StandardChapterBundle;
+    assert.equal(bundle.title, '[fr] Original title');
+    assert.equal(bundle.description, '[fr] Original description');
+  });
+
+  test('failed() marks the job as failed', async ({ assert }) => {
+    const translationJob = await TranslationJob.create({
+      storyId: 1,
+      draftId: 1,
+      locale: 'fr',
+      chapterTitle: 'Some chapter',
+      userId: 1,
+      estimatedTokens: 100,
+      status: 'processing',
+    });
+
+    const job = new TranslateChapter();
+    job.$hydrate(
+      {
+        translationJobId: translationJob.id,
+        storyId: 1,
+        draftId: 1,
+        locale: 'fr',
+        source,
+      },
+      fakeContext(),
+    );
+
+    await job.failed(new Error('Simulated failure'));
+
+    const updatedJob = await TranslationJob.findOrFail(translationJob.id);
+    assert.equal(updatedJob.status, 'failed');
+  });
+});

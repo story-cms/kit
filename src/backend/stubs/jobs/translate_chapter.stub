@@ -1,0 +1,70 @@
+{{{
+  exports({ to: app.makePath('app/jobs/translate_chapter.ts') })
+}}}
+import { Job } from '@adonisjs/queue';
+import type { JobOptions } from '@adonisjs/queue/types';
+import {
+  ChapterTranslationService,
+  Draft,
+  TranslationJob,
+  type StandardChapterBundle,
+} from '@story-cms/kit';
+
+interface TranslateChapterPayload {
+  translationJobId: number;
+  storyId: number;
+  draftId: number;
+  locale: string;
+  source: StandardChapterBundle;
+}
+
+export default class TranslateChapter extends Job<TranslateChapterPayload> {
+  // No auto-retry: a retry means spending real OpenAI tokens again. A failed
+  // translation should be re-triggered manually, not silently retried.
+  //
+  // Deliberately left on the 'default' queue (no `queue:` option here, no
+  // `.toQueue()` at dispatch): `node ace queue:work` only polls 'default'
+  // unless you pass `-q`, and this app has exactly one job type, so a named
+  // queue would just be a footgun to forget the flag for.
+  static options: JobOptions = {
+    maxRetries: 0,
+  };
+
+  async execute() {
+    const { translationJobId, draftId, locale, source } = this.payload;
+
+    const draft = await Draft.findOrFail(draftId);
+    const currentBundle =
+      typeof draft.bundle === 'string' ? JSON.parse(draft.bundle) : { ...draft.bundle };
+
+    await TranslationJob.query().where('id', translationJobId).update({
+      status: 'processing',
+      previousBundle: currentBundle,
+    });
+
+    const translated = await new ChapterTranslationService().translate(source, locale, {
+      storyId: this.payload.storyId,
+      draftId,
+      translationJobId,
+    });
+
+    draft.bundle = {
+      ...currentBundle,
+      title: translated.title,
+      description: translated.description,
+      blocks: translated.blocks,
+    };
+    await draft.save();
+
+    await TranslationJob.query()
+      .where('id', translationJobId)
+      .update({ status: 'complete' });
+  }
+
+  async failed(error: Error) {
+    console.error('TranslateChapter job failed', error);
+    await TranslationJob.query()
+      .where('id', this.payload.translationJobId)
+      .update({ status: 'failed' });
+  }
+}

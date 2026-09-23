@@ -1,0 +1,38 @@
+{{{
+  exports({
+    to: app.makePath(migration.folder, migration.fileName)
+  })
+}}}
+import { BaseSchema } from '@adonisjs/lucid/schema';
+
+export default class extends BaseSchema {
+  protected tableName = 'token_usages';
+
+  async up() {
+    this.schema.createTable(this.tableName, (table) => {
+      table.increments('id');
+
+      table.integer('story_id').unsigned().notNullable();
+      table.integer('draft_id').unsigned().notNullable();
+      table
+        .string('locale', 15)
+        .notNullable()
+        .comment('IETF BCP 47 target locale translated into');
+      table
+        .integer('translation_job_id')
+        .unsigned()
+        .nullable()
+        .comment('the translation_jobs row this usage came from, when applicable');
+
+      table.integer('input_tokens').unsigned().notNullable();
+      table.integer('output_tokens').unsigned().notNullable();
+
+      table.timestamp('created_at', { useTz: true });
+      table.timestamp('updated_at', { useTz: true });
+    });
+  }
+
+  async down() {
+    this.schema.dropTable(this.tableName);
+  }
+}

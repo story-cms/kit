@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="cardEl"
     class="relative my-2 list-none rounded-xl border border-gray-200 p-0"
     :class="{
       'h-full': stretchForAlignment,
@@ -9,7 +10,6 @@
     :data-translation-block-side="
       translationMode ? (readOnly ? 'source' : 'translation') : undefined
     "
-    ref="cardEl"
     :draggable="isDragHandleActive"
     @dragstart="onDragStart"
     @dragover.prevent
@@ -103,7 +103,11 @@
         </div>
       </div>
 
-      <div v-if="expanded" class="space-y-6 p-6" :class="{ 'flex-1': stretchForAlignment }">
+      <div
+        v-if="expanded"
+        class="space-y-6 p-6"
+        :class="{ 'flex-1': stretchForAlignment }"
+      >
         <slot />
       </div>
       <div

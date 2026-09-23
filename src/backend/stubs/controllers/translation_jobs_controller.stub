@@ -1,0 +1,101 @@
+{{{
+  exports({ to: app.makePath('app/controllers/translation_jobs_controller.ts') })
+}}}
+import { DateTime } from 'luxon';
+import type { HttpContext } from '@adonisjs/core/http';
+import {
+  Draft,
+  TokenUsage,
+  TranslationJob,
+  type LanguageSpecification,
+} from '@story-cms/kit';
+import cms from '#services/cms';
+
+const RECENT_COMPLETION_WINDOW_MINUTES = 10;
+
+export default class TranslationJobsController {
+  // Lists jobs still worth showing in the floating tracker: anything still
+  // pending/processing, plus complete/failed jobs finished recently. Older
+  // finished jobs are left in the table (for token-usage history) but drop
+  // out of this list so the tracker doesn't resurrect them on every reload.
+  public async index(ctx: HttpContext) {
+    const recentCutoff = DateTime.now().minus({
+      minutes: RECENT_COMPLETION_WINDOW_MINUTES,
+    });
+
+    const jobs = await TranslationJob.query()
+      .where((query) => {
+        query.whereIn('status', ['pending', 'processing']).orWhere((sub) => {
+          sub
+            .whereIn('status', ['complete', 'failed'])
+            .where('updatedAt', '>=', recentCutoff.toSQL());
+        });
+      })
+      .orderBy('created_at', 'desc');
+
+    const draftIds = [...new Set(jobs.map((job) => job.draftId))];
+    const drafts = await Draft.query().whereIn('id', draftIds).select('id', 'number');
+    const chapterNumberByDraftId = new Map(
+      drafts.map((draft) => [draft.id, draft.number]),
+    );
+
+    const jobIds = jobs.map((job) => job.id);
+    const usageRows =
+      jobIds.length > 0
+        ? await TokenUsage.query()
+            .whereIn('translation_job_id', jobIds)
+            .select('translation_job_id')
+            .sum('input_tokens as inputTotal')
+            .sum('output_tokens as outputTotal')
+            .groupBy('translation_job_id')
+        : [];
+    const actualTokensByJobId = new Map(
+      usageRows.map((row) => [
+        row.translationJobId,
+        Number(row.$extras.inputTotal) + Number(row.$extras.outputTotal),
+      ]),
+    );
+
+    const localeName = (locale: string) =>
+      cms.config.languages?.find(
+        (language: LanguageSpecification) => language.locale === locale,
+      )?.language ?? locale;
+
+    return ctx.response.json(
+      jobs.map((job) => ({
+        id: job.id,
+        storyId: job.storyId,
+        draftId: job.draftId,
+        chapterNumber: chapterNumberByDraftId.get(job.draftId) ?? null,
+        locale: job.locale,
+        localeName: localeName(job.locale),
+        chapterTitle: job.chapterTitle,
+        status: job.status,
+        canUndo: job.status === 'complete' && job.previousBundle !== null,
+        actualTokens: actualTokensByJobId.get(job.id) ?? null,
+      })),
+    );
+  }
+
+  public async destroy(ctx: HttpContext) {
+    await TranslationJob.query().where('id', Number(ctx.params.id)).delete();
+    return ctx.response.noContent();
+  }
+
+  // Reverts the draft back to its bundle from right before this translation
+  // overwrote it, using the snapshot captured when the job started.
+  public async undo(ctx: HttpContext) {
+    const job = await TranslationJob.find(Number(ctx.params.id));
+    if (!job || job.status !== 'complete' || !job.previousBundle) {
+      return ctx.response.badRequest({ error: 'This translation cannot be undone' });
+    }
+
+    const draft = await Draft.findOrFail(job.draftId);
+    draft.bundle = job.previousBundle;
+    await draft.save();
+
+    await job.delete();
+
+    return ctx.response.noContent();
+  }
+}

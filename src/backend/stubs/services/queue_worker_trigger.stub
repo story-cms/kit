@@ -1,0 +1,12 @@
+{{{
+  exports({ to: app.makePath('app/services/queue_worker_trigger.ts') })
+}}}
+/**
+ * Optional hook to wake a background queue worker after dispatching a job.
+ * Default is a no-op; override in client apps that run workers on GCP/Cloud Run.
+ */
+export default class QueueWorkerTriggerService {
+  async trigger() {
+    // no-op
+  }
+}
