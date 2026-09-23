@@ -937,3 +937,22 @@ export interface SupportRequest {
   supportCode: SupportCode;
   removeLanguageCode?: string;
 }
+
+/// ----------------------------------------------------
+///  translation jobs
+/// ----------------------------------------------------
+
+export type TranslationJobStatus = 'pending' | 'processing' | 'complete' | 'failed';
+
+export interface TranslationJobSummary {
+  id: number;
+  storyId: number;
+  draftId: number;
+  chapterNumber: number | null;
+  locale: string;
+  localeName: string;
+  chapterTitle: string;
+  status: TranslationJobStatus;
+  canUndo: boolean;
+  actualTokens: number | null;
+}

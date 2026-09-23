@@ -1,7 +1,6 @@
 import { DateTime } from 'luxon';
 import { BaseModel, column } from '@adonisjs/lucid/orm';
-
-export type TranslationJobStatus = 'pending' | 'processing' | 'complete' | 'failed';
+import type { TranslationJobStatus } from '../../types.js';
 
 export default class TranslationJob extends BaseModel {
   @column({ isPrimary: true })

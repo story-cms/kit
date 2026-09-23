@@ -48,6 +48,7 @@ async function addMigrations(command: Configure, codemods: Codemods) {
     'translation_jobs',
     'token_usages',
     'token_top_ups',
+    'queue',
   ];
 
   const path = command.app.migrationsPath();
@@ -91,6 +92,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'config/database.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/bodyparser.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/cache.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'config/queue.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/providers.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/auth.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/cms.stub', {});

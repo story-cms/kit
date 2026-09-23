@@ -2,21 +2,10 @@ import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import axios from 'axios';
 import { useSharedStore } from './shared';
+import type { TranslationJobStatus, TranslationJobSummary } from '../../types.js';
 
-export type TranslationJobStatus = 'pending' | 'processing' | 'complete' | 'failed';
-
-export interface TranslationJob {
-  id: number;
-  storyId: number;
-  draftId: number;
-  chapterNumber: number | null;
-  locale: string;
-  localeName: string;
-  chapterTitle: string;
-  status: TranslationJobStatus;
-  canUndo: boolean;
-  actualTokens: number | null;
-}
+export type { TranslationJobStatus };
+export type TranslationJob = TranslationJobSummary;
 
 export interface UndoneTranslation {
   jobId: number;

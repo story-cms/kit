@@ -8,6 +8,7 @@ import {
   TokenUsage,
   TranslationJob,
   type LanguageSpecification,
+  type TranslationJobSummary,
 } from '@story-cms/kit';
 import cms from '#services/cms';
 
@@ -62,18 +63,20 @@ export default class TranslationJobsController {
       )?.language ?? locale;
 
     return ctx.response.json(
-      jobs.map((job) => ({
-        id: job.id,
-        storyId: job.storyId,
-        draftId: job.draftId,
-        chapterNumber: chapterNumberByDraftId.get(job.draftId) ?? null,
-        locale: job.locale,
-        localeName: localeName(job.locale),
-        chapterTitle: job.chapterTitle,
-        status: job.status,
-        canUndo: job.status === 'complete' && job.previousBundle !== null,
-        actualTokens: actualTokensByJobId.get(job.id) ?? null,
-      })),
+      jobs.map(
+        (job): TranslationJobSummary => ({
+          id: job.id,
+          storyId: job.storyId,
+          draftId: job.draftId,
+          chapterNumber: chapterNumberByDraftId.get(job.draftId) ?? null,
+          locale: job.locale,
+          localeName: localeName(job.locale),
+          chapterTitle: job.chapterTitle,
+          status: job.status,
+          canUndo: job.status === 'complete' && job.previousBundle !== null,
+          actualTokens: actualTokensByJobId.get(job.id) ?? null,
+        }),
+      ),
     );
   }
 
