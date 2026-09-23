@@ -245,7 +245,7 @@ test.describe('Invitation validator', () => {
     });
 
     test('accepts valid actionType values', async () => {
-      const validActionTypes = ['close', 'donate', 'externalUrl'] as const;
+      const validActionTypes = ['close', 'donate', 'externalUrl', 'share'] as const;
 
       for (const actionType of validActionTypes) {
         const data = {
@@ -256,6 +256,7 @@ test.describe('Invitation validator', () => {
           actionLabel: 'Click Here',
           actionType,
           actionUrl: 'https://example.com',
+          shareMessage: 'Please share this invitation',
           isPublished: true,
         };
         const ctx = createMockHttpContext(data);
@@ -403,6 +404,103 @@ test.describe('Invitation validator', () => {
 
       const result = await schema.validate(data);
       expect(result.actionUrl).toBeUndefined();
+    });
+
+    test('requires shareMessage when actionType is share', async () => {
+      const data = {
+        name: 'Test Invitation',
+        window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
+        title: 'Test Title',
+        message: 'Test Message',
+        actionLabel: 'Click Here',
+        actionType: 'share' as const,
+        isPublished: true,
+      };
+
+      const ctx = createMockHttpContext(data);
+      const validator = new InvitationValidator(ctx);
+      const schema = validator.schema;
+
+      await expect(schema.validate(data)).rejects.toThrow();
+    });
+
+    test('rejects a blank shareMessage when actionType is share', async () => {
+      const data = {
+        name: 'Test Invitation',
+        window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
+        title: 'Test Title',
+        message: 'Test Message',
+        actionLabel: 'Click Here',
+        actionType: 'share' as const,
+        shareMessage: '   ',
+        isPublished: true,
+      };
+
+      const ctx = createMockHttpContext(data);
+      const validator = new InvitationValidator(ctx);
+      const schema = validator.schema;
+
+      await expect(schema.validate(data)).rejects.toThrow();
+    });
+
+    test('accepts shareMessage when actionType is share', async () => {
+      const data = {
+        name: 'Test Invitation',
+        window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
+        title: 'Test Title',
+        message: 'Test Message',
+        actionLabel: 'Click Here',
+        actionType: 'share' as const,
+        shareMessage: 'Please share this invitation',
+        isPublished: true,
+      };
+
+      const ctx = createMockHttpContext(data);
+      const validator = new InvitationValidator(ctx);
+      const schema = validator.schema;
+
+      const result = await schema.validate(data);
+      expect(result.actionType).toBe('share');
+      expect(result.shareMessage).toBe('Please share this invitation');
+    });
+
+    test('allows empty shareMessage when actionType is not share', async () => {
+      const data = {
+        name: 'Test Invitation',
+        window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
+        title: 'Test Title',
+        message: 'Test Message',
+        actionLabel: 'Click Here',
+        actionType: 'close' as const,
+        shareMessage: '',
+        isPublished: true,
+      };
+
+      const ctx = createMockHttpContext(data);
+      const validator = new InvitationValidator(ctx);
+      const schema = validator.schema;
+
+      const result = await schema.validate(data);
+      expect(result.shareMessage).toBe('');
+    });
+
+    test('allows missing shareMessage when actionType is not share', async () => {
+      const data = {
+        name: 'Test Invitation',
+        window: '2025-01-01T00:00:00.000Z|2025-01-31T23:59:59.999Z',
+        title: 'Test Title',
+        message: 'Test Message',
+        actionLabel: 'Click Here',
+        actionType: 'donate' as const,
+        isPublished: true,
+      };
+
+      const ctx = createMockHttpContext(data);
+      const validator = new InvitationValidator(ctx);
+      const schema = validator.schema;
+
+      const result = await schema.validate(data);
+      expect(result.shareMessage).toBeUndefined();
     });
 
     test('makes promoImage optional', async () => {
