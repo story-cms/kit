@@ -4,7 +4,8 @@
       <div class="relative h-96 w-full">
         <p class="text-sm text-gray-500">
           Closing minimizes into a floating button — nothing is removed. Click
-          it again to restore the panel.
+          it again to restore the panel. "Undo translation" opens a confirmation
+          modal before the job is actually undone.
         </p>
         <TranslationProgressTrackerCard :jobs="mixedJobs" @undo="onUndo(mixedJobs, $event)" />
       </div>
