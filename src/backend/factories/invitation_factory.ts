@@ -20,8 +20,10 @@ export const InvitationFactory = factory
         'close',
         'donate',
         'externalUrl',
+        'share',
       ]) as InvitationBundle['actionType'],
       actionUrl: faker.internet.url(),
+      shareMessage: faker.lorem.sentence(),
       regions: faker.location.countryCode(),
     };
 

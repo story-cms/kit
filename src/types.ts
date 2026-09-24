@@ -760,6 +760,7 @@ export interface InvitationBundle {
   actionLabel: string;
   actionType: string;
   actionUrl?: string;
+  shareMessage?: string;
 }
 
 export interface InvitationItem {
@@ -785,6 +786,7 @@ export interface InvitationForApi {
   actionLabel: string;
   actionType: string;
   actionUrl: string;
+  shareMessage: string;
   regions: string;
 }
 

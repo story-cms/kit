@@ -110,10 +110,19 @@
           />
 
           <StringField
-            v-if="!urlFieldIsDisabled"
+            v-if="selection === 'externalUrl'"
             :field="{
               name: 'actionUrl',
               label: 'Action URL',
+              widget: 'string',
+            }"
+            :is-nested="true"
+          />
+          <StringField
+            v-else-if="selection === 'share'"
+            :field="{
+              name: 'shareMessage',
+              label: 'Share message',
               widget: 'string',
             }"
             :is-nested="true"
@@ -147,7 +156,7 @@ import { ref, computed, onMounted, toRefs, watch } from 'vue';
 import type { Component } from 'vue';
 import { DateTime } from 'luxon';
 import { router } from '@inertiajs/vue3';
-import { ExternalLink, Heart, X } from '@lucide/vue';
+import { ExternalLink, Heart, Send, X } from '@lucide/vue';
 import axios from 'axios';
 import {
   type SharedPageProps,
@@ -183,6 +192,7 @@ type RequestPayload = {
   actionLabel: string;
   actionType: string;
   actionUrl: string;
+  shareMessage: string;
   isPublished: boolean;
 };
 
@@ -240,16 +250,27 @@ const actionTypeOptions: {
     description: 'Link to an external website',
     icon: ExternalLink,
   },
+  {
+    value: 'share',
+    label: 'Share',
+    description: 'Share with your users seamlessly',
+    icon: Send,
+  },
 ];
 
 const setActionType = (type: string) => {
-  const previousSelection = selection.value;
+  const previousSelection = model.getField('actionType', defaultType);
   selection.value = type;
   model.setField('actionType', type);
 
   if (previousSelection === 'externalUrl' && type !== 'externalUrl') {
     const actionUrl = model.getField('actionUrl', '');
     if (actionUrl) model.setField('actionUrl', '');
+  }
+
+  if (previousSelection === 'share' && type !== 'share') {
+    const shareMessage = model.getField('shareMessage', '');
+    if (shareMessage) model.setField('shareMessage', '');
   }
 };
 
@@ -301,8 +322,6 @@ watch(
   },
   { deep: true },
 );
-
-const urlFieldIsDisabled = computed(() => selection.value !== 'externalUrl');
 
 const stats = ref<InvitationStatsType>({ impressions: 0, clicks: 0 });
 

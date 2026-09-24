@@ -57,6 +57,7 @@ export default class Invitation extends BaseModel {
       actionLabel: this.bundle.actionLabel,
       actionType: this.bundle.actionType,
       actionUrl: this.bundle.actionUrl ?? '',
+      shareMessage: this.bundle.shareMessage ?? '',
       regions: this.bundle.regions,
     };
   }
@@ -89,6 +90,7 @@ export default class Invitation extends BaseModel {
       actionLabel: this.freshValue(changes, old, 'actionLabel', ''),
       actionType: this.freshValue(changes, old, 'actionType', 'close'),
       actionUrl: this.freshValue(changes, old, 'actionUrl', undefined),
+      shareMessage: this.freshValue(changes, old, 'shareMessage', undefined),
       regions: this.freshValue(changes, old, 'regions', ''),
     };
 
