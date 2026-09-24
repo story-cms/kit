@@ -48,7 +48,10 @@ export class StoryService {
       throw errors.E_ROUTE_NOT_FOUND;
     }
 
-    return { storyId: Number.parseInt(ctx.params.storyId), locale: ctx.params.locale };
+    const storyId = Number.parseInt(ctx.params.storyId);
+    if (ctx.params.storyId !== undefined && Number.isNaN(storyId)) return undefined;
+
+    return { storyId, locale: ctx.params.locale };
   }
 
   public async blockingPublishMessages(
@@ -413,6 +416,8 @@ export class StoryService {
 
   private async storyFromPath(ctx: HttpContext): Promise<StorySpec | undefined> {
     const storyId = Number.parseInt(ctx.params.storyId);
+    if (Number.isNaN(storyId)) return undefined;
+
     const story = await Story.query()
       .where('id', storyId)
       .preload('localisations', (localisationsQuery) => {
