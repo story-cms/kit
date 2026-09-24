@@ -17,7 +17,7 @@ const page = usePage();
 
 // Only present on standard-chapter-edit pages; absent everywhere else.
 const currentDraftId = computed(
-  () => (page.props.draft as { id?: number } | undefined)?.id ?? null,
+  () => (page.props?.draft as { id?: number } | undefined)?.id ?? null,
 );
 
 onMounted(() => {

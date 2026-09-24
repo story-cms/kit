@@ -76,6 +76,7 @@
               v-if="currentTab === 'Details'"
               name="details"
               :is-translation="props.isTranslation"
+              :is-auto-translating="isAutoTranslating"
             />
             <div v-if="currentTab === 'Blocks'" dir="ltr">
               <slot
@@ -83,6 +84,7 @@
                 :blocks="blocks"
                 :update-blocks="updateBlocks"
                 :is-translation="props.isTranslation"
+                :is-auto-translating="isAutoTranslating"
               />
             </div>
             <div v-if="currentTab === 'Resources'" dir="ltr">
@@ -168,11 +170,12 @@ const props = withDefaults(
 );
 
 defineSlots<{
-  details: (props: { isTranslation: boolean }) => VNode[];
+  details: (props: { isTranslation: boolean; isAutoTranslating: boolean }) => VNode[];
   blocks: (props: {
     blocks: ChapterBlock[];
     updateBlocks: (blocks: ChapterBlock[]) => void;
     isTranslation: boolean;
+    isAutoTranslating: boolean;
   }) => VNode[];
 }>();
 

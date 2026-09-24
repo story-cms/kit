@@ -10,6 +10,29 @@
       />
     </Variant>
 
+    <Variant title="Auto-translating">
+      <StandardChapterEditBlocks
+        v-model:blocks="autoTranslatingBlocks"
+        :video-collection-id="sharedProps.config.videoCollectionId"
+        :image-collection-id="sharedProps.config.imageCollectionId"
+        template="devotion"
+        chapter-type="Day"
+        :is-auto-translating="true"
+      />
+    </Variant>
+
+    <Variant title="Translation, auto-translating" :setup-app="loadTranslationSource">
+      <StandardChapterEditBlocks
+        v-model:blocks="translationBlocks"
+        :video-collection-id="sharedProps.config.videoCollectionId"
+        :image-collection-id="sharedProps.config.imageCollectionId"
+        template="course"
+        chapter-type="Session"
+        :is-translation="true"
+        :is-auto-translating="true"
+      />
+    </Variant>
+
     <Variant title="Empty">
       <StandardChapterEditBlocks
         v-model:blocks="emptyBlocks"
@@ -79,12 +102,14 @@ import { ref } from 'vue';
 import type { ChapterBlock } from '../../../types';
 import {
   mockResourceProviders,
+  sampleCourseDraftSourceBundle,
+  sampleCourseDraftTranslationBundle,
   sampleMixedChapterBlocks,
   samplePreviousCourseChapterBlocks,
   samplePreviousDevotionChapterBlocks,
   sharedProps,
 } from '../../test/mocks';
-import { useWidgetsStore } from '../../store';
+import { useModelStore, useWidgetsStore } from '../../store';
 import type { StoryHandler } from '../../shared/helpers';
 import StandardChapterEditBlocks from './standard-chapter-edit-blocks.vue';
 import { createContentItem, createEmptyContentBlock } from './blocks/block-utils';
@@ -93,7 +118,16 @@ const setupProviders: StoryHandler = (): void => {
   useWidgetsStore().setProviders(mockResourceProviders);
 };
 
+const loadTranslationSource: StoryHandler = (context): void => {
+  setupProviders(context);
+  useModelStore().setSource({ ...sampleCourseDraftSourceBundle });
+};
+
 const defaultBlocks = ref<ChapterBlock[]>([createEmptyContentBlock()]);
+const autoTranslatingBlocks = ref<ChapterBlock[]>([createEmptyContentBlock()]);
+const translationBlocks = ref<ChapterBlock[]>([
+  ...sampleCourseDraftTranslationBundle.blocks,
+]);
 const emptyBlocks = ref<ChapterBlock[]>([]);
 const stackedItemBlocks = ref<ChapterBlock[]>([
   {
