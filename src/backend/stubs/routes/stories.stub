@@ -12,25 +12,58 @@ export default () => {
   router.get(':locale/story', [StoriesController, 'index']);
   router.get(':locale/story/create', [StoriesController, 'create']);
   router.post(':locale/story', [StoriesController, 'store']);
-  router.get(':locale/story/:storyId/edit', [StoriesController, 'edit']);
-  router.delete(':locale/story/:storyId', [StoriesController, 'delete']);
-  router.post(':locale/story/:storyId/publish', [StoriesController, 'publish']);
-  router.post(':locale/story/:storyId', [StoriesController, 'update']);
+  router
+    .get(':locale/story/:storyId/edit', [StoriesController, 'edit'])
+    .where('storyId', router.matchers.number());
+  router
+    .delete(':locale/story/:storyId', [StoriesController, 'delete'])
+    .where('storyId', router.matchers.number());
+  router
+    .post(':locale/story/:storyId/publish', [StoriesController, 'publish'])
+    .where('storyId', router.matchers.number());
+  router
+    .post(':locale/story/:storyId', [StoriesController, 'update'])
+    .where('storyId', router.matchers.number());
 
   // chapters
   router.on('/story/:storyId').redirect('chapters.index', {
     locale: 'en',
     storyId: 1,
   });
-  router.get(':locale/story/:storyId', [ChaptersController, 'index']);
-  router.get(':locale/story/:storyId/chapter/:number', [ChaptersController, 'preview']);
+  router
+    .get(':locale/story/:storyId', [ChaptersController, 'index'])
+    .where('storyId', router.matchers.number());
+  router
+    .get(':locale/story/:storyId/chapter/:number', [ChaptersController, 'preview'])
+    .where('storyId', router.matchers.number())
+    .where('number', router.matchers.number());
 
   // drafts
-  router.get(':locale/story/:storyId/draft/:number/edit', [DraftsController, 'edit']);
-  router.get(':locale/story/:storyId/draft/create', [DraftsController, 'create']);
-  router.delete(':locale/story/:storyId/draft/:id', [DraftsController, 'delete']);
-  router.post(':locale/story/:storyId/draft/:id/save', [DraftsController, 'save']);
-  router.post(':locale/story/:storyId/draft/:id/submit', [DraftsController, 'submit']);
-  router.post(':locale/story/:storyId/draft/:id/publish', [DraftsController, 'publish']);
-  router.post(':locale/story/:storyId/draft/:id/reject', [DraftsController, 'reject']);
+  router
+    .get(':locale/story/:storyId/draft/:number/edit', [DraftsController, 'edit'])
+    .where('storyId', router.matchers.number())
+    .where('number', router.matchers.number());
+  router
+    .get(':locale/story/:storyId/draft/create', [DraftsController, 'create'])
+    .where('storyId', router.matchers.number());
+  router
+    .delete(':locale/story/:storyId/draft/:id', [DraftsController, 'delete'])
+    .where('storyId', router.matchers.number())
+    .where('id', router.matchers.number());
+  router
+    .post(':locale/story/:storyId/draft/:id/save', [DraftsController, 'save'])
+    .where('storyId', router.matchers.number())
+    .where('id', router.matchers.number());
+  router
+    .post(':locale/story/:storyId/draft/:id/submit', [DraftsController, 'submit'])
+    .where('storyId', router.matchers.number())
+    .where('id', router.matchers.number());
+  router
+    .post(':locale/story/:storyId/draft/:id/publish', [DraftsController, 'publish'])
+    .where('storyId', router.matchers.number())
+    .where('id', router.matchers.number());
+  router
+    .post(':locale/story/:storyId/draft/:id/reject', [DraftsController, 'reject'])
+    .where('storyId', router.matchers.number())
+    .where('id', router.matchers.number());
 };
