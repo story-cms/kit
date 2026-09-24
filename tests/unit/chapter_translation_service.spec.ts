@@ -172,6 +172,51 @@ test.describe('ChapterTranslationService.buildTranslationSources', () => {
     expect(sources.some((source) => source.id === 'block:blk-4:item:txt-1')).toBe(false);
   });
 
+  test('does not throw when a content block has no items array', () => {
+    const contentBlock = {
+      id: 'blk-5',
+      kind: 'content',
+      blockName: 'Morning',
+      visibility,
+      displayName: 'Morning',
+      blockRole: 'reflection',
+      style: 'primary',
+      leadersNotes: 'Notes for leaders',
+      showLeadersNotes: true,
+    } as unknown as ChapterBlock;
+
+    const sources = buildTranslationSources(bundle({ blocks: [contentBlock] }));
+
+    expect(sources).toContainEqual({
+      id: 'block:blk-5:leadersNotes',
+      text: 'Notes for leaders',
+    });
+    expect(sources.some((source) => source.id.includes(':item:'))).toBe(false);
+  });
+
+  test('does not throw when a content block has a null items value', () => {
+    const contentBlock = {
+      id: 'blk-6',
+      kind: 'content',
+      blockName: 'Morning',
+      visibility,
+      displayName: 'Morning',
+      blockRole: 'reflection',
+      style: 'primary',
+      leadersNotes: 'Notes for leaders',
+      showLeadersNotes: true,
+      items: null,
+    } as unknown as ChapterBlock;
+
+    const sources = buildTranslationSources(bundle({ blocks: [contentBlock] }));
+
+    expect(sources).toContainEqual({
+      id: 'block:blk-6:leadersNotes',
+      text: 'Notes for leaders',
+    });
+    expect(sources.some((source) => source.id.includes(':item:'))).toBe(false);
+  });
+
   test('combines sources from the bundle and multiple blocks, in order', () => {
     const titleBlock: ChapterBlock = {
       id: 'blk-1',

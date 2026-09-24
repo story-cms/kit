@@ -1,4 +1,9 @@
-import type { ChapterBlock, StandardChapterBundle } from '../../types.js';
+import type {
+  ChapterBlock,
+  ChapterContentBlock,
+  ChapterContentItem,
+  StandardChapterBundle,
+} from '../../types.js';
 import { AiService, type TranslationSource } from './ai_service.js';
 import TokenUsage from '../models/token_usage.js';
 import TokenTopUp from '../models/token_top_up.js';
@@ -38,6 +43,12 @@ const blockLeadersNotesId = (blockId: string) => `block:${blockId}:leadersNotes`
 const blockItemId = (blockId: string, itemId: string) =>
   `block:${blockId}:item:${itemId}`;
 
+// Persisted content blocks aren't guaranteed to have a populated `items`
+// array — the save-time validator allows it to be omitted — even though the
+// TypeScript type declares it as required.
+const contentBlockItems = (block: ChapterContentBlock): ChapterContentItem[] =>
+  Array.isArray(block.items) ? block.items : [];
+
 export default class ChapterTranslationService {
   private buildTranslationSources(source: StandardChapterBundle): TranslationSource[] {
     const translationSources: TranslationSource[] = [];
@@ -67,7 +78,7 @@ export default class ChapterTranslationService {
             text: block.leadersNotes,
           });
         }
-        for (const item of block.items) {
+        for (const item of contentBlockItems(block)) {
           if (item.kind === 'text' && item.content?.trim()) {
             translationSources.push({
               id: blockItemId(block.id, item.id),
@@ -170,7 +181,7 @@ export default class ChapterTranslationService {
       return {
         ...block,
         leadersNotes: translated(blockLeadersNotesId(block.id), block.leadersNotes ?? ''),
-        items: block.items.map((item) =>
+        items: contentBlockItems(block).map((item) =>
           item.kind === 'text' && item.content
             ? {
                 ...item,
