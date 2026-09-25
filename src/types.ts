@@ -939,6 +939,33 @@ export interface SupportRequest {
 }
 
 /// ----------------------------------------------------
+///  tokens
+/// ----------------------------------------------------
+
+export interface TokenPot {
+  locale: string;
+  name: string;
+  allocated: number;
+  used: number;
+}
+
+export type TokenPotField = 'allocated' | 'used' | 'remaining';
+
+export interface DailyTokenUsage {
+  day: string;
+  tokens: number;
+}
+
+export interface TokenTransaction {
+  date: string;
+  action: string;
+  sourceLanguage: string;
+  targetLanguage: string;
+  blocks: number;
+  tokensUsed: number;
+}
+
+/// ----------------------------------------------------
 ///  translation jobs
 /// ----------------------------------------------------
 

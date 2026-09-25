@@ -14,6 +14,9 @@ import type {
   InvitationItem,
   UiConfig,
   AppUserInterface,
+  DailyTokenUsage,
+  TokenPot,
+  TokenTransaction,
 } from '../../types.ts';
 import { StoryHandler } from '../shared/helpers.js';
 import { useSharedStore } from '../store/shared.js';
@@ -5551,3 +5554,123 @@ export const sampleDevotionDraftTranslationBundle: StandardChapterEditBundle = {
     };
   }),
 };
+
+export const mockTokenPoolTotal = 52000;
+
+export const mockTokenPots: TokenPot[] = [
+  { locale: 'ar', name: 'Arabic', allocated: 2000, used: 1400 },
+  { locale: 'bn', name: 'Bengali', allocated: 1200, used: 850 },
+  { locale: 'ca', name: 'Catalan', allocated: 800, used: 320 },
+  { locale: 'zh', name: 'Chinese', allocated: 3000, used: 2700 },
+  { locale: 'cs', name: 'Czech', allocated: 900, used: 540 },
+  { locale: 'da', name: 'Danish', allocated: 750, used: 600 },
+  { locale: 'nl', name: 'Dutch', allocated: 1500, used: 1050 },
+  { locale: 'en', name: 'English', allocated: 5000, used: 4200 },
+  { locale: 'fi', name: 'Finnish', allocated: 600, used: 210 },
+  { locale: 'fr', name: 'French', allocated: 1500, used: 1020 },
+  { locale: 'de', name: 'German', allocated: 1800, used: 1260 },
+  { locale: 'el', name: 'Greek', allocated: 700, used: 490 },
+  { locale: 'he', name: 'Hebrew', allocated: 650, used: 300 },
+  { locale: 'hi', name: 'Hindi', allocated: 2200, used: 1980 },
+  { locale: 'hu', name: 'Hungarian', allocated: 850, used: 400 },
+  { locale: 'id', name: 'Indonesian', allocated: 1100, used: 700 },
+  { locale: 'it', name: 'Italian', allocated: 1300, used: 900 },
+  { locale: 'ja', name: 'Japanese', allocated: 1600, used: 1500 },
+  { locale: 'ko', name: 'Korean', allocated: 1000, used: 650 },
+  { locale: 'ms', name: 'Malay', allocated: 500, used: 150 },
+  { locale: 'no', name: 'Norwegian', allocated: 600, used: 300 },
+  { locale: 'pl', name: 'Polish', allocated: 950, used: 600 },
+  { locale: 'pt', name: 'Portuguese', allocated: 1400, used: 1000 },
+  { locale: 'ro', name: 'Romanian', allocated: 700, used: 350 },
+  { locale: 'ru', name: 'Russian', allocated: 1700, used: 1100 },
+  { locale: 'sr', name: 'Serbian', allocated: 550, used: 200 },
+  { locale: 'sk', name: 'Slovak', allocated: 600, used: 250 },
+  { locale: 'es', name: 'Spanish', allocated: 4500, used: 3200 },
+  { locale: 'sw', name: 'Swahili', allocated: 400, used: 100 },
+  { locale: 'sv', name: 'Swedish', allocated: 800, used: 500 },
+  { locale: 'th', name: 'Thai', allocated: 900, used: 700 },
+  { locale: 'tr', name: 'Turkish', allocated: 1200, used: 800 },
+  { locale: 'uk', name: 'Ukrainian', allocated: 1000, used: 600 },
+  { locale: 'vi', name: 'Vietnamese', allocated: 1100, used: 750 },
+  { locale: 'zu', name: 'Zulu', allocated: 300, used: 80 },
+  { locale: 'am', name: 'Amharic', allocated: 450, used: 200 },
+];
+
+export const mockDailyTokenUsage: DailyTokenUsage[] = [
+  { day: 'Mon', tokens: 178 },
+  { day: 'Tue', tokens: 426 },
+  { day: 'Wed', tokens: 658 },
+  { day: 'Thu', tokens: 832 },
+  { day: 'Fri', tokens: 581 },
+  { day: 'Sat', tokens: 329 },
+  { day: 'Sun', tokens: 756 },
+];
+
+export const mockTokenTransactions: TokenTransaction[] = [
+  {
+    date: '12 Mar 2026',
+    action: 'Translate document',
+    sourceLanguage: 'English',
+    targetLanguage: 'Spanish',
+    blocks: 48,
+    tokensUsed: 1200,
+  },
+  {
+    date: '11 Mar 2026',
+    action: 'Batch translate',
+    sourceLanguage: 'French',
+    targetLanguage: 'German',
+    blocks: 12,
+    tokensUsed: 360,
+  },
+  {
+    date: '10 Mar 2026',
+    action: 'Translate article',
+    sourceLanguage: 'English',
+    targetLanguage: 'Japanese',
+    blocks: 27,
+    tokensUsed: 810,
+  },
+  {
+    date: '09 Mar 2026',
+    action: 'Translate product copy',
+    sourceLanguage: 'English',
+    targetLanguage: 'Portuguese',
+    blocks: 18,
+    tokensUsed: 540,
+  },
+  {
+    date: '08 Mar 2026',
+    action: 'Translate support email',
+    sourceLanguage: 'English',
+    targetLanguage: 'Spanish',
+    blocks: 6,
+    tokensUsed: 180,
+  },
+  {
+    date: '07 Mar 2026',
+    action: 'Translate landing page',
+    sourceLanguage: 'English',
+    targetLanguage: 'French',
+    blocks: 34,
+    tokensUsed: 1020,
+  },
+];
+
+export const mockTokenTransactionsLarge: TokenTransaction[] = Array.from(
+  { length: 24 },
+  (_, index) => {
+    const template = mockTokenTransactions[index % mockTokenTransactions.length];
+    const date = new Date(2026, 2, 12);
+    date.setDate(date.getDate() - index);
+
+    return {
+      ...template,
+      date: date.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      }),
+    };
+  },
+);
