@@ -13,7 +13,7 @@
 
     <div
       v-if="jobs.length > 0 && !minimized"
-      class="fixed bottom-32 right-6 z-40 w-96 rounded-2xl border border-gray-200 bg-white p-5 shadow-xl"
+      class="fixed bottom-32 right-6 z-40 w-[480px] rounded-2xl border border-gray-200 bg-white p-5 shadow-xl"
     >
       <div class="relative flex items-center justify-center">
         <h2 class="text-center font-dmsans text-base font-semibold text-black">
