@@ -40,7 +40,7 @@
           <div class="flex items-center gap-3">
             <span
               v-if="job.status === 'pending' || job.status === 'processing'"
-              class="flex size-12 items-center justify-center"
+              class="flex size-12 shrink-0 items-center justify-center"
             >
               <LoaderCircle
                 class="size-6 animate-spin text-studio-forest"
@@ -49,13 +49,13 @@
             </span>
             <span
               v-else-if="job.status === 'complete'"
-              class="flex size-12 items-center justify-center rounded-full bg-studio-lime"
+              class="flex size-12 shrink-0 items-center justify-center rounded-full bg-studio-lime"
             >
               <Check class="size-6 text-studio-forest" aria-hidden="true" />
             </span>
             <span
               v-else
-              class="flex size-12 items-center justify-center rounded-full bg-red-100"
+              class="flex size-12 shrink-0 items-center justify-center rounded-full bg-red-100"
             >
               <XCircle class="size-6 text-red-600" aria-hidden="true" />
             </span>
@@ -82,7 +82,7 @@
           <a
             v-if="job.chapterNumber !== null && job.draftId !== currentDraftId"
             :href="editUrl(job)"
-            class="inline-flex items-center justify-center rounded-full border border-studio-forest px-6 py-3 font-dmsans text-[15px] font-semibold text-studio-forest transition-colors hover:bg-gray-300"
+            class="inline-flex shrink-0 items-center justify-center rounded-full border border-studio-forest px-6 py-3 font-dmsans text-[15px] font-semibold text-studio-forest transition-colors hover:bg-gray-300"
           >
             Open
           </a>
