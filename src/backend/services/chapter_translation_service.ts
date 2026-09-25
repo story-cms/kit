@@ -4,10 +4,13 @@ import type {
   ChapterContentItem,
   StandardChapterBundle,
 } from '../../types.js';
-import { AiService, type TranslationSource } from './ai_service.js';
+import type { TranslationSource } from './ai_service.js';
+import { getAiService } from './ai_service_factory.js';
+import { getTokenBalance } from './token_balance.js';
 import TokenUsage from '../models/token_usage.js';
-import TokenTopUp from '../models/token_top_up.js';
 import TranslationJob from '../models/translation_job.js';
+
+export { setMockAiService, resetAiService } from './ai_service_factory.js';
 
 interface TranslatedChapterContent {
   title: string;
@@ -19,20 +22,7 @@ interface TranslationContext {
   storyId: number;
   draftId: number;
   translationJobId: number;
-}
-
-let aiServiceFactory: () => AiService = () => new AiService();
-
-// Test seam, mirroring #services/cms's setMockCms/resetCms: swaps the
-// AiService instance ChapterTranslationService talks to, so tests can
-// exercise translate() (and anything that calls it, like the
-// TranslateChapter job) without hitting the real OpenAI API.
-export function setMockAiService(factory: () => AiService) {
-  aiServiceFactory = factory;
-}
-
-export function resetAiService() {
-  aiServiceFactory = () => new AiService();
+  sourceLocale: string;
 }
 
 const TITLE_ID = 'title';
@@ -92,33 +82,24 @@ export default class ChapterTranslationService {
     return translationSources;
   }
 
-  // A locale's balance is global across every story translated into it: sum of
-  // everything topped up, minus sum of everything actually used, minus the
-  // estimated cost of every other job still pending/processing for that locale.
-  // That last part is what stops two concurrent translations from both seeing
-  // a "sufficient" balance and jointly overspending it before either finishes.
+  // A locale's balance is global across every story translated into it: its
+  // allocated tokens minus everything actually used (see getTokenBalance,
+  // shared with TokenService so both compute this identically), minus the
+  // estimated cost of every other job still pending/processing for that
+  // locale. That last part is what stops two concurrent translations from
+  // both seeing a "sufficient" balance and jointly overspending it before
+  // either finishes.
   private async getBalance(locale: string): Promise<number> {
-    const topUpResult = await TokenTopUp.query()
-      .where('locale', locale)
-      .sum('tokens as total')
-      .first();
-    const usageResult = await TokenUsage.query()
-      .where('locale', locale)
-      .sum('input_tokens as inputTotal')
-      .sum('output_tokens as outputTotal')
-      .first();
+    const balance = await getTokenBalance(locale);
     const reservedResult = await TranslationJob.query()
       .where('locale', locale)
       .whereIn('status', ['pending', 'processing'])
       .sum('estimated_tokens as total')
       .first();
 
-    const toppedUp = Number(topUpResult?.$extras.total ?? 0);
-    const inputUsed = Number(usageResult?.$extras.inputTotal ?? 0);
-    const outputUsed = Number(usageResult?.$extras.outputTotal ?? 0);
     const reserved = Number(reservedResult?.$extras.total ?? 0);
 
-    return toppedUp - inputUsed - outputUsed - reserved;
+    return balance - reserved;
   }
 
   public async estimate(
@@ -126,7 +107,7 @@ export default class ChapterTranslationService {
     targetLocale: string,
   ): Promise<{ inputTokens: number; outputTokens: number; balance: number }> {
     const translationSources = this.buildTranslationSources(source);
-    const { inputTokens, outputTokens } = aiServiceFactory().estimateTokens({
+    const { inputTokens, outputTokens } = getAiService().estimateTokens({
       outputLocales: [targetLocale],
       translationSources,
     });
@@ -142,7 +123,7 @@ export default class ChapterTranslationService {
   ): Promise<TranslatedChapterContent> {
     const translationSources = this.buildTranslationSources(source);
 
-    const { output, usage } = await aiServiceFactory().translate({
+    const { output, usage } = await getAiService().translate({
       outputLocales: [targetLocale],
       translationSources,
     });
@@ -155,6 +136,9 @@ export default class ChapterTranslationService {
         translationJobId: context.translationJobId,
         inputTokens: usage.inputTokens,
         outputTokens: usage.outputTokens,
+        action: `Translated "${source.title?.trim() || 'Untitled chapter'}"`,
+        sourceLocale: context.sourceLocale,
+        blockCount: source.blocks.length,
       });
     } catch (error) {
       console.error(

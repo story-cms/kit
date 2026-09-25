@@ -5,7 +5,7 @@ import testUtils from '@adonisjs/core/services/test_utils';
 import { test } from '@japa/runner';
 import { Draft, DraftFactory, type StandardChapterBundle } from '@story-cms/kit';
 import TranslateChapter from '#jobs/translate_chapter';
-import { TranslationJob } from '@story-cms/kit';
+import { TokenUsage, TranslationJob } from '@story-cms/kit';
 import { setupMockAiService, cleanupMockAiService } from '#tests/helpers/ai_service_mock';
 
 function fakeContext() {
@@ -80,6 +80,15 @@ test.group('TranslateChapter job', (group) => {
     const bundle = updatedDraft.bundle as StandardChapterBundle;
     assert.equal(bundle.title, '[fr] Original title');
     assert.equal(bundle.description, '[fr] Original description');
+
+    const usage = await TokenUsage.query()
+      .where('translation_job_id', translationJob.id)
+      .first();
+    assert.isNotNull(usage);
+    assert.equal(usage?.locale, 'fr');
+    assert.equal(usage?.sourceLocale, 'en');
+    assert.equal(usage?.action, 'Translated "Original title"');
+    assert.equal(usage?.blockCount, 0);
   });
 
   test('failed() marks the job as failed', async ({ assert }) => {

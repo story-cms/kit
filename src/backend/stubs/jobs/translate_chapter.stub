@@ -9,6 +9,7 @@ import {
   TranslationJob,
   type StandardChapterBundle,
 } from '@story-cms/kit';
+import cms from '#services/cms';
 
 interface TranslateChapterPayload {
   translationJobId: number;
@@ -46,6 +47,7 @@ export default class TranslateChapter extends Job<TranslateChapterPayload> {
       storyId: this.payload.storyId,
       draftId,
       translationJobId,
+      sourceLocale: cms.sourceLocale,
     });
 
     draft.bundle = {

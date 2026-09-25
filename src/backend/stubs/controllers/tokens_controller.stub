@@ -1,0 +1,37 @@
+{{{
+  exports({ to: app.makePath('app/controllers/tokens_controller.ts') })
+}}}
+import type { HttpContext } from '@adonisjs/core/http';
+import { TokenService } from '@story-cms/kit';
+
+import cms from '#services/cms';
+
+export default class TokensController {
+  public async index(ctx: HttpContext) {
+    cms.localeFromPath(ctx);
+
+    const tokenService = new TokenService(cms);
+    const [poolTotal, pots, dailyUsage, transactions] = await Promise.all([
+      tokenService.poolTotal(),
+      tokenService.pots(),
+      tokenService.dailyUsage(),
+      tokenService.recentTransactions(),
+    ]);
+
+    // @ts-expect-error Inertia page name
+    return ctx.inertia.render('TokensIndex', { poolTotal, pots, dailyUsage, transactions });
+  }
+
+  public async allocate(ctx: HttpContext) {
+    cms.localeFromPath(ctx);
+
+    const delta = Number(ctx.request.input('delta'));
+    if (!Number.isFinite(delta)) {
+      return ctx.response.badRequest({ error: 'Invalid delta' });
+    }
+
+    await new TokenService(cms).allocate(ctx.params.languageLocale, delta, ctx.auth.user!.id);
+
+    return ctx.response.redirect().back();
+  }
+}

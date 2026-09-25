@@ -125,6 +125,7 @@ import type {
   TokenTransaction,
 } from '../../../types';
 import { useSharedStore } from '../../store';
+import { postWithPayload } from '../../shared/post-with-payload';
 import { potFieldValue } from './tokens';
 
 const props = defineProps<
@@ -143,7 +144,7 @@ shared.setCurrentStoryName('');
 const STEP = 100;
 const itemsPerPage = 12;
 
-const pots = ref<TokenPot[]>([...props.pots]);
+const pots = computed(() => props.pots);
 const poolTotal = computed(() => props.poolTotal);
 
 const allocatedTotal = computed(() =>
@@ -189,18 +190,10 @@ const onPageChange = (page: number) => {
 };
 
 const adjustAllocation = (pot: TokenPot, delta: number) => {
-  const index = pots.value.findIndex((item) => item.locale === pot.locale);
-  if (index === -1) return;
-
-  const current = pots.value[index];
-  const poolRemaining = Math.max(poolTotal.value - allocatedTotal.value, 0);
-  const nextAllocated =
-    delta > 0
-      ? current.allocated + Math.min(delta, poolRemaining)
-      : Math.max(current.used, current.allocated + delta);
-
-  pots.value = pots.value.map((item, i) =>
-    i === index ? { ...item, allocated: nextAllocated } : item,
+  postWithPayload(
+    `/${shared.locale}/settings/tokens/${pot.locale}/allocate`,
+    { delta },
+    { failureMessage: 'Could not update allocation' },
   );
 };
 </script>

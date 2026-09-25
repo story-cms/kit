@@ -4,7 +4,7 @@
 import testUtils from '@adonisjs/core/services/test_utils';
 import { test } from '@japa/runner';
 import type { StandardChapterBundle } from '@story-cms/kit';
-import { DraftFactory, TokenTopUp, TranslationJob, UserFactory } from '@story-cms/kit';
+import { Allocation, DraftFactory, TranslationJob, UserFactory } from '@story-cms/kit';
 import { setupMockCms, cleanupMockCms } from '#tests/helpers/cms_mock';
 import { seedTestStory } from '#tests/helpers/story_test_helper';
 
@@ -33,7 +33,7 @@ test.group('DraftsController translation endpoints', (group) => {
       number: 1,
       locale: 'en',
     }).create();
-    await TokenTopUp.create({ locale: 'fr', tokens: 1000, userId: user.id });
+    await Allocation.create({ locale: 'fr', tokens: 1000, userId: user.id });
 
     const response = await client
       .post(`/en/story/1/draft/${draft.id}/estimate-translation`)
@@ -76,7 +76,7 @@ test.group('DraftsController translation endpoints', (group) => {
       number: 1,
       locale: 'en',
     }).create();
-    await TokenTopUp.create({ locale: 'fr', tokens: 1_000_000, userId: user.id });
+    await Allocation.create({ locale: 'fr', tokens: 1_000_000, userId: user.id });
 
     const response = await client
       .post(`/en/story/1/draft/${draft.id}/auto-translate`)

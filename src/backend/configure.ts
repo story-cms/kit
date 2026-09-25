@@ -48,6 +48,7 @@ async function addMigrations(command: Configure, codemods: Codemods) {
     'translation_jobs',
     'token_usages',
     'token_top_ups',
+    'allocations',
     'queue',
   ];
 
@@ -127,6 +128,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'controllers/stories_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/users_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/settings_controller.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'controllers/tokens_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/locale_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/health_controller.stub', {});
 
@@ -134,6 +136,7 @@ export async function configure(command: Configure) {
 
   await codemods.makeUsingStub(stubsRoot, 'routes/users.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/settings.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'routes/tokens.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/auth.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/health.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/routes.stub', {});
@@ -182,8 +185,11 @@ export async function configure(command: Configure) {
     'tests/functional/chapter_translation_service.stub',
     {},
   );
+  await codemods.makeUsingStub(stubsRoot, 'tests/functional/tokens_api.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'tests/functional/ui_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/helpers/ai_service_mock.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/ui_service.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'tests/unit/token_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/invitation_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/page_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/resource_service.stub', {});

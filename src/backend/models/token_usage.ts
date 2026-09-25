@@ -6,10 +6,10 @@ export default class TokenUsage extends BaseModel {
   declare id: number;
 
   @column()
-  declare storyId: number;
+  declare storyId: number | null;
 
   @column()
-  declare draftId: number;
+  declare draftId: number | null;
 
   @column()
   declare locale: string;
@@ -22,6 +22,15 @@ export default class TokenUsage extends BaseModel {
 
   @column()
   declare outputTokens: number;
+
+  @column()
+  declare action: string | null;
+
+  @column()
+  declare sourceLocale: string | null;
+
+  @column()
+  declare blockCount: number | null;
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime;

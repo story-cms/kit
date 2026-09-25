@@ -5,8 +5,8 @@ import testUtils from '@adonisjs/core/services/test_utils';
 import { test } from '@japa/runner';
 import type { StandardChapterBundle } from '@story-cms/kit';
 import {
+  Allocation,
   ChapterTranslationService,
-  TokenTopUp,
   TokenUsage,
   TranslationJob,
 } from '@story-cms/kit';
@@ -30,7 +30,7 @@ test.group('ChapterTranslationService.getBalance (via estimate)', (group) => {
   group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
 
   test('balance is top-ups minus actual usage for that locale', async ({ assert }) => {
-    await TokenTopUp.create({ locale: 'fr', tokens: 1000, userId: 1 });
+    await Allocation.create({ locale: 'fr', tokens: 1000, userId: 1 });
     await TokenUsage.create({
       storyId: 1,
       draftId: 1,
@@ -46,8 +46,8 @@ test.group('ChapterTranslationService.getBalance (via estimate)', (group) => {
   test('top-ups and usage for other locales do not affect this locale', async ({
     assert,
   }) => {
-    await TokenTopUp.create({ locale: 'fr', tokens: 1000, userId: 1 });
-    await TokenTopUp.create({ locale: 'de', tokens: 5000, userId: 1 });
+    await Allocation.create({ locale: 'fr', tokens: 1000, userId: 1 });
+    await Allocation.create({ locale: 'de', tokens: 5000, userId: 1 });
     await TokenUsage.create({
       storyId: 1,
       draftId: 1,
@@ -63,7 +63,7 @@ test.group('ChapterTranslationService.getBalance (via estimate)', (group) => {
   test('a pending job reserves its estimated tokens against the balance', async ({
     assert,
   }) => {
-    await TokenTopUp.create({ locale: 'fr', tokens: 1000, userId: 1 });
+    await Allocation.create({ locale: 'fr', tokens: 1000, userId: 1 });
     await TranslationJob.create({
       storyId: 1,
       draftId: 1,
@@ -78,7 +78,7 @@ test.group('ChapterTranslationService.getBalance (via estimate)', (group) => {
   });
 
   test('a processing job also reserves its estimated tokens', async ({ assert }) => {
-    await TokenTopUp.create({ locale: 'fr', tokens: 1000, userId: 1 });
+    await Allocation.create({ locale: 'fr', tokens: 1000, userId: 1 });
     await TranslationJob.create({
       storyId: 1,
       draftId: 1,
@@ -93,7 +93,7 @@ test.group('ChapterTranslationService.getBalance (via estimate)', (group) => {
   });
 
   test('complete and failed jobs no longer reserve tokens', async ({ assert }) => {
-    await TokenTopUp.create({ locale: 'fr', tokens: 1000, userId: 1 });
+    await Allocation.create({ locale: 'fr', tokens: 1000, userId: 1 });
     await TranslationJob.create({
       storyId: 1,
       draftId: 1,
@@ -119,7 +119,7 @@ test.group('ChapterTranslationService.getBalance (via estimate)', (group) => {
   test('multiple concurrent pending jobs stack their reservations', async ({
     assert,
   }) => {
-    await TokenTopUp.create({ locale: 'fr', tokens: 1000, userId: 1 });
+    await Allocation.create({ locale: 'fr', tokens: 1000, userId: 1 });
     await TranslationJob.create({
       storyId: 1,
       draftId: 1,

@@ -2,9 +2,12 @@ import axios from 'axios';
 import db from '@adonisjs/lucid/services/db';
 import Ui from '../models/ui.js';
 import UiAttribute from '../models/ui_attribute.js';
-import { AiService } from './ai_service.js';
+import TokenUsage from '../models/token_usage.js';
+import type { TranslationInput } from './ai_service.js';
+import { getAiService } from './ai_service_factory.js';
 import { inject } from '@adonisjs/core';
 import { CmsService } from './cms_service.js';
+import { TokenService } from './token_service.js';
 
 @inject()
 export class UiService {
@@ -14,19 +17,33 @@ export class UiService {
     this.sourceLocale = cms.sourceLocale;
   }
 
+  public async estimateFillMissing(
+    locale: string,
+  ): Promise<{ inputTokens: number; outputTokens: number; balance: number }> {
+    const missing = await this.missingItems(locale);
+    const aiService = getAiService();
+    const { inputTokens, outputTokens } = aiService.estimateTokens({
+      outputLocales: [locale],
+      translationSources: missing,
+    });
+    const balance = await new TokenService(this.cms).getBalance(locale);
+
+    return { inputTokens, outputTokens, balance };
+  }
+
   public async fillMissing(locale: string): Promise<number> {
     let fillCount = 0;
 
     const missing = await this.missingItems(locale);
     if (missing.length === 0) return fillCount;
 
-    const aiService = new AiService();
+    const aiService = getAiService();
     const input = {
       outputLocales: [locale],
       translationSources: missing,
     };
 
-    const { output: result } = await aiService.translate(input);
+    const { output: result, usage } = await aiService.translate(input);
     if (!result[locale] || result[locale].length === 0) return fillCount;
 
     // persist the result
@@ -48,6 +65,19 @@ export class UiService {
       const ui = await Ui.createMany(fresh);
       fillCount = ui.length;
     });
+
+    try {
+      await TokenUsage.create({
+        locale,
+        action: 'Batch translate',
+        sourceLocale: this.sourceLocale,
+        blockCount: missing.length,
+        inputTokens: usage.inputTokens,
+        outputTokens: usage.outputTokens,
+      });
+    } catch (error) {
+      console.error('UiService.fillMissing: failed to log token usage', error);
+    }
 
     return fillCount;
   }
@@ -119,17 +149,19 @@ export class UiService {
     return missing;
   }
 
-  public async suggest(locale: string, key: string): Promise<string> {
+  private async buildSuggestInput(
+    locale: string,
+    key: string,
+  ): Promise<TranslationInput | null> {
     const source = await Ui.query()
       .where('locale', this.sourceLocale)
       .where('key', key)
       .first();
-    if (!source) return '';
+    if (!source) return null;
 
     const attribute = await UiAttribute.query().where('key', key).first();
 
-    const aiService = new AiService();
-    const input = {
+    return {
       outputLocales: [locale],
       translationSources: [
         {
@@ -140,7 +172,42 @@ export class UiService {
         },
       ],
     };
-    const { output: result } = await aiService.translate(input);
+  }
+
+  public async estimateSuggest(
+    locale: string,
+    key: string,
+  ): Promise<{ inputTokens: number; outputTokens: number; balance: number } | null> {
+    const input = await this.buildSuggestInput(locale, key);
+    if (!input) return null;
+
+    const aiService = getAiService();
+    const { inputTokens, outputTokens } = aiService.estimateTokens(input);
+    const balance = await new TokenService(this.cms).getBalance(locale);
+
+    return { inputTokens, outputTokens, balance };
+  }
+
+  public async suggest(locale: string, key: string): Promise<string> {
+    const input = await this.buildSuggestInput(locale, key);
+    if (!input) return '';
+
+    const aiService = getAiService();
+    const { output: result, usage } = await aiService.translate(input);
+
+    try {
+      await TokenUsage.create({
+        locale,
+        action: `Translate UI string: ${key}`,
+        sourceLocale: this.sourceLocale,
+        blockCount: 1,
+        inputTokens: usage.inputTokens,
+        outputTokens: usage.outputTokens,
+      });
+    } catch (error) {
+      console.error('UiService.suggest: failed to log token usage', error);
+    }
+
     return result[locale][0].text;
   }
 

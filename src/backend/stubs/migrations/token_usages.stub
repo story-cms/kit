@@ -12,8 +12,16 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id');
 
-      table.integer('story_id').unsigned().notNullable();
-      table.integer('draft_id').unsigned().notNullable();
+      table
+        .integer('story_id')
+        .unsigned()
+        .nullable()
+        .comment('null for usage not tied to a story/draft, e.g. UI-string translation');
+      table
+        .integer('draft_id')
+        .unsigned()
+        .nullable()
+        .comment('null for usage not tied to a story/draft, e.g. UI-string translation');
       table
         .string('locale', 15)
         .notNullable()
@@ -26,6 +34,20 @@ export default class extends BaseSchema {
 
       table.integer('input_tokens').unsigned().notNullable();
       table.integer('output_tokens').unsigned().notNullable();
+
+      table
+        .string('action')
+        .nullable()
+        .comment('human-readable label for what triggered this usage');
+      table
+        .string('source_locale', 15)
+        .nullable()
+        .comment('IETF BCP 47 locale the source content was written in');
+      table
+        .integer('block_count')
+        .unsigned()
+        .nullable()
+        .comment('number of chapter blocks or UI strings translated in this usage event');
 
       table.timestamp('created_at', { useTz: true });
       table.timestamp('updated_at', { useTz: true });
