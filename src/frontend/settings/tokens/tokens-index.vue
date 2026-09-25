@@ -1,5 +1,8 @@
 <template>
   <AppLayout title="Settings" subtitle="Manage your AI tokens">
+    <template #controls>
+      <SettingsTabNav active="tokens" />
+    </template>
     <template #main>
       <section class="rounded-xl bg-white p-6 shadow-sm">
         <div class="flex flex-wrap items-start justify-between gap-6 pb-4">
@@ -112,6 +115,7 @@
 import { computed, ref, watch } from 'vue';
 import AppLayout from '../../shared/app-layout.vue';
 import Pagination from '../../shared/pagination.vue';
+import SettingsTabNav from '../../shared/settings-tab-nav.vue';
 import TokenPoolSummary from './components/token-pool-summary.vue';
 import TokenPotFilter from './components/token-pot-filter.vue';
 import TokenPotCard from './components/token-pot-card.vue';

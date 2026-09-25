@@ -9,6 +9,7 @@
       />
     </template>
     <template #controls>
+      <SettingsTabNav active="languages" class="pb-6" />
       <div class="flex items-center justify-between pb-4">
         <div>
           <h3 class="text-xl/7 font-semibold leading-7 text-gray-800">Languages</h3>
@@ -60,6 +61,7 @@ import type { RequestPayload } from '@inertiajs/core';
 import AppLayout from '../shared/app-layout.vue';
 import { Plus } from '@lucide/vue';
 import StudioButton from '../shared/studio-button.vue';
+import SettingsTabNav from '../shared/settings-tab-nav.vue';
 import LanguagesTable from './languages/components/language-table.vue';
 import RequestAppUpdateModal from './languages/components/request-app-update-modal.vue';
 import RequestFeedbackModal from './languages/components/request-feedback-modal.vue';
