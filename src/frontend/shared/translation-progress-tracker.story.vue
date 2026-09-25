@@ -36,6 +36,46 @@
         <TranslationProgressTrackerCard :jobs="[]" @undo="() => {}" />
       </div>
     </Variant>
+    <Variant title="Long titles, Open button on the first job">
+      <div class="relative h-96 w-full">
+        <p class="text-sm text-gray-500">
+          Both chapter titles are long enough to wrap to multiple lines — the status icon
+          must stay a perfect circle whether or not that row's Open button is showing.
+        </p>
+        <TranslationProgressTrackerCard
+          :jobs="longTitleJobsComplete"
+          :current-draft-id="102"
+          @undo="onUndo(longTitleJobsComplete, $event)"
+        />
+      </div>
+    </Variant>
+    <Variant title="Long titles, Open button on the second job">
+      <div class="relative h-96 w-full">
+        <TranslationProgressTrackerCard
+          :jobs="longTitleJobsComplete"
+          :current-draft-id="101"
+          @undo="onUndo(longTitleJobsComplete, $event)"
+        />
+      </div>
+    </Variant>
+    <Variant title="Long titles, both jobs show Open">
+      <div class="relative h-96 w-full">
+        <TranslationProgressTrackerCard
+          :jobs="longTitleJobsComplete"
+          :current-draft-id="999"
+          @undo="onUndo(longTitleJobsComplete, $event)"
+        />
+      </div>
+    </Variant>
+    <Variant title="Long titles, in progress">
+      <div class="relative h-96 w-full">
+        <TranslationProgressTrackerCard
+          :jobs="longTitleJobsProcessing"
+          :current-draft-id="101"
+          @undo="onUndo(longTitleJobsProcessing, $event)"
+        />
+      </div>
+    </Variant>
   </Story>
 </template>
 
@@ -117,6 +157,60 @@ const inProgressJobs = reactive<TranslationJob[]>([
     localeName: 'Spanish',
     chapterTitle: 'Living Water',
     status: 'pending',
+    canUndo: false,
+    actualTokens: null,
+  },
+]);
+
+const longTitleJobsComplete = reactive<TranslationJob[]>([
+  {
+    id: 101,
+    storyId: 1,
+    draftId: 101,
+    chapterNumber: 1,
+    locale: 'it',
+    localeName: 'Italian: Italiano',
+    chapterTitle: 'Depending on God rather than ourselves',
+    status: 'complete',
+    canUndo: true,
+    actualTokens: 842,
+  },
+  {
+    id: 102,
+    storyId: 1,
+    draftId: 102,
+    chapterNumber: 2,
+    locale: 'it',
+    localeName: 'Italian: Italiano',
+    chapterTitle: 'Walking faithfully through seasons of uncertainty',
+    status: 'complete',
+    canUndo: true,
+    actualTokens: 613,
+  },
+]);
+
+const longTitleJobsProcessing = reactive<TranslationJob[]>([
+  {
+    id: 103,
+    storyId: 1,
+    draftId: 101,
+    chapterNumber: 1,
+    locale: 'it',
+    localeName: 'Italian: Italiano',
+    chapterTitle: 'Depending on God rather than ourselves',
+    status: 'processing',
+    canUndo: false,
+    actualTokens: null,
+  },
+  {
+    id: 104,
+    storyId: 1,
+    draftId: 102,
+    chapterNumber: 2,
+    locale: 'it',
+    localeName: 'Italian: Italiano',
+    chapterTitle: 'Walking faithfully through seasons of uncertainty',
+    status: 'processing',
     canUndo: false,
     actualTokens: null,
   },
