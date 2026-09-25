@@ -4,7 +4,9 @@
       <SettingsTabNav active="tokens" />
     </template>
     <template #main>
-      <section class="rounded-xl bg-white p-6 shadow-sm">
+      <TokenPlanSummary @buy-tokens="showBuyTokensModal = true" />
+
+      <section class="mt-6 rounded-xl bg-white p-6 shadow-sm">
         <div class="flex flex-wrap items-start justify-between gap-6 pb-4">
           <div>
             <h3 class="text-xl/7 font-semibold leading-7 text-gray-800">
@@ -107,6 +109,19 @@
 
         <TokenTransactionTable :transactions="transactions" />
       </section>
+
+      <BuyTokensModal
+        :open="showBuyTokensModal"
+        @close="showBuyTokensModal = false"
+        @confirm="handleBuyTokensConfirm"
+      />
+
+      <RequestFeedbackModal
+        :open="showFeedbackModal"
+        :variant="feedbackModalVariant"
+        :contact-email="props.config.supportEmail ?? 'ops@startjourneys.io'"
+        @close="showFeedbackModal = false"
+      />
     </template>
   </AppLayout>
 </template>
@@ -116,6 +131,9 @@ import { computed, ref, watch } from 'vue';
 import AppLayout from '../../shared/app-layout.vue';
 import Pagination from '../../shared/pagination.vue';
 import SettingsTabNav from '../../shared/settings-tab-nav.vue';
+import RequestFeedbackModal from '../languages/components/request-feedback-modal.vue';
+import TokenPlanSummary from './components/token-plan-summary.vue';
+import BuyTokensModal from './components/buy-tokens-modal.vue';
 import TokenPoolSummary from './components/token-pool-summary.vue';
 import TokenPotFilter from './components/token-pot-filter.vue';
 import TokenPotCard from './components/token-pot-card.vue';
@@ -198,6 +216,27 @@ const adjustAllocation = (pot: TokenPot, delta: number) => {
     `/${shared.locale}/settings/tokens/${pot.locale}/allocate`,
     { delta },
     { failureMessage: 'Could not update allocation' },
+  );
+};
+
+const showBuyTokensModal = ref(false);
+const showFeedbackModal = ref(false);
+const feedbackModalVariant = ref<'success' | 'error'>('success');
+
+const handleBuyTokensConfirm = () => {
+  postWithPayload(
+    `/${shared.locale}/settings/support`,
+    { supportCode: 'BUY_TOKENS' },
+    {
+      onSuccess: () => {
+        feedbackModalVariant.value = 'success';
+        showFeedbackModal.value = true;
+      },
+      onError: () => {
+        feedbackModalVariant.value = 'error';
+        showFeedbackModal.value = true;
+      },
+    },
   );
 };
 </script>

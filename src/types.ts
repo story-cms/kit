@@ -933,7 +933,7 @@ export interface LanguageListItemProps {
 }
 
 export type SupportCode =
-  'REMOVE_LANGUAGE' | 'UPDATE_LANGUAGE' | 'UPDATE_CONTENT' | 'UPDATE_APP';
+  'REMOVE_LANGUAGE' | 'UPDATE_LANGUAGE' | 'UPDATE_CONTENT' | 'UPDATE_APP' | 'BUY_TOKENS';
 
 export interface SupportRequest {
   supportCode: SupportCode;

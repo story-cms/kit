@@ -5,6 +5,7 @@ import type { HttpContext } from '@adonisjs/core/http';
 import mail from '@adonisjs/mail/services/main';
 import {
   LanguageService,
+  SupportRequestService,
   type LanguageSpecification,
   type SettingsPageProps,
   type UserInterface,
@@ -114,7 +115,7 @@ export default class SettingsController {
     }
 
     try {
-      const { subject, details, language } = new LanguageService(
+      const { subject, details, language } = new SupportRequestService(
         cms,
       ).getSupportRequestDetails(supportCode, removeLanguageCode);
 

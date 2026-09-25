@@ -1764,6 +1764,9 @@ export const config: UiConfig = {
     'invitation',
     'page',
     'resource',
+    'settings',
+    'languages-settings',
+    'tokens',
   ],
   supportEmail: 'support@startjourneys.io',
 };
