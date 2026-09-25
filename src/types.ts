@@ -856,6 +856,8 @@ export type Subscription =
   | 'invitation'
   | 'resource'
   | 'settings'
+  | 'languages-settings'
+  | 'tokens'
   | 'ui'
   | 'page';
 

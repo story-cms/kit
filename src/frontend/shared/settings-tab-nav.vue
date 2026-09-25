@@ -1,13 +1,19 @@
 <template>
   <div class="flex items-center gap-2">
     <TabButton
+      v-if="subscribed('languages-settings')"
       label="Languages"
       :is-active="active === 'languages'"
       @click="goTo('languages')"
     >
       <Languages class="size-4" aria-hidden="true" />
     </TabButton>
-    <TabButton label="AI tokens" :is-active="active === 'tokens'" @click="goTo('tokens')">
+    <TabButton
+      v-if="subscribed('tokens')"
+      label="AI tokens"
+      :is-active="active === 'tokens'"
+      @click="goTo('tokens')"
+    >
       <Sparkles class="size-4" aria-hidden="true" />
     </TabButton>
   </div>
@@ -18,12 +24,14 @@ import { router } from '@inertiajs/vue3';
 import { Languages, Sparkles } from '@lucide/vue';
 import TabButton from './tab-button.vue';
 import { useSharedStore } from '../store';
+import { useSidebarNav } from './use-sidebar-nav';
 
 const props = defineProps<{
   active: 'languages' | 'tokens';
 }>();
 
 const shared = useSharedStore();
+const { subscribed } = useSidebarNav();
 
 const routes: Record<'languages' | 'tokens', string> = {
   languages: 'settings',

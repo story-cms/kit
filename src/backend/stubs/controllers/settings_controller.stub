@@ -15,7 +15,14 @@ import providers from '#config/providers';
 
 export default class SettingsController {
   public async index(ctx: HttpContext) {
-    cms.localeFromPath(ctx);
+    const locale = cms.localeFromPath(ctx);
+
+    if (
+      !cms.config.subscriptions.includes('languages-settings') &&
+      cms.config.subscriptions.includes('tokens')
+    ) {
+      return ctx.response.redirect().toPath(`/${locale}/settings/tokens`);
+    }
 
     const languageService = new LanguageService(cms);
     const { sourceLanguage, languageItems } = await languageService.settingsIndex(

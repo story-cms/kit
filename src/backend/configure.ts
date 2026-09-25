@@ -186,6 +186,7 @@ export async function configure(command: Configure) {
     {},
   );
   await codemods.makeUsingStub(stubsRoot, 'tests/functional/tokens_api.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'tests/functional/settings_api.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/functional/ui_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/helpers/ai_service_mock.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/ui_service.stub', {});
