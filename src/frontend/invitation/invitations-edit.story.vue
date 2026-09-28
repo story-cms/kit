@@ -13,11 +13,27 @@
         :stats="stats"
       />
     </Variant>
+
+    <Variant title="Prefilled" :setup-app="miniSidebar">
+      <InvitationsEdit
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :errors="sharedProps.errors"
+        :bookmarks="sharedProps.bookmarks"
+        :bundle="invitationBundle"
+        :invitation="invitation"
+        :providers="{}"
+        :stats="stats"
+      />
+      <ModelControl :model="invitationBundle" />
+    </Variant>
   </Story>
 </template>
 
 <script setup lang="ts">
 import InvitationsEdit from './invitations-edit.vue';
+import ModelControl from '../test/model-control.vue';
 import type { InvitationBundle, InvitationMeta, InvitationStats } from '../../types';
 import { sharedProps, miniSidebar } from '../test/mocks';
 
@@ -33,6 +49,7 @@ const invitationBundle: InvitationBundle = {
   actionLabel: 'Donate',
   actionType: 'donate',
   actionUrl: 'https://www.google.com',
+  shareMessage: '',
   regions: 'CX, KE, UG, ZM',
 };
 

@@ -10,8 +10,9 @@ const draft = {
   title: vine.string().optional(),
   message: vine.string().optional(),
   actionLabel: vine.string().optional(),
-  actionType: vine.enum(['close', 'donate', 'externalUrl']).optional(),
+  actionType: vine.enum(['close', 'donate', 'externalUrl', 'share']).optional(),
   actionUrl: vine.string().optional(),
+  shareMessage: vine.string().optional(),
   regions: vine.string().optional(),
   isPublished: vine.boolean(),
 };
@@ -24,8 +25,9 @@ const live = {
   title: vine.string().trim().minLength(1).maxLength(58),
   message: vine.string().trim().minLength(1).maxLength(560),
   actionLabel: vine.string().trim().minLength(1).maxLength(66),
-  actionType: vine.enum(['close', 'donate', 'externalUrl']),
+  actionType: vine.enum(['close', 'donate', 'externalUrl', 'share']),
   actionUrl: vine.string().optional(),
+  shareMessage: vine.string().optional(),
   regions: vine.string().optional(),
   isPublished: vine.boolean(),
 };
@@ -33,11 +35,13 @@ const live = {
 export class InvitationValidator {
   protected isPublished: boolean;
   protected isExternalUrl: boolean;
+  protected isShare: boolean;
   protected hasVideoUrl: boolean;
 
   constructor(protected ctx: HttpContext) {
     this.isPublished = ctx.request.input('isPublished') === true;
     this.isExternalUrl = ctx.request.input('actionType') === 'externalUrl';
+    this.isShare = ctx.request.input('actionType') === 'share';
     const videoUrlInput = ctx.request.input('videoUrl');
     this.hasVideoUrl = typeof videoUrlInput === 'string' && videoUrlInput.trim() !== '';
   }
@@ -57,44 +61,30 @@ export class InvitationValidator {
       return vine.object(draft);
     }
 
+    const published: Record<string, SchemaTypes> = { ...live };
+
     if (this.isExternalUrl) {
-      const liveWithUrl = {
-        ...live,
-        actionUrl: vine.string().url({
-          require_protocol: true,
-          protocols: ['http', 'https'],
-        }),
-      };
-      if (this.hasVideoUrl) {
-        return vine.object({
-          ...liveWithUrl,
-          videoUrl: vine
-            .string()
-            .url({
-              require_protocol: true,
-              protocols: ['https'],
-            })
-            .endsWith('.mp4'),
-        });
-      }
-      return vine.object(liveWithUrl);
+      published.actionUrl = vine.string().url({
+        require_protocol: true,
+        protocols: ['http', 'https'],
+      });
+    }
+
+    if (this.isShare) {
+      published.shareMessage = vine.string().trim().minLength(1);
     }
 
     if (this.hasVideoUrl) {
-      const liveWithVideo = {
-        ...live,
-        videoUrl: vine
-          .string()
-          .url({
-            require_protocol: true,
-            protocols: ['https'],
-          })
-          .endsWith('.mp4'),
-      };
-      return vine.object(liveWithVideo);
+      published.videoUrl = vine
+        .string()
+        .url({
+          require_protocol: true,
+          protocols: ['https'],
+        })
+        .endsWith('.mp4');
     }
 
-    return vine.object(live);
+    return vine.object(published);
   }
 
   // Kept for backwards compatibility with existing tests/usages.
@@ -125,6 +115,9 @@ export const invitationErrorMessages = new SimpleMessagesProvider({
   'bundle.actionType.required': 'An action type is required',
   'bundle.actionUrl.required': 'An action URL is required',
   'bundle.actionUrl.url': 'The invitation needs a valid URL for the external action',
+  'bundle.shareMessage': 'Share message must be a string',
+  'bundle.shareMessage.required': 'A share message is required',
+  'bundle.shareMessage.minLength': 'A share message is required',
   'bundle.videoUrl.required': 'A video URL is required',
   'bundle.videoUrl.url': 'The invitation needs a valid URL for the video',
   'bundle.videoUrl.endsWith': 'The video URL must end with .mp4',

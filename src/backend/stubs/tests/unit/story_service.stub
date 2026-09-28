@@ -53,6 +53,19 @@ function createGalleryHttpContext(locale: string): HttpContext {
   } as unknown as HttpContext;
 }
 
+function createRawParamsHttpContext(params: Record<string, unknown>): HttpContext {
+  return {
+    params,
+    auth: {
+      use: () => ({
+        user: {
+          isAllowed: () => true,
+        },
+      }),
+    },
+  } as unknown as HttpContext;
+}
+
 function versionFor(storyId: number, locale: string): StoryVersion {
   return { apiVersion: 1, locale, storyId };
 }
@@ -103,6 +116,28 @@ test.group('Story service', (group) => {
     );
 
     assert.isUndefined(props);
+  });
+
+  test('editProps returns undefined for a non-numeric storyId instead of querying the database', async ({
+    assert,
+  }) => {
+    const service = new StoryService(testCmsConfig);
+    const props = await service.editProps(
+      createRawParamsHttpContext({ storyId: 'abc', locale: sourceLocale }),
+    );
+
+    assert.isUndefined(props);
+  });
+
+  test('parsePath returns story undefined for a non-numeric storyId instead of querying the database', async ({
+    assert,
+  }) => {
+    const service = new StoryService(testCmsConfig);
+    const { story } = await service.parsePath(
+      createRawParamsHttpContext({ storyId: 'abc', locale: sourceLocale }),
+    );
+
+    assert.isUndefined(story);
   });
 
   test('editProps labels bespoke templates with (custom) suffix', async ({ assert }) => {
