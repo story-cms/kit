@@ -33,6 +33,7 @@
         <TokenPotFilter
           v-model:threshold="filterThreshold"
           v-model:field="filterField"
+          v-model:search="filterSearch"
           class="mt-6"
           :matched-count="filteredPots.length"
         />
@@ -148,7 +149,7 @@ import type {
 } from '../../../types';
 import { useSharedStore } from '../../store';
 import { postWithPayload } from '../../shared/post-with-payload';
-import { potFieldValue } from './tokens';
+import { potFieldValue, potMatchesQuery } from './tokens';
 
 const props = defineProps<
   SharedPageProps & {
@@ -182,12 +183,22 @@ const transactions = computed(() => props.transactions);
 
 const filterThreshold = ref<number | null>(1000);
 const filterField = ref<TokenPotField>('remaining');
+const filterSearch = ref('');
 const currentPage = ref(1);
 
 const filteredPots = computed(() => {
-  if (filterThreshold.value === null) return pots.value;
-  const threshold = filterThreshold.value;
-  return pots.value.filter((pot) => potFieldValue(pot, filterField.value) < threshold);
+  let items = pots.value;
+
+  if (filterThreshold.value !== null) {
+    const threshold = filterThreshold.value;
+    items = items.filter((pot) => potFieldValue(pot, filterField.value) < threshold);
+  }
+
+  if (filterSearch.value) {
+    items = items.filter((pot) => potMatchesQuery(pot, filterSearch.value));
+  }
+
+  return items;
 });
 
 const startIndex = computed(() => (currentPage.value - 1) * itemsPerPage);
@@ -198,7 +209,7 @@ const pagedPots = computed(() =>
   filteredPots.value.slice(startIndex.value, endIndex.value),
 );
 
-watch([filterThreshold, filterField], () => {
+watch([filterThreshold, filterField, filterSearch], () => {
   currentPage.value = 1;
 });
 

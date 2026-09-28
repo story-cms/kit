@@ -12,3 +12,11 @@ export const isLowPot = (pot: TokenPot): boolean =>
 
 export const potFieldValue = (pot: TokenPot, field: TokenPotField): number =>
   field === 'remaining' ? potRemaining(pot) : pot[field];
+
+export const potMatchesQuery = (pot: TokenPot, query: string): boolean => {
+  const normalized = query.trim().toLowerCase();
+  if (!normalized) return true;
+  return (
+    pot.name.toLowerCase().includes(normalized) || pot.locale.toLowerCase().includes(normalized)
+  );
+};

@@ -68,14 +68,20 @@ export default () => {
     .post(':locale/story/:storyId/draft/:id/reject', [DraftsController, 'reject'])
     .where('storyId', router.matchers.number())
     .where('id', router.matchers.number());
-  router.post(':locale/story/:storyId/draft/:id/auto-translate', [
-    DraftsController,
-    'autoTranslate',
-  ]);
-  router.post(':locale/story/:storyId/draft/:id/estimate-translation', [
-    DraftsController,
-    'estimateTranslation',
-  ]);
+  router
+    .post(':locale/story/:storyId/draft/:id/auto-translate', [
+      DraftsController,
+      'autoTranslate',
+    ])
+    .where('storyId', router.matchers.number())
+    .where('id', router.matchers.number());
+  router
+    .post(':locale/story/:storyId/draft/:id/estimate-translation', [
+      DraftsController,
+      'estimateTranslation',
+    ])
+    .where('storyId', router.matchers.number())
+    .where('id', router.matchers.number());
 
   // translation jobs (background translation tracker)
   router.get(':locale/translation-jobs', [TranslationJobsController, 'index']);
