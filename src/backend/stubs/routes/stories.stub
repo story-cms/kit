@@ -41,26 +41,6 @@ export default () => {
     .where('number', router.matchers.number());
 
   // drafts
-  router.get(':locale/story/:storyId/draft/:number/edit', [DraftsController, 'edit']);
-  router.get(':locale/story/:storyId/draft/create', [DraftsController, 'create']);
-  router.delete(':locale/story/:storyId/draft/:id', [DraftsController, 'delete']);
-  router.post(':locale/story/:storyId/draft/:id/save', [DraftsController, 'save']);
-  router.post(':locale/story/:storyId/draft/:id/submit', [DraftsController, 'submit']);
-  router.post(':locale/story/:storyId/draft/:id/publish', [DraftsController, 'publish']);
-  router.post(':locale/story/:storyId/draft/:id/reject', [DraftsController, 'reject']);
-  router.post(':locale/story/:storyId/draft/:id/auto-translate', [
-    DraftsController,
-    'autoTranslate',
-  ]);
-  router.post(':locale/story/:storyId/draft/:id/estimate-translation', [
-    DraftsController,
-    'estimateTranslation',
-  ]);
-
-  // translation jobs (background translation tracker)
-  router.get(':locale/translation-jobs', [TranslationJobsController, 'index']);
-  router.delete(':locale/translation-jobs/:id', [TranslationJobsController, 'destroy']);
-  router.post(':locale/translation-jobs/:id/undo', [TranslationJobsController, 'undo']);
   router
     .get(':locale/story/:storyId/draft/:number/edit', [DraftsController, 'edit'])
     .where('storyId', router.matchers.number())
@@ -88,4 +68,17 @@ export default () => {
     .post(':locale/story/:storyId/draft/:id/reject', [DraftsController, 'reject'])
     .where('storyId', router.matchers.number())
     .where('id', router.matchers.number());
+  router.post(':locale/story/:storyId/draft/:id/auto-translate', [
+    DraftsController,
+    'autoTranslate',
+  ]);
+  router.post(':locale/story/:storyId/draft/:id/estimate-translation', [
+    DraftsController,
+    'estimateTranslation',
+  ]);
+
+  // translation jobs (background translation tracker)
+  router.get(':locale/translation-jobs', [TranslationJobsController, 'index']);
+  router.delete(':locale/translation-jobs/:id', [TranslationJobsController, 'destroy']);
+  router.post(':locale/translation-jobs/:id/undo', [TranslationJobsController, 'undo']);
 };
