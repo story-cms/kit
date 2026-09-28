@@ -1,6 +1,9 @@
 import { expect, test } from '@playwright/test';
 import type { ChapterBlock, StandardChapterBundle } from '../../src/types.js';
-import ChapterTranslationService from '../../src/backend/services/chapter_translation_service.js';
+import ChapterTranslationService, {
+  setMockAiService,
+  resetAiService,
+} from '../../src/backend/services/chapter_translation_service.js';
 
 function buildTranslationSources(source: StandardChapterBundle) {
   return (
@@ -64,6 +67,24 @@ test.describe('ChapterTranslationService.buildTranslationSources', () => {
     expect(sources).toContainEqual({ id: 'block:blk-1:subtitle', text: 'Block subtitle' });
   });
 
+  test("includes a title block's blockName with a block-scoped id", () => {
+    const titleBlock: ChapterBlock = {
+      id: 'blk-1',
+      kind: 'title',
+      blockName: 'Section One',
+      visibility,
+      title: 'Block title',
+      subtitle: 'Block subtitle',
+    };
+
+    const sources = buildTranslationSources(bundle({ blocks: [titleBlock] }));
+
+    expect(sources).toContainEqual({
+      id: 'block:blk-1:blockName',
+      text: 'Section One',
+    });
+  });
+
   test("omits a title block's subtitle when blank", () => {
     const titleBlock: ChapterBlock = {
       id: 'blk-1',
@@ -102,6 +123,32 @@ test.describe('ChapterTranslationService.buildTranslationSources', () => {
     expect(sources).toContainEqual({
       id: 'block:blk-2:item:item-1',
       text: 'Reflection text',
+    });
+  });
+
+  test("includes a content block's blockName and displayName with block-scoped ids", () => {
+    const contentBlock: ChapterBlock = {
+      id: 'blk-2',
+      kind: 'content',
+      blockName: 'Section Two',
+      visibility,
+      displayName: 'Morning Reflection',
+      blockRole: 'reflection',
+      style: 'primary',
+      leadersNotes: 'Notes for leaders',
+      showLeadersNotes: true,
+      items: [],
+    };
+
+    const sources = buildTranslationSources(bundle({ blocks: [contentBlock] }));
+
+    expect(sources).toContainEqual({
+      id: 'block:blk-2:blockName',
+      text: 'Section Two',
+    });
+    expect(sources).toContainEqual({
+      id: 'block:blk-2:displayName',
+      text: 'Morning Reflection',
     });
   });
 
@@ -250,10 +297,74 @@ test.describe('ChapterTranslationService.buildTranslationSources', () => {
     expect(sources.map((source) => source.id)).toEqual([
       'title',
       'description',
+      'block:blk-1:blockName',
       'block:blk-1:title',
       'block:blk-1:subtitle',
+      'block:blk-2:blockName',
+      'block:blk-2:displayName',
       'block:blk-2:leadersNotes',
       'block:blk-2:item:item-1',
     ]);
+  });
+});
+
+test.describe('ChapterTranslationService.translate', () => {
+  test.afterEach(() => {
+    resetAiService();
+  });
+
+  test('writes translated blockName and displayName back onto the returned blocks', async () => {
+    setMockAiService(
+      () =>
+        ({
+          translate: async (input: { outputLocales: string[]; translationSources: { id: string; text: string }[] }) => {
+            const output: Record<string, { id: string; text: string }[]> = {};
+            for (const locale of input.outputLocales) {
+              output[locale] = input.translationSources.map((source) => ({
+                id: source.id,
+                text: `[${locale}] ${source.text}`,
+              }));
+            }
+            return { output, usage: { inputTokens: 10, outputTokens: 10 } };
+          },
+        }) as unknown as import('../../src/backend/services/ai_service.js').AiService,
+    );
+
+    const titleBlock: ChapterBlock = {
+      id: 'blk-1',
+      kind: 'title',
+      blockName: 'Section One',
+      visibility,
+      title: 'Block title',
+      subtitle: 'Block subtitle',
+    };
+    const contentBlock: ChapterBlock = {
+      id: 'blk-2',
+      kind: 'content',
+      blockName: 'Section Two',
+      visibility,
+      displayName: 'Morning Reflection',
+      blockRole: 'reflection',
+      style: 'primary',
+      leadersNotes: 'Notes',
+      showLeadersNotes: false,
+      items: [],
+    };
+
+    const service = new ChapterTranslationService();
+    const result = await service.translate(
+      bundle({ blocks: [titleBlock, contentBlock] }),
+      'es',
+      { storyId: 1, draftId: 1, translationJobId: 1, sourceLocale: 'en' },
+    );
+
+    const translatedTitleBlock = result.blocks.find((block) => block.id === 'blk-1');
+    const translatedContentBlock = result.blocks.find((block) => block.id === 'blk-2');
+
+    expect(translatedTitleBlock?.blockName).toBe('[es] Section One');
+    expect(translatedContentBlock?.blockName).toBe('[es] Section Two');
+    expect((translatedContentBlock as { displayName?: string })?.displayName).toBe(
+      '[es] Morning Reflection',
+    );
   });
 });

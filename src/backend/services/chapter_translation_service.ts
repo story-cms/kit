@@ -32,6 +32,8 @@ const blockSubtitleId = (blockId: string) => `block:${blockId}:subtitle`;
 const blockLeadersNotesId = (blockId: string) => `block:${blockId}:leadersNotes`;
 const blockItemId = (blockId: string, itemId: string) =>
   `block:${blockId}:item:${itemId}`;
+const blockNameId = (blockId: string) => `block:${blockId}:blockName`;
+const blockDisplayNameId = (blockId: string) => `block:${blockId}:displayName`;
 
 // Persisted content blocks aren't guaranteed to have a populated `items`
 // array — the save-time validator allows it to be omitted — even though the
@@ -52,6 +54,9 @@ export default class ChapterTranslationService {
 
     for (const block of source.blocks) {
       if (block.kind === 'title') {
+        if (block.blockName?.trim()) {
+          translationSources.push({ id: blockNameId(block.id), text: block.blockName });
+        }
         if (block.title?.trim()) {
           translationSources.push({ id: blockTitleId(block.id), text: block.title });
         }
@@ -62,6 +67,15 @@ export default class ChapterTranslationService {
           });
         }
       } else {
+        if (block.blockName?.trim()) {
+          translationSources.push({ id: blockNameId(block.id), text: block.blockName });
+        }
+        if (block.displayName?.trim()) {
+          translationSources.push({
+            id: blockDisplayNameId(block.id),
+            text: block.displayName,
+          });
+        }
         if (block.leadersNotes?.trim()) {
           translationSources.push({
             id: blockLeadersNotesId(block.id),
@@ -157,6 +171,7 @@ export default class ChapterTranslationService {
       if (block.kind === 'title') {
         return {
           ...block,
+          blockName: translated(blockNameId(block.id), block.blockName ?? ''),
           title: translated(blockTitleId(block.id), block.title ?? ''),
           subtitle: translated(blockSubtitleId(block.id), block.subtitle ?? ''),
         };
@@ -164,6 +179,8 @@ export default class ChapterTranslationService {
 
       return {
         ...block,
+        blockName: translated(blockNameId(block.id), block.blockName ?? ''),
+        displayName: translated(blockDisplayNameId(block.id), block.displayName ?? ''),
         leadersNotes: translated(blockLeadersNotesId(block.id), block.leadersNotes ?? ''),
         items: contentBlockItems(block).map((item) =>
           item.kind === 'text' && item.content
