@@ -4,10 +4,12 @@ import { ref } from 'vue';
 export const useListStateStore = defineStore('list-state', () => {
   const removedItems = ref<Record<string, number[]>>({});
   const listToggles = ref<Record<string, boolean[]>>({});
+  const panelToggles = ref<Record<string, boolean>>({});
 
   const clearListState = (): void => {
     removedItems.value = {};
     listToggles.value = {};
+    panelToggles.value = {};
   };
 
   const setListToggles = (path: string, value: boolean[]): void => {
@@ -32,13 +34,22 @@ export const useListStateStore = defineStore('list-state', () => {
   const isInRemovedList = (path: string, index: number): boolean =>
     removedItems.value[path]?.includes(index) || false;
 
+  const getPanelExpanded = (path: string): boolean => panelToggles.value[path] ?? true;
+
+  const setPanelExpanded = (path: string, value: boolean): void => {
+    panelToggles.value = { ...panelToggles.value, [path]: value };
+  };
+
   return {
     removedItems,
     listToggles,
+    panelToggles,
     clearListState,
     setListToggles,
     getListToggles,
     toggleRemovedIndex,
     isInRemovedList,
+    getPanelExpanded,
+    setPanelExpanded,
   };
 });

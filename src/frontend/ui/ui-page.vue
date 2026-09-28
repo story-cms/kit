@@ -28,7 +28,7 @@
                   'bg-blue-50': isTranslating,
                   'bg-white': !isTranslating,
                 }"
-                @click="translateItems"
+                @click="startTranslateItems"
               >
                 <Sparkles class="size-4 text-gray-800" aria-hidden="true" />
                 <span>
@@ -90,6 +90,19 @@
       </section>
     </template>
   </AppLayout>
+
+  <TranslationTokenEstimateModal
+    :open="showEstimateModal"
+    :source-locale="sourceLanguageName"
+    :target-locale="language.language"
+    :input-tokens="estimateInputTokens"
+    :output-tokens="estimateOutputTokens"
+    :balance="estimateBalance"
+    :is-estimating="isEstimating"
+    :is-translating="isTranslating"
+    @close="closeEstimateModal"
+    @confirm="confirmTranslateItems"
+  />
 </template>
 
 <script setup lang="ts">
@@ -102,6 +115,7 @@ import { Sparkles } from '@lucide/vue';
 import UiToolbar from './components/ui-toolbar.vue';
 import UiStringItem from './components/ui-string-item.vue';
 import UiCard from './components/ui-card.vue';
+import TranslationTokenEstimateModal from '../stories/components/translation-token-estimate-modal.vue';
 
 import { useSharedStore } from '../store';
 import AppLayout from '../shared/app-layout.vue';
@@ -185,6 +199,7 @@ shared.setFromProps(props);
 shared.setCurrentStoryName('');
 
 const headerHeight = computed(() => shared.headerHeight);
+const sourceLanguageName = computed(() => shared.config.languages?.[0]?.language ?? 'English');
 
 const listToMap = (list: UiItem[]): ModelType => {
   const map: ModelType = {};
@@ -257,10 +272,43 @@ const save = async (payload: UiItemPayload) => {
   }
 };
 
-const translateItems = async () => {
+const showEstimateModal = ref(false);
+const isEstimating = ref(false);
+const estimateInputTokens = ref<number | null>(null);
+const estimateOutputTokens = ref<number | null>(null);
+const estimateBalance = ref<number | null>(null);
+
+const startTranslateItems = async () => {
   if (isTranslating.value) return;
 
+  showEstimateModal.value = true;
+  isEstimating.value = true;
+  estimateInputTokens.value = null;
+  estimateOutputTokens.value = null;
+  estimateBalance.value = null;
+
+  try {
+    const response = await axios.post(`/${shared.locale}/ui/estimate-translation`);
+    estimateInputTokens.value = response.data.inputTokens;
+    estimateOutputTokens.value = response.data.outputTokens;
+    estimateBalance.value = response.data.balance;
+  } catch (error) {
+    console.error(error);
+    showEstimateModal.value = false;
+    shared.addMessage(ResponseStatus.Failure, 'Could not estimate translation cost');
+  } finally {
+    isEstimating.value = false;
+  }
+};
+
+const closeEstimateModal = () => {
+  showEstimateModal.value = false;
+};
+
+const confirmTranslateItems = async () => {
+  showEstimateModal.value = false;
   isTranslating.value = true;
+
   const itemsToTranslate = props.items.filter((item) => !item.translation);
 
   const payload = itemsToTranslate.reduce(
@@ -279,7 +327,8 @@ const translateItems = async () => {
     }
   } catch (error) {
     console.error(error);
-    shared.addMessage(ResponseStatus.Failure, 'Failed to translate items');
+    const message = (error as AxiosError<{ error: string }>).response?.data?.error;
+    shared.addMessage(ResponseStatus.Failure, message ?? 'Failed to translate items');
   } finally {
     isTranslating.value = false;
     router.visit(window.location.href, {

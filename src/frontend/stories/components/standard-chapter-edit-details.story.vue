@@ -16,6 +16,23 @@
     <Variant title="Translation" :setup-app="loadTranslation">
       <StandardChapterEditDetails chapter-type="Session" template="course" :is-translation="true" />
     </Variant>
+
+    <Variant title="Translation, auto-translating" :setup-app="loadTranslation">
+      <StandardChapterEditDetails
+        chapter-type="Session"
+        template="course"
+        :is-translation="true"
+        :is-auto-translating="true"
+      />
+    </Variant>
+
+    <Variant title="Auto-translating" :setup-app="loadCourse">
+      <StandardChapterEditDetails
+        chapter-type="Session"
+        template="course"
+        :is-auto-translating="true"
+      />
+    </Variant>
   </Story>
 </template>
 

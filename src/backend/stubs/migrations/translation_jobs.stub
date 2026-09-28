@@ -1,0 +1,54 @@
+{{{
+  exports({
+    to: app.makePath(migration.folder, migration.fileName)
+  })
+}}}
+import { BaseSchema } from '@adonisjs/lucid/schema';
+
+export default class extends BaseSchema {
+  protected tableName = 'translation_jobs';
+
+  async up() {
+    this.schema.createTable(this.tableName, (table) => {
+      table.increments('id');
+
+      table.integer('story_id').unsigned().notNullable();
+      table.integer('draft_id').unsigned().notNullable();
+      table
+        .string('locale', 15)
+        .notNullable()
+        .comment('IETF BCP 47 target locale translated into');
+      table.string('chapter_title').notNullable().comment('source title, for display');
+      table
+        .integer('user_id')
+        .unsigned()
+        .notNullable()
+        .comment('who triggered this translation');
+      table
+        .integer('estimated_tokens')
+        .unsigned()
+        .notNullable()
+        .comment(
+          'input+output estimate at dispatch time; reserved against the locale balance while pending/processing so concurrent jobs cannot both spend the same tokens',
+        );
+      table
+        .string('status', 20)
+        .notNullable()
+        .defaultTo('pending')
+        .comment('pending | processing | complete | failed');
+      table
+        .jsonb('previous_bundle')
+        .nullable()
+        .comment(
+          'the draft bundle as it was right before this translation overwrote it, for undo; set once the job starts processing',
+        );
+
+      table.timestamp('created_at', { useTz: true });
+      table.timestamp('updated_at', { useTz: true });
+    });
+  }
+
+  async down() {
+    this.schema.dropTable(this.tableName);
+  }
+}

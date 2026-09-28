@@ -1,0 +1,51 @@
+{{{
+  exports({ to: app.makePath('tests/functional/settings_api.spec.ts') })
+}}}
+import testUtils from '@adonisjs/core/services/test_utils';
+import { test } from '@japa/runner';
+import { UserFactory } from '@story-cms/kit';
+import { setupMockCms, cleanupMockCms, testCmsConfig } from '#tests/helpers/cms_mock';
+
+test.group('SettingsController', (group) => {
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
+  group.each.teardown(() => cleanupMockCms());
+
+  test('GET /:locale/settings redirects to tokens when languages-settings is not subscribed but tokens is', async ({
+    client,
+  }) => {
+    setupMockCms({ ...testCmsConfig, subscriptions: ['tokens'] });
+    const user = await UserFactory.create();
+
+    const response = await client.get('/en/settings').loginAs(user);
+
+    response.assertRedirectsTo('/en/settings/tokens');
+  });
+
+  test('GET /:locale/settings renders the Languages page when languages-settings is subscribed', async ({
+    client,
+  }) => {
+    setupMockCms({ ...testCmsConfig, subscriptions: ['languages-settings', 'tokens'] });
+    const user = await UserFactory.create();
+
+    const response = await client
+      .get('/en/settings')
+      .header('X-Inertia', 'true')
+      .loginAs(user);
+
+    response.assertStatus(200);
+  });
+
+  test('GET /:locale/settings renders the Languages page when neither flag is set', async ({
+    client,
+  }) => {
+    setupMockCms({ ...testCmsConfig, subscriptions: [] });
+    const user = await UserFactory.create();
+
+    const response = await client
+      .get('/en/settings')
+      .header('X-Inertia', 'true')
+      .loginAs(user);
+
+    response.assertStatus(200);
+  });
+});

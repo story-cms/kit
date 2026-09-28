@@ -4,8 +4,9 @@
 import { test } from '@japa/runner';
 import testUtils from '@adonisjs/core/services/test_utils';
 import nock from 'nock';
-import { Ui, UiAttribute, UiService } from '@story-cms/kit';
-import { setupMockCms, createCustomCmsConfig } from '../helpers/cms_mock.js';
+import { Allocation, TokenUsage, Ui, UiAttribute, UiService } from '@story-cms/kit';
+import { setupMockCms, createCustomCmsConfig, testCmsConfig } from '../helpers/cms_mock.js';
+import { setupMockAiService, cleanupMockAiService } from '../helpers/ai_service_mock.js';
 import cms from '#services/cms';
 
 test.group('UiService.pull()', (group) => {
@@ -497,5 +498,120 @@ test.group('UiService.pull()', (group) => {
       1,
       'Should have exactly one record for button.save, no duplicates',
     );
+  });
+});
+
+test.group('UiService token tracking', (group) => {
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
+  group.each.setup(() => setupMockCms(testCmsConfig));
+  group.each.teardown(() => cleanupMockAiService());
+
+  test('estimateFillMissing estimates tokens for missing items and reports balance', async ({
+    assert,
+  }) => {
+    setupMockAiService({ usage: { inputTokens: 42, outputTokens: 17 } });
+    await Ui.create({ locale: 'en', key: 'button.save', microCopy: 'Save' });
+    await Allocation.create({ locale: 'es', tokens: 1000, userId: 1 });
+
+    const service = new UiService(cms);
+    const estimate = await service.estimateFillMissing('es');
+
+    assert.equal(estimate.inputTokens, 42);
+    assert.equal(estimate.outputTokens, 17);
+    assert.equal(estimate.balance, 1000);
+  });
+
+  test('fillMissing translates missing items and records token usage', async ({ assert }) => {
+    setupMockAiService({ usage: { inputTokens: 42, outputTokens: 17 } });
+    await Ui.create({ locale: 'en', key: 'button.save', microCopy: 'Save' });
+
+    const service = new UiService(cms);
+    const count = await service.fillMissing('es');
+
+    assert.equal(count, 1);
+
+    const translated = await Ui.query()
+      .where('locale', 'es')
+      .where('key', 'button.save')
+      .first();
+    assert.isNotNull(translated);
+    assert.equal(translated?.microCopy, '[es] Save');
+
+    const usage = await TokenUsage.query().where('locale', 'es').first();
+    assert.isNotNull(usage);
+    assert.equal(usage?.action, 'Batch translate');
+    assert.equal(usage?.sourceLocale, 'en');
+    assert.equal(usage?.blockCount, 1);
+    assert.equal(usage?.inputTokens, 42);
+    assert.equal(usage?.outputTokens, 17);
+  });
+
+  test('fillMissing does not call the AI service or log usage when nothing is missing', async ({
+    assert,
+  }) => {
+    const { calls } = setupMockAiService();
+
+    const service = new UiService(cms);
+    const count = await service.fillMissing('es');
+
+    assert.equal(count, 0);
+    assert.lengthOf(calls, 0);
+    assert.lengthOf(await TokenUsage.query(), 0);
+  });
+
+  test('estimateSuggest returns null when the source item does not exist', async ({
+    assert,
+  }) => {
+    setupMockAiService();
+
+    const service = new UiService(cms);
+    const estimate = await service.estimateSuggest('es', 'missing.key');
+
+    assert.isNull(estimate);
+  });
+
+  test('estimateSuggest estimates a single item and reports balance', async ({ assert }) => {
+    setupMockAiService({ usage: { inputTokens: 5, outputTokens: 3 } });
+    await Ui.create({ locale: 'en', key: 'button.save', microCopy: 'Save' });
+    await Allocation.create({ locale: 'es', tokens: 200, userId: 1 });
+
+    const service = new UiService(cms);
+    const estimate = await service.estimateSuggest('es', 'button.save');
+
+    assert.exists(estimate);
+    assert.equal(estimate?.inputTokens, 5);
+    assert.equal(estimate?.outputTokens, 3);
+    assert.equal(estimate?.balance, 200);
+  });
+
+  test('suggest translates one item and records token usage', async ({ assert }) => {
+    setupMockAiService({ usage: { inputTokens: 5, outputTokens: 3 } });
+    await Ui.create({ locale: 'en', key: 'button.save', microCopy: 'Save' });
+
+    const service = new UiService(cms);
+    const suggestion = await service.suggest('es', 'button.save');
+
+    assert.equal(suggestion, '[es] Save');
+
+    const usage = await TokenUsage.query().where('locale', 'es').first();
+    assert.isNotNull(usage);
+    assert.equal(usage?.action, 'Translate UI string: button.save');
+    assert.equal(usage?.sourceLocale, 'en');
+    assert.equal(usage?.blockCount, 1);
+    assert.equal(usage?.inputTokens, 5);
+    assert.equal(usage?.outputTokens, 3);
+  });
+
+  test('suggest returns an empty string and logs nothing when the source item is missing', async ({
+    assert,
+  }) => {
+    const { calls } = setupMockAiService();
+
+    const service = new UiService(cms);
+    const suggestion = await service.suggest('es', 'missing.key');
+
+    assert.equal(suggestion, '');
+    assert.lengthOf(calls, 0);
+    assert.lengthOf(await TokenUsage.query(), 0);
   });
 });

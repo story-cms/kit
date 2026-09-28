@@ -33,6 +33,23 @@ export function withAttachedResource<T extends { id: string }>(
   return resource ? [...attached, resource] : attached;
 }
 
+export function estimatedTokenRange(
+  inputTokens: number,
+  outputTokens: number,
+): { low: number; high: number } {
+  const sum = inputTokens + outputTokens;
+  return { low: Math.round(sum * 0.8), high: Math.round(sum * 1.2) };
+}
+
+export function hasSufficientBalance(
+  balance: number,
+  inputTokens: number,
+  outputTokens: number,
+): boolean {
+  const { high } = estimatedTokenRange(inputTokens, outputTokens);
+  return balance >= high;
+}
+
 interface AutosaveClock {
   setTimeout: (callback: () => void, delay: number) => unknown;
   clearTimeout: (timer: unknown) => void;

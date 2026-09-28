@@ -154,15 +154,4 @@ test.group('LanguageService', (group) => {
     assert.lengthOf(props.addedLanguages, 3);
     assert.equal(props.addedLanguages[0].locale, 'en');
   });
-
-  test('getSupportRequestDetails throws for unknown support code', async ({ assert }) => {
-    setupMockCms(testCmsConfig);
-
-    const service = new LanguageService(cms);
-
-    await assert.rejects(
-      () => service.getSupportRequestDetails('UNKNOWN_CODE' as 'REMOVE_LANGUAGE'),
-      /Invalid support code/,
-    );
-  });
 });

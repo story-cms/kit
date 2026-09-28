@@ -4,53 +4,11 @@ import {
   type LanguageTableItem,
   type LanguagesEditProps,
   type SettingsPageProps,
-  type SupportCode,
   type UserInterface,
 } from '../../types.js';
 import User from '../models/user.js';
 import { CmsService } from './cms_service.js';
 import { ProgressService } from './progress_service.js';
-
-export interface SupportRequestLanguageSpec {
-  name: string;
-  nativeName: string;
-  locale: string;
-}
-
-export interface SupportRequestDetails {
-  subject: string;
-  details: string;
-  language?: SupportRequestLanguageSpec;
-}
-
-interface SupportCodeDefinition {
-  code: SupportCode;
-  description: string;
-  subject: string;
-}
-
-const SUPPORT_CODES = {
-  REMOVE_LANGUAGE: {
-    code: 'REMOVE_LANGUAGE',
-    subject: 'Remove language',
-    description: 'Language requested to be removed',
-  },
-  UPDATE_LANGUAGE: {
-    code: 'UPDATE_LANGUAGE',
-    subject: 'App update - new language added.',
-    description: 'Language requested to be added',
-  },
-  UPDATE_CONTENT: {
-    code: 'UPDATE_CONTENT',
-    subject: 'App update - content added.',
-    description: 'Content requested to be updated',
-  },
-  UPDATE_APP: {
-    code: 'UPDATE_APP',
-    subject: 'App update - new language and content.',
-    description: 'App update requested for new language and new content',
-  },
-} as const satisfies Record<string, SupportCodeDefinition>;
 
 const defaultTranslationProgress = [
   { name: 'Interface', done: 0, draft: 0, total: 0 },
@@ -152,30 +110,6 @@ export class LanguageService {
     await this.save(languages);
   }
 
-  public getSupportRequestDetails(
-    supportCode: SupportCode,
-    removeLanguageCode?: string,
-  ): SupportRequestDetails {
-    const definition = this.supportCodeDefinition(supportCode);
-    if (!definition) {
-      throw new Error('Invalid support code');
-    }
-
-    let language: SupportRequestLanguageSpec | undefined;
-    if (supportCode === 'REMOVE_LANGUAGE' && removeLanguageCode) {
-      const languageSpec = this.find(removeLanguageCode);
-      if (languageSpec) {
-        language = this.parseLanguageForSupport(languageSpec);
-      }
-    }
-
-    return {
-      subject: `Support request: ${definition.subject}`,
-      details: definition.description,
-      language,
-    };
-  }
-
   private toLanguageTableItem(
     spec: LanguageSpecification,
     translationProgressByLocale: Record<string, LanguageTableItem['translationProgress']>,
@@ -193,23 +127,6 @@ export class LanguageService {
         .filter((user) => user.language === spec.locale)
         .map((user) => user.meta),
     };
-  }
-
-  private parseLanguageForSupport(
-    spec: LanguageSpecification,
-  ): SupportRequestLanguageSpec {
-    const { language, locale } = spec;
-    const name = language.split('|')[0].trim();
-
-    if (language.includes('|')) {
-      return { name, nativeName: language.split('|')[1].trim(), locale };
-    }
-
-    return { name, nativeName: language, locale };
-  }
-
-  private supportCodeDefinition(code: string): SupportCodeDefinition | undefined {
-    return Object.values(SUPPORT_CODES).find((definition) => definition.code === code);
   }
 
   private async save(languages: LanguageSpecification[]) {

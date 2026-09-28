@@ -11,6 +11,7 @@
     kind-label="title"
     :read-only="readOnly"
     :translation-mode="translationMode"
+    :is-auto-translating="isAutoTranslating"
     :block-index="blockIndex"
     @toggle="emit('toggle')"
     @delete="emit('delete')"
@@ -143,11 +144,13 @@ const props = withDefaults(
     template?: string | null;
     readOnly?: boolean;
     translationMode?: boolean;
+    isAutoTranslating?: boolean;
   }>(),
   {
     template: null,
     readOnly: false,
     translationMode: false,
+    isAutoTranslating: false,
   },
 );
 

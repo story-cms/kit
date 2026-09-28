@@ -1,6 +1,7 @@
 <template>
   <div
-    class="flex flex-col gap-y-2 rounded-xl border border-gray-200 bg-white px-6 pb-11"
+    class="relative flex flex-col gap-y-2 rounded-xl border border-gray-200 bg-white px-6 pb-11"
+    :inert="isAutoTranslating"
   >
     <div class="mt-4">
       <label :for="numberFieldId" class="input-label text-gray-600">
@@ -70,6 +71,8 @@
         <AudioField :field="devotionAudioField" :is-nested="true" />
       </div>
     </template>
+
+    <TranslationLockOverlay v-if="isAutoTranslating" />
   </div>
 </template>
 
@@ -85,6 +88,7 @@ import AudioField from '../../fields/audio-field.vue';
 import ImageField from '../../fields/image-field.vue';
 import MarkdownField from '../../fields/markdown-field.vue';
 import StringField from '../../fields/string-field.vue';
+import TranslationLockOverlay from '../../shared/translation-lock-overlay.vue';
 
 const props = withDefaults(
   defineProps<{
@@ -93,6 +97,7 @@ const props = withDefaults(
     audioCollectionId?: string;
     template?: string | null;
     isTranslation?: boolean;
+    isAutoTranslating?: boolean;
   }>(),
   {
     isTranslation: false,
@@ -100,6 +105,7 @@ const props = withDefaults(
     imageCollectionId: '',
     audioCollectionId: '',
     template: null,
+    isAutoTranslating: false,
   },
 );
 

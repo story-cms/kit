@@ -1,0 +1,117 @@
+{{{
+  exports({ to: app.makePath('tests/functional/ui_controller.spec.ts') })
+}}}
+import testUtils from '@adonisjs/core/services/test_utils';
+import { test } from '@japa/runner';
+import { Allocation, TokenUsage, Ui, UserFactory } from '@story-cms/kit';
+import { setupMockCms, cleanupMockCms, testCmsConfig } from '#tests/helpers/cms_mock';
+import { setupMockAiService, cleanupMockAiService } from '#tests/helpers/ai_service_mock';
+
+test.group('UiController token gating', (group) => {
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
+  group.each.setup(() => setupMockCms(testCmsConfig));
+  group.each.teardown(() => cleanupMockCms());
+  group.each.teardown(() => cleanupMockAiService());
+
+  test('estimate-translation reports the estimate and current balance', async ({
+    client,
+    assert,
+  }) => {
+    const user = await UserFactory.create();
+    setupMockAiService({ usage: { inputTokens: 42, outputTokens: 17 } });
+    await Ui.create({ locale: 'en', key: 'button.save', microCopy: 'Save' });
+    await Allocation.create({ locale: 'es', tokens: 1000, userId: user.id });
+
+    const response = await client
+      .post('/es/ui/estimate-translation')
+      .loginAs(user)
+      .withCsrfToken();
+
+    response.assertStatus(200);
+    assert.equal(response.body().inputTokens, 42);
+    assert.equal(response.body().outputTokens, 17);
+    assert.equal(response.body().balance, 1000);
+  });
+
+  test('translate-bulk succeeds and records token usage when the balance is sufficient', async ({
+    client,
+    assert,
+  }) => {
+    const user = await UserFactory.create();
+    setupMockAiService({ usage: { inputTokens: 42, outputTokens: 17 } });
+    await Ui.create({ locale: 'en', key: 'button.save', microCopy: 'Save' });
+    await Allocation.create({ locale: 'es', tokens: 1000, userId: user.id });
+
+    const response = await client
+      .post('/es/ui/translate-bulk')
+      .loginAs(user)
+      .withCsrfToken();
+
+    response.assertStatus(200);
+    const usage = await TokenUsage.query().where('locale', 'es').first();
+    assert.isNotNull(usage);
+    assert.equal(usage?.action, 'Batch translate');
+  });
+
+  test('translate-bulk is rejected when the pool balance is insufficient', async ({
+    client,
+    assert,
+  }) => {
+    const user = await UserFactory.create();
+    setupMockAiService({ usage: { inputTokens: 42, outputTokens: 17 } });
+    await Ui.create({ locale: 'en', key: 'button.save', microCopy: 'Save' });
+    // No allocation for 'es' at all: balance is 0.
+
+    const response = await client
+      .post('/es/ui/translate-bulk')
+      .loginAs(user)
+      .withCsrfToken();
+
+    response.assertStatus(400);
+    assert.lengthOf(await TokenUsage.query(), 0);
+    const translated = await Ui.query().where('locale', 'es').first();
+    assert.isNull(translated);
+  });
+
+  test('suggest is rejected when the pool balance is insufficient', async ({
+    client,
+    assert,
+  }) => {
+    const user = await UserFactory.create();
+    setupMockAiService({ usage: { inputTokens: 5, outputTokens: 3 } });
+    await Ui.create({ locale: 'en', key: 'button.save', microCopy: 'Save' });
+    // No allocation for 'es' at all: balance is 0.
+
+    const response = await client
+      .post('/es/ui/suggest')
+      .json({ key: 'button.save' })
+      .loginAs(user)
+      .withCsrfToken();
+
+    response.assertStatus(400);
+    assert.lengthOf(await TokenUsage.query(), 0);
+  });
+
+  test('suggest succeeds and records token usage when the balance is sufficient', async ({
+    client,
+    assert,
+  }) => {
+    const user = await UserFactory.create();
+    setupMockAiService({ usage: { inputTokens: 5, outputTokens: 3 } });
+    await Ui.create({ locale: 'en', key: 'button.save', microCopy: 'Save' });
+    await Allocation.create({ locale: 'es', tokens: 200, userId: user.id });
+
+    const response = await client
+      .post('/es/ui/suggest')
+      .json({ key: 'button.save' })
+      .loginAs(user)
+      .withCsrfToken();
+
+    response.assertStatus(200);
+    assert.equal(response.body().suggestion, '[es] Save');
+
+    const usage = await TokenUsage.query().where('locale', 'es').first();
+    assert.isNotNull(usage);
+    assert.equal(usage?.action, 'Translate UI string: button.save');
+  });
+});

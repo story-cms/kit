@@ -31,6 +31,44 @@
         :bookmarks="sharedProps.bookmarks"
       />
     </Variant>
+
+    <Variant title="Bible Devotions" :setup-app="miniSidebar">
+      <DraftIndex
+        :draft="bibleDevotionsStory.draft"
+        :bundle="bibleDevotionsStory.source"
+        :story="{
+          ...bibleDevotionsStory.story,
+          fields: bibleDevotionsStory.story.fields as FieldSpec[],
+        }"
+        :has-edit-review="false"
+        :last-published="'2021-10-10T14:48:00.000000Z'"
+        :providers="{}"
+        :errors="sharedProps.errors"
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :bookmarks="sharedProps.bookmarks"
+      />
+    </Variant>
+
+    <Variant title="Bible Devotions Errors" :setup-app="miniSidebar">
+      <DraftIndex
+        :draft="bibleDevotionsStory.draft"
+        :bundle="bibleDevotionsStory.source"
+        :story="{
+          ...bibleDevotionsStory.story,
+          fields: bibleDevotionsStory.story.fields as FieldSpec[],
+        }"
+        :has-edit-review="false"
+        :last-published="'2021-10-10T14:48:00.000000Z'"
+        :providers="{}"
+        :errors="bibleDevotionsErrors"
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="sharedProps.language"
+        :bookmarks="sharedProps.bookmarks"
+      />
+    </Variant>
   </Story>
 </template>
 
@@ -44,6 +82,8 @@ import {
   listInListModel,
   story,
   miniSidebar,
+  bibleDevotionsStory,
+  bibleDevotionsErrors,
 } from '../test/mocks';
 import { FieldSpec } from '../../types';
 

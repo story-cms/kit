@@ -20,6 +20,10 @@ export { default as Story } from './models/story.js';
 export { default as StoryLocalisation } from './models/story_localisation.js';
 export { emptyTranslation } from './models/story_localisation.js';
 export { default as Resource } from './models/resource.js';
+export { default as TranslationJob } from './models/translation_job.js';
+export { default as TokenUsage } from './models/token_usage.js';
+export { default as TokenTopUp } from './models/token_top_up.js';
+export { default as Allocation } from './models/allocation.js';
 export * from './factories/drop_factory.js';
 export * from './factories/draft_factory.js';
 export * from './factories/index_factory.js';
@@ -32,6 +36,11 @@ export * from './factories/user_factory.js';
 export * from './factories/resource_factory.js';
 export * from './services/helpers.js';
 export * from './services/ai_service.js';
+export {
+  default as ChapterTranslationService,
+  setMockAiService,
+  resetAiService,
+} from './services/chapter_translation_service.js';
 export * from './services/analytics_service.js';
 export * from './services/audience_service.js';
 export * from './services/bundle_service.js';
@@ -42,6 +51,7 @@ export * from './services/index_service.js';
 export * from './services/page_service.js';
 export * from './services/progress_service.js';
 export * from './services/language_service.js';
+export * from './services/support_request_service.js';
 export * from './services/locale_service.js';
 export * from './services/ui_service.js';
 export * from './services/user_service.js';
@@ -49,6 +59,7 @@ export * from './services/stream_service.js';
 export * from './services/preference_service.js';
 export * from './services/story_service.js';
 export * from './services/resource_service.js';
+export * from './services/token_service.js';
 export * from './validators/auth.js';
 export * from './validators/invitation.js';
 export * from './validators/bundle.js';

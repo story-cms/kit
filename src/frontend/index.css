@@ -132,6 +132,16 @@
   }
 }
 
+/* Shimmer sweep, used by translation-lock-overlay.vue */
+@keyframes shimmer-sweep {
+  100% {
+    transform: translateX(100%);
+  }
+}
+.animate-shimmer-sweep {
+  animation: shimmer-sweep 1.5s ease-in-out infinite;
+}
+
 /* Overide CodeMirror styles */
 .form-panel .cm-s-easymde .CodeMirror,
 .form-field-styles .cm-s-easymde .CodeMirror {

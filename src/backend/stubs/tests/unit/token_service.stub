@@ -1,0 +1,169 @@
+{{{
+  exports({ to: app.makePath('tests/unit/token_service.spec.ts') })
+}}}
+import testUtils from '@adonisjs/core/services/test_utils';
+import { test } from '@japa/runner';
+import { Allocation, TokenService, TokenTopUp, TokenUsage } from '@story-cms/kit';
+import cms from '#services/cms';
+import { setupMockCms, testCmsConfig } from '#tests/helpers/cms_mock';
+
+test.group('TokenService', (group) => {
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
+  group.each.setup(() => setupMockCms(testCmsConfig));
+
+  test('poolTotal sums every top-up', async ({ assert }) => {
+    await TokenTopUp.create({ tokens: 1000, userId: 1 });
+    await TokenTopUp.create({ tokens: 500, userId: 1 });
+
+    const service = new TokenService(cms);
+    assert.equal(await service.poolTotal(), 1500);
+  });
+
+  test('pots excludes the source locale and reports allocated/used per locale', async ({
+    assert,
+  }) => {
+    await Allocation.create({ locale: 'es', tokens: 1000, userId: 1 });
+    await Allocation.create({ locale: 'my', tokens: 400, userId: 1 });
+    await TokenUsage.create({ locale: 'es', inputTokens: 100, outputTokens: 50 });
+
+    const service = new TokenService(cms);
+    const pots = await service.pots();
+
+    assert.isUndefined(pots.find((pot) => pot.locale === 'en'));
+
+    const es = pots.find((pot) => pot.locale === 'es');
+    assert.exists(es);
+    assert.equal(es!.name, 'Spanish');
+    assert.equal(es!.allocated, 1000);
+    assert.equal(es!.used, 150);
+
+    const my = pots.find((pot) => pot.locale === 'my');
+    assert.exists(my);
+    assert.equal(my!.allocated, 400);
+    assert.equal(my!.used, 0);
+  });
+
+  test('getBalance is allocated tokens minus used tokens for that locale only', async ({
+    assert,
+  }) => {
+    await Allocation.create({ locale: 'es', tokens: 1000, userId: 1 });
+    await Allocation.create({ locale: 'my', tokens: 5000, userId: 1 });
+    await TokenUsage.create({ locale: 'es', inputTokens: 100, outputTokens: 50 });
+    await TokenUsage.create({ locale: 'my', inputTokens: 4000, outputTokens: 500 });
+
+    const service = new TokenService(cms);
+    assert.equal(await service.getBalance('es'), 850);
+  });
+
+  test('a negative allocation (deallocation) reduces the balance', async ({ assert }) => {
+    await Allocation.create({ locale: 'es', tokens: 1000, userId: 1 });
+    await Allocation.create({ locale: 'es', tokens: -300, userId: 1 });
+
+    const service = new TokenService(cms);
+    assert.equal(await service.getBalance('es'), 700);
+  });
+
+  test('recentTransactions maps fields and resolves locale display names', async ({
+    assert,
+  }) => {
+    await TokenUsage.create({
+      locale: 'es',
+      sourceLocale: 'en',
+      action: 'Translated "Some chapter"',
+      blockCount: 4,
+      inputTokens: 80,
+      outputTokens: 20,
+    });
+
+    const service = new TokenService(cms);
+    const transactions = await service.recentTransactions();
+
+    assert.lengthOf(transactions, 1);
+    assert.equal(transactions[0].action, 'Translated "Some chapter"');
+    assert.equal(transactions[0].sourceLanguage, 'English');
+    assert.equal(transactions[0].targetLanguage, 'Spanish');
+    assert.equal(transactions[0].blocks, 4);
+    assert.equal(transactions[0].tokensUsed, 100);
+  });
+
+  test('recentTransactions falls back to a generic action and the source locale when unset', async ({
+    assert,
+  }) => {
+    await TokenUsage.create({ locale: 'es', inputTokens: 10, outputTokens: 5 });
+
+    const service = new TokenService(cms);
+    const transactions = await service.recentTransactions();
+
+    assert.equal(transactions[0].action, 'Translated content');
+    assert.equal(transactions[0].sourceLanguage, 'English');
+  });
+
+  test('dailyUsage returns one entry per day for the trailing 7 days', async ({ assert }) => {
+    await TokenUsage.create({ locale: 'es', inputTokens: 60, outputTokens: 40 });
+
+    const service = new TokenService(cms);
+    const days = await service.dailyUsage();
+
+    assert.lengthOf(days, 7);
+    const today = days[days.length - 1];
+    assert.equal(today.tokens, 100);
+  });
+
+  test('allocate moves tokens from the pool into a locale', async ({ assert }) => {
+    await TokenTopUp.create({ tokens: 5000, userId: 1 });
+
+    const service = new TokenService(cms);
+    await service.allocate('es', 1000, 1);
+
+    const rows = await Allocation.query().where('locale', 'es');
+    assert.lengthOf(rows, 1);
+    assert.equal(rows[0].tokens, 1000);
+  });
+
+  test('allocate clamps to the pool\'s unallocated remainder', async ({ assert }) => {
+    await TokenTopUp.create({ tokens: 500, userId: 1 });
+    await Allocation.create({ locale: 'my', tokens: 200, userId: 1 });
+
+    const service = new TokenService(cms);
+    await service.allocate('es', 1000, 1);
+
+    const rows = await Allocation.query().where('locale', 'es');
+    assert.lengthOf(rows, 1);
+    assert.equal(rows[0].tokens, 300);
+  });
+
+  test('allocate no-ops when the pool has nothing unallocated left', async ({ assert }) => {
+    await TokenTopUp.create({ tokens: 500, userId: 1 });
+    await Allocation.create({ locale: 'my', tokens: 500, userId: 1 });
+
+    const service = new TokenService(cms);
+    await service.allocate('es', 1000, 1);
+
+    const rows = await Allocation.query().where('locale', 'es');
+    assert.lengthOf(rows, 0);
+  });
+
+  test('deallocating writes a negative row and cannot drop below what is used', async ({
+    assert,
+  }) => {
+    await TokenTopUp.create({ tokens: 5000, userId: 1 });
+    await Allocation.create({ locale: 'es', tokens: 1000, userId: 1 });
+    await TokenUsage.create({ locale: 'es', inputTokens: 600, outputTokens: 100 });
+
+    const service = new TokenService(cms);
+    await service.allocate('es', -900, 1);
+
+    const total = await Allocation.query().where('locale', 'es').sum('tokens as total');
+    assert.equal(Number(total[0].$extras.total), 700);
+  });
+
+  test('allocate is a no-op for a zero delta', async ({ assert }) => {
+    await TokenTopUp.create({ tokens: 5000, userId: 1 });
+
+    const service = new TokenService(cms);
+    await service.allocate('es', 0, 1);
+
+    const rows = await Allocation.query().where('locale', 'es');
+    assert.lengthOf(rows, 0);
+  });
+});

@@ -1,0 +1,37 @@
+{{{
+  exports({
+    to: app.makePath(migration.folder, migration.fileName)
+  })
+}}}
+import { BaseSchema } from '@adonisjs/lucid/schema';
+
+export default class extends BaseSchema {
+  protected tableName = 'allocations';
+
+  async up() {
+    this.schema.createTable(this.tableName, (table) => {
+      table.increments('id');
+
+      table
+        .string('locale', 15)
+        .notNullable()
+        .comment('IETF BCP 47 locale this allocation applies to');
+      table
+        .integer('tokens')
+        .notNullable()
+        .comment('signed token amount; negative values are deallocations back to the pool');
+      table
+        .integer('user_id')
+        .unsigned()
+        .notNullable()
+        .comment('who performed the allocation');
+
+      table.timestamp('created_at', { useTz: true });
+      table.timestamp('updated_at', { useTz: true });
+    });
+  }
+
+  async down() {
+    this.schema.dropTable(this.tableName);
+  }
+}

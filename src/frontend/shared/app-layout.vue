@@ -40,6 +40,7 @@
         </div>
       </div>
     </div>
+    <TranslationProgressTracker />
   </div>
 </template>
 
@@ -58,6 +59,7 @@ import { useSharedStore } from '../store';
 import AppLayoutHeader from './app-layout-header.vue';
 import type { SharedPageProps } from '../../types';
 import AppFooter from './app-footer.vue';
+import TranslationProgressTracker from './translation-progress-tracker.vue';
 
 defineProps<{
   title?: string;

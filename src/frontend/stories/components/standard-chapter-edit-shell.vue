@@ -3,6 +3,9 @@
     <template #actions>
       <DraftEditActions
         :has-edit-review="props.hasEditReview"
+        :show-auto-translate="props.isTranslation"
+        :is-auto-translating="isAutoTranslating"
+        @auto-translate="autoTranslate"
         @delete="deleteDraft"
         @publish="publishDraft"
         @request-change="rejectDraft"
@@ -73,6 +76,7 @@
               v-if="currentTab === 'Details'"
               name="details"
               :is-translation="props.isTranslation"
+              :is-auto-translating="isAutoTranslating"
             />
             <div v-if="currentTab === 'Blocks'" dir="ltr">
               <slot
@@ -80,6 +84,7 @@
                 :blocks="blocks"
                 :update-blocks="updateBlocks"
                 :is-translation="props.isTranslation"
+                :is-auto-translating="isAutoTranslating"
               />
             </div>
             <div v-if="currentTab === 'Resources'" dir="ltr">
@@ -123,6 +128,20 @@
       </div>
     </template>
   </AppLayout>
+
+  <TranslationTokenEstimateModal
+    v-if="props.isTranslation"
+    :open="showAutoTranslateModal"
+    :source-locale="sourceLanguageName"
+    :target-locale="targetLanguageName"
+    :input-tokens="inputTokens"
+    :output-tokens="outputTokens"
+    :balance="balance"
+    :is-estimating="isEstimating"
+    :is-translating="isAutoTranslating"
+    @close="closeAutoTranslateModal"
+    @confirm="confirmAutoTranslate"
+  />
 </template>
 
 <script setup lang="ts">
@@ -141,6 +160,7 @@ import { useTranslationDraftLayout } from '../use-translation-draft-layout';
 import { useStandardChapterEdit } from '../use-standard-chapter-edit';
 import DraftEditActions from './draft-edit-actions.vue';
 import StoryEditResources from './story-edit-resources.vue';
+import TranslationTokenEstimateModal from './translation-token-estimate-modal.vue';
 
 const props = withDefaults(
   defineProps<StandardChapterEditProps & SharedPageProps & { isTranslation?: boolean }>(),
@@ -150,32 +170,43 @@ const props = withDefaults(
 );
 
 defineSlots<{
-  details: (props: { isTranslation: boolean }) => VNode[];
+  details: (props: { isTranslation: boolean; isAutoTranslating: boolean }) => VNode[];
   blocks: (props: {
     blocks: ChapterBlock[];
     updateBlocks: (blocks: ChapterBlock[]) => void;
     isTranslation: boolean;
+    isAutoTranslating: boolean;
   }) => VNode[];
 }>();
 
 const {
   attachedResources,
+  autoTranslate,
   availableResources,
+  balance,
   blocks,
+  closeAutoTranslateModal,
+  confirmAutoTranslate,
   createResource,
   currentTab,
   deleteDraft,
+  inputTokens,
+  isAutoTranslating,
+  isEstimating,
   layoutSubtitle,
   layoutTitle,
   metaChapter,
   onTabChange,
+  outputTokens,
   previewBundle,
   publishDraft,
   publishedWhen,
   rejectDraft,
   shared,
+  showAutoTranslateModal,
   submitDraft,
   tabs,
+  targetLanguageName,
   updateBlocks,
 } = useStandardChapterEdit(props, props.isTranslation);
 

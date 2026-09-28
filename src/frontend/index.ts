@@ -59,6 +59,7 @@ import StreamGallery from './streams/stream-gallery.vue';
 import StreamIndex from './streams/stream-index.vue';
 import StringField from './fields/string-field.vue';
 import TagField from './fields/tag-field.vue';
+import TokensIndex from './settings/tokens/tokens-index.vue';
 import TranslationIndex from './stories/translation-index.vue';
 import UiPage from './ui/ui-page.vue';
 import UsersIndex from './team/users-index.vue';
@@ -133,6 +134,7 @@ export {
   StreamIndex,
   StringField,
   TagField,
+  TokensIndex,
   TranslationIndex,
   UiPage,
   UsersIndex,

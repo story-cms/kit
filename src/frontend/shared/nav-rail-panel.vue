@@ -85,7 +85,7 @@
             <a
               v-if="isAdmin && subscribed('settings')"
               :class="classList('settings', true)"
-              :href="`/${locale}/settings`"
+              :href="`/${locale}/settings${subscribed('languages-settings') ? '' : '/tokens'}`"
             >
               <Settings class="size-6 shrink-0" aria-hidden="true" />
               <span>Settings</span>
