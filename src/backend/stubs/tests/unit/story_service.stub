@@ -140,6 +140,17 @@ test.group('Story service', (group) => {
     assert.isUndefined(story);
   });
 
+  test('editProps returns undefined for an out-of-range storyId instead of querying the database', async ({
+    assert,
+  }) => {
+    const service = new StoryService(testCmsConfig);
+    const props = await service.editProps(
+      createRawParamsHttpContext({ storyId: '2147483648', locale: sourceLocale }),
+    );
+
+    assert.isUndefined(props);
+  });
+
   test('editProps labels bespoke templates with (custom) suffix', async ({ assert }) => {
     const story = await StoryFactory.with('localisations').create();
     const config = createCustomCmsConfig({

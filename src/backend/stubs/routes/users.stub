@@ -2,6 +2,7 @@
   exports({ to: app.makePath('start/routes/users.ts') })
 }}}
 import router from '@adonisjs/core/services/router';
+import { idMatcher } from '@story-cms/kit';
 
 const UsersController = () => import('#controllers/users_controller');
 
@@ -11,6 +12,6 @@ export default () => {
   });
   router.get(':locale/user', [UsersController, 'index']);
   router.post(':locale/user', [UsersController, 'store']);
-  router.put(':locale/user/:id', [UsersController, 'update']);
-  router.delete(':locale/user/:id', [UsersController, 'destroy']);
+  router.put(':locale/user/:id', [UsersController, 'update']).where('id', idMatcher);
+  router.delete(':locale/user/:id', [UsersController, 'destroy']).where('id', idMatcher);
 };

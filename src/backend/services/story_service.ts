@@ -15,6 +15,7 @@ import {
   storyTypeBlockedMessages,
   type StoryPublishMetadata,
 } from './helpers.js';
+import { parseId } from './helpers.js';
 import { ResourceService } from './resource_service.js';
 import type {
   BundleTemplate,
@@ -48,10 +49,10 @@ export class StoryService {
       throw errors.E_ROUTE_NOT_FOUND;
     }
 
-    const storyId = Number.parseInt(ctx.params.storyId);
-    if (ctx.params.storyId !== undefined && Number.isNaN(storyId)) return undefined;
+    const storyId = parseId(ctx.params.storyId);
+    if (ctx.params.storyId !== undefined && storyId === undefined) return undefined;
 
-    return { storyId, locale: ctx.params.locale };
+    return { storyId: storyId as number, locale: ctx.params.locale };
   }
 
   public async blockingPublishMessages(
@@ -415,8 +416,8 @@ export class StoryService {
   }
 
   private async storyFromPath(ctx: HttpContext): Promise<StorySpec | undefined> {
-    const storyId = Number.parseInt(ctx.params.storyId);
-    if (Number.isNaN(storyId)) return undefined;
+    const storyId = parseId(ctx.params.storyId);
+    if (storyId === undefined) return undefined;
 
     const story = await Story.query()
       .where('id', storyId)
