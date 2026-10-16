@@ -53,7 +53,7 @@ import { computed, onBeforeUnmount, ref, watch } from 'vue';
 
 import type { FieldSpec, Scripture } from '../../../../types';
 import ScriptureField from '../../../fields/scripture-field.vue';
-import { parseReference } from '../../../shared/helpers';
+import { BIBLE_API_BASE, parseReference } from '../../../shared/helpers';
 import { useModelStore, useSharedStore, useWidgetsStore } from '../../../store';
 import {
   blockFieldErrorMessages,
@@ -183,7 +183,7 @@ const fetchScripturePassage = async () => {
 
   const query = ['content-type=text', 'include-titles=false'].join('&');
   const response = await fetch(
-    `https://api.scripture.api.bible/v1/bibles/${shared.bibleVersion}/passages/${code}?${query}`,
+    `${BIBLE_API_BASE}/bibles/${shared.bibleVersion}/passages/${code}?${query}`,
     {
       headers: {
         'Content-Type': 'application/json',
