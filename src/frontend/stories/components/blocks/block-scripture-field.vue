@@ -94,9 +94,7 @@ const shared = useSharedStore();
 const provider = useWidgetsStore().providers.scripture;
 const rootPath = computed(() => `blocks.${props.blockIndex}`);
 const fieldName = computed(() =>
-  props.itemIndex === undefined
-    ? 'scripture'
-    : `items.${props.itemIndex}.scripture`,
+  props.itemIndex === undefined ? 'scripture' : `items.${props.itemIndex}.scripture`,
 );
 const scripturePath = computed(() => `${rootPath.value}.${fieldName.value}`);
 const useCustomLabels = computed(() =>
@@ -121,7 +119,11 @@ const verse = ref(props.modelValue.verse);
 
 const scriptureReferenceMessages = computed(() => {
   if (props.itemIndex === undefined) {
-    return blockFieldErrorMessages(shared.errors, props.blockIndex, 'scripture.reference');
+    return blockFieldErrorMessages(
+      shared.errors,
+      props.blockIndex,
+      'scripture.reference',
+    );
   }
   return blockItemFieldErrorMessages(
     shared.errors,
