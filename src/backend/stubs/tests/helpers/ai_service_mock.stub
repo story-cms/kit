@@ -1,0 +1,52 @@
+{{{
+  exports({ to: app.makePath('tests/helpers/ai_service_mock.ts') })
+}}}
+import type { AiService, TranslationInput, TranslationOutput } from '@story-cms/kit';
+import { setMockAiService, resetAiService } from '@story-cms/kit';
+
+/**
+ * Test seam for ChapterTranslationService's AiService dependency: never
+ * calls the real OpenAI API. By default, translate() echoes back
+ * `[locale] <original text>` for every source/locale pair, which is enough
+ * for tests to assert real content flowed through end to end without
+ * hand-building a matching output for every source id. Pass `translations`
+ * to override specific ids' text where a test needs exact control.
+ */
+export function setupMockAiService(
+  options: {
+    translations?: TranslationOutput;
+    usage?: { inputTokens: number; outputTokens: number };
+  } = {},
+) {
+  const usage = options.usage ?? { inputTokens: 42, outputTokens: 17 };
+  const calls: TranslationInput[] = [];
+
+  const fake = {
+    translate: async (input: TranslationInput) => {
+      calls.push(input);
+
+      const output: TranslationOutput = {};
+      for (const locale of input.outputLocales) {
+        const overridesForLocale = options.translations?.[locale] ?? [];
+        output[locale] = input.translationSources.map((source) => ({
+          id: source.id,
+          text:
+            overridesForLocale.find((item) => item.id === source.id)?.text ??
+            `[${locale}] ${source.text}`,
+        }));
+      }
+
+      return { output, usage };
+    },
+    estimateTokens: () => ({ ...usage }),
+    estimateOutputTokens: () => usage.outputTokens,
+  } as unknown as AiService;
+
+  setMockAiService(() => fake);
+
+  return { calls };
+}
+
+export function cleanupMockAiService() {
+  resetAiService();
+}

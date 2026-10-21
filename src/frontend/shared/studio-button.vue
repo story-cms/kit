@@ -7,7 +7,7 @@
     <span class="inline-flex" :class="{ 'pointer-events-none': disabled }">
       <button
         type="button"
-        :class="[buttonBaseClasses, shapeClasses, variantClasses, sizeClasses]"
+        :class="[buttonBaseClasses, shapeClasses, variantClasses, sizeClasses, widthClasses]"
         :aria-label="accessibleLabel"
         :disabled="disabled"
         @click="emit('click')"
@@ -26,7 +26,7 @@
   <button
     v-else
     type="button"
-    :class="[buttonBaseClasses, shapeClasses, variantClasses, sizeClasses]"
+    :class="[buttonBaseClasses, shapeClasses, variantClasses, sizeClasses, widthClasses]"
     :aria-label="accessibleLabel"
     :disabled="disabled"
     @click="emit('click')"
@@ -55,6 +55,7 @@ const props = withDefaults(
     shape?: StudioButtonShape;
     disabled?: boolean;
     tooltip?: string;
+    fullWidth?: boolean;
   }>(),
   {
     variant: 'primary',
@@ -63,6 +64,7 @@ const props = withDefaults(
     tooltip: undefined,
     label: undefined,
     ariaLabel: undefined,
+    fullWidth: false,
   },
 );
 
@@ -85,6 +87,8 @@ const sizeClasses = computed(() => {
 const shapeClasses = computed(() =>
   props.shape === 'cta' ? 'rounded-[15px]' : 'rounded-full',
 );
+
+const widthClasses = computed(() => (props.fullWidth ? 'w-full' : ''));
 
 const variantClassMap: Record<StudioButtonVariant, string> = {
   primary:

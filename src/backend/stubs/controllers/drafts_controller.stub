@@ -7,14 +7,18 @@ import db from '@adonisjs/lucid/services/db';
 import {
   Activity,
   Chapter,
+  ChapterTranslationService,
   Draft,
   DraftService,
   IndexService,
   StoryService,
+  TranslationJob,
 } from '@story-cms/kit';
 import cms from '#services/cms';
 import providers from '#config/providers';
 import { storyValidator } from '#validators/story_validator';
+import TranslateChapter from '#jobs/translate_chapter';
+import QueueWorkerTriggerService from '#services/queue_worker_trigger';
 
 export default class DraftsController {
   public async create(ctx: HttpContext) {
@@ -190,6 +194,74 @@ export default class DraftsController {
     await service.buildIndex(version);
 
     return ctx.response.redirect({{ '`/${version.locale}/story/${story.id}`' }});
+  }
+
+  public async autoTranslate(ctx: HttpContext) {
+    const storyService = new StoryService(cms.config);
+    const { story } = await storyService.parsePath(ctx);
+    if (story === undefined) return ctx.response.notFound();
+
+    const source = ctx.request.input('source');
+    const targetLocale = ctx.request.input('targetLocale');
+    if (!source || !targetLocale) {
+      return ctx.response.badRequest({
+        error: 'Missing source content or target locale',
+      });
+    }
+
+    const draftId = Number(ctx.params.id);
+
+    const translationService = new ChapterTranslationService();
+    const { inputTokens, outputTokens, balance } = await translationService.estimate(
+      source,
+      targetLocale,
+    );
+    const estimatedTokens = inputTokens + outputTokens;
+    if (balance < estimatedTokens) {
+      return ctx.response.badRequest({ error: 'Insufficient token balance' });
+    }
+
+    const translationJob = await TranslationJob.create({
+      storyId: story.id,
+      draftId,
+      locale: targetLocale,
+      chapterTitle: source.title ?? '',
+      userId: ctx.auth.user!.id,
+      estimatedTokens,
+      status: 'pending',
+    });
+
+    await TranslateChapter.dispatch({
+      translationJobId: translationJob.id,
+      storyId: story.id,
+      draftId,
+      locale: targetLocale,
+      source,
+    });
+
+    new QueueWorkerTriggerService()
+      .trigger()
+      .catch((err) => ctx.logger.warn({ err }, 'Failed to wake queue worker'));
+
+    return ctx.response.json({ jobId: translationJob.id });
+  }
+
+  public async estimateTranslation(ctx: HttpContext) {
+    const storyService = new StoryService(cms.config);
+    const { story } = await storyService.parsePath(ctx);
+    if (story === undefined) return ctx.response.notFound();
+
+    const source = ctx.request.input('source');
+    const targetLocale = ctx.request.input('targetLocale');
+    if (!source || !targetLocale) {
+      return ctx.response.badRequest({
+        error: 'Missing source content or target locale',
+      });
+    }
+
+    const estimate = await new ChapterTranslationService().estimate(source, targetLocale);
+
+    return ctx.response.json(estimate);
   }
 
   public async delete(ctx: HttpContext) {

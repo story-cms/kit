@@ -1,15 +1,16 @@
 <template>
   <div
+    ref="cardEl"
     class="relative my-2 list-none rounded-xl border border-gray-200 p-0"
     :class="{
       'h-full': stretchForAlignment,
       'self-start': translationMode && !expanded,
     }"
+    :inert="isAutoTranslating"
     :data-translation-block-index="translationMode ? blockIndex : undefined"
     :data-translation-block-side="
       translationMode ? (readOnly ? 'source' : 'translation') : undefined
     "
-    ref="cardEl"
     :draggable="isDragHandleActive"
     @dragstart="onDragStart"
     @dragover.prevent
@@ -78,7 +79,7 @@
             <CircleAlert class="size-5" aria-hidden="true" />
           </div>
           <button
-            v-if="!readOnly && !translationMode"
+            v-if="!readOnly && !translationMode && !isAutoTranslating"
             type="button"
             class="rounded-xl p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
             :aria-label="`Delete ${kindLabel} block`"
@@ -103,7 +104,11 @@
         </div>
       </div>
 
-      <div v-if="expanded" class="space-y-6 p-6" :class="{ 'flex-1': stretchForAlignment }">
+      <div
+        v-if="expanded"
+        class="space-y-6 p-6"
+        :class="{ 'flex-1': stretchForAlignment }"
+      >
         <slot />
       </div>
       <div
@@ -113,6 +118,8 @@
         <slot name="footer" />
       </div>
     </div>
+
+    <TranslationLockOverlay v-if="isAutoTranslating" />
   </div>
 </template>
 
@@ -127,6 +134,7 @@ import {
   Trash2,
   User,
 } from '@lucide/vue';
+import TranslationLockOverlay from '../../../shared/translation-lock-overlay.vue';
 
 const props = withDefaults(
   defineProps<{
@@ -141,17 +149,21 @@ const props = withDefaults(
     errorMessage?: string;
     readOnly?: boolean;
     translationMode?: boolean;
+    isAutoTranslating?: boolean;
     blockIndex?: number;
   }>(),
   {
     readOnly: false,
     translationMode: false,
+    isAutoTranslating: false,
     blockIndex: undefined,
   },
 );
 
 const stretchForAlignment = computed(() => props.translationMode && props.expanded);
-const canDrag = computed(() => !props.readOnly && !props.translationMode);
+const canDrag = computed(
+  () => !props.readOnly && !props.translationMode && !props.isAutoTranslating,
+);
 const cardEl = ref<HTMLElement | null>(null);
 const isDragHandleActive = ref(false);
 const isDragging = ref(false);

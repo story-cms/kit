@@ -26,6 +26,7 @@ import streams from '#start/routes/streams';
 import { ui, uiTools } from '#start/routes/ui';
 import users from '#start/routes/users';
 import settings from '#start/routes/settings';
+import tokens from '#start/routes/tokens';
 
 // Public routes
 
@@ -48,6 +49,7 @@ router
     streams();
     preferences();
     settings();
+    tokens();
   })
   .use(middleware.auth());
 

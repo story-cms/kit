@@ -10,6 +10,7 @@
     :template="template"
     :read-only="readOnly"
     :translation-mode="translationMode"
+    :is-auto-translating="isAutoTranslating"
     @update:block="emit('update:block', $event)"
     @delete="emit('delete')"
     @toggle="emit('toggle')"
@@ -26,6 +27,7 @@
     :template="template"
     :read-only="readOnly"
     :translation-mode="translationMode"
+    :is-auto-translating="isAutoTranslating"
     @update:block="emit('update:block', $event)"
     @delete="emit('delete')"
     @toggle="emit('toggle')"
@@ -51,6 +53,7 @@ defineProps<{
   template?: string | null;
   readOnly?: boolean;
   translationMode?: boolean;
+  isAutoTranslating?: boolean;
 }>();
 
 const emit = defineEmits<{

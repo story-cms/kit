@@ -20,6 +20,7 @@
           :chapter-type="chapterType"
           :template="template"
           :translation-mode="true"
+          :is-auto-translating="isAutoTranslating"
           @update:block="updateBlock(index, $event)"
           @delete="deleteBlock(index)"
           @toggle="onToggle(index)"
@@ -66,6 +67,7 @@
           :image-collection-id="imageCollectionId"
           :chapter-type="chapterType"
           :template="template"
+          :is-auto-translating="isAutoTranslating"
           @update:block="updateBlock(index, $event)"
           @delete="deleteBlock(index)"
           @toggle="onToggle(index)"
@@ -113,6 +115,7 @@ const props = withDefaults(
     template?: string | null;
     previousChapterBlocks?: ChapterBlock[];
     isTranslation?: boolean;
+    isAutoTranslating?: boolean;
   }>(),
   {
     videoCollectionId: '',
@@ -121,6 +124,7 @@ const props = withDefaults(
     template: null,
     previousChapterBlocks: () => [],
     isTranslation: false,
+    isAutoTranslating: false,
   },
 );
 
