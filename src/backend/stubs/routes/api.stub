@@ -3,6 +3,7 @@
 }}}
 import router from '@adonisjs/core/services/router';
 import { middleware } from '#start/kernel';
+import { idMatcher } from '@story-cms/kit';
 const StreamController = () => import('#controllers/streams_controller');
 const ChaptersController = () => import('#controllers/chapters_controller');
 const PreviewController = () => import('#controllers/preview_controller');
@@ -12,28 +13,26 @@ const InvitationsController = () => import('#controllers/invitations_controller'
 const StoriesController = () => import('#controllers/stories_controller');
 const LocaleController = () => import('#controllers/locale_controller');
 
-const number = /^[0-9]+$/;
-
 export default () => {
   router
     .group(() => {
       router
         .get('/preview/:number', [PreviewController, 'get'])
-        .where('number', { match: number });
+        .where('number', idMatcher);
 
-      router.get('/stream/:id', [StreamController, 'get']).where('id', { match: number });
+      router.get('/stream/:id', [StreamController, 'get']).where('id', idMatcher);
       router
         .get('/drop/:id', [StreamController, 'getDrop'])
-        .where('id', { match: number });
+        .where('id', idMatcher);
 
       router
         .get('/chapter/:number', [ChaptersController, 'get'])
-        .where('number', { match: number });
+        .where('number', idMatcher);
 
       router
         .get('/chapter/from/:from/to/:to', [ChaptersController, 'range'])
-        .where('from', { match: number })
-        .where('to', { match: number });
+        .where('from', idMatcher)
+        .where('to', idMatcher);
 
       router.get('/index', [IndicesController, 'index']);
       router.get('/stories', [StoriesController, 'home']);

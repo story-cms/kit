@@ -2,6 +2,7 @@
   exports({ to: app.makePath('start/routes/streams.ts') })
 }}}
 import router from '@adonisjs/core/services/router';
+import { idMatcher } from '@story-cms/kit';
 const StreamController = () => import('#controllers/streams_controller');
 
 export default () => {
@@ -11,13 +12,13 @@ export default () => {
   // gallery of configured streams
   router.get(':locale/stream', [StreamController, 'gallery']);
   // index of a stream's drops
-  router.get(':locale/stream/:id', [StreamController, 'index']);
+  router.get(':locale/stream/:id', [StreamController, 'index']).where('id', idMatcher);
   // create a drop for a stream
-  router.get(':locale/stream/:id/drop/create', [StreamController, 'create']);
+  router.get(':locale/stream/:id/drop/create', [StreamController, 'create']).where('id', idMatcher);
   // edit a drop
-  router.get(':locale/drop/:id/edit', [StreamController, 'edit']);
+  router.get(':locale/drop/:id/edit', [StreamController, 'edit']).where('id', idMatcher);
   // delete a drop
-  router.delete(':locale/drop/:id', [StreamController, 'destroy']);
+  router.delete(':locale/drop/:id', [StreamController, 'destroy']).where('id', idMatcher);
   // update a drop
-  router.post(':locale/drop/:id', [StreamController, 'update']);
+  router.post(':locale/drop/:id', [StreamController, 'update']).where('id', idMatcher);
 };

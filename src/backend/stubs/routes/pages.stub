@@ -2,6 +2,7 @@
   exports({ to: app.makePath('start/routes/pages.ts') })
 }}}
 import router from '@adonisjs/core/services/router';
+import { idMatcher } from '@story-cms/kit';
 
 const PagesController = () => import('#controllers/pages_controller');
 
@@ -10,9 +11,9 @@ export default () => {
     locale: 'en',
   });
   router.get(':locale/page', [PagesController, 'index']);
-  router.get(':locale/page/:id/edit', [PagesController, 'edit']);
+  router.get(':locale/page/:id/edit', [PagesController, 'edit']).where('id', idMatcher);
   router.get(':locale/page/create', [PagesController, 'create']);
-  router.delete(':locale/page/:id', [PagesController, 'destroy']);
+  router.delete(':locale/page/:id', [PagesController, 'destroy']).where('id', idMatcher);
   router.post(':locale/page/sort', [PagesController, 'sort']);
-  router.post(':locale/page/:id', [PagesController, 'update']);
+  router.post(':locale/page/:id', [PagesController, 'update']).where('id', idMatcher);
 };
