@@ -1,6 +1,6 @@
 import type { LanguageSpecification, LocaleItem } from '../types.js';
 
-export const LANGUAGE_LABEL_SEPARATOR = /\s*-\s*|\s*\|\s*/;
+export const LANGUAGE_LABEL_SEPARATOR = /\s*-\s*|\s*\|\s*|\s*:\s*/;
 
 /** Whether tag is a well-formed IETF BCP 47 language tag (hyphen-separated). */
 export function isValidLanguageTag(tag: string): boolean {
