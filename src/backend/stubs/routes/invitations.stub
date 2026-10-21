@@ -2,15 +2,16 @@
   exports({ to: app.makePath('start/routes/invitations.ts') })
 }}}
 import router from '@adonisjs/core/services/router';
+import { idMatcher } from '@story-cms/kit';
 
 const InvitationsController = () => import('#controllers/invitations_controller');
 const AnalyticsController = () => import('#controllers/analytics_controller');
 
 export default () => {
-  router.get(':locale/invitation/:id/edit', [InvitationsController, 'edit']);
+  router.get(':locale/invitation/:id/edit', [InvitationsController, 'edit']).where('id', idMatcher);
   router.get(':locale/invitation/create', [InvitationsController, 'create']);
-  router.post(':locale/invitation/:id', [InvitationsController, 'update']);
-  router.delete(':locale/invitation/:id', [InvitationsController, 'destroy']);
+  router.post(':locale/invitation/:id', [InvitationsController, 'update']).where('id', idMatcher);
+  router.delete(':locale/invitation/:id', [InvitationsController, 'destroy']).where('id', idMatcher);
   router.get(':locale/invitation', [InvitationsController, 'index']);
-  router.get(':locale/invitation/:id/stats', [AnalyticsController, 'invitationStats']);
+  router.get(':locale/invitation/:id/stats', [AnalyticsController, 'invitationStats']).where('id', idMatcher);
 };

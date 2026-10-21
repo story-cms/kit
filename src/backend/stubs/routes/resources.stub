@@ -2,14 +2,15 @@
   exports({ to: app.makePath('start/routes/resources.ts') })
 }}}
 import router from '@adonisjs/core/services/router';
+import { idMatcher } from '@story-cms/kit';
 
 const ResourcesController = () => import('#controllers/resources_controller');
 
 export default () => {
   router.get(':locale/resource', [ResourcesController, 'index']);
   router.get(':locale/resource/create', [ResourcesController, 'create']);
-  router.get(':locale/resource/:id/edit', [ResourcesController, 'edit']);
+  router.get(':locale/resource/:id/edit', [ResourcesController, 'edit']).where('id', idMatcher);
   router.post(':locale/resource', [ResourcesController, 'store']);
-  router.post(':locale/resource/:id', [ResourcesController, 'update']);
-  router.delete(':locale/resource/:id', [ResourcesController, 'destroy']);
+  router.post(':locale/resource/:id', [ResourcesController, 'update']).where('id', idMatcher);
+  router.delete(':locale/resource/:id', [ResourcesController, 'destroy']).where('id', idMatcher);
 };
