@@ -21,7 +21,7 @@ export {
   type StoryPublishMetadata,
 } from '../../shared/story_helpers.js';
 
-export const INT32_MAX = 2147483647;
+const INT32_MAX = 2147483647;
 
 const buildIdPattern = (max: number): RegExp => {
   const digits = String(max);
