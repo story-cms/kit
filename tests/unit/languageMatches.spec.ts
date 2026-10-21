@@ -19,6 +19,12 @@ test.describe('languageMatches', () => {
     expect(languageMatches('English | American', 'English, American Standard')).toBe(true);
   });
 
+  test('match stored format with colon separator (e.g. cms seeded languages)', () => {
+    expect(languageMatches('Hindi: हिंदी', 'Hindi')).toBe(true);
+    expect(languageMatches('Arabic: عربى', 'Arabic, Sudanese Creole')).toBe(true);
+    expect(languageMatches('French: Français', 'French')).toBe(true);
+  });
+
   test('match stored format to API dialect with comma', () => {
     expect(languageMatches('Arabic - عربى', 'Arabic, Sudanese Creole')).toBe(true);
   });
