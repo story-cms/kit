@@ -141,6 +141,8 @@ export const safeChapterTitle = (
   return `${storyName} <span>.</span> ${padZero(number)} <span>.</span> ${safe}`;
 };
 
+export const BIBLE_API_BASE = 'https://rest.api.bible/v1';
+
 export const parseReference = (reference: string): string => {
   const standardReference = fromStandardReference(reference);
   if (standardReference !== '') {
