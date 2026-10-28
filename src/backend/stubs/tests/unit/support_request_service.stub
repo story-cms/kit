@@ -1,0 +1,42 @@
+{{{
+  exports({ to: app.makePath('tests/unit/support_request_service.spec.ts') })
+}}}
+import testUtils from '@adonisjs/core/services/test_utils';
+import { test } from '@japa/runner';
+import { SupportRequestService } from '@story-cms/kit';
+import cms from '#services/cms';
+import { setupMockCms, testCmsConfig } from '#tests/helpers/cms_mock';
+
+test.group('SupportRequestService', (group) => {
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
+  group.each.setup(() => setupMockCms(testCmsConfig));
+
+  test('throws for unknown support code', async ({ assert }) => {
+    const service = new SupportRequestService(cms);
+
+    await assert.rejects(
+      () => Promise.resolve(service.getSupportRequestDetails('UNKNOWN_CODE' as 'REMOVE_LANGUAGE')),
+      /Invalid support code/,
+    );
+  });
+
+  test('resolves BUY_TOKENS request details', async ({ assert }) => {
+    const service = new SupportRequestService(cms);
+
+    const details = service.getSupportRequestDetails('BUY_TOKENS');
+
+    assert.equal(details.subject, 'Support request: Token pool top-up requested');
+    assert.isUndefined(details.language);
+  });
+
+  test('resolves REMOVE_LANGUAGE request details with the language spec', async ({
+    assert,
+  }) => {
+    const service = new SupportRequestService(cms);
+
+    const details = service.getSupportRequestDetails('REMOVE_LANGUAGE', 'es');
+
+    assert.equal(details.subject, 'Support request: Remove language');
+    assert.equal(details.language?.locale, 'es');
+  });
+});

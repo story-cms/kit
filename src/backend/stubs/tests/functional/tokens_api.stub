@@ -1,0 +1,133 @@
+{{{
+  exports({ to: app.makePath('tests/functional/tokens_api.spec.ts') })
+}}}
+import testUtils from '@adonisjs/core/services/test_utils';
+import { test } from '@japa/runner';
+import { Allocation, TokenTopUp, TokenUsage, UserFactory } from '@story-cms/kit';
+import { setupMockCms, cleanupMockCms, testCmsConfig } from '#tests/helpers/cms_mock';
+
+test.group('TokensController', (group) => {
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
+  group.each.setup(() => setupMockCms(testCmsConfig));
+  group.each.teardown(() => cleanupMockCms());
+
+  test('GET /:locale/settings/tokens renders the pool, pots, usage, and transactions', async ({
+    client,
+    assert,
+  }) => {
+    const user = await UserFactory.create();
+    await TokenTopUp.create({ tokens: 5000, userId: user.id });
+    await Allocation.create({ locale: 'es', tokens: 1000, userId: user.id });
+    await TokenUsage.create({
+      locale: 'es',
+      sourceLocale: 'en',
+      action: 'Translated "Test chapter"',
+      blockCount: 3,
+      inputTokens: 100,
+      outputTokens: 50,
+    });
+
+    const response = await client
+      .get('/en/settings/tokens')
+      .header('X-Inertia', 'true')
+      .loginAs(user);
+
+    response.assertStatus(200);
+    const props = response.body().props;
+
+    assert.equal(props.poolTotal, 5000);
+
+    const esPot = props.pots.find((pot: { locale: string }) => pot.locale === 'es');
+    assert.exists(esPot);
+    assert.equal(esPot.allocated, 1000);
+    assert.equal(esPot.used, 150);
+    assert.equal(esPot.name, 'Spanish');
+
+    // The source locale never gets its own pot.
+    assert.isUndefined(
+      props.pots.find((pot: { locale: string }) => pot.locale === 'en'),
+    );
+
+    assert.lengthOf(props.dailyUsage, 7);
+
+    assert.lengthOf(props.transactions, 1);
+    assert.equal(props.transactions[0].action, 'Translated "Test chapter"');
+    assert.equal(props.transactions[0].sourceLanguage, 'English');
+    assert.equal(props.transactions[0].targetLanguage, 'Spanish');
+    assert.equal(props.transactions[0].blocks, 3);
+    assert.equal(props.transactions[0].tokensUsed, 150);
+  });
+
+  test('POST /:locale/settings/tokens/:languageLocale/allocate moves tokens from the pool into a locale', async ({
+    client,
+    assert,
+  }) => {
+    const user = await UserFactory.create();
+    await TokenTopUp.create({ tokens: 5000, userId: user.id });
+
+    const response = await client
+      .post('/en/settings/tokens/es/allocate')
+      .json({ delta: 1000 })
+      .loginAs(user)
+      .withCsrfToken();
+
+    response.assertRedirectsTo('/');
+
+    const allocations = await Allocation.query().where('locale', 'es');
+    assert.lengthOf(allocations, 1);
+    assert.equal(allocations[0].tokens, 1000);
+  });
+
+  test('allocate clamps to what is actually unallocated in the pool', async ({
+    client,
+    assert,
+  }) => {
+    const user = await UserFactory.create();
+    await TokenTopUp.create({ tokens: 500, userId: user.id });
+
+    await client
+      .post('/en/settings/tokens/es/allocate')
+      .json({ delta: 1000 })
+      .loginAs(user)
+      .withCsrfToken();
+
+    const allocations = await Allocation.query().where('locale', 'es');
+    assert.lengthOf(allocations, 1);
+    assert.equal(allocations[0].tokens, 500);
+  });
+
+  test('deallocating cannot drop a locale below what it has already used', async ({
+    client,
+    assert,
+  }) => {
+    const user = await UserFactory.create();
+    await TokenTopUp.create({ tokens: 5000, userId: user.id });
+    await Allocation.create({ locale: 'es', tokens: 1000, userId: user.id });
+    await TokenUsage.create({
+      locale: 'es',
+      inputTokens: 600,
+      outputTokens: 100,
+    });
+
+    await client
+      .post('/en/settings/tokens/es/allocate')
+      .json({ delta: -900 })
+      .loginAs(user)
+      .withCsrfToken();
+
+    const allocated = await Allocation.query().where('locale', 'es').sum('tokens as total');
+    assert.equal(Number(allocated[0].$extras.total), 700);
+  });
+
+  test('allocate rejects a non-numeric delta', async ({ client }) => {
+    const user = await UserFactory.create();
+
+    const response = await client
+      .post('/en/settings/tokens/es/allocate')
+      .json({ delta: 'not-a-number' })
+      .loginAs(user)
+      .withCsrfToken();
+
+    response.assertStatus(400);
+  });
+});

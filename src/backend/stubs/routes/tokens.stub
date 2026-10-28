@@ -1,0 +1,14 @@
+{{{
+  exports({ to: app.makePath('start/routes/tokens.ts') })
+}}}
+import router from '@adonisjs/core/services/router';
+
+const TokensController = () => import('#controllers/tokens_controller');
+
+export default () => {
+  router.get(':locale/settings/tokens', [TokensController, 'index']);
+  router.post(':locale/settings/tokens/:languageLocale/allocate', [
+    TokensController,
+    'allocate',
+  ]);
+};

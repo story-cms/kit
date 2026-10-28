@@ -57,6 +57,25 @@
       />
     </Variant>
 
+    <Variant title="Auto-translating" :setup-app="loadAutoTranslating">
+      <StandardChapterEdit
+        :is-translation="true"
+        :config="sharedProps.config"
+        :user="sharedProps.user"
+        :language="spanish"
+        :errors="{}"
+        :bookmarks="sharedProps.bookmarks"
+        :draft="sampleDevotionDraft"
+        :bundle="sampleDevotionDraftTranslationBundle"
+        :source="sampleDevotionDraftSourceBundle"
+        :story="devotionDraftEditStory"
+        :available-resources="availableResources"
+        :has-edit-review="false"
+        :last-published="''"
+        :providers="mockResourceProviders"
+      />
+    </Variant>
+
     <Variant title="Validation errors on tabs" :setup-app="loadValidationErrors">
       <StandardChapterEdit
         :is-translation="true"
@@ -93,7 +112,7 @@ import {
   german,
   miniSidebar,
 } from '../test/mocks';
-import { useModelStore, useSharedStore } from '../store';
+import { useModelStore, useSharedStore, useTranslationTrackerStore } from '../store';
 import type { StoryHandler } from '../shared/helpers';
 import type { StandardChapterEditBundle } from '../../types';
 
@@ -319,6 +338,26 @@ const loadValidationErrors: StoryHandler = (context): void => {
   miniSidebar(context);
   loadTranslationModel(context);
   useSharedStore().setErrors(devotionDraftEditValidationErrors);
+  const url = new URL(window.location.href);
+  url.searchParams.set('tab', 'Blocks');
+  window.history.replaceState({}, '', url.toString());
+};
+
+const loadAutoTranslating: StoryHandler = (context): void => {
+  miniSidebar(context);
+  loadTranslationModel(context);
+  useTranslationTrackerStore().addOptimisticJob({
+    id: 9001,
+    storyId: devotionDraftEditStory.id,
+    draftId: sampleDevotionDraft.id,
+    chapterNumber: sampleDevotionDraft.number,
+    locale: 'es',
+    localeName: 'Spanish',
+    chapterTitle: sampleDevotionDraftTranslationBundle.title,
+    status: 'processing',
+    canUndo: false,
+    actualTokens: null,
+  });
   const url = new URL(window.location.href);
   url.searchParams.set('tab', 'Blocks');
   window.history.replaceState({}, '', url.toString());

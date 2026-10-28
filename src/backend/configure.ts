@@ -45,6 +45,11 @@ async function addMigrations(command: Configure, codemods: Codemods) {
     'configs',
     'stories',
     'resources',
+    'translation_jobs',
+    'token_usages',
+    'token_top_ups',
+    'allocations',
+    'queue',
   ];
 
   const path = command.app.migrationsPath();
@@ -88,9 +93,12 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'config/database.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/bodyparser.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/cache.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'config/queue.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/providers.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'config/auth.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'services/cms.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'services/queue_worker_trigger.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'jobs/translate_chapter.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/users_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/auth_controller.stub', {});
   await codemods.makeUsingStub(
@@ -107,6 +115,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'controllers/invitations_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/chapters_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/drafts_controller.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'controllers/translation_jobs_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/pages_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/resources_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/ui_controller.stub', {});
@@ -119,6 +128,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'controllers/stories_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/users_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/settings_controller.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'controllers/tokens_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/locale_controller.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'controllers/health_controller.stub', {});
 
@@ -126,6 +136,7 @@ export async function configure(command: Configure) {
 
   await codemods.makeUsingStub(stubsRoot, 'routes/users.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/settings.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'routes/tokens.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/auth.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/health.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'routes/routes.stub', {});
@@ -166,7 +177,20 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'tests/ui.rest.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/functional/draft.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/functional/health.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'tests/functional/draft_translation_api.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'tests/functional/translation_jobs_api.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'tests/functional/translate_chapter_job.stub', {});
+  await codemods.makeUsingStub(
+    stubsRoot,
+    'tests/functional/chapter_translation_service.stub',
+    {},
+  );
+  await codemods.makeUsingStub(stubsRoot, 'tests/functional/tokens_api.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'tests/functional/settings_api.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'tests/functional/ui_controller.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'tests/helpers/ai_service_mock.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/ui_service.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'tests/unit/token_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/invitation_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/page_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/resource_service.stub', {});
@@ -175,6 +199,7 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/user_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/progress_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/language_service.stub', {});
+  await codemods.makeUsingStub(stubsRoot, 'tests/unit/support_request_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/locale_service.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/unit/model.stub', {});
   await codemods.makeUsingStub(stubsRoot, 'tests/helpers/cms_mock.stub', {});
@@ -272,7 +297,10 @@ export async function configure(command: Configure) {
    */
 
   await codemods.updateRcFile((rcFile: any) => {
-    rcFile.addProvider('@story-cms/kit/cms_provider');
+    rcFile
+      .addProvider('@story-cms/kit/cms_provider')
+      .addProvider('@adonisjs/queue/queue_provider')
+      .addCommand('@adonisjs/queue/commands');
   });
 
   /**

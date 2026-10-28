@@ -858,6 +858,8 @@ export type Subscription =
   | 'invitation'
   | 'resource'
   | 'settings'
+  | 'languages-settings'
+  | 'tokens'
   | 'ui'
   | 'page';
 
@@ -933,9 +935,55 @@ export interface LanguageListItemProps {
 }
 
 export type SupportCode =
-  'REMOVE_LANGUAGE' | 'UPDATE_LANGUAGE' | 'UPDATE_CONTENT' | 'UPDATE_APP';
+  'REMOVE_LANGUAGE' | 'UPDATE_LANGUAGE' | 'UPDATE_CONTENT' | 'UPDATE_APP' | 'BUY_TOKENS';
 
 export interface SupportRequest {
   supportCode: SupportCode;
   removeLanguageCode?: string;
+}
+
+/// ----------------------------------------------------
+///  tokens
+/// ----------------------------------------------------
+
+export interface TokenPot {
+  locale: string;
+  name: string;
+  allocated: number;
+  used: number;
+}
+
+export type TokenPotField = 'allocated' | 'used' | 'remaining';
+
+export interface DailyTokenUsage {
+  day: string;
+  tokens: number;
+}
+
+export interface TokenTransaction {
+  date: string;
+  action: string;
+  sourceLanguage: string;
+  targetLanguage: string;
+  blocks: number;
+  tokensUsed: number;
+}
+
+/// ----------------------------------------------------
+///  translation jobs
+/// ----------------------------------------------------
+
+export type TranslationJobStatus = 'pending' | 'processing' | 'complete' | 'failed';
+
+export interface TranslationJobSummary {
+  id: number;
+  storyId: number;
+  draftId: number;
+  chapterNumber: number | null;
+  locale: string;
+  localeName: string;
+  chapterTitle: string;
+  status: TranslationJobStatus;
+  canUndo: boolean;
+  actualTokens: number | null;
 }

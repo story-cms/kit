@@ -1,0 +1,272 @@
+{{{
+  exports({ to: app.makePath('tests/functional/translation_jobs_api.spec.ts') })
+}}}
+import testUtils from '@adonisjs/core/services/test_utils';
+import { test } from '@japa/runner';
+import { DateTime } from 'luxon';
+import db from '@adonisjs/lucid/services/db';
+import {
+  Draft,
+  DraftFactory,
+  TokenUsage,
+  TranslationJob,
+  UserFactory,
+} from '@story-cms/kit';
+import { setupMockCms, cleanupMockCms } from '#tests/helpers/cms_mock';
+import { seedTestStory } from '#tests/helpers/story_test_helper';
+
+test.group('TranslationJobsController', (group) => {
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction());
+  group.each.setup(() => setupMockCms());
+  group.each.teardown(() => cleanupMockCms());
+
+  test('GET /:locale/translation-jobs returns pending/processing jobs regardless of age', async ({
+    client,
+    assert,
+  }) => {
+    const user = await UserFactory.create();
+    await seedTestStory();
+    const draft = await DraftFactory.merge({
+      storyId: 1,
+      number: 1,
+      locale: 'fr',
+    }).create();
+
+    const oldPending = await TranslationJob.create({
+      storyId: 1,
+      draftId: draft.id,
+      locale: 'fr',
+      chapterTitle: 'Old pending',
+      userId: user.id,
+      estimatedTokens: 100,
+      status: 'pending',
+    });
+    await db
+      .from('translation_jobs')
+      .where('id', oldPending.id)
+      .update({ updated_at: DateTime.now().minus({ hours: 2 }).toSQL() });
+
+    const response = await client.get('/fr/translation-jobs').loginAs(user);
+
+    response.assertStatus(200);
+    assert.isTrue(
+      response.body().some((job: { id: number }) => job.id === oldPending.id),
+    );
+  });
+
+  test('GET /:locale/translation-jobs hides complete/failed jobs older than the recent window', async ({
+    client,
+    assert,
+  }) => {
+    const user = await UserFactory.create();
+    await seedTestStory();
+    const draft = await DraftFactory.merge({
+      storyId: 1,
+      number: 1,
+      locale: 'fr',
+    }).create();
+
+    const recentComplete = await TranslationJob.create({
+      storyId: 1,
+      draftId: draft.id,
+      locale: 'fr',
+      chapterTitle: 'Recently finished',
+      userId: user.id,
+      estimatedTokens: 100,
+      status: 'complete',
+    });
+
+    const staleComplete = await TranslationJob.create({
+      storyId: 1,
+      draftId: draft.id,
+      locale: 'fr',
+      chapterTitle: 'Finished ages ago',
+      userId: user.id,
+      estimatedTokens: 100,
+      status: 'complete',
+    });
+    await db
+      .from('translation_jobs')
+      .where('id', staleComplete.id)
+      .update({ updated_at: DateTime.now().minus({ minutes: 30 }).toSQL() });
+
+    const response = await client.get('/fr/translation-jobs').loginAs(user);
+
+    response.assertStatus(200);
+    const ids = response.body().map((job: { id: number }) => job.id);
+    assert.include(ids, recentComplete.id);
+    assert.notInclude(ids, staleComplete.id);
+  });
+
+  test('GET /:locale/translation-jobs resolves locale display names, chapter number, and actual tokens', async ({
+    client,
+    assert,
+  }) => {
+    const user = await UserFactory.create();
+    await seedTestStory();
+    const draft = await DraftFactory.merge({
+      storyId: 1,
+      number: 7,
+      locale: 'es',
+    }).create();
+
+    const job = await TranslationJob.create({
+      storyId: 1,
+      draftId: draft.id,
+      locale: 'es',
+      chapterTitle: 'Some chapter',
+      userId: user.id,
+      estimatedTokens: 100,
+      status: 'complete',
+    });
+    await TokenUsage.create({
+      storyId: 1,
+      draftId: draft.id,
+      locale: 'es',
+      translationJobId: job.id,
+      inputTokens: 40,
+      outputTokens: 15,
+    });
+
+    const response = await client.get('/es/translation-jobs').loginAs(user);
+
+    response.assertStatus(200);
+    response.assertBodyContains([
+      {
+        id: job.id,
+        locale: 'es',
+        localeName: 'Spanish',
+        chapterNumber: 7,
+        actualTokens: 55,
+        canUndo: false,
+      },
+    ]);
+  });
+
+  test('a complete job with a previousBundle snapshot can be undone', async ({
+    client,
+    assert,
+  }) => {
+    const user = await UserFactory.create();
+    await seedTestStory();
+    const draft = await DraftFactory.merge({
+      storyId: 1,
+      number: 1,
+      locale: 'fr',
+      bundle: { title: 'Translated title' },
+    }).create();
+
+    const job = await TranslationJob.create({
+      storyId: 1,
+      draftId: draft.id,
+      locale: 'fr',
+      chapterTitle: 'Some chapter',
+      userId: user.id,
+      estimatedTokens: 100,
+      status: 'complete',
+      previousBundle: { title: 'Original title' },
+    });
+
+    const response = await client.get('/fr/translation-jobs').loginAs(user);
+    response.assertBodyContains([{ id: job.id, canUndo: true }]);
+
+    const undoResponse = await client
+      .post(`/fr/translation-jobs/${job.id}/undo`)
+      .loginAs(user)
+      .withCsrfToken();
+    undoResponse.assertStatus(204);
+
+    const restoredDraft = await Draft.findOrFail(draft.id);
+    assert.deepEqual(restoredDraft.bundle, { title: 'Original title' });
+
+    const jobFromDb = await TranslationJob.find(job.id);
+    assert.isNull(jobFromDb);
+  });
+
+  test('undo is rejected for a job with no previousBundle', async ({ client }) => {
+    const user = await UserFactory.create();
+    await seedTestStory();
+    const draft = await DraftFactory.merge({
+      storyId: 1,
+      number: 1,
+      locale: 'fr',
+    }).create();
+
+    const job = await TranslationJob.create({
+      storyId: 1,
+      draftId: draft.id,
+      locale: 'fr',
+      chapterTitle: 'Some chapter',
+      userId: user.id,
+      estimatedTokens: 100,
+      status: 'complete',
+      previousBundle: null,
+    });
+
+    const response = await client
+      .post(`/fr/translation-jobs/${job.id}/undo`)
+      .loginAs(user)
+      .withCsrfToken();
+
+    response.assertStatus(400);
+  });
+
+  test('undo is rejected for a job that is still pending', async ({ client }) => {
+    const user = await UserFactory.create();
+    await seedTestStory();
+    const draft = await DraftFactory.merge({
+      storyId: 1,
+      number: 1,
+      locale: 'fr',
+    }).create();
+
+    const job = await TranslationJob.create({
+      storyId: 1,
+      draftId: draft.id,
+      locale: 'fr',
+      chapterTitle: 'Some chapter',
+      userId: user.id,
+      estimatedTokens: 100,
+      status: 'pending',
+      previousBundle: { title: 'Original title' },
+    });
+
+    const response = await client
+      .post(`/fr/translation-jobs/${job.id}/undo`)
+      .loginAs(user)
+      .withCsrfToken();
+
+    response.assertStatus(400);
+  });
+
+  test('DELETE /:locale/translation-jobs/:id dismisses a job', async ({
+    client,
+    assert,
+  }) => {
+    const user = await UserFactory.create();
+    await seedTestStory();
+    const draft = await DraftFactory.merge({
+      storyId: 1,
+      number: 1,
+      locale: 'fr',
+    }).create();
+
+    const job = await TranslationJob.create({
+      storyId: 1,
+      draftId: draft.id,
+      locale: 'fr',
+      chapterTitle: 'Some chapter',
+      userId: user.id,
+      estimatedTokens: 100,
+      status: 'failed',
+    });
+
+    const response = await client
+      .delete(`/fr/translation-jobs/${job.id}`)
+      .loginAs(user)
+      .withCsrfToken();
+
+    response.assertStatus(204);
+    assert.isNull(await TranslationJob.find(job.id));
+  });
+});

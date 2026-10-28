@@ -55,6 +55,18 @@ export default class UisController {
     }
   }
 
+  public async estimateTranslation(ctx: HttpContext) {
+    const locale = cms.localeFromPath(ctx);
+
+    if (!cms.isTranslation(locale)) {
+      return ctx.response.unprocessableEntity('Cannot translate source language');
+    }
+
+    const estimate = await new UiService(cms).estimateFillMissing(locale);
+
+    return ctx.response.json(estimate);
+  }
+
   public async translateBulk(ctx: HttpContext) {
     const locale = cms.localeFromPath(ctx);
 
@@ -65,6 +77,11 @@ export default class UisController {
     const service = new UiService(cms);
 
     try {
+      const { inputTokens, outputTokens, balance } = await service.estimateFillMissing(locale);
+      if (balance < inputTokens + outputTokens) {
+        return ctx.response.badRequest({ error: 'Insufficient token balance' });
+      }
+
       const count = await service.fillMissing(locale);
 
       await Activity.create({
@@ -87,6 +104,12 @@ export default class UisController {
 
     const key = ctx.request.input('key');
     const service = new UiService(cms);
+
+    const estimate = await service.estimateSuggest(locale, key);
+    if (estimate && estimate.balance < estimate.inputTokens + estimate.outputTokens) {
+      return ctx.response.badRequest({ error: 'Insufficient token balance' });
+    }
+
     const suggestion = await service.suggest(locale, key);
 
     return ctx.response.json({ suggestion });

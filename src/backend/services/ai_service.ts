@@ -1,10 +1,17 @@
 import OpenAI from 'openai';
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
-import { encode } from 'node:punycode';
+import { encode } from 'gpt-tokenizer';
 
 export class AiService {
-  private client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  private client: OpenAI | null = null;
+
+  private getClient() {
+    if (!this.client) {
+      this.client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    }
+    return this.client;
+  }
   private MAX_INPUT_TOKENS = 4096;
   private MAX_OUTPUT_TOKENS = 4096;
   private TOKEN_BUFFER = 500;
@@ -12,17 +19,22 @@ export class AiService {
   private SYSTEM_PROMPT =
     'You are a professional translator. Translate texts naturally and concisely for a mobile app. Preserve all placeholders exactly as they appear (e.g., {userName}).';
 
-  public async translate(input: TranslationInput): Promise<TranslationOutput> {
+  public async translate(input: TranslationInput): Promise<{
+    output: TranslationOutput;
+    usage: { inputTokens: number; outputTokens: number };
+  }> {
+    const parsed = TranslationInputSchema.parse(input);
     const output: TranslationOutput = {};
-    const batches = this.getBatchedSources(input);
+    const usage = { inputTokens: 0, outputTokens: 0 };
+    const batches = this.getBatchedSources(parsed);
     const sourcePlaceholders = new Map(
-      input.translationSources.map((s) => [s.id, s.placeholders]),
+      parsed.translationSources.map((s) => [s.id, s.placeholders]),
     );
 
     for (const batch of batches) {
-      const prompt = this.createPrompt(input.outputLocales, batch);
+      const prompt = this.createPrompt(parsed.outputLocales, batch);
 
-      const completion = await this.client.chat.completions.parse({
+      const completion = await this.getClient().chat.completions.parse({
         messages: [
           { role: 'system', content: this.SYSTEM_PROMPT },
           { role: 'user', content: prompt },
@@ -30,6 +42,9 @@ export class AiService {
         model: this.MODEL,
         response_format: zodResponseFormat(TranslationResponseSchema, 'translations'),
       });
+
+      usage.inputTokens += completion.usage?.prompt_tokens ?? 0;
+      usage.outputTokens += completion.usage?.completion_tokens ?? 0;
 
       const result = completion.choices[0].message.parsed;
       if (!result) throw new Error('Translation failed');
@@ -49,7 +64,30 @@ export class AiService {
       }
     }
 
-    return TranslationOutputSchema.parse(output);
+    return { output: TranslationOutputSchema.parse(output), usage };
+  }
+
+  // Dry-run estimate: tokenizes locally against the same batching `translate()`
+  // would use, without ever calling OpenAI.
+  public estimateTokens(input: TranslationInput): {
+    inputTokens: number;
+    outputTokens: number;
+  } {
+    const parsed = TranslationInputSchema.parse(input);
+    const batches = this.getBatchedSources(parsed);
+    const inputTokens = batches.reduce(
+      (total, batch) =>
+        total +
+        encode(this.SYSTEM_PROMPT).length +
+        encode(this.createPrompt(parsed.outputLocales, batch)).length,
+      0,
+    );
+    const outputTokens = this.estimateOutputTokens(
+      parsed.outputLocales,
+      parsed.translationSources,
+    );
+
+    return { inputTokens, outputTokens };
   }
 
   private getBatchedSources(input: TranslationInput): TranslationSource[][] {
@@ -127,7 +165,7 @@ export class AiService {
     }
   }
 
-  private estimateOutputTokens(locales: string[], sources: TranslationSource[]): number {
+  public estimateOutputTokens(locales: string[], sources: TranslationSource[]): number {
     const expansionFactor = 1.5;
     const baseTokens = 20;
     let total = 0;
@@ -149,7 +187,6 @@ const TranslationSourceSchema = z.object({
   placeholders: z.array(z.string()).optional(),
 });
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const TranslationInputSchema = z.object({
   outputLocales: z.array(z.string()),
   translationSources: z.array(TranslationSourceSchema),

@@ -7,6 +7,8 @@ import { idMatcher } from '@story-cms/kit';
 const StoriesController = () => import('#controllers/stories_controller');
 const ChaptersController = () => import('#controllers/chapters_controller');
 const DraftsController = () => import('#controllers/drafts_controller');
+const TranslationJobsController = () =>
+  import('#controllers/translation_jobs_controller');
 
 export default () => {
   // stories
@@ -66,5 +68,28 @@ export default () => {
   router
     .post(':locale/story/:storyId/draft/:id/reject', [DraftsController, 'reject'])
     .where('storyId', idMatcher)
+    .where('id', idMatcher);
+  router
+    .post(':locale/story/:storyId/draft/:id/auto-translate', [
+      DraftsController,
+      'autoTranslate',
+    ])
+    .where('storyId', idMatcher)
+    .where('id', idMatcher);
+  router
+    .post(':locale/story/:storyId/draft/:id/estimate-translation', [
+      DraftsController,
+      'estimateTranslation',
+    ])
+    .where('storyId', idMatcher)
+    .where('id', idMatcher);
+
+  // translation jobs (background translation tracker)
+  router.get(':locale/translation-jobs', [TranslationJobsController, 'index']);
+  router
+    .delete(':locale/translation-jobs/:id', [TranslationJobsController, 'destroy'])
+    .where('id', idMatcher);
+  router
+    .post(':locale/translation-jobs/:id/undo', [TranslationJobsController, 'undo'])
     .where('id', idMatcher);
 };
