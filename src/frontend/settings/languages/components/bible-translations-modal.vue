@@ -131,7 +131,7 @@ import {
 import Icon from '../../../shared/icon.vue';
 import LanguageModal from './language-modal.vue';
 import StudioButton from '../../../shared/studio-button.vue';
-import { languageMatches } from '../../../shared/helpers';
+import { BIBLE_API_BASE, languageMatches } from '../../../shared/helpers';
 import type { LanguageTableItem, LanguageSpecification } from '../../../../types';
 
 const widgets = useWidgetsStore();
@@ -221,7 +221,7 @@ const getBibleVersions = async (): Promise<Array<APIBibleVersion>> => {
     throw new Error('Missing Bible API key');
   }
   try {
-    const res = await axios.get('https://api.scripture.api.bible/v1/bibles', {
+    const res = await axios.get(`${BIBLE_API_BASE}/bibles`, {
       headers: { 'api-key': apiKey },
     });
     const { data } = res.data;
