@@ -38,13 +38,6 @@
     </div>
     <div class="flex flex-wrap gap-4">
       <Link
-        :href="`/${shared.locale}/page/create`"
-        class="flex items-center gap-x-2 rounded-full bg-blue-50 px-3 py-[9px] text-sm font-medium leading-4 text-blue-700 shadow-[0px_1px_2px_0px_#0000000D] hover:bg-blue-100"
-      >
-        <Icon name="document-add" />
-        New Page
-      </Link>
-      <Link
         v-if="shared.user.isAdmin"
         :href="`/${shared.locale}/user`"
         class="flex items-center gap-x-2 rounded-full bg-blue-50 px-3 py-[9px] text-sm font-medium leading-4 text-blue-700 shadow-[0px_1px_2px_0px_#0000000D] hover:bg-blue-100"

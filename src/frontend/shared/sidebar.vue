@@ -59,17 +59,6 @@
             >
 
             <a
-              v-if="include('story')"
-              :class="classList('story')"
-              :href="`/${locale}/story`"
-              >Stories</a
-            >
-
-            <a v-if="include('page')" :class="classList('page')" :href="`/${locale}/page`"
-              >Pages</a
-            >
-
-            <a
               v-if="include('invitation')"
               :class="classList('invitation')"
               :href="`/${locale}/invitation`"
@@ -96,23 +85,6 @@
               </a>
             </div>
           </section>
-          <div v-if="shared.bookmarks.length > 0">
-            <div class="my-7 border-t border-gray-200"></div>
-            <div class="flex flex-col">
-              <a
-                v-for="bookmark in shared.bookmarks"
-                :key="bookmark.label"
-                class="flex items-center justify-between gap-3 rounded-full px-6 py-[18px] text-left text-sm font-semibold leading-5 transition-all duration-200 ease-in-out hover:bg-gray-100"
-                :href="bookmark.link"
-              >
-                <div class="flex items-center gap-3">
-                  <Icon name="star" class="size-6" />
-                  <span class="line-clamp-2">{{ bookmark.label }}</span>
-                </div>
-                <span class="uppercase">{{ extractLocaleFromLink(bookmark.link) }}</span>
-              </a>
-            </div>
-          </div>
           <div class="my-7 border-t border-gray-200"></div>
           <section class="grid grid-cols-1">
             <a v-if="isAdmin" :class="classList('user', true)" :href="`/${locale}/user`">
@@ -219,11 +191,6 @@ const classList = (path: string, withGap: boolean = false) => {
     active: url.includes(`/${locale.value}/${path}`),
     'flex items-center gap-x-3': withGap,
   };
-};
-
-const extractLocaleFromLink = (link: string): string => {
-  const match = link.match(/^\/([a-z]{2})\//);
-  return match ? match[1] : '';
 };
 </script>
 
